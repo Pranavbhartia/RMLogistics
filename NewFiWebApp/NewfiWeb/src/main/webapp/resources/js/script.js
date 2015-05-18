@@ -4,6 +4,8 @@ var currentUserAndLoanOnj = new Object();
 var doPagination = false;
 var loanTypeText = "refinance";
 var  removedKnwoNewFi = false; 
+var flagKnowNewFi=true;
+var flagToShowCompletPro = true;
 
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
@@ -52,7 +54,7 @@ function getCustomerSecondaryLeftNav() {
         "id": "cust-sec-nav"
     });
     newfiObject.applicationKnowNewfi=undefined;
-    var flagKnowNewFi=true;
+    
     if(newfi.appUserDetails){
         try{
             var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
@@ -437,7 +439,11 @@ function redirectToGettingToKnowLastPage() {
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
 	});
 	
+	if(flagToShowCompletPro){
 	cont2.append(cont2btn1).append(cont2btn2).append(cont2btn3).append(cont2btn4);
+	}else{
+		cont2.append(cont2btn2).append(cont2btn3).append(cont2btn4);
+	}
 	
 	parentContainer.append(cont1).append(cont2);
 }
