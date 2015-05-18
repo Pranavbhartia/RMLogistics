@@ -367,23 +367,32 @@ public class UserProfileRest {
 
 		Gson gson = new Gson();
 		UserVO userVO = null;
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		ErrorVO error=new ErrorVO();
 		try {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
 
-			Integer userUpdateCount = userProfileService
+			/*Integer userUpdateCount = userProfileService
 			        .managerUpdateUserProfile(userVO);
 			Integer customerDetailsUpdateCount = userProfileService
-			        .managerUpdateUCustomerDetails(userVO);
+			        .managerUpdateUCustomerDetails(userVO);*/
+			Integer userUpdateCount = userProfileService
+			        .updateUser(userVO);
 
-			if (userUpdateCount < 0 || customerDetailsUpdateCount < 0) {
+			if (userUpdateCount < 0 ) {
 				LOG.error("Error while updataing the user datails ");
+				error.setMessage("Error while updataing the user datails ");
+				commonResponseVO.setError(error);
+				
 			}
 
 		} catch (Exception e) {
 			LOG.error("Error while updataing the user datails ::",
 			        e.getMessage());
+			error.setMessage("Error while updataing the user datails ");
+			commonResponseVO.setError(error);
 		}
-		CommonResponseVO commonResponseVO = new CommonResponseVO();
+	
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
 	}

@@ -215,12 +215,7 @@ function getAdminDashboardRightPanel() {
 }
 
 function adminDashboardRightPanel(data){
-
 paintAdminUserPage(data);
-
-
-
-
 }
 /*paint method for userManagement page*/
 function paintAdminUserPage(data) {
@@ -282,7 +277,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		if($("#admin-add-memeber-user-type").attr("roleid")==undefined || $("#admin-add-memeber-user-type").attr(
 		"internalroleid")==undefined ){
 			$("#admin-create-user-popup").hide();
-			showErrorToastMessage("Please select a user type");
+			showErrorToastMessage(selectUserType);
 			return ;
 		}else{
 			showAddUserPopUp(e);
@@ -332,7 +327,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		    }	
 			},
 			error:function(e){
-				showErrorToastMessage("Problem while uploading csv.Please try again later");
+				showErrorToastMessage(uploadCsvErrorMessage);
 			}
 			
 		});
@@ -506,7 +501,7 @@ var popUpWrapper = $('<div>').attr({
 
 	// save button
 	var saveBtn = $('<div>').attr({
-		"class" : "prof-cust-save-btn"
+		"class" : "prof-cust-save-btn admin-save-btn"
 	}).html("save").on(
 			'click',
 			function(event) {
@@ -521,26 +516,39 @@ var popUpWrapper = $('<div>').attr({
 						console.log($('#admin-create-user-emailId').val()+"  "+$('#admin-create-user-first-name').val()+""+$('#admin-create-user-last-name').val());
 
 				if (user.firstName == "") {
-					$('#admin-create-user-first-name').addClass('err-input').focus();
-					showErrorToastMessage("First name cannot be empty");
-					return;
-				} else if (user.lastName == "") {
-					$('#admin-create-user-last-name').addClass('err-input').focus();
-					showErrorToastMessage("Last name cannot be empty");
-					return;
-				} else if (user.emailId == "") {
-					$('#admin-create-user-emailId').addClass('err-input').focus();
-					showErrorToastMessage("Email ID cannot be empty");
-					return;
+					$('#admin-create-user-first-name').next('.admin-err-msg').html(firstNameEmptyMessage).show();
+					$('#admin-create-user-first-name').addClass('ce-err-input').show();
+					return false;
+				}else{
+					$('#admin-create-user-first-name').next('.admin-err-msg').hide();
+					$('#admin-create-user-first-name').removeClass('ce-err-input');
+				} 
+				if (user.lastName == "") {
+					$('#admin-create-user-last-name').next('.admin-err-msg').html(lastNameEmptyMessage).show();
+					$('#admin-create-user-last-name').addClass('ce-err-input').show();
+					return false;
+				} else {
+					$('#admin-create-user-last-name').next('.admin-err-msg').hide();
+					$('#admin-create-user-last-name').removeClass('ce-err-input');
+				}
+               if (user.emailId == "") {
+            	   $('#admin-create-user-emailId').next('.admin-err-msg').html(emailEmptyMessage).show();
+            	   $('#admin-create-user-emailId').addClass('ce-err-input').show();
+					return false;
+				}else{
+					$('#admin-create-user-emailId').next('.admin-err-msg').hide();
+					$('#admin-create-user-emailId').removeClass('ce-err-input');
 				}
 				if(user.emailId!="")
 				{var validationStatus=emailValidation(user.emailId);
 			      if(validationStatus){
-					  $('#admin-create-user-emailId').val('');								  
+					  $('#admin-create-user-emailId').val('');	
+					  $('#admin-create-user-emailId').next('.admin-err-msg').html(invalidEmailErrorMessage).show();
 				      $('#admin-create-user-emailId').addClass('err-input').focus();
 				  
-				  return;
+				  return false;
 				  }else{
+					  $('#admin-create-user-emailId').next('.admin-err-msg').hide();
 					  $('#admin-create-user-emailId').removeClass('err-input');
 				  }
 			      
@@ -590,7 +598,7 @@ if(data.error==null||data.error==undefined||data.error==""){
 	   $('#admin-create-user-first-name').val('');
 	   $('#admin-create-user-last-name').val('');
 
-		showToastMessage("User created successfully");
+		showToastMessage(userCreationSuccessMessage);
 }else{
 	   $('#admin-create-user-emailId').val('');
 	   $('#admin-create-user-first-name').val('');
@@ -601,7 +609,10 @@ if(data.error==null||data.error==undefined||data.error==""){
 	
 }
 function appendAdminCreateUserPopupFirstName(){
-var row = $('<div>').attr({
+	var ErrMessage = $('<div>').attr({
+		"class" : "admin-err-msg hide"
+	});
+    var row = $('<div>').attr({
 		"class" : "admin-create-user-popup-cont clearfix float-left"
 	});
 	var label = $('<div>').attr({
@@ -612,13 +623,16 @@ var row = $('<div>').attr({
 		"class" : "admin-create-user-popup-input",
 		"id" : "admin-create-user-first-name"
 	}).val("");
-	row.append(label).append(inputBox);
+	row.append(label).append(inputBox).append(ErrMessage);
 	$('#admin-create-user-container').append(row);
 
 }
 
 function appendAdminCreateUserPopupLastName(){
-var row = $('<div>').attr({
+	var ErrMessage = $('<div>').attr({
+		"class" : "admin-err-msg hide"
+	});
+    var row = $('<div>').attr({
 		"class" : "admin-create-user-popup-cont clearfix float-left"
 	});
 	var label = $('<div>').attr({
@@ -628,12 +642,15 @@ var row = $('<div>').attr({
 		"class" : "admin-create-user-popup-input",
 		"id" : "admin-create-user-last-name"
 	}).val("");
-	row.append(label).append(inputBox);
+	row.append(label).append(inputBox).append(ErrMessage);
 	$('#admin-create-user-container').append(row);
 
 }
 
 function appendAdminCreateUserPopupEmail(){
+	var ErrMessage = $('<div>').attr({
+		"class" : "admin-err-msg hide"
+	});
 	var row = $('<div>').attr({
 		"class" : "admin-create-user-popup-cont clearfix float-left"
 	});
@@ -649,7 +666,7 @@ function appendAdminCreateUserPopupEmail(){
 		"class" : "err-msg hide" 
 	});
 	inputBox.append(errMessage);
-	row.append(label).append(inputBox);
+	row.append(label).append(inputBox).append(ErrMessage);
 	$('#admin-create-user-container').append(row);
 
 }
@@ -847,7 +864,7 @@ function getAdminTeamListTableRow(user) {
 		userDelIcn.click(function() {
 			var userID = $(this).attr("userid");
 
-	    RemoveUserFromUserListAdmin("Are you sure you want to delete the user?",userID);
+	    RemoveUserFromUserListAdmin(messageToDeleteUser,userID);
 		});
 		if(user.userRole.id==3){
 			if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
@@ -895,9 +912,9 @@ function displayResponseData(data){
    var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + data.resultObject.id + "]");
    teamMemberRow.remove();
    if(data.resultObject.userRole.id==1){
-       showToastMessage("Customer deleted successfully");
+       showToastMessage(customerDeleteSuccessMessage);
    }else{
-	   showToastMessage("Loan manger deleted successfully");  
+	   showToastMessage(loanMangerDeleteSuccessMessage);  
    }
 
   // tableRow.empty(teamMemberRow); 
