@@ -1,12 +1,12 @@
 var userDescription="System User";
 var salesManager="Sales Manager";
-var loanManager="Loan Manager";
+var loanManager="";
 var customer="Customer";
 var Realtor="Realtor";
 var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
-var customer="Customer";
+
 
 $(document).on('click',function(e){
 	if($('#admin-add-usertype-dropdown-cont').css("display") == "block"){
@@ -27,6 +27,9 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 
 
 $('#alert-settings-btn').click(function(e){
+	if(newfiObject.user.internalUserDetail!=undefined){
+		loanManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+	}
 	event.stopImmediatePropagation();
 	if($('#alert-popup-wrapper-settings').length==1){
 		
@@ -77,9 +80,9 @@ function appendSettingsDropDown(){
 			});
 	
 
-	 if(currentUser.userRole.roleDescription==customer ||currentUser.userRole.roleDescription==Realtor || currentUser.internalUserDetail.internalUserRoleMasterVO.roleDescription==loanManager)
+	 if(currentUser.userRole.roleDescription==customer || currentUser.userRole.roleDescription==Realtor || currentUser.internalUserDetail.internalUserRoleMasterVO.roleDescription==loanManager)
 	 {
-
+		 
 		//TODO for dropdown settings for LM,customer,realtor			 
 			
 			var myProfileRow =paintSettingsDropDown("my-profile","My Profile","myProfile()","#");
@@ -91,18 +94,14 @@ function appendSettingsDropDown(){
 			var tutorialsRow=paintSettingsDropDown("tutorials","Tutorial","completeTutorials()","#");
 			
 		 if(newfiObject.user.userRole.roleDescription==customer){
-		 	 var tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
-		 	 if(!tutorialStatus){
-					container.append(tutorialsRow); 
-		 	 }
 		 	 
-   			
-				
+					container.append(tutorialsRow); 
+	
 		 }				
 	}   
 	 else{	 
 
-   		
+	
    		var UserManagementRow=paintSettingsDropDown("user-management","User Mangement","userManagement()","#");
    		container.append(UserManagementRow);
    		

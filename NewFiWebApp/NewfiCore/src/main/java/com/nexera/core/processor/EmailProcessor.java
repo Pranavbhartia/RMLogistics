@@ -422,12 +422,12 @@ public class EmailProcessor implements Runnable {
 				LOGGER.debug("Mail did not have any attachment ");
 				messageServiceHelper.generateEmailDocumentMessage(
 				        loanVO.getId(), uploadedByUser, messageId, emailBody,
-				        null, true, sendEmail);
+				        null, true, sendEmail, false);
 				if (!lqbFieldFound) {
 					String lqbFieldIdMessage = "Your needs list should be set before you try to upload a document";
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        lqbFieldIdMessage, null, true, sendEmail);
+					        lqbFieldIdMessage, null, true, sendEmail, true);
 				}
 
 			} else {
@@ -441,10 +441,10 @@ public class EmailProcessor implements Runnable {
 					}
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        emailBody, null, true, sendEmail);
+					        emailBody, null, true, sendEmail, false);
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        successNoteText, fileVOList, true, sendEmail);
+					        successNoteText, fileVOList, true, sendEmail, true);
 				}
 				if (!checkUploadFailureList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were not uploaded ");
@@ -452,7 +452,7 @@ public class EmailProcessor implements Runnable {
 						failureNoteText = "No file was uploaded to the system, please note the system supports only .pdf, .img, .jpg or .png files only";
 						messageServiceHelper.generateEmailDocumentMessage(
 						        loanVO.getId(), uploadedByUser, messageId,
-						        emailBody, null, true, sendEmail);
+						        emailBody, null, true, sendEmail, false);
 
 					} else {
 						failureNoteText = "Some Files were not uploaded, please note only .pdf, .jpg, .img or .png files  are supported by the system";
@@ -460,7 +460,7 @@ public class EmailProcessor implements Runnable {
 
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        failureNoteText, null, false, sendEmail);
+					        failureNoteText, null, false, sendEmail, true);
 				}
 			}
 		} catch (MessagingException me) {

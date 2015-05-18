@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>newfi</title>
+    <link rel="shortcut icon" type="image/x-icon" href="resources/images/title-logo.png">
     <link href="resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="resources/css/styles.css" rel="stylesheet">
     <link href="resources/css/style-resp.css" rel="stylesheet">
@@ -300,6 +301,7 @@
 	<script src="resources/js/jquery-ui.js"></script>
     <script src="resources/js/bootstrap.min.js"></script>
     <script src="resources/js/script.js"></script>
+    <script src="resources/js/message.js"></script>
     <script src="resources/js/include/historySupport.js"></script>
 	<script>
 			

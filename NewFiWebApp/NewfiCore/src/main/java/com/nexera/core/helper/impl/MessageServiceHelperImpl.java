@@ -204,7 +204,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Async
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
 	        String messageId, String noteText, List<FileVO> fileUrls,
-	        boolean successFlag, boolean sendEmail) {
+	        boolean successFlag, boolean sendEmail, boolean systemGenerated) {
 		/*
 		 * 1. Create messageVO object. 2. set senderUserId as the createdBy of
 		 * the note. Permission will be all the users who are part of the loan
@@ -218,7 +218,15 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		        System.currentTimeMillis())));
 		String message = CommunicationLogConstants.DOCUMENT_UPLOAD;
 
-		setGlobalPermissionsToMessage(loanId, messageVO, loggedInUser, message);
+		if (systemGenerated) {
+			setGlobalPermissionsToMessage(loanId, messageVO,
+			        userProfileDao
+			                .findByUserId(CommonConstants.SYSTEM_USER_USERID),
+			        message);
+		} else {
+			setGlobalPermissionsToMessage(loanId, messageVO, loggedInUser,
+			        message);
+		}
 
 		/*
 		 * We will override the message either if the file list contains values

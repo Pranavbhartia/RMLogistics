@@ -269,6 +269,7 @@ function getApplicationQuestion(question,val) {
         if(val)
             question.value=val;
         quesCont = getApplicationTextQues(question);
+		
     } else if (question.type == "select") {
         quesCont = getApplicationSelectQues(question,val);
     } else if (question.type == "yesno") {
@@ -443,6 +444,11 @@ function setDropDownData(element, dataSet, value){
 }
 
 function getApplicationTextQues(question) {
+	if(question.name=="phoneNumber"){
+		
+		question.value=formatPhoneNumberToUsFormat(question.value);
+		
+	}
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
@@ -487,10 +493,11 @@ function getApplicationTextQues(question) {
 			}
 	      
 	    });
-	  
+
 	  if(question.name =="birthday"){
 		  optionCont.removeClass("app-input").addClass("prof-form-input date-picker").attr("placeholder","MM/DD/YYYY");
 	  }
+	
   }else{
 	   optionCont = $('<input>').attr({
 	        "class": "app-input app-append-width",
@@ -521,8 +528,9 @@ function getApplicationTextQues(question) {
 			}
 	      
 	    });
+	  
   }
-   
+	
 
     if (question.value != undefined) {
         optionCont.val(question.value);
@@ -3550,7 +3558,7 @@ function paintCustomerApplicationPageStep5() {
     		
     		customerDetailTemp =  appUserDetails.user.customerDetail;
             userTemp = appUserDetails.user;
-    		customerDetailTemp.dateOfBirth= makeDate(dateOfBirth);//new Date(dateOfBirth).getTime();
+    		customerDetailTemp.dateOfBirth= dateOfBirth;//new Date(dateOfBirth).getTime();
     		
     		customerDetailTemp.ssn = ssn;
     		//customerDetailTemp.secPhoneNumber = secPhoneNumber;

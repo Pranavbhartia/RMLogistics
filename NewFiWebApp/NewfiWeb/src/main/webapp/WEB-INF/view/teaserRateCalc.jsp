@@ -10,7 +10,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
+<link rel="shortcut icon" type="image/x-icon" href="resources/images/title-logo.png">
 <jsp:include page="include/commonStyles.jsp"></jsp:include>
+ <script src="resources/js/message.js"></script>
 <script src="/NewfiWeb/resources/js/historySupport.js"></script>
 </head>
 <body>

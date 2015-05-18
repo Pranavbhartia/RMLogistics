@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -311,17 +310,10 @@ public class CustomerDetail implements Serializable {
 			customerDetailVO.setAddressState(inputEntity.getAddressState());
 			customerDetailVO.setAddressZipCode(inputEntity.getAddressZipCode());
 			if (null != inputEntity.getDateOfBirth()) {
-				Date dat = inputEntity.getDateOfBirth();
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-				String dateString = format.format(dat);
-				format.setTimeZone(TimeZone.getTimeZone("UTC"));
-				try {
-					customerDetailVO.setDateOfBirth(format.parse(dateString)
-					        .getTime());
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+				customerDetailVO.setDateOfBirth(df.format(inputEntity
+				        .getDateOfBirth()));
 			} else {
 				// if the date of birth id null then ??
 				customerDetailVO.setDateOfBirth(null);
@@ -479,13 +471,19 @@ public class CustomerDetail implements Serializable {
 
 		customerDetail.setSubscriptionsStatus(2);
 		if (inputEntity != null) {
+			
 			customerDetail.setAddressCity(inputEntity.getAddressCity());
 			customerDetail.setAddressStreet(inputEntity.getAddressStreet());
 			customerDetail.setAddressState(inputEntity.getAddressState());
 			customerDetail.setAddressZipCode(inputEntity.getAddressZipCode());
 			if (null != inputEntity.getDateOfBirth()) {
-				customerDetail.setDateOfBirth(new Date(inputEntity
-				        .getDateOfBirth()));
+				SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+				try {
+					customerDetail.setDateOfBirth(df.parse(inputEntity
+					        .getDateOfBirth()));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 			}
 			customerDetail.setId(inputEntity.getId());
 			customerDetail.setId(inputEntity.getId());
