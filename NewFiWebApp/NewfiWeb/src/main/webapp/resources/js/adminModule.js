@@ -82,7 +82,7 @@ function appendSettingsDropDown(){
 
 	 if(currentUser.userRole.roleDescription==customer || currentUser.userRole.roleDescription==Realtor || currentUser.internalUserDetail.internalUserRoleMasterVO.roleDescription==loanManager)
 	 {
-		 alert("in if")
+		 
 		//TODO for dropdown settings for LM,customer,realtor			 
 			
 			var myProfileRow =paintSettingsDropDown("my-profile","My Profile","myProfile()","#");
@@ -101,7 +101,7 @@ function appendSettingsDropDown(){
 	}   
 	 else{	 
 
-		 alert("in else")
+	
    		var UserManagementRow=paintSettingsDropDown("user-management","User Mangement","userManagement()","#");
    		container.append(UserManagementRow);
    		
