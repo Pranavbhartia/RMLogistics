@@ -127,21 +127,21 @@ public class WorkflowConstants {
 
 	// TODO DYNAMIC content
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are {\"72\":\"elapsed\"}";
-	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Please click on Getting to know newfi to learn about using newfi portal";
-	public static final String VERIFY_EMAIL_NOTIFICATION_CONTENT = "Please verify your email";
-	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Please complete your loan profile.";
-	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have an agent? Please add him to NewFi Team.";
+	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Click here to learn more about using the newfi portal";
+	public static final String VERIFY_EMAIL_NOTIFICATION_CONTENT = "Your email is not verified. Click here to resend your verification email.";
+	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your loan profile.";
+	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have an real estate agent? Click here to add them to your newfi loan team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION = "The purchase documents are about to expire within {\"24\":\"elapsed\"} hours ";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC = "The purchase documents are about to expire.";
-	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "Initial needs list not created";
+	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "Initial needs list has not been created";
 	public static final String LOCK_RATE__NOTIFICATION_CONTENT = "Rates not locked";
 	public static final String APP_FEE__NOTIFICATION_CONTENT = "Fee pending";
 	public static final String APP_FEE_OVERDUE_NOTIFICATION_CONTENT = "Fee pending";
 	public static final String APPRAISAL_NOTIFICATION__NOTIFICATION_CONTENT = "Appraisals not available";
 	public static final String UW_NOTIFICATION__NOTIFICATION_CONTENT = "Underwriting pending";
 	public static final String LOCK_RATE_CUST_NOTIFICATION_CONTENT = "Lock your rate";
-	public static final String NEEDS_LIST_SET_TYPE_CONTENT = "Needs list has been set";
+	public static final String NEEDS_LIST_SET_TYPE_CONTENT = "Your needs list has been set. Click to upload.";
 	static {
 
 		MILESTONE_WF_ITEM_LOOKUP.put(
