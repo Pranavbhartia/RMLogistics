@@ -242,11 +242,17 @@ function paintApplicationAlreadySubmittedPage() {
 	
 	var btn2 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
-	}).html("View my rate options");
+	}).html("View my rate options").on('click',function(){
+		
+		window.location.href ="./home.do#myLoan";
+	});
 	
 	var btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
-	}).html("Talk to a loan advisor");
+	}).html("Talk to a loan advisor").on('click',function(){
+		
+		window.location.href ="./home.do#myTeam";
+	});
 	
 	$('#center-panel-cont').append(descText).append(btn1).append(btn2).append(btn3);
 }
