@@ -64,6 +64,8 @@ public class LoanRestService {
 
 	@Autowired
 	private NeedsListService needsListService;
+	
+
 
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
@@ -335,7 +337,8 @@ public class LoanRestService {
 	        @PathVariable Integer userID) {
 		UserVO user = new UserVO();
 		user.setId(userID);
-
+		//TODO added for to get mobilepreference and carrier info 
+		user=userProfileService.findUser(userID);
 		LoanDashboardVO responseVO = loanService
 		        .retrieveDashboardForWorkLoans(user);
 
@@ -348,7 +351,6 @@ public class LoanRestService {
 	        @PathVariable Integer userID) {
 		UserVO user = new UserVO();
 		user.setId(userID);
-
 		LoanDashboardVO responseVO = loanService
 		        .retrieveDashboardForWorkLoans(user);
 

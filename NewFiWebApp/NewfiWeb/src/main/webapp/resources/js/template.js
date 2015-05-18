@@ -1,4 +1,5 @@
 function populateTemplate() {
+	
 	var context = new Object();
 	context.userID = newfiObject.user.id;
 	var data = {};

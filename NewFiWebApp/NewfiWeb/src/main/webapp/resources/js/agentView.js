@@ -1,4 +1,6 @@
-
+/*
+ *Contains JavaScript functions for agent dashboard pages
+ */
 var isAgentTypeDashboard;
 var docData = [];
 var currentLoanType = null;
@@ -950,7 +952,7 @@ $(document).on('click', '.lp-t2-agent-item', function() {
 
 function repaintNotes(hideToast) {
 	if (hideToast == undefined || hideToast == false) {
-		showToastMessage("Message saved succesfully");
+		showToastMessage(messageSaved);
 	}
 
 	synchronousAjaxRequest("rest/commlog/" + newfiObject.user.id + "/"
@@ -1014,7 +1016,7 @@ function paintMyLoansViewCallBack(data) {
 // function to reset slected UserdetailObject
 var selectedUserDetail;
 function resetSelectedUserDetailObject(userObject) {
-
+console.log(userObject);
 	// userObject this is a "LoanCustomerVO" object
 
 	selectedUserDetail = new Object();
@@ -1033,14 +1035,14 @@ function resetSelectedUserDetailObject(userObject) {
 	selectedUserDetail.emailId = userObject.emailId;
 
 	selectedUserDetail.customerId = userObject.customerDetail.id;
-	selectedUserDetail.carrierName = userObject.customerDetail.carrierInfo;
+	selectedUserDetail.carrierName = userObject.carrierInfo;
 	selectedUserDetail.city = userObject.customerDetail.addressCity;
 	selectedUserDetail.state = userObject.customerDetail.addressState;
 	selectedUserDetail.zipCode = userObject.customerDetail.addressZipCode;
 	selectedUserDetail.dob = $.datepicker.formatDate('mm/dd/yy', new Date(
 			userObject.customerDetail.dateOfBirth));
 	selectedUserDetail.setSenderDomain = userObject.setSenderDomain;
-
+	selectedUserDetail.setMobileAlertPreference=userObject.mobileAlertsPreference;
 	// TODO-add a default image url
 	if (userObject.prof_image)
 		selectedUserDetail.photoUrl = userObject.prof_image;
@@ -1388,7 +1390,7 @@ function updatePurchaseDocumentExpiryDate() {
 	var date = new Date($("#purchaseDocumentExpiryDate").val()).getTime();
 	var currentTime = new Date().getTime();
 	if (currentTime > date) {
-		showToastMessage("Cannot select old value");
+		showToastMessage(cannotSelectOldMessage);
 		return;
 	}
 	var data = {};
@@ -1417,9 +1419,9 @@ function updatePurchaseDocumentExpiryDate() {
 function showExpiryDateResponse(response) {
 	console.info(response);
 	if (response.error == null) {
-		showToastMessage("Expiry Date Accepted.");
+		showToastMessage(expiryDateExpected);
 	} else {
-		showToastMessage("Problem saving Expiry Date.");
+		showToastMessage(problemSavingExpiryDate);
 	}
 }
 
@@ -1520,7 +1522,7 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 						var roleID = $('#add-memeber-user-type').attr("roleID");
 						if (roleID == undefined
 								&& (code != "TITLE_COMPANY" && code != "HOME_OWN_INS")) {
-							showToastMessage("Please select a user type");
+							showErrorToastMessage(selectUserType);
 							return false;
 						}
 						var internalRoleID = $('#add-memeber-user-type').attr(
@@ -1551,7 +1553,8 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 							var roleID = $('#add-memeber-user-type').attr(
 									"roleID");
 							if (roleID == undefined) {
-								showToastMessage("Please select a user type");
+								/*showToastMessage("Please select a user type");*/
+								showErrorToastMessage(selectUserType);
 								return false;
 							}
 							var internalRoleID = $('#add-memeber-user-type')
@@ -1993,7 +1996,7 @@ function getTeamListTableRow(user, loanID) {
 			"titleCompanyID" : titleCompanyID
 		};
 
-		confirmRemoveUser("Are you sure you want to delete the user?", input,
+		confirmRemoveUser(messageToDeleteUser, input,
 				loanID);
 	});
 	trCol5.append(userDelIcn);
@@ -2083,14 +2086,6 @@ function appendCustomerEditProfilePopUp() {
 	appendCityEditRow();
 	// appendCustomerProfEditRow("City", selectedUserDetail.city, "cityId");
 	appendZipEditRow();
-	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo,
-			"primaryPhoneID");
-	// To append carrier info
-	appendCarrierNameDropDown();
-
-	$('#emailIdID').attr("readonly", true)
-	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
-
 	var row = $('<div>').attr({
 		"class" : "cust-prof-edit-row clearfix"
 	});
@@ -2118,14 +2113,22 @@ function appendCustomerEditProfilePopUp() {
 		});
 	});
 
-	row.append(label).append(dobInput);
+	row.append(label).append(dobInput).append(appendErrorMessage());
 	$('#cus-prof-container').append(row);
 
 	$("#dobID").addClass('prof-form-input date-picker').datepicker({
 		orientation : "top auto",
 		autoclose : true
 	});
-
+	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo,
+			"primaryPhoneID");
+	$('#emailIdID').attr("readonly", true)
+	// To append carrier info
+	appendCarrierNameDropDown();
+	//TO append mobile preference
+	appendCustomerProfEditRow("Receive SMS Alert", selectedUserDetail.setMobileAlertPreference,
+	"");
+	// appendCustomerProfEditRow("DOB", selectedUserDetail.dob, "dobID");
 	// append save button
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-cust-save-btn",
@@ -2319,30 +2322,32 @@ function appendCarrierNameDropDown() {
 						}
 					});
 
-	if (user.customerDetail.mobileAlertsPreference) {
-		row.removeClass('hide');
-
-	}
 
 	var dropDownWrapper = $('<div>').attr({
 		"id" : "carrier-dropdown-wrapper",
 		"class" : "carrier-dropdown-wrapper hide"
 	});
 
-	rowCol2.append(carrierinfo).append(dropDownWrapper);
+	rowCol2.append(carrierinfo).append(dropDownWrapper).append(appendErrorMessage());
 	row.append(label).append(rowCol2);
 	$('#cus-prof-container').append(row);
 
 }
 function updateUserProfile() {
-
+	var firstname=validateFirstName("firstNameID");
+	var lastname=validateLastName("lastNameID");
+	if(!firstname || !lastname){
+		return false;
+	}
 	var userProfileJson = new Object();
 
 	userProfileJson.id = selectedUserDetail.userID;
 	userProfileJson.firstName = $("#firstNameID").val();
 	userProfileJson.lastName = $("#lastNameID").val();
 	userProfileJson.emailId = $("#emailIdID").val();
-	userProfileJson.phoneNumber = $("#primaryPhoneID").val();
+	var phoneNumber = $("#primaryPhoneID").val();
+	userProfileJson.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+
 
 	var customerDetails = new Object();
 
@@ -2352,16 +2357,17 @@ function updateUserProfile() {
 	customerDetails.addressZipCode = $("#zipcodeId").val();
 	customerDetails.dateOfBirth = new Date($("#dobID").val()).getTime();
 
+	if($('.cust-radio-btn-yes').hasClass('radio-btn-selected')){
+		userProfileJson.mobileAlertsPreference = true;	
+		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
+		   userProfileJson.mobileAlertsPreference = false;
+		}
 	if ($('#carrierInfoID').val() != null || $('#carrierInfoID').val() != "") {
-
-		customerDetails.carrierInfo = $('#carrierInfoID').val();
+        alert($('#carrierInfoID').val());
+		userProfileJson.carrierInfo = $('#carrierInfoID').val();
 	}
 	userProfileJson.customerDetail = customerDetails;
-
-	// ajaxRequest("rest/userprofile/updateprofile", "POST", "json",
-	// JSON.stringify(userProfileJson),function(response){});
-	if ($("#firstNameID").val() != "" && $("#lastNameID").val() != ""
-			&& $("#emailIdID").val() != "") {
+       showOverlay();
 		$.ajax({
 			url : "rest/userprofile/managerupdateprofile",
 			type : "POST",
@@ -2371,23 +2377,30 @@ function updateUserProfile() {
 			},
 			dataType : "json",
 			success : function(data) {
-
-				$("#cusProfNameTxtID").text(
-						userProfileJson.firstName + " "
-								+ userProfileJson.lastName);
-				$('#cusProfPhoneNumber').html(formatPhoneNumberToUsFormat(userProfileJson.phoneNumber));
+				hideOverlay();
+				if(data.error==null){
+					showToastMessage(updateSuccessMessage);
+					$("#cusProfNameTxtID").text(
+							userProfileJson.firstName + " "
+									+ userProfileJson.lastName);
+					$('#cusProfPhoneNumber').html(formatPhoneNumberToUsFormat(userProfileJson.phoneNumber));
+				}else{
+					if(data.error.message){
+						showErrorToastMessage(data.error.message);
+					}else{
+						showErrorToastMessage(updateErrorMessage);
+					}
+					
+				}
+				
 				
 				hideCustomerEditProfilePopUp();
 			},
 			error : function(error) {
-				alert("error" + error);
+				hideOverlay();
+				showErrorToastMessage(updateErrorMessage);
 			}
 		});
-
-		showToastMessage("Succesfully updated");
-	} else {
-		showErrorToastMessage("Mandatory feilds cannot be empty");
-	}
 
 }
 
@@ -2406,15 +2419,19 @@ function hideCustomerEditProfilePopUp() {
 }
 
 function appendCustomerProfEditRow(labelTxt, value, id) {
-
+	var row = $('<div>').attr({
+		"class" : "cust-prof-edit-row clearfix"
+	});
+	var ErrMessage = $('<div>').attr({
+		"class" : "err-msg hide"
+	});
+    if(labelTxt!="Receive SMS Alert"){
 	var span = $('<span>').attr({
 
 		"class" : "mandatoryClass"
 	}).html("*").css("color", "red");
 
-	var row = $('<div>').attr({
-		"class" : "cust-prof-edit-row clearfix"
-	});
+	
 
 	var label = $('<div>').attr({
 		"class" : "cust-prof-edit-label float-left"
@@ -2430,10 +2447,97 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 
 	}).val(value);
 
-	row.append(label).append(inputTag);
+	row.append(label).append(inputTag).append(ErrMessage);
 	$('#cus-prof-container').append(row);
-}
+}else{
+	var rowCol1 = $('<div>').attr({
+		"class" : "cust-prof-edit-label float-left"
+	}).html("Receive SMS Alert");
+	
+	var rowColtext = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("Yes");
+	var rowCol2 = $('<div>').attr({
+		"class" : "prof-form-rc float-left"
+	});
+	var rowColtext2 = $('<div>').attr({
+		"class" : "cust-sms-ch float-left"
+	}).html("No");
+	var inputCont = $('<div>').attr({
+		"class" : "prof-form-input-cont"
+	});
+	
+	var radioYesButton = $('<div>').attr({
+		"class" : "cust-radio-btn-yes radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDYes",		
+		
 
+	}).bind('click',function(e){
+			$('.cust-radio-btn-no').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');	
+			var phoneStatus=phoneNumberValidation($("#primaryPhoneID").val(),true ,"primaryPhoneID");
+		    if(!phoneStatus){
+		    	if($("#carrierInfoID").val() == ""){
+		    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
+		    		$('#carrierInfoID').addClass('err-input');
+		    		return false;
+		    		//showErrorToastMessage(carrierSelectmessage);
+					
+				}else{
+					$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+					$('#carrierInfoID').removeClass('err-input');
+					
+				}
+		    	
+		    }else{
+		    	if($("#carrierInfoID").val() == ""){
+		    		
+		    		$('#carrier-dropdown-wrapper').next('.err-msg').html(carrierSelectmessage).show();
+		    		$('#carrierInfoID').addClass('err-input');
+		    		//showErrorToastMessage(carrierSelectmessage);
+					return false;
+				}else{
+					$('#carrier-dropdown-wrapper').next('.err-msg').html('');
+					$('#carrierInfoID').removeClass('err-input');
+				}
+		    }	
+			//validatePhone('priPhoneNumberId');
+			
+	        //$('#primaryPhoneID').show();
+	});
+	
+	var radioNoButton = $('<div>').attr({
+		"class" : "cust-radio-btn-no radio-btn float-left",		
+		"id" : "alertSMSPreferenceIDNo"
+	}).bind('click',function(e){
+		
+			$('.cust-radio-btn-yes').removeClass('radio-btn-selected');
+			$(this).addClass('radio-btn-selected');
+			if(	$('#carrier-dropdown-wrapper').next('.err-msg').html()!=""){
+				$('#carrier-dropdown-wrapper').next('.err-msg').hide();
+				$('#carrierInfoID').removeClass('err-input');
+			}
+			
+	});
+	
+	if(value!=null){
+		if(value){
+			radioYesButton.addClass('radio-btn-selected');
+		}else if(!value){
+			radioNoButton.addClass('radio-btn-selected');
+		}}
+
+	
+	inputCont.append(radioYesButton).append(rowColtext).append(radioNoButton).append(rowColtext2);
+	
+	rowCol2.append(inputCont);
+	 row.append(rowCol1).append(rowCol2);
+	 $('#cus-prof-container').append(row);
+}
+}
+$('body').on('focus',"#primaryPhoneID",function(){
+    $(this).mask("(999) 999-9999");
+});
 function appendCustomerProfUploadPhotoRow() {
 
 	var row = $('<div>').attr({
@@ -2541,15 +2645,46 @@ function appendCreateUserPopup() {
 						+ JSON.stringify(user));
 
 				if (user.firstName == "") {
-					showToastMessage("First name cannot be empty");
-					return;
-				} else if (user.lastName == "") {
-					showToastMessage("Last name cannot be empty");
-					return;
-				} else if (user.emailId == "") {
-					showToastMessage("Email ID cannot be empty");
-					return;
-				}
+					//showErrorToastMessage(firstNameEmptyMessage);
+					 $('#create-user-first-name').next('.admin-err-msg').html(firstNameEmptyMessage).show();
+					 $('#create-user-first-name').addClass('ce-err-input').show();
+					return false;
+				}else{
+					 $('#create-user-first-name').next('.admin-err-msg').hide();
+					 $('#create-user-first-name').removeClass('ce-err-input');
+				} 
+				if (user.lastName == "") {
+					//showErrorToastMessage(lastNameEmptyMessage);
+					$('#create-user-last-name').next('.admin-err-msg').html(lastNameEmptyMessage).show();
+					$('#create-user-last-name').addClass('ce-err-input').show();
+					return false;
+				}else{
+					$('#create-user-last-name').next('.admin-err-msg').hide();
+					$('#create-user-last-name').removeClass('ce-err-input');
+				} 
+				if (user.emailId == "") {
+					//showErrorToastMessage(emailEmptyMessage);
+					$('#create-user-emailId').next('.admin-err-msg').html(emailEmptyMessage).show();
+					$('#create-user-emailId').addClass('ce-err-input').show();
+					return false;
+				}else{
+					$('#create-user-emailId').next('.admin-err-msg').hide();
+					$('#create-user-emailId').removeClass('ce-err-input');
+				} 
+				if(user.emailId!="")
+				{var validationStatus=emailValidation(user.emailId);
+			      if(validationStatus){
+			    	  $('#create-user-emailId').val('');	
+			    	  $('#create-user-emailId').next('.admin-err-msg').html(invalidEmailErrorMessage).show();
+			    	  $('#create-user-emailId').addClass('err-input').focus();
+				  
+				  return false;
+				  }else{
+					  $('#create-user-emailId').next('.admin-err-msg').hide();
+					  $('#create-user-emailId').removeClass('err-input');
+				  }
+			      
+			     }
 				user.userRole = {
 					id : $("#add-memeber-user-type").attr("roleid")
 				};
@@ -2645,16 +2780,16 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 					ob.company = company;
 
 					if (company.name == "") {
-						showToastMessage("Company name cannot be empty");
+						showErrorToastMessage(companyNameEmptyMessage);
 						return;
 					} else if (company.phoneNumber == "") {
-						showToastMessage("Phone number cannot be empty");
+						showErrorToastMessage(phoneEmptyMessage);
 						return;
 					} else if (company.emailID == "") {
-						showToastMessage("Email address cannot be empty");
+						showErrorToastMessage(emailAddressEmptyMessage);
 						return;
 					} else if (user.emailId == "") {
-						showToastMessage("Email ID cannot be empty");
+						showErrorToastMessage(emailEmptyMessage);
 						return;
 					}
 					console.log("Create company button clicked. User : "
@@ -2886,16 +3021,16 @@ function getCreateTitleCompanyContext(loanID) {
 					ob.company = company;
 
 					if (company.name == "") {
-						showToastMessage("Company name cannot be empty");
+						showErrorToastMessage(companyNameEmptyMessage);
 						return;
 					} else if (company.phoneNumber == "") {
-						showToastMessage("Phone number cannot be empty");
+						showErrorToastMessage(phoneEmptyMessage);
 						return;
 					} else if (company.emailID == "") {
-						showToastMessage("Email address cannot be empty");
+						showErrorToastMessage(emailAddressEmptyMessage);
 						return;
 					} else if (user.emailId == "") {
-						showToastMessage("Email ID cannot be empty");
+						showErrorToastMessage(emailEmptyMessage);
 						return;
 					}
 					console.log("Create company button clicked. User : "
@@ -3098,7 +3233,9 @@ function hideCreateUserPopup() {
 }
 
 function appendCreateUserPopupFirstName() {
-
+	var ErrMessage = $('<div>').attr({
+		"class" : "admin-err-msg loan-type hide"
+	});
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
 	});
@@ -3110,11 +3247,14 @@ function appendCreateUserPopupFirstName() {
 		"class" : "create-user-popup-input",
 		"id" : "create-user-first-name"
 	}).val("");
-	row.append(label).append(inputBox);
+	row.append(label).append(inputBox).append(ErrMessage);
 	$('#create-user-container').append(row);
 }
 
 function appendCreateUserPopupLastName() {
+	var ErrMessage = $('<div>').attr({
+		"class" : "admin-err-msg loan-type hide"
+	});
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
 	});
@@ -3125,7 +3265,7 @@ function appendCreateUserPopupLastName() {
 		"class" : "create-user-popup-input",
 		"id" : "create-user-last-name"
 	}).val("");
-	row.append(label).append(inputBox);
+	row.append(label).append(inputBox).append(ErrMessage);
 	$('#create-user-container').append(row);
 }
 
@@ -3194,6 +3334,9 @@ function appendCreateUserPopupZip() {
 }
 
 function appendCreateUserPopupEmail() {
+	var ErrMessage = $('<div>').attr({
+		"class" : "admin-err-msg loan-type hide"
+	});
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
 	});
@@ -3205,7 +3348,7 @@ function appendCreateUserPopupEmail() {
 		"id" : "create-user-emailId",
 
 	}).val("");
-	row.append(label).append(inputBox);
+	row.append(label).append(inputBox).append(ErrMessage);
 	$('#create-user-container').append(row);
 }
 
@@ -3519,10 +3662,10 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
 	if (!result) {
-		showToastMessage("An error occurred, kindly contact admin.");
+		showErrorToastMessage(userRemovalErrorMessage);
 		return;
 	} else
-		showToastMessage("User removed successfully");
+		showToastMessage(userRemoveSuccessMessage);
 
 	var loanID = editLoanTeamVO.loanID;
 	var userID = editLoanTeamVO.userID;
@@ -3586,7 +3729,7 @@ function onReturnOfAddUserToLoanTeam(data, callback) {
 	var userToAdd;
 	if (userID && userID > 0) {
 		if (!result) {
-			showToastMessage("An error occurred, kindly contact admin.");
+			showErrorToastMessage(userRemovalErrorMessage);
 			return;
 		}
 		teamMemberRow = $(".newfi-team-list-tr[userid=" + userID + "]");
@@ -3617,7 +3760,7 @@ function onReturnOfAddUserToLoanTeam(data, callback) {
 	}
 
 	if (teamMemberRow != undefined && teamMemberRow.length > 0) {
-		showToastMessage("User already exists on the loan team.");
+		showErrorToastMessage(userExsistErrorMessage);
 		return;
 	}
 
@@ -3630,11 +3773,11 @@ function onReturnOfAddUserToLoanTeam(data, callback) {
 	var existingDiv = $('.ms-team-member-table').find(
 			'.ms-team-member-tr[userid=' + userID + ']');
 	if (existingDiv != undefined && existingDiv.length > 0) {
-		showToastMessage("User already exists on the loan team.");
+		showErrorToastMessage(userExsistErrorMessage);
 		return;
 	}
 
-	showToastMessage("User added to loan team.");
+	showToastMessage(userAddedToLoanTeamSuccessMessage);
 	if (addData != undefined) {
 		var parentContainer = $("#WF" + addData.milestoneID);
 		clearStatusClass(parentContainer);
@@ -3716,7 +3859,7 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 	console.log("Return : " + JSON.stringify(data));
 	
 	if(data.error!= undefined && data.error.code=="522"){
-		showToastMessage("Email already exists!!");
+		showErrorToastMessage(emailAldreadyExsist);
 		return;
 	}
 	
