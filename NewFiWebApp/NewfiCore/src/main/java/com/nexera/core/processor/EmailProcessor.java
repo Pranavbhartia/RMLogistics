@@ -363,6 +363,7 @@ public class EmailProcessor implements Runnable {
 		try {
 			String successNoteText = "";
 			String failureNoteText = "";
+			boolean lqbFieldFound = true;
 			List<CheckUploadVO> checkUploadSuccessList = new ArrayList<CheckUploadVO>();
 			List<FileVO> fileVOList = new ArrayList<FileVO>();
 			List<CheckUploadVO> checkUploadFailureList = new ArrayList<CheckUploadVO>();
@@ -382,22 +383,27 @@ public class EmailProcessor implements Runnable {
 
 					CheckUploadVO checkUploadVO = null;
 					try {
-						checkUploadVO = uploadedFileListService
-						        .uploadFileByEmail(inputStream, content,
-						                actualUser.getId(), loanVO.getId(),
-						                uploadedByUser.getId());
-						if (checkUploadVO != null) {
-							if (checkUploadVO.getIsUploadSuccess()) {
-								FileVO fileVO = new FileVO();
-								fileVO.setFileName(checkUploadVO.getFileName());
-								fileVO.setUrl(checkUploadVO.getUuid());
-								fileVOList.add(fileVO);
-								checkUploadSuccessList.add(checkUploadVO);
-							}
+						if (loanVO.getLqbFileId() != null) {
+							checkUploadVO = uploadedFileListService
+							        .uploadFileByEmail(inputStream, content,
+							                actualUser.getId(), loanVO.getId(),
+							                uploadedByUser.getId());
+							if (checkUploadVO != null) {
+								if (checkUploadVO.getIsUploadSuccess()) {
+									FileVO fileVO = new FileVO();
+									fileVO.setFileName(checkUploadVO
+									        .getFileName());
+									fileVO.setUrl(checkUploadVO.getUuid());
+									fileVOList.add(fileVO);
+									checkUploadSuccessList.add(checkUploadVO);
+								}
 
-							else {
-								checkUploadFailureList.add(checkUploadVO);
+								else {
+									checkUploadFailureList.add(checkUploadVO);
+								}
 							}
+						} else {
+							lqbFieldFound = false;
 						}
 
 					} catch (Exception e) {
@@ -417,6 +423,12 @@ public class EmailProcessor implements Runnable {
 				messageServiceHelper.generateEmailDocumentMessage(
 				        loanVO.getId(), uploadedByUser, messageId, emailBody,
 				        null, true, sendEmail);
+				if (!lqbFieldFound) {
+					String lqbFieldIdMessage = "Your needs list should be set before you try to upload a document";
+					messageServiceHelper.generateEmailDocumentMessage(
+					        loanVO.getId(), uploadedByUser, messageId,
+					        lqbFieldIdMessage, null, true, sendEmail);
+				}
 
 			} else {
 				LOGGER.debug("Mail contains attachment ");
