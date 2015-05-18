@@ -29,7 +29,7 @@
 		</form>
 	</div>
 </div>
-
+ <script src="resources/js/message.js"></script>
 <script src="resources/js/include/historySupport.js"></script>
 <script type="text/javascript">
 	globalBinder();
