@@ -293,29 +293,46 @@ function paintGettingToKnowPage() {
     });
     
     var slideShowCont = $('<ul>').attr({
-    	"class" : "pgwSlideshow"
+    	"class" : "pgwSlideshow left-padding"
     });
     
+    var imageBaseurl = window.location.origin + "/NewfiWeb/resources/images/";
 
     var imagesObj = [ {
-		"src" : "//static.pgwjs.com/img/pg/slideshow/san-francisco.jpg",
-		"alt" : "San Franciso",
-		"data-description" : "San Franciso"
-	}, {
-		"src" : "//static.pgwjs.com/img/pg/slideshow/rio.jpg",
-		"alt" : "Rio de Jenario",
-		"data-description" : "Brazil"
-	}, {
-		"src" : "//static.pgwjs.com/img/pg/slideshow/new-delhi.jpg",
-		"alt" : "New Delhi",
-		"data-description" : "India"
-	}, {
-		"src" : "//static.pgwjs.com/img/pg/slideshow/new-york.jpg",
-		"alt" : "New York, US",
+		"src" : imageBaseurl+"imageNumber1.png",
+		"alt" : "",
 		"data-description" : ""
 	}, {
-		"src" : "//static.pgwjs.com/img/pg/slideshow/london.jpg",
-		"alt" : "London, England",
+		"src" : imageBaseurl+"imageNumber2.png",
+		"alt" : "",
+		"data-description" : ""
+	}, {
+		"src" : imageBaseurl+"imageNumber3.png",
+		"alt" : "",
+		"data-description" : ""
+	}, {
+		"src" :imageBaseurl+ "imageNumber4.png",
+		"alt" : "",
+		"data-description" : ""
+	}, {
+		"src" : imageBaseurl+"imageNumber5.png",
+		"alt" : "",
+		"description" : ""
+	}, {
+		"src" : imageBaseurl+"imageNumber6.png",
+		"alt" : "",
+		"description" : ""
+	}, {
+		"src" : imageBaseurl+"imageNumber7.png",
+		"alt" : "",
+		"description" : ""
+	}, {
+		"src" : imageBaseurl+"imageNumber8.png",
+		"alt" : "",
+		"description" : ""
+	}, {
+		"src" : imageBaseurl+"imageNumber9.png",
+		"alt" : "",
 		"description" : ""
 	} ];
     
