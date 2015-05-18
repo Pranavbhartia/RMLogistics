@@ -93,6 +93,8 @@ public class ThreadManager implements Runnable {
 
 	private List<LoanMilestoneMaster> loanMilestoneMasterList;
 
+	private boolean invokeLQB;
+
 	@Autowired
 	LqbInvoker lqbInvoker;
 
@@ -161,307 +163,310 @@ public class ThreadManager implements Runnable {
 	public void run() {
 
 		LOGGER.debug("Inside method run ");
+		if (invokeLQB) {
+			boolean success = true;
+			List<Integer> statusTrackingList = new LinkedList<Integer>();
+			Map<String, String> map = new HashMap<String, String>();
+			int format = 0;
+			workflowItemExecList = getWorkflowItemExecByLoan(loan);
+			LOGGER.debug("Invoking load service of lendinqb ");
+			JSONObject loadOperationObject = createLoadJsonObject(map,
+			        WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD,
+			        loan.getLqbFileId(), format);
+			if (loadOperationObject != null) {
+				LOGGER.debug("Invoking LQB service to fetch Loan status ");
+				JSONObject loadJSONResponse = lqbInvoker
+				        .invokeLqbService(loadOperationObject.toString());
+				if (loadJSONResponse != null) {
+					if (!loadJSONResponse
+					        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
 
-		boolean success = true;
-		List<Integer> statusTrackingList = new LinkedList<Integer>();
-		Map<String, String> map = new HashMap<String, String>();
-		int format = 0;
-		workflowItemExecList = getWorkflowItemExecByLoan(loan);
-		LOGGER.debug("Invoking load service of lendinqb ");
-		JSONObject loadOperationObject = createLoadJsonObject(map,
-		        WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD,
-		        loan.getLqbFileId(), format);
-		if (loadOperationObject != null) {
-			LOGGER.debug("Invoking LQB service to fetch Loan status ");
-			JSONObject loadJSONResponse = lqbInvoker
-			        .invokeLqbService(loadOperationObject.toString());
-			if (loadJSONResponse != null) {
-				if (!loadJSONResponse
-				        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
-
-					String loadResponse = loadJSONResponse
-					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-					loadResponse = nexeraUtility
-					        .removeBackSlashDelimiter(loadResponse);
-					int currentLoanStatus = -1;
-					Milestones milestones = null;
-					List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
-					if (loadResponseList != null) {
-						for (LoadResponseVO loadResponseVO : loadResponseList) {
-							String fieldId = loadResponseVO.getFieldId();
-							if (fieldId
-							        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_LOAN_STATUS)) {
-								currentLoanStatus = Integer
-								        .parseInt(loadResponseVO
-								                .getFieldValue());
-							}
-
-						}
-						LOSLoanStatus loanStatusID = null;
-						if (currentLoanStatus == -1) {
-							LOGGER.error("Invalid/No status received from LQB ");
-							success = false;
-						} else {
-							loanStatusID = LOSLoanStatus
-							        .getLOSStatus(currentLoanStatus);
-							if (loanStatusID == null) {
-								LOGGER.error("Not a supported LQB status ");
-								success = false;
-							}
-
-							if (workflowItemExecList == null) {
-
-								workflowItemExecList = new ArrayList<WorkflowItemExec>();
-							}
-							milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
-							        .get(loanStatusID).getMilestone();
-							WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
-							if (wItemMSInfo != null) {
-								statusTrackingList = wItemMSInfo
-								        .getStatusTrackingList();
-
-							}
-							if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
-								LOGGER.debug("These status are related to underwriting ");
-
-							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
-								LOGGER.debug("These status are related to appraisal ");
-
-							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
-								LOGGER.debug("These status are related to QC ");
-
-							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_WITHDRAWN
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED
-							        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
-								LOGGER.debug("These status are related to Loan Closure ");
-
-							} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
-								LOGGER.debug("These status are related to 1003 ");
-
-							}
-
-							LoanMilestoneMaster loanMilestoneMaster = null;
-							if (milestones != null) {
-								loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(milestones);
-								LOGGER.debug("Saving/Updating LoanMileStone ");
-								boolean sameStatus = false;
-								boolean newStatus = true;
-								LoanMilestone loanMilestone = getLoanMilestone(
-								        loan, loanMilestoneMaster);
-								if (loanMilestone == null) {
-									LOGGER.debug("This is a new entry of this milestone "
-									        + loanMilestoneMaster.getName());
-									putLoanMilestoneIntoExecution(loanStatusID,
-									        currentLoanStatus,
-									        loadResponseList,
-									        loanMilestoneMaster);
-									newStatus = false;
-
-								} else {
-									LOGGER.debug("Milestone exist, need to update the status ");
-									List<LoanMilestone> loanMilestoneList = loan
-									        .getLoanMilestones();
-									for (LoanMilestone loanMiles : loanMilestoneList) {
-										if (loanMiles.getStatus() == null) {
-											continue;
-										}
-										if (Integer.valueOf(loanMiles
-										        .getStatus()) == currentLoanStatus) {
-											newStatus = false;
-											Date date = loanMiles
-											        .getStatusUpdateTime();
-											if (date != null) {
-												String currentDateString = getDataTimeField(
-												        currentLoanStatus,
-												        loadResponseList);
-												if (currentDateString != null) {
-													Date currentDate = parseStringIntoDate(currentDateString);
-													if (currentDate != null) {
-														if (date.compareTo(currentDate) == 0) {
-															sameStatus = true;
-														} else {
-															updateLoanMilestone(loanMilestone);
-														}
-													}
-												}
-
-											} else {
-												String currentDateString = getDataTimeField(
-												        currentLoanStatus,
-												        loadResponseList);
-												if (currentDateString != null) {
-													Date currentDate = parseStringIntoDate(currentDateString);
-													if (currentDate != null) {
-
-														if (currentDate != null) {
-															updateLoanMilestone(loanMilestone);
-														}
-													} else {
-														sameStatus = true;
-													}
-												} else {
-													sameStatus = true;
-												}
-											}
-
-										}
-									}
+						String loadResponse = loadJSONResponse
+						        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+						loadResponse = nexeraUtility
+						        .removeBackSlashDelimiter(loadResponse);
+						int currentLoanStatus = -1;
+						Milestones milestones = null;
+						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
+						if (loadResponseList != null) {
+							for (LoadResponseVO loadResponseVO : loadResponseList) {
+								String fieldId = loadResponseVO.getFieldId();
+								if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_LOAN_STATUS)) {
+									currentLoanStatus = Integer
+									        .parseInt(loadResponseVO
+									                .getFieldValue());
 								}
 
-								if (!sameStatus) {
+							}
+							LOSLoanStatus loanStatusID = null;
+							if (currentLoanStatus == -1) {
+								LOGGER.error("Invalid/No status received from LQB ");
+								success = false;
+							} else {
+								loanStatusID = LOSLoanStatus
+								        .getLOSStatus(currentLoanStatus);
+								if (loanStatusID == null) {
+									LOGGER.error("Not a supported LQB status ");
+									success = false;
+								}
 
-									LOGGER.debug("If status has changed then only proceed to call the class ");
-									if (newStatus) {
-										LOGGER.debug("The loan milestone exist but this is a new status hence adding into database ");
+								if (workflowItemExecList == null) {
+
+									workflowItemExecList = new ArrayList<WorkflowItemExec>();
+								}
+								milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
+								        .get(loanStatusID).getMilestone();
+								WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
+								if (wItemMSInfo != null) {
+									statusTrackingList = wItemMSInfo
+									        .getStatusTrackingList();
+
+								}
+								if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
+									LOGGER.debug("These status are related to underwriting ");
+
+								} else if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_ORDERED
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_DRAWN
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_OUT
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCS_BACK
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_PURCHASE_REVIEW
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_PURCHASE_CONDITIONS) {
+									LOGGER.debug("These status are related to appraisal ");
+
+								} else if (currentLoanStatus == LoadConstants.LQB_STATUS_PRE_DOC_QC
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_PURCHASE
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_PURCHASED) {
+									LOGGER.debug("These status are related to QC ");
+
+								} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUSPENDED
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_DENIED
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_WITHDRAWN
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_ARCHIVED
+								        || currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_CLOSED) {
+									LOGGER.debug("These status are related to Loan Closure ");
+
+								} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
+									LOGGER.debug("These status are related to 1003 ");
+
+								}
+
+								LoanMilestoneMaster loanMilestoneMaster = null;
+								if (milestones != null) {
+									loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(milestones);
+									LOGGER.debug("Saving/Updating LoanMileStone ");
+									boolean sameStatus = false;
+									boolean newStatus = true;
+									LoanMilestone loanMilestone = getLoanMilestone(
+									        loan, loanMilestoneMaster);
+									if (loanMilestone == null) {
+										LOGGER.debug("This is a new entry of this milestone "
+										        + loanMilestoneMaster.getName());
 										putLoanMilestoneIntoExecution(
 										        loanStatusID,
 										        currentLoanStatus,
 										        loadResponseList,
 										        loanMilestoneMaster);
-									}
-									if (WorkflowConstants.LQB_MONITOR_LIST
-									        .contains(currentLoanStatus)) {
-										checkIfAnyStatusIsMissed(
-										        currentLoanStatus,
-										        WorkflowConstants.LQB_MONITOR_LIST,
-										        loadResponseList,
-										        getLoanMilestoneMasterList());
-									}
-									List<String> workflowItemTypeList = getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(wItemMSInfo);
+										newStatus = false;
 
-									List<WorkflowItemExec> itemsToExecute = itemToExecute(
-									        workflowItemTypeList,
-									        workflowItemExecList);
-									LOGGER.debug("Putting milestone into execution ");
-									putItemsIntoExecution(itemsToExecute,
-									        currentLoanStatus);
+									} else {
+										LOGGER.debug("Milestone exist, need to update the status ");
+										List<LoanMilestone> loanMilestoneList = loan
+										        .getLoanMilestones();
+										for (LoanMilestone loanMiles : loanMilestoneList) {
+											if (loanMiles.getStatus() == null) {
+												continue;
+											}
+											if (Integer.valueOf(loanMiles
+											        .getStatus()) == currentLoanStatus) {
+												newStatus = false;
+												Date date = loanMiles
+												        .getStatusUpdateTime();
+												if (date != null) {
+													String currentDateString = getDataTimeField(
+													        currentLoanStatus,
+													        loadResponseList);
+													if (currentDateString != null) {
+														Date currentDate = parseStringIntoDate(currentDateString);
+														if (currentDate != null) {
+															if (date.compareTo(currentDate) == 0) {
+																sameStatus = true;
+															} else {
+																updateLoanMilestone(loanMilestone);
+															}
+														}
+													}
 
-									LOGGER.debug("Updating last acted on time ");
-									updateLastModifiedTimeForThisLoan(loan);
+												} else {
+													String currentDateString = getDataTimeField(
+													        currentLoanStatus,
+													        loadResponseList);
+													if (currentDateString != null) {
+														Date currentDate = parseStringIntoDate(currentDateString);
+														if (currentDate != null) {
+
+															if (currentDate != null) {
+																updateLoanMilestone(loanMilestone);
+															}
+														} else {
+															sameStatus = true;
+														}
+													} else {
+														sameStatus = true;
+													}
+												}
+
+											}
+										}
+									}
+
+									if (!sameStatus) {
+
+										LOGGER.debug("If status has changed then only proceed to call the class ");
+										if (newStatus) {
+											LOGGER.debug("The loan milestone exist but this is a new status hence adding into database ");
+											putLoanMilestoneIntoExecution(
+											        loanStatusID,
+											        currentLoanStatus,
+											        loadResponseList,
+											        loanMilestoneMaster);
+										}
+										if (WorkflowConstants.LQB_MONITOR_LIST
+										        .contains(currentLoanStatus)) {
+											checkIfAnyStatusIsMissed(
+											        currentLoanStatus,
+											        WorkflowConstants.LQB_MONITOR_LIST,
+											        loadResponseList,
+											        getLoanMilestoneMasterList());
+										}
+										List<String> workflowItemTypeList = getWorkflowItemTypeListBasedOnWorkflowItemMSInfo(wItemMSInfo);
+
+										List<WorkflowItemExec> itemsToExecute = itemToExecute(
+										        workflowItemTypeList,
+										        workflowItemExecList);
+										LOGGER.debug("Putting milestone into execution ");
+										putItemsIntoExecution(itemsToExecute,
+										        currentLoanStatus);
+
+										LOGGER.debug("Updating last acted on time ");
+										updateLastModifiedTimeForThisLoan(loan);
+									}
 								}
 							}
+						} else {
+							LOGGER.error(" Unable to parse the LQB response ");
+							success = false;
+							nexeraUtility.putExceptionMasterIntoExecution(
+							        exceptionMaster,
+							        " Unable to parse the LQB response ");
+							nexeraUtility
+							        .sendExceptionEmail("Unparasable LQB Response ");
 						}
 					} else {
-						LOGGER.error(" Unable to parse the LQB response ");
+						LOGGER.error(" Valid Response Not Received From Mule/LQB ");
 						success = false;
 						nexeraUtility.putExceptionMasterIntoExecution(
 						        exceptionMaster,
-						        " Unable to parse the LQB response ");
+						        "Invalid response received from mule/lqb");
 						nexeraUtility
-						        .sendExceptionEmail("Unparasable LQB Response ");
+						        .sendExceptionEmail("Invalid Response Received From LQB ");
 					}
 				} else {
-					LOGGER.error(" Valid Response Not Received From Mule/LQB ");
+					LOGGER.error("Connection Timed out at LQB ");
 					success = false;
 					nexeraUtility.putExceptionMasterIntoExecution(
-					        exceptionMaster,
-					        "Invalid response received from mule/lqb");
+					        exceptionMaster, " Connection to mule timed out");
 					nexeraUtility
-					        .sendExceptionEmail("Invalid Response Received From LQB ");
+					        .sendExceptionEmail("Connection to mule timed out");
 				}
 			} else {
-				LOGGER.error("Connection Timed out at LQB ");
 				success = false;
 				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-				        " Connection to mule timed out");
+				        "Request Json Object Not Created For Load ");
 				nexeraUtility
-				        .sendExceptionEmail("Connection to mule timed out");
+				        .sendExceptionEmail("Unable to create json object for load ");
+
 			}
-		} else {
-			success = false;
-			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-			        "Request Json Object Not Created For Load ");
-			nexeraUtility
-			        .sendExceptionEmail("Unable to create json object for load ");
+			LOGGER.debug("Fetching Docs for this loan ");
+			if (!fetchDocsForThisLoan(loan)) {
+				success = false;
+			}
 
-		}
-		LOGGER.debug("Fetching Docs for this loan ");
-		if (!fetchDocsForThisLoan(loan)) {
-			success = false;
-		}
+			LOGGER.debug("Fetching underwriting conditions for this loan ");
+			if (!invokeUnderwritingCondition(loan, format)) {
+				success = false;
+			}
 
-		LOGGER.debug("Fetching underwriting conditions for this loan ");
-		if (!invokeUnderwritingCondition(loan, format)) {
-			success = false;
-		}
+			LOGGER.debug("Fetch Credit Score For This Loan ");
+			if (!fetchCreditScore(loan)) {
+				success = false;
+			}
 
-		LOGGER.debug("Fetch Credit Score For This Loan ");
-		if (!fetchCreditScore(loan)) {
-			success = false;
-		}
+			LOGGER.debug("Check whether purchase document is about to expire");
+			if (loan.getLoanType() != null) {
+				String loanTypeMaster = loan.getLoanType().getLoanTypeCd();
+				if (loanTypeMaster.equalsIgnoreCase(LoanTypeMasterEnum.PUR
+				        .toString())) {
+					if (checkPurchaseDocumentExpiry(loan)) {
+						LOGGER.debug("Purchase Docuement Is About To Expire ");
+						NotificationVO notificationVO = new NotificationVO(
+						        loan.getId(),
+						        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+						                .getNotificationTypeName(),
+						        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC);
+						List<NotificationVO> notificationVOList = notificationService
+						        .findNotificationTypeListForLoan(
+						                loan.getId(),
+						                MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+						                        .getNotificationTypeName(),
+						                false);
+						if (notificationVOList.isEmpty()) {
+							notificationVO = notificationService
+							        .createNotification(notificationVO);
+						}
+					}
+				}
+			} else {
+				LOGGER.error("No loan type master associated with this loan "
+				        + loan.getId());
+				nexeraUtility.putExceptionMasterIntoExecution(
+				        exceptionMaster,
+				        "No loan type master associated with this loan "
+				                + loan.getId());
+				nexeraUtility
+				        .sendExceptionEmail("No loan type master associated with this loan "
+				                + loan.getId());
 
+			}
+
+			if (success) {
+				JSONObject ClearModifiedLoanByNameByAppCodeObject = createClearModifiedLoanObject(
+				        WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE,
+				        loan.getLqbFileId());
+				if (ClearModifiedLoanByNameByAppCodeObject != null) {
+					LOGGER.debug("Invoking LQB service to fetch Loan status ");
+					lqbInvoker
+					        .invokeLqbService(ClearModifiedLoanByNameByAppCodeObject
+					                .toString());
+				}
+			}
+		}
 		LOGGER.debug("Calling Braintree Tansaction Related Classes");
 		invokeBrainTree(loan);
 
 		LOGGER.debug("Calling Milestones With Reminder ");
 		invokeMilestonesWithReminder();
 
-		LOGGER.debug("Check whether purchase document is about to expire");
-		if (loan.getLoanType() != null) {
-			String loanTypeMaster = loan.getLoanType().getLoanTypeCd();
-			if (loanTypeMaster.equalsIgnoreCase(LoanTypeMasterEnum.PUR
-			        .toString())) {
-				if (checkPurchaseDocumentExpiry(loan)) {
-					LOGGER.debug("Purchase Docuement Is About To Expire ");
-					NotificationVO notificationVO = new NotificationVO(
-					        loan.getId(),
-					        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
-					                .getNotificationTypeName(),
-					        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC);
-					List<NotificationVO> notificationVOList = notificationService
-					        .findNotificationTypeListForLoan(
-					                loan.getId(),
-					                MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
-					                        .getNotificationTypeName(), false);
-					if (notificationVOList.isEmpty()) {
-						notificationVO = notificationService
-						        .createNotification(notificationVO);
-					}
-				}
-			}
-		} else {
-			LOGGER.error("No loan type master associated with this loan "
-			        + loan.getId());
-			nexeraUtility.putExceptionMasterIntoExecution(
-			        exceptionMaster,
-			        "No loan type master associated with this loan "
-			                + loan.getId());
-			nexeraUtility
-			        .sendExceptionEmail("No loan type master associated with this loan "
-			                + loan.getId());
-
-		}
-
-		if (success) {
-			JSONObject ClearModifiedLoanByNameByAppCodeObject = createClearModifiedLoanObject(
-			        WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE,
-			        loan.getLqbFileId());
-			if (ClearModifiedLoanByNameByAppCodeObject != null) {
-				LOGGER.debug("Invoking LQB service to fetch Loan status ");
-				lqbInvoker
-				        .invokeLqbService(ClearModifiedLoanByNameByAppCodeObject
-				                .toString());
-			}
-		}
 	}
 
 	private Boolean checkPurchaseDocumentExpiry(Loan loan) {
@@ -1629,6 +1634,14 @@ public class ThreadManager implements Runnable {
 
 	public void setExceptionMaster(ExceptionMaster exceptionMaster) {
 		this.exceptionMaster = exceptionMaster;
+	}
+
+	public boolean isInvokeLQB() {
+		return invokeLQB;
+	}
+
+	public void setInvokeLQB(boolean invokeLQB) {
+		this.invokeLQB = invokeLQB;
 	}
 
 }

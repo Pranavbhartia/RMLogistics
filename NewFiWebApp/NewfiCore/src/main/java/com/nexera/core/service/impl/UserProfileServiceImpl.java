@@ -1630,7 +1630,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional(readOnly = true)
-	public User findBySecondaryEmail(String fromAddressString) {
+	public List<User> findBySecondaryEmail(String fromAddressString) {
 		return userProfileDao.getUserBySecondaryMail(fromAddressString);
 	}
 }

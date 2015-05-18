@@ -149,7 +149,6 @@ public class EmailProcessor implements Runnable {
 								        userName.indexOf("@"));
 							}
 
-							LOGGER.debug("Expecting the username in this format userid+loanid@loan.newfi.com");
 							LoanVO loanVO = loanService
 							        .getLoanByLoanEmailId(userName
 							                + CommonConstants.SENDER_EMAIL_ID);
@@ -214,9 +213,28 @@ public class EmailProcessor implements Runnable {
 								}
 								if (!loanFound) {
 									LOGGER.debug("Checking if this loan has association with seconday email id");
-									User secondaryUser = userProfileService
+									User secondaryUser = null;
+									List<User> secondaryUserList = userProfileService
 									        .findBySecondaryEmail(fromAddressString);
-									if (secondaryUser != null) {
+									if (secondaryUserList != null) {
+										if (secondaryUserList.size() == 1) {
+											LOGGER.debug("Only one user exist with this secondary email id");
+											secondaryUser = secondaryUserList
+											        .get(0);
+										} else {
+											LOGGER.debug("Multiple user found with the same secondary email id");
+											for (User secUser : secondaryUserList) {
+												for (Address address : toAddress) {
+													if (address
+													        .toString()
+													        .equalsIgnoreCase(
+													                secUser.getEmailId())) {
+														secondaryUser = secUser;
+														break;
+													}
+												}
+											}
+										}
 										for (Loan loan : secondaryUser
 										        .getLoans()) {
 											if (loan.getId() == loanIdInt) {
@@ -231,10 +249,29 @@ public class EmailProcessor implements Runnable {
 							}
 						} else {
 							LOGGER.debug("Checking if this is seconday email");
-							User secondaryUser = userProfileService
+							User secondaryUser = null;
+							List<User> secondaryUserList = userProfileService
 							        .findBySecondaryEmail(fromAddressString);
-							if (secondaryUser != null) {
+
+							if (secondaryUserList != null) {
 								LOGGER.debug("Found user with secondary email, checking if it belongs to this loan");
+								if (secondaryUserList.size() == 1) {
+									LOGGER.debug("Only one user exist with this secondary email id");
+									secondaryUser = secondaryUserList.get(0);
+								} else {
+									LOGGER.debug("Multiple user found with the same secondary email id");
+									for (User secUser : secondaryUserList) {
+										for (Address address : toAddress) {
+											if (address
+											        .toString()
+											        .equalsIgnoreCase(
+											                secUser.getEmailId())) {
+												secondaryUser = secUser;
+												break;
+											}
+										}
+									}
+								}
 								for (Loan loan : secondaryUser.getLoans()) {
 									if (loan.getId() == loanIdInt) {
 										uploadedByUser = secondaryUser;

@@ -17,7 +17,6 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,9 +54,6 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Autowired
 	private SessionFactory sessionFactory;
-
-	@Value("${cryptic.key}")
-	private String crypticKey;
 
 	@Override
 	public User authenticateUser(String userName, String password)
@@ -980,19 +976,23 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public User getUserBySecondaryMail(String emailAddress) {
+	public List<User> getUserBySecondaryMail(String emailAddress) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(CustomerDetail.class);
 		criteria.add(Restrictions.eq("secEmailId", emailAddress));
-		CustomerDetail obj = (CustomerDetail) criteria.uniqueResult();
+		List<CustomerDetail> objList = criteria.list();
+		List<User> userList = new ArrayList<User>();
 		User user = null;
-		if (obj != null) {
+		if (objList != null) {
 			Criteria userCriteria = session.createCriteria(User.class);
-			userCriteria.add(Restrictions.eq("customerDetail", obj));
-			user = (User) userCriteria.uniqueResult();
+			for (CustomerDetail obj : objList) {
+				userCriteria.add(Restrictions.eq("customerDetail", obj));
+				user = (User) userCriteria.uniqueResult();
+				userList.add(user);
+			}
 
 		}
-		return user;
+		return userList;
 
 	}
 }

@@ -11,4 +11,6 @@ public interface BatchService {
 
 	void updateBatchJobExecution(BatchJobExecution batchJobExecution);
 
+	BatchJobExecution getLastUpdatedLoanBatch(int batchjobId);
+
 }

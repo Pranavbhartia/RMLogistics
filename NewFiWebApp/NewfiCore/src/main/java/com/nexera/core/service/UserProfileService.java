@@ -134,6 +134,6 @@ public interface UserProfileService {
 
 	public List<User> geAllSalesManagers();
 
-	public User findBySecondaryEmail(String fromAddressString);
+	public List<User> findBySecondaryEmail(String fromAddressString);
 
 }

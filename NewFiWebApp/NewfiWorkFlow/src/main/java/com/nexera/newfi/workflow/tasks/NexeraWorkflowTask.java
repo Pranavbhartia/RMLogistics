@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Template;
 import com.nexera.common.exception.InvalidInputException;
@@ -71,7 +72,7 @@ public abstract class NexeraWorkflowTask {
 				emailEntity.setSenderEmailId("web@newfi.com");
 				emailEntity.setSenderName("Newfi System");
 				if (subject == null) {
-					emailEntity.setSubject("Nexera Newfi Portal");
+					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
 				} else {
 					emailEntity.setSubject(subject);
 				}
