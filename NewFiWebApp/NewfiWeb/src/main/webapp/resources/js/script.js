@@ -1849,13 +1849,29 @@ function populateClosingCostHolder (inputObject)
 		}
 	}	
 }
+function setClosingCostContainerValues(){
+    if(appUserDetails!=undefined){
+        closingCostHolder.loanType=(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR")
+    }else{
+        closingCostHolder.loanType="PUR";
+    }
 
+    if(closingCostHolder.loanType=="PUR"){
+        closingCostHolder.housePrice=appUserDetails.purchaseDetails.housePrice;
+    }else{
+        closingCostHolder.housePrice=appUserDetails.propertyTypeMaster.homeWorthToday;
+        closingCostHolder.annualHomeownersInsurance=appUserDetails.propertyTypeMaster.propertyInsuranceCost;
+        closingCostHolder.propertyTaxesPaid=appUserDetails.propertyTypeMaster.propertyTaxesPaid;
+    }
+        
+}   
 function getClosingCostSummaryContainer(valueSet) {
     closingCostHolder=getObContainer();
     if(typeof(newfiObject)!=='undefined'){
         //Code TO get loan type for loggedin user Hardcoded For Now
     	//Rajeswari    	
-        closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR"):"PUR";
+        //closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR"):"PUR";
+        setClosingCostContainerValues();
     }else{
     	
         if(buyHomeTeaserRate.loanType&&buyHomeTeaserRate.loanType=="PUR"){
