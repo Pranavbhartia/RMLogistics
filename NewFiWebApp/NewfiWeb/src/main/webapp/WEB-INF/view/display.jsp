@@ -300,6 +300,7 @@
 	<script src="resources/js/jquery-ui.js"></script>
     <script src="resources/js/bootstrap.min.js"></script>
     <script src="resources/js/script.js"></script>
+    <script src="resources/js/message.js"></script>
     <script src="resources/js/include/historySupport.js"></script>
 	<script>
 			

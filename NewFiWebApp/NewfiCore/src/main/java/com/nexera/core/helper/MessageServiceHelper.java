@@ -17,7 +17,7 @@ public interface MessageServiceHelper {
 
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
 	        String messageId, String noteText, List<FileVO> fileUrls,
-	        boolean successFlag, boolean sendEmail);
+	        boolean successFlag, boolean sendEmail, boolean systemGenerated);
 
 	public void generateWorkflowMessage(int loanId, String noteText,
 	        boolean sendEmail);
@@ -25,7 +25,7 @@ public interface MessageServiceHelper {
 	public void generatePrivateMessage(int loanId, String noteText,
 	        User createdBy, boolean sendEmail);
 
-	public void checkIfUserFirstLogin(User loggedInUser , boolean isShopper);
+	public void checkIfUserFirstLogin(User loggedInUser, boolean isShopper);
 
 	void generateWelcomeNote(User loggedInUser, int loanId);
 
