@@ -255,11 +255,11 @@ function paintGettingToKnowPage() {
 	var wrapper = $('<div>').attr({
         "class": "getting-to-know-wrapper"
     });
-    var header = $('<div>').attr({
+   /* var header = $('<div>').attr({
         "class": "complete-application-header"
     }).html("Getting to Know Newfi").on('click',function(){
     	
-    	/*var inputData = {};
+    	var inputData = {};
     	inputData.id = JSON.parse(newfiObject.appUserDetails).user.customerDetail.id;
     	inputData.loanId = JSON.parse(newfiObject.appUserDetails).loan.id;
     	
@@ -282,11 +282,11 @@ function paintGettingToKnowPage() {
     		error:function(data){
     			showErrorToastMessage("Error while updating tutorial status");
     		}
-    	});*/
+    	});
     	
     });
     wrapper.append(header);
-    
+    */
     
     var container = $('<div>').attr({
     	"class" : "getting-to-know-container"
