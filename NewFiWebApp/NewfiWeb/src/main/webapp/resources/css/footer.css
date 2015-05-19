@@ -118,10 +118,9 @@ div.footeremail:hover{
 }
 
 .footer-text {
-  text-align: center;
  
   padding-top: 5px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .footer-wrapper {
@@ -132,6 +131,7 @@ div.footeremail:hover{
   background-color: #FAFAFA;
   z-index: 9999;
   border-top: 1px solid #E5E5E5;
+  font-family:'OpenSans';
 }
 .footer-newfi-image {
     background: url(../images/newfi_logo_big.png) no-repeat center;
@@ -186,35 +186,35 @@ p.footer-subtxt {
 }
 
 .footer-text-links {
+  padding: 0;
   text-align: center;
-  padding: 0px;
+  margin-top: 0px;
+  box-shadow: 5px 5px 0 #FAFAFA inset;
 }
 a.footer-inline-txt {
     font-size: 10px;
+    border-right: 1px solid #E5E5E5;
+    padding: 0 9px;
+    /* box-shadow: 0 0 4px inset; */
 }
 .footer-inline-home-image{
-	background: url(../images/houseB.png) no-repeat left;
-    background-color: none !important;   
-	background-size: 100% auto;    
-	height: 24px;   
-	width: 25px;    
-	margin-top: 0px;    
-	float: left;
-	/* background-color: #428bca; */
+	background: url(../images/houseB.png) no-repeat left;          
+	height: 27px;           
+	width: 20px;
+	line-height: 17px;
+	margin-left: 37px;
 }
 .footer-inline-bottom-right {
     padding-left: 277px;
 }
 
 div#footeHomeImage {
-    margin-top: 8px;
 }
 
-div#footerHomeText {
+.footer-inline-home-text {
     white-space: nowrap;
-    padding-top: 5px;
-    padding-left: 33px;
-    font-size: 13px;
+    font-size: 10px;
+    cursor: pointer;
 }
 .footer-inline-bottom-left {
     padding-left: 233px;
@@ -225,3 +225,10 @@ div#footerHomeText {
    top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
 }
 
+.footer-text1{
+	padding-left: 405px;
+}
+
+.footer-text2{
+    padding-right: 45px;
+}
