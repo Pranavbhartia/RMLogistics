@@ -988,7 +988,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 				Criteria userCriteria = session.createCriteria(User.class);
 				userCriteria.add(Restrictions.eq("customerDetail", obj));
 				user = (User) userCriteria.uniqueResult();
-				userList.add(user);
+				if (user != null) {
+					userList.add(user);
+				}
 			}
 
 		}
