@@ -80,7 +80,6 @@ public class LoanBatchProcessor extends QuartzJobBean {
 		if (batchJobMaster != null) {
 			if (batchJobMaster.getStatus() == CommonConstants.STATUS_ACTIVE) {
 				taskExecutor = getTaskExecutor();
-				BatchJobExecution lastBatch = getBatchJobExecution(2);
 				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
 				try {
 					LOGGER.debug("Invoking modifiedLoanListByAppCode service of lendinqb ");
@@ -139,25 +138,21 @@ public class LoanBatchProcessor extends QuartzJobBean {
 
 						}
 
-						if (lastBatch != null) {
-							Date date = lastBatch.getDateLastRunStartTime();
-							for (Loan loan : loanList) {
-								if (!modifiedLoans.contains(loan)) {
-									if (loan.getModifiedDate().after(date)) {
-										ThreadManager threadManager = applicationContext
-										        .getBean(ThreadManager.class);
-										threadManager
-										        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
-										threadManager.setLoan(loan);
-										threadManager.setInvokeLQB(true);
-										threadManager
-										        .setExceptionMaster(exceptionMaster);
-										taskExecutor.execute(threadManager);
-									}
-								}
-							}
+						for (Loan loan : loanList) {
+							if (!modifiedLoans.contains(loan)) {
+								ThreadManager threadManager = applicationContext
+								        .getBean(ThreadManager.class);
+								threadManager
+								        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
+								threadManager.setLoan(loan);
+								threadManager.setInvokeLQB(false);
+								threadManager
+								        .setExceptionMaster(exceptionMaster);
+								taskExecutor.execute(threadManager);
 
+							}
 						}
+
 						taskExecutor.shutdown();
 					}
 				} finally {
@@ -169,10 +164,6 @@ public class LoanBatchProcessor extends QuartzJobBean {
 				LOGGER.debug("Batch Jobs Not Running ");
 			}
 		}
-	}
-
-	private BatchJobExecution getBatchJobExecution(int batchjobId) {
-		return batchService.getLastUpdatedLoanBatch(batchjobId);
 	}
 
 	private void updateBatchJobExecution(BatchJobExecution batchJobExecution) {
