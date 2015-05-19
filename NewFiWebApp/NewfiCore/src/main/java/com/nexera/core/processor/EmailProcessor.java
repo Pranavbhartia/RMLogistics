@@ -508,7 +508,7 @@ public class EmailProcessor implements Runnable {
 
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        failureNoteText, null, false, sendEmail, true);
+					        failureNoteText, null, false, true, true);
 				}
 			}
 		} catch (MessagingException me) {
