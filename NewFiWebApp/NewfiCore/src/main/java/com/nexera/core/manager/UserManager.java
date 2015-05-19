@@ -61,30 +61,21 @@ public class UserManager implements Runnable {
 	}
 
 	public void passwordNotUpdated(User user) {
-		Date userCreationDate = user.getCreatedDate();
-		Date tokenGeerationDate = user.getTokenGeneratedTime();
-		Date systemDate = utils.convertCurrentDateToUtc();
-		if (tokenGeerationDate != null) {
-			long secs = (systemDate.getTime() - userCreationDate.getTime()) / 1000;
-			long hours = secs / 3600;
-			if (hours == 48 || hours == 96) {
-				try {
-					sendPasswordNotUpdatedEmail(user);
-				} catch (InvalidInputException e) {
-					LOGGER.error("Exception caught " + e.getMessage());
-					nexeraUtility.putExceptionMasterIntoExecution(
-					        exceptionMaster, e.getMessage());
-					nexeraUtility.sendExceptionEmail(e.getMessage());
-				} catch (UndeliveredEmailException e) {
-					LOGGER.error("Exception caught " + e.getMessage());
-					nexeraUtility.putExceptionMasterIntoExecution(
-					        exceptionMaster, e.getMessage());
-					nexeraUtility.sendExceptionEmail(e.getMessage());
-				}
-			}
 
-		} else {
-			LOGGER.debug("User may have updated his password ");
+		if (user.getTokenGeneratedTime() != null) {
+			try {
+				sendPasswordNotUpdatedEmail(user);
+			} catch (InvalidInputException e) {
+				LOGGER.error("Exception caught " + e.getMessage());
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        e.getMessage());
+				nexeraUtility.sendExceptionEmail(e.getMessage());
+			} catch (UndeliveredEmailException e) {
+				LOGGER.error("Exception caught " + e.getMessage());
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        e.getMessage());
+				nexeraUtility.sendExceptionEmail(e.getMessage());
+			}
 		}
 	}
 

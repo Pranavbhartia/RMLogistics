@@ -57,13 +57,15 @@
 	<bean id="emailCronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="emailJobDetail" />
+
 		<property name="cronExpression" value="0 0/3 * * * ?" />
+
 	</bean>
 
 	<bean id="userCronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="userJobDetail" />
-		<property name="cronExpression" value="0 0/59 * * * ?" />
+		<property name="cronExpression" value="0 0 12 * * ?" />
 
 	</bean>
 
@@ -71,7 +73,6 @@
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="complexJobDetail" />
 		<property name="cronExpression" value="0 0/15 * * * ?" />
-
 	</bean>
 
 	<!-- Scheduler factory bean to glue together jobDetails and triggers to 
@@ -91,6 +92,11 @@
 				<ref bean="emailCronTrigger" />
 				<ref bean="userCronTrigger" />
 			</list>
+		</property>
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.threadPool.threadCount">1</prop>
+			</props>
 		</property>
 	</bean>
 
