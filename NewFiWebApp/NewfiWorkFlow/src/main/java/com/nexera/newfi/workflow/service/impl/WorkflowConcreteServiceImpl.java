@@ -120,8 +120,8 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	private void sendReminder(CreateReminderVo createReminderVo,
 	        WorkflowItemExec currMilestone, WorkflowItemExec prevMilestone) {
 		LOG.debug("Inside method sendReminder");
-		long noOfHours = (prevMilestone.getEndTime().getTime() - new Date()
-		        .getTime()) / (1000 * 60 * 60);
+		long noOfHours = (new Date()
+        .getTime()-prevMilestone.getEndTime().getTime()) / (1000 * 60 * 60);
 		LOG.debug("total number of hours left " + noOfHours);
 		LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
 		        .retrieveTurnAroundTimeByLoan(createReminderVo.getLoanId(),
