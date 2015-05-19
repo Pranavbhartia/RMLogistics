@@ -163,12 +163,13 @@ public class ThreadManager implements Runnable {
 	public void run() {
 
 		LOGGER.debug("Inside method run ");
+		LOGGER.debug("Loading all workflowitems");
+		workflowItemExecList = getWorkflowItemExecByLoan(loan);
 		if (invokeLQB) {
 			boolean success = true;
 			List<Integer> statusTrackingList = new LinkedList<Integer>();
 			Map<String, String> map = new HashMap<String, String>();
 			int format = 0;
-			workflowItemExecList = getWorkflowItemExecByLoan(loan);
 			LOGGER.debug("Invoking load service of lendinqb ");
 			JSONObject loadOperationObject = createLoadJsonObject(map,
 			        WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD,
