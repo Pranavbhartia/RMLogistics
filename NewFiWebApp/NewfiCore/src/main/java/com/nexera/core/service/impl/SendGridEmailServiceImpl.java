@@ -197,10 +197,18 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 				LOG.error("Exception caught " + e.getMessage());
 			}
 		}
+		int totalNumberOfRecipients = recipientEmailIdsList.size();
 
 		for (Entry<String, String[]> entry : emailEntity.getTokenMap()
 		        .entrySet()) {
-			email.addSubstitution(entry.getKey(), entry.getValue());
+			String[] newArray = entry.getValue();
+			String[] valueArray = new String[totalNumberOfRecipients];
+			valueArray[0] = newArray[0];
+			for (int i = 1; i < totalNumberOfRecipients; i++) {
+				String[] addArray = entry.getValue();
+				valueArray[i] = addArray[0];
+			}
+			email.addSubstitution(entry.getKey(), valueArray);
 		}
 
 		email.addFilter("templates", "enable", "1");
