@@ -871,7 +871,8 @@ public class ThreadManager implements Runnable {
 					if (!needsList.isEmpty()) {
 						LOGGER.debug("Send mail because new needs list have been added ");
 						try {
-							loanApprovedWithConditionsEmail(loan, needsList);
+							loanApprovedWithConditionsEmail(loan,
+							        conditionDescriptionList);
 						} catch (InvalidInputException
 						        | UndeliveredEmailException e) {
 							nexeraUtility.putExceptionMasterIntoExecution(
@@ -906,29 +907,39 @@ public class ThreadManager implements Runnable {
 		return success;
 	}
 
-	private String[] convertNeedsListToArray(List<LoanNeedsList> needsList) {
-		String[] needsListArray = new String[needsList.size()];
-		List<String> loanNeedLabel = new ArrayList<String>();
-		for (LoanNeedsList loanNeed : needsList) {
-			loanNeedLabel.add(loanNeed.getNeedsListMaster().getLabel());
+	private String getNeedsListNameById(
+	        List<NeedsListMaster> needsListMasterList) {
+		String needsName = "";
+		int count = needsListMasterList.size();
+		for (NeedsListMaster needsListMaster : needsListMasterList) {
+
+			if (needsListMaster != null) {
+				needsName = count + ". " + needsListMaster.getLabel() + " - "
+				        + needsListMaster.getDescription() + "\n" + needsName;
+				count = count - 1;
+			}
+
 		}
-		needsListArray = (String[]) loanNeedLabel.toArray();
-		return needsListArray;
+
+		return needsName;
 	}
 
 	private void loanApprovedWithConditionsEmail(Loan loan,
-	        List<LoanNeedsList> needsList) throws InvalidInputException,
+	        List<NeedsListMaster> needsList) throws InvalidInputException,
 	        UndeliveredEmailException {
 
 		EmailVO emailEntity = new EmailVO();
+
 		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_FILE_INACTIVITY);
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEEDS_LIST_UPDATED);
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { loan.getUser()
 		        .getFirstName() });
 		substitutions.put("-url-", new String[] { baseUrl });
-		substitutions.put("-listOfItems-", convertNeedsListToArray(needsList));
+
+		substitutions.put("-listofitems-",
+		        new String[] { getNeedsListNameById(needsList) });
 		if (loan.getUser() != null) {
 			emailEntity.setSenderEmailId(loan.getUser().getUsername()
 			        + CommonConstants.SENDER_EMAIL_ID);
@@ -938,11 +949,17 @@ public class ThreadManager implements Runnable {
 			                + CommonConstants.SENDER_EMAIL_ID);
 		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Password Not Updated! Pelase Update.");
+		emailEntity.setSubject("You Needs list has been updated");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 
-		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+		try {
+			sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+		} catch (InvalidInputException | UndeliveredEmailException e) {
+			LOGGER.error("Exception caught while sending email "
+			        + e.getMessage());
+		}
+
 	}
 
 	private Boolean fetchDocsForThisLoan(Loan loan) {

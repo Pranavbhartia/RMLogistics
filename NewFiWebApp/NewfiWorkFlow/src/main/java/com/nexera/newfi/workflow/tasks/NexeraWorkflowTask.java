@@ -90,6 +90,53 @@ public abstract class NexeraWorkflowTask {
 		}
 	}
 
+	public void sendEmailForCustomer(HashMap<String, Object> objectMap,
+	        String subject) {
+		if (objectMap != null) {
+			LoanVO loanVO = loanService
+			        .getLoanByID(Integer.parseInt(objectMap.get(
+			                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
+			                .toString()));
+			if (loanVO != null) {
+				String emailTemplateKey = objectMap.get(
+				        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+				        .toString();
+				String emailTemplate = WorkflowDisplayConstants.EMAIL_TEMPLATE_DEFAULT_ID;
+				Template template = templateService
+				        .getTemplateByKey(emailTemplateKey);
+				if (template != null) {
+					LOG.info("Send Email Template Found " + template.getValue());
+					emailTemplate = template.getValue();
+				}
+				EmailVO emailEntity = new EmailVO();
+				String[] names = new String[1];
+				names[0] = loanVO.getUser().getFirstName();
+
+				Map<String, String[]> substitutions = new HashMap<String, String[]>();
+				substitutions.put("-name-", names);
+				substitutions = doTemplateSubstitutions(substitutions,
+				        objectMap);
+				emailEntity.setSenderEmailId("web@newfi.com");
+				emailEntity.setSenderName("Newfi System");
+				if (subject == null) {
+					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
+				} else {
+					emailEntity.setSubject(subject);
+				}
+				emailEntity.setTokenMap(substitutions);
+				emailEntity.setTemplateId(emailTemplate);
+				try {
+					sendEmailService.sendEmailForCustomer(emailEntity,
+					        loanVO.getId());
+				} catch (InvalidInputException e) {
+					LOG.error("Exception Caught " + e.getMessage());
+				} catch (UndeliveredEmailException e) {
+					LOG.error("Exception Caught " + e.getMessage());
+				}
+			}
+		}
+	}
+
 	public Map<String, String[]> doTemplateSubstitutions(
 	        Map<String, String[]> substitutions,
 	        HashMap<String, Object> objectMap) {
