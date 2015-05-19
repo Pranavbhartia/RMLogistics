@@ -121,40 +121,40 @@ public class LoanBatchProcessor extends QuartzJobBean {
 								}
 							}
 						}
-						if (modifiedLoans != null) {
-							for (Loan loan : modifiedLoans) {
-								if (loan.getLqbFileId() != null) {
-									ThreadManager threadManager = applicationContext
-									        .getBean(ThreadManager.class);
-									threadManager
-									        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
-									threadManager.setLoan(loan);
-									threadManager.setInvokeLQB(true);
-									threadManager
-									        .setExceptionMaster(exceptionMaster);
-									taskExecutor.execute(threadManager);
-								}
-							}
-
-						}
-
-						for (Loan loan : loanList) {
-							if (!modifiedLoans.contains(loan)) {
+					}
+					if (modifiedLoans != null) {
+						for (Loan loan : modifiedLoans) {
+							if (loan.getLqbFileId() != null) {
 								ThreadManager threadManager = applicationContext
 								        .getBean(ThreadManager.class);
 								threadManager
 								        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
 								threadManager.setLoan(loan);
-								threadManager.setInvokeLQB(false);
+								threadManager.setInvokeLQB(true);
 								threadManager
 								        .setExceptionMaster(exceptionMaster);
 								taskExecutor.execute(threadManager);
-
 							}
 						}
 
-						taskExecutor.shutdown();
 					}
+
+					for (Loan loan : loanList) {
+						if (!modifiedLoans.contains(loan)) {
+							ThreadManager threadManager = applicationContext
+							        .getBean(ThreadManager.class);
+							threadManager
+							        .setLoanMilestoneMasterList(getLoanMilestoneMasterList());
+							threadManager.setLoan(loan);
+							threadManager.setInvokeLQB(false);
+							threadManager.setExceptionMaster(exceptionMaster);
+							taskExecutor.execute(threadManager);
+
+						}
+					}
+
+					taskExecutor.shutdown();
+
 				} finally {
 					LOGGER.debug("Updating the end time for this batch job ");
 					updateBatchJobExecution(batchJobExecution);
