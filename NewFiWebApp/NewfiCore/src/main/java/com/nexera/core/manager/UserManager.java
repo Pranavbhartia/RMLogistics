@@ -1,5 +1,6 @@
 package com.nexera.core.manager;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,18 +64,28 @@ public class UserManager implements Runnable {
 	public void passwordNotUpdated(User user) {
 
 		if (user.getTokenGeneratedTime() != null) {
-			try {
-				sendPasswordNotUpdatedEmail(user);
-			} catch (InvalidInputException e) {
-				LOGGER.error("Exception caught " + e.getMessage());
-				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-				        e.getMessage());
-				nexeraUtility.sendExceptionEmail(e.getMessage());
-			} catch (UndeliveredEmailException e) {
-				LOGGER.error("Exception caught " + e.getMessage());
-				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-				        e.getMessage());
-				nexeraUtility.sendExceptionEmail(e.getMessage());
+			Date userCreationDate = user.getCreatedDate();
+			Calendar creationCalendar = Calendar.getInstance();
+			creationCalendar.setTime(userCreationDate);
+			int day = creationCalendar.get(Calendar.DAY_OF_MONTH);
+			Date currentDate = utils.convertCurrentDateToUtc();
+			Calendar currentCalendar = Calendar.getInstance();
+			currentCalendar.setTime(currentDate);
+			int currentDay = creationCalendar.get(Calendar.DAY_OF_MONTH);
+			if (day != currentDay) {
+				try {
+					sendPasswordNotUpdatedEmail(user);
+				} catch (InvalidInputException e) {
+					LOGGER.error("Exception caught " + e.getMessage());
+					nexeraUtility.putExceptionMasterIntoExecution(
+					        exceptionMaster, e.getMessage());
+					nexeraUtility.sendExceptionEmail(e.getMessage());
+				} catch (UndeliveredEmailException e) {
+					LOGGER.error("Exception caught " + e.getMessage());
+					nexeraUtility.putExceptionMasterIntoExecution(
+					        exceptionMaster, e.getMessage());
+					nexeraUtility.sendExceptionEmail(e.getMessage());
+				}
 			}
 		}
 	}
