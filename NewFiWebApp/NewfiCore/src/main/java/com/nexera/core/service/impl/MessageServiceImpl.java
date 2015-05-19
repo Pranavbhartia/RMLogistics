@@ -296,6 +296,10 @@ public class MessageServiceImpl implements MessageService {
 		MongoQueryVO mongoQueryVO = new MongoQueryVO();
 
 		mongoQueryVO.setLoanId(queryVO.getLoanId());
+		// Check if this loan has Sales manager in team. If yes, show LM in
+		// communication log.
+		Boolean salesManagerPresent = loanService
+		        .checkIfLoanHasSalesManager(queryVO.getLoanId());
 		mongoQueryVO.setUserId(queryVO.getUserId());
 		mongoQueryVO.setPageNumber(queryVO.getPageNumber());
 		mongoQueryVO.setNumberOfRecords(queryVO.getNumberOfRecords());
@@ -305,6 +309,7 @@ public class MessageServiceImpl implements MessageService {
 		        .getMessages(mongoQueryVO);
 
 		MessageHierarchyVO messageHierarchyVO = constructMessageHierarchy(mongoHierarchyVO);
+		messageHierarchyVO.setSalesManagerPresent(salesManagerPresent);
 		return messageHierarchyVO;
 	}
 

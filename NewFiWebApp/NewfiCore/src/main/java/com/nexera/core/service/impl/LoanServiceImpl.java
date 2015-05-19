@@ -295,12 +295,12 @@ public class LoanServiceImpl implements LoanService {
 		User user = new User();
 
 		user.setId(userVO.getId());
-		if(userVO.getMobileAlertsPreference()!=null){
+		if (userVO.getMobileAlertsPreference() != null) {
 			user.setMobileAlertsPreference(userVO.getMobileAlertsPreference());
 		}
-        if(userVO.getCarrierInfo()!=null){
-        	user.setCarrierInfo(userVO.getCarrierInfo());
-        }
+		if (userVO.getCarrierInfo() != null) {
+			user.setCarrierInfo(userVO.getCarrierInfo());
+		}
 		return user;
 	}
 
@@ -506,14 +506,15 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setFirstName(user.getFirstName());
 		loanCustomerVO.setLastName(user.getLastName());
 		loanCustomerVO.setEmailId(user.getEmailId());
-		if(user.getMobileAlertsPreference()!=null){
-			loanCustomerVO.setMobileAlertsPreference(user.getMobileAlertsPreference());
+		if (user.getMobileAlertsPreference() != null) {
+			loanCustomerVO.setMobileAlertsPreference(user
+			        .getMobileAlertsPreference());
 		}
-        if(user.getCarrierInfo()!=null){
-        	MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+		if (user.getCarrierInfo() != null) {
+			MobileCarriersEnum mobileCarrier = MobileCarriersEnum
 			        .getCarrierNameForEmail(user.getCarrierInfo());
-        	loanCustomerVO.setCarrierInfo(mobileCarrier.getCarrierName());
-        }
+			loanCustomerVO.setCarrierInfo(mobileCarrier.getCarrierName());
+		}
 		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
 		if (customerDetail != null) {
 			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
@@ -1516,5 +1517,11 @@ public class LoanServiceImpl implements LoanService {
 	public LoanVO getLoanByLoanEmailId(String loanEmailId) {
 
 		return loanDao.findLoanByLoanEmailId(loanEmailId);
+	}
+
+	@Override
+	public Boolean checkIfLoanHasSalesManager(Long loanId) {
+		// TODO Auto-generated method stub
+		return loanDao.checkIfLoanHasSalesManager(loanId);
 	}
 }

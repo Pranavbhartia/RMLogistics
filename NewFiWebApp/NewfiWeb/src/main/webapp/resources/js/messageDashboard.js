@@ -39,7 +39,8 @@ function showAgentMessageDashboard() {
 function paintConversationPagination(response) {
 
 	var conversations = response.resultObject.messageVOs;
-	paintConversations(conversations);
+	var showSM = response.resultObject.salesManagerPresent;
+	paintConversations(conversations,showSM);
 }
 
 function setCurrentUserObject() {
@@ -200,7 +201,8 @@ function paintCommunicationLog(response) {
 	}
 
 	var conversations = response.resultObject.messageVOs;
-	paintConversations(conversations);
+	var showSM = response.resultObject.salesManagerPresent;
+	paintConversations(conversations,showSM);
 	adjustRightPanelOnResize();
 }
 
@@ -245,9 +247,9 @@ function getMessageDashboardWrapper() {
 		if (myLoanTeam[i].userRole.roleCd == "INTERNAL") {
 
 			userRole = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleName;
-			if (userRole != "LM") {
-				continue;
-			}
+//			if (userRole != "LM") {
+//				continue;
+//			}
 			userDescription = myLoanTeam[i].internalUserDetail.internalUserRoleMasterVO.roleDescription;
 		}
 		var agent = getAssignedAgentContainer(myLoanTeam[i].id,
@@ -402,7 +404,7 @@ function getConversationHistoryWrapper() {
 	return wrapper.append(container);
 }
 
-function paintConversations(conversations) {
+function paintConversations(conversations,showSM) {
 
 	for (var i = 0; i < conversations.length; i++) {
 		var user = conversations[i];
@@ -459,7 +461,7 @@ function paintConversations(conversations) {
 		var otherUserBinded = data.otherUsers;
 		for (k in otherUserBinded) {
 			if (otherUserBinded[k].roleName == "Loan Advisor"
-					|| otherUserBinded[k].roleName == "CUSTOMER" ||  otherUserBinded[k].roleName == "REALTOR") {
+					|| otherUserBinded[k].roleName == "CUSTOMER" ||  otherUserBinded[k].roleName == "REALTOR" || (showSM==true &&otherUserBinded[k].roleName == "Sales Manager" )) {
 				// We wil not show any other user roles in here.
 
 				var userImage = $('<div>').attr({
@@ -503,7 +505,7 @@ function paintConversations(conversations) {
 		conContainer.append(topRow).append(messageContent).append(replies);
 		$('#conv-container').append(conContainer);
 		if (conversations[i].length > 0) {
-			paintChildConversations(1, user);
+			paintChildConversations(1, user,showSM);
 		}
 	}
 }
@@ -574,7 +576,7 @@ function sendMessage(element) {
 	// TODO : Writing logic on what happens when a user sends a message
 }
 
-function paintChildConversations(level, conversations) {
+function paintChildConversations(level, conversations,showSM) {
 
 	for (var i = 1; i < conversations.length; i++) {
 		var data = conversations[i];
@@ -634,7 +636,7 @@ function paintChildConversations(level, conversations) {
 		for (k in otherUserBinded) {
 
 			if (otherUserBinded[k].roleName == "Loan Advisor"
-					|| otherUserBinded[k].roleName == "CUSTOMER" ||  otherUserBinded[k].roleName == "REALTOR") {
+					|| otherUserBinded[k].roleName == "CUSTOMER" ||  otherUserBinded[k].roleName == "REALTOR"||  (showSM==true && otherUserBinded[k].roleName == "Sales Manager")) {
 				// We wil not show any other user roles in here.
 
 				var userImage = $('<div>').attr({					

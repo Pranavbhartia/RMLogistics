@@ -47,6 +47,8 @@ public class CommunicationLogRestService {
 			queryVO.setUserId(new Long(userID));
 			queryVO.setNumberOfRecords(CommonConstants.PAGINATION_SIZE);
 			hierarchyVO = messageService.getMessages(queryVO);
+			LOG.debug("The request for loan" + loanID + " has Sales manager "
+			        + hierarchyVO.getSalesManagerPresent());
 			response = RestUtil.wrapObjectForSuccess(hierarchyVO);
 		} catch (Exception e) {
 

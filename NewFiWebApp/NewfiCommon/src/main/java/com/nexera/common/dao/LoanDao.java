@@ -123,8 +123,10 @@ public interface LoanDao extends GenericDao {
 
 	public void updateLoanProgress(int loanId,
 	        LoanProgressStatusMaster loanProgressValue);
-	
+
 	public void updateLoan(Integer loanId, Boolean rateLocked, String rateVo);
 
 	public LoanVO findLoanByLoanEmailId(String loanEmailId);
+
+	public Boolean checkIfLoanHasSalesManager(Long loanId);
 }

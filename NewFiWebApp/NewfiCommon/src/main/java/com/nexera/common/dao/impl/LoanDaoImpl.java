@@ -908,4 +908,25 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		Loan loan = (Loan) criteria.uniqueResult();
 		return Loan.convertFromEntityToVO(loan);
 	}
+
+	@Override
+	public Boolean checkIfLoanHasSalesManager(Long loanId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(LoanTeam.class);
+		criteria.add(Restrictions.eq("loan.id", loanId.intValue()));
+		criteria.add(Restrictions.eq("active", Boolean.TRUE));
+		criteria.createAlias("user.userRole", "ur");
+		criteria.createAlias("user.internalUserDetail", "iud");
+		criteria.createAlias("iud.internaUserRoleMaster", "irm");
+
+		criteria.add(Restrictions.eq("ur.roleCd",
+		        UserRolesEnum.INTERNAL.getName()));
+		criteria.add(Restrictions.eq("irm.roleName", UserRolesEnum.SM.getName()));
+
+		List<LoanTeam> loanTeam = criteria.list();
+		if (loanTeam == null || loanTeam.isEmpty()) {
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
 }
