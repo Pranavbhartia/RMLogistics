@@ -24,28 +24,28 @@ img{max-width:100%;}
 /*end reset*
  */
 body{
-	background: url(../images/404-bg1.png);
-	font-family: "Century Gothic",Arial, Helvetica, sans-serif;
+	/* background: url(../images/404-bg1.png); */
+	/* font-family: "Century Gothic",Arial, Helvetica, sans-serif; */
 	}
 .content p{
-	margin: 18px 0px 45px 0px;
+	margin: 0px 0px 0px 0px;
 }
 .content p{
-	font-family: "Century Gothic";
-	font-size:2em;
+	font-family: "opensanslight";
+	font-size: 14px;
 	color:#666;
 	text-align:center;
 }
 .content p span,.logo h1 a{
-	color:#e54040;
+	/* color:#e54040; */
 }
 .content{
 	text-align:center;
-	padding:115px 0px 0px 0px;
+	padding:180px 0px 0px 0px;
 }
 .content a{
 	color:#fff;
-	font-family: "Century Gothic";
+	/* font-family: "Century Gothic"; */
 	background: #666666; /* Old browsers */
 	background: -moz-linear-gradient(top,  #666666 0%, #666666 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#666666), color-stop(100%,#666666)); /* Chrome,Safari4+ */
@@ -68,7 +68,7 @@ body{
 }
 .logo h1{
 	font-size:2em;
-	font-family: "Century Gothic";
+	/* font-family: "Century Gothic"; */
 	background: #666666; /* Old browsers */
 	background: -moz-linear-gradient(top,  #666666 0%, #666666 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#666666), color-stop(100%,#666666)); /* Chrome,Safari4+ */
@@ -86,21 +86,30 @@ body{
 	padding-top:20px;
 }
 .copy-right p{
-	font-size:0.9em;
+	font-size: 12px;
 }
 .copy-right p a{
 	background:none;
-	color:#e54040;
+	color: blue;
 	padding:0px 0px 5px 0px;
 	font-size:0.9em;
 }
 .copy-right p a:hover{
 	color:#666;
 }
+
+.login-hdr-error-page {
+    text-align: center;
+    font-family: 'Opensans';
+    padding: 17px;
+    color: white;
+    font-size: 14px;
+}
+
 /*------responive-design--------*/
-@media screen and (max-width: 1366px)	{
+/* @media screen and (max-width: 1366px)	{
 	.content {
-		padding: 58px 0px 0px 0px;
+		padding: 120px 0px 0px 0px;
 	}
 }
 @media screen and (max-width:1280px)	{
@@ -156,7 +165,18 @@ body{
 		margin: 18px 0px 22px 0px;
 	}
 }
-
+ */
 span.label-txt {
   font-size: 20px;
 }
+
+.err-text1{
+	font-size: 2em;
+	display:flex;
+	height:90px;
+	justify-content:center;
+	line-height: normal;
+	flex-direction:column;
+	font-family: 'Opensans';
+}
+

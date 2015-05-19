@@ -1,8 +1,8 @@
-var userDescription="System User";
-var salesManager="Sales Manager";
+var userDescription="";
+var salesManager="";
 var loanManager="";
-var customer="Customer";
-var Realtor="Realtor";
+var customer="";
+var Realtor="";
 var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
@@ -27,9 +27,25 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 
 
 $('#alert-settings-btn').click(function(e){
-	if(newfiObject.user.internalUserDetail!=undefined){
-		loanManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
-	}
+	if(newfiObject.user.userRole.id==3){
+		if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==2){
+			salesManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
+		}
+		if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==1){
+			loanManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;	
+		}
+	    }
+
+		if(newfiObject.user.userRole.id==1){
+			customer=newfiObject.user.userRole.roleDescription;
+		}
+		if(newfiObject.user.userRole.id==2){
+			Realtor=newfiObject.user.userRole.roleDescription;
+		}
+		if(newfiObject.user.userRole.id==4){
+			userDescription=newfiObject.user.userRole.roleDescription;
+		}
+	
 	event.stopImmediatePropagation();
 	if($('#alert-popup-wrapper-settings').length==1){
 		
@@ -50,6 +66,7 @@ $('#alert-settings-btn').click(function(e){
 function appendSettingsDropDown(){
 
 	var currentUser=newfiObject.user;
+
 	var alertWrapper = $('<div>').attr({
 		"id" : "alert-popup-wrapper-settings",
 		"class" : "alert-popup-wrapper-settings"
@@ -63,7 +80,7 @@ function appendSettingsDropDown(){
 	 });
 	 icondiv.append(icon);
 	 var header="";
-	 if(currentUser.userRole.roleDescription==customer ||currentUser.userRole.roleDescription==Realtor || currentUser.internalUserDetail.internalUserRoleMasterVO.roleDescription==loanManager){
+	 if(customer!="" || Realtor!="" || loanManager!=""){
 		  header = $('<div>').attr({
 	   			"class" : "admin-pop-up-header"
 	   		}).html("User Settings");
@@ -80,7 +97,7 @@ function appendSettingsDropDown(){
 			});
 	
 
-	 if(currentUser.userRole.roleDescription==customer || currentUser.userRole.roleDescription==Realtor || currentUser.internalUserDetail.internalUserRoleMasterVO.roleDescription==loanManager)
+	 if(customer!="" || Realtor!="" || loanManager!="")
 	 {
 		 
 		//TODO for dropdown settings for LM,customer,realtor			 
