@@ -7,7 +7,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 <!DOCTYPE HTML>
 <html><head>
-		<title>0hh Website Template | Home :: W3layouts</title>
+		<title>newfi</title>
+		<link rel="shortcut icon" type="image/x-icon" href="resources/images/title-logo.png">
 		<meta name="keywords" content="404 iphone web template, Andriod web template, Smartphone web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design">
 		<link href="resources/css/404-style.css" rel="stylesheet" type="text/css" media="all">
 	    <link href="/NewfiWeb/resources/css/styles.css" rel="stylesheet">
