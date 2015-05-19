@@ -403,3 +403,10 @@ INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `de
 
 
 UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='9';
+
+########
+
+### Anoop: 
+### Added all the above to 1_ script
+
+########
