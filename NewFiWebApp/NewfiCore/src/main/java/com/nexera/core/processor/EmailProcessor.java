@@ -123,7 +123,8 @@ public class EmailProcessor implements Runnable {
 
 					String toAddressString = null;
 					for (Address address : toAddress) {
-						if ((address.toString()).contains("NewFi Team")) {
+						if ((address.toString())
+						        .contains(CommonConstants.SENDER_EMAIL_ID)) {
 							toAddressString = address.toString();
 						}
 
@@ -224,23 +225,29 @@ public class EmailProcessor implements Runnable {
 										} else {
 											LOGGER.debug("Multiple user found with the same secondary email id");
 											for (User secUser : secondaryUserList) {
-												for (Address address : toAddress) {
-													if (address
-													        .toString()
-													        .equalsIgnoreCase(
-													                secUser.getEmailId())) {
-														secondaryUser = secUser;
-														break;
+												for (Loan secondaryLoan : secUser
+												        .getLoans()) {
+													if (secondaryLoan
+													        .getLoanEmailId() != null) {
+														if (toAddressString
+														        .contains(secondaryLoan
+														                .getLoanEmailId())) {
+															loanFound = true;
+															secondaryUser = secUser;
+															break;
+														}
 													}
 												}
 											}
 										}
-										for (Loan loan : secondaryUser
-										        .getLoans()) {
-											if (loan.getId() == loanIdInt) {
-												loanFound = true;
-												uploadedByUser = secondaryUser;
-												break;
+										if (!loanFound) {
+											for (Loan loan : secondaryUser
+											        .getLoans()) {
+												if (loan.getId() == loanIdInt) {
+													loanFound = true;
+													uploadedByUser = secondaryUser;
+													break;
+												}
 											}
 										}
 									}
@@ -261,25 +268,29 @@ public class EmailProcessor implements Runnable {
 								} else {
 									LOGGER.debug("Multiple user found with the same secondary email id");
 									for (User secUser : secondaryUserList) {
-										for (Address address : toAddress) {
-											if (address
-											        .toString()
-											        .equalsIgnoreCase(
-											                secUser.getEmailId())) {
-												secondaryUser = secUser;
-												break;
+										for (Loan secondaryLoan : secUser
+										        .getLoans()) {
+											if (secondaryLoan.getLoanEmailId() != null) {
+												if (toAddressString
+												        .contains(secondaryLoan
+												                .getLoanEmailId())) {
+													secondaryUser = secUser;
+													loanFound = true;
+													break;
+												}
 											}
 										}
 									}
 								}
-								for (Loan loan : secondaryUser.getLoans()) {
-									if (loan.getId() == loanIdInt) {
-										uploadedByUser = secondaryUser;
-										loanFound = true;
-										break;
+								if (!loanFound) {
+									for (Loan loan : secondaryUser.getLoans()) {
+										if (loan.getId() == loanIdInt) {
+											uploadedByUser = secondaryUser;
+											loanFound = true;
+											break;
+										}
 									}
 								}
-
 							}
 
 						}
@@ -497,7 +508,7 @@ public class EmailProcessor implements Runnable {
 
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        failureNoteText, null, false, sendEmail, true);
+					        failureNoteText, null, false, true, true);
 				}
 			}
 		} catch (MessagingException me) {

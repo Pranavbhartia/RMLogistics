@@ -984,11 +984,13 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		List<User> userList = new ArrayList<User>();
 		User user = null;
 		if (objList != null) {
-			Criteria userCriteria = session.createCriteria(User.class);
 			for (CustomerDetail obj : objList) {
+				Criteria userCriteria = session.createCriteria(User.class);
 				userCriteria.add(Restrictions.eq("customerDetail", obj));
 				user = (User) userCriteria.uniqueResult();
-				userList.add(user);
+				if (user != null) {
+					userList.add(user);
+				}
 			}
 
 		}

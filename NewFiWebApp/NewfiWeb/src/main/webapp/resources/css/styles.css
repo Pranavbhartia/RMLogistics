@@ -4938,8 +4938,10 @@ padding-left: 10px;
 }
 
 .pgwSlideshow {
-  	background: #F5F9FC;
+  	background: white;
   	padding-left:0px !important;
+  	width: 82%;
+        margin-left: 57px;
 }
 
 .pgwSlideshow .ps-list{
@@ -5092,9 +5094,19 @@ a.prof-form-verfied-mess {
 .ps-current {
 	  margin: 10px 0 0 0;
 	  border-radius: 7px;
+	  height: 406px !important;
+	  border: 1px solid gainsboro;
 }
 
 .ps-current >ul{
 	 padding: 0 0 0px 0;
     margin: -10px 0 0px 0;
+}
+
+span.ps-next{
+	display:none !important;
+}
+
+span.ps-prev{
+	display:none !important;
 }

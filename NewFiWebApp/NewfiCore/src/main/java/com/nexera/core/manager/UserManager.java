@@ -1,5 +1,6 @@
 package com.nexera.core.manager;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,13 +62,17 @@ public class UserManager implements Runnable {
 	}
 
 	public void passwordNotUpdated(User user) {
-		Date userCreationDate = user.getCreatedDate();
-		Date tokenGeerationDate = user.getTokenGeneratedTime();
-		Date systemDate = utils.convertCurrentDateToUtc();
-		if (tokenGeerationDate != null) {
-			long secs = (systemDate.getTime() - userCreationDate.getTime()) / 1000;
-			long hours = secs / 3600;
-			if (hours == 48 || hours == 96) {
+
+		if (user.getTokenGeneratedTime() != null) {
+			Date userCreationDate = user.getCreatedDate();
+			Calendar creationCalendar = Calendar.getInstance();
+			creationCalendar.setTime(userCreationDate);
+			int day = creationCalendar.get(Calendar.DAY_OF_MONTH);
+			Date currentDate = utils.convertCurrentDateToUtc();
+			Calendar currentCalendar = Calendar.getInstance();
+			currentCalendar.setTime(currentDate);
+			int currentDay = creationCalendar.get(Calendar.DAY_OF_MONTH);
+			if (day != currentDay) {
 				try {
 					sendPasswordNotUpdatedEmail(user);
 				} catch (InvalidInputException e) {
@@ -82,9 +87,6 @@ public class UserManager implements Runnable {
 					nexeraUtility.sendExceptionEmail(e.getMessage());
 				}
 			}
-
-		} else {
-			LOGGER.debug("User may have updated his password ");
 		}
 	}
 
