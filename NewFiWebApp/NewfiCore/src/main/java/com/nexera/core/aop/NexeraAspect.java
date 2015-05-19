@@ -14,7 +14,7 @@ public class NexeraAspect {
 
 	private static final Object NEWLINE = "\n";
 
-	@Before("execution(* com.nexera.core..*(..)) ")
+	@Before("execution(* com.nexera.core..*(..)) && !execution(* com.nexera.core.batchprocessor..*(..))")
 	public void logBefore(JoinPoint joinPoint) {
 
 		LOG.info("Method invoked : " + joinPoint.getSignature());
