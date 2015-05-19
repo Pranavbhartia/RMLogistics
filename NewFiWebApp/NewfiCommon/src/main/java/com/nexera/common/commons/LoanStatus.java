@@ -45,4 +45,6 @@ public interface LoanStatus {
 	String ratesLocked = "Rates Locked";
 
 	String noProductFound = "Not Products Found";
+	
+	String ratesLockedRequested="Rate Lock Requested by User";
 }

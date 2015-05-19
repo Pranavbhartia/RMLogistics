@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.dao.LoanDao;
@@ -72,6 +73,7 @@ import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.helper.TeamAssignmentHelper;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
@@ -135,7 +137,8 @@ public class LoanServiceImpl implements LoanService {
 	private LoanAppFormService loanAppFormService;
 	@Autowired
 	private StateLookupService stateLookupService;
-
+	@Autowired
+	public MessageServiceHelper messageServiceHelper;
 	@Autowired
 	private NotificationService notificationService;
 
@@ -1373,8 +1376,35 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-
+		messageServiceHelper.generatePrivateMessage(loanID, LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
 		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+		
+		// TODO send mail to LM ............... change template id and substitutions
+		emailEntity = new EmailVO();
+		template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_RATES_LOCKED);
+		// We create the substitutions map
+		substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { loan.getUser()
+		        .getFirstName() + " " + loan.getUser().getLastName() });
+		substitutions.put("-rate-",
+		        new String[] { loan.getLockedRate() != null ? loan
+		                .getLockedRate().toString() : "" });
+		substitutions.put("-rateexpirationdate-", new String[] { " " });
+
+		if (loan.getUser() != null) {
+			emailEntity.setSenderEmailId(loan.getUser().getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Rates Locked");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
 	}
 
 	@Override
