@@ -42,7 +42,7 @@
 		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 		$('.assigned-agent-contact').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
-			if(!newfiObject.user.internalUserDetail.lqbUsername){
+			if(newfiObject.user.internalUserDetail!= undefined &&!newfiObject.user.internalUserDetail.lqbUsername){
 				window.location.hash="#myProfile";
 			}
 			isAgentTypeDashboard = true;
