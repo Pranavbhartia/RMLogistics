@@ -393,8 +393,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.NEEDS_LIST_SET_TYPE;
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
-		                notificationType.getNotificationTypeName(), null);
-		if (notificationList.size() == 0 || notificationList.get(0).getRead()) {
+		                notificationType.getNotificationTypeName(), true);
+		if (notificationList.size() == 0) {
 			NotificationVO notificationVO = new NotificationVO(loanId,
 			        notificationType.getNotificationTypeName(),
 			        WorkflowConstants.NEEDS_LIST_SET_TYPE_CONTENT);
