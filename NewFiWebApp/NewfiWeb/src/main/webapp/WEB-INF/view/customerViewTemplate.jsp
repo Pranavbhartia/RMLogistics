@@ -63,8 +63,7 @@
 	<jsp:include page="footer.jsp"></jsp:include>
 	<input type="hidden" value="${user.photoImageUrl}" id="photoImageUrlID">
 	<script>
-	var newfi = ${newfi};
-	var baseUrl = "${baseUrl}";
+	
 		$(document).ready(function() {
 
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
@@ -160,6 +159,8 @@
 			height=height-headerHeight;
 			$('.content').css("height",height+ "px");
 		}
+		var newfi = ${newfi};
+		var baseUrl = "${baseUrl}";
 	</script>
 </body>
 </html>
