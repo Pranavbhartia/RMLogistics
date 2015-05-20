@@ -412,6 +412,9 @@
 		font-size: 14px;
 		margin: 0 auto;
 	}
+	.footer-wrapper-container {
+		padding-left: 50px;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
@@ -1074,6 +1077,10 @@
     .cust-prof-edit-label {
 		width: 100px;
 		padding-right: 15px;
+		padding-top: 11px;
+		display: flex;
+		justify-content: flex-end;
+		line-height: normal;
 	}
 	.cust-prof-edit-row {
 	  	line-height: 35px;
@@ -1175,6 +1182,18 @@
 	}
 	.reg-input-row{
 		padding: 0;
+	}
+	.alert-popup-cont {
+		max-width: 205px;
+	}
+	.alert-popup-wrapper {
+		width: 280px;
+	}
+	.alert-popup-cont-wrapper {
+		right: -80px;
+	}
+	.alert-popup-cont-wrapper:before {
+		right: 93px;
 	}
 }
 
