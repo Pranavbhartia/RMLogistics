@@ -49,8 +49,8 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		 */
 		// This logic is changed to not assign anyone. Sales manager will be
 		// assigned neverthless
-		// return userProfileDao.getDefaultSalesManager();
-		return null;
+		 return userProfileDao.getDefaultSalesManager();
+		//return null;
 		// userList = userProfileDao.getLoanManagerWithLeastWork();
 		// if (!userList.isEmpty()) {
 		// return pickTheChosenOne(userList);

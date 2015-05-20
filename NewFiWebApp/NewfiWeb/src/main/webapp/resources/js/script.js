@@ -244,7 +244,7 @@ function paintApplicationAlreadySubmittedPage() {
 		"class" : "getting-to-know-btn margin-0-auto"
 	}).html("View my rate options").on('click',function(){
 		
-		window.location.href ="./home.do#myLoan";
+		window.location.href ="./home.do#myLoan/lock-my-rate";
 	});
 	
 	var btn3 = $('<div>').attr({
@@ -444,7 +444,7 @@ function redirectToGettingToKnowLastPage() {
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/lock-my-rate");
-		
+		newfiObject.applicationKnowNewfi=undefined;
 	});
 	
 	var cont2btn3 = $('<div>').attr({
@@ -453,6 +453,7 @@ function redirectToGettingToKnowLastPage() {
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-loan-progress");
+		newfiObject.applicationKnowNewfi=undefined;
 	});
 	
 	var cont2btn4 = $('<div>').attr({
@@ -461,6 +462,7 @@ function redirectToGettingToKnowLastPage() {
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
+		newfiObject.applicationKnowNewfi=undefined;
 	});
 	
 	if(flagToShowCompletPro){
@@ -755,8 +757,13 @@ function lockLoanRate(lockratedata){
                     message="Rates can be locked between : 08:30 AM PST - 04:00 PM PST";
                 }
                 alert(message);
-            }else
+            }else{
+            	rateLockRequestedFlag = true;
+        	    $('input').attr("readonly","true");
+                element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
                 alert('loan is locked');
+            }
+                
             //TO:DO pass the data (json)which is coming from the controller
             //paintLockRate(data,appUserDetails);
             //paintLockRate(JSON.parse(data), appUserDetails);
@@ -2433,9 +2440,7 @@ function getRequestRateLockStatus(element){
                     element.addClass("rate-btn");
                     if(!rateLockRequestedFlag){
 	                    element.html("Request Rate Lock").on('click', function(event) {
-	                    	    rateLockRequestedFlag = true;
-	                    	    $('input').attr("readonly","true");
-	                            element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
+	                    	    
 	                            lockLoanRate(lockratedata);
 	                    });
                     }else{

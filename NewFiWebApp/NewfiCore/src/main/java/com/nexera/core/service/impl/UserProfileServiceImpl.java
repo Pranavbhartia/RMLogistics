@@ -1458,7 +1458,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 					        lqbPassword);
 				}
 				if (lqbUsername != null && lqbPassword != null) {
-					JSONObject authOperationObject = createAuthObject(
+					JSONObject authOperationObject = NexeraUtility.createAuthObject(
 					        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
 					        lqbUsername, lqbPassword);
 					LOG.debug("Invoking LQB service to fetch user authentication ticket ");
@@ -1536,19 +1536,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return json;
 	}
 
-	public JSONObject createAuthObject(String opName, String userName,
-	        String password) {
-		JSONObject json = new JSONObject();
-		try {
-			json.put(WebServiceMethodParameters.PARAMETER_USERNAME, userName);
-			json.put(WebServiceMethodParameters.PARAMETER_PASSWORD, password);
-			json.put("opName", opName);
-		} catch (JSONException e) {
-			LOG.error("Invalid Json String ");
-			throw new FatalException("Could not parse json " + e.getMessage());
-		}
-		return json;
-	}
+	
 
 	@Override
 	public List<String> getDefaultUsers(String userName) {
