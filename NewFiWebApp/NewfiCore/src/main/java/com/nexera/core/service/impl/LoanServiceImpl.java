@@ -1410,6 +1410,40 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public void sendRateLockRequested(Integer loanID) throws InvalidInputException,
+	        UndeliveredEmailException {
+		//Change Template and substitutations for rate lock requested
+		LoanVO loan = getLoanByID(loanID);
+		EmailVO emailEntity = new EmailVO();
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_RATE_LOCK_REQUESTED);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { loan.getUser()
+		        .getFirstName() + " " + loan.getUser().getLastName() });
+		substitutions.put("-rate-",
+		        new String[] { loan.getLockedRate() != null ? loan
+		                .getLockedRate().toString() : "" });
+		substitutions.put("-rateexpirationdate-", new String[] { " " });
+
+		if (loan.getUser() != null) {
+			emailEntity.setSenderEmailId(loan.getUser().getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+		} else {
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("Rates Locked");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+		messageServiceHelper.generatePrivateMessage(loanID, LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
+		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
 	public void sendNoproductsAvailableEmail(Integer loanId) {
 
 		EmailVO emailEntity = new EmailVO();
@@ -1484,9 +1518,8 @@ public class LoanServiceImpl implements LoanService {
 
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
-		                notificationType.getNotificationTypeName(), null);
-		if (notificationList.size() == 0
-		        || notificationList.get(0).getRead() == true) {
+		                notificationType.getNotificationTypeName(), true);
+		if (notificationList.size() == 0) {
 			LOG.debug("Creating new notification for "
 			        + notificationType.getNotificationTypeName());
 			LoanVO loanVO = new LoanVO(loanId);
@@ -1527,9 +1560,8 @@ public class LoanServiceImpl implements LoanService {
 
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
-		                notificationType.getNotificationTypeName(), null);
-		if (notificationList.size() == 0
-		        || notificationList.get(0).getRead() == true) {
+		                notificationType.getNotificationTypeName(), true);
+		if (notificationList.size() == 0) {
 			LOG.debug("Creating new notification for "
 			        + notificationType.getNotificationTypeName());
 			LoanVO loanVO = new LoanVO(loanId);

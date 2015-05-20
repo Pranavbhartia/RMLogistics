@@ -139,9 +139,8 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(createReminderVo.getLoanId(),
 		                createReminderVo.getNotificationType()
-		                        .getNotificationTypeName(), null);
-		if (notificationList.size() == 0
-		        || notificationList.get(0).getRead() == true) {
+		                        .getNotificationTypeName(), true);
+		if (notificationList.size() == 0) {
 			LOG.debug("Creating new notification "
 			        + createReminderVo.getNotificationType());
 			NotificationVO notificationVO = new NotificationVO(

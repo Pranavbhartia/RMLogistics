@@ -177,4 +177,12 @@ public interface LoanService {
 	public LoanVO getLoanByLoanEmailId(String string);
 
 	public Boolean checkIfLoanHasSalesManager(Long loanId);
+
+	/**
+	 * @param loanID
+	 * @throws InvalidInputException
+	 * @throws UndeliveredEmailException
+	 */
+	void sendRateLockRequested(Integer loanID) throws InvalidInputException,
+			UndeliveredEmailException;
 }
