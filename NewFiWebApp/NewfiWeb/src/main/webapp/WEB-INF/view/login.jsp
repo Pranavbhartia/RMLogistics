@@ -254,15 +254,23 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
    </section>
    <section class="section swatch-black">
                <div class="container">
-               <div id="footer">
+               <!-- <div id="footer">
 	<div class="footer-bottom">
 		<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
 			<div class="footer-home-image float-left" id="footeHomeImage">
 			<div class="footer-home-text" id="footerHomeText">Equal Housing Lender</div>
 		</a></div>
 			
-	</div>
-	<div class="footer-container-text"> © 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
+	</div> -->
+	<div class="footer-container-text float-left"> © 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
+	<div class="footer-container-text2 float-right">
+   <a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
+   <div class="footer-login-inline-home-image" id="footeHomeImage"></div>
+   </a>
+  <a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
+  <div class="footer-login-inline-home-text" id="footerHomeText">Equal Housing Lender</div>
+   </a>  
+  </div>
 </div>
 <br>
 		</div></section>

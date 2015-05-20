@@ -36,9 +36,14 @@
 	<jsp:include page="inlineFooter.jsp"></jsp:include>
 	<jsp:include page="footer.jsp"></jsp:include>
 	<script>
+
 		var newfi = ${newfi};
 		var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
+/* 			var height=$('.home-container').height();
+			var footerHeight=$('.footer-wrapper').height();
+			height=footerHeight-height;
+			$('.footer-wrapper').css("bottom",height+ "px"); */
 		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 		$('.assigned-agent-contact').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
@@ -52,6 +57,7 @@
 				adjustAgentDashboardOnResize();
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
+				adjustFooter();
 			});
 			
 			//TODO added for loan profile page		
@@ -96,6 +102,13 @@
 			
 			
 		});
+		function adjustFooter(){
+			var height=window.innerHeight;
+			var footerHeight=$('.footer-wrapper').height();
+			var headerHeight=$('.header-wrapper').height();
+			height=height-headerHeight;
+			$('.content').css("height",height+ "px");
+		}
 	</script>
 </body>
 </html>

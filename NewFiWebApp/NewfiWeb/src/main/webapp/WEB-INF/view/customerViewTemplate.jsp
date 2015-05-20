@@ -66,6 +66,7 @@
 	var newfi = ${newfi};
 	var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
+
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
 			changeLeftPanel(2,callBackFun);
@@ -79,6 +80,7 @@
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
                 adjustCustomerApplicationPageOnResize();
+                adjustFooter();
 			});
 			var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
 			if(loanType === "Purchase")
@@ -150,6 +152,13 @@
 
 			
 			$('[data-toggle="tooltip"]').tooltip();  
+		}
+		function adjustFooter(){
+			var height=window.innerHeight;
+			var footerHeight=$('.footer-wrapper').height();
+			var headerHeight=$('.header-wrapper').height();
+			height=height-headerHeight;
+			$('.content').css("height",height+ "px");
 		}
 	</script>
 </body>
