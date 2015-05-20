@@ -17,8 +17,9 @@ section.section.swatch-black {
 }
 
 .footer-container-text {
-    text-align: center;
-    padding:15px;
+    font-family: opensanslight;
+    font-size: 12px;
+    padding: 38px 0px 0px 323px;
 }
 
 .footer-element-normal-bottom {
@@ -34,7 +35,7 @@ section.section.swatch-black {
   /* padding-bottom: 12px; */
   position: relative;
   color: white;
-  font-size: 20px;
+  font-size: 16px;
   white-space: nowrap;
 }
 
@@ -59,7 +60,7 @@ section.section.swatch-black {
 
 .footer-anchor {
   font-family: OpenSanslight;
-  font-size: 14px;
+  font-size: 12px;
    color: white; 
    cursor: pointer;
 }
@@ -124,9 +125,7 @@ div.footeremail:hover{
 }
 
 .footer-wrapper {
-  bottom: 0px;
   width: 100%;
-  position: fixed;
   height: 48px;
   background-color: #FAFAFA;
   z-index: 9999;
@@ -141,10 +140,11 @@ div.footeremail:hover{
 
 .footer-newfi-information {
     /* font-family: 'OpenSansLight'; */
-    font-family: OpenSanslight;
-    font-size: 15px;
-    text-align: right;
-    margin-right: -15px;
+    font-family: opensans;
+    font-size: 13px;
+    text-align: left;
+    /* margin-right: 0px; */
+    padding-left: 96px;
 }
 
 .footer-newfi-information-subtxt {
@@ -156,7 +156,7 @@ div.footeremail:hover{
 p.footer-subtxt {
     /* font-family: 'OpenSansLight'; */
     font-family: OpenSanslight;
-    font-size: 14px;
+    font-size: 12px;
     text-align: left;
     margin: 0px;
     margin-left: 98px;
@@ -231,4 +231,22 @@ div#footeHomeImage {
 
 .footer-text2{
     padding-right: 45px;
+}
+.footer-container-text2 {
+    padding: 15px 0px 0px 0px;
+}
+
+.footer-login-inline-home-text {
+    white-space: nowrap;    
+    font-size: 10px;    
+    cursor: pointer;
+    color: white;
+}
+
+.footer-login-inline-home-image {
+    background: url(../images/house.png) no-repeat left;    
+    height: 27px;    
+    width: 20px;    
+    line-height: 17px;    
+    margin-left: 37px;
 }

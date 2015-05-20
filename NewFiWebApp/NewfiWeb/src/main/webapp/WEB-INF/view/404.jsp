@@ -1,21 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>newfi</title>
+<link rel="shortcut icon" type="image/x-icon" href="resources/images/title-logo.png">
+<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="resources/css/jquery-ui.css" rel="stylesheet">
+<link href="resources/css/styles.css" rel="stylesheet">
+<link href="resources/css/404-style.css" rel="stylesheet">
+<link href="resources/css/footer.css" rel="stylesheet">
+<script src="resources/js/jquery-2.1.3.min.js"></script>
+<script src="resources/js/jquery-ui.js"></script>
+<script src="resources/js/bootstrap.min.js"></script>
 
-<!--
-Author: W3layouts
-Author URL: http://w3layouts.com
-License: Creative Commons Attribution 3.0 Unported
-License URL: http://creativecommons.org/licenses/by/3.0/
--->
-<!DOCTYPE HTML>
-<html><head>
-		<title>newfi</title>
-		<link rel="shortcut icon" type="image/x-icon" href="resources/images/title-logo.png">
-		<meta name="keywords" content="404 iphone web template, Andriod web template, Smartphone web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design">
-		<link href="resources/css/404-style.css" rel="stylesheet" type="text/css" media="all">
-	    <link href="/NewfiWeb/resources/css/styles.css" rel="stylesheet">
-	    <link href="/NewfiWeb/resources/css/footer.css" rel="stylesheet">
-	<style type="text/css"></style></head>
-	<body>
-	<div class="container">
+</head>
+<body>
+
 	<div class="header-wrapper">
 	<div class="header-container container">
 		<div class="header-row row clearfix">
@@ -54,9 +56,22 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<!--End-Cotent------>
 		</div>
 		<!--End-wrap--->
-		<jsp:include page="inlineFooter.jsp"></jsp:include>
-	</div>
+		 <jsp:include page="inlineFooter.jsp"></jsp:include> 
 
+</body>
+<script>
+$(document).ready(function(){
 
-</body></html>
+		var height=window.innerHeight;
+		var footerHeight=$('.footer-wrapper').height();
+		var headerHeight=$('.header-wrapper').height();
+		height=height-headerHeight;
+		$('.content').css("height",height+ "px");
+
+	
+	
+	
+});
+</script>
+</html>
 
