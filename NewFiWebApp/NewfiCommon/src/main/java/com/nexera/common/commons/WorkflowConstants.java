@@ -125,7 +125,7 @@ public class WorkflowConstants {
 
 	public static final String SYS_EDU_NOTIFICATION_CONTENT = "System Education Pending";
 
-	// TODO DYNAMIC content
+	// here 72 should not be changed since it is getting replaced by turnaround time in next step
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are {\"72\":\"elapsed\"}";
 	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Click here to learn more about using the newfi portal";
 	public static final String VERIFY_EMAIL_NOTIFICATION_CONTENT = "Your email is not verified. Click here to resend your verification email.";
