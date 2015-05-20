@@ -57,6 +57,7 @@
 				adjustAgentDashboardOnResize();
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
+				adjustFooter();
 			});
 			
 			//TODO added for loan profile page		
@@ -101,6 +102,13 @@
 			
 			
 		});
+		function adjustFooter(){
+			var height=window.innerHeight;
+			var footerHeight=$('.footer-wrapper').height();
+			var headerHeight=$('.header-wrapper').height();
+			height=height-headerHeight;
+			$('.content').css("height",height+ "px");
+		}
 	</script>
 </body>
 </html>
