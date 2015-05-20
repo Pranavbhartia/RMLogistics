@@ -75,8 +75,8 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		LOG.info("Create Alert for Disclosure Due : for " + loanId);
 		List<NotificationVO> notificationList = notificationService
 		        .findNotificationTypeListForLoan(loanId,
-		                notificationType.getNotificationTypeName(), null);
-		if (notificationList.size() == 0 || notificationList.get(0).getRead()) {
+		                notificationType.getNotificationTypeName(), true);
+		if (notificationList.size() == 0) {
 			NotificationVO notificationVO = new NotificationVO(loanId,
 			        notificationType.getNotificationTypeName(),
 			        WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT);
