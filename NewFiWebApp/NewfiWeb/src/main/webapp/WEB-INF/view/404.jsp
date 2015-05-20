@@ -9,6 +9,7 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
+<link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/404-style.css" rel="stylesheet">
 <link href="resources/css/footer.css" rel="stylesheet">
 <script src="resources/js/jquery-2.1.3.min.js"></script>

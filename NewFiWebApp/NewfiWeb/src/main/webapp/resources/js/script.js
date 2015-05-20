@@ -244,7 +244,7 @@ function paintApplicationAlreadySubmittedPage() {
 		"class" : "getting-to-know-btn margin-0-auto"
 	}).html("View my rate options").on('click',function(){
 		
-		window.location.href ="./home.do#myLoan";
+		window.location.href ="./home.do#myLoan/lock-my-rate";
 	});
 	
 	var btn3 = $('<div>').attr({
@@ -444,7 +444,7 @@ function redirectToGettingToKnowLastPage() {
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/lock-my-rate");
-		
+		newfiObject.applicationKnowNewfi=undefined;
 	});
 	
 	var cont2btn3 = $('<div>').attr({
@@ -453,6 +453,7 @@ function redirectToGettingToKnowLastPage() {
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-loan-progress");
+		newfiObject.applicationKnowNewfi=undefined;
 	});
 	
 	var cont2btn4 = $('<div>').attr({
@@ -461,6 +462,7 @@ function redirectToGettingToKnowLastPage() {
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
+		newfiObject.applicationKnowNewfi=undefined;
 	});
 	
 	if(flagToShowCompletPro){
@@ -755,8 +757,13 @@ function lockLoanRate(lockratedata){
                     message="Rates can be locked between : 08:30 AM PST - 04:00 PM PST";
                 }
                 alert(message);
-            }else
+            }else{
+            	rateLockRequestedFlag = true;
+        	    $('input').attr("readonly","true");
+                element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
                 alert('loan is locked');
+            }
+                
             //TO:DO pass the data (json)which is coming from the controller
             //paintLockRate(data,appUserDetails);
             //paintLockRate(JSON.parse(data), appUserDetails);
@@ -2305,8 +2312,8 @@ $(document).on('click', function(e) {
 });
 $(document).on('click', '#alert-notification-btn', function(e) {
     e.stopImmediatePropagation();
-    if ($(this).has('#alert-popup-wrapper').length == 1) {
-        if ($('#alert-popup-wrapper').css("display") == "block") {
+    if ($(this).has('#alert-popup-cont-wrapper').length == 1) {
+        if ($('#alert-popup-cont-wrapper').css("display") == "block") {
             hideAlertNotificationPopup();
         } else {
             showAlertNotificationPopup();
@@ -2317,17 +2324,17 @@ $(document).on('click', '#alert-notification-btn', function(e) {
 });
 
 function showAlertNotificationPopup() {
-    $('#alert-popup-wrapper').show();
+    $('#alert-popup-cont-wrapper').show();
     $('#alert-popup-wrapper').perfectScrollbar({
         suppressScrollX : true
     });
 }
 
 function hideAlertNotificationPopup() {
-    $('#alert-popup-wrapper').hide();
+    $('#alert-popup-cont-wrapper').hide();
 }
 
-function appendAlertNotificationPopup() {
+/*function appendAlertNotificationPopup() {
     var alertWrapper = $('<div>').attr({
         "id": "alert-popup-wrapper",
         "class": "alert-popup-wrapper"
@@ -2343,7 +2350,7 @@ function appendAlertNotificationPopup() {
     $('#alert-popup-wrapper').perfectScrollbar({
         suppressScrollX : true
     });
-}
+}*/
 
 function getAlertNotificationRow(alert, time, isSystemAlert) {
     var row = $('<div>').attr({
@@ -2433,9 +2440,7 @@ function getRequestRateLockStatus(element){
                     element.addClass("rate-btn");
                     if(!rateLockRequestedFlag){
 	                    element.html("Request Rate Lock").on('click', function(event) {
-	                    	    rateLockRequestedFlag = true;
-	                    	    $('input').attr("readonly","true");
-	                            element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
+	                    	    
 	                            lockLoanRate(lockratedata);
 	                    });
                     }else{

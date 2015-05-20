@@ -661,12 +661,16 @@ function getTimeElapsedString(dat) {
 }
 
 function appendAlertNotificationPopup() {
+	var alertContWrapper = $('<div>').attr({
+		"id" : "alert-popup-cont-wrapper",
+		"class" : "alert-popup-cont-wrapper"
+	});
 	var alertWrapper = $('<div>').attr({
 		"id" : "alert-popup-wrapper",
 		"class" : "alert-popup-wrapper"
 	});
 	var contxt = getContext("notification");
-	contxt.alertWrapper = alertWrapper
+	contxt.alertWrapper = alertWrapper;
 	for (var i = 0; i < contxt.userNotificationList.length; i++) {
 		var row = getAlertNotificationRow(contxt.userNotificationList[i],
 				contxt);
@@ -687,7 +691,10 @@ function appendAlertNotificationPopup() {
 	 * alertWrapper.append(row1).append(row2).append(row3).append(row4).append(row5).append(row6);
 	 */
 
-	$('#alert-notification-btn').append(alertWrapper);
+	$('#alert-notification-btn').append(alertContWrapper.append(alertWrapper));
+    $('#alert-popup-wrapper').perfectScrollbar({
+        suppressScrollX : true
+    });
 }
 
 function getAlertNotificationRow(notification, contxt) {

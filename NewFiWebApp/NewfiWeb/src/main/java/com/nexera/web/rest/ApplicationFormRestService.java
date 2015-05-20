@@ -1,9 +1,18 @@
 package com.nexera.web.rest;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
@@ -34,19 +43,24 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
+import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.helper.MessageServiceHelper;
+import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
 import com.nexera.web.rest.util.RestUtil;
@@ -77,6 +91,19 @@ public class ApplicationFormRestService {
 	
 	@Autowired
 	private UserProfileService userProfileService;
+	
+	@Autowired
+	private LqbInvoker lqbInvoker;
+	
+	@Autowired
+	NexeraUtility nexeraUtility;
+	
+	@Value("${cryptic.key}")
+	private String crypticKey;
+	
+	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
+	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
+
 	
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -145,15 +172,15 @@ public class ApplicationFormRestService {
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-			String loanNumber = invokeRest(lQBRequestUtil.prepareCreateLoanJson(
-					CommonConstants.CREATET_LOAN_TEMPLATE).toString());
+			
+			String sTicket= findSticket(loaAppFormVO);
+			String loanNumber = invokeRest((lQBRequestUtil.prepareCreateLoanJson((CommonConstants.CREATET_LOAN_TEMPLATE),sTicket)).toString());
 			
 			LOG.debug("createLoanResponse is" + loanNumber);
 			
 			if (!"".equalsIgnoreCase(loanNumber)) {
 
-				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO))
-				        .toString());
+				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO, sTicket)).toString());
 				LOG.debug("Save Loan Response is " + response);
 				if (null != loaAppFormVO.getLoan()
 				        && !loanNumber.equals("error")) {
@@ -199,13 +226,14 @@ public class ApplicationFormRestService {
 		String lockRateData = null;
 		LoanAppFormVO loaAppFormVO = null;
 		try {
-			loaAppFormVO = gson.fromJson(appFormData,
-			        LoanAppFormVO.class);
+			loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
+			
+			String sTicket = findSticket(loaAppFormVO);
 			String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
 			LOG.debug("createLoanResponse is" + loanNumber);
 			if (!"".equalsIgnoreCase(loanNumber)) {
-
-				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO))
+                
+				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO,sTicket))
 				        .toString());
 				LOG.debug("Save Loan Response is " + response);
 				String loanAppFrm = gson.toJson(loaAppFormVO);
@@ -407,6 +435,56 @@ public class ApplicationFormRestService {
 
 		}
 
+	}
+	
+	
+	public String findSticket(LoanAppFormVO loaAppFormVO) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, IOException{
+		
+		String sTicket = null;
+		String lqbUsername = null;
+		String lqbPassword = null;
+		UserVO internalUser = null;
+		List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
+		if(null!= loanTeam && loanTeam.size() > 0)
+		for (UserVO user : loanTeam) {
+			if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("LM")){
+				// this user would be either realtor or LM
+				internalUser = user;
+				break;
+			}else if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("SM")){
+				internalUser = user;
+				break;
+			}
+        }
+		
+		if(null!= internalUser){
+			   lqbUsername = internalUser.getInternalUserDetail().getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
+			if (lqbUsername != null) {
+				lqbUsername = nexeraUtility.decrypt(salt, crypticKey,lqbUsername);
+			}
+			    lqbPassword = internalUser.getInternalUserDetail().getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
+			if (lqbPassword != null) {
+				lqbPassword = nexeraUtility.decrypt(salt, crypticKey,lqbPassword);
+			}
+		}else{
+			
+		}
+		
+		if (lqbUsername != null && lqbPassword != null) {
+			org.json.JSONObject authOperationObject = NexeraUtility.createAuthObject(WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+			        lqbUsername, lqbPassword);
+			LOG.debug("Invoking LQB service to fetch user authentication ticket ");
+			String authTicketJson = lqbInvoker.invokeRestSpringParseObjForAuth(authOperationObject.toString());
+			if (!authTicketJson.contains("Access Denied")) {
+				 sTicket = authTicketJson;
+				
+			} else {
+				LOG.error("Ticket Not Generated For This User ");
+			}
+		} else {
+			LOG.error("LQBUsername or Password are not valid ");
+		}
+		return sTicket;
 	}
 	
 	

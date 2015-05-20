@@ -22,11 +22,12 @@ public class LQBRequestUtil {
 	        .getLogger(LQBRequestUtil.class);
 	
 	
-	public JSONObject prepareCreateLoanJson(String templateName) {
+	public JSONObject prepareCreateLoanJson(String templateName,String sTicket) {
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
 		try {
 			jsonChild.put("sTemplateName", templateName);
+			jsonChild.put("sTicket", sTicket);
 			json.put("opName", "Create");
 
 			json.put("loanVO", jsonChild);
@@ -60,7 +61,7 @@ public class LQBRequestUtil {
 	}
 	
 	
-	public JSONObject saveLoan(String loanNumber, LoanAppFormVO loanAppFormVO) {
+	public JSONObject saveLoan(String loanNumber, LoanAppFormVO loanAppFormVO, String sTicket) {
 		HashMap<String, String> hashmap = new HashMap();
 		try {
 			String condition = "";
@@ -326,6 +327,7 @@ public class LQBRequestUtil {
 			jsonChild.put("sLoanNumber", loanNumber);
 			jsonChild.put("sDataContentMap", jsonObject);
 			jsonChild.put("format", "0");
+			jsonChild.put("sTicket",sTicket);
 
 			json.put("opName", "Save");
 			json.put("loanVO", jsonChild);
