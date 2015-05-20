@@ -1058,6 +1058,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		LoanNeedsList loanNeed = loanService.fetchByNeedId(needId, loanId);
 		updateFileInLoanNeedList(loanNeed.getId(), fileId);
 		updateIsAssignedToTrue(fileId);
+		Map<Integer, FileAssignmentMappingVO> map=new HashMap<Integer, FileAssignmentMappingVO>();
+		map.put(loanNeed.getId(), new FileAssignmentMappingVO());
+		changeWorkItem(map,loanId);
 	}
 
 }
