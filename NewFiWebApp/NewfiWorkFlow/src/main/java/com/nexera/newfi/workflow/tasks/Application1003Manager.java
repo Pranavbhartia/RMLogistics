@@ -21,10 +21,15 @@ import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.vo.LoanTurnAroundTimeVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -77,9 +82,26 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		        .findNotificationTypeListForLoan(loanId,
 		                notificationType.getNotificationTypeName(), true);
 		if (notificationList.size() == 0) {
+			LoanVO loanVO = loanService.getLoanByID(loanId);
+			WorkflowExec workflowExec = new WorkflowExec();
+			workflowExec.setId(loanVO.getLoanManagerWorkflowID());
+			WorkflowItemMaster workflowItemMaster = workflowService
+			        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS);
+			WorkflowItemExec currMilestone = workflowService
+			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
+			LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
+			        .retrieveTurnAroundTimeByLoan(loanId,
+			                currMilestone.getWorkflowItemMaster().getId());
+			long turnaroundTime = loanTurnAroundTimeVO.getHours();
+			
+			
+			String content=WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT;
+			content=content.replace("72", ""+turnaroundTime);
+			
 			NotificationVO notificationVO = new NotificationVO(loanId,
 			        notificationType.getNotificationTypeName(),
-			        WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT);
+			        content);
+			
 			List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
 			userRoles.add(UserRolesEnum.INTERNAL);
 			List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
