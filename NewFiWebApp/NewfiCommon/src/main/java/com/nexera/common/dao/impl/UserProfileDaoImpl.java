@@ -620,10 +620,12 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			List<User> availableUsers = new ArrayList<User>();
 
 			for (InternalUserStateMapping internalUser : internalUsers) {
-				if (internalUser.getUser().getInternalUserDetail() != null) // Doing
-				                                                            // only
-				                                                            // for
-				                                                            // LM
+				if (internalUser.getUser().getInternalUserDetail() != null
+				        && internalUser.getUser().getInternalUserDetail()
+				                .getLqbUsername() != null) // Doing
+				// only
+				// for
+				// LM and with valid LQB username
 				{
 					addIfUserIsEligible(internalUser.getUser(), availableUsers);
 				}
