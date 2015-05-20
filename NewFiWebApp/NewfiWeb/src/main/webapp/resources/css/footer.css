@@ -198,11 +198,9 @@ a.footer-inline-txt {
     /* box-shadow: 0 0 4px inset; */
 }
 .footer-inline-home-image{
-	background: url(../images/houseB.png) no-repeat left;          
+	background: url(../images/houseB.png) no-repeat center;          
 	height: 27px;           
-	width: 20px;
-	line-height: 17px;
-	margin-left: 37px;
+	width: 100%;
 }
 .footer-inline-bottom-right {
     padding-left: 277px;
@@ -212,9 +210,10 @@ div#footeHomeImage {
 }
 
 .footer-inline-home-text {
-    white-space: nowrap;
+    /* white-space: nowrap; */
     font-size: 10px;
     cursor: pointer;
+    text-align: center;
 }
 .footer-inline-bottom-left {
     padding-left: 233px;
@@ -225,12 +224,19 @@ div#footeHomeImage {
    top:expression((0-(footer.offsetHeight)+(document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight)+(ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop))+'px');
 }
 
+.footer-wrapper-container {
+    padding-left: 312px;
+}
+
 .footer-text1{
-	padding-left: 405px;
+    width: 80%;
+    text-align: center;
+    padding: 0 20px;
 }
 
 .footer-text2{
-    padding-right: 45px;
+    padding-right: 15px;
+    width: 20%;
 }
 .footer-container-text2 {
     padding: 15px 0px 0px 0px;

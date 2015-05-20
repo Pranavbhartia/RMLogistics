@@ -28,7 +28,7 @@ function getAgentSecondaryLeftNav() {
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 ="";
 	if(!selectedUserDetail.lqbFileId){
-		step1 = getAgentSecondaryLeftNavStep(1, "application progress");
+		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
 		newfiObject.applicationNavTab=step1;
 	}
 	var step2 = '';
