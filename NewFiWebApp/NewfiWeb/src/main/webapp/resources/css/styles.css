@@ -3467,24 +3467,68 @@ padding-left: 10px;
 	background-image: url(../images/ms-my-profile-grey.png);
 }
 
+
+
+.m-not-started .ms-icn-application-status {
+	background-image: url(../images/ms-application-status-grey.png);
+}
 .ms-icn-application-status {
 	background-image: url(../images/ms-application-status.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
-
-.m-not-started .ms-icn-application-status {
-	background-image: url(../images/ms-application-status-grey.png);
-}
-
 .ms-icn-application-fee {
 	background-image: url(../images/ms-application-fee.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
-
+.m-not-started .ms-icn-application-fee-app-status {
+  background: url(../images/ms-disclosure-grey.png) no-repeat center;
+  background-color: rgb(235, 235, 235);
+}
+.ms-icn-application-fee-app-status {
+	background-image: url(../images/ms-disclosure-selected.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.m-not-started .ms-icn-application-fee-initial-contact {
+	background-image: url(../images/contact_made.png);
+}
+.ms-icn-application-fee-initial-contact {
+	background-image: url(../images/contact_made_selected.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.m-not-started .ms-icn-application-fee-2 {
+  background: url(../images/Know_newfi.png) no-repeat center;
+  background-color: rgb(235, 235, 235);
+}
+.ms-icn-application-fee-2{
+	background-image: url(../images/Know_newfi_selcted.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.m-not-started .ms-icn-application-fee-app {
+  background: url(../images/app_fee.png) no-repeat center;
+  background-color: rgb(235, 235, 235);
+}
+.ms-icn-application-fee-app {
+	background-image: url(../images/app_fee_sel.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
 .m-not-started .ms-icn-application-fee {
-	background-image: url(../images/ms-application-fee-grey.png);
+  background-image: url(../images/ms-application-fee-grey.png);
+}
+.m-not-started .ms-icn-application-fee-um {
+  background: url(../images/underwriting.png) no-repeat center;
+  background-color: rgb(235, 235, 235);
+}
+
+.ms-icn-application-fee-app-um {
+	background-image: url(../images/underwriting_selected.png);
+	background-repeat: no-repeat;
+	background-position: center;
 }
 
 .ms-icn-appraisal {
@@ -3518,7 +3562,7 @@ padding-left: 10px;
 }
 
 .ms-icn-initial-need-list {
-	background-image: url(../images/ms-initial-need-list.png);
+	background-image: url(../images/needs_list_selected.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
