@@ -253,6 +253,8 @@ public interface CommonConstants {
 
 	public static final String SUBJECT_LOAN_SUSPENDED = "Loan Suspended";
 
+	public static final String SUBJECT_UPDATE_NEEDS_LIST = "Your needs list has been updated";
+
 	public static final String SUBJECT_LOAN_DECLINED = "Loan Declined";
 
 	public static final String SUBJECT_LOAN_WITHDRAWN = "Loan Withdrawn";

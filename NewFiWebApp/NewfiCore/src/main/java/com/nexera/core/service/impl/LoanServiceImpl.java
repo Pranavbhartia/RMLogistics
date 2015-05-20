@@ -272,7 +272,7 @@ public class LoanServiceImpl implements LoanService {
 		loan.setModifiedDate(loanVO.getModifiedDate());
 		loan.setName(loanVO.getName());
 		loan.setIsBankConnected(loanVO.getIsBankConnected());
-		loan.setIsRateLocked(loanVO.getIsRateLocked());
+		loan.setLockStatus(loanVO.getLockStatus());
 		return loan;
 
 	}
@@ -1377,10 +1377,14 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-		messageServiceHelper.generatePrivateMessage(loanID, LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
+		messageServiceHelper
+		        .generatePrivateMessage(loanID,
+		                LoanStatus.ratesLockedRequested,
+		                utils.getLoggedInUser(), false);
 		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
-		
-		// TODO send mail to LM ............... change template id and substitutions
+
+		// TODO send mail to LM ............... change template id and
+		// substitutions
 		emailEntity = new EmailVO();
 		template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_RATES_LOCKED);
@@ -1410,9 +1414,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public void sendRateLockRequested(Integer loanID) throws InvalidInputException,
-	        UndeliveredEmailException {
-		//Change Template and substitutations for rate lock requested
+	public void sendRateLockRequested(Integer loanID)
+	        throws InvalidInputException, UndeliveredEmailException {
+		// Change Template and substitutations for rate lock requested
 		LoanVO loan = getLoanByID(loanID);
 		EmailVO emailEntity = new EmailVO();
 		Template template = templateService
@@ -1438,10 +1442,13 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-		messageServiceHelper.generatePrivateMessage(loanID, LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
+		messageServiceHelper
+		        .generatePrivateMessage(loanID,
+		                LoanStatus.ratesLockedRequested,
+		                utils.getLoggedInUser(), false);
 		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public void sendNoproductsAvailableEmail(Integer loanId) {

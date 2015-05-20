@@ -63,25 +63,13 @@ public class Loan implements Serializable {
 	private List<UploadedFilesList> uploadedFileList;
 	private Integer customerWorkflow;
 	private Integer loanManagerWorkflow;
-	private Boolean isRateLocked;
+	private String lockStatus;
 	private Boolean isBankConnected;
 	private BigDecimal lockedRate;
 	private BigDecimal appFee;
 	private Long purchaseDocumentExpiryDate;
 	private String lockedRateData;
-	
-	
-	
-
-	@Column(name = "rate_locked", columnDefinition = "TINYINT")
-	@Type(type = "org.hibernate.type.NumericBooleanType")
-	public Boolean getIsRateLocked() {
-		return isRateLocked;
-	}
-
-	public void setIsRateLocked(Boolean isRateLocked) {
-		this.isRateLocked = isRateLocked;
-	}
+	private Date lockExpirationDate;
 
 	@Column(name = "bank_connected", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -479,8 +467,10 @@ public class Loan implements Serializable {
 		loanVo.setModifiedDate(loan.getModifiedDate());
 		loanVo.setAppFee(loan.getAppFee());
 		loanVo.setName(loan.getName());
+		loanVo.setLockExpirationDate(loan.getLockExpirationDate());
 		loanVo.setLockedRateData(loan.getLockedRateData());
-		loanVo.setPurchaseDocumentExpiryDate(loan.getPurchaseDocumentExpiryDate());
+		loanVo.setPurchaseDocumentExpiryDate(loan
+		        .getPurchaseDocumentExpiryDate());
 		if (loan.getLoanProgressStatus() != null) {
 			loanVo.setStatus(loan.getLoanProgressStatus()
 			        .getLoanProgressStatus());
@@ -492,7 +482,7 @@ public class Loan implements Serializable {
 
 		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
 		List<UserVO> loanTeam = new ArrayList<UserVO>();
-		if(null!= loan.getLoanTeam()){
+		if (null != loan.getLoanTeam()) {
 			for (LoanTeam team : loan.getLoanTeam()) {
 				UserVO userVo = User.convertFromEntityToVO(team.getUser());
 				// loanVo.setUser(userVo);
@@ -509,7 +499,7 @@ public class Loan implements Serializable {
 		}
 
 		loanVo.setIsBankConnected(loan.getIsBankConnected());
-		loanVo.setIsRateLocked(loan.getIsRateLocked());
+		loanVo.setLockStatus(loan.getLockStatus());
 		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
 		loanVo.setLockedRate(loan.getLockedRate());
 		return loanVo;
@@ -549,20 +539,39 @@ public class Loan implements Serializable {
 
 	@Column(name = "purchase_document_expiry_date")
 	public Long getPurchaseDocumentExpiryDate() {
-	    return purchaseDocumentExpiryDate;
-    }
+		return purchaseDocumentExpiryDate;
+	}
 
 	public void setPurchaseDocumentExpiryDate(Long purchaseDocumentExpiryDate) {
-	    this.purchaseDocumentExpiryDate = purchaseDocumentExpiryDate;
-    }
+		this.purchaseDocumentExpiryDate = purchaseDocumentExpiryDate;
+	}
 
 	@Column(name = "locked_rate_data")
 	public String getLockedRateData() {
-	    return lockedRateData;
-    }
+		return lockedRateData;
+	}
 
 	public void setLockedRateData(String lockedRateData) {
-	    this.lockedRateData = lockedRateData;
-    }
+		this.lockedRateData = lockedRateData;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "lock_expiration_date")
+	public Date getLockExpirationDate() {
+		return lockExpirationDate;
+	}
+
+	public void setLockExpirationDate(Date lockExpirationDate) {
+		this.lockExpirationDate = lockExpirationDate;
+	}
+
+	@Column(name = "lock_status")
+	public String getLockStatus() {
+		return lockStatus;
+	}
+
+	public void setLockStatus(String lockStatus) {
+		this.lockStatus = lockStatus;
+	}
 
 }

@@ -103,7 +103,8 @@
 		<field id="sArchivedD" />
 		<field id="sArchivedDTime" />
 		<field id="sStatusD" />
-		<field id="sStatusD" />
+		<field id="sRLckdExpiredD" />
+		<field id="sRateLockStatusT" />
 		<applicant>
 			<field id="aBFirstNm" />
 			<field id="aBLastNm" />
