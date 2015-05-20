@@ -2312,8 +2312,8 @@ $(document).on('click', function(e) {
 });
 $(document).on('click', '#alert-notification-btn', function(e) {
     e.stopImmediatePropagation();
-    if ($(this).has('#alert-popup-wrapper').length == 1) {
-        if ($('#alert-popup-wrapper').css("display") == "block") {
+    if ($(this).has('#alert-popup-cont-wrapper').length == 1) {
+        if ($('#alert-popup-cont-wrapper').css("display") == "block") {
             hideAlertNotificationPopup();
         } else {
             showAlertNotificationPopup();
@@ -2324,17 +2324,17 @@ $(document).on('click', '#alert-notification-btn', function(e) {
 });
 
 function showAlertNotificationPopup() {
-    $('#alert-popup-wrapper').show();
+    $('#alert-popup-cont-wrapper').show();
     $('#alert-popup-wrapper').perfectScrollbar({
         suppressScrollX : true
     });
 }
 
 function hideAlertNotificationPopup() {
-    $('#alert-popup-wrapper').hide();
+    $('#alert-popup-cont-wrapper').hide();
 }
 
-function appendAlertNotificationPopup() {
+/*function appendAlertNotificationPopup() {
     var alertWrapper = $('<div>').attr({
         "id": "alert-popup-wrapper",
         "class": "alert-popup-wrapper"
@@ -2350,7 +2350,7 @@ function appendAlertNotificationPopup() {
     $('#alert-popup-wrapper').perfectScrollbar({
         suppressScrollX : true
     });
-}
+}*/
 
 function getAlertNotificationRow(alert, time, isSystemAlert) {
     var row = $('<div>').attr({

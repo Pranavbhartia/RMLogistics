@@ -27,8 +27,8 @@
 <link href="resources/css/style-admin.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/footer.css" rel="stylesheet">    
+<link href="resources/css/style-resp.css" rel="stylesheet">
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
 

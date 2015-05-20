@@ -285,19 +285,19 @@ public class ApplicationFormRestService {
 	public @ResponseBody String lockLoanRateLoan(String appFormData) {
 		LOG.debug("lockLoanRateLoan" + appFormData);
 		Gson gson = new Gson();
-		String lockRateData = null;
+		String lockRateData = "";
 		try {
 			LoanLockRateVO loanLockRateVO = gson.fromJson(appFormData,
 			        LoanLockRateVO.class);
 			LOG.debug("lockLoanRate is"
 			        + loanLockRateVO.getIlpTemplateId());
-			lockRateData = invokeRest(lQBRequestUtil.prepareLockLoanRateJson(loanLockRateVO)
-			        .toString());
+//			lockRateData = invokeRest(lQBRequestUtil.prepareLockLoanRateJson(loanLockRateVO)
+//			        .toString());
 			LOG.debug("lockLoanRate is" + lockRateData);
 			if (!lockRateData.contains("status=\"Error\"")) {
-				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
-				        loanLockRateVO.getRateVo());
-				loanService.sendRateLocked(loanLockRateVO.getLoanId());
+//				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
+//				        loanLockRateVO.getRateVo());
+				loanService.sendRateLockRequested(loanLockRateVO.getLoanId());
 			}
 
 		} catch (Exception e) {
