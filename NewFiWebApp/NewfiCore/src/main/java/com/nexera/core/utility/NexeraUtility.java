@@ -66,6 +66,8 @@ import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDPixelMap;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDXObjectImage;
 import org.apache.pdfbox.util.PDFMergerUtility;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +80,7 @@ import com.itextpdf.text.pdf.PdfCopy;
 import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.ExceptionMasterExecution;
 import com.nexera.common.entity.UploadedFilesList;
@@ -903,5 +906,37 @@ public class NexeraUtility {
 		String plainStr = new String(utf8, charSet);
 		return plainStr;
 	}
+	
+	public static JSONObject createAuthObject(String opName, String userName,
+	        String password) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put(WebServiceMethodParameters.PARAMETER_USERNAME, userName);
+			json.put(WebServiceMethodParameters.PARAMETER_PASSWORD, password);
+			json.put("opName", opName);
+		} catch (JSONException e) {
+			//LOG.error("Invalid Json String ");
+			throw new FatalException("Could not parse json " + e.getMessage());
+		}
+		return json;
+	}
+	
+	/*public static void main(String[] args) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
+	    String userName = "Nexera_RareMile";
+	    String password = "Portal0262";
+	    byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
+		        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
+	    
+	    String crypticKey ="ezeon8547";
+	    
+	    String encryptedlqbUserName = encrypt(salt, crypticKey, userName);
+	    System.out.println(encryptedlqbUserName);
+	    String encryptedlqbPassword = encrypt(salt, crypticKey, password);
+	    System.out.println(encryptedlqbPassword);
+	    
+	    String encryptedlqbName = decrypt(salt, crypticKey, encryptedlqbUserName);
+	    String encryptedlqbPass = decrypt(salt, crypticKey, encryptedlqbPassword);
+	    
+    }*/
 
 }
