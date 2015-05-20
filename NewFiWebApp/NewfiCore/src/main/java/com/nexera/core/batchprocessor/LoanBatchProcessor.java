@@ -119,6 +119,18 @@ public class LoanBatchProcessor extends QuartzJobBean {
 										}
 									}
 								}
+							} else {
+								LOGGER.debug("Loan has been deleted in LQB, hence removing this loan");
+								JSONObject ClearModifiedLoanByNameByAppCodeObject = createClearModifiedLoanObject(
+								        WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE,
+								        modifiedLoanListResponseVO
+								                .getLoanName());
+								if (ClearModifiedLoanByNameByAppCodeObject != null) {
+									LOGGER.debug("Invoking LQB service to fetch Loan status ");
+									lqbInvoker
+									        .invokeLqbService(ClearModifiedLoanByNameByAppCodeObject
+									                .toString());
+								}
 							}
 						}
 					}
@@ -164,6 +176,27 @@ public class LoanBatchProcessor extends QuartzJobBean {
 				LOGGER.debug("Batch Jobs Not Running ");
 			}
 		}
+	}
+
+	public JSONObject createClearModifiedLoanObject(String opName,
+	        String lqbLoanId) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        lqbLoanId);
+
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_APP_CODE,
+			        appCode);
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+			        e.getMessage());
+			nexeraUtility.sendExceptionEmail(e.getMessage());
+		}
+		return json;
 	}
 
 	private void updateBatchJobExecution(BatchJobExecution batchJobExecution) {

@@ -14,6 +14,7 @@ import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -54,7 +55,8 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO user = new UserVO(userId);
 		LoanVO loan = loanService.getActiveLoanOfUser(user);
-		if (loan.getIsRateLocked()) {
+		if (loan.getLockStatus().equalsIgnoreCase(
+		        CoreCommonConstants.RATE_LOCKED)) {
 			LOG.info("Chaning Status to Completeed");
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
@@ -70,16 +72,18 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		
+
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.LOCK_RATE_NOTIFICATION_TYPE;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		
+
 		int workflowItemExecutionId = Integer.parseInt(objectMap.get(
-		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());		
+		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		String prevMilestoneKey = WorkflowConstants.WORKFLOW_ITEM_APP_FEE;
-		LOG.debug("LockRatesManager : Updating Reminder" + loanId + " with Prev Mielstone as " + prevMilestoneKey);
+		LOG.debug("LockRatesManager : Updating Reminder" + loanId
+		        + " with Prev Mielstone as " + prevMilestoneKey);
 		String notificationReminderContent = WorkflowConstants.LOCK_RATE__NOTIFICATION_CONTENT;
 		CreateReminderVo createReminderVo = new CreateReminderVo(
 		        notificationType, loanId, workflowItemExecutionId,

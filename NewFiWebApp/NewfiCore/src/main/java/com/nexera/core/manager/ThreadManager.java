@@ -187,6 +187,8 @@ public class ThreadManager implements Runnable {
 						loadResponse = nexeraUtility
 						        .removeBackSlashDelimiter(loadResponse);
 						int currentLoanStatus = -1;
+						String lockStatus = null;
+						String lockexpirationDate = null;
 						Milestones milestones = null;
 						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 						if (loadResponseList != null) {
@@ -197,9 +199,34 @@ public class ThreadManager implements Runnable {
 									currentLoanStatus = Integer
 									        .parseInt(loadResponseVO
 									                .getFieldValue());
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_STATUS)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										lockStatus = loadResponseVO
+										        .getFieldValue();
+									}
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_EXPIRED_DATE)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										lockexpirationDate = loadResponseVO
+										        .getFieldValue();
+									}
 								}
 
 							}
+
+							if (lockStatus != null) {
+								if (lockStatus
+								        .equalsIgnoreCase(CoreCommonConstants.RATE_LOCKED)) {
+									if (lockexpirationDate != null) {
+										Date date = parseStringIntoDate(lockexpirationDate);
+										loan.setLockExpirationDate(date);
+									}
+								}
+								loan.setLockStatus(lockStatus);
+								loanService.updateLoan(loan);
+							}
+
 							LOSLoanStatus loanStatusID = null;
 							if (currentLoanStatus == -1) {
 								LOGGER.error("Invalid/No status received from LQB ");

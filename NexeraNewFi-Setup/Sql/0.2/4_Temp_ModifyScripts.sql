@@ -410,3 +410,8 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='9';
 ### Added all the above to 1_ script
 
 ########
+
+
+
+ALTER TABLE `newfi_schema`.`loan` ADD COLUMN `lock_expiration_date` DATETIME NULL AFTER `locked_rate_data`;
+ALTER TABLE `newfi_schema`.`loan` change `rate_locked` `lock_status` enum('0','1','2') DEFAULT '0' NULL;
