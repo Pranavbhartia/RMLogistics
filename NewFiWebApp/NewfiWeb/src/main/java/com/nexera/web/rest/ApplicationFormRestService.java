@@ -202,7 +202,7 @@ public class ApplicationFormRestService {
 			e.printStackTrace();
 			lockRateData = "error";
 		}
-		if (lockRateData == null || lockRateData.equals("error")) {
+		if (lockRateData == null || lockRateData.equals("error")||lockRateData.equals("")){
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
