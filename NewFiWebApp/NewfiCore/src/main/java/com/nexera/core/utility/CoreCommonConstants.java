@@ -20,6 +20,14 @@ public interface CoreCommonConstants {
 
 	public static String SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_SIGNED = "Signed Disclosure";
 
+	// Rate Lock status
+
+	public static String RATE_NOT_LOCKED = "0";
+
+	public static String RATE_LOCK_REQUESTED = "1";
+
+	public static String RATE_LOCKED = "2";
+
 	// LQB xml constants
 
 	public static String SOAP_XML_RESPONSE_MESSAGE = "responseMessage";
@@ -27,6 +35,10 @@ public interface CoreCommonConstants {
 	public static String SOAP_XML_UNDERWRITING_CONDITION_DESCRIPTION = "CondDesc";
 
 	public static String SOAP_XML_LOAD_LOAN_STATUS = "sStatusT";
+
+	public static String SOAP_XML_RATE_LOCK_STATUS = "sRateLockStatusT";
+
+	public static String SOAP_XML_RATE_LOCK_EXPIRED_DATE = "sRLckdExpiredD";
 
 	// Borrower Credit Score Constants
 	public static String SOAP_XML_BORROWER_EQUIFAX_SCORE = "aBEquifaxScore";

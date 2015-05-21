@@ -39,7 +39,7 @@ public class LoanVO implements Serializable {
 	private List<UserVO> loanTeam;
 	private ExtendedLoanTeamVO extendedLoanTeam;
 
-	private Boolean isRateLocked;
+	private String lockStatus;
 	private Boolean isBankConnected;
 	private String setSenderDomain;
 	private BigDecimal lockedRate;
@@ -56,6 +56,7 @@ public class LoanVO implements Serializable {
 	private Long purchaseDocumentExpiryDate;
 	private String lqbUrl;
 	private String lockedRateData;
+	private Date lockExpirationDate;
 
 	private String userZipCode;
 
@@ -332,14 +333,6 @@ public class LoanVO implements Serializable {
 		this.lockedRate = lockedRate;
 	}
 
-	public Boolean getIsRateLocked() {
-		return isRateLocked;
-	}
-
-	public void setIsRateLocked(Boolean isRateLocked) {
-		this.isRateLocked = isRateLocked;
-	}
-
 	public Boolean getIsBankConnected() {
 		return isBankConnected;
 	}
@@ -429,7 +422,7 @@ public class LoanVO implements Serializable {
 		        + loanNeedsLists + ", loanNotifications=" + loanNotifications
 		        + ", loanRates=" + loanRates + ", loanSettings=" + loanSettings
 		        + ", loanTeam=" + loanTeam + ", extendedLoanTeam="
-		        + extendedLoanTeam + ", isRateLocked=" + isRateLocked
+		        + extendedLoanTeam + ", lockStatus=" + lockStatus
 		        + ", isBankConnected=" + isBankConnected + ", setSenderDomain="
 		        + setSenderDomain + ", lockedRate=" + lockedRate + ", appFee="
 		        + appFee + ", customerWorkflowID=" + customerWorkflowID
@@ -438,5 +431,21 @@ public class LoanVO implements Serializable {
 		        + ", purchaseDocumentExpiryDate=" + purchaseDocumentExpiryDate
 		        + ", lqbUrl=" + lqbUrl + ", lockedRateData=" + lockedRateData
 		        + ", userZipCode=" + userZipCode + "]";
+	}
+
+	public Date getLockExpirationDate() {
+		return lockExpirationDate;
+	}
+
+	public void setLockExpirationDate(Date lockExpirationDate) {
+		this.lockExpirationDate = lockExpirationDate;
+	}
+
+	public String getLockStatus() {
+		return lockStatus;
+	}
+
+	public void setLockStatus(String lockStatus) {
+		this.lockStatus = lockStatus;
 	}
 }

@@ -790,7 +790,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 			                + CommonConstants.SENDER_EMAIL_ID);
 		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("You Needs list has been updated");
+		emailEntity.setSubject(CommonConstants.SUBJECT_UPDATE_NEEDS_LIST);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 

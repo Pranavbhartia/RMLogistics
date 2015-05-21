@@ -15,6 +15,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -59,7 +60,8 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 		UserVO user = new UserVO();
 		user.setId(userId);
 		LoanVO loan = loanService.getActiveLoanOfUser(user);
-		if (loan.getIsRateLocked()) {
+		if (loan.getLockStatus().equalsIgnoreCase(
+		        CoreCommonConstants.RATE_LOCKED)) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
