@@ -241,7 +241,7 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		messageVO.setMessage(noteText);
 		messageVO.setLinks(fileUrls);
 		messageVO.setParentId(messageId);
-		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString(), false);
+		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString(), sendEmail);
 
 	}
 

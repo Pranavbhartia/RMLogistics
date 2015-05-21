@@ -628,10 +628,7 @@ function getCalculationFunctionForItem(key) {
 					var result = Math.round(.0035 * purchaseValue)
 					return result;
 				} else {
-					var taxVal = closingCostHolder != undefined ? closingCostHolder.annualHomeownersInsurance
-							: "";
-					var result = Math.round(taxVal);
-					return result;
+					return "$0.00";
 				}
 			}
 		};

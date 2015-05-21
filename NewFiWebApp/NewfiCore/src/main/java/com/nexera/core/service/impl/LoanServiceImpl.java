@@ -60,6 +60,7 @@ import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
@@ -1414,8 +1415,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public void sendRateLockRequested(Integer loanID)
-	        throws InvalidInputException, UndeliveredEmailException {
+	public void sendRateLockRequested(Integer loanID,
+	        LoanLockRateVO loanLockRateVO) throws InvalidInputException,
+	        UndeliveredEmailException {
 		// Change Template and substitutations for rate lock requested
 		LoanVO loan = getLoanByID(loanID);
 		EmailVO emailEntity = new EmailVO();
@@ -1425,9 +1427,9 @@ public class LoanServiceImpl implements LoanService {
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { loan.getUser()
 		        .getFirstName() + " " + loan.getUser().getLastName() });
-		substitutions.put("-rate-",
-		        new String[] { loan.getLockedRate() != null ? loan
-		                .getLockedRate().toString() : "" });
+		substitutions.put("-rate-", new String[] { loanLockRateVO
+		        .getRequestedRate() != null ? loanLockRateVO.getRequestedRate()
+		        : "" });
 		substitutions.put("-rateexpirationdate-", new String[] { " " });
 
 		if (loan.getUser() != null) {
@@ -1447,6 +1449,7 @@ public class LoanServiceImpl implements LoanService {
 		                LoanStatus.ratesLockedRequested,
 		                utils.getLoggedInUser(), false);
 		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
+		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
 	}
 
 	@Override

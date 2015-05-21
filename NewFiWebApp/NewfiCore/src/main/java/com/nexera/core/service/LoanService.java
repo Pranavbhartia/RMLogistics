@@ -19,6 +19,7 @@ import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanUserSearchVO;
@@ -183,6 +184,6 @@ public interface LoanService {
 	 * @throws InvalidInputException
 	 * @throws UndeliveredEmailException
 	 */
-	void sendRateLockRequested(Integer loanID) throws InvalidInputException,
+	void sendRateLockRequested(Integer loanID,LoanLockRateVO loanLockRateVO) throws InvalidInputException,
 			UndeliveredEmailException;
 }

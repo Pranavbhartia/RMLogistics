@@ -299,7 +299,7 @@ public class ApplicationFormRestService {
 			if (!lockRateData.contains("status=\"Error\"")) {
 //				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
 //				        loanLockRateVO.getRateVo());
-				loanService.sendRateLockRequested(loanLockRateVO.getLoanId());
+				loanService.sendRateLockRequested(loanLockRateVO.getLoanId(),loanLockRateVO);
 			}
 
 		} catch (Exception e) {

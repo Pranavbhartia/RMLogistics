@@ -419,7 +419,7 @@ ALTER TABLE `newfi_schema`.`loan` ADD COLUMN `lock_expiration_date` DATETIME NUL
 ALTER TABLE `newfi_schema`.`loan` change `rate_locked` `lock_status` enum('0','1','2') DEFAULT '0' NULL;
 
 #Charu - Create extra need, please drop your schema completely and execute else, it wont work
-INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `description`, `modified_date`, `is_custom`) VALUES ('40', '', 'Extra', 'Extra', NULL, '0');
+INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `description`, `modified_date`, `is_custom`) VALUES ('40', 'Other', 'Extra', 'Extra', NULL, '0');
 
 ########
 
