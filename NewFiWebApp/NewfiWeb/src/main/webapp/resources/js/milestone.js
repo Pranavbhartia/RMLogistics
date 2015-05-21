@@ -263,7 +263,7 @@ var workFlowContext = {
 				VIEW_UW : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},		
 				CLOSURE_STATUS : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
 				VIEW_CLOSING : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
-				MANAGE_PROFILE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
+				MANAGE_PROFILE : { active : "ms-icn-application-fee-profile"	, inactive : "m-not-started ms-icn-application-fee-profile"	},
 				MANAGE_ACCOUNT : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				MANAGE_ONLINE_APP : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				MANAGE_PHOTO : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},

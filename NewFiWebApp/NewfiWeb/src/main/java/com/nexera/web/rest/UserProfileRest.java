@@ -59,6 +59,7 @@ import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.StateLookupService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 import com.nexera.web.rest.util.RestUtil;
@@ -81,7 +82,8 @@ public class UserProfileRest {
 
 	@Autowired
 	private Utils utils;
-
+	@Autowired
+	private StateLookupService stateLookupService;
 	@Autowired
 	private PropertyFileReader propertyFileReader;
 
@@ -718,5 +720,6 @@ public class UserProfileRest {
 		return commonResponseVO;
 
 	}
+	
 
 }

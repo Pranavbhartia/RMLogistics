@@ -66,6 +66,8 @@
 	
 		$(document).ready(function() {
 
+			$('#right-panel').css('min-height',window.innerHeight - 98 + 'px');
+			
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
 			changeLeftPanel(2,callBackFun);
