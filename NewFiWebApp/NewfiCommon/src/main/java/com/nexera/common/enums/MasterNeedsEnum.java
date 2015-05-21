@@ -46,7 +46,8 @@ public enum MasterNeedsEnum {
 	        "Current_Business_License"), Copy_of_Relocation_Agreement(36,
 	        "Copy_of_Relocation_Agreement"), Disclsoure_Available(37,
 	        "Disclosure Available"), Signed_Disclosure(38, "Signed Disclosure"), Appraisal_Report(
-	        39, "Appraisals Report");
+	        39, "Appraisals Report"), EXTRA(
+	    	        40, "EXTRA");
 
 	private final int indx;
 
