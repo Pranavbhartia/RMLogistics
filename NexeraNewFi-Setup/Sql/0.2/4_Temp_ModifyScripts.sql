@@ -404,12 +404,9 @@ INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `de
 
 UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='9';
 
-########
 
-### Anoop: 
 ### Added all the above to 1_ script
 
-########
 
 
 
@@ -420,4 +417,14 @@ UPDATE `newfi_schema`.`internaluserdetails` SET `lqb_password`='ycmeuaJoQyt7Bgna
 
 ALTER TABLE `newfi_schema`.`loan` ADD COLUMN `lock_expiration_date` DATETIME NULL AFTER `locked_rate_data`;
 ALTER TABLE `newfi_schema`.`loan` change `rate_locked` `lock_status` enum('0','1','2') DEFAULT '0' NULL;
+
+#Charu - Create extra need, please drop your schema completely and execute else, it wont work
+INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `description`, `modified_date`, `is_custom`) VALUES ('40', '', 'Extra', 'Extra', NULL, '0');
+
+########
+
+### Anoop: 
+### Added all the above to 1_ script
+
+########
 
