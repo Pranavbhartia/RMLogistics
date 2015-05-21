@@ -40,4 +40,5 @@ var phoneFieldEmptyMessage="Phone feild cannot be empty";
 var invalidPhoneNumberMessage="Phone number not valid";
 var invalidZipCodeMessage="Zip Code not valid";
 var zipCodeEmptyMessage="Zipcode can not be empty";
+var passwordEmptyMessage="Password field cannot be empty";
 
