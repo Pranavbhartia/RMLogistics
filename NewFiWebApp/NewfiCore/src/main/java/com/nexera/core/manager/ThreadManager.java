@@ -189,6 +189,7 @@ public class ThreadManager implements Runnable {
 						int currentLoanStatus = -1;
 						String lockStatus = null;
 						String lockexpirationDate = null;
+						String lockedRate = null;
 						Milestones milestones = null;
 						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 						if (loadResponseList != null) {
@@ -211,17 +212,24 @@ public class ThreadManager implements Runnable {
 										lockexpirationDate = loadResponseVO
 										        .getFieldValue();
 									}
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOCKED_RATE)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										lockedRate = loadResponseVO
+										        .getFieldValue();
+									}
 								}
 
 							}
 
 							if (lockStatus != null) {
-								if (lockStatus
-								        .equalsIgnoreCase(CoreCommonConstants.RATE_LOCKED)) {
-									if (lockexpirationDate != null) {
-										Date date = parseStringIntoDate(lockexpirationDate);
-										loan.setLockExpirationDate(date);
-									}
+								if (lockexpirationDate != null) {
+									Date date = parseStringIntoDate(lockexpirationDate);
+									loan.setLockExpirationDate(date);
+								}
+								if (lockedRate != null) {
+									loan.setLockedRateData(lockedRate);
+
 								}
 								loan.setLockStatus(lockStatus);
 								loanService.updateLoan(loan);
