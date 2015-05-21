@@ -197,11 +197,12 @@ public class ApplicationFormRestService {
 				}
 				
 				// Code for automating Needs List creation
+
 				
 				if (response != null && !response.equalsIgnoreCase("error")) {
 					
 					Integer loanId = loaAppFormVO.getLoan().getId();
-					needsListService.createInitilaNeedsList(loanId);
+//					needsListService.createInitilaNeedsList(loanId);
 					userProfileService.dismissAlert(MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,loanId,WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 					
 					lockRateData = loadLoanRateData(loanNumber ,sTicket);
@@ -308,7 +309,7 @@ public class ApplicationFormRestService {
 			if (!lockRateData.contains("status=\"Error\"")) {
 //				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
 //				        loanLockRateVO.getRateVo());
-				loanService.sendRateLockRequested(loanLockRateVO.getLoanId());
+				loanService.sendRateLockRequested(loanLockRateVO.getLoanId(),loanLockRateVO);
 			}
 
 		} catch (Exception e) {
