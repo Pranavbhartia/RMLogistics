@@ -184,6 +184,8 @@ public interface LoanService {
 	 * @throws InvalidInputException
 	 * @throws UndeliveredEmailException
 	 */
-	void sendRateLockRequested(Integer loanID,LoanLockRateVO loanLockRateVO) throws InvalidInputException,
-			UndeliveredEmailException;
+	void sendRateLockRequested(Integer loanID, LoanLockRateVO loanLockRateVO)
+	        throws InvalidInputException, UndeliveredEmailException;
+
+	public void sendNoproductsAvailableEmail(UserVO userVO, int loanID);
 }

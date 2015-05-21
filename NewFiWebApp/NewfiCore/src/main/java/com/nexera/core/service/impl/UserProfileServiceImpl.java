@@ -780,7 +780,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 		return date;
 	}
-	
+
 	private boolean checkStateCode(String stateCodewithLicence) {
 		boolean status = false;
 
@@ -1033,11 +1033,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = userProfileDao.findByUserId(userVO.getId());
 
 		for (String stateCodeAndLicenceNo : stateCodesList) {
-			
+
 			String stateCode = stateCodeAndLicenceNo.split(":")[0];
 			String licenseNumber = stateCodeAndLicenceNo.split(":")[1];
 			internalUserStateMapping = new InternalUserStateMapping();
-			internalUserStateMapping.setStateLookup(stateLookupDao.findStateLookupByStateCode(stateCode));
+			internalUserStateMapping.setStateLookup(stateLookupDao
+			        .findStateLookupByStateCode(stateCode));
 			internalUserStateMapping.setLicenseNumber(licenseNumber);
 			internalUserStateMapping.setUser(user);
 			internalUserStateMappingDao.save(internalUserStateMapping);
@@ -1281,8 +1282,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 								        .getStatusId()) {
 									int loanId = loanVO.getId();
 									LOG.info(loanId + "-------------------");
-									loanService
-									        .sendNoproductsAvailableEmail(loanId);
+									loanService.sendNoproductsAvailableEmail(
+									        userVOObj, loanId);
 									messageServiceHelper
 									        .generatePrivateMessage(loanId,
 									                LoanStatus.ratesLocked,
@@ -1457,9 +1458,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 					        lqbPassword);
 				}
 				if (lqbUsername != null && lqbPassword != null) {
-					JSONObject authOperationObject = NexeraUtility.createAuthObject(
-					        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
-					        lqbUsername, lqbPassword);
+					JSONObject authOperationObject = NexeraUtility
+					        .createAuthObject(
+					                WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+					                lqbUsername, lqbPassword);
 					LOG.debug("Invoking LQB service to fetch user authentication ticket ");
 					String authTicketJson = lqbInvoker
 					        .invokeRestSpringParseObjForAuth(authOperationObject
@@ -1534,8 +1536,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 		}
 		return json;
 	}
-
-	
 
 	@Override
 	public List<String> getDefaultUsers(String userName) {

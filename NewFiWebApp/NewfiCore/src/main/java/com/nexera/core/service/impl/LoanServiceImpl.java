@@ -1521,6 +1521,63 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public void sendNoproductsAvailableEmail(UserVO userVO, int loanID) {
+
+		EmailVO emailEntity = new EmailVO();
+		EmailRecipientVO recipientVO = new EmailRecipientVO();
+
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { userVO.getFirstName() + " "
+		        + userVO.getLastName() });
+		recipientVO.setEmailID(userVO.getEmailId());
+		emailEntity.setSenderEmailId(userVO.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject("No Products Available");
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+
+		try {
+			sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, userVO);
+		} catch (InvalidInputException e) {
+			LOG.error("Mail send failed--" + e);
+		} catch (UndeliveredEmailException e) {
+			LOG.error("Mail send failed--" + e);
+		}
+
+		EmailVO loanManagerEmailEntity = new EmailVO();
+		Template loanManagerTemplate = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
+		// We create the substitutions map
+		Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
+		loanManagerSubstitutions.put("-customername-",
+		        new String[] { userVO.getFirstName() });
+
+		loanManagerEmailEntity.setSenderEmailId(userVO.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+
+		loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		loanManagerEmailEntity.setSubject("No Products Available");
+		loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
+		loanManagerEmailEntity.setTemplateId(loanManagerTemplate.getValue());
+
+		try {
+			sendEmailService.sendEmailForLoanManagers(loanManagerEmailEntity,
+			        loanID);
+		} catch (InvalidInputException e) {
+			LOG.error("Mail send failed--" + e);
+		} catch (UndeliveredEmailException e) {
+			LOG.error("Mail send failed--" + e);
+		}
+
+	}
+
+	@Override
 	@Transactional
 	public void createAlertForAgentAddition(int loanId) {
 		LOG.debug("Inside method createAlertForAgentAddition ");
