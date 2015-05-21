@@ -40,6 +40,7 @@
 		var newfi = ${newfi};
 		var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
+			$('#right-panel').css('min-height',window.innerHeight - 98 + 'px');
 /* 			var height=$('.home-container').height();
 			var footerHeight=$('.footer-wrapper').height();
 			height=footerHeight-height;
