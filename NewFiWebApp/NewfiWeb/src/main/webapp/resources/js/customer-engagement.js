@@ -1595,7 +1595,24 @@ function teaseCalculation(inputCustomerDetails){
 	
 	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment));
 	var totalEstMonthlyPaymentId = (principalInterest + investment);
-	
+    
+    var textDiv=$('#monthlyPaymentDifferenceId').prev();
+    var hgLow="";
+    var ele=$('#monthlyPaymentDifferenceId');
+    ele.removeClass("loan-summary-green-col-detail");
+    ele.removeClass("loan-summary-red-col-detail");
+    var clas="";
+    if(principalInterest < monthlyPayment){
+        hgLow='<font color="green"><b>Lower</b></font>';
+        clas="loan-summary-green-col-detail";
+    }else{
+        hgLow='<font color="red"><b>Higher</b></font>';
+        clas="loan-summary-red-col-detail";
+    }
+    textDiv.html('This Monthly<br/> Payment is '+hgLow+' by');
+    ele.addClass(clas);
+
+
 	$('#monthlyPaymentId').text(showValue(monthlyPayment));
 	$('#monthlyPaymentDifferenceId').text(showValue(monthlyPaymentDifference));
 	$('#totalEstMonthlyPaymentId').text((showValue(totalEstMonthlyPaymentId)));
@@ -2072,4 +2089,51 @@ function modifiyTeaserRate(amt,amt1) {
             }
         }
  }
-  
+function changeToState(num){
+    switch(num){
+        case 1:
+            if(refinanceTeaserRate.loanType == "REF")
+                paintRefinanceMainContainer()   
+            else
+                paintBuyHomeContainer();
+            break;
+        case 2:
+            if(refinanceTeaserRate.loanType == "REF")
+                paintRefinanceStep2();  
+            else{
+                if(buyHomeTeaserRate["livingSituation"] = "renting")
+                    paintRentOfYourHouse();
+                else
+                    saleYourCurrentHome();
+            }
+            break;
+        case 3:
+            if(refinanceTeaserRate.loanType == "REF")
+                paintRefinanceStep3();  
+            else
+                paintNewResidenceTypeQues();
+            break;
+        case 4:
+            if(refinanceTeaserRate.loanType == "REF")
+                paintRefinanceHomeWorthToday(); 
+            else
+                paintHomeZipCode();
+            break;
+        case 5:
+            if(refinanceTeaserRate.loanType == "REF")
+                paintNewResidenceTypeQues();    
+            else
+                paintBuyHomeSeeTeaserRate();
+            break;
+        case 6:
+            if(refinanceTeaserRate.loanType == "REF")
+                paintRefinanceHomeZipCode();    
+            break;
+        case 7:
+            if(refinanceTeaserRate.loanType == "REF")
+                paintRefinanceSeeRates();  
+            break; 
+        default:
+            paintSelectLoanTypeQuestion();
+    }
+}
