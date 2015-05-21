@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.User;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -172,7 +174,6 @@ public class ApplicationFormRestService {
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-			
 			String sTicket= findSticket(loaAppFormVO);
 			String loanNumber = invokeRest((lQBRequestUtil.prepareCreateLoanJson((CommonConstants.CREATET_LOAN_TEMPLATE),sTicket)).toString());
 			
@@ -182,8 +183,7 @@ public class ApplicationFormRestService {
 
 				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO, sTicket)).toString());
 				LOG.debug("Save Loan Response is " + response);
-				if (null != loaAppFormVO.getLoan()
-				        && !loanNumber.equals("error")) {
+				if (null != loaAppFormVO.getLoan() && !loanNumber.equals("error")) {
 					LoanVO loan = loaAppFormVO.getLoan();
 					loan.setLqbFileId(loanNumber);
 					String loanAppFrm = gson.toJson(loaAppFormVO);
@@ -191,12 +191,14 @@ public class ApplicationFormRestService {
 				}
 				
 				// Code for automating Needs List creation
-				Integer loanId = loaAppFormVO.getLoan().getId();
-//				needsListService.createInitilaNeedsList(loanId);
 
-				userProfileService.dismissAlert(MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,loanId,WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 				
-				if (response != null) {
+				if (response != null && !response.equalsIgnoreCase("error")) {
+					
+					Integer loanId = loaAppFormVO.getLoan().getId();
+//					needsListService.createInitilaNeedsList(loanId);
+					userProfileService.dismissAlert(MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,loanId,WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+					
 					lockRateData = loadLoanRateData(loanNumber);
 					LOG.debug("lockRateData" + lockRateData);
 				}
@@ -444,48 +446,49 @@ public class ApplicationFormRestService {
 		String lqbUsername = null;
 		String lqbPassword = null;
 		UserVO internalUser = null;
-		List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
-		if(null!= loanTeam && loanTeam.size() > 0)
-		for (UserVO user : loanTeam) {
-			if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("LM")){
-				// this user would be either realtor or LM
-				internalUser = user;
-				break;
-			}else if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("SM")){
-				internalUser = user;
-				break;
-			}
-        }
 		
-		if(null!= internalUser){
-			   lqbUsername = internalUser.getInternalUserDetail().getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
-			if (lqbUsername != null) {
-				lqbUsername = nexeraUtility.decrypt(salt, crypticKey,lqbUsername);
-			}
-			    lqbPassword = internalUser.getInternalUserDetail().getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
-			if (lqbPassword != null) {
-				lqbPassword = nexeraUtility.decrypt(salt, crypticKey,lqbPassword);
-			}
-		}else{
+		User logedInUser = getUserObject();
+		
+		// this is the case when LM or SM will fill the user's form
+		if(logedInUser.getId() != loaAppFormVO.getUser().getId()){
 			
+			lqbUsername = logedInUser.getInternalUserDetail().getLqbUsername();
+			lqbPassword = logedInUser.getInternalUserDetail().getLqbPassword();
+		}else{
+			// this is the case when user submits the loan form : at the last step of while filling the form
+			List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
+			if(null!= loanTeam && loanTeam.size() > 0)
+			for (UserVO user : loanTeam) {
+				if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("LM")){
+					// this user would be either realtor or LM
+					internalUser = user;
+					lqbUsername = internalUser.getInternalUserDetail().getLqbUsername();
+					lqbPassword = internalUser.getInternalUserDetail().getLqbPassword();
+					break;
+				}else if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("SM")){
+					internalUser = user;
+					lqbUsername = internalUser.getInternalUserDetail().getLqbUsername();
+					lqbPassword = internalUser.getInternalUserDetail().getLqbPassword();
+					break;
+				}
+	        }
 		}
 		
-		if (lqbUsername != null && lqbPassword != null) {
-			org.json.JSONObject authOperationObject = NexeraUtility.createAuthObject(WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
-			        lqbUsername, lqbPassword);
-			LOG.debug("Invoking LQB service to fetch user authentication ticket ");
-			String authTicketJson = lqbInvoker.invokeRestSpringParseObjForAuth(authOperationObject.toString());
-			if (!authTicketJson.contains("Access Denied")) {
-				 sTicket = authTicketJson;
-				
-			} else {
-				LOG.error("Ticket Not Generated For This User ");
-			}
-		} else {
-			LOG.error("LQBUsername or Password are not valid ");
-		}
+		sTicket = nexeraUtility.findSticket(lqbUsername, lqbPassword);
+		
 		return sTicket;
 	}
 	
+
+	private User getUserObject() {
+		final Object principal = SecurityContextHolder.getContext()
+		        .getAuthentication().getPrincipal();
+		if (principal instanceof User) {
+			return (User) principal;
+		} else {
+			return null;
+		}
+
+	}
 	
 }
