@@ -342,6 +342,14 @@ function appendAgentDashboardContainer() {
  *            of container to which customer list is to appended
  * @param customers
  */
+function checkCreditScore(creditScore){
+	if(creditScore.indexOf("800")>-1){
+    	
+		creditScore="NA";
+    	
+    }
+	return creditScore;
+}
 function appendCustomers(elementId, customers) {
 
 	$('#' + elementId).html("");
@@ -350,7 +358,7 @@ function appendCustomers(elementId, customers) {
 	for (var i = 0; i < customers.length; i++) {
 
 		var customer = customers[i];
-
+		customer.credit_score=checkCreditScore(customer.credit_score);
 		var row = $('<div>').attr({
 			"class" : "leads-container-tr leads-container-row clearfix"
 		});
@@ -1306,6 +1314,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
 	if (loanDetails.creditReportUrl == undefined
 			|| loanDetails.creditReportUrl == "") {
+		loanDetails.userLoanStatus.creditInformation=checkCreditScore(loanDetails.userLoanStatus.creditInformation);
 		appendLoanDetailsRow("Credit",
 				loanDetails.userLoanStatus.creditInformation);
 	} else {

@@ -413,5 +413,11 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='9';
 
 
 
+
+# Abhishek 20 May
+
+UPDATE `newfi_schema`.`internaluserdetails` SET `lqb_password`='ycmeuaJoQyt7BgnalnWhsg==', `lqb_username`='fsJV304Ey6cT6NOn4BuByg==' WHERE `id`='1';
+
 ALTER TABLE `newfi_schema`.`loan` ADD COLUMN `lock_expiration_date` DATETIME NULL AFTER `locked_rate_data`;
 ALTER TABLE `newfi_schema`.`loan` change `rate_locked` `lock_status` enum('0','1','2') DEFAULT '0' NULL;
+

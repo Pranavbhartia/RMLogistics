@@ -71,6 +71,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -81,12 +82,14 @@ import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.WebServiceMethodParameters;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.ExceptionMasterExecution;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
+import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.ExceptionService;
 import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
@@ -107,6 +110,17 @@ public class NexeraUtility {
 
 	@Autowired
 	private ExceptionService exceptionService;
+	
+	@Autowired
+	private LqbInvoker lqbInvoker;
+	
+	
+	@Value("${cryptic.key}")
+	private String crypticKey;
+	
+	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
+	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
+	
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(NexeraUtility.class);
@@ -862,8 +876,7 @@ public class NexeraUtility {
 		return string;
 	}
 
-	@SuppressWarnings("restriction")
-	public String encrypt(byte[] salt, String secretKey, String plainText)
+	public  String encrypt(byte[] salt, String secretKey, String plainText)
 	        throws NoSuchAlgorithmException, InvalidKeySpecException,
 	        NoSuchPaddingException, InvalidKeyException,
 	        InvalidAlgorithmParameterException, UnsupportedEncodingException,
@@ -885,8 +898,7 @@ public class NexeraUtility {
 		return encStr;
 	}
 
-	@SuppressWarnings("restriction")
-	public String decrypt(byte[] salt, String secretKey, String encryptedText)
+	public  String decrypt(byte[] salt, String secretKey, String encryptedText)
 	        throws NoSuchAlgorithmException, InvalidKeySpecException,
 	        NoSuchPaddingException, InvalidKeyException,
 	        InvalidAlgorithmParameterException, UnsupportedEncodingException,
@@ -934,9 +946,55 @@ public class NexeraUtility {
 	    String encryptedlqbPassword = encrypt(salt, crypticKey, password);
 	    System.out.println(encryptedlqbPassword);
 	    
-	    String encryptedlqbName = decrypt(salt, crypticKey, encryptedlqbUserName);
-	    String encryptedlqbPass = decrypt(salt, crypticKey, encryptedlqbPassword);
+	    String encryptedlqbName = decrypt(salt, crypticKey, "MvwYMBzMJWOhzo4yuY0Y2g==");
+	    String encryptedlqbPass = decrypt(salt, crypticKey, "yrcUbfET1xe8/axuOVHY0Q==");
 	    
     }*/
+	
+	public String findSticket(String lqbUsername , String lqbPassword){
+		
+		String sTicket = null;
+		if(null!= lqbUsername && null !=lqbPassword){
+			   lqbUsername = lqbUsername.replaceAll("[^\\x00-\\x7F]", "");
+			   try {
+	            lqbUsername = decrypt(salt, crypticKey,lqbUsername);
+            } catch (InvalidKeyException | NoSuchAlgorithmException
+                    | InvalidKeySpecException | NoSuchPaddingException
+                    | InvalidAlgorithmParameterException
+                    | IllegalBlockSizeException
+                    | BadPaddingException | IOException e) {
+	          
+	            e.printStackTrace();
+            }
+			
+			    lqbPassword = lqbPassword.replaceAll("[^\\x00-\\x7F]", "");
+				try {
+	                lqbPassword = decrypt(salt, crypticKey,lqbPassword);
+                } catch (InvalidKeyException | NoSuchAlgorithmException
+                        | InvalidKeySpecException | NoSuchPaddingException
+                        | InvalidAlgorithmParameterException
+                        | IllegalBlockSizeException | BadPaddingException
+                        | IOException e) {
+	              
+	                e.printStackTrace();
+                }
+				
+
+				org.json.JSONObject authOperationObject = NexeraUtility.createAuthObject(WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+				        lqbUsername, lqbPassword);
+				LOGGER.debug("Invoking LQB service to fetch user authentication ticket ");
+				String authTicketJson = lqbInvoker.invokeRestSpringParseObjForAuth(authOperationObject.toString());
+				if (!authTicketJson.contains("Access Denied")) {
+					 sTicket = authTicketJson;
+					
+				} else {
+					LOGGER.error("Ticket Not Generated For This User ");
+				}
+			
+		}else {
+			LOGGER.error("LQBUsername or Password are not valid ");
+		}
+		return sTicket;
+	}
 
 }
