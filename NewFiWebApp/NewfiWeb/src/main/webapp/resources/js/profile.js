@@ -224,7 +224,8 @@ function getLoanLqbInfoContainer(user){
 	container.append(uploadRow);
 
 	internalUserDetailId=user.internalUserDetail.id;
-	var passwordRow = getPasswordRow("Password","lqb_userPassword");
+	var password = user.internalUserDetail.lqbPassword;
+	var passwordRow = getPasswordRow("Password","lqb_userPassword",password);
 	container.append(passwordRow);
 	
 	var saveBtn = $('<div>').attr({
@@ -461,6 +462,16 @@ function updateLqbLMDetails(){
 	internalUserDetail.id = internalUserDetailId;
 	internalUserDetail.lqbUsername = $("#lqb_userName").val();
 	internalUserDetail.lqbPassword = $("#lqb_userPassword").val();
+	
+	if(internalUserDetail.lqbPassword  == "" ){
+		
+		$('#lqb_userPassword').next('.err-msg').html(passwordEmptyMessage).show();
+		$('#lqb_userPassword').addClass('ce-err-input').show();
+		return false;
+	}else{
+		$('#lqb_userPassword').next('.err-msg').hide();
+		$('#lqb_userPassword').removeClass('ce-err-input');
+	}
 	userProfileJson.internalUserDetail=internalUserDetail;
 	console.info("userProfileJson:"+userProfileJson);
 	$('#overlay-loader').show();
@@ -1048,11 +1059,14 @@ function getDOBRow(user) {
 		"class" : "prof-form-input date-picker",
 		"placeholder" : "MM/DD/YYYY",
 		"value" : dob,
-		"id" : "dateOfBirthId"
+		"id" : "dateOfBirthId",
+		
 	}).datepicker({
 		orientation : "top auto",
 		autoclose : true,
-		maxDate: new Date() 
+		maxDate: new Date() ,
+		changeMonth: true,
+		changeYear: true
 	});
 	
 	var errMessage = $('<div>').attr({
@@ -2680,7 +2694,7 @@ function getLqbRow(displayName,value,id) {
 }
 
 
-function getPasswordRow(displayName,id) {
+function getPasswordRow(displayName,id,password) {
 	
 	
 	var row = $('<div>').attr({
@@ -2711,7 +2725,7 @@ function getPasswordRow(displayName,id) {
 			"class" : "prof-form-input prof-form-input-m",
 			"id" : id,
 			"type" : "password"
-		});
+		}).val(password);
 		inputCont.append(input);
 	}
 	

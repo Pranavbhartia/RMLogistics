@@ -20,15 +20,15 @@ import com.nexera.workflow.Constants.WorkflowConstants;
  *
  */
 @Component
-public class CacheManager
+public class NexeraCacheManager
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger( CacheManager.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( NexeraCacheManager.class );
     private ResourceBundle bundle = null;
     private ExecutorService executorService;
     private boolean initialized = false;
 
 
-    public CacheManager()
+    public NexeraCacheManager()
     {
         bundle = ResourceBundle.getBundle( WorkflowConstants.PROPERTY_FILE_NAME );
     }

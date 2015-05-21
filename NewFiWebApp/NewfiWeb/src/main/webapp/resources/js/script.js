@@ -944,6 +944,7 @@ function paintFixYourRatePage(appUserDetails) {
 
 }
 
+<<<<<<< HEAD
 function fetchLockRatedata(loanNumber) {
 	// alert('inside create loan method');
 	showOverlay();
@@ -951,6 +952,17 @@ function fetchLockRatedata(loanNumber) {
 		url : "rest/application/fetchLockRatedata/" + loanNumber,
 		type : "POST",
 		cache : false,
+=======
+function fetchLockRatedata(loanNumber,appUserDetailsParam)
+{
+//alert('inside create loan method');
+ showOverlay();
+ $.ajax({
+		url:"rest/application/fetchLockRatedata/"+loanNumber,
+		type:"POST",
+		cache:false,
+		data:{"appFormData" : JSON.stringify(appUserDetailsParam)},
+>>>>>>> ff4409702530651c99016582769ef9e3a27743a3
 		datatype : "application/json",
 		success : function(data) {
 			var ob;
@@ -1953,7 +1965,71 @@ function populateClosingCostHolder(inputObject) {
 		} else if (inputObject[currentAttribute]) {
 			closingCostHolder[currentAttribute] = inputObject[currentAttribute];
 		}
+<<<<<<< HEAD
 	}
+=======
+	}	
+}
+function setClosingCostContainerValues(){
+    if(appUserDetails!=undefined){
+        closingCostHolder.loanType=(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR")
+    }else{
+        closingCostHolder.loanType="PUR";
+    }
+
+    if(closingCostHolder.loanType=="PUR"){
+        closingCostHolder.housePrice=appUserDetails.purchaseDetails.housePrice;
+    }else{
+        closingCostHolder.housePrice=appUserDetails.propertyTypeMaster.homeWorthToday;
+        closingCostHolder.annualHomeownersInsurance=appUserDetails.propertyTypeMaster.propertyInsuranceCost;
+        closingCostHolder.propertyTaxesPaid=appUserDetails.propertyTypeMaster.propertyTaxesPaid;
+    }
+        
+}   
+function getClosingCostSummaryContainer(valueSet) {
+    closingCostHolder=getObContainer();
+    if(typeof(newfiObject)!=='undefined'){
+        //Code TO get loan type for loggedin user Hardcoded For Now
+    	//Rajeswari    	
+        //closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR"):"PUR";
+        setClosingCostContainerValues();
+    }else{
+    	
+        if(buyHomeTeaserRate.loanType && buyHomeTeaserRate.loanType=="PUR"){
+        	populateClosingCostHolder(buyHomeTeaserRate);
+        }else if(refinanceTeaserRate){
+        	populateClosingCostHolder(refinanceTeaserRate);
+        }
+    }
+    if(valueSet){
+        closingCostHolder.valueSet=valueSet;
+        closingCostHolder.initValueSet = valueSet;
+    }else{
+        closingCostHolder.valueSet={};
+        closingCostHolder.initValueSet = valueSet;
+    }
+    var parentWrapper = $('<div>').attr({
+        "class": "closing-cost-wrapper"
+    });
+    if(valueSet.dummyData){
+        if(typeof(newfiObject)!=='undefined')
+            parentWrapper.html(getHeaderText("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you"));
+        else{
+            parentWrapper.html(getHeaderText("Sorry, We could not find suitable products for you!"));
+        }
+    }else{
+        var header = getClosingCostHeader("Closing Cost Summary");
+        var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
+        var closingDate = $('<span>').attr({
+            "class": "semibold"
+        });
+        descText.append(closingDate);
+        var topContainer = getClosingCostTopConatiner();
+        var bottomContainer = getClosingCostBottomConatiner();
+        parentWrapper.append(header).append(descText).append(topContainer).append(bottomContainer);
+    }
+    return parentWrapper;
+>>>>>>> ff4409702530651c99016582769ef9e3a27743a3
 }
 function setClosingCostContainerValues() {
 	if (appUserDetails != undefined) {
