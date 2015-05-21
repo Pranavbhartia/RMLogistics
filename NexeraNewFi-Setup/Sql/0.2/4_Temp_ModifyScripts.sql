@@ -410,3 +410,9 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='9';
 ### Added all the above to 1_ script
 
 ########
+
+
+
+# Abhishek 20 May
+
+UPDATE `newfi_schema`.`internaluserdetails` SET `lqb_password`='ycmeuaJoQyt7BgnalnWhsg==', `lqb_username`='fsJV304Ey6cT6NOn4BuByg==' WHERE `id`='1';
