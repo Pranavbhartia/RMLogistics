@@ -27,7 +27,7 @@ import com.nexera.workflow.bean.WorkflowMaster;
 import com.nexera.workflow.bean.WorkflowTaskConfigMaster;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.exception.FatalException;
-import com.nexera.workflow.manager.CacheManager;
+import com.nexera.workflow.manager.NexeraCacheManager;
 import com.nexera.workflow.manager.WorkflowManager;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.utils.Util;
@@ -41,7 +41,7 @@ public class EngineTrigger {
 	private ExecutorService executorService;
 
 	@Autowired
-	CacheManager cacheManager;
+	NexeraCacheManager nexeraCacheManager;
 
 	@Autowired
 	WorkflowService workflowService;
@@ -386,7 +386,7 @@ public class EngineTrigger {
 	public String startWorkFlowItemExecution(int workflowItemExecutionId) {
 		LOGGER.debug("Inside method startWorkFlowItemExecution ");
 		Future<String> future = null;
-		executorService = cacheManager.initializePool();
+		executorService = nexeraCacheManager.initializePool();
 
 		WorkflowItemExec workflowItemExecution = workflowService
 		        .getWorkflowExecById(workflowItemExecutionId);
@@ -509,7 +509,7 @@ public class EngineTrigger {
 						if (!workflowItemExecution.getStatus()
 						        .equalsIgnoreCase(
 						                WorkItemStatus.COMPLETED.getStatus())) {
-							executorService = cacheManager.initializePool();
+							executorService = nexeraCacheManager.initializePool();
 							LOGGER.debug(" Triggering the parent");
 							WorkflowManager workflowManager = applicationContext
 							        .getBean(WorkflowManager.class);

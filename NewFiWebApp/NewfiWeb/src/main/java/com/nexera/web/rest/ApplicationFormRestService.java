@@ -60,6 +60,7 @@ import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.NexeraUtility;
@@ -96,6 +97,11 @@ public class ApplicationFormRestService {
 	
 	@Autowired
 	private LqbInvoker lqbInvoker;
+	
+	@Autowired
+	private LqbInterface lqbCacheInvoker;
+	
+	
 	
 	@Autowired
 	NexeraUtility nexeraUtility;
@@ -174,7 +180,7 @@ public class ApplicationFormRestService {
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-			String sTicket= findSticket(loaAppFormVO);
+			String sTicket= lqbCacheInvoker.findSticket(loaAppFormVO);
 			String loanNumber = invokeRest((lQBRequestUtil.prepareCreateLoanJson((CommonConstants.CREATET_LOAN_TEMPLATE),sTicket)).toString());
 			
 			LOG.debug("createLoanResponse is" + loanNumber);
@@ -199,7 +205,7 @@ public class ApplicationFormRestService {
 //					needsListService.createInitilaNeedsList(loanId);
 					userProfileService.dismissAlert(MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,loanId,WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 					
-					lockRateData = loadLoanRateData(loanNumber);
+					lockRateData = loadLoanRateData(loanNumber ,sTicket);
 					LOG.debug("lockRateData" + lockRateData);
 				}
 			}
@@ -230,7 +236,7 @@ public class ApplicationFormRestService {
 		try {
 			loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
 			
-			String sTicket = findSticket(loaAppFormVO);
+			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 			String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
 			LOG.debug("createLoanResponse is" + loanNumber);
 			if (!"".equalsIgnoreCase(loanNumber)) {
@@ -242,7 +248,7 @@ public class ApplicationFormRestService {
 				createApplication(loanAppFrm, httpServletRequest);
 
 				if (response != null) {
-					lockRateData = loadLoanRateData(loanNumber);
+					lockRateData = loadLoanRateData(loanNumber,sTicket);
 					LOG.debug("lockRateData" + lockRateData);
 				}
 			}
@@ -265,14 +271,18 @@ public class ApplicationFormRestService {
 	}
 
 	@RequestMapping(value = "/fetchLockRatedata/{loanNumber}", method = RequestMethod.POST)
-	public @ResponseBody String fetchLockRatedata(
-	        @PathVariable String loanNumber) {
+	public @ResponseBody String fetchLockRatedata(@PathVariable String loanNumber,String appFormData) {
 		LOG.debug("Inside fetchLockRatedata loanNumber" + loanNumber);
 
 		String lockRateData = null;
+		Gson gson = new Gson();
 		try {
 
-			lockRateData = loadLoanRateData(loanNumber);
+			LOG.debug("appFormData is" + appFormData);
+			
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
+			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+			lockRateData = loadLoanRateData(loanNumber,sTicket);
 			LOG.debug("lockRateData" + lockRateData);
 
 		} catch (Exception e) {
@@ -310,7 +320,7 @@ public class ApplicationFormRestService {
 
 	}
 
-	private String loadLoanRateData(String loanNumber) {
+	private String loadLoanRateData(String loanNumber , String sTicket) {
 		Gson gson = new Gson();
 		List<TeaserRateResponseVO> teaserRateList = null;
 		RateCalculatorRestService rateService = new RateCalculatorRestService();
@@ -320,12 +330,12 @@ public class ApplicationFormRestService {
 			jsonChild.put(CommonConstants.SLOANNUMBER, loanNumber);
 			jsonChild.put(CommonConstants.SXMLQUERYMAP, new JSONObject("{}"));
 			jsonChild.put(CommonConstants.FORMAT, 0);
+			jsonChild.put(CommonConstants.STICKET, sTicket);
+			
 			json.put(CommonConstants.OPNAME, "Load");
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
-			teaserRateList = rateService
-			        .parseLqbResponse(retrievePricingDetails(invokeRest(json
-			                .toString())));
+			teaserRateList = rateService.parseLqbResponse(retrievePricingDetails(invokeRest(json.toString())));
 
 			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 			teaserRateResponseVO.setLoanDuration("sample");
@@ -439,56 +449,5 @@ public class ApplicationFormRestService {
 
 	}
 	
-	
-	public String findSticket(LoanAppFormVO loaAppFormVO) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, IOException{
-		
-		String sTicket = null;
-		String lqbUsername = null;
-		String lqbPassword = null;
-		UserVO internalUser = null;
-		
-		User logedInUser = getUserObject();
-		
-		// this is the case when LM or SM will fill the user's form
-		if(logedInUser.getId() != loaAppFormVO.getUser().getId()){
-			
-			lqbUsername = logedInUser.getInternalUserDetail().getLqbUsername();
-			lqbPassword = logedInUser.getInternalUserDetail().getLqbPassword();
-		}else{
-			// this is the case when user submits the loan form : at the last step of while filling the form
-			List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
-			if(null!= loanTeam && loanTeam.size() > 0)
-			for (UserVO user : loanTeam) {
-				if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("LM")){
-					// this user would be either realtor or LM
-					internalUser = user;
-					lqbUsername = internalUser.getInternalUserDetail().getLqbUsername();
-					lqbPassword = internalUser.getInternalUserDetail().getLqbPassword();
-					break;
-				}else if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("SM")){
-					internalUser = user;
-					lqbUsername = internalUser.getInternalUserDetail().getLqbUsername();
-					lqbPassword = internalUser.getInternalUserDetail().getLqbPassword();
-					break;
-				}
-	        }
-		}
-		
-		sTicket = nexeraUtility.findSticket(lqbUsername, lqbPassword);
-		
-		return sTicket;
-	}
-	
-
-	private User getUserObject() {
-		final Object principal = SecurityContextHolder.getContext()
-		        .getAuthentication().getPrincipal();
-		if (principal instanceof User) {
-			return (User) principal;
-		} else {
-			return null;
-		}
-
-	}
 	
 }

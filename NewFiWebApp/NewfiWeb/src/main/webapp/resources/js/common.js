@@ -613,7 +613,7 @@ function getCalculationFunctionForItem(key) {
 					&& closingCostHolder.valueSet[key] != "0")
 				return closingCostHolder.valueSet[key];
 			else
-				return "$125.00";
+				return "$87.00";
 		};
 		break;
 	case "hazIns903":

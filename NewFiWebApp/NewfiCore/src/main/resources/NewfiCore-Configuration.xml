@@ -18,10 +18,13 @@
 	<!-- <aop:aspectj-autoproxy /> -->
 	<task:annotation-driven />
 
-	<!-- <cache:annotation-driven /> <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"> 
-		<property name="cacheManager" value="ehcache"></property> </bean> Ehcache 
-		library setup <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" 
-		> <property name="configLocation" value="ehcache.xml"></property> </bean> -->
+	<!-- <cache:annotation-driven />
+	 <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"> 
+		<property name="cacheManager" value="ehcache"></property> 
+	 </bean>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    	 <property name="configLocation" value="ehcache.xml"></property>
+    </bean> -->
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="2" />

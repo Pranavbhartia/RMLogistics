@@ -3,8 +3,13 @@ package com.nexera.core.service.impl;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +18,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.HibernateException;
@@ -154,6 +163,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Autowired
 	private InternalUserStateMappingService internalUserStateMappingService;
 
+	
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
 
@@ -175,6 +185,17 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = userProfileDao.findByUserId(userid);
 		UserVO userListVO = User.convertFromEntityToVO(user);
 
+		try {
+	        userListVO.getInternalUserDetail().setLqbUsername(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbUsername()));
+	        userListVO.getInternalUserDetail().setLqbPassword(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbPassword()));
+        } catch (InvalidKeyException | NoSuchAlgorithmException
+                | InvalidKeySpecException | NoSuchPaddingException
+                | InvalidAlgorithmParameterException
+                | IllegalBlockSizeException
+                | BadPaddingException | IOException e) {
+	        
+	        e.printStackTrace();
+        }
 		return userListVO;
 	}
 

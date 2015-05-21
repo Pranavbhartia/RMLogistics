@@ -899,14 +899,15 @@ function paintFixYourRatePage(appUserDetails) {
 
 
 
-function fetchLockRatedata(loanNumber)
+function fetchLockRatedata(loanNumber,appUserDetailsParam)
 {
 //alert('inside create loan method');
  showOverlay();
-$.ajax({
+ $.ajax({
 		url:"rest/application/fetchLockRatedata/"+loanNumber,
 		type:"POST",
 		cache:false,
+		data:{"appFormData" : JSON.stringify(appUserDetailsParam)},
 		datatype : "application/json",
 		success:function(data){
 		    var ob;
@@ -1911,7 +1912,7 @@ function getClosingCostSummaryContainer(valueSet) {
         setClosingCostContainerValues();
     }else{
     	
-        if(buyHomeTeaserRate.loanType&&buyHomeTeaserRate.loanType=="PUR"){
+        if(buyHomeTeaserRate.loanType && buyHomeTeaserRate.loanType=="PUR"){
         	populateClosingCostHolder(buyHomeTeaserRate);
         }else if(refinanceTeaserRate){
         	populateClosingCostHolder(refinanceTeaserRate);
