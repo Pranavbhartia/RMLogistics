@@ -73,6 +73,11 @@ public class LMDecisionManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		User user = new User();
 		user.setId(userId);
+		if(decision.equals("Pass")){
+			comment="Loan Advisor Passed the Loan </br>"+comment;
+		}else{
+			comment="Loan Advisor Declined the Loan </br>"+comment;
+		}
 		makeANote(loanId, comment, user);
 		return status;
 	}
