@@ -1157,6 +1157,12 @@ function userIsRealtor() {
 	return false;
 }
 
+function userIsInternal() {
+	if (newfiObject.user.userRole.roleCd == "INTERNAL") {
+		return true;
+	}
+	return false;
+}
 
 
 // Function to append customer's detail in loan manager view
