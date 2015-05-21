@@ -2170,18 +2170,24 @@ function getDocumentContainer() {
 }
 
 function createdNeededList(categoryName, elements) {
-    var incomeDocCont = $('<div>').attr({
-        "class": "needed-doc-container"
-    });
-    var incDocHeading = $('<div>').attr({
-        "class": "needed-doc-heading"
-    }).html(categoryName);
-    incomeDocCont.append(incDocHeading);
-    $.each(elements, function(i, val) {
-        var needDocRow = getNeededDocRow(val.needsListMaster.label, val.needsListMaster.id,val.needsListMaster.description);
-        incDocHeading.append(needDocRow);
-    });
-    return incomeDocCont;
+	var incomeDocCont = $('<div>').attr({
+		"class" : "needed-doc-container"
+	});
+	var incDocHeading = $('<div>').attr({
+		"class" : "needed-doc-heading"
+	}).html(categoryName);
+	incomeDocCont.append(incDocHeading);
+	$.each(elements, function(i, val) {
+		//IF Need is 40, then it is extra. Hence do not show in UI
+		if (val.needsListMaster.id != 40) {
+			var needDocRow = getNeededDocRow(val.needsListMaster.label,
+					val.needsListMaster.id, val.needsListMaster.description);
+			incDocHeading.append(needDocRow);
+
+		}
+
+	});
+	return incomeDocCont;
 }
 
 function getNeededDocRow(desc, needId, details) {

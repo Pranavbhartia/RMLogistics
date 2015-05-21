@@ -1,18 +1,9 @@
 package com.nexera.web.rest;
 
-import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
@@ -26,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,17 +34,13 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
-import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.LoanAppForm;
-import com.nexera.common.entity.User;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
-import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
@@ -91,28 +77,25 @@ public class ApplicationFormRestService {
 	private ApplicationPathUtil appPathUtil;
 	@Autowired
 	private LQBRequestUtil lQBRequestUtil;
-	
+
 	@Autowired
 	private UserProfileService userProfileService;
-	
+
 	@Autowired
 	private LqbInvoker lqbInvoker;
-	
+
 	@Autowired
 	private LqbInterface lqbCacheInvoker;
-	
-	
-	
+
 	@Autowired
 	NexeraUtility nexeraUtility;
-	
+
 	@Value("${cryptic.key}")
 	private String crypticKey;
-	
+
 	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
 	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
 
-	
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
 	public @ResponseBody String createApplication(String appFormData,
@@ -122,7 +105,7 @@ public class ApplicationFormRestService {
 
 		try {
 			LOG.debug("appFormData is" + appFormData);
-			
+
 			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
 			        LoanAppFormVO.class);
 			HashMap<String, Integer> cache = new HashMap<String, Integer>();
@@ -138,21 +121,18 @@ public class ApplicationFormRestService {
 				cache = (HashMap<String, Integer>) map;
 			}
 
-			LoanAppForm loanAppForm = loanAppFormService.create(appPathUtil.setEntityIdFromCache( loaAppFormVO,cache));
-			appPathUtil.setLocalCache(loanAppForm,cache);
+			LoanAppForm loanAppForm = loanAppFormService.create(appPathUtil
+			        .setEntityIdFromCache(loaAppFormVO, cache));
+			appPathUtil.setLocalCache(loanAppForm, cache);
 			return new Gson().toJson(loaAppFormVO);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(null);
+		// CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(null);
 		return null;
 	}
 
-	
-	
-	
-	
 	@RequestMapping(value = "{appFormId}", method = RequestMethod.POST)
 	public @ResponseBody String updateApplication(@PathVariable int appFormId,
 	        @RequestBody String appFormData) {
@@ -170,7 +150,6 @@ public class ApplicationFormRestService {
 		return new Gson().toJson(responseVO);
 	}
 
-	
 	@RequestMapping(value = "/createLoan", method = RequestMethod.POST)
 	public @ResponseBody String createLoan(String appFormData,
 	        HttpServletRequest httpServletRequest) {
@@ -180,32 +159,42 @@ public class ApplicationFormRestService {
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-			String sTicket= lqbCacheInvoker.findSticket(loaAppFormVO);
-			String loanNumber = invokeRest((lQBRequestUtil.prepareCreateLoanJson((CommonConstants.CREATET_LOAN_TEMPLATE),sTicket)).toString());
-			
+			LOG.debug("Getting token for loan manager");
+			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+			LOG.debug("Token retrieved for loan manager" + sTicket);
+			String loanNumber = invokeRest((lQBRequestUtil
+			        .prepareCreateLoanJson(
+			                (CommonConstants.CREATET_LOAN_TEMPLATE), sTicket))
+			        .toString());
+
 			LOG.debug("createLoanResponse is" + loanNumber);
-			
+
 			if (!"".equalsIgnoreCase(loanNumber)) {
 
-				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO, sTicket)).toString());
+				String response = invokeRest((lQBRequestUtil.saveLoan(
+				        loanNumber, loaAppFormVO, sTicket)).toString());
 				LOG.debug("Save Loan Response is " + response);
-				if (null != loaAppFormVO.getLoan() && !loanNumber.equals("error")) {
+				if (null != loaAppFormVO.getLoan()
+				        && !loanNumber.equals("error")) {
 					LoanVO loan = loaAppFormVO.getLoan();
 					loan.setLqbFileId(loanNumber);
 					String loanAppFrm = gson.toJson(loaAppFormVO);
 					createApplication(loanAppFrm, httpServletRequest);
 				}
-				
+
 				// Code for automating Needs List creation
 
-				
 				if (response != null && !response.equalsIgnoreCase("error")) {
-					
+
 					Integer loanId = loaAppFormVO.getLoan().getId();
-//					needsListService.createInitilaNeedsList(loanId);
-					userProfileService.dismissAlert(MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,loanId,WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
-					
-					lockRateData = loadLoanRateData(loanNumber ,sTicket);
+					// needsListService.createInitilaNeedsList(loanId);
+					userProfileService
+					        .dismissAlert(
+					                MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
+					                loanId,
+					                WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+
+					lockRateData = loadLoanRateData(loanNumber, sTicket);
 					LOG.debug("lockRateData" + lockRateData);
 				}
 			}
@@ -234,21 +223,21 @@ public class ApplicationFormRestService {
 		String lockRateData = null;
 		LoanAppFormVO loaAppFormVO = null;
 		try {
-			loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
-			
+			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
+
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 			String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
 			LOG.debug("createLoanResponse is" + loanNumber);
 			if (!"".equalsIgnoreCase(loanNumber)) {
-                
-				String response = invokeRest((lQBRequestUtil.saveLoan(loanNumber, loaAppFormVO,sTicket))
-				        .toString());
+
+				String response = invokeRest((lQBRequestUtil.saveLoan(
+				        loanNumber, loaAppFormVO, sTicket)).toString());
 				LOG.debug("Save Loan Response is " + response);
 				String loanAppFrm = gson.toJson(loaAppFormVO);
 				createApplication(loanAppFrm, httpServletRequest);
 
 				if (response != null) {
-					lockRateData = loadLoanRateData(loanNumber,sTicket);
+					lockRateData = loadLoanRateData(loanNumber, sTicket);
 					LOG.debug("lockRateData" + lockRateData);
 				}
 			}
@@ -271,7 +260,8 @@ public class ApplicationFormRestService {
 	}
 
 	@RequestMapping(value = "/fetchLockRatedata/{loanNumber}", method = RequestMethod.POST)
-	public @ResponseBody String fetchLockRatedata(@PathVariable String loanNumber,String appFormData) {
+	public @ResponseBody String fetchLockRatedata(
+	        @PathVariable String loanNumber, String appFormData) {
 		LOG.debug("Inside fetchLockRatedata loanNumber" + loanNumber);
 
 		String lockRateData = null;
@@ -279,10 +269,11 @@ public class ApplicationFormRestService {
 		try {
 
 			LOG.debug("appFormData is" + appFormData);
-			
-			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
+
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+			        LoanAppFormVO.class);
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-			lockRateData = loadLoanRateData(loanNumber,sTicket);
+			lockRateData = loadLoanRateData(loanNumber, sTicket);
 			LOG.debug("lockRateData" + lockRateData);
 
 		} catch (Exception e) {
@@ -301,15 +292,16 @@ public class ApplicationFormRestService {
 		try {
 			LoanLockRateVO loanLockRateVO = gson.fromJson(appFormData,
 			        LoanLockRateVO.class);
-			LOG.debug("lockLoanRate is"
-			        + loanLockRateVO.getIlpTemplateId());
-//			lockRateData = invokeRest(lQBRequestUtil.prepareLockLoanRateJson(loanLockRateVO)
-//			        .toString());
+			LOG.debug("lockLoanRate is" + loanLockRateVO.getIlpTemplateId());
+			// lockRateData =
+			// invokeRest(lQBRequestUtil.prepareLockLoanRateJson(loanLockRateVO)
+			// .toString());
 			LOG.debug("lockLoanRate is" + lockRateData);
 			if (!lockRateData.contains("status=\"Error\"")) {
-//				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
-//				        loanLockRateVO.getRateVo());
-				loanService.sendRateLockRequested(loanLockRateVO.getLoanId(),loanLockRateVO);
+				// loanService.updateLoan(loanLockRateVO.getLoanId(), true,
+				// loanLockRateVO.getRateVo());
+				loanService.sendRateLockRequested(loanLockRateVO.getLoanId(),
+				        loanLockRateVO);
 			}
 
 		} catch (Exception e) {
@@ -320,7 +312,7 @@ public class ApplicationFormRestService {
 
 	}
 
-	private String loadLoanRateData(String loanNumber , String sTicket) {
+	private String loadLoanRateData(String loanNumber, String sTicket) {
 		Gson gson = new Gson();
 		List<TeaserRateResponseVO> teaserRateList = null;
 		RateCalculatorRestService rateService = new RateCalculatorRestService();
@@ -331,11 +323,13 @@ public class ApplicationFormRestService {
 			jsonChild.put(CommonConstants.SXMLQUERYMAP, new JSONObject("{}"));
 			jsonChild.put(CommonConstants.FORMAT, 0);
 			jsonChild.put(CommonConstants.STICKET, sTicket);
-			
+
 			json.put(CommonConstants.OPNAME, "Load");
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
-			teaserRateList = rateService.parseLqbResponse(retrievePricingDetails(invokeRest(json.toString())));
+			teaserRateList = rateService
+			        .parseLqbResponse(retrievePricingDetails(invokeRest(json
+			                .toString())));
 
 			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 			teaserRateResponseVO.setLoanDuration("sample");
@@ -352,9 +346,6 @@ public class ApplicationFormRestService {
 		return gson.toJson(teaserRateList);
 
 	}
-
-	
-	
 
 	private String retrievePricingDetails(String xml) {
 		String pricingResultXml = null;
@@ -401,8 +392,6 @@ public class ApplicationFormRestService {
 
 	}
 
-	
-
 	private String invokeRest(String appFormData) {
 
 		LOG.info("Invoking rest Service with Input " + appFormData);
@@ -427,9 +416,6 @@ public class ApplicationFormRestService {
 
 	}
 
-
-
-	
 	@RequestMapping(value = "/savetaxandinsurance", method = RequestMethod.POST)
 	public @ResponseBody void saveTaxAndInsurance(String appFormData,
 	        HttpServletRequest httpServletRequest) {
@@ -448,6 +434,5 @@ public class ApplicationFormRestService {
 		}
 
 	}
-	
-	
+
 }

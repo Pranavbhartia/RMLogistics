@@ -39,7 +39,7 @@ public class LqbCacheInvoker implements LqbInterface {
 
 	@Autowired
 	NexeraUtility nexeraUtility;
-	
+
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(LqbCacheInvoker.class);
 
@@ -70,57 +70,74 @@ public class LqbCacheInvoker implements LqbInterface {
 		return null;
 	}
 
-	   @Cacheable(cacheName = "sTicket")  
-	   @Override
-       public String findSticket(LoanAppFormVO loaAppFormVO) throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, IOException{
-		
+	@Cacheable(cacheName = "sTicket")
+	@Override
+	public String findSticket(LoanAppFormVO loaAppFormVO)
+	        throws InvalidKeyException, NoSuchAlgorithmException,
+	        InvalidKeySpecException, NoSuchPaddingException,
+	        InvalidAlgorithmParameterException, UnsupportedEncodingException,
+	        IllegalBlockSizeException, BadPaddingException, IOException {
+		LOGGER.debug("findSticket is called.");
 		String sTicket = null;
 		String lqbUsername = null;
 		String lqbPassword = null;
 		UserVO internalUser = null;
-		
+
 		User logedInUser = getUserObject();
-		
+
 		/* this is the case when LM or SM will fill the user's form */
-		if(logedInUser.getId() != loaAppFormVO.getUser().getId()){
-			
+		if (logedInUser.getId() != loaAppFormVO.getUser().getId()) {
+
 			lqbUsername = logedInUser.getInternalUserDetail().getLqbUsername();
 			lqbPassword = logedInUser.getInternalUserDetail().getLqbPassword();
-		}else{
-			/* this is the case when user submits the loan form : at the last step of while filling the form */
+		} else {
+			/*
+			 * this is the case when user submits the loan form : at the last
+			 * step of while filling the form
+			 */
 			boolean loanMangerFound = false;
 			List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
-			if(null!= loanTeam && loanTeam.size() > 0)
-			for (UserVO user : loanTeam) {
-				if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("LM")){
-					/*  this user would be either realtor or LM */
-					internalUser = user;
-					lqbUsername = internalUser.getInternalUserDetail().getLqbUsername();
-					lqbPassword = internalUser.getInternalUserDetail().getLqbPassword();
-					loanMangerFound = true;
-					break;
-				}
-			}
-			/* This is the case when LM is not found */
-			if(!loanMangerFound){
+			if (null != loanTeam && loanTeam.size() > 0)
 				for (UserVO user : loanTeam) {
-					if(null != user.getInternalUserDetail() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("SM")){
+					if (null != user.getInternalUserDetail()
+					        && user.getInternalUserDetail()
+					                .getInternalUserRoleMasterVO()
+					                .getRoleName().equalsIgnoreCase("LM")) {
+						/* this user would be either realtor or LM */
 						internalUser = user;
-						lqbUsername = internalUser.getInternalUserDetail().getLqbUsername();
-						lqbPassword = internalUser.getInternalUserDetail().getLqbPassword();
+						lqbUsername = internalUser.getInternalUserDetail()
+						        .getLqbUsername();
+						lqbPassword = internalUser.getInternalUserDetail()
+						        .getLqbPassword();
+						loanMangerFound = true;
+						break;
+					}
+				}
+			/* This is the case when LM is not found */
+			if (!loanMangerFound) {
+				for (UserVO user : loanTeam) {
+					if (null != user.getInternalUserDetail()
+					        && user.getInternalUserDetail()
+					                .getInternalUserRoleMasterVO()
+					                .getRoleName().equalsIgnoreCase("SM")) {
+						internalUser = user;
+						lqbUsername = internalUser.getInternalUserDetail()
+						        .getLqbUsername();
+						lqbPassword = internalUser.getInternalUserDetail()
+						        .getLqbPassword();
 						break;
 					}
 				}
 			}
-	        
+
 		}
-		
+
 		sTicket = nexeraUtility.findSticket(lqbUsername, lqbPassword);
-		
+
 		return sTicket;
 	}
-	
-	  private User getUserObject() {
+
+	private User getUserObject() {
 		final Object principal = SecurityContextHolder.getContext()
 		        .getAuthentication().getPrincipal();
 		if (principal instanceof User) {
@@ -130,6 +147,5 @@ public class LqbCacheInvoker implements LqbInterface {
 		}
 
 	}
-	
 
 }
