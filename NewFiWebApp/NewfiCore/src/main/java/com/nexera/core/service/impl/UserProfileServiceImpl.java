@@ -185,17 +185,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = userProfileDao.findByUserId(userid);
 		UserVO userListVO = User.convertFromEntityToVO(user);
 
-		try {
-	        userListVO.getInternalUserDetail().setLqbUsername(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbUsername()));
-	        userListVO.getInternalUserDetail().setLqbPassword(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbPassword()));
-        } catch (InvalidKeyException | NoSuchAlgorithmException
-                | InvalidKeySpecException | NoSuchPaddingException
-                | InvalidAlgorithmParameterException
-                | IllegalBlockSizeException
-                | BadPaddingException | IOException e) {
-	        
-	        e.printStackTrace();
-        }
+		if(null != userListVO.getInternalUserDetail()){
+			try {
+		        userListVO.getInternalUserDetail().setLqbUsername(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbUsername()));
+		        userListVO.getInternalUserDetail().setLqbPassword(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbPassword()));
+	        } catch (InvalidKeyException | NoSuchAlgorithmException
+	                | InvalidKeySpecException | NoSuchPaddingException
+	                | InvalidAlgorithmParameterException
+	                | IllegalBlockSizeException
+	                | BadPaddingException | IOException e) {
+		        
+		        e.printStackTrace();
+	        }
+		}
 		return userListVO;
 	}
 
