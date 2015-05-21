@@ -72,6 +72,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -954,53 +955,6 @@ public class NexeraUtility {
 	 * }
 	 */
 
-	public String findSticket(String lqbUsername, String lqbPassword) {
 
-		String sTicket = null;
-		if (null != lqbUsername && null != lqbPassword) {
-			lqbUsername = lqbUsername.replaceAll("[^\\x00-\\x7F]", "");
-			try {
-				lqbUsername = decrypt(salt, crypticKey, lqbUsername);
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-			        | InvalidKeySpecException | NoSuchPaddingException
-			        | InvalidAlgorithmParameterException
-			        | IllegalBlockSizeException | BadPaddingException
-			        | IOException e) {
-
-				e.printStackTrace();
-			}
-
-			lqbPassword = lqbPassword.replaceAll("[^\\x00-\\x7F]", "");
-			try {
-				lqbPassword = decrypt(salt, crypticKey, lqbPassword);
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-			        | InvalidKeySpecException | NoSuchPaddingException
-			        | InvalidAlgorithmParameterException
-			        | IllegalBlockSizeException | BadPaddingException
-			        | IOException e) {
-
-				e.printStackTrace();
-			}
-
-			org.json.JSONObject authOperationObject = NexeraUtility
-			        .createAuthObject(
-			                WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
-			                lqbUsername, lqbPassword);
-			LOGGER.debug("Invoking LQB service to fetch user authentication ticket ");
-			String authTicketJson = lqbInvoker
-			        .invokeRestSpringParseObjForAuth(authOperationObject
-			                .toString());
-			if (!authTicketJson.contains("Access Denied")) {
-				sTicket = authTicketJson;
-
-			} else {
-				LOGGER.error("Ticket Not Generated For This User ");
-			}
-
-		} else {
-			LOGGER.error("LQBUsername or Password are not valid ");
-		}
-		return sTicket;
-	}
 
 }

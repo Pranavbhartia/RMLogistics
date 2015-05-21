@@ -22,6 +22,11 @@
         timeToIdleSeconds="0" timeToLiveSeconds="6000"
         memoryStoreEvictionPolicy="LRU" />
         
+         <cache name="sTicket" eternal="false"
+        maxElementsInMemory="100" overflowToDisk="false" diskPersistent="false"
+        timeToIdleSeconds="0" timeToLiveSeconds="14398"
+        memoryStoreEvictionPolicy="LRU" />
+        
         
 
 </ehcache>
