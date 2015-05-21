@@ -368,26 +368,26 @@ public class NeedsListServiceImpl implements NeedsListService {
 		}
 	}
 
-	@Override
-	@Transactional
-	public void createInitilaNeedsList(Integer loanId) {
-		HashMap<String, Object> result;
-		try {
-			result = getLoansNeedsList(loanId);
-			List<ManagerNeedVo> needs = (List<ManagerNeedVo>) result
-			        .get("result");
-			List<Integer> needsToSave = new ArrayList<Integer>();
-			for (ManagerNeedVo needVo : needs) {
-				if (needVo.getIsChecked()) {
-					needsToSave.add(needVo.getNeedType());
-				}
-			}
-			int res = saveLoanNeeds(loanId, needsToSave);
-
-		} catch (Exception e) {
-			LOGGER.error("Exception caught " + e.getMessage());
-		}
-	}
+//	@Override
+//	@Transactional
+//	public void createInitilaNeedsList(Integer loanId) {
+//		HashMap<String, Object> result;
+//		try {
+//			result = getLoansNeedsList(loanId);
+//			List<ManagerNeedVo> needs = (List<ManagerNeedVo>) result
+//			        .get("result");
+//			List<Integer> needsToSave = new ArrayList<Integer>();
+//			for (ManagerNeedVo needVo : needs) {
+//				if (needVo.getIsChecked()) {
+//					needsToSave.add(needVo.getNeedType());
+//				}
+//			}
+//			int res = saveLoanNeeds(loanId, needsToSave);
+//
+//		} catch (Exception e) {
+//			LOGGER.error("Exception caught " + e.getMessage());
+//		}
+//	}
 
 	private void createAlertForNeedsListSet(int loanId) {
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.NEEDS_LIST_SET_TYPE;

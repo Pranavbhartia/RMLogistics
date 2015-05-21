@@ -191,11 +191,12 @@ public class ApplicationFormRestService {
 				}
 				
 				// Code for automating Needs List creation
+
 				
 				if (response != null && !response.equalsIgnoreCase("error")) {
 					
 					Integer loanId = loaAppFormVO.getLoan().getId();
-					needsListService.createInitilaNeedsList(loanId);
+//					needsListService.createInitilaNeedsList(loanId);
 					userProfileService.dismissAlert(MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,loanId,WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 					
 					lockRateData = loadLoanRateData(loanNumber);

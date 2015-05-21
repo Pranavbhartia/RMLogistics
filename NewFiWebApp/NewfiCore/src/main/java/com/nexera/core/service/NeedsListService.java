@@ -51,7 +51,7 @@ public interface NeedsListService {
 	public void updatedNeedsListEmail(Integer loanID, List<Integer> addedList,
 	        List<Integer> removedList);
 	
-	public void createInitilaNeedsList(Integer loanId);
+//	public void createInitilaNeedsList(Integer loanId);
 
 	public void createOrDismissNeedsAlert(int loanId);
 }
