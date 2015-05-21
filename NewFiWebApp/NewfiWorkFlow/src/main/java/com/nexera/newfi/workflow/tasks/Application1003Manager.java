@@ -15,17 +15,23 @@ import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.LoanProgressStatusMaster;
+import com.nexera.common.entity.Template;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.core.service.SendEmailService;
+import com.nexera.core.service.TemplateService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -47,7 +53,11 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	private IWorkflowService iworkflowService;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(Application1003Manager.class);
+	@Autowired
+	private SendEmailService sendEmailService;
 
+	@Autowired
+	private TemplateService templateService;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
@@ -71,6 +81,51 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			        LoanProgressStatusMasterEnum.IN_PROGRESS));
 		}
 		return returnStatus;
+	}
+	public void sendEmail(HashMap<String, Object> objectMap, String subject) {
+		if (objectMap != null) {
+			LoanVO loanVO = loanService
+			        .getLoanByID(Integer.parseInt(objectMap.get(
+			                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
+			                .toString()));
+			if (loanVO != null) {
+				String emailTemplateKey = objectMap.get(
+				        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+				        .toString();
+				String emailTemplate = WorkflowDisplayConstants.EMAIL_TEMPLATE_DEFAULT_ID;
+				Template template = templateService
+				        .getTemplateByKey(emailTemplateKey);
+				if (template != null) {
+					LOG.info("Send Email Template Found " + template.getValue());
+					emailTemplate = template.getValue();
+				}
+				EmailVO emailEntity = new EmailVO();
+				String[] names = new String[1];
+				names[0] = loanVO.getUser().getFirstName();
+
+				Map<String, String[]> substitutions = new HashMap<String, String[]>();
+				substitutions.put("-name-", names);
+				substitutions = doTemplateSubstitutions(substitutions,
+				        objectMap);
+				emailEntity.setSenderEmailId("web@newfi.com");
+				emailEntity.setSenderName("Newfi System");
+				if (subject == null) {
+					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
+				} else {
+					emailEntity.setSubject(subject);
+				}
+				emailEntity.setTokenMap(substitutions);
+				emailEntity.setTemplateId(emailTemplate);
+				try {
+					sendEmailService.sendEmailForLoanManagers(emailEntity,
+					        loanVO.getId());
+				} catch (InvalidInputException e) {
+					LOG.error("Exception Caught " + e.getMessage());
+				} catch (UndeliveredEmailException e) {
+					LOG.error("Exception Caught " + e.getMessage());
+				}
+			}
+		}
 	}
 
 	private void createAlertForDisclosureDue(HashMap<String, Object> objectMap) {
