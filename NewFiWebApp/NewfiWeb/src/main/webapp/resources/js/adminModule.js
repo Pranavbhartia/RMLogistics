@@ -315,6 +315,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		console.log("file",file);
 		formData.append("file",file);
 		var formURL = "rest/userprofile/addusersfromcsv";
+		showOverlay();
 		$.ajax({
 			url :formURL,
 			type : "POST",
@@ -324,7 +325,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			cache : false,
 			data : formData,
 			success:function(data){
-			
+			hideOverlay();
 		    if(data!=null){
 			
             var response=JSON.parse(data);
@@ -343,6 +344,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		    }	
 			},
 			error:function(e){
+				hideOverlay();
 				showErrorToastMessage(uploadCsvErrorMessage);
 			}
 			
@@ -377,12 +379,18 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	
 	
 	});
-	
+
 	var downloadDiv=$('<div>').attr({
-	"class":"admin-download-btn"
-	}).html("&nbsp;&nbsp;&nbsp;/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Click to download csv").on('click',function(e){
-		alert("hi u have choosen to download csv template");
+	"class":"admin-download-btn",
+
+	}).html("&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Click to download csv").on('click',function(e){
+		window.open("https://s3-ap-southeast-1.amazonaws.com/newfi/static/Nexera-UserUploadTemplate.csv");
 	});
+	var link=$('<a>').attr({
+
+    "href":"https://s3-ap-southeast-1.amazonaws.com/newfi/static/Nexera-UserUploadTemplate.csv"
+	});
+	downloadDiv.append(link);
 	container.append(userTypeCont);
 	container.append(createUserButton); 
 	container.append(label);
