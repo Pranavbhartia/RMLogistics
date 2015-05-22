@@ -422,6 +422,9 @@ function paintloanamountBuyApp() {
     $('#app-right-panel').html("");
     quesContxts = [];
     var dwnPaymnt=showValue(getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue(appUserDetails.purchaseDetails.loanAmount));
+    if(getFloatValue(appUserDetails.purchaseDetails.housePrice) == undefined)
+    	dwnPaymnt="";
+    
     var questions = [{
             "type": "desc",
             "text": "Desired purchase price?",
