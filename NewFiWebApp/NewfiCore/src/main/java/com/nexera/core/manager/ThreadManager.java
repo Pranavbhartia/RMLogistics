@@ -990,7 +990,11 @@ public class ThreadManager implements Runnable {
 		emailEntity.setSubject("You Needs list has been updated");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(loan.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 
+		emailEntity.setCCList(ccList);
 		try {
 			sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
 		} catch (InvalidInputException | UndeliveredEmailException e) {

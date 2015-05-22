@@ -488,8 +488,10 @@ public class NeedsListServiceImpl implements NeedsListService {
 		} else {
 			updatedNeedsListEmail(loanId, addedList, removedList);
 		}
-		messageServiceHelper.generateNeedListModificationMessage(loanId,
-		        utils.getLoggedInUser(), addedList, removedList, Boolean.FALSE);
+		/*
+		 * messageServiceHelper.generateNeedListModificationMessage(loanId,
+		 * utils.getLoggedInUser(), addedList, removedList, Boolean.FALSE);
+		 */
 
 		return 1;
 	}
@@ -735,7 +737,11 @@ public class NeedsListServiceImpl implements NeedsListService {
 				        .setSubject(CommonConstants.SUBJECT_INITIAL_NEEDS_LIST_ARE_SET);
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(template.getValue());
+				List<String> ccList = new ArrayList<String>();
+				ccList.add(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
 
+				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForCustomer(emailEntity,
 					        loanVO.getId());
@@ -795,7 +801,11 @@ public class NeedsListServiceImpl implements NeedsListService {
 		emailEntity.setSubject(CommonConstants.SUBJECT_UPDATE_NEEDS_LIST);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
+		List<String> ccList = new ArrayList<String>();
 
+		ccList.add(loanVO.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
 		try {
 			sendEmailService.sendEmailForCustomer(emailEntity, loanVO.getId());
 		} catch (InvalidInputException | UndeliveredEmailException e) {

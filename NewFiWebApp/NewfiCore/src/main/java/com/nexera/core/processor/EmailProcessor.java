@@ -29,6 +29,8 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.User;
+import com.nexera.common.exception.DatabaseException;
+import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
@@ -98,6 +100,7 @@ public class EmailProcessor implements Runnable {
 	public void run() {
 		LOGGER.debug("Inside run method ");
 		boolean sendEmail = false;
+		boolean systemGenerated = false;
 		try {
 			MimeMessage mimeMsg = (MimeMessage) message;
 			if (mimeMsg != null) {
@@ -193,12 +196,39 @@ public class EmailProcessor implements Runnable {
 						String emailBody = getEmailBody(mimeMessage);
 						User uploadedByUser = userProfileService
 						        .findUserByMail(fromAddressString);
-						if (uploadedByUser != null) {
-							LOGGER.debug("Found a user, checking whether he belongs to this loan");
-							for (Loan loan : uploadedByUser.getLoans()) {
-								if (loan.getId() == loanIdInt) {
-									loanFound = true;
-									break;
+						if (fromAddressString
+						        .contains(CommonConstants.SENDER_EMAIL_ID)) {
+							if (uploadedByUser == null) {
+								LOGGER.debug("This might be a reply mail sent, hence checking based on username ");
+								String username = fromAddressString.substring(
+								        0, fromAddressString.indexOf("@"));
+								UserVO uploadedByUserVO = null;
+								try {
+									uploadedByUserVO = userProfileService
+									        .findByUserName(username);
+								} catch (DatabaseException e) {
+									uploadedByUser = null;
+								} catch (NoRecordsFetchedException e) {
+									uploadedByUser = null;
+								}
+								if (uploadedByUserVO != null) {
+									uploadedByUser = User
+									        .convertFromVOToEntity(uploadedByUserVO);
+									if (uploadedByUser != null) {
+										loanFound = true;
+										systemGenerated = true;
+									}
+								}
+							}
+						}
+						if (!loanFound) {
+							if (uploadedByUser != null) {
+								LOGGER.debug("Found a user, checking whether he belongs to this loan");
+								for (Loan loan : uploadedByUser.getLoans()) {
+									if (loan.getId() == loanIdInt) {
+										loanFound = true;
+										break;
+									}
 								}
 							}
 							if (!loanFound) {
@@ -315,7 +345,7 @@ public class EmailProcessor implements Runnable {
 								extractAttachmentAndUploadEverything(emailBody,
 								        loanVO, uploadedByUser,
 								        loanVO.getUser(), mimeMessage,
-								        messageId, sendEmail);
+								        messageId, sendEmail, systemGenerated);
 
 							} else {
 								LOGGER.error("user who uploaded not found in database");
@@ -407,7 +437,8 @@ public class EmailProcessor implements Runnable {
 
 	private void extractAttachmentAndUploadEverything(String emailBody,
 	        LoanVO loanVO, User uploadedByUser, UserVO actualUser,
-	        MimeMessage mimeMessage, String messageId, boolean sendEmail) {
+	        MimeMessage mimeMessage, String messageId, boolean sendEmail,
+	        boolean systemGenerated) {
 		try {
 			String successNoteText = "";
 			String failureNoteText = "";
@@ -415,62 +446,72 @@ public class EmailProcessor implements Runnable {
 			List<CheckUploadVO> checkUploadSuccessList = new ArrayList<CheckUploadVO>();
 			List<FileVO> fileVOList = new ArrayList<FileVO>();
 			List<CheckUploadVO> checkUploadFailureList = new ArrayList<CheckUploadVO>();
-			Multipart multipart = (Multipart) mimeMessage.getContent();
-			for (int i = 0; i < multipart.getCount(); i++) {
-				BodyPart bodyPart = multipart.getBodyPart(i);
-				String disposition = bodyPart.getDisposition();
+			Multipart multipart = null;
+			try {
+				multipart = (Multipart) mimeMessage.getContent();
+			} catch (ClassCastException ce) {
+				LOGGER.error("This class cast is occuring because the message from reply is coming as string ");
+			}
+			if (multipart != null) {
+				for (int i = 0; i < multipart.getCount(); i++) {
+					BodyPart bodyPart = multipart.getBodyPart(i);
+					String disposition = bodyPart.getDisposition();
 
-				if (disposition != null
-				        && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-					LOGGER.debug("This mail contains attachment ");
-					DataHandler dataHandler = bodyPart.getDataHandler();
-					String content = dataHandler.getContentType();
-					InputStream inputStream = dataHandler.getInputStream();
+					if (disposition != null
+					        && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
+						LOGGER.debug("This mail contains attachment ");
+						DataHandler dataHandler = bodyPart.getDataHandler();
+						String content = dataHandler.getContentType();
+						InputStream inputStream = dataHandler.getInputStream();
 
-					LOGGER.debug("Uploading the file in the system ");
+						LOGGER.debug("Uploading the file in the system ");
 
-					CheckUploadVO checkUploadVO = null;
-					try {
-						if (loanVO.getLqbFileId() != null) {
-							checkUploadVO = uploadedFileListService
-							        .uploadFileByEmail(inputStream, content,
-							                actualUser.getId(), loanVO.getId(),
-							                uploadedByUser.getId());
-							if (checkUploadVO != null) {
-								if (checkUploadVO.getIsUploadSuccess()) {
-									FileVO fileVO = new FileVO();
-									fileVO.setFileName(checkUploadVO
-									        .getFileName());
-									fileVO.setUrl(checkUploadVO.getUuid());
-									fileVOList.add(fileVO);
-									checkUploadSuccessList.add(checkUploadVO);
+						CheckUploadVO checkUploadVO = null;
+						try {
+							if (loanVO.getLqbFileId() != null) {
+								checkUploadVO = uploadedFileListService
+								        .uploadFileByEmail(inputStream,
+								                content, actualUser.getId(),
+								                loanVO.getId(),
+								                uploadedByUser.getId());
+								if (checkUploadVO != null) {
+									if (checkUploadVO.getIsUploadSuccess()) {
+										FileVO fileVO = new FileVO();
+										fileVO.setFileName(checkUploadVO
+										        .getFileName());
+										fileVO.setUrl(checkUploadVO.getUuid());
+										fileVOList.add(fileVO);
+										checkUploadSuccessList
+										        .add(checkUploadVO);
+									}
+
+									else {
+										checkUploadFailureList
+										        .add(checkUploadVO);
+									}
 								}
-
-								else {
-									checkUploadFailureList.add(checkUploadVO);
-								}
+							} else {
+								lqbFieldFound = false;
 							}
-						} else {
-							lqbFieldFound = false;
+
+						} catch (Exception e) {
+							nexeraUtility.putExceptionMasterIntoExecution(
+							        exceptionMaster, e.getMessage());
+							nexeraUtility.sendExceptionEmail(e.getMessage());
 						}
 
-					} catch (Exception e) {
-						nexeraUtility.putExceptionMasterIntoExecution(
-						        exceptionMaster, e.getMessage());
-						nexeraUtility.sendExceptionEmail(e.getMessage());
 					}
 
 				}
-
 			}
-
 			if (checkUploadSuccessList.isEmpty()
 			        && checkUploadFailureList.isEmpty()) {
 
 				LOGGER.debug("Mail did not have any attachment ");
 				messageServiceHelper.generateEmailDocumentMessage(
 				        loanVO.getId(), uploadedByUser, messageId, emailBody,
-				        null, true, sendEmail, false);
+				        null, true, sendEmail, systemGenerated);
+
 				if (!lqbFieldFound) {
 					String lqbFieldIdMessage = "Your needs list should be set before you try to upload a document";
 					messageServiceHelper.generateEmailDocumentMessage(
@@ -503,7 +544,7 @@ public class EmailProcessor implements Runnable {
 						        emailBody, null, true, sendEmail, false);
 
 					} else {
-						failureNoteText = "Some Files were not uploaded, please note only .pdf, .jpg, .img or .png files  are supported by the system";
+						failureNoteText = "Some files were not uploaded, please note only .pdf, .jpg, .img or .png files  are supported by the system";
 					}
 
 					messageServiceHelper.generateEmailDocumentMessage(
