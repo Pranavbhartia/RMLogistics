@@ -28,8 +28,12 @@ function changeLeftPanel(primary,callback) {
 }
 
 function findUser(callback) {
+    if(window.location.hash=="")
         ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, function(response){appendCustPersonalInfoWrapper(response,callback)});
+    else{
+        callback();
     }
+}
     /*var logedInUser;
 
     function resetSelectedUserDetailObject(user) {
