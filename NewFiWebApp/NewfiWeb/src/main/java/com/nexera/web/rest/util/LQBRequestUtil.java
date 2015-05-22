@@ -20,9 +20,8 @@ public class LQBRequestUtil {
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LQBRequestUtil.class);
-	
-	
-	public JSONObject prepareCreateLoanJson(String templateName,String sTicket) {
+
+	public JSONObject prepareCreateLoanJson(String templateName, String sTicket) {
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
 		try {
@@ -39,8 +38,6 @@ public class LQBRequestUtil {
 		return json;
 	}
 
-	
-	
 	public JSONObject prepareLockLoanRateJson(LoanLockRateVO loanLockRateVO) {
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
@@ -59,9 +56,9 @@ public class LQBRequestUtil {
 		}
 		return json;
 	}
-	
-	
-	public JSONObject saveLoan(String loanNumber, LoanAppFormVO loanAppFormVO, String sTicket) {
+
+	public JSONObject saveLoan(String loanNumber, LoanAppFormVO loanAppFormVO,
+	        String sTicket) {
 		HashMap<String, String> hashmap = new HashMap();
 		try {
 			String condition = "";
@@ -151,6 +148,8 @@ public class LQBRequestUtil {
 			        .getLastName());
 			hashmap.put("lastName", loanAppFormVO.getLoan().getUser()
 			        .getLastName());
+			hashmap.put("borrowersEmailAddress", loanAppFormVO.getLoan()
+			        .getUser().getEmailId());
 			hashmap.put("dateOfBirth", new SimpleDateFormat("yyyy-MM-dd")
 			        .format(new Date(loanAppFormVO.getUser()
 			                .getCustomerDetail().getDateOfBirth())));
@@ -327,7 +326,7 @@ public class LQBRequestUtil {
 			jsonChild.put("sLoanNumber", loanNumber);
 			jsonChild.put("sDataContentMap", jsonObject);
 			jsonChild.put("format", "0");
-			jsonChild.put("sTicket",sTicket);
+			jsonChild.put("sTicket", sTicket);
 
 			json.put("opName", "Save");
 			json.put("loanVO", jsonChild);
@@ -342,7 +341,7 @@ public class LQBRequestUtil {
 		}
 
 	}
-	
+
 	public String getYearsSpent(String purchaseTime) {
 		int yeardiff = 0;
 		int tempTime = 0;
@@ -737,5 +736,4 @@ public class LQBRequestUtil {
 		return hashmap;
 	}
 
-	
 }
