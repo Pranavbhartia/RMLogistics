@@ -24,11 +24,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.googlecode.ehcache.annotations.Cacheable;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LqbInterface;
+import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 
 @Component
@@ -39,6 +39,9 @@ public class LqbCacheInvoker implements LqbInterface {
 
 	@Autowired
 	NexeraUtility nexeraUtility;
+
+	@Autowired
+	NexeraCacheableMethodInterface cacheableMethodInterface;
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(LqbCacheInvoker.class);
@@ -70,7 +73,6 @@ public class LqbCacheInvoker implements LqbInterface {
 		return null;
 	}
 
-	@Cacheable(cacheName = "sTicket")
 	@Override
 	public String findSticket(LoanAppFormVO loaAppFormVO)
 	        throws InvalidKeyException, NoSuchAlgorithmException,
@@ -132,7 +134,8 @@ public class LqbCacheInvoker implements LqbInterface {
 
 		}
 
-		sTicket = nexeraUtility.findSticket(lqbUsername, lqbPassword);
+		sTicket = cacheableMethodInterface
+		        .findSticket(lqbUsername, lqbPassword);
 
 		return sTicket;
 	}

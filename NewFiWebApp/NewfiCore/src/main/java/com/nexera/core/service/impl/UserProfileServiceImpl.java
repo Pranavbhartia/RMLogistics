@@ -3,7 +3,6 @@ package com.nexera.core.service.impl;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -163,7 +162,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Autowired
 	private InternalUserStateMappingService internalUserStateMappingService;
 
-	
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
 
@@ -185,18 +183,22 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = userProfileDao.findByUserId(userid);
 		UserVO userListVO = User.convertFromEntityToVO(user);
 
-		if(null != userListVO.getInternalUserDetail()){
+		if (null != userListVO.getInternalUserDetail()) {
 			try {
-		        userListVO.getInternalUserDetail().setLqbUsername(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbUsername()));
-		        userListVO.getInternalUserDetail().setLqbPassword(nexeraUtility.decrypt(salt, crypticKey, userListVO.getInternalUserDetail().getLqbPassword()));
-	        } catch (InvalidKeyException | NoSuchAlgorithmException
-	                | InvalidKeySpecException | NoSuchPaddingException
-	                | InvalidAlgorithmParameterException
-	                | IllegalBlockSizeException
-	                | BadPaddingException | IOException e) {
-		        
-		        e.printStackTrace();
-	        }
+				userListVO.getInternalUserDetail().setLqbUsername(
+				        nexeraUtility.decrypt(salt, crypticKey, userListVO
+				                .getInternalUserDetail().getLqbUsername()));
+				userListVO.getInternalUserDetail().setLqbPassword(
+				        nexeraUtility.decrypt(salt, crypticKey, userListVO
+				                .getInternalUserDetail().getLqbPassword()));
+			} catch (InvalidKeyException | NoSuchAlgorithmException
+			        | InvalidKeySpecException | NoSuchPaddingException
+			        | InvalidAlgorithmParameterException
+			        | IllegalBlockSizeException | BadPaddingException
+			        | IOException e) {
+
+				e.printStackTrace();
+			}
 		}
 		return userListVO;
 	}
