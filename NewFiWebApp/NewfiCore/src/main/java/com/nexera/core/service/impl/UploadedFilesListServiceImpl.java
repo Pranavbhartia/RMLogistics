@@ -376,7 +376,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public UploadedFilesList fetchUsingFileUUID(String uuidFileId) {
 		// TODO Auto-generated method stub
-		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId);
+		return uploadedFilesListDao.fetchUsingFileUUID(uuidFileId, null);
 	}
 
 	@Override
@@ -697,8 +697,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public void getFileContentFromLQBUsingUUID(HttpServletResponse response,
 	        String uuId) {
-		UploadedFilesList filesList = uploadedFilesListDao
-		        .fetchUsingFileUUID(uuId);
+		UploadedFilesList filesList = uploadedFilesListDao.fetchUsingFileUUID(
+		        uuId, null);
 
 		InputStream inputStream = null;
 		try {
@@ -805,7 +805,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			if (!docIdList.contains(file.getLqbFileID())) {
 				LOG.debug("Can delete the file, lqbfileid also doesnt exist ");
 				UploadedFilesList fileToDelete = uploadedFilesListDao
-				        .fetchUsingFileUUID(file.getUuidFileId());
+				        .fetchUsingFileUUID(file.getUuidFileId(), loan);
 				if (fileToDelete != null) {
 					LoanNeedsList loanNeedList = loanService
 					        .fetchLoanNeedByFileId(fileToDelete);
@@ -1058,9 +1058,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		LoanNeedsList loanNeed = loanService.fetchByNeedId(needId, loanId);
 		updateFileInLoanNeedList(loanNeed.getId(), fileId);
 		updateIsAssignedToTrue(fileId);
-		Map<Integer, FileAssignmentMappingVO> map=new HashMap<Integer, FileAssignmentMappingVO>();
+		Map<Integer, FileAssignmentMappingVO> map = new HashMap<Integer, FileAssignmentMappingVO>();
 		map.put(loanNeed.getId(), new FileAssignmentMappingVO());
-		changeWorkItem(map,loanId);
+		changeWorkItem(map, loanId);
 	}
 
 }

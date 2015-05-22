@@ -162,11 +162,12 @@ public class ThreadManager implements Runnable {
 	@Override
 	public void run() {
 
+		boolean success = true;
 		LOGGER.debug("Inside method run ");
 		LOGGER.debug("Loading all workflowitems");
 		workflowItemExecList = getWorkflowItemExecByLoan(loan);
 		if (invokeLQB) {
-			boolean success = true;
+
 			List<Integer> statusTrackingList = new LinkedList<Integer>();
 			Map<String, String> map = new HashMap<String, String>();
 			int format = 0;
@@ -433,58 +434,6 @@ public class ThreadManager implements Runnable {
 				        .sendExceptionEmail("Unable to create json object for load ");
 
 			}
-			LOGGER.debug("Fetching Docs for this loan ");
-			if (!fetchDocsForThisLoan(loan)) {
-				success = false;
-			}
-
-			LOGGER.debug("Fetching underwriting conditions for this loan ");
-			/*
-			 * if (!invokeUnderwritingCondition(loan, format)) { success =
-			 * false; }
-			 */
-
-			LOGGER.debug("Fetch Credit Score For This Loan ");
-			if (!fetchCreditScore(loan)) {
-				success = false;
-			}
-
-			LOGGER.debug("Check whether purchase document is about to expire");
-			if (loan.getLoanType() != null) {
-				String loanTypeMaster = loan.getLoanType().getLoanTypeCd();
-				if (loanTypeMaster.equalsIgnoreCase(LoanTypeMasterEnum.PUR
-				        .toString())) {
-					if (checkPurchaseDocumentExpiry(loan)) {
-						LOGGER.debug("Purchase Docuement Is About To Expire ");
-						NotificationVO notificationVO = new NotificationVO(
-						        loan.getId(),
-						        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
-						                .getNotificationTypeName(),
-						        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC);
-						List<NotificationVO> notificationVOList = notificationService
-						        .findNotificationTypeListForLoan(
-						                loan.getId(),
-						                MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
-						                        .getNotificationTypeName(),
-						                false);
-						if (notificationVOList.isEmpty()) {
-							notificationVO = notificationService
-							        .createNotification(notificationVO);
-						}
-					}
-				}
-			} else {
-				LOGGER.error("No loan type master associated with this loan "
-				        + loan.getId());
-				nexeraUtility.putExceptionMasterIntoExecution(
-				        exceptionMaster,
-				        "No loan type master associated with this loan "
-				                + loan.getId());
-				nexeraUtility
-				        .sendExceptionEmail("No loan type master associated with this loan "
-				                + loan.getId());
-
-			}
 
 			if (success) {
 				JSONObject ClearModifiedLoanByNameByAppCodeObject = createClearModifiedLoanObject(
@@ -499,6 +448,58 @@ public class ThreadManager implements Runnable {
 				}
 			}
 		}
+
+		if (loan.getLqbFileId() != null) {
+			LOGGER.debug("Fetching Docs for this loan ");
+			fetchDocsForThisLoan(loan);
+		}
+
+		LOGGER.debug("Fetching underwriting conditions for this loan ");
+		/*
+		 * if (!invokeUnderwritingCondition(loan, format)) { success = false; }
+		 */
+
+		LOGGER.debug("Fetch Credit Score For This Loan ");
+		if (!fetchCreditScore(loan)) {
+			success = false;
+		}
+
+		LOGGER.debug("Check whether purchase document is about to expire");
+		if (loan.getLoanType() != null) {
+			String loanTypeMaster = loan.getLoanType().getLoanTypeCd();
+			if (loanTypeMaster.equalsIgnoreCase(LoanTypeMasterEnum.PUR
+			        .toString())) {
+				if (checkPurchaseDocumentExpiry(loan)) {
+					LOGGER.debug("Purchase Docuement Is About To Expire ");
+					NotificationVO notificationVO = new NotificationVO(
+					        loan.getId(),
+					        MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+					                .getNotificationTypeName(),
+					        WorkflowConstants.PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC);
+					List<NotificationVO> notificationVOList = notificationService
+					        .findNotificationTypeListForLoan(
+					                loan.getId(),
+					                MilestoneNotificationTypes.PURCHASE_DOCUMENT_EXPIRATION_NOTIFICATION_TYPE
+					                        .getNotificationTypeName(), false);
+					if (notificationVOList.isEmpty()) {
+						notificationVO = notificationService
+						        .createNotification(notificationVO);
+					}
+				}
+			}
+		} else {
+			LOGGER.error("No loan type master associated with this loan "
+			        + loan.getId());
+			nexeraUtility.putExceptionMasterIntoExecution(
+			        exceptionMaster,
+			        "No loan type master associated with this loan "
+			                + loan.getId());
+			nexeraUtility
+			        .sendExceptionEmail("No loan type master associated with this loan "
+			                + loan.getId());
+
+		}
+
 		LOGGER.debug("Calling Braintree Tansaction Related Classes");
 		invokeBrainTree(loan);
 
