@@ -1446,11 +1446,16 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-		messageServiceHelper
-		        .generatePrivateMessage(loanID,
-		                LoanStatus.ratesLockedRequested,
-		                utils.getLoggedInUser(), false);
+		/*
+		 * messageServiceHelper .generatePrivateMessage(loanID,
+		 * LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
+		 */
 		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
+
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(loan.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
 		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
 	}
 
@@ -1481,8 +1486,12 @@ public class LoanServiceImpl implements LoanService {
 			emailEntity.setSubject("No Products Available");
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(template.getValue());
-
+			List<String> ccList = new ArrayList<String>();
+			ccList.add(loan.getUser().getUsername()
+			        + CommonConstants.SENDER_EMAIL_ID);
+			emailEntity.setCCList(ccList);
 			try {
+
 				sendEmailService.sendEmailForCustomer(emailEntity, loanId);
 			} catch (InvalidInputException e) {
 				LOG.error("Mail send failed--" + e);
@@ -1543,7 +1552,9 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("No Products Available");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(userVO.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
 		try {
 			sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, userVO);
 		} catch (InvalidInputException e) {

@@ -1,6 +1,8 @@
 package com.nexera.newfi.workflow.tasks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -125,6 +127,10 @@ public abstract class NexeraWorkflowTask {
 				}
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(emailTemplate);
+				List<String> ccList = new ArrayList<String>();
+				ccList.add(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
+				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForCustomer(emailEntity,
 					        loanVO.getId());

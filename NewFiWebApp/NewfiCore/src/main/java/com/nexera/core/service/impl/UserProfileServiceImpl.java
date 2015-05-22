@@ -551,7 +551,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSubject(subject);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
@@ -591,7 +593,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSubject("You have been subscribed to Nexera");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
@@ -1296,7 +1300,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        loanVO.getId(),
 							        WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT);
 							if (null != loanVO.getLoanType()
-							        && null != loanVO.getLoanType().getLoanTypeCd()
+							        && null != loanVO.getLoanType()
+							                .getLoanTypeCd()
 							        && loanVO.getLoanType().getLoanTypeCd()
 							                .equals("PUR"))
 								loanService.createAlertForAgent(loanVO.getId());
@@ -1452,6 +1457,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSubject("Please reset your password");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
 
