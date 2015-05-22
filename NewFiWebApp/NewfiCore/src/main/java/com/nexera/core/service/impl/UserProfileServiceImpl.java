@@ -923,7 +923,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			}
 		}
 
-		if (csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.REALTOR
+		/*if (csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.REALTOR
 		        .toString())) {
 			if (csvRow[CommonConstants.LICENSE_INFO_COLUMN] == null
 			        || csvRow[CommonConstants.LICENSE_INFO_COLUMN].isEmpty()) {
@@ -939,10 +939,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        DisplayMessageType.ERROR_MESSAGE).toString();
 				return message;
 			}
-		}
+		}*/
 
 		if (csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.LM
-		        .toString())) {
+		        .toString())||csvRow[CommonConstants.ROLE_COLUMN].equals(UserRolesEnum.REALTOR
+				        .toString())) {
 			if (csvRow[CommonConstants.STATE_CODE_COLUMN] != null
 			        && !csvRow[CommonConstants.STATE_CODE_COLUMN].isEmpty()) {
 				String[] stateCodes = csvRow[CommonConstants.STATE_CODE_COLUMN]
@@ -1037,8 +1038,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userVO.setUserRole(userRoleVO);
 
 			RealtorDetailVO realtorDetailVO = new RealtorDetailVO();
-			realtorDetailVO
-			        .setLicenceInfo(rowData[CommonConstants.LICENSE_INFO_COLUMN]);
+		/*	realtorDetailVO
+			        .setLicenceInfo(rowData[CommonConstants.LICENSE_INFO_COLUMN]);*/
+			
 			realtorDetailVO
 			        .setProfileUrl(rowData[CommonConstants.PROFILE_LINK_COLUMN]);
 			userVO.setRealtorDetail(realtorDetailVO);
@@ -1079,8 +1081,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		Reader reader = new InputStreamReader(file.getInputStream());
 		CSVReader csvReader = new CSVReader(reader, ',',
-		        CSVParser.DEFAULT_QUOTE_CHARACTER, 2);
-		int lineCounter = 2;
+		        CSVParser.DEFAULT_QUOTE_CHARACTER, 3);
+		int lineCounter = 3;
 
 		JsonObject errors = new JsonObject();
 		JsonArray errorList = new JsonArray();
