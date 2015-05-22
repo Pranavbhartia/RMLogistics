@@ -177,6 +177,7 @@ public class UserProfileRest {
 
 		} catch (Exception e) {
 			LOG.error("Error while getting the user datails ", e.getMessage());
+			e.printStackTrace();
 
 		}
 

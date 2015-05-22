@@ -54,10 +54,7 @@ public class RestInterceptor implements HandlerInterceptor {
 		        "For your protection, we have logged you out due to "
 		                + "inactivity.</br>Simply click this <a href='http://"
 		                + path + "'>LOGIN</a> link to start a new session.");
-		System.out.println(request.getServerName() + ":"
-		        + request.getServerPort() + "/" + request.getContextPath());
 
-		System.out.println(map.toString());
 		List<String> unprotectedUrls = utils.getUnprotectedUrls();
 		LOG.debug("Serving getPathInfo" + request.getPathInfo());
 		LOG.debug("Serving URL URI " + request.getRequestURI());
@@ -77,6 +74,8 @@ public class RestInterceptor implements HandlerInterceptor {
 			response.getWriter().write(gson.toJson(map));
 			return false;
 		}
+		LOG.debug("User has a valid session to access a protected URL: "
+		        + request.getRequestURI());
 
 		return true;
 	}

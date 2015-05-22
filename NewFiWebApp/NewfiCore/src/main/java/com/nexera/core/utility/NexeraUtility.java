@@ -72,7 +72,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -83,7 +82,6 @@ import com.itextpdf.text.pdf.PdfImportedPage;
 import com.itextpdf.text.pdf.PdfReader;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.WebServiceMethodParameters;
-import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.ExceptionMasterExecution;
 import com.nexera.common.entity.UploadedFilesList;
@@ -903,6 +901,9 @@ public class NexeraUtility {
 	        InvalidAlgorithmParameterException, UnsupportedEncodingException,
 	        IllegalBlockSizeException, BadPaddingException, IOException {
 		// Key generation for enc and desc
+		if (null == encryptedText || encryptedText.isEmpty()) {
+			return null;
+		}
 		KeySpec keySpec = new PBEKeySpec(secretKey.toCharArray(), salt, 19);
 		SecretKey key = SecretKeyFactory.getInstance("PBEWithMD5AndDES")
 		        .generateSecret(keySpec);
@@ -954,7 +955,5 @@ public class NexeraUtility {
 	 * 
 	 * }
 	 */
-
-
 
 }
