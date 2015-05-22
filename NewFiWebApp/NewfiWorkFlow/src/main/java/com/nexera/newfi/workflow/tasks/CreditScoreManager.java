@@ -117,6 +117,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 				List<String> ccList = new ArrayList<String>();
 				ccList.add(loanVO.getUser().getUsername()
 				        + CommonConstants.SENDER_EMAIL_ID);
+
 				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForCustomer(emailEntity,

@@ -199,7 +199,8 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 		}
 
 		int totalNumberOfRecipients = recipientEmailIdsList.size();
-		if (emailEntity.getCCList() != null) {
+		if (emailEntity.getCCList() != null
+		        && !emailEntity.getCCList().isEmpty()) {
 			totalNumberOfRecipients = totalNumberOfRecipients
 			        + emailEntity.getCCList().size();
 		}

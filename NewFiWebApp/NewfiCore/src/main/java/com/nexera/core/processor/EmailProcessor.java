@@ -544,7 +544,7 @@ public class EmailProcessor implements Runnable {
 						        emailBody, null, true, sendEmail, false);
 
 					} else {
-						failureNoteText = "Some Files were not uploaded, please note only .pdf, .jpg, .img or .png files  are supported by the system";
+						failureNoteText = "Some files were not uploaded, please note only .pdf, .jpg, .img or .png files  are supported by the system";
 					}
 
 					messageServiceHelper.generateEmailDocumentMessage(

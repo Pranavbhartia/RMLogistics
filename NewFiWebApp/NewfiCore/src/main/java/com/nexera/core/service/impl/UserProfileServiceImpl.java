@@ -595,6 +595,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+
 		emailEntity.setCCList(ccList);
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
 	}
@@ -1458,6 +1459,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
+
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);

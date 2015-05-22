@@ -127,6 +127,7 @@ public abstract class NexeraWorkflowTask {
 				}
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(emailTemplate);
+
 				List<String> ccList = new ArrayList<String>();
 				ccList.add(loanVO.getUser().getUsername()
 				        + CommonConstants.SENDER_EMAIL_ID);
