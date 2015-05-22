@@ -43,9 +43,13 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements
 		criteria.createAlias("loan", "ls");
 		criteria.add(Restrictions.eq("ls.id", loanId));
 		criteria.add(Restrictions.eq("isActivate", true));
-		criteria.add(Restrictions.disjunction().add(Restrictions.isNull("documentType")).add(Restrictions.ne("documentType", CommonConstants.LQB_DOC_TYPE_CR)));
-		
-		LOG.info("criteria :"+criteria.toString() );
+		criteria.add(Restrictions
+		        .disjunction()
+		        .add(Restrictions.isNull("documentType"))
+		        .add(Restrictions.ne("documentType",
+		                CommonConstants.LQB_DOC_TYPE_CR)));
+
+		LOG.info("criteria :" + criteria.toString());
 		return criteria.list();
 	}
 
@@ -107,10 +111,13 @@ public class UploadedFilesListDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public UploadedFilesList fetchUsingFileUUID(String uuid) {
+	public UploadedFilesList fetchUsingFileUUID(String uuid, Loan loan) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(UploadedFilesList.class)
 		        .add(Restrictions.eq("uuidFileId", uuid));
+		if (loan != null) {
+			criteria.add(Restrictions.eq("loan", loan));
+		}
 		UploadedFilesList filesList = (UploadedFilesList) criteria
 		        .uniqueResult();
 		return filesList;
