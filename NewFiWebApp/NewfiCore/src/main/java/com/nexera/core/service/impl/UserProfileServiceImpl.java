@@ -1295,7 +1295,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
 							        loanVO.getId(),
 							        WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT);
-							loanService.createAlertForAgent(loanVO.getId());
+							if(loanVO.getLoanType().getLoanTypeCd().equals("PUR"))
+								loanService.createAlertForAgent(loanVO.getId());
 							// code to send mail for no product found
 							boolean noProductFound = false;
 							if (null != teaseRateDataList
