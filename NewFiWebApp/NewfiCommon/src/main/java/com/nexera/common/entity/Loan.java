@@ -65,7 +65,7 @@ public class Loan implements Serializable {
 	private Integer loanManagerWorkflow;
 	private String lockStatus;
 	private Boolean isBankConnected;
-	private BigDecimal lockedRate;
+	private String lockedRate;
 	private BigDecimal appFee;
 	private Long purchaseDocumentExpiryDate;
 	private String lockedRateData;
@@ -445,11 +445,11 @@ public class Loan implements Serializable {
 	}
 
 	@Column(name = "locked_rate")
-	public BigDecimal getLockedRate() {
+	public String getLockedRate() {
 		return lockedRate;
 	}
 
-	public void setLockedRate(BigDecimal lockedRate) {
+	public void setLockedRate(String lockedRate) {
 		this.lockedRate = lockedRate;
 	}
 

@@ -105,6 +105,8 @@
 		<field id="sStatusD" />
 		<field id="sRLckdExpiredD" />
 		<field id="sRateLockStatusT" />
+		<field id="sBrokerLockOriginatorPriceNoteIR" />
+		<field id="sBrokerLockOriginatorPriceBrokComp1PcFee" />
 		<applicant>
 			<field id="aBFirstNm" />
 			<field id="aBLastNm" />

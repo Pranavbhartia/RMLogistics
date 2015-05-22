@@ -1169,7 +1169,7 @@ public class LoanServiceImpl implements LoanService {
 		}
 
 		if (loan.getLockedRate() != null) {
-			loanStatus.setLockRate(loan.getLockedRate().toString());
+			loanStatus.setLockRate(loan.getLockedRate());
 		} else {
 			loanStatus.setLockRate("Not Locked");
 		}
@@ -1361,9 +1361,10 @@ public class LoanServiceImpl implements LoanService {
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { loan.getUser()
 		        .getFirstName() + " " + loan.getUser().getLastName() });
-		substitutions.put("-rate-",
+		substitutions.put(
+		        "-rate-",
 		        new String[] { loan.getLockedRate() != null ? loan
-		                .getLockedRate().toString() : "" });
+		                .getLockedRate() : "" });
 		substitutions.put("-rateexpirationdate-", new String[] { " " });
 
 		if (loan.getUser() != null) {
@@ -1393,9 +1394,10 @@ public class LoanServiceImpl implements LoanService {
 		substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { loan.getUser()
 		        .getFirstName() + " " + loan.getUser().getLastName() });
-		substitutions.put("-rate-",
+		substitutions.put(
+		        "-rate-",
 		        new String[] { loan.getLockedRate() != null ? loan
-		                .getLockedRate().toString() : "" });
+		                .getLockedRate() : "" });
 		substitutions.put("-rateexpirationdate-", new String[] { " " });
 
 		if (loan.getUser() != null) {

@@ -24,9 +24,9 @@ public interface CoreCommonConstants {
 
 	public static String RATE_NOT_LOCKED = "0";
 
-	public static String RATE_LOCK_REQUESTED = "1";
+	public static String RATE_LOCK_REQUESTED = "2";
 
-	public static String RATE_LOCKED = "2";
+	public static String RATE_LOCKED = "1";
 
 	// LQB xml constants
 
@@ -40,7 +40,7 @@ public interface CoreCommonConstants {
 
 	public static String SOAP_XML_RATE_LOCK_EXPIRED_DATE = "sRLckdExpiredD";
 
-	public static String SOAP_XML_LOCKED_RATE = "sBrokerLockBaseNoteIR";
+	public static String SOAP_XML_LOCKED_RATE = "sBrokerLockOriginatorPriceNoteIR";
 
 	// Borrower Credit Score Constants
 	public static String SOAP_XML_BORROWER_EQUIFAX_SCORE = "aBEquifaxScore";
