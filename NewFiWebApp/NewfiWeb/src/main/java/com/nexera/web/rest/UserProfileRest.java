@@ -249,6 +249,7 @@ public class UserProfileRest {
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 				        emailId, updatePassword.getNewPassword());
 				token.setDetails(new WebAuthenticationDetails(request));
+				token.setDetails("Change Password");
 				Authentication authenticatedUser = authenticationManager
 				        .authenticate(token);
 				SecurityContextHolder.getContext().setAuthentication(
