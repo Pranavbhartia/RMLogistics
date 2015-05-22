@@ -11,4 +11,5 @@ public class CommonConstant {
 	public static final String PATH_FOR_ORIGINAL_TEMPELATE = "C:\\apps\\LQB\\blustreamRS.xls";
 	public static final String TEMP_PATH_FOR_COPIED_TEMPELATE = "C:\\apps\\LQB\\temp";
 	public static final String COPIED_TEMPELATE = "C:\\apps\\LQB\\temp\\blustreamRS.xls";
+	
 }
