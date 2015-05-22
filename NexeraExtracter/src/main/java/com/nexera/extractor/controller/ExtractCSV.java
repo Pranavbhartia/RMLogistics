@@ -14,6 +14,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.util.IOUtils;
@@ -32,7 +33,7 @@ public class ExtractCSV {
 
 	@Autowired
 	private Utility utility;
-	
+
 	@Autowired
 	private CommonConstant commonConstant;
 
@@ -42,91 +43,119 @@ public class ExtractCSV {
 		mav.setViewName("rates");
 		return mav;
 	}
-	
-	@RequestMapping(value="/downloadXLS" )
-	public void downloadXLSFile(HttpServletRequest request ,HttpServletResponse response ){
+
+	@RequestMapping(value = "/downloadXLS")
+	public void downloadXLSFile(HttpServletRequest request,
+			HttpServletResponse response) {
 		File file = createXLSFile();
 		OutputStream outStream = null;
 		InputStream is = null;
-		try 
-		{
-			 InputStream in = new BufferedInputStream(new FileInputStream(file));
-			 response.setContentType("application/xlsx");
-		     response.setHeader("Content-Disposition", "attachment; filename="+file.getName()); 
+		InputStream in = null;
+		try {
+			in = new BufferedInputStream(new FileInputStream(file));
+			response.setContentType("application/xlsx");
+			response.setHeader("Content-Disposition", "attachment; filename="
+					+ file.getName());
 
+			ServletOutputStream out = response.getOutputStream();
+			IOUtils.copy(in, out);
+			response.flushBuffer();
+		} catch (Exception e) {
 
-		     ServletOutputStream out = response.getOutputStream();
-		     IOUtils.copy(in, out);
-		     response.flushBuffer();
-		}catch(Exception e){
-			
-		}finally{
-			if(outStream!= null){
+		} finally {
+			if (outStream != null) {
 				try {
-	                outStream.close();
-                } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
-                }
+					outStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			if(is!= null){
+			if (is != null) {
 				try {
-	                is.close();
-                } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
-                }
+					is.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			
-			if(file.exists()){
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (file.exists()) {
 				file.delete();
 			}
+			
+			File tempfile = new File(CommonConstant.COPIED_TEMPELATE);
+			if(tempfile.exists()){
+				tempfile.delete();
+			}
+			File tempDir = new File(CommonConstant.TEMP_PATH_FOR_COPIED_TEMPELATE);
+			if(tempDir.exists()){
+				tempDir.delete();
+			}
 		}
-		
-		
+
 	}
 
-	public File createXLSFile(){
-		
+	public File createXLSFile() {
+
 		FileOutputStream out = null;
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet = workbook.createSheet("Sheet1");
-		
+		File file = null;
+		HSSFWorkbook workbook = null;
+
 		final File folder = new File(commonConstant.FOLDER_PATH);
 		// final File folder = new File("/apps/tmp/RateSheet Files/Price/");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
 		Long folderLastModfied = folder.lastModified();
-		RestResponse restResponse = utility.buildUIMap(list, folderLastModfied);
 		
-		utility.writeResponseDataSetToSheet(sheet, restResponse);
-		File file = null;
+
+		//utility.writeResponseDataSetToSheet(sheet, restResponse);
+		workbook = utility.buildUIComponent(list, folderLastModfied, workbook);
 		try {
-			file = new File(tomcatDirectoryPath()+commonConstant.DEFAULT_FILE_NAME);
+			/*file = new File(tomcatDirectoryPath()
+					+ commonConstant.DEFAULT_FILE_NAME);*/
+			file = new File(CommonConstant.COPIED_TEMPELATE);
 			out = new FileOutputStream(file);
-            workbook.write(out);
-            out.close();
-            System.out.println("Excel written successfully..");
-             
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally{
-        	if(workbook!= null){
-        		try {
-	                workbook.close();
-                } catch (IOException e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
-                }
-        	}
-        }
+			if(null != workbook){
+			workbook.write(out);
+			
+			}			
+			if(null != out){
+			out.flush();
+			out.close();
+			}
+			
+			System.out.println("Excel written successfully..");
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (workbook != null) {
+				try {
+					workbook.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+			}
+		}
 		return file;
-		 
+
 	}
-	
+
 	public String tomcatDirectoryPath() {
 		String rootPath = System.getProperty("catalina.home");
-		return rootPath + File.separator ;
+		return rootPath + File.separator;
 	}
 }

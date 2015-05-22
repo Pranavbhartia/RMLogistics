@@ -1,22 +1,40 @@
 package com.nexera.extractor.utility;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.logging.SimpleFormatter;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor.WHITE;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,6 +50,7 @@ import com.nexera.extractor.entity.ProductPointRate;
 import com.nexera.extractor.entity.RestResponse;
 import com.nexera.extractor.entity.UIEntity;
 import com.nexera.extractor.entity.YearBasedRate;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 @Component
 public class Utility {
@@ -40,6 +59,8 @@ public class Utility {
 
 	@Autowired
 	private CommonConstant commonConstant;
+	 static CellStyle startingCellStyle = null;
+	 static CellStyle endingCellStyle = null;
 	
 	private static final String[] FILE_KEY_INDEX = {
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
@@ -602,7 +623,7 @@ public class Utility {
 	    Object[] objects = new Object[]{"Rate" , "15-Day" , "30-Day" , "45-Day" , "60-Day"};
 	    for (Object object : objects) {
 	    	Cell cellTable = row.createCell(cellNum++);
-	        writeValueToCell(object, cellTable);
+	        writeValueToCell(object, (HSSFCell)cellTable);
         }
     }
 
@@ -613,98 +634,55 @@ public class Utility {
 		};
 	}
 	
-	public HSSFSheet writeResponseDataSetToSheet(HSSFSheet sheet ,RestResponse restResponse ){
-		Map<String, List<UIEntity>> data = restResponse.getData();
-		
-		Integer startRow = 4 ;
-		
-		Set<String> filePatternKeys = FILE_PATTERN_LABEL_HEADER.keySet();
-		for (String filePatternKey : filePatternKeys) {
-			iterateOverFilePatterns( filePatternKey, FILE_PATTERN_LABEL_HEADER.get(filePatternKey)
-										, sheet , data );
-        }
-		return sheet;
-	}
-	
-	private static Integer startRow = 4;
-	
-	private void iterateOverFilePatterns(String filePatternKey, String[] filePatternKeySet
-										, HSSFSheet sheet , Map<String, List<UIEntity>> data 
-										){
-		//Counter parametes 
-		
-		Integer startCell = 0;
-		Integer rowCounter = 0;
-		Integer newRowNum =null;
-		
-		Row row = null;
-		Cell cell = null;
-		startRow = startRow+4;
-		row = sheet.createRow(startRow);
-		cell = row.createCell(0);
-		
-		writeValueToCell(filePatternKey, cell);
-		
-		
-		for (String fileHeading : filePatternKeySet) {
-			
-			if(rowCounter==0){
-				startRow = startRow+3; 
-				row = sheet.createRow(startRow);
-				startCell = 0;
-				cell = row.createCell(startCell);
-			}else{
-				row = sheet.getRow(startRow);
-				startCell = startCell+7;
-				cell = row.createCell(startCell);
-			}
-			
-			String fileName = fileHeading;
-			writeValueToCell(fileName , cell);
-			
-			
-			newRowNum = writeDataTableToSheet(sheet ,data.get(fileName), startRow ,startCell ,rowCounter );
-			
-			
-			rowCounter++;
-			if(rowCounter==commonConstant.COLUMN_IN_SINGLE_ROW){
-				rowCounter = 0;
-				startRow = newRowNum;
-			}
-			
-			
-        }
-		startRow = newRowNum;
-	}
-
+	/**
+	 * Method to write data in sheet an provide styling to cells along with calculating formula based fields  
+	 * @param sheet
+	 * @param uiEntityList
+	 * @param startRow
+	 * @param startCell
+	 * @param rowCounter
+	 * @return
+	 */
 	private Integer writeDataTableToSheet(HSSFSheet sheet ,List<UIEntity> uiEntityList , 
-				Integer startRow ,Integer startCell , Integer rowCounter) {
+				Integer startRow ,Integer startCell , int rowCounter) {
 		Integer rowNum = startRow;
-		
 	    for (UIEntity uiEntity : uiEntityList) {
 	    	Integer cellNum = startCell;
-	    	Row row = null;
+	    	HSSFRow row = null;
 	    	
-	    	if(rowCounter== 0){
-	    		row = sheet.createRow(++rowNum);
-	    	}else{
-		    	if(sheet.getRow(++rowNum)== null)
-		    		row = sheet.createRow(rowNum);
-		    	else{
-		    		row = sheet.getRow(rowNum);
-		    	}
+	    	if(rowCounter == 12){
+	    		break;
 	    	}
+	    	
+		    	if(sheet.getRow(++rowNum)== null){
+		    		row = sheet.createRow(rowNum);
+		    		rowCounter++;
+	    		}else{
+		    		row = sheet.getRow(rowNum);
+		    		rowCounter++;
+		    	}
 			Object[] objects = getObjectRow(uiEntity);
-	       	
+	       		
 		       	for (Object object : objects) {
-		       			Cell cell = row.createCell(cellNum++);
-		       			writeValueToCell(object , cell);
+		       			HSSFCell hssfCell = row.createCell(cellNum++);
+		       			int tempCellNum = cellNum -1;
+		       			if(tempCellNum == 2 || tempCellNum == 8 || tempCellNum == 14){
+		       				hssfCell.setCellStyle(startingCellStyle);
+		       			}else if (tempCellNum == 6 || tempCellNum == 12 || tempCellNum == 18){
+		       				hssfCell.setCellStyle(endingCellStyle);
+		       			}
+		       			writeValueToCell(object , hssfCell);
 		        }
 			  }
 		return rowNum;
     }
 	
-	private void writeValueToCell(Object object , Cell cell){
+	/**
+	 * MEthod to write data into cells along with values passed
+	 * @param object Object
+	 * @param cell HSSFCell
+	 */
+	private void writeValueToCell(Object object , HSSFCell cell){
 		if(object instanceof String){
    			cell.setCellValue((String)object);
    		}
@@ -715,5 +693,404 @@ public class Utility {
         	cell.setCellValue(String.valueOf(object));
         }
 	}
+	
+	/**
+	 * Method to fill the excel sheet with the data from UI
+	 * @param list
+	 * @param fileTimeStamp
+	 * @return
+	 */
+	public HSSFWorkbook buildUIComponent(List<FileProductPointRate> list,
+	        long fileTimeStamp, HSSFWorkbook workBook){
+		
+		System.out.println("Last modified time: " + fileTimeStamp);
+		RestResponse response = new RestResponse();
+		File newTempelate = null;
+		try {
+		Map<String, List<UIEntity>> fromCache = cache.get(fileTimeStamp);
+		newTempelate = createCopyOfTempelate();
+		
+		if (fromCache != null) {
+			System.out.println("Returning from cache instance");
+			response.setData(fromCache);
+			response.setTimestamp(fileTimeStamp);
+		} else {
+			Map<String, List<UIEntity>> lastData = new HashMap<String, List<UIEntity>>();
+			if (cache.entrySet() != null) {
+				try {
+					Map.Entry<Long, Map<String, List<UIEntity>>> entry = cache
+					        .entrySet().iterator().next();
+					if (entry != null) {
+						lastData = entry.getValue();
+						System.out.println("Cache has data");
+						long time = entry.getKey();
+						response.setTimestamp(time);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+			Map<String, List<UIEntity>> data = populateMap(list);
+			System.out.println("New list size: " + data.size());
+			System.out.println("lastData size: " + lastData.size());
+			if (data.size() < lastData.size() && lastData.size() > 0) {
+				// This is the case if there is any issue in extraction logic
+				System.out
+				        .println("Size is different, hence returning cached data");
+				response.setData(lastData);
+			}
+			System.out.println("Updating cache since there is a new data set");
+			cache = new HashMap<Long, Map<String, List<UIEntity>>>();
+			cache.put(fileTimeStamp, data);
+			// If there are too many elements in the cache, remove the oldest.
+
+			if (cache.size() > 10) {
+				System.out.println("Too many elements in cache. Removing.");
+				clearCache();
+			}
+			response.setTimestamp(fileTimeStamp);
+			response.setData(data);
+							
+	}
+		workBook = writeDataToExcelSheet(newTempelate, response, workBook);
+		workBook.setForceFormulaRecalculation(true);
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return workBook;
+	}
+	
+	
+	/**
+	 * Method to make copy of the original tempelate
+	 */
+	private File createCopyOfTempelate() throws IOException{
+		
+		InputStream inStream = null;
+		OutputStream outStream = null;
+		File orgTempelate = null;
+		File newTempelate = null;
+		try{
+			orgTempelate = new File(CommonConstant.PATH_FOR_ORIGINAL_TEMPELATE);
+			File newDir = new File(CommonConstant.TEMP_PATH_FOR_COPIED_TEMPELATE);
+			if(!newDir.exists()){
+				newDir.mkdir();
+			}
+			newTempelate = new File(CommonConstant.COPIED_TEMPELATE);
+			inStream = new FileInputStream(orgTempelate);
+			outStream = new FileOutputStream(newTempelate);
+			int i =0;
+			while((i = inStream.read()) != -1){
+				outStream.write(i);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(null != inStream){
+			inStream.close();
+			inStream =null;
+			}
+			if(null != outStream){
+			outStream.flush();
+			outStream.close();
+			outStream = null;
+			}
+		}
+		
+		return newTempelate;
+	}
+	
+	
+	/**
+	 * Method to write data in excel sheet
+	 */
+	private HSSFWorkbook  writeDataToExcelSheet(File file, RestResponse restResponse, HSSFWorkbook workBook) throws IOException, java.text.ParseException{
+		
+		FileInputStream inStream = null;
+		HSSFSheet sheet = null;
+		try{
+		inStream = new FileInputStream(file);
+		workBook = new HSSFWorkbook(inStream);
+		sheet = workBook.getSheet("Sheet1");
+		Map<String, List<UIEntity>> data = restResponse.getData();
+		
+		int startRowNum = 0;
+		int newRowNum = 0;
+		int rowCounter = 0;
+		
+		createCellStyleRightBorder(workBook);
+		createCellStyleLeftBorder(workBook);
+		writeCurrentDateAndTimeInExcel(sheet);
+		updateFormulaCellsDependingOnDate(sheet);
+		
+		
+		Set<String> filePatternKeys = FILE_PATTERN_LABEL_HEADER.keySet();
+		for (String filePatternKey : filePatternKeys) {
+				String [] filePatternKeySets = FILE_PATTERN_LABEL_HEADER.get(filePatternKey);
+				
+				for(String fileHeading : filePatternKeySets){
+					if("Fannie Mae 30yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14 ,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;						
+					}
+					if("Fannie Mae 20yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14 ,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;						
+					}
+					if("Fannie Mae 15yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 10yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 30yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 20yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 15yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 64,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 10yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 64,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 5/1 Libor ARM 2/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 189,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 7/1 Libor ARM 2/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 189,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 5/1 Libor ARM High Balance 2/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 189,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Fannie Mae 7/1 Libor ARM High Balance 5/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 209,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Mammoth Jumbo 30 YR Fixed".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 354,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Mammoth Jumbo 15 YR Fixed".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 354,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Mammoth Non Agency Hybrid 5/1 ARM".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 354,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Mammoth Non Agency Hybrid 5/1 ARM IO".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 372,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Cascades Jumbo 30 YR Fixed".equals(fileHeading) && "CASCADES JUMBO FIXED PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 539,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					if("Cascades Jumbo 15 YR Fixed".equals(fileHeading) && "CASCADES JUMBO FIXED PRODUCTS".equals(filePatternKey)){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 539,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;							
+					}
+					
+				}
+        }
+		
+	}catch(IOException e){
+		e.printStackTrace();
+	}finally{
+		if(null != inStream){
+		inStream.close();
+		inStream = null;
+		}
+		if(null != workBook){
+			workBook.close();
+		}
+	}
+		
+		return workBook;
+}
+	
+	/**
+	 * Method to create cell styling
+	 */
+	private void createCellStyleRightBorder(HSSFWorkbook workbook){
+		
+		endingCellStyle = workbook.createCellStyle();
+		endingCellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		endingCellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		return;
+	}
+	
+	/**
+	 * Method to create cell styling
+	 */
+	private void createCellStyleLeftBorder(HSSFWorkbook workbook){
+		
+		startingCellStyle = workbook.createCellStyle();
+		startingCellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		startingCellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		return ;
+	}
+	
+	/**
+	 * Method to write date in excel workbook
+	 * @param workBook
+	 */
+	private void writeCurrentDateAndTimeInExcel(HSSFSheet sheet){
+		
+		Integer startRow = 7;
+		Integer startCell = 16;
+		HSSFRow row = null;
+		HSSFCell cell = null;
+		String currentDate = getCurrentDate();
+		
+		if(null == sheet.getRow(startRow)){
+			row = sheet.createRow(startRow);
+		}else{
+			row = sheet.getRow(startRow);
+		}
+		
+		if(null != row){
+			cell = row.createCell(startCell);
+		}
+		
+		writeValueToCell(currentDate, cell);
+		
+		String currentTime = getCurrentTime();
+		
+		if(null == sheet.getRow(++startRow)){
+			row = sheet.createRow(startRow);
+		}else{
+			row = sheet.getRow(startRow);
+		}
+		
+		if(null != row){
+			cell = row.createCell(startCell);
+		}
+		
+		writeValueToCell(currentTime, cell);
+		
+		
+	}
+	
+	/**
+	 * Method to get current date in a string
+	 */
+	private String getCurrentDate(){
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/YYYY");
+		Date date = new Date();
+		String textDate = dateFormat.format(date);
+		return textDate;		
+	}
+	
+	/**
+	 * Method to get current date in a string
+	 */
+	private String getCurrentTime(){
+		
+		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+		Calendar cal = Calendar.getInstance();
+		String textTime = dateFormat.format(cal.getTime());
+		return textTime;		
+	}
+	
+	/**
+	 * Method to add date to given date
+	 * @param currentDate String 
+	 * @param numOfDays	int
+	 * @return String
+	 * @throws java.text.ParseException
+	 */
+	private String addDaysToCurrentDate(String currentDate, int numOfDays) throws  java.text.ParseException{
+		
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		Date date = formatter.parse(currentDate);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, numOfDays);
+		date = cal.getTime();
+		String newDate = formatter.format(date);
+		return newDate;
+		
+	}
+	
+	/**
+	 * Method to update formula cells dependent on date
+	 * @param sheet HSSFSheet
+	 * @throws java.text.ParseException
+	 */
+	private void updateFormulaCellsDependingOnDate(HSSFSheet sheet) throws java.text.ParseException{
+		makeChangesInFormulaCell(116, 18, sheet);
+		makeChangesInFormulaCell(288, 18, sheet);
+		
+	}
+	
+	private void makeChangesInFormulaCell(int startRow, int startCell, HSSFSheet sheet) throws java.text.ParseException{
+		
+		int endRow = startRow + 3;
+		int noOfDays =0;
+		HSSFRow row = null;
+		HSSFCell cell = null;
+		
+		while(startRow <= endRow){
+			
+			if(startRow == 116 || startRow == 288){
+				noOfDays = 15;
+			}else if(startRow == 117 || startRow == 289){
+				noOfDays = 30;
+			}else if(startRow == 118 || startRow == 290){
+				noOfDays = 45;
+			}else if(startRow == 119 || startRow == 291){
+				noOfDays = 60;
+			}
+			
+			if(null == sheet.getRow(startRow)){
+				row = sheet.createRow(startRow);
+			}else{
+				row = sheet.getRow(startRow);
+			}
+			
+			cell = row.getCell(startCell);
+			String currentDate = getCurrentDate();
+			String newDate = addDaysToCurrentDate(currentDate, noOfDays);
+			writeValueToCell(newDate, cell);
+			startRow++;
+		}
+		
+	}
+	
 	
 }
