@@ -439,9 +439,10 @@ public class ThreadManager implements Runnable {
 			}
 
 			LOGGER.debug("Fetching underwriting conditions for this loan ");
-			if (!invokeUnderwritingCondition(loan, format)) {
-				success = false;
-			}
+			/*
+			 * if (!invokeUnderwritingCondition(loan, format)) { success =
+			 * false; }
+			 */
 
 			LOGGER.debug("Fetch Credit Score For This Loan ");
 			if (!fetchCreditScore(loan)) {
@@ -490,7 +491,8 @@ public class ThreadManager implements Runnable {
 				        WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE,
 				        loan.getLqbFileId());
 				if (ClearModifiedLoanByNameByAppCodeObject != null) {
-					LOGGER.debug("Invoking LQB service to fetch Loan status ");
+					LOGGER.debug("Invoking LQB service to clear this loan "
+					        + loan.getLqbFileId());
 					lqbInvoker
 					        .invokeLqbService(ClearModifiedLoanByNameByAppCodeObject
 					                .toString());

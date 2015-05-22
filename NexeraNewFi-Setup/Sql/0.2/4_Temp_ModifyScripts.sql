@@ -398,13 +398,6 @@ UPDATE `newfi_schema`.`internaluserrolemaster` SET `role_description`='Loan Advi
 #16 May for 1003 Complete for Cystomer
 INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`, `params`) VALUES ('35', 'com.nexera.newfi.workflow.customer.tasks.App1003CustomerDisplayManager', '{\"EMAIL_TEMPLATE_NAME\": \"TEMPLATE_WORKFLOW_COMPLETION\"}');
 
-
-INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('43', 'LQB_1003_DISPLAY', '1003 Complete', '35', '2', '2015-02-28 14:23:35', '-1', '2015-02-28 14:23:35', '0', '1', '26', '0', '7', '1');
-
-
-UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='9';
-
-
 ### Added all the above to 1_ script
 
 

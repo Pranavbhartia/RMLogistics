@@ -501,6 +501,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		        .createAlias("loan", "loanList")
 		        .createAlias("needsListMaster", "nlm")
 		        .add(Restrictions.eq("loanList.id", loanId))
+		        .add(Restrictions.ne("nlm.id", 40))
 		        .add(Restrictions.ne("nlm.label",
 		                CommonConstants.LQB_DOC_TYPE_CR));
 		LOG.info("criteria : " + criteria);
@@ -515,6 +516,8 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		Criteria criteria = session.createCriteria(LoanNeedsList.class)
 		        .createAlias("loan", "loanList")
 		        .add(Restrictions.eq("loanList.id", loanId))
+		        .createAlias("needsListMaster", "nlm")
+		        .add(Restrictions.ne("nlm.id", 40))
 		        .createAlias("uploadFileId", "upload")
 		        .add(Restrictions.isNotNull("upload.id"));
 		LOG.info("criteria : " + criteria);

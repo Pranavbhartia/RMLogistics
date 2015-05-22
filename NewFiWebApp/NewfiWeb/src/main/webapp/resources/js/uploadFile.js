@@ -194,6 +194,17 @@ function getDocumentUploadColumn(listUploadedFiles) {
 				
 
 			
+		}else{
+			if (userIsInternal() && neededItemListObj[i].needsListMaster.id == 40 ) {
+				var needsListMasterobj = neededItemListObj[i];
+				var option = $("<option>").attr({
+					"value" : needsListMasterobj.id
+				}).html(needsListMasterobj.needsListMaster.label);
+
+					docAssign.append(option);	
+				
+					
+			}
 		}
 
 	}
