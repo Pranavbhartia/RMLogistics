@@ -108,7 +108,9 @@ public class LoanBatchProcessor extends QuartzJobBean {
 					if (modifiedLoanResponseList != null) {
 						for (ModifiedLoanListResponseVO modifiedLoanListResponseVO : modifiedLoanResponseList) {
 							if (modifiedLoanListResponseVO.getValid()) {
-								LOGGER.debug("This loan is still valid in lqb ");
+								LOGGER.debug("This loan is still valid in lqb "
+								        + modifiedLoanListResponseVO
+								                .getLoanName());
 								for (Loan loan : loanList) {
 									if (loan.getLqbFileId() != null) {
 										if (loan.getLqbFileId()
@@ -120,7 +122,9 @@ public class LoanBatchProcessor extends QuartzJobBean {
 									}
 								}
 							} else {
-								LOGGER.debug("Loan has been deleted in LQB, hence removing this loan");
+								LOGGER.debug("Loan has been deleted in LQB, hence removing this loan"
+								        + modifiedLoanListResponseVO
+								                .getLoanName());
 								JSONObject ClearModifiedLoanByNameByAppCodeObject = createClearModifiedLoanObject(
 								        WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE,
 								        modifiedLoanListResponseVO
