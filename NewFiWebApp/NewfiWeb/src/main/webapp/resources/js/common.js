@@ -989,6 +989,7 @@ function finishedTutorial(element, url){
 		success:function(data){
 			if(data.error== null)
 				{
+				removedKnwoNewFi = true;
 				//showToastMessage("Successfully updated");
 			}else{
 				showErrorToastMessage(data.error.message);
