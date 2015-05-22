@@ -772,9 +772,17 @@ public class LoanServiceImpl implements LoanService {
 
 		User realtor = userProfileService.findUserByMail(loanVO
 		        .getRealtorEmail());
+
 		if (realtor != null && realtor.getId() != 0) {
 			// User is valid. Update the loan team
 			updateLoanTeamList(loanTeam, realtor, loanId);
+			if (realtor.getRealtorDetail() != null
+			        && realtor.getRealtorDetail().getDefaultLoanManager() != null) {
+				// If the realtor has a defaul loan manager, assign him as well
+				updateLoanTeamList(loanTeam, realtor.getRealtorDetail()
+				        .getDefaultLoanManager(), loanId);
+			}
+
 		}
 		// Check if loanmanageremail is valid
 		userProfileService.findUserByMail(loanVO.getLmEmail());
