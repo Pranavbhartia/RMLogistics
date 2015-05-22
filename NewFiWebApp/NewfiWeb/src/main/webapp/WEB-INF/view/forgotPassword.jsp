@@ -94,8 +94,6 @@ $('#loginForm').submit(function(event){
 		if (resendIndex!=-1)
 		{
 			ajaxURL = ajaxURL+"?resend=true";
-		}else{
-			ajaxURL = ajaxURL+"?resend=false";
 		}
 		user.emailId = $('#emailID').val();
 		console.log("Create user button clicked. User : "

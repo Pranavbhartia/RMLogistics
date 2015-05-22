@@ -28,11 +28,11 @@ function changeLeftPanel(primary,callback) {
 }
 
 function findUser(callback) {
-    if(window.location.hash=="")
+   // if(window.location.hash=="")
         ajaxRequest("rest/userprofile/completeprofile", "GET", "json", {}, function(response){appendCustPersonalInfoWrapper(response,callback)});
-    else{
+   /* else{
         callback();
-    }
+    }*/
 }
     /*var logedInUser;
 

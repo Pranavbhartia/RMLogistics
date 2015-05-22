@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +31,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
@@ -153,15 +150,15 @@ public class UserProfileRest {
 	@RequestMapping(value = "/completeprofile", method = RequestMethod.GET)
 	public @ResponseBody String getUserProfileWithUserId() {
 
-		LOG.info("completeprofile profile get call : ");
-		Gson gson = new Gson();
-		User user = getUserObject();
-
-		Integer userid = user.getId();
-
-		UserVO userVO = null;
 		String userprofile = null;
 		try {
+			LOG.info("completeprofile profile get call : ");
+			Gson gson = new Gson();
+			User user = getUserObject();
+
+			Integer userid = user.getId();
+
+			UserVO userVO = null;
 			userVO = userProfileService.findUser(userid);
 			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
 			        .getRoleId()) {
@@ -180,6 +177,7 @@ public class UserProfileRest {
 
 		} catch (Exception e) {
 			LOG.error("Error while getting the user datails ", e.getMessage());
+			e.printStackTrace();
 
 		}
 
@@ -251,6 +249,7 @@ public class UserProfileRest {
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 				        emailId, updatePassword.getNewPassword());
 				token.setDetails(new WebAuthenticationDetails(request));
+				token.setDetails("Change Password");
 				Authentication authenticatedUser = authenticationManager
 				        .authenticate(token);
 				SecurityContextHolder.getContext().setAuthentication(
@@ -370,22 +369,23 @@ public class UserProfileRest {
 		Gson gson = new Gson();
 		UserVO userVO = null;
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
-		ErrorVO error=new ErrorVO();
+		ErrorVO error = new ErrorVO();
 		try {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
 
-			/*Integer userUpdateCount = userProfileService
-			        .managerUpdateUserProfile(userVO);
-			Integer customerDetailsUpdateCount = userProfileService
-			        .managerUpdateUCustomerDetails(userVO);*/
-			Integer userUpdateCount = userProfileService
-			        .updateUser(userVO);
+			/*
+			 * Integer userUpdateCount = userProfileService
+			 * .managerUpdateUserProfile(userVO); Integer
+			 * customerDetailsUpdateCount = userProfileService
+			 * .managerUpdateUCustomerDetails(userVO);
+			 */
+			Integer userUpdateCount = userProfileService.updateUser(userVO);
 
-			if (userUpdateCount < 0 ) {
+			if (userUpdateCount < 0) {
 				LOG.error("Error while updataing the user datails ");
 				error.setMessage("Error while updataing the user datails ");
 				commonResponseVO.setError(error);
-				
+
 			}
 
 		} catch (Exception e) {
@@ -394,7 +394,7 @@ public class UserProfileRest {
 			error.setMessage("Error while updataing the user datails ");
 			commonResponseVO.setError(error);
 		}
-	
+
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
 	}
@@ -720,6 +720,5 @@ public class UserProfileRest {
 		return commonResponseVO;
 
 	}
-	
 
 }
