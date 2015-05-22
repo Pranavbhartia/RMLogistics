@@ -52,6 +52,7 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 		                .equals(DisplayMessageConstants.IS_SHOPPER)) {
 			isShopper = true;
 		}
+
 		String password = authentication.getCredentials().toString();
 
 		User user = null;
@@ -59,7 +60,9 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			LOG.debug("Validating the form parameters");
 			validateLoginFormParameters(username, password);
 			User userFromTable = userProfileService.findUserByMail(username);
-
+			if(authentication.getDetails().equals(DisplayMessageConstants.FROM_CHANGE_PASSWORD) && !userFromTable.getEmailVerified() ){
+				userFromTable.setEmailVerified(true);
+			}
 			if (userFromTable != null
 			        && userFromTable.getEmailVerified() != null
 			        && !userFromTable.getEmailVerified() && !isShopper) {
@@ -72,6 +75,9 @@ public class UserAuthProvider extends DaoAuthenticationProvider {
 			}
 			user = authenticationService.getUserWithLoginName(username,
 			        password);
+			if(authentication.getDetails().equals(DisplayMessageConstants.FROM_CHANGE_PASSWORD) && !user.getEmailVerified() ){
+				user.setEmailVerified(true);
+			}
 			LOG.debug("Checking if user is not in inactive mode");
 			if (user.getStatus() == -1) {
 				throw new DisabledException(
