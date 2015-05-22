@@ -228,7 +228,7 @@ public class ThreadManager implements Runnable {
 									loan.setLockExpirationDate(date);
 								}
 								if (lockedRate != null) {
-									loan.setLockedRateData(lockedRate);
+									loan.setLockedRate(lockedRate);
 
 								}
 								loan.setLockStatus(lockStatus);

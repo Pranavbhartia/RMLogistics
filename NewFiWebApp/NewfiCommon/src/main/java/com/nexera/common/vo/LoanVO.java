@@ -42,7 +42,7 @@ public class LoanVO implements Serializable {
 	private String lockStatus;
 	private Boolean isBankConnected;
 	private String setSenderDomain;
-	private BigDecimal lockedRate;
+	private String lockedRate;
 	private BigDecimal appFee;
 
 	private int customerWorkflowID;
@@ -325,11 +325,11 @@ public class LoanVO implements Serializable {
 		this.setSenderDomain = setSenderDomain;
 	}
 
-	public BigDecimal getLockedRate() {
+	public String getLockedRate() {
 		return lockedRate;
 	}
 
-	public void setLockedRate(BigDecimal lockedRate) {
+	public void setLockedRate(String lockedRate) {
 		this.lockedRate = lockedRate;
 	}
 

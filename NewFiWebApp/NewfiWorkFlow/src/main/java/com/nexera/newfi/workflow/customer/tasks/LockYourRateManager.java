@@ -48,7 +48,7 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = loanService.getLoanByID(loanId);
 		if (loanVO != null)
-			return loanVO.getLockedRate() + "";
+			return loanVO.getLockedRate();
 		return null;
 	}
 

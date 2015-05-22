@@ -428,3 +428,6 @@ INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `d
 
 ########
 
+#Utsav on 22nd May 
+ALTER TABLE `newfi_schema`.`loan` change `locked_rate` `locked_rate` VARCHAR(50) NULL; 
+
