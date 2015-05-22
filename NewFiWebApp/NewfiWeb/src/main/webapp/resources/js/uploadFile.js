@@ -82,6 +82,7 @@ function checkforSimilarNeed(Object) {
 
 								if (!(select.attr("ismiscellaneous") == "true" && $(
 										this).attr("ismiscellaneous") == "true")) {
+									//if (select.val() == $(this).val() && select.attr("masterId")!=$(this).val() ) {
 									if (select.val() == $(this).val()) {
 										select.val('Assign');
 										showDialogPopup(
@@ -152,6 +153,7 @@ function getDocumentUploadColumn(listUploadedFiles) {
 		"fileId" : listUploadedFiles.id,
 		"fileName" : listUploadedFiles.fileName,
 		"isMiscellaneous" : listUploadedFiles.isMiscellaneous,
+		
 		"onchange" : "checkforSimilarNeed(this)"
 	}).change(function() {
 		checkForSplitOption(this);
@@ -198,8 +200,10 @@ function getDocumentUploadColumn(listUploadedFiles) {
 			if (userIsInternal() && neededItemListObj[i].needsListMaster.id == 40 ) {
 				var needsListMasterobj = neededItemListObj[i];
 				var option = $("<option>").attr({
-					"value" : needsListMasterobj.id
+					"value" : needsListMasterobj.id,
+					"data" : needsListMasterobj.needsListMaster.id
 				}).html(needsListMasterobj.needsListMaster.label);
+				docAssign.attr("masterId",needsListMasterobj.id);
 
 					docAssign.append(option);	
 				
