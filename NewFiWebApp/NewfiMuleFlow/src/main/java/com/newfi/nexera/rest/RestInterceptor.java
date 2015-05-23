@@ -64,6 +64,10 @@ public class RestInterceptor implements Callable
             if ( NewFiManager.userTicket == null ) {
                 LOG.debug( "Getting the user ticket based on the username and password " );
                 NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                if ( NewFiManager.userTicket == null ) {
+                    LOG.debug( "Valid ticket was not generated hence trying again " );
+                    NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                }
                 NewFiManager.generationTime = System.currentTimeMillis();
             } else {
                 long generationTime = NewFiManager.generationTime;
@@ -73,12 +77,18 @@ public class RestInterceptor implements Callable
                 if ( differenceInHours >= 3 ) {
                     LOG.debug( "Ticket would have expired as time difference has gone beyond 4 hours " );
                     NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                    if ( NewFiManager.userTicket == null ) {
+                        LOG.debug( "Valid ticket was not generated hence trying again " );
+                        NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                    }
+
                 }
             }
             LOG.debug( "Ticket generated " + NewFiManager.userTicket );
         } else {
             LOG.debug( " This ticket is specific to a loan manager " + restParameters.getLoanVO().getsTicket() );
         }
+
         Object[] inputParameters = getAllParameters( restParameters );
         message.setPayload( inputParameters );
         return message;
