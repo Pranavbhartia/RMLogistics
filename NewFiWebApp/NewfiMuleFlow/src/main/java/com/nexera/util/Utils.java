@@ -4,19 +4,15 @@
 package com.nexera.util;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.mule.mvel2.util.ThisLiteral;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,6 +49,10 @@ public class Utils
         RestTemplate restTemplate = new RestTemplate();
         response = restTemplate.postForEntity( url, jsonString, String.class );
         String ticket = response.getBody();
+        if ( !ticket.contains( "EncryptedTicket" ) ) {
+            LOG.debug( "Valid ticket not generated " );
+            ticket = null;
+        }
         return ticket;
     }
 

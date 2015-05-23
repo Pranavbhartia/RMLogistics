@@ -8,8 +8,6 @@ import org.mule.api.MuleEventContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.Callable;
 
-import com.newfi.nexera.manager.NewFiManager;
-
 
 /**
  * @author Utsav
@@ -29,8 +27,6 @@ public class NewFiTicketProcessor implements Callable
     {
         LOG.debug( "Inside method onCall " );
         MuleMessage message = eventContext.getMessage();
-        String recievedTicket = message.getPayloadAsString();
-        NewFiManager.userTicket = recievedTicket;
         return message;
     }
 
