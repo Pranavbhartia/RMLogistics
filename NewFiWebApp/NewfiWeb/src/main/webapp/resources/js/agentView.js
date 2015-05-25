@@ -2848,16 +2848,14 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 
 					ob.company = company;
 
-					if (company.name == "") {
-						showErrorToastMessage(companyNameEmptyMessage);
-						return;
-					} else if (company.phoneNumber == "") {
-						showErrorToastMessage(phoneEmptyMessage);
-						return;
-					} else if (company.emailID == "") {
-						showErrorToastMessage(emailAddressEmptyMessage);
-						return;
-					} else if (user.emailId == "") {
+					$('.err-msg').css('padding-left','109px');
+					var companyName=validateFormFeild('#create-tc-name','#create-tc-name',companyNameEmptyMessage);
+					var phoneNumber=validateFormFeild('#create-tc-phone-number','#create-tc-phone-number',phoneEmptyMessage);
+					var userEmailID=validateFormFeild('#create-tc-email-id','#create-tc-email-id',emailAddressEmptyMessage);
+					if(!companyName || !phoneNumber || !userEmailID){
+						return false;
+					}
+					if (user.emailId == "") {
 						showErrorToastMessage(emailEmptyMessage);
 						return;
 					}
@@ -3002,6 +3000,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 		ajaxRequest("rest/loan/homeOwnersInsurance/", "POST", "json", JSON
 				.stringify(ob.company), function(response) {
 			if (response.error) {
+				$('create-tc-email-id').html('');
 				showToastMessage(response.error.message)
 			} else {
 				console.log("Home owners ins company added");
@@ -3034,7 +3033,12 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 	return context;
 
 }
-
+$('body').on('focus',"#create-tc-phone-number",function(){
+    $(this).mask("(999) 999-9999");
+});
+$('body').on('focus',"#create-tc-fax-number",function(){
+    $(this).mask("(999) 999-9999");
+});
 function getCreateTitleCompanyContext(loanID) {
 	var context = new Object();
 	context.loanID = loanID;
@@ -3083,15 +3087,23 @@ function getCreateTitleCompanyContext(loanID) {
 					var company = new Object();
 					company.name = $('#create-tc-name').val();
 					company.address = $('#create-tc-address').val();
-					company.phoneNumber = $('#create-tc-phone-number').val();
-					company.fax = $('#create-tc-fax-number').val();
+					var phoneNumber =  $('#create-tc-phone-number').val();
+					company.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+					var phoneNumber =  $('#create-tc-fax-number').val();
+					company.fax = phoneNumber.replace(/[^0-9]/g, '');
 					company.emailID = $('#create-tc-email-id').val();
 					company.primaryContact = $('#create-tc-primary-contact')
 							.val();
 
 					ob.company = company;
-
-					if (company.name == "") {
+					$('.err-msg').css('padding-left','109px');
+					var companyName=validateFormFeild('#create-tc-name','#create-tc-name',companyNameEmptyMessage);
+					var phoneNumber=validateFormFeild('#create-tc-phone-number','#create-tc-phone-number',phoneEmptyMessage);
+					var userEmailID=validateFormFeild('#create-tc-email-id','#create-tc-email-id',emailAddressEmptyMessage);
+					if(!companyName || !phoneNumber || !userEmailID){
+						return false;
+					}
+				/*	if (company.name == "") {
 						showErrorToastMessage(companyNameEmptyMessage);
 						return;
 					} else if (company.phoneNumber == "") {
@@ -3100,7 +3112,8 @@ function getCreateTitleCompanyContext(loanID) {
 					} else if (company.emailID == "") {
 						showErrorToastMessage(emailAddressEmptyMessage);
 						return;
-					} else if (user.emailId == "") {
+					} else*/ 
+					if (user.emailId == "") {
 						showErrorToastMessage(emailEmptyMessage);
 						return;
 					}
@@ -3129,7 +3142,7 @@ function getCreateTitleCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-tc-name"
 		}).val("");
-		row.append(label).append(inputBox);
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-title-company-container').append(row);
 	}
 
@@ -3146,7 +3159,7 @@ function getCreateTitleCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-tc-address"
 		}).val("");
-		row.append(label).append(inputBox);
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-title-company-container').append(row);
 	}
 
@@ -3163,7 +3176,8 @@ function getCreateTitleCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-tc-phone-number"
 		}).val("");
-		row.append(label).append(inputBox);
+		inputBox.mask("(999) 999-9999");
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-title-company-container').append(row);
 	}
 
@@ -3180,7 +3194,8 @@ function getCreateTitleCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-tc-fax-number"
 		}).val("");
-		row.append(label).append(inputBox);
+		inputBox.mask("(999) 999-9999");
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-title-company-container').append(row);
 	}
 
@@ -3197,7 +3212,7 @@ function getCreateTitleCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-tc-email-id"
 		}).val("");
-		row.append(label).append(inputBox);
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-title-company-container').append(row);
 	}
 
@@ -3214,7 +3229,7 @@ function getCreateTitleCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-tc-primary-contact"
 		}).val("");
-		row.append(label).append(inputBox);
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-title-company-container').append(row);
 	}
 
@@ -3246,8 +3261,10 @@ function getCreateTitleCompanyContext(loanID) {
 		ajaxRequest("rest/loan/titleCompany", "POST", "json", JSON
 				.stringify(ob.company), function(response) {
 			if (response.error) {
-				showToastMessage(response.error.message)
+				
+				showToastMessage(response.error.message);
 			} else {
+				$('#create-tc-email-id').val('');
 				console.log("Title company added");
 				ob.response = response;
 				if (callback) {
