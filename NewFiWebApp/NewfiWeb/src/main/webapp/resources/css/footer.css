@@ -20,6 +20,7 @@ section.section.swatch-black {
     font-family: opensanslight;
     font-size: 12px;
     padding: 38px 0px 0px 323px;
+    color: white;
 }
 
 .footer-element-normal-bottom {
@@ -146,6 +147,7 @@ div.footeremail:hover{
     text-align: left;
     /* margin-right: 0px; */
     padding-left: 96px;
+    color: white;
 }
 
 .footer-newfi-information-subtxt {
@@ -161,6 +163,7 @@ p.footer-subtxt {
     text-align: left;
     margin: 0px;
     margin-left: 98px;
+    color: white;
 }
 
 .footer-home-text {    
