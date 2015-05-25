@@ -1421,6 +1421,29 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
+
+		String loanManagerUsername = null;
+		LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
+		for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
+			if (loanTeam.getUser() != null) {
+				if (loanTeam.getUser().getInternalUserDetail() != null) {
+					if (loanTeam.getUser().getInternalUserDetail()
+					        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+					        .getRoleId()) {
+						loanManagerUsername = loanTeam.getUser().getUsername();
+					}
+				}
+			}
+		}
+		List<String> loanManagerccList = new ArrayList<String>();
+		if (loanManagerUsername != null) {
+			loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
+			        + "-" + loanManagerUsername + "-" + loan.getId()
+			        + CommonConstants.SENDER_EMAIL_ID);
+
+			emailEntity.setCCList(loanManagerccList);
+		}
+
 		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
 	}
 
@@ -1456,8 +1479,35 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		
-		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
+		/*
+		 * messageServiceHelper .generatePrivateMessage(loanID,
+		 * LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
+		 */
 
+		String loanManagerUsername = null;
+		LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
+		for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
+			if (loanTeam.getUser() != null) {
+				if (loanTeam.getUser().getInternalUserDetail() != null) {
+					if (loanTeam.getUser().getInternalUserDetail()
+					        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+					        .getRoleId()) {
+						loanManagerUsername = loanTeam.getUser().getUsername();
+					}
+				}
+			}
+		}
+		List<String> loanManagerccList = new ArrayList<String>();
+		if (loanManagerUsername != null) {
+			loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
+			        + "-" + loanManagerUsername + "-" + loan.getId()
+			        + CommonConstants.SENDER_EMAIL_ID);
+
+			emailEntity.setCCList(loanManagerccList);
+			sendEmailService
+			        .sendEmailForLoanManagers(emailEntity, loan.getId());
+			emailEntity.setCCList(null);
+		}
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(loan.getUser().getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
@@ -1465,7 +1515,6 @@ public class LoanServiceImpl implements LoanService {
 
 		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
 		
-		messageServiceHelper.generateWorkflowMessage(loanID, LoanStatus.ratesLockedRequested, false);
 	}
 
 	@Override
@@ -1530,6 +1579,29 @@ public class LoanServiceImpl implements LoanService {
 			loanManagerEmailEntity
 			        .setTemplateId(loanManagerTemplate.getValue());
 
+			String loanManagerUsername = null;
+			LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
+			for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
+				if (loanTeam.getUser() != null) {
+					if (loanTeam.getUser().getInternalUserDetail() != null) {
+						if (loanTeam.getUser().getInternalUserDetail()
+						        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+						        .getRoleId()) {
+							loanManagerUsername = loanTeam.getUser()
+							        .getUsername();
+						}
+					}
+				}
+			}
+			List<String> loanManagerccList = new ArrayList<String>();
+			if (loanManagerUsername != null) {
+				loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
+				        + "-" + loanManagerUsername + "-" + loan.getId()
+				        + CommonConstants.SENDER_EMAIL_ID);
+
+				loanManagerEmailEntity.setCCList(loanManagerccList);
+			}
+
 			try {
 				sendEmailService.sendEmailForLoanManagers(
 				        loanManagerEmailEntity, loanId);
@@ -1590,6 +1662,31 @@ public class LoanServiceImpl implements LoanService {
 		loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
 		loanManagerEmailEntity.setTemplateId(loanManagerTemplate.getValue());
 
+		String loanManagerUsername = null;
+		LoanVO loanVO = getActiveLoanOfUser(userVO);
+		if (loanVO != null) {
+			LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loanVO);
+			for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
+				if (loanTeam.getUser() != null) {
+					if (loanTeam.getUser().getInternalUserDetail() != null) {
+						if (loanTeam.getUser().getInternalUserDetail()
+						        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+						        .getRoleId()) {
+							loanManagerUsername = loanTeam.getUser()
+							        .getUsername();
+						}
+					}
+				}
+			}
+			List<String> loanManagerccList = new ArrayList<String>();
+			if (loanManagerUsername != null) {
+				loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
+				        + "-" + loanManagerUsername + "-" + loanID
+				        + CommonConstants.SENDER_EMAIL_ID);
+
+				loanManagerEmailEntity.setCCList(loanManagerccList);
+			}
+		}
 		try {
 			sendEmailService.sendEmailForLoanManagers(loanManagerEmailEntity,
 			        loanID);

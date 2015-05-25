@@ -171,6 +171,46 @@ public class EmailProcessor implements Runnable {
 							}
 							messageId = messageId.replace(
 							        CommonConstants.SENDER_NAME_REGEX, "");
+						} else if (toAddressArray.length == 3) {
+							String loanManagerUsername = null;
+							if (toAddressArray[0]
+							        .contains(CommonConstants.SENDER_DEFAULT_USER_NAME)) {
+								loanManagerUsername = toAddressArray[1];
+
+								loanId = toAddressArray[2];
+								loanId = loanId
+								        .replace(
+								                CommonConstants.SENDER_DOMAIN_REGEX,
+								                "");
+								if (loanId.contains("@")) {
+									loanId = loanId.substring(0,
+									        loanId.indexOf("@"));
+								}
+
+								String emailBody = getEmailBody(mimeMessage);
+								UserVO user = null;
+								try {
+									user = userProfileService
+									        .findByUserName(loanManagerUsername);
+								} catch (DatabaseException
+								        | NoRecordsFetchedException e) {
+									user = null;
+								}
+								if (user != null) {
+
+									User createdBy = User
+									        .convertFromVOToEntity(user);
+									if (loanId != null) {
+										messageServiceHelper
+										        .generatePrivateMessage(Integer
+										                .parseInt(loanId),
+										                emailBody, createdBy,
+										                false);
+										loanId = null;
+									}
+								}
+
+							}
 						}
 
 					}

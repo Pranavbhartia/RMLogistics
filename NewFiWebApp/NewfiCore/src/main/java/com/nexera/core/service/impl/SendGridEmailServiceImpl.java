@@ -111,12 +111,6 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 
 	private void prepareAndSend(EmailVO emailEntity)
 	        throws InvalidInputException, UndeliveredEmailException {
-		if (emailEntity.getRecipients() == null
-		        || emailEntity.getRecipients().size() == 0) {
-			LOG.error("sendEmailUsingTemplate : recipientEmailId is null or empty!");
-			throw new InvalidInputException(
-			        "sendEmailUsingTemplate : recipientEmailId is null or empty!");
-		}
 
 		if (emailEntity.getTokenMap() == null
 		        || emailEntity.getTokenMap().isEmpty()) {
@@ -176,6 +170,27 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 			}
 			email.setCc(ccEmails);
 		}
+
+		if (emailEntity.getRecipients() == null
+		        || emailEntity.getRecipients().size() == 0) {
+			if (emailEntity.getCCList() == null
+			        || emailEntity.getCCList().size() == 0) {
+				LOG.error("sendEmailUsingTemplate : recipientEmailId is null or empty!");
+				throw new InvalidInputException(
+				        "sendEmailUsingTemplate : recipientEmailId is null or empty!");
+			} else {
+				LOG.debug("Recepeints not found, but CC list exist, hence adding the CC list entries to the recepient list");
+				email.setCc(new String[0]);
+				String[] recepientEmails = new String[emailEntity.getCCList()
+				        .size()];
+				for (int i = 0; i < emailEntity.getCCList().size(); i++) {
+					recepientEmails[i] = emailEntity.getCCList().get(i);
+				}
+
+				email.setTo(recepientEmails);
+			}
+		}
+
 		email.setFrom(emailEntity.getSenderEmailId());
 		email.setFromName(emailEntity.getSenderName());
 		email.setSubject(emailEntity.getSubject());

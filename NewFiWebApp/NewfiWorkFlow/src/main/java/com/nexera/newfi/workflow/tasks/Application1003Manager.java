@@ -24,6 +24,8 @@ import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.LoanTeamListVO;
+import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
@@ -58,6 +60,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 
 	@Autowired
 	private TemplateService templateService;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
@@ -82,6 +85,8 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		}
 		return returnStatus;
 	}
+
+	@Override
 	public void sendEmail(HashMap<String, Object> objectMap, String subject) {
 		if (objectMap != null) {
 			LoanVO loanVO = loanService
@@ -116,6 +121,31 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 				}
 				emailEntity.setTokenMap(substitutions);
 				emailEntity.setTemplateId(emailTemplate);
+				String loanManagerUsername = null;
+				LoanTeamListVO loanTeamList = loanService
+				        .getLoanTeamListForLoan(loanVO);
+				for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
+					if (loanTeam.getUser() != null) {
+						if (loanTeam.getUser().getInternalUserDetail() != null) {
+							if (loanTeam.getUser().getInternalUserDetail()
+							        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+							        .getRoleId()) {
+								loanManagerUsername = loanTeam.getUser()
+								        .getUsername();
+							}
+						}
+					}
+				}
+				List<String> loanManagerccList = new ArrayList<String>();
+				if (loanManagerUsername != null) {
+					loanManagerccList
+					        .add(CommonConstants.SENDER_DEFAULT_USER_NAME + "-"
+					                + loanManagerUsername + "-"
+					                + loanVO.getId()
+					                + CommonConstants.SENDER_EMAIL_ID);
+
+					emailEntity.setCCList(loanManagerccList);
+				}
 				try {
 					sendEmailService.sendEmailForLoanManagers(emailEntity,
 					        loanVO.getId());
@@ -145,18 +175,16 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			WorkflowItemExec currMilestone = workflowService
 			        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
 			LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
-			        .retrieveTurnAroundTimeByLoan(loanId,
-			                currMilestone.getWorkflowItemMaster().getId());
+			        .retrieveTurnAroundTimeByLoan(loanId, currMilestone
+			                .getWorkflowItemMaster().getId());
 			long turnaroundTime = loanTurnAroundTimeVO.getHours();
-			
-			
-			String content=WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT;
-			content=content.replace("72", ""+turnaroundTime);
-			
+
+			String content = WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT;
+			content = content.replace("72", "" + turnaroundTime);
+
 			NotificationVO notificationVO = new NotificationVO(loanId,
-			        notificationType.getNotificationTypeName(),
-			        content);
-			
+			        notificationType.getNotificationTypeName(), content);
+
 			List<UserRolesEnum> userRoles = new ArrayList<UserRolesEnum>();
 			userRoles.add(UserRolesEnum.INTERNAL);
 			List<InternalUserRolesEum> internalUserRoles = new ArrayList<InternalUserRolesEum>();
@@ -189,7 +217,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		return null;
 	}
 
