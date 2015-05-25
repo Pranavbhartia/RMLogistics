@@ -1301,6 +1301,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Customer", "Edit", true);
 
 	if (loanDetails.lqbInformationAvailable) {
+		appendLoanDetailsRow("Loan URL in LQB", loanDetails.lqbFileId,  true,
 				loanDetails.lqbUrl);
 	} else {
 		appendLoanDetailsRow("Loan URL in LQB",
