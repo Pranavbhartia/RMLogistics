@@ -1455,10 +1455,7 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-		/*
-		 * messageServiceHelper .generatePrivateMessage(loanID,
-		 * LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
-		 */
+		
 		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
 
 		List<String> ccList = new ArrayList<String>();
@@ -1467,6 +1464,8 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setCCList(ccList);
 
 		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+		
+		messageServiceHelper.generateWorkflowMessage(loanID, LoanStatus.ratesLockedRequested, false);
 	}
 
 	@Override
