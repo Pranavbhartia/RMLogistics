@@ -1478,6 +1478,7 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
+		
 		/*
 		 * messageServiceHelper .generatePrivateMessage(loanID,
 		 * LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
@@ -1513,6 +1514,7 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setCCList(ccList);
 
 		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+		
 	}
 
 	@Override
