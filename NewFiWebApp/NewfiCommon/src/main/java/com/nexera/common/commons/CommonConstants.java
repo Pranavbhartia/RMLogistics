@@ -47,7 +47,7 @@ public interface CommonConstants {
 
 	public static final int EMAIL_COLUMN = 2;
 	public static final int ROLE_COLUMN = 3;
-/*	public static final int LICENSE_INFO_COLUMN = 4;*/
+	/* public static final int LICENSE_INFO_COLUMN = 4; */
 	public static final int CITY_COLUMN = 4;
 	public static final int STATE_COLUMN = 5;
 	public static final int ZIPCODE_COLUMN = 6;
@@ -154,6 +154,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_WORKFLOW_COMPLETION = "TEMPLATE_WORKFLOW_COMPLETION";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI = "WELCOME_TO_NEWFI_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR = "WELCOME_TO_NEWFI_REALTOR_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_TITLE_COMPANY = "WELCOME_TO_NEWFI_TITLE_COMPANY_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_CREATED_ACCOUNT_PASSWORD_NOT_UPDATED = "CREATED_ACCOUNT_PASSWORD_NOT_UPDATED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_FORGOT_YOUR_PASSWORD = "FORGOT_YOUR_PASSWORD_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_GET_TO_KNOW_NEWFI = "GET_TO_KNOW_NEWFI_TEMPLATE_ID";
@@ -290,8 +291,7 @@ public interface CommonConstants {
 	public static final String SEND_EMAIL_TO_SALES_MANGERS = "salesManagersOnly";
 
 	public static final String SEND_EMAIL_TO_INTERNAL_USERS = "internalUsers";
-	
+
 	public static final String STICKET = "sTicket";
-	
 
 }
