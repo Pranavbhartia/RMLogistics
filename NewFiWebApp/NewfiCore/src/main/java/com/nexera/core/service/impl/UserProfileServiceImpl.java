@@ -558,7 +558,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
-	private void sendNewUserEmailForTitleCompany(User user)
+	@Override
+	public void sendNewUserEmailForTitleCompany(User user)
 	        throws InvalidInputException, UndeliveredEmailException {
 		String subject = "Welcome to newfi";
 		EmailVO emailEntity = new EmailVO();
@@ -1530,16 +1531,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 			if (userVO != null) {
 				String lqbUsername = userVO.getInternalUserDetail()
 				        .getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
-				if (lqbUsername != null) {
-					lqbUsername = nexeraUtility.decrypt(salt, crypticKey,
-					        lqbUsername);
-				}
+				
 				String lqbPassword = userVO.getInternalUserDetail()
 				        .getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
-				if (lqbPassword != null) {
-					lqbPassword = nexeraUtility.decrypt(salt, crypticKey,
-					        lqbPassword);
-				}
+				
 				if (lqbUsername != null && lqbPassword != null) {
 					JSONObject authOperationObject = NexeraUtility
 					        .createAuthObject(

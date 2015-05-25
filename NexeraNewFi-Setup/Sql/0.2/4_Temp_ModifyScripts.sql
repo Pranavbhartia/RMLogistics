@@ -424,3 +424,10 @@ INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `d
 #Utsav on 22nd May 
 ALTER TABLE `newfi_schema`.`loan` change `locked_rate` `locked_rate` VARCHAR(50) NULL; 
 
+
+# Utsav on 25th May
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES ('40','WELCOME_TO_NEWFI_TITLE_COMPANY_TEMPLATE_ID','Welcome mail for title company','2015-04-10 12:53:34','9bf78a7a-3a55-47e8-93ef-33c9eefcf24b');
+
+
+
