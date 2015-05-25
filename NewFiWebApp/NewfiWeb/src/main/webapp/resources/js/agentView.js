@@ -2806,7 +2806,9 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 		var popUpWrapper = $('<div>').attr({
 			"id" : "create-hoi-company-popup",
 			"class" : "pop-up-wrapper create-user-popup hide"
-		});
+		}).bind("click",function(e){
+			e.stopImmediatePropagation();
+		});;
 
 		var header = $('<div>').attr({
 			"class" : "pop-up-header"
