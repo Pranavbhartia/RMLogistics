@@ -844,10 +844,22 @@ function appendRecentNotesContainer(loanId, notes) {
 		for (var i = 0; i < notes.length; i++) {
 			var noteData = notes[i];
 			var noteContainer = $('<div>').attr({
-				"class" : "note-conatiner",
-				"style" : "background-image:url(" + noteData.imgUrl + ") "
-			});
-
+					"class" : "note-conatiner",
+					"style" : "background-image:url(" + noteData.imgUrl + ") "
+					});
+			if(noteData.imgUrl!=""){
+				noteContainer = $('<div>').attr({
+					"class" : "note-conatiner",
+					"style" : "background-image:url(" + noteData.imgUrl + ") "
+					});
+			}else{
+				var initialTxt = getInitialsByName(noteData.name);
+				var imgContainer = $('<div>').attr({
+					"class" : "lp-initial-pic float-left",
+					"text" : initialTxt
+					});
+				noteContainer.append(imgContainer);
+			}
 			var cusName = $('<div>').attr({
 				"class" : "note-cus-name"
 			}).html(noteData.name);
@@ -968,6 +980,19 @@ function repaintNotes(hideToast) {
 			paintRecentNotes, true);
 
 }
+function getInitialsByName(name){
+	var nameParts=name.split(" ");
+	var fName="";
+	var lName="";
+	if(nameParts){
+		fName=nameParts[0];
+		if(nameParts.length>1){
+			lName=nameParts[nameParts.length-1];
+		}
+	}
+	var initialText = getInitials(fName,lName);
+	return initialText;
+}
 function paintRecentNotes(response) {
 	var messages = response.resultObject.messageVOs;
 	var notes = new Array();
@@ -976,6 +1001,7 @@ function paintRecentNotes(response) {
 		var obj = messages[i];
 		notes[i] = new Object();
 		notes[i].name = obj[0].createdUser.userName;
+
 		if (obj[0].createdUser.imgUrl == undefined
 				|| obj[0].createdUser.imgUrl == null) {
 			notes[i].imgUrl = "";
@@ -1301,7 +1327,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Customer", "Edit", true);
 
 	if (loanDetails.lqbInformationAvailable) {
-		appendLoanDetailsRow("Loan URL in LQB", "Open file in LQB", true,
+		appendLoanDetailsRow("Loan URL in LQB", loanDetails.lqbFileId,  true,
 				loanDetails.lqbUrl);
 	} else {
 		appendLoanDetailsRow("Loan URL in LQB",

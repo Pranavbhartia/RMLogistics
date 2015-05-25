@@ -120,8 +120,8 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	private void sendReminder(CreateReminderVo createReminderVo,
 	        WorkflowItemExec currMilestone, WorkflowItemExec prevMilestone) {
 		LOG.debug("Inside method sendReminder");
-		long noOfHours = (new Date()
-        .getTime()-prevMilestone.getEndTime().getTime()) / (1000 * 60 * 60);
+		long noOfHours = (new Date().getTime() - prevMilestone.getEndTime()
+		        .getTime()) / (1000 * 60 * 60);
 		LOG.debug("total number of hours left " + noOfHours);
 		LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
 		        .retrieveTurnAroundTimeByLoan(createReminderVo.getLoanId(),
@@ -282,8 +282,18 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	public String getRenderInfoForApplicationFee(int loanID) {
 		LOG.debug("Inside method getRenderStateInfoForApplicationFee ");
 		Map<String, Object> map = new HashMap<String, Object>();
-		String status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
+		String status = "";
 		Loan loan = new Loan(loanID);
+		// Code change : Do not show "Click here to pay" if Disclosures are NOT
+		// signed.
+		LoanMilestone disclosureMS = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.DISCLOSURE.getMilestoneKey());
+		
+		if (disclosureMS != null && disclosureMS.getComments()!=null && disclosureMS.getComments().equals(LoanStatus.disclosureSigned))
+		{
+			//Show Click To pay only if Disclosures are signed
+			status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
+		}
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.APP_FEE.getMilestoneKey());
 		if (mileStone != null && mileStone.getComments() != null) {

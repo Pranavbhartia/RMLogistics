@@ -254,6 +254,13 @@ public class UserProfileRest {
 				        .authenticate(token);
 				SecurityContextHolder.getContext().setAuthentication(
 				        authenticatedUser);
+				//TODO link expiration
+					UserVO userVOUpdate=new UserVO();
+					userVOUpdate.setId(updatePassword.getUserId());
+					userVOUpdate.setEmailEncryptionToken(null);
+					userProfileService.updateTokenDetails(User.convertFromVOToEntity(userVOUpdate));
+
+				
 				// Update his login time here
 			}
 		} catch (InputValidationException inputValidation) {

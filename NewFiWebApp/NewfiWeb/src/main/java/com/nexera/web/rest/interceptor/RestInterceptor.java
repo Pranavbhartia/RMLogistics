@@ -52,8 +52,8 @@ public class RestInterceptor implements HandlerInterceptor {
 		map.put("status", "Session Expired");
 		map.put("message",
 		        "For your protection, we have logged you out due to "
-		                + "inactivity.</br>Simply click this <a href='http://"
-		                + path + "'>LOGIN</a> link to start a new session.");
+		                + "inactivity.</br>Simply click this <a class='session-login-btn' href='http://"
+		                + path + "'>Login</a> to start a new session.");
 
 		List<String> unprotectedUrls = utils.getUnprotectedUrls();
 		LOG.debug("Serving getPathInfo" + request.getPathInfo());
