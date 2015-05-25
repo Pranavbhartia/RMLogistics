@@ -3046,6 +3046,8 @@ function getCreateTitleCompanyContext(loanID) {
 		var popUpWrapper = $('<div>').attr({
 			"id" : "create-title-company-popup",
 			"class" : "pop-up-wrapper create-user-popup hide"
+		}).bind("click",function(e){
+			e.stopImmediatePropagation();
 		});
 
 		var header = $('<div>').attr({
