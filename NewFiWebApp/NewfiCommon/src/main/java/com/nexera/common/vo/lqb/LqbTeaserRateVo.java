@@ -18,6 +18,7 @@ public class LqbTeaserRateVo {
 	private String lendersTitleInsurance1104;
 	private String closingEscrowFee1102	;
 	private String recordingFees1201;
+	private String recordingFees1202;
 	private String cityCountyTaxStamps1204;
 	private String interest901;
 	private String hazIns903;
@@ -165,6 +166,12 @@ public class LqbTeaserRateVo {
 	public void setYearData(String yearData) {
 		this.yearData = yearData;
 	}
+	public String getRecordingFees1202() {
+	    return recordingFees1202;
+    }
+	public void setRecordingFees1202(String recordingFees1202) {
+	    this.recordingFees1202 = recordingFees1202;
+    }
 	
 	
 	

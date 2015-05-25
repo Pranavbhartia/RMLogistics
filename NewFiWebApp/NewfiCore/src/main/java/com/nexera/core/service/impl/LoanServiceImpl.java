@@ -1475,7 +1475,7 @@ public class LoanServiceImpl implements LoanService {
 			                + CommonConstants.SENDER_EMAIL_ID);
 		}
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Rates Locked");
+		emailEntity.setSubject("Rates Lock Requested");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		
