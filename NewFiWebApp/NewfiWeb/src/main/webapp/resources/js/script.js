@@ -769,8 +769,9 @@ function lockLoanRate(lockratedata){
             }else{
             	rateLockRequestedFlag = true;
         	    $('input').attr("readonly","true");
-                element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
-                alert('loan is locked');
+                showToastMessage("Rate Lock Requested");
+                /*element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
+                alert('loan is locked');*/
             }
                 
             //TO:DO pass the data (json)which is coming from the controller
