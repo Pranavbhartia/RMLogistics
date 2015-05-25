@@ -428,6 +428,9 @@ ALTER TABLE `newfi_schema`.`loan` change `locked_rate` `locked_rate` VARCHAR(50)
 # Utsav on 25th May
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
 VALUES ('40','WELCOME_TO_NEWFI_TITLE_COMPANY_TEMPLATE_ID','Welcome mail for title company','2015-04-10 12:53:34','9bf78a7a-3a55-47e8-93ef-33c9eefcf24b');
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES ('41','WELCOME_TO_NEWFI_HOME_OWNER_INSURANCE_COMPANY_TEMPLATE_ID','Welcome mail for home insurance owner company','2015-04-10 12:53:34','0e2334f7-07ce-4992-8c14-a98ebd3b8258');
+
 
 
 
