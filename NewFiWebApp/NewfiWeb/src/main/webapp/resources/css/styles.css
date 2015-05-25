@@ -5181,3 +5181,11 @@ a.session-login-btn {
   font-family: 'opensanssemibold';
   padding: 5px;
 }
+.new-class {
+	white-space: nowrap;
+	margin-left: 48px;
+}
+.main-container{
+	padding-top: 10px;
+	border-bottom: 1px #b7b7b7 solid;
+}

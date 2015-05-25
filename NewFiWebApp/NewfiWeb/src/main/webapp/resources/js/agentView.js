@@ -844,9 +844,9 @@ function appendRecentNotesContainer(loanId, notes) {
 		for (var i = 0; i < notes.length; i++) {
 			var noteData = notes[i];
 			var noteContainer = $('<div>').attr({
-					"class" : "note-conatiner",
-					"style" : "background-image:url(" + noteData.imgUrl + ") "
-					});
+				"class":"main-container"
+			});
+			var newCls=""
 			if(noteData.imgUrl!=""){
 				noteContainer = $('<div>').attr({
 					"class" : "note-conatiner",
@@ -855,21 +855,21 @@ function appendRecentNotesContainer(loanId, notes) {
 			}else{
 				var initialTxt = getInitialsByName(noteData.name);
 				var imgContainer = $('<div>').attr({
-					"class" : "lp-initial-pic float-left",
-					"text" : initialTxt
-					});
+					"class" : "lp-initial-pic float-left clearfix"
+					}).html(initialTxt);
 				noteContainer.append(imgContainer);
+				newCls="new-class";
 			}
 			var cusName = $('<div>').attr({
-				"class" : "note-cus-name"
+				"class" : "note-cus-name "+newCls
 			}).html(noteData.name);
 
 			var time = $('<div>').attr({
-				"class" : "note-time"
+				"class" : "note-time "+newCls
 			}).html(noteData.time);
 
 			var message = $('<div>').attr({
-				"class" : "note-message"
+				"class" : "note-message "+newCls
 			}).html(noteData.message);
 
 			noteContainer.append(cusName).append(time).append(message);
