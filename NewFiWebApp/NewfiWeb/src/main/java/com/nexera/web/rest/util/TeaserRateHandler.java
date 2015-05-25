@@ -138,6 +138,7 @@ public class TeaserRateHandler extends DefaultHandler {
     				tempRateVo.setLendersTitleInsurance1104(tempMap.get("lendersTitleInsurance1104"));
     				tempRateVo.setClosingEscrowFee1102(tempMap.get("closingEscrowFee1102"));
     				tempRateVo.setRecordingFees1201(tempMap.get("recordingFees1201"));
+    				tempRateVo.setRecordingFees1202(tempMap.get("recordingFees1202"));
     				tempRateVo.setCityCountyTaxStamps1204(tempMap.get("cityCountyTaxStamps1204"));
     				tempRateVo.setInterest901(tempMap.get("interest901"));
     				tempRateVo.setHazIns903(tempMap.get("hazIns903"));
@@ -228,6 +229,8 @@ private LqbTeaserRateVo setClosingCost(Attributes attributes, LqbTeaserRateVo ra
 	if("1201".equalsIgnoreCase(attributes.getValue("Line")))
 		rateVo.setRecordingFees1201(attributes.getValue("Amount"));
 	
+	if("1202".equalsIgnoreCase(attributes.getValue("Line")))
+		rateVo.setRecordingFees1202(attributes.getValue("Amount"));
 	
 	if("1204".equalsIgnoreCase(attributes.getValue("Line")))
 		rateVo.setCityCountyTaxStamps1204(attributes.getValue("Amount"));
@@ -306,6 +309,9 @@ private HashMap<String,String> setClosingCostTempMapValue(Attributes attributes,
 	
 	if("1201".equalsIgnoreCase(attributes.getValue("Line")))
 		tempMap.put("recordingFees1201",attributes.getValue("Amount"));
+		
+	if("1202".equalsIgnoreCase(attributes.getValue("Line")))
+		tempMap.put("recordingFees1202",attributes.getValue("Amount"));
 		
 	
 	
