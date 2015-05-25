@@ -16,10 +16,6 @@ var customerOtherAccountDetails = new Object();
 //customerDetail.customerOtherAccountDetails = customerOtherAccountDetails;
 
 user.customerDetail = customerDetail;
-var yesyNoErrorMessage="Please give answers of the questions";
-var stateErrorMessage="Please select your state";
-var gonernamentQuestionErrorMessage="Please give answers of all the questions";
-var selectQuestionErrorMessage="Please select any one that applies";
 
 var customerEnagagement = new Object();
 
@@ -3587,7 +3583,7 @@ function paintCustomerApplicationPageStep5() {
     		
     	}else{
             if(yearCount<0){
-                showErrorToastMessage("You must be at least 18 years of age.");
+                showErrorToastMessage(ageErrorMessage);
             }else
     		  showErrorToastMessage(yesyNoErrorMessage);
     	}
