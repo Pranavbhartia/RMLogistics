@@ -13,15 +13,18 @@
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
+<link href="resources/css/footer.css" rel="stylesheet">
+<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 
 </head>
 <body>
 	<jsp:include page="loginHeader.jsp"></jsp:include>
-	<div class="home-container container">
+	<div class="home-container container home-container_CEP">
 		<div class="container-row row clearfix">
 			<div id="ce-main-container"></div>			
 		</div>
 	</div>
+	<jsp:include page="newFiFooter.jsp"></jsp:include>
 	<script src="resources/js/jquery-2.1.3.min.js"></script>
 	<script src="resources/js/jquery-ui.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>

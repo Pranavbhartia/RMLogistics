@@ -1674,7 +1674,7 @@ function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
  
     
     var saveBtn = $('<div>').attr({
-    	"class" : "sm-save-btn float-right"
+    	"class" : "cep-button-color sm-save-btn float-right"
     }).html("Save").on('click',{'flag':flag},function(){
     	
     	if(flag){
@@ -1824,7 +1824,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     $(inputBox).val(detail);
     
     var saveBtn = $('<div>').attr({
-    	"class" : "sm-save-btn float-right"
+    	"class" : "cep-button-color sm-save-btn float-right"
     }).html("Save").on('click',function(){
     	
     	saveTaxAndInsurance();
@@ -2745,7 +2745,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     
     
     var saveBtn = $('<div>').attr({
-    	"class" : "sm-save-btn float-right"
+    	"class" : "cep-button-color sm-save-btn float-right"
     }).html("Save").on('click',{"path":path,"flag":flag},function(){
     	
     	if(flag){

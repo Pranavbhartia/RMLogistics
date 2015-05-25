@@ -202,3 +202,6 @@
 .app-append-width {
     width: 212px;
 }
+.cep-button-color{
+	background-color: rgba(24,72,141,0.9);
+}
