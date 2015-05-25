@@ -373,14 +373,17 @@ public class SendEmailServiceImpl implements SendEmailService {
 		return true;
 
 	}
+
 	@Override
-    public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
-            throws InvalidInputException, UndeliveredEmailException {
-		return sendEmailForCustomer(emailEntity, userVO, true);
-    }
-	@Override
-	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,UserVO userVO)
+	public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
 	        throws InvalidInputException, UndeliveredEmailException {
+		return sendEmailForCustomer(emailEntity, userVO, true);
+	}
+
+	@Override
+	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,
+	        UserVO userVO) throws InvalidInputException,
+	        UndeliveredEmailException {
 		return sendEmailForCustomer(emailEntity, userVO, false);
 	}
 
@@ -448,6 +451,5 @@ public class SendEmailServiceImpl implements SendEmailService {
 			}
 		}
 	}
-
 
 }

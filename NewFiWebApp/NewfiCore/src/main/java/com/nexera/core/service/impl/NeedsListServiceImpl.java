@@ -757,15 +757,24 @@ public class NeedsListServiceImpl implements NeedsListService {
 	private String getNeedsListNameById(List<Integer> needsListId) {
 		NeedsListMaster needsListMaster = null;
 		String needsName = "";
-		int count = needsListId.size();
+		List<NeedsListMaster> needsList = new ArrayList<NeedsListMaster>();
 		for (int id : needsListId) {
 			needsListMaster = (NeedsListMaster) needsDao.load(
 			        NeedsListMaster.class, id);
 			if (needsListMaster != null) {
-				needsName = count + ". " + needsListMaster.getLabel() + " - "
-				        + needsListMaster.getDescription() + "\n" + needsName;
-				count = count - 1;
+				if (needsListMaster.getId() != Integer
+				        .parseInt(MasterNeedsEnum.EXTRA.getIndx())) {
+					needsList.add(needsListMaster);
+				}
 			}
+		}
+
+		int count = needsList.size();
+		for (NeedsListMaster needsListEntry : needsList) {
+
+			needsName = count + ". " + needsListEntry.getLabel() + " - "
+			        + needsListEntry.getDescription() + "\n" + needsName;
+			count = count - 1;
 
 		}
 
