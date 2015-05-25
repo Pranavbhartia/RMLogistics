@@ -136,7 +136,4 @@ public interface UserProfileService {
 
 	public List<User> findBySecondaryEmail(String fromAddressString);
 
-	public void sendNewUserEmailForTitleCompany(User user)
-	        throws InvalidInputException, UndeliveredEmailException;
-
 }

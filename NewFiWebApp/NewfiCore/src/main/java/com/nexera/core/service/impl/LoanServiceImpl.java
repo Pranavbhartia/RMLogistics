@@ -21,6 +21,7 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
@@ -970,6 +971,7 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	@Transactional
 	public TitleCompanyMasterVO addTitleCompany(TitleCompanyMasterVO vo) {
+		// Send the Email here.
 		return this.buildTitleCompanyMasterVO(loanDao.addTitleCompany(this
 		        .parseTitleCompanyMaster(vo)));
 	}
@@ -982,10 +984,115 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.addToLoanTeam(this.parseLoanModel(loan),
 		        this.parseHomeOwnInsMaster(homeOwnersInsurance),
 		        User.convertFromVOToEntity(addedBy));
-		return this
+		// Send the email Here.
+		HomeOwnersInsuranceMasterVO homeOwnersInsuranceMasterVO = this
 		        .buildHomeOwnersInsuranceMasterVO((HomeOwnersInsuranceMaster) loanDao
 		                .load(HomeOwnersInsuranceMaster.class,
 		                        homeOwnersInsurance.getId()));
+
+		sendHomeInsuranceEmail((Loan) loanDao.load(Loan.class, loan.getId()),
+		        homeOwnersInsuranceMasterVO);
+		return homeOwnersInsuranceMasterVO;
+	}
+
+	private void sendTitleCompanyEmailVO(Loan loanVO,
+	        TitleCompanyMasterVO titleCompanyMasterVO) {
+
+		if (loanVO != null) {
+			String emailTemplateKey = CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_TITLE_COMPANY;
+
+			String subject = CommonConstants.SUBJECT_TITLE_COMPANY;
+			Template template = templateService
+			        .getTemplateByKey(emailTemplateKey);
+			if (template == null) {
+				LOG.error("Send Email could not be found Template Found ");
+				return;
+			}
+			EmailVO emailEntity = new EmailVO();
+			String[] names = new String[1];
+			names[0] = titleCompanyMasterVO.getName();
+			Map<String, String[]> substitutions = new HashMap<String, String[]>();
+			substitutions.put("-name-", names);
+
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+			emailEntity.setSubject(subject);
+			List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+			EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+			emailRecipientVO.setEmailID(titleCompanyMasterVO.getEmailID());
+			emailRecipientVO.setRecipientName(titleCompanyMasterVO.getName());
+			recipients.add(emailRecipientVO);
+			emailEntity.setRecipients(recipients);
+			emailEntity.setTokenMap(substitutions);
+			emailEntity.setTemplateId(template.getValue());
+			emailEntity.setBody("---");
+			if (loanVO.getUser() != null
+			        && loanVO.getUser().getUsername() != null) {
+				List<String> ccList = new ArrayList<String>();
+				ccList.add(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
+				emailEntity.setCCList(ccList);
+			}
+			try {
+				sendEmailService.sendMail(emailEntity, true);
+			} catch (InvalidInputException e) {
+				LOG.error("Exception Caught " + e.getMessage());
+			} catch (UndeliveredEmailException e) {
+				LOG.error("Exception Caught " + e.getMessage());
+			}
+		}
+	}
+
+	private void sendHomeInsuranceEmail(Loan loanVO,
+	        HomeOwnersInsuranceMasterVO homeOwnersInsurance) {
+
+		if (loanVO != null) {
+			String emailTemplateKey = CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_HOME_OWNER_INSURANCE_COMPANY;
+
+			String subject = CommonConstants.SUBJECT_HOME_INSUR_COMPANY;
+			Template template = templateService
+			        .getTemplateByKey(emailTemplateKey);
+			if (template == null) {
+				LOG.error("Send Email could not be found Template Found ");
+				return;
+			}
+			EmailVO emailEntity = new EmailVO();
+			String[] names = new String[1];
+			names[0] = homeOwnersInsurance.getName();
+			Map<String, String[]> substitutions = new HashMap<String, String[]>();
+			substitutions.put("-name-", names);
+
+			emailEntity
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+			emailEntity.setSubject(subject);
+			List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+			EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+			emailRecipientVO.setEmailID(homeOwnersInsurance.getEmailID());
+			emailRecipientVO.setRecipientName(homeOwnersInsurance.getName());
+			recipients.add(emailRecipientVO);
+			emailEntity.setRecipients(recipients);
+			emailEntity.setTokenMap(substitutions);
+			emailEntity.setTemplateId(template.getValue());
+			emailEntity.setBody("---");
+			if (loanVO.getUser() != null
+			        && loanVO.getUser().getUsername() != null) {
+				List<String> ccList = new ArrayList<String>();
+				ccList.add(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
+				emailEntity.setCCList(ccList);
+			}
+			try {
+				sendEmailService.sendMail(emailEntity, true);
+			} catch (InvalidInputException e) {
+				LOG.error("Exception Caught " + e.getMessage());
+			} catch (UndeliveredEmailException e) {
+				LOG.error("Exception Caught " + e.getMessage());
+			}
+		}
 	}
 
 	@Override
@@ -996,8 +1103,13 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.addToLoanTeam(this.parseLoanModel(loan),
 		        this.parseTitleCompanyMaster(titleCompany),
 		        User.convertFromVOToEntity(addedBy));
-		return this.buildTitleCompanyMasterVO(((TitleCompanyMaster) loanDao
-		        .load(TitleCompanyMaster.class, titleCompany.getId())));
+
+		TitleCompanyMasterVO titleCompanyMasterVO = this
+		        .buildTitleCompanyMasterVO(((TitleCompanyMaster) loanDao.load(
+		                TitleCompanyMaster.class, titleCompany.getId())));
+		sendTitleCompanyEmailVO((Loan) loanDao.load(Loan.class, loan.getId()),
+		        titleCompanyMasterVO);
+		return titleCompanyMasterVO;
 	}
 
 	@Override
@@ -1478,7 +1590,7 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setSubject("Rates Locked");
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
-		
+
 		/*
 		 * messageServiceHelper .generatePrivateMessage(loanID,
 		 * LoanStatus.ratesLockedRequested, utils.getLoggedInUser(), false);
@@ -1514,7 +1626,7 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setCCList(ccList);
 
 		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
-		
+
 	}
 
 	@Override
