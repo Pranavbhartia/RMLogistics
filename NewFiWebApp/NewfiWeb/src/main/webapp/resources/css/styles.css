@@ -541,6 +541,7 @@ input[type="button"]:focus, button:focus {
 	color: #606060;
 	padding: 0 10px;
 	margin-bottom: 20px;
+	font-size:14px;
 }
 
 .cp-rate-header-text {
