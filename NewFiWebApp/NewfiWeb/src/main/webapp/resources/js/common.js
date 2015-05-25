@@ -609,9 +609,13 @@ function getCalculationFunctionForItem(key) {
 		break;
 	case "recordingFees1201":
 		fun = function() {
+			var secKey="recordingFees1202";
 			if (closingCostHolder.valueSet[key]
 					&& closingCostHolder.valueSet[key] != "0")
 				return closingCostHolder.valueSet[key];
+			else if(closingCostHolder.valueSet[secKey]
+					&& closingCostHolder.valueSet[secKey] != "0")
+				return closingCostHolder.valueSet[secKey];
 			else
 				return "$87.00";
 		};
