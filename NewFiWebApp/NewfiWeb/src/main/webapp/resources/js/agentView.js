@@ -3000,9 +3000,10 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 		ajaxRequest("rest/loan/homeOwnersInsurance/", "POST", "json", JSON
 				.stringify(ob.company), function(response) {
 			if (response.error) {
-				$('create-tc-email-id').html('');
+				
 				showToastMessage(response.error.message)
 			} else {
+				$('create-tc-email-id').html('');
 				console.log("Home owners ins company added");
 				ob.response = response;
 				if (callback) {
