@@ -2851,9 +2851,9 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 					ob.company = company;
 
 					$('.err-msg').css('padding-left','109px');
-					var companyName=validateFormFeild('#create-tc-name','#create-tc-name',companyNameEmptyMessage);
-					var phoneNumber=validateFormFeild('#create-tc-phone-number','#create-tc-phone-number',phoneEmptyMessage);
-					var userEmailID=validateFormFeild('#create-tc-email-id','#create-tc-email-id',emailAddressEmptyMessage);
+					var companyName=validateFormFeild('#create-hoic-name','#create-hoic-name',companyNameEmptyMessage);
+					var phoneNumber=validateFormFeild('#create-hoic-phone-number','#create-hoic-phone-number',phoneEmptyMessage);
+					var userEmailID=validateFormFeild('#create-hoic-email-id','#create-hoic-email-id',emailAddressEmptyMessage);
 					if(!companyName || !phoneNumber || !userEmailID){
 						return false;
 					}
@@ -2885,7 +2885,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-hoic-name"
 		}).val("");
-		row.append(label).append(inputBox);
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-hoi-company-container').append(row);
 	}
 
@@ -2902,7 +2902,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-hoic-address"
 		}).val("");
-		row.append(label).append(inputBox);
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-hoi-company-container').append(row);
 	}
 
@@ -2919,7 +2919,8 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-hoic-phone-number"
 		}).val("");
-		row.append(label).append(inputBox);
+		inputBox.mask("(999) 999-9999");
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-hoi-company-container').append(row);
 	}
 
@@ -2936,7 +2937,8 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-hoic-fax-number"
 		}).val("");
-		row.append(label).append(inputBox);
+		inputBox.mask("(999) 999-9999");
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-hoi-company-container').append(row);
 	}
 
@@ -2953,8 +2955,8 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-hoic-email-id"
 		}).val("");
-		row.append(label).append(inputBox);
-		$('#create-hoi-company-container').append(row);
+		row.append(label).append(inputBox).append(appendErrorMessage());
+		$('#create-hoi-company-container').append(row).append(appendErrorMessage());
 	}
 
 	context.appendPrimaryContact = function() {
@@ -2970,7 +2972,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 			"class" : "create-user-popup-input",
 			"id" : "create-hoic-primary-contact"
 		}).val("");
-		row.append(label).append(inputBox);
+		row.append(label).append(inputBox).append(appendErrorMessage());
 		$('#create-hoi-company-container').append(row);
 	}
 
@@ -3005,7 +3007,8 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 				
 				showToastMessage(response.error.message)
 			} else {
-				$('create-tc-email-id').html('');
+				$('create-tc-email-id').val('');
+				$('create-hoic-email-id').val('');
 				console.log("Home owners ins company added");
 				ob.response = response;
 				if (callback) {
@@ -3040,6 +3043,12 @@ $('body').on('focus',"#create-tc-phone-number",function(){
     $(this).mask("(999) 999-9999");
 });
 $('body').on('focus',"#create-tc-fax-number",function(){
+    $(this).mask("(999) 999-9999");
+});
+$('body').on('focus',"#create-hoic-phone-number",function(){
+    $(this).mask("(999) 999-9999");
+});
+$('body').on('focus',"#create-hoic-fax-number",function(){
     $(this).mask("(999) 999-9999");
 });
 function getCreateTitleCompanyContext(loanID) {
