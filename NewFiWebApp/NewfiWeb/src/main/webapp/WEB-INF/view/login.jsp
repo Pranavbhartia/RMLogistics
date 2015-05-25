@@ -100,14 +100,14 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			<div class="login-container container">
 				<div class="row clearfix">
 					<div class="display-title">Access your newfi account</div>
-					<div class="display-title-subtxt">Login with the email address and password used to create your account</div>
+					<!-- <div class="display-title-subtxt">Login with the email address and password used to create your account</div> -->
 					<div class="login-form-wrapper">
 						<form id="loginForm" name="loginForm"
 							action="j_spring_security_check" method="POST">
 <!-- 							<div class="form-logo"></div> -->
 							<div class="login-error hide" id="errorMessage"></div>
-							<div class="reg-input-row clearfix">	
-				                      <div class="login-row-lc float-left">Email Address</div>
+							<div class="reg-input-row clearfix regis-input">	
+				                     <!--  <div class="login-row-lc float-left">Email Address</div> -->
 				                      <div class="login-row-rc float-left">
 				                        <div class="login-input-cont">
 								          <input type="text" class="login-input"
@@ -117,8 +117,8 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 							</div>
 							</div>
 							</div>
-							<div class="reg-input-row clearfix">	
-				                      <div class="login-row-lc float-left">Password</div>
+							<div class="reg-input-row clearfix regis-input">	
+				                       <!--  <div class="login-row-lc float-left">Password</div>  -->
 				                       <div class="login-row-rc float-left">
 							<div class="login-input-cont">
 								<input type="password" class="login-input"
@@ -128,13 +128,13 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 							</div>
 							</div>
 							
-							<input type="submit" class="login-submit-button" name="Login"
+							<input type="submit" class="cep-button-color login-submit-button" name="Login"
 								value="Login">
 							<!--  <div class="login-submit-button" onclick="document.loginForm.submit();">Login to your account</div>-->
 							<div class="forgot-pwd">
 								Forgot Password?<span class="forgot-pwd-link" onclick="window.location='forgotPassword.do'">Click here</span>
 							</div>
-							<div class="display-title-bottom-subtxt">Newfi difference #1:we empower you with advanced tools to save time and money </div>
+							<!-- <div class="display-title-bottom-subtxt">Newfi difference #1:we empower you with advanced tools to save time and money </div> -->
 						</form>
 					</div>
 				</div>

@@ -97,7 +97,7 @@ function paintMySpouseIncome() {
 	var skipMyAssets = appUserDetails.customerSpouseDetail.skipMyAssets;
 	 
 	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
+		"class" : "cep-button-color ce-save-btn"
 	}).html("Save & Continue").bind('click',function() {
 	  	
 		
@@ -473,7 +473,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 		});
 		optionContainer.append(option);
 		var addAccountBtn = $('<div>').attr({
-			"class" : "add-btn add-account-btn"
+			"class" : "cep-button-color add-btn add-account-btn"
 		}).html("Add additional source of income").bind('click',function(){
 			var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 			if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 2){
@@ -483,8 +483,23 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 			var quesTxt = "About how much do you make a year";
 			var quesCont = getMultiTextQuestion(quesTxt);
 			$(this).before(quesCont);
+			
+			
+			var removeAccBtn = $('<div>').attr({
+				"class" : "cep-button-color add-btn remove-account-btn"
+			}).html("Remove Income")
+			.bind('click',{"mainContainerId":mainContainerId},function(event){
+				$(this).closest('.ce-option-ques-wrapper').remove();
+				var parentDiv = $('#'+event.data.mainContainerId);
+				
+				if(parentDiv.children('.ce-option-ques-wrapper').length==1){
+					parentDiv.children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
+				}
+			});
+			
+			
 			$(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
-			$(this).parent().children('.ce-option-ques-wrapper');/*.append(removeAccBtn);*/
+			$(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
 		});
 
 
@@ -836,7 +851,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
     }
 
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function() {
     	for(var i=0;i<quesDeclarationContxts.length;i++){
     		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
@@ -1078,7 +1093,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	 var questionsContainer = getQuestionsContainer(questions);
 	
 	 var saveAndContinueButton = $('<div>').attr({
-	        "class": "app-save-btn"
+	        "class": "cep-button-color app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
 	    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
@@ -1179,7 +1194,7 @@ function paintCustomerSpouseApplicationPageStep5() {
     
     var dob = "";
     if(appUserDetails.customerSpouseDetail.spouseDateOfBirth != 0)
-    dob = $.datepicker.formatDate('mm/dd/yy', new Date(appUserDetails.customerSpouseDetail.spouseDateOfBirth));
+    dob = makeDateFromLong(appUserDetails.customerSpouseDetail.spouseDateOfBirth);
     if(dob =="" || dob == undefined || dob =='NaN/NaN/NaN')
     	dob="";
     
@@ -1235,7 +1250,7 @@ function paintCustomerSpouseApplicationPageStep5() {
     var questionsContainer = getQuestionsContainer(questions);
 
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
     	dateOfBirth = $('input[name="birthday"]').val();

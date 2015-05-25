@@ -91,7 +91,7 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
         });
         for (var i = 0; i < options.length; i++) {
             var option = $('<div>').attr({
-                "class": "ce-option",
+                "class": "cep-button-color ce-option",
                 "value": options[i].value
             }).html(options[i].text).bind('click', {
                 "option": options[i],
@@ -240,7 +240,7 @@ function paintloanamount() {
         quesContxts.push(contxt);
     }
     var saveAndContinueButton = $('<div>').attr({
-        "class": "ce-save-btn"
+        "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").on('click', function() {
         buyHomeTeaserRate.homeWorthToday = $('input[name="homeWorthToday"]').val();
         buyHomeTeaserRate.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
@@ -592,7 +592,7 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
     });
     optionContainer.append(inputBox).append(errFeild);
     var saveBtn = $('<div>').attr({
-        "class": "ce-save-btn"
+        "class": "cep-button-color ce-save-btn"
     }).html("Save & Continue").bind('click', {
         'clickEvent': clickEvent,
         "name": name
@@ -787,7 +787,7 @@ function getMonthYearTextQuestion(quesText, clickEvent, name) {
     });
     optionContainer.append(monthDropDown).append(yearInput);
     var saveBtn = $('<div>').attr({
-        "class": "ce-save-btn"
+        "class": "cep-button-color ce-save-btn"
     }).html("Save & Continue").bind('click', {
         'clickEvent': clickEvent,
         "name": name

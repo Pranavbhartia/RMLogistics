@@ -150,7 +150,7 @@ function getContextApplicationYesNoQuesCEP(contxt) {
         var sel = "false";
         if (contxt.value == option.text) sel = "true";
         var optionCont = $('<div>').attr({
-            "class": "app-option-choice",
+            "class": "cep-button-color app-option-choice",
             "isSelected": sel
         }).html(option.text);
         optionCont.bind("click", {
@@ -368,35 +368,37 @@ function paintSelectLoanTypeQuestion() {
         "class": "ce-rate-icon"
     });
     var titleText = $('<div>').attr({
-        "class": "ce-title"
-    }).html("A New way to Finance your home");
+        "class": "ce-title-firstPage"
+    }).html("a New way to Finance your home");
     
     var getStartedTxt = $('<div>').attr({
     	"class" : "ce-get-started"
     }).html("Get Started Now");
     
     $('#ce-main-container').append(rateIcon).append(titleText).append(getStartedTxt);
+   
     var wrapper = $('<div>').attr({
-        "class": "ce-ques-wrapper"
+        "class": "ce-ques-wrapper_firstPage"
     });
     var optionsContainer = $('<div>').attr({
         "class": "ce-ques-options-container clearfix"
     });
     var option1 = $('<div>').attr({
-        "class": "ce-ques-option float-left"
+        "class": "cep-button-color ce-ques-option float-left"
     }).html("Refinance").on('click', function() {
         paintRefinanceMainContainer();
     });
     var option2 = $('<div>').attr({
-        "class": "ce-ques-option float-left"
+        "class": "ce-ques-option float-left cep-button-color"
     }).html("Buy a home").on('click', function() {
         paintBuyHomeContainer();
     });
     optionsContainer.append(option1).append(option2);
-    var question = $('<div>').attr({
+   /* var question = $('<div>').attr({
         "class": "ce-ques-text"
-    }).html("Newfi difference #1: we empower you with advanced tools to save time and money!");
-    wrapper.append(optionsContainer).append(question);
+    }).html("Newfi difference #1: we empower you with advanced tools to save time and money!");*/
+   // wrapper.append(optionsContainer).append(question);
+    wrapper.append(optionsContainer);
     $('#ce-main-container').append(wrapper);
 }
 
@@ -510,7 +512,7 @@ function getMutipleChoiceQuestion(quesText, options, name) {
     var errFeild=appendErrorMessage();
     for (var i = 0; i < options.length; i++) {
         var option = $('<div>').attr({
-            "class": "ce-option",
+            "class": "cep-button-color ce-option",
             "value": options[i].value
         }).html(options[i].text).bind('click', {
             "option": options[i],
@@ -557,7 +559,7 @@ function getTextQuestion(quesText, clickEvent, name) {
         
         optionContainer.append(inputBox).append(errFeild);
         var saveBtn = $('<div>').attr({
-            "class": "ce-save-btn"
+            "class": "cep-button-color ce-save-btn"
         }).html("Save & Continue").bind('click', {
             'clickEvent': clickEvent,
             "name": name
@@ -623,7 +625,7 @@ function paintRefinanceStep2() {
         quesContxts.push(contxt);
     }
     var saveAndContinueButton = $('<div>').attr({
-        "class": "ce-save-btn"
+        "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").bind('click', {
         'contxt': contxt
     }, function(event) {
@@ -686,7 +688,7 @@ function paintRefinanceStep3() {
             quesContxts[question.name]=contxt;
         }
         var saveAndContinueButton = $('<div>').attr({
-            "class": "ce-save-btn"
+            "class": "cep-button-color ce-save-btn"
         }).html("Save & continue").on('click', function() {
             
         	refinanceTeaserRate.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val()
@@ -804,7 +806,7 @@ function paintNewResidenceTypeQues(){
         quesContxts[question.name]=contxt;
     }
     var saveAndContinueButton = $('<div>').attr({
-        "class": "ce-save-btn"
+        "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").on('click', function() {
         
         if(refinanceTeaserRate.loanType){
@@ -1069,7 +1071,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         "class": "reg-btn-wrapper clearfix"
     });
     var regGetStarted = $('<div>').attr({
-        "class": "reg-btn float-left",
+        "class": "cep-button-color reg-btn float-left",
     }).html("Create Account").bind('click', {
         "userDetails": registration
     }, function(event) {

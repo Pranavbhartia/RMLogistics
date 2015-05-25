@@ -74,8 +74,14 @@ public class RateCalculatorRestService {
 			String lqbResponse = lqbCacheInvoker
 			        .invokeRest(CreateTeaserRateJson(jsonObject,
 			                "RunQuickPricer").toString());
-			List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
-			lockRateData = gson.toJson(teaserRateList);
+			if(null != lqbResponse){
+				List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
+				lockRateData = gson.toJson(teaserRateList);
+			}else{
+				lockRateData = "error";
+			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			lockRateData = "error";

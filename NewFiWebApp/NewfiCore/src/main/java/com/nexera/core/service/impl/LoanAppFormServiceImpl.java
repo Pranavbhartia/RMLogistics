@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -516,9 +517,14 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 			return null;
 		CustomerSpouseDetailVO customerSpouseDetailVO = new CustomerSpouseDetailVO();
 		customerSpouseDetailVO.setId(customerspousedetail.getId());
-		if (customerspousedetail.getSpouseDateOfBirth() != null)
-			customerSpouseDetailVO.setSpouseDateOfBirth(customerspousedetail
-			        .getSpouseDateOfBirth().getTime());
+		
+		if (null != customerspousedetail.getSpouseDateOfBirth()){
+			
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			customerSpouseDetailVO.setSpouseDateOfBirth(df.format(customerspousedetail
+			        .getSpouseDateOfBirth()));
+		 }
+		
 		customerSpouseDetailVO
 		        .setSpouseSsn(customerspousedetail.getSpouseSsn());
 		customerSpouseDetailVO.setSpouseSecPhoneNumber(customerspousedetail

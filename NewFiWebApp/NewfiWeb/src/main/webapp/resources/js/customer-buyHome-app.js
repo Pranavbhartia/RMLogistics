@@ -300,7 +300,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     
 
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function(event) {
     	var addressStreet = $('input[name="addressStreet"]').val();
     	var inputState = $('input[name="state"]').val();
@@ -444,7 +444,7 @@ function paintloanamountBuyApp() {
         quesContxts.push(contxt);
     }
     var saveAndContinueButton = $('<div>').attr({
-        "class": "ce-save-btn"
+        "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").on('click', function() {
         appUserDetails.purchaseDetails.housePrice = $('input[name="housePrice"]').val();
         appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
@@ -504,7 +504,7 @@ function paintWhereYouLiveStep(){
         addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipTri);
     }
     var saveAndContinueButton = $('<div>').attr({
-	    "class": "ce-save-btn"
+	    "class": "cep-button-color ce-save-btn"
 	}).html("Save & continue").on('click', function() {
 		 var isSuccess=validateInput( $('input[name="buyhomeZipPri"]'), $('input[name="buyhomeZipPri"]').val(),"Please enter a valid 5-digit zipcode");
 		    if(!isSuccess){

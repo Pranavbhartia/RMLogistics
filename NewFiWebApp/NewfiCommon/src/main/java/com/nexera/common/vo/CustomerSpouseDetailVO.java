@@ -7,7 +7,7 @@ public class CustomerSpouseDetailVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private Long spouseDateOfBirth;
+	private String spouseDateOfBirth;
 	private String spouseSsn;
 	private String spouseSecPhoneNumber;
 	private String spouseName;
@@ -48,10 +48,10 @@ public class CustomerSpouseDetailVO implements Serializable {
 		this.id = id;
 	}
 
-	public Long getSpouseDateOfBirth() {
+	public String getSpouseDateOfBirth() {
 		return spouseDateOfBirth;
 	}
-	public void setSpouseDateOfBirth(Long spouseDateOfBirth) {
+	public void setSpouseDateOfBirth(String spouseDateOfBirth) {
 		
 		this.spouseDateOfBirth=spouseDateOfBirth;
 	}

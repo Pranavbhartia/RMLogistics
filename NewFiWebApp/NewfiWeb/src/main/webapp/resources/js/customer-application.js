@@ -631,7 +631,7 @@ function paintCustomerApplicationPageStep1a() {
     var questionsContainer = getQuestionsContainer(questions);
 
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function(event) {
     	
     	
@@ -1002,7 +1002,7 @@ function paintCustomerApplicationPageStep1b() {
     
    
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
     	propertyTypeCd = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
@@ -1108,7 +1108,7 @@ $('#app-right-panel').html("");
 	}
 	
     var saveAndContinueButton = $('<div>').attr({
-	    "class": "ce-save-btn"
+	    "class": "cep-button-color ce-save-btn"
 	}).html("Save & continue").on('click', function() {
 		
 		   isSecondaryMortgage = quesContxts[0].value;
@@ -1438,7 +1438,7 @@ function paintCustomerApplicationPageStep2() {
     //alert('isCoBorrowerSpouse'+ $('input[name="isCoBorrowerSpouse"]').val())
     
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function() {
        // alert('quesContxts[0].value'+quesContxts[0].value);
               //  alert('quesContxts[1].value'+quesContxts[1].value);
@@ -1608,7 +1608,7 @@ function getContextApplicationYesNoQues(contxt) {
         if(contxt.value == option.text)
         	sel="true";
         var optionCont = $('<div>').attr({
-            "class": "app-option-choice",
+            "class": "cep-button-color app-option-choice",
             "isSelected" : sel
         }).html(option.text);
          
@@ -1857,7 +1857,7 @@ function paintMyIncome() {
    var skipMyAssets = appUserDetails.skipMyAssets;
    
     var saveAndContinueButton = $('<div>').attr({
-        "class": "ce-save-btn"
+        "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").on('click', function(event) {
     
     	        var isStatus=[];
@@ -2686,7 +2686,7 @@ function getAppDetialsTextQuestion(quesText, clickEvent, name) {
 	optionContainer.append(inputBox).append(errFeild);
 
 	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
+		"class" : "cep-button-color ce-save-btn"
 	}).html("Save & Continue").bind('click', {
 		'clickEvent' : clickEvent,
 		"name" : name
@@ -2777,7 +2777,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		
 		if(i==0){
 			var addAccountBtn = $('<div>').attr({
-				"class" : "add-btn add-account-btn"
+				"class" : "cep-button-color add-btn add-account-btn"
 			}).html("Add additional source of income").bind('click',function(){
 				
 				var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
@@ -2795,7 +2795,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				//$(this).parent().children('.ce-option-ques-wrapper').find('.remove-account-btn').remove();
 				
 				var removeAccBtn = $('<div>').attr({
-					"class" : "add-btn remove-account-btn"
+					"class" : "cep-button-color add-btn remove-account-btn"
 				}).html("Remove Income")
 				.bind('click',{"mainContainerId":mainContainerId},function(event){
 					$(this).closest('.ce-option-ques-wrapper').remove();
@@ -3043,7 +3043,7 @@ function paintCustomerApplicationPageStep4a() {
     }
 
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function() {
     	for(var i=0;i<quesDeclarationContxts.length;i++){
     		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
@@ -3284,7 +3284,7 @@ function paintCustomerApplicationPageStep4a() {
 	 var questionsContainer = getQuestionsContainer(questions);
 
 	 var saveAndContinueButton = $('<div>').attr({
-	        "class": "app-save-btn"
+	        "class": "cep-button-color app-save-btn"
 	    }).html("Save & continue").on('click', function() {
 	    	
             //dateOfBirth = $('input[name="birthday"]').val();
@@ -3515,7 +3515,7 @@ function paintCustomerApplicationPageStep5() {
     var questionsContainer = getQuestionsContainer(questions);
 
     var saveAndContinueButton = $('<div>').attr({
-        "class": "app-save-btn"
+        "class": "cep-button-color app-save-btn"
     }).html("Save & continue").on('click', function() {
     	
     	dateOfBirth = $('input[name="birthday"]').val();
@@ -4621,7 +4621,7 @@ var questions = [
 		}
 		
 		var saveAndContinueButton = $('<div>').attr({
-		    "class": "ce-save-btn"
+		    "class": "cep-button-color ce-save-btn"
 		}).html("Save & continue").bind('click',{'contxt':contxt}, function(event) {
 			
 			
@@ -4700,7 +4700,7 @@ function paintRefinanceStep3() {
 	}
 	
     var saveAndContinueButton = $('<div>').attr({
-	    "class": "ce-save-btn"
+	    "class": "cep-button-color ce-save-btn"
 	}).html("Save & continue").on('click', function() {
 		
 			refinancedetails.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val();		  
@@ -4983,7 +4983,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 	optionContainer.append(inputBox).append(errFeild);
 
 	var saveBtn = $('<div>').attr({
-		"class" : "ce-save-btn"
+		"class" : "cep-button-color ce-save-btn"
 	}).html("Save & Continue").bind('click', {
 		'clickEvent' : clickEvent,
 		"name" : name
