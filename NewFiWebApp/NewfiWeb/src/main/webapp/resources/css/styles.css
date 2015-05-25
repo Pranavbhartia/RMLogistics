@@ -3582,13 +3582,13 @@ padding-left: 10px;
 }
 
 .ms-icn-closing-status {
-	background-image: url(../images/ms-initial-need-list.png);
+	background-image: url(../images/closing-status-white.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
 
 .m-not-started .ms-icn-closing-status {
-	background-image: url(../images/ms-initial-need-list-grey.png);
+	background-image: url(../images/closing-status-grey.png);
 }
 
 .ms-icn-lock-rate {
@@ -5168,4 +5168,16 @@ span.ps-next{
 
 span.ps-prev{
 	display:none !important;
+}
+
+a.session-login-btn {
+  font-size: 16px;
+  color: #fff;
+  background-color: #6c9f2e;
+  border-radius: 3px;
+  text-align: center;
+  text-transform: capitalize;
+  cursor: pointer;
+  font-family: 'opensanssemibold';
+  padding: 5px;
 }
