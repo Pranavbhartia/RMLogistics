@@ -155,6 +155,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI = "WELCOME_TO_NEWFI_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR = "WELCOME_TO_NEWFI_REALTOR_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_TITLE_COMPANY = "WELCOME_TO_NEWFI_TITLE_COMPANY_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_HOME_OWNER_INSURANCE_COMPANY = "WELCOME_TO_NEWFI_HOME_OWNER_INSURANCE_COMPANY_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_CREATED_ACCOUNT_PASSWORD_NOT_UPDATED = "CREATED_ACCOUNT_PASSWORD_NOT_UPDATED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_FORGOT_YOUR_PASSWORD = "FORGOT_YOUR_PASSWORD_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_GET_TO_KNOW_NEWFI = "GET_TO_KNOW_NEWFI_TEMPLATE_ID";
@@ -269,6 +270,8 @@ public interface CommonConstants {
 	public static final String SUBJECT_APPLICATION_SUBMITTED = "Application Has Been Submitted";
 
 	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
+	public static final String SUBJECT_TITLE_COMPANY = "Welcome to newfi as a Title Company";
+	public static final String SUBJECT_HOME_INSUR_COMPANY = "Welcome to newfi as a Home Insurance Company";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
 
