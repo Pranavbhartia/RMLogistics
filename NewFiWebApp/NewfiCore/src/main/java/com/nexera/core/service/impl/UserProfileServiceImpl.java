@@ -558,7 +558,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
-	private void sendNewUserEmailForTitleCompany(User user)
+	@Override
+	public void sendNewUserEmailForTitleCompany(User user)
 	        throws InvalidInputException, UndeliveredEmailException {
 		String subject = "Welcome to newfi";
 		EmailVO emailEntity = new EmailVO();
