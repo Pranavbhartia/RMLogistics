@@ -814,6 +814,7 @@ function paintNewResidenceTypeQues(){
             refinanceTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
             if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+            	removeToastMessage();
             	paintRefinanceHomeZipCode();	
             }else{
             	showErrorToastMessage("Please answser the questions");
@@ -824,6 +825,7 @@ function paintNewResidenceTypeQues(){
             buyHomeTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
             buyHomeTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
             if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+            	removeToastMessage();
             	paintHomeZipCode();	
             }else{
             	showErrorToastMessage("Please answser the questions");
@@ -1220,6 +1222,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     return parentWrapper.append(regMainContainer);
 }
 function validateUsersBeforeRegistration(registration,teaseRateDataList){
+	
 	$('#overlay-loader').show();
     $.ajax({
         url: "rest/shopper/validate",
@@ -1248,6 +1251,7 @@ function validateUsersBeforeRegistration(registration,teaseRateDataList){
     });
 }
 function saveUserAndRedirect(registration,teaseRateDataList) {
+	
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
@@ -1276,7 +1280,7 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
 }
 
 function saveAndUpdateLoanAppForm(appUserDetails) {
-	globalBinder();
+	
         $.ajax({
             url: "rest/application/applyloan",
             type: "POST",
