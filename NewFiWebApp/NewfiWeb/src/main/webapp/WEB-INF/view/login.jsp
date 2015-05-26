@@ -23,7 +23,7 @@
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 <link href="resources/css/footer.css" rel="stylesheet">
 <script src="resources/js/jquery-2.1.3.min.js"></script>
-
+<script src="resources/js/common.js"></script>
 <script type="text/javascript">
 
 var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}"; 
@@ -79,22 +79,22 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 				</div>
 			</div>  -->
 			<div class="header-wrapper">
-	<div class="header-container container">
-		<div class="header-row row clearfix">
-			<div class="header-logo float-left"></div>
-			<div class="reg-header-btns-wrapper float-right clearfix">
-				<div class="float-left login-hdr hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>
-               <!--  <div class="float-left login-hdr hdr-login-btn" onclick="window.location='./'">Login</div> -->
-			</div>
-            <div class="soft-menu-icon float-right"></div>
-            <div class="soft-menu-wrapper">
-               <!--  <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div> -->
-				<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
+	        <div class="header-container container">
+		    <div class="header-row row clearfix">
+				<div class="header-logo float-left"></div>
+				<div class="reg-header-btns-wrapper float-right clearfix">
+					<!--  <div class="float-left login-hdr hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>-->
+	                <!-- <div class="float-left login-hdr hdr-login-btn" onclick="login()">Login</div> -->
+				</div>
+	            <div class="soft-menu-icon float-right"></div>
+	            <div class="soft-menu-wrapper">
+	                <!-- <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div> -->
+					<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
+	            </div>
+	             <div class="float-right login-hdr hdr-contact-no">888-316-3934</div>
+		    </div>
+	        </div>
             </div>
-             <div class="float-right login-hdr hdr-contact-no">888-316-3934</div>
-		</div>
-	</div>
-</div>
 
 			<!-- Main Container -->
 			<div class="login-container container">
