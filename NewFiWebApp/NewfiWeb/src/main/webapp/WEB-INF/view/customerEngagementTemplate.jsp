@@ -39,9 +39,9 @@
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script src="resources/js/historySupport.js"></script>
 	<script>
-	globalBinder();
+	
 		$(document).ready(function() {
-			
+			globalBinder();
 			adjustCustomerEngagementPageOnResize();
 			$(window).resize(function(){
 				adjustCustomerEngagementPageOnResize();

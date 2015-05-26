@@ -5120,12 +5120,14 @@ input.calc-input {
     height: 40px;
     line-height: 40px;
     cursor: pointer;
-    background: #6c9f2e;
+    background: rgba(24,72,141,0.9);
     margin: 5px auto;
     color: #fff;
     border-radius: 3px;
 }
-
+.getting-to-know-btn:hover{
+	  background: #F47521;	
+}
 .app-completed-text {
     font-size: 22px;
     font-family: 'opensanssemibold';
