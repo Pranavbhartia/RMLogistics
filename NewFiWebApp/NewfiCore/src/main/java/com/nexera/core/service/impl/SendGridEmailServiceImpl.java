@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -157,6 +158,14 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 				        "sendEmailUsingTemplate : recipient email id is null or empty!");
 			}
 			recipientEmailIdsList.add(recipientVO.getEmailID());
+			for (Iterator<String> iterator = emailEntity.getCCList().iterator(); iterator
+			        .hasNext();) {
+				String emailId = iterator.next();
+				if (recipientVO.getEmailID().equalsIgnoreCase(emailId)) {
+					LOG.debug("This email id already exist in recepient list, hence removing it from CC list");
+					iterator.remove();
+				}
+			}
 		}
 
 		email.addTo(recipientEmailIdsList

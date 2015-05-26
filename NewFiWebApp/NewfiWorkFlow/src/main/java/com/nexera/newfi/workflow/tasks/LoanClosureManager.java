@@ -69,9 +69,11 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			subject = CommonConstants.SUBJECT_LOAN_ARCHIVED;
 		}
 		if (status != null && !status.isEmpty()) {
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        displayMessage);
+			/*
+			 * makeANote(Integer.parseInt(objectMap.get(
+			 * WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+			 * displayMessage)
+			 */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        displayMessage);
 			sendEmail(objectMap, subject);

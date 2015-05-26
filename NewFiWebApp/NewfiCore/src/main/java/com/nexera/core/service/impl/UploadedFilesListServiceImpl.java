@@ -842,7 +842,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	private EmailVO constructEmail(Loan loan) {
 		EmailVO emailEntity = new EmailVO();
-		emailEntity.setSenderEmailId("web@newfi.com");
+		emailEntity.setSenderEmailId(loan.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName("Newfi System");
 		emailEntity.setSubject("Needs list has been updated");
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();

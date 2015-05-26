@@ -71,7 +71,8 @@ public abstract class NexeraWorkflowTask {
 				substitutions.put("-name-", names);
 				substitutions = doTemplateSubstitutions(substitutions,
 				        objectMap);
-				emailEntity.setSenderEmailId("web@newfi.com");
+				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName("Newfi System");
 				if (subject == null) {
 					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
@@ -122,7 +123,8 @@ public abstract class NexeraWorkflowTask {
 				substitutions.put("-name-", names);
 				substitutions = doTemplateSubstitutions(substitutions,
 				        objectMap);
-				emailEntity.setSenderEmailId("web@newfi.com");
+				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName("Newfi System");
 				if (subject == null) {
 					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
