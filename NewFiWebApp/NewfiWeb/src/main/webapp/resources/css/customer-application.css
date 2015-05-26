@@ -90,6 +90,7 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	padding-right: 20px;
+	text-transform:inherit;
 }
 
 .app-option-sel {
