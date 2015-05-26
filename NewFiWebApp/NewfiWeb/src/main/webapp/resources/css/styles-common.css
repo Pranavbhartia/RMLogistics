@@ -16,6 +16,7 @@
 	height: 100%;
 	border:none;
 	background: transparent;
+	font-size:14px;
 }
 
 .reg-btn-wrapper{
@@ -43,6 +44,7 @@
 	font-size: 32px;
 	line-height: 70px;
 	margin-top: 41px;
+	color:#606060;
 }
 
 .reg-display-title-subtxt{
@@ -101,10 +103,10 @@ input.reg-radio {
 }
 
 .soft-menu-hdr{
-  line-height: 37px;
-  margin-left: 15px;
-  margin-bottom: 6px;
-  font-size: 14px;
+	  line-height: 37px;
+	  margin-left: 15px;
+	  margin-bottom: 6px;
+	  font-size: 14px;
 }
 
 .reg-header-btns-wrapper{
@@ -136,11 +138,11 @@ input.reg-radio {
 }
 
 .reg-option-selected {
-  height: 100%;
-  background-color: #FAFAFA !important;
-  border-bottom: inherit;
-  border: none;
-  width: 100%;
+	  height: 100%;
+	  background-color: #FAFAFA !important;
+	  border-bottom: inherit;
+	  border: none;
+	  width: 100%;
 }
 
 .reg-input-row {
@@ -261,5 +263,13 @@ k}
 	  border: 1px solid #dd4b39;
 }
 .realtor-row {
-  margin: 36px auto;
+  	  margin: 36px auto;
+}
+
+.color-change{
+	  background-color: rgba(24,72,141,0.9);
+}
+
+.color-change:hover {
+    background: #F47521;
 }

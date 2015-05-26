@@ -84,7 +84,7 @@
                <div class="footer-newfi-information-subtxt">
                <p class="footer-subtxt">2200 Powell Street, Suite 340</p>
                <p class="footer-subtxt">Emeryville, CA 94608</p>
-               <p class="footer-subtxt">Call now 1-888-316-3934</p></div>
+               <p class="footer-subtxt">888-316-3934</p></div>
 
             </div>
             <div class="footer-icon-col-md-3">
