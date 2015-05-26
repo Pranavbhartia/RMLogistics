@@ -61,6 +61,7 @@ public class Utility {
 	private CommonConstant commonConstant;
 	 static CellStyle startingCellStyle = null;
 	 static CellStyle endingCellStyle = null;
+	 static CellStyle regularCellStyling = null;
 	
 	private static final String[] FILE_KEY_INDEX = {
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
@@ -670,6 +671,8 @@ public class Utility {
 		       				hssfCell.setCellStyle(startingCellStyle);
 		       			}else if (tempCellNum == 6 || tempCellNum == 12 || tempCellNum == 18){
 		       				hssfCell.setCellStyle(endingCellStyle);
+		       			}else{
+		       				hssfCell.setCellStyle(regularCellStyling);
 		       			}
 		       			writeValueToCell(object , hssfCell);
 		        }
@@ -815,7 +818,7 @@ public class Utility {
 		try{
 		inStream = new FileInputStream(file);
 		workBook = new HSSFWorkbook(inStream);
-		sheet = workBook.getSheet("Sheet1");
+		//sheet = workBook.getSheet("Sheet1");
 		Map<String, List<UIEntity>> data = restResponse.getData();
 		
 		int startRowNum = 0;
@@ -824,8 +827,7 @@ public class Utility {
 		
 		createCellStyleRightBorder(workBook);
 		createCellStyleLeftBorder(workBook);
-		writeCurrentDateAndTimeInExcel(sheet);
-		updateFormulaCellsDependingOnDate(sheet);
+		createCellStyleRegular(workBook);
 		
 		
 		Set<String> filePatternKeys = FILE_PATTERN_LABEL_HEADER.keySet();
@@ -834,94 +836,156 @@ public class Utility {
 				
 				for(String fileHeading : filePatternKeySets){
 					if("Fannie Mae 30yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FNMA Conventional Fixed Rate");
+						if(null != sheet){
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14 ,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;						
+						rowCounter = 0;
+						writeCurrentDateAndTimeInExcel(sheet);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
 					}
 					if("Fannie Mae 20yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FNMA Conventional Fixed Rate");
+						if(null != sheet){
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14 ,8,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;						
+						rowCounter = 0;	
+						}
 					}
 					if("Fannie Mae 15yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FNMA Conventional Fixed Rate");
+						if(null != sheet){
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,14,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						}
 					}
 					if("Fannie Mae 10yr Fixed".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FNMA Conventional Fixed Rate");
+						if(null != sheet){
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						}
 					}
 					if("Fannie Mae 30yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,8,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						writeCurrentDateAndTimeInExcel(sheet);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
 					}
 					if("Fannie Mae 20yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,14,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,8,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;	
+						}
 					}
 					if("Fannie Mae 15yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 64,2,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,14,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						}
 					}
 					if("Fannie Mae 10yr Fixed High Balance".equals(fileHeading) && "FNMA CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 64,8,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;	
+						}
 					}
 					if("Fannie Mae 5/1 Libor ARM 2/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 189,2,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;	
+						writeCurrentDateAndTimeInExcel(sheet);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
 					}
 					if("Fannie Mae 7/1 Libor ARM 2/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 189,8,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,8,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;	
+						}
 					}
 					if("Fannie Mae 5/1 Libor ARM High Balance 2/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 189,14,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,14,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						}
 					}
 					if("Fannie Mae 7/1 Libor ARM High Balance 5/2/5".equals(fileHeading) && "FNMA CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 209,2,rowCounter);
+						sheet = workBook.getSheet("FNMA Conventional Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						}
 					}
 					if("Mammoth Jumbo 30 YR Fixed".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 354,2,rowCounter);
+						sheet = workBook.getSheet("Mammoth Jumbo_Hybrid Fix & Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						writeCurrentDateAndTimeInExcel(sheet);
+						}
 					}
 					if("Mammoth Jumbo 15 YR Fixed".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 354,8,rowCounter);
+						sheet = workBook.getSheet("Mammoth Jumbo_Hybrid Fix & Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,8,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						}
 					}
 					if("Mammoth Non Agency Hybrid 5/1 ARM".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 354,14,rowCounter);
+						sheet = workBook.getSheet("Mammoth Jumbo_Hybrid Fix & Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,14,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;		
+						}
 					}
 					if("Mammoth Non Agency Hybrid 5/1 ARM IO".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 372,2,rowCounter);
+						sheet = workBook.getSheet("Mammoth Jumbo_Hybrid Fix & Arm");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 39,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;	
+						}
 					}
 					if("Cascades Jumbo 30 YR Fixed".equals(fileHeading) && "CASCADES JUMBO FIXED PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 539,2,rowCounter);
+						sheet = workBook.getSheet("Cascades Jumbo Fixed");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;	
+						writeCurrentDateAndTimeInExcel(sheet);
+						}
 					}
 					if("Cascades Jumbo 15 YR Fixed".equals(fileHeading) && "CASCADES JUMBO FIXED PRODUCTS".equals(filePatternKey)){
-						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 539,8,rowCounter);
+						sheet = workBook.getSheet("Cascades Jumbo Fixed");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,8,rowCounter);
 						startRowNum = newRowNum;
-						rowCounter = 0;							
+						rowCounter = 0;	
+						}
 					}
 					
 				}
@@ -950,6 +1014,7 @@ public class Utility {
 		endingCellStyle = workbook.createCellStyle();
 		endingCellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		endingCellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
+		endingCellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		return;
 	}
 	
@@ -961,6 +1026,18 @@ public class Utility {
 		startingCellStyle = workbook.createCellStyle();
 		startingCellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		startingCellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+		startingCellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		return ;
+	}
+	
+	
+	/**
+	 * Method to create cell styling
+	 */
+	private void createCellStyleRegular(HSSFWorkbook workbook){
+		
+		regularCellStyling = workbook.createCellStyle();
+		regularCellStyling.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		return ;
 	}
 	
@@ -1054,7 +1131,7 @@ public class Utility {
 	 */
 	private void updateFormulaCellsDependingOnDate(HSSFSheet sheet) throws java.text.ParseException{
 		makeChangesInFormulaCell(116, 18, sheet);
-		makeChangesInFormulaCell(288, 18, sheet);
+		//makeChangesInFormulaCell(288, 18, sheet);
 		
 	}
 	
@@ -1067,13 +1144,13 @@ public class Utility {
 		
 		while(startRow <= endRow){
 			
-			if(startRow == 116 || startRow == 288){
+			if(startRow == 116){
 				noOfDays = 15;
-			}else if(startRow == 117 || startRow == 289){
+			}else if(startRow == 117){
 				noOfDays = 30;
-			}else if(startRow == 118 || startRow == 290){
+			}else if(startRow == 118){
 				noOfDays = 45;
-			}else if(startRow == 119 || startRow == 291){
+			}else if(startRow == 119){
 				noOfDays = 60;
 			}
 			
