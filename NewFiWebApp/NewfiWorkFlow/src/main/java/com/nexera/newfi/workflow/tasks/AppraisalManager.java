@@ -50,9 +50,11 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 		if (status.equals(LoanStatus.appraisalAvailable)) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.appraisalAvailable;
-			makeANote(Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        LoanStatus.appraisalReceivedMessage);
+			/*
+			 * makeANote(Integer.parseInt(objectMap.get(
+			 * WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+			 * LoanStatus.appraisalReceivedMessage)
+			 */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        LoanStatus.appraisalReceivedMessage);
 			LoanVO loanVO = loanService.getLoanByID(loanId);

@@ -311,6 +311,15 @@ public class SendEmailServiceImpl implements SendEmailService {
 							        teamMember.getUser().getFirstName(),
 							        teamMember.getUser().getLastName()));
 						}
+					} else {
+						if (teamMember.getUser().getCustomerDetail() != null) {
+							EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+							emailRecipientVO.setEmailID(teamMember.getUser()
+							        .getUsername()
+							        + CommonConstants.SENDER_EMAIL_ID);
+							recipients.add(emailRecipientVO);
+
+						}
 					}
 				}
 			}

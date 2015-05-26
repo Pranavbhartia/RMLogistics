@@ -56,11 +56,13 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	@Autowired
 	private NotificationService notificationService;
 
-	public String execute(HashMap<String, Object> objectMap) {
+	@Override
+    public String execute(HashMap<String, Object> objectMap) {
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
-	public String renderStateInfo(HashMap<String, Object> inputMap) {
+	@Override
+    public String renderStateInfo(HashMap<String, Object> inputMap) {
 		LOG.debug("RenderStateInfo of LoanTeamManager" + inputMap);
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -72,7 +74,8 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		return gson.toJson(extendedLoanTeamVO);
 	}
 
-	public String checkStatus(HashMap<String, Object> inputMap) {
+	@Override
+    public String checkStatus(HashMap<String, Object> inputMap) {
 		
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -167,7 +170,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 			return "Bad request";
 		}
 		if (message != null) {
-			makeANote(loanID, message);
+			/* makeANote(loanID, message) */;
 		}
 		if (agentAdded) {
 			dismissAgentAddAlert(loanID);
@@ -207,7 +210,8 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		        WorkItemStatus.STARTED.getStatus());
 	}
 
-	public String updateReminder(HashMap<String, Object> objectMap) {
+	@Override
+    public String updateReminder(HashMap<String, Object> objectMap) {
 		// Do Nothing - No reminders were part of this
 		return null;
 	}

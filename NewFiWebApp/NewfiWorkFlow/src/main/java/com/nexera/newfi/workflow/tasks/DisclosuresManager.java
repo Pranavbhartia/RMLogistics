@@ -101,7 +101,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		if (flag) {
 			LOG.debug("Sending Note from Disclosures Manager" + loanId
 			        + " Status as " + returnStatus);
-			makeANote(loanId, message);
+			/* makeANote(loanId, message) */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        message);
 			sendEmail(objectMap, subject);
