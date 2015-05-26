@@ -177,10 +177,12 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
 			        .retrieveTurnAroundTimeByLoan(loanId, currMilestone
 			                .getWorkflowItemMaster().getId());
-			long turnaroundTime = loanTurnAroundTimeVO.getHours();
-
 			String content = WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT;
-			content = content.replace("72", "" + turnaroundTime);
+
+			if (loanTurnAroundTimeVO != null) {
+				long turnaroundTime = loanTurnAroundTimeVO.getHours();
+				content = content.replace("72", "" + turnaroundTime);
+			}
 
 			NotificationVO notificationVO = new NotificationVO(loanId,
 			        notificationType.getNotificationTypeName(), content);
