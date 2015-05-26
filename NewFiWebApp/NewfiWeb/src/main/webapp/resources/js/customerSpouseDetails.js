@@ -47,28 +47,28 @@ function paintMySpouseIncome() {
 		"value" : 1
 	},
 	{
-		"text" : "Child Support/Alimony",
+		"text" : "Child Support/Alimony",
 		"onselect" : paintRefinancePension,
 		"name" :"childAlimonySupport",
         "data" : childSupportIncome,
 		"value" : 2
 	}, 
 	{
-		"text" : "Social Security Income",
+		"text" : "Social Security Income",
 		"onselect" : paintRefinancePension,
 		"name" :"socialSecurityIncome",
         "data" : socialSecIncome,
 		"value" : 3
 	}, 
 	{
-		"text" : "Disability Income",
+		"text" : "Disability Income",
 		"onselect" : paintRefinancePension,
 		"name" :"disabilityIncome",
         "data" : socialSecDisabilityIncome,
 		"value" : 4
 	}, 
 	{
-		"text" : "Pension Income",
+		"text" : "Pension Income",
 		"onselect" : paintRefinancePension,
 		"name" :"pensionIncome",
         "data" : pensionIncome,
@@ -96,116 +96,121 @@ function paintMySpouseIncome() {
 	if(appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.skipMyAssets)
 	var skipMyAssets = appUserDetails.customerSpouseDetail.skipMyAssets;
 	 
+	
+	var lqbFileId = checkLqbFileId();
+	if(lqbFileId){
+		buttonText = next;
+	}
+	
 	var saveBtn = $('<div>').attr({
 		"class" : "cep-button-color ce-save-btn"
-	}).html("Save & Continue").bind('click',function() {
+	}).html(buttonText).bind('click',function() {
 	  	
-		
-		var  customerSpouseEmploymentIncome = [];
-	      
-		
-	  	 if($("#ce-option_0").prev().hasClass('app-option-checked')){
-		  	
-	  		 $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
-				customerSpouseEmploymentIncomeTemp1 = {};
-	
-				id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
-				if(id ==""){
-					id = undefined;
-				}
-	
-				jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
-				EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
-				EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
-				EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
-	
-				customerSpouseEmploymentIncomeTemp1.id = id;
-				customerSpouseEmploymentIncomeTemp1.jobTitle=jobTitle;
-				customerSpouseEmploymentIncomeTemp1.employedIncomePreTax = EmployedIncomePreTax;
-				customerSpouseEmploymentIncomeTemp1.employedAt = EmployedAt;
-				customerSpouseEmploymentIncomeTemp1.employedSince = EmployedSince;
-				var temp = {};
-				temp.customerSpouseEmploymentIncome = customerSpouseEmploymentIncomeTemp1;
-	
-				customerSpouseEmploymentIncome.push(temp);
-			});
-	  		 
-	  		appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
-	  	 }
-	      
-		
+		if(this.innerText!=next){
+				var  customerSpouseEmploymentIncome = [];
+			  	 if($("#ce-option_0").prev().hasClass('app-option-checked')){
+				  	
+			  		 $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
+						customerSpouseEmploymentIncomeTemp1 = {};
 			
+						id = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="customerEmploymentIncomeId"]').val();
+						if(id ==""){
+							id = undefined;
+						}
+			
+						jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
+						EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
+						EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
+						EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
+			
+						customerSpouseEmploymentIncomeTemp1.id = id;
+						customerSpouseEmploymentIncomeTemp1.jobTitle=jobTitle;
+						customerSpouseEmploymentIncomeTemp1.employedIncomePreTax = EmployedIncomePreTax;
+						customerSpouseEmploymentIncomeTemp1.employedAt = EmployedAt;
+						customerSpouseEmploymentIncomeTemp1.employedSince = EmployedSince;
+						var temp = {};
+						temp.customerSpouseEmploymentIncome = customerSpouseEmploymentIncomeTemp1;
+			
+						customerSpouseEmploymentIncome.push(temp);
+					});
+			  		 
+			  		appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
+			  	 }
+	      
 	  
-	  
-	    selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
-        selfEmployedYears = $('input[name="selfEmployedYears"]').val();
-        childAlimonySupport = $('input[name="childAlimonySupport"]').val();
-        socialSecurityIncome = $('input[name="socialSecurityIncome"]').val();
-        disabilityIncome = $('input[name="disabilityIncome"]').val();
-        pensionIncome = $('input[name="pensionIncome"]').val();
-        retirementIncome = $('input[name="retirementIncome"]').val();
-        if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
-    		appUserDetails.customerSpouseDetail.selfEmployedIncome= selfEmployedIncome;
-    		appUserDetails.customerSpouseDetail.selfEmployedNoYear =selfEmployedYears;
-    	}else{
-            appUserDetails.customerSpouseDetail.selfEmployedIncome= undefined;
-            appUserDetails.customerSpouseDetail.selfEmployedNoYear =undefined;
-        }
-    	if(childAlimonySupport != "" && childAlimonySupport != undefined){
-    		appUserDetails.customerSpouseDetail.childSupportAlimony =childAlimonySupport;
-    	}else{
-            appUserDetails.customerSpouseDetail.childSupportAlimony = undefined;
-        }
-    	if(socialSecurityIncome !="" && socialSecurityIncome != undefined){
-    		appUserDetails.customerSpouseDetail.socialSecurityIncome= socialSecurityIncome;
-    	}else{
-            appUserDetails.customerSpouseDetail.socialSecurityIncome = undefined;
-        }
-    	if(disabilityIncome !="" && disabilityIncome != undefined){
-            appUserDetails.customerSpouseDetail.disabilityIncome = disabilityIncome;
-        }else{
-            appUserDetails.customerSpouseDetail.disabilityIncome = undefined;
-        }
-        if(pensionIncome !="" && pensionIncome != undefined){
-            appUserDetails.customerSpouseDetail.monthlyPension = pensionIncome;
-        }else{
-            appUserDetails.customerSpouseDetail.monthlyPension = undefined;
-        }
-        if(retirementIncome !="" && retirementIncome != undefined){
-            appUserDetails.customerSpouseDetail.retirementIncome = retirementIncome;
-        }else{
-            appUserDetails.customerSpouseDetail.retirementIncome = undefined;
-        }
+			    selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
+		        selfEmployedYears = $('input[name="selfEmployedYears"]').val();
+		        childAlimonySupport = $('input[name="childAlimonySupport"]').val();
+		        socialSecurityIncome = $('input[name="socialSecurityIncome"]').val();
+		        disabilityIncome = $('input[name="disabilityIncome"]').val();
+		        pensionIncome = $('input[name="pensionIncome"]').val();
+		        retirementIncome = $('input[name="retirementIncome"]').val();
+		        if(selfEmployedIncome != "" && selfEmployedIncome != undefined){
+		    		appUserDetails.customerSpouseDetail.selfEmployedIncome= selfEmployedIncome;
+		    		appUserDetails.customerSpouseDetail.selfEmployedNoYear =selfEmployedYears;
+		    	}else{
+		            appUserDetails.customerSpouseDetail.selfEmployedIncome= undefined;
+		            appUserDetails.customerSpouseDetail.selfEmployedNoYear =undefined;
+		        }
+		    	if(childAlimonySupport != "" && childAlimonySupport != undefined){
+		    		appUserDetails.customerSpouseDetail.childSupportAlimony =childAlimonySupport;
+		    	}else{
+		            appUserDetails.customerSpouseDetail.childSupportAlimony = undefined;
+		        }
+		    	if(socialSecurityIncome !="" && socialSecurityIncome != undefined){
+		    		appUserDetails.customerSpouseDetail.socialSecurityIncome= socialSecurityIncome;
+		    	}else{
+		            appUserDetails.customerSpouseDetail.socialSecurityIncome = undefined;
+		        }
+		    	if(disabilityIncome !="" && disabilityIncome != undefined){
+		            appUserDetails.customerSpouseDetail.disabilityIncome = disabilityIncome;
+		        }else{
+		            appUserDetails.customerSpouseDetail.disabilityIncome = undefined;
+		        }
+		        if(pensionIncome !="" && pensionIncome != undefined){
+		            appUserDetails.customerSpouseDetail.monthlyPension = pensionIncome;
+		        }else{
+		            appUserDetails.customerSpouseDetail.monthlyPension = undefined;
+		        }
+		        if(retirementIncome !="" && retirementIncome != undefined){
+		            appUserDetails.customerSpouseDetail.retirementIncome = retirementIncome;
+		        }else{
+		            appUserDetails.customerSpouseDetail.retirementIncome = undefined;
+		        }
 	    
-	    if(purchase == true){
-			
-	    	homelistprice = $('input[name="homelistprice"]').val();
-			homemortgagebalance = $('input[name="homemortgagebalance"]').val();
-			inverstInPurchase = $('input[name="inverstInPurchase"]').val();
-			
-			appUserDetails.customerSpouseDetail.skipMyAssets = $('.myassets').hasClass("app-option-checked");
-			
-			/*appUserDetails.customerSpouseBankAccountDetails = [];
-			appUserDetails.customerSpouseRetirementAccountDetails = [];
-			appUserDetails.customerSpouseOtherAccountDetails = [];
-			*/
-			var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
-			
-			var bankContainer=assets[0];
-			var retirementContainer=assets[1];
-			var otherContainer=assets[2];
-			
-			if($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')){
-				appUserDetails.customerSpouseBankAccountDetails=getAccountValues(bankContainer,"customerSpouseBankAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
-			}
-			if($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')){
-			    appUserDetails.customerSpouseRetirementAccountDetails=getAccountValues(retirementContainer,"customerSpouseRetirementAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
-			}
-			if($(otherContainer).find('.app-option-checked').hasClass('app-option-checked')){
-			    appUserDetails.customerSpouseOtherAccountDetails=getAccountValues(otherContainer,"customerSpouseOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
-			}
-		}
+			    if(purchase == true){
+					
+			    	homelistprice = $('input[name="homelistprice"]').val();
+					homemortgagebalance = $('input[name="homemortgagebalance"]').val();
+					inverstInPurchase = $('input[name="inverstInPurchase"]').val();
+					
+					appUserDetails.customerSpouseDetail.skipMyAssets = $('.myassets').hasClass("app-option-checked");
+					
+					/*appUserDetails.customerSpouseBankAccountDetails = [];
+					appUserDetails.customerSpouseRetirementAccountDetails = [];
+					appUserDetails.customerSpouseOtherAccountDetails = [];
+					*/
+					var assets=$('.asset-ques-wrapper').find('.app-account-wrapper');
+					
+					var bankContainer=assets[0];
+					var retirementContainer=assets[1];
+					var otherContainer=assets[2];
+					
+					if($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')){
+						appUserDetails.customerSpouseBankAccountDetails=getAccountValues(bankContainer,"customerSpouseBankAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
+					}
+					if($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')){
+					    appUserDetails.customerSpouseRetirementAccountDetails=getAccountValues(retirementContainer,"customerSpouseRetirementAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
+					}
+					if($(otherContainer).find('.app-option-checked').hasClass('app-option-checked')){
+					    appUserDetails.customerSpouseOtherAccountDetails=getAccountValues(otherContainer,"customerSpouseOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
+					}
+				}
 		saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep4a);
+		}else{
+			// when click on next button
+			paintCustomerApplicationPageStep4a();
+		}
 		
 	});
 	
@@ -849,164 +854,174 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	
     	quesDeclarationContxts.push(contxt);
     }
+    
+    var lqbFileId = checkLqbFileId();
+	if(lqbFileId){
+		buttonText = next;
+	}
+    
 
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color app-save-btn"
-    }).html("Save & continue").on('click', function() {
-    	for(var i=0;i<quesDeclarationContxts.length;i++){
-    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
-    			showErrorToastMessage(gonernamentQuestionErrorMessage);
-    			return;
-    		}
-    	}
-    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
-    	isBankrupt =  quesDeclarationContxts[1].value;
-    	isPropertyForeclosed =  quesDeclarationContxts[2].value;
-    	isLawsuit =  quesDeclarationContxts[3].value;
-    	isObligatedLoan =  quesDeclarationContxts[4].value;
-    	isFederalDebt =  quesDeclarationContxts[5].value;
-    	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
-    	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
-    	isEndorser =  quesDeclarationContxts[8].value;
-    	isUSCitizen =  quesDeclarationContxts[9].value;
-    	isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
-    	isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
+    }).html(buttonText).on('click', function() {
     	
-    	 
-    	
-    	typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data();
-	    if(typeOfPropertyOwned != undefined)	
-	    	typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
-	    	
-	    
-    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data();
-	    if(propertyTitleStatus != undefined)
-	    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
-    	  
-    	 if(appUserDetails.spouseGovernmentQuestions){
-    		 spouseGovernmentQuestions = appUserDetails.spouseGovernmentQuestions;
-    	 }
-    	 else{
-    		 spouseGovernmentQuestions = {};
-    	 }
-    	 
-    	  if( isDownPaymentBorrowed =="Yes"){ 
-    		 spouseGovernmentQuestions.isDownPaymentBorrowed = true;
- 		 }else if(isDownPaymentBorrowed =="No"){
- 			spouseGovernmentQuestions.isDownPaymentBorrowed = false;
- 		 }else{
- 			spouseGovernmentQuestions.isDownPaymentBorrowed = null;
- 		 }
-    	 
-    	 if( isOutstandingJudgments =="Yes"){ 
-    		 spouseGovernmentQuestions.isOutstandingJudgments = true;
- 		 }else if (isOutstandingJudgments =="No"){
- 			spouseGovernmentQuestions.isOutstandingJudgments = false;
- 		 }else{
- 			spouseGovernmentQuestions.isOutstandingJudgments = null;
- 		 }
-    	 
-    	 if( isBankrupt =="Yes"){ 
-    		 spouseGovernmentQuestions.isBankrupt = true;
- 		 }else if(isBankrupt =="No"){
- 			spouseGovernmentQuestions.isBankrupt = false;
- 		 }else{
- 			spouseGovernmentQuestions.isBankrupt = null;
- 		 }
-    	 
-    	 if( isPropertyForeclosed =="Yes"){ 
-    		 spouseGovernmentQuestions.isPropertyForeclosed = true;
- 		 }else if(isPropertyForeclosed =="No"){
- 			spouseGovernmentQuestions.isPropertyForeclosed = false;
- 		 }else{
- 			spouseGovernmentQuestions.isPropertyForeclosed = null;
- 		 }
-    	 
-    	 if( isLawsuit =="Yes"){ 
-    		 spouseGovernmentQuestions.isLawsuit = true;
- 		 }else if(isLawsuit =="No"){
- 			spouseGovernmentQuestions.isLawsuit = false;
- 		 }else{
- 			spouseGovernmentQuestions.isLawsuit = null;
- 		 }
-
-    	 if( isObligatedLoan =="Yes"){ 
-    		 spouseGovernmentQuestions.isObligatedLoan = true;
- 		 }else if(isObligatedLoan =="No"){
- 			spouseGovernmentQuestions.isObligatedLoan = false;
- 		 }else{
- 			spouseGovernmentQuestions.isObligatedLoan = null;
- 		 }
-    	 
-    	 if( isFederalDebt =="Yes"){ 
-    		 spouseGovernmentQuestions.isFederalDebt = true;
- 		 }else if( isFederalDebt =="No"){
- 			spouseGovernmentQuestions.isFederalDebt = false;
- 		 }else{
- 			spouseGovernmentQuestions.isFederalDebt = null;
- 		 }
-
-    	 if( isObligatedToPayAlimony =="Yes"){ 
-    		 spouseGovernmentQuestions.isObligatedToPayAlimony = true;
- 		 }else if(isObligatedToPayAlimony =="No"){
- 			spouseGovernmentQuestions.isObligatedToPayAlimony = false;
- 		 }else{
- 			spouseGovernmentQuestions.isObligatedToPayAlimony = null;
- 		 }
-    	 
-    	 if( isEndorser =="Yes"){ 
-    		 spouseGovernmentQuestions.isEndorser = true;
- 		 }else if(isEndorser =="No"){
- 			spouseGovernmentQuestions.isEndorser = false;
- 		 }else{
- 			spouseGovernmentQuestions.isEndorser = null;
- 		 }
-
-    	 if( isUSCitizen =="Yes"){ 
-    		 spouseGovernmentQuestions.isUSCitizen = true;
- 		 }else if(isUSCitizen =="No"){
- 			spouseGovernmentQuestions.isUSCitizen = false;
- 			permanentResidentAlien = quesDeclarationContxts[9].childContexts.No[0].value;
-				if(permanentResidentAlien =="Yes")
-					spouseGovernmentQuestions.permanentResidentAlien = true;
-				else if(permanentResidentAlien =="No")
-					spouseGovernmentQuestions.permanentResidentAlien = false;
-				else 
-					spouseGovernmentQuestions.permanentResidentAlien = null;
- 			
- 			
- 		 }else{
- 			spouseGovernmentQuestions.isUSCitizen = null;
- 		 }
-
-    	 if( isOccupyPrimaryResidence =="Yes"){ 
-    		 spouseGovernmentQuestions.isOccupyPrimaryResidence = true;
- 		 }else if(isOccupyPrimaryResidence =="No"){
- 			spouseGovernmentQuestions.isOccupyPrimaryResidence = false;
- 		 }else{
- 			spouseGovernmentQuestions.isOccupyPrimaryResidence = null;
- 		 }
-    	 
-    	 if( isOwnershipInterestInProperty =="Yes"){ 
-    		 spouseGovernmentQuestions.isOwnershipInterestInProperty = true;
-    		 if(typeOfPropertyOwned==undefined && propertyTitleStatus==undefined){
-    			 showErrorToastMessage(yesyNoErrorMessage);
-    			 return;
-    		 }
- 		 }else if(isOwnershipInterestInProperty =="No"){
- 			spouseGovernmentQuestions.isOwnershipInterestInProperty = false;
- 		 }else{
- 			spouseGovernmentQuestions.isOwnershipInterestInProperty = null;
- 		 }
-    	 
-    	  spouseGovernmentQuestions.typeOfPropertyOwned=typeOfPropertyOwned;
-	     spouseGovernmentQuestions.propertyTitleStatus=propertyTitleStatus;
-    	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
-    	 
-
-    	 saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4b());
+    	if(this.innerText!=next){
+		    	for(var i=0;i<quesDeclarationContxts.length;i++){
+		    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
+		    			showErrorToastMessage(gonernamentQuestionErrorMessage);
+		    			return;
+		    		}
+		    	}
+		    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
+		    	isBankrupt =  quesDeclarationContxts[1].value;
+		    	isPropertyForeclosed =  quesDeclarationContxts[2].value;
+		    	isLawsuit =  quesDeclarationContxts[3].value;
+		    	isObligatedLoan =  quesDeclarationContxts[4].value;
+		    	isFederalDebt =  quesDeclarationContxts[5].value;
+		    	isObligatedToPayAlimony =  quesDeclarationContxts[6].value;
+		    	isDownPaymentBorrowed = quesDeclarationContxts[7].value;
+		    	isEndorser =  quesDeclarationContxts[8].value;
+		    	isUSCitizen =  quesDeclarationContxts[9].value;
+		    	isOccupyPrimaryResidence =  quesDeclarationContxts[10].value;
+		    	isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
+		    	
+		    	 
+		    	
+		    	typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data();
+			    if(typeOfPropertyOwned != undefined)	
+			    	typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
+			    	
+			    
+		    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data();
+			    if(propertyTitleStatus != undefined)
+			    	propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
+		    	  
+		    	 if(appUserDetails.spouseGovernmentQuestions){
+		    		 spouseGovernmentQuestions = appUserDetails.spouseGovernmentQuestions;
+		    	 }
+		    	 else{
+		    		 spouseGovernmentQuestions = {};
+		    	 }
+		    	 
+		    	  if( isDownPaymentBorrowed =="Yes"){ 
+		    		 spouseGovernmentQuestions.isDownPaymentBorrowed = true;
+		 		 }else if(isDownPaymentBorrowed =="No"){
+		 			spouseGovernmentQuestions.isDownPaymentBorrowed = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isDownPaymentBorrowed = null;
+		 		 }
+		    	 
+		    	 if( isOutstandingJudgments =="Yes"){ 
+		    		 spouseGovernmentQuestions.isOutstandingJudgments = true;
+		 		 }else if (isOutstandingJudgments =="No"){
+		 			spouseGovernmentQuestions.isOutstandingJudgments = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isOutstandingJudgments = null;
+		 		 }
+		    	 
+		    	 if( isBankrupt =="Yes"){ 
+		    		 spouseGovernmentQuestions.isBankrupt = true;
+		 		 }else if(isBankrupt =="No"){
+		 			spouseGovernmentQuestions.isBankrupt = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isBankrupt = null;
+		 		 }
+		    	 
+		    	 if( isPropertyForeclosed =="Yes"){ 
+		    		 spouseGovernmentQuestions.isPropertyForeclosed = true;
+		 		 }else if(isPropertyForeclosed =="No"){
+		 			spouseGovernmentQuestions.isPropertyForeclosed = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isPropertyForeclosed = null;
+		 		 }
+		    	 
+		    	 if( isLawsuit =="Yes"){ 
+		    		 spouseGovernmentQuestions.isLawsuit = true;
+		 		 }else if(isLawsuit =="No"){
+		 			spouseGovernmentQuestions.isLawsuit = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isLawsuit = null;
+		 		 }
+		
+		    	 if( isObligatedLoan =="Yes"){ 
+		    		 spouseGovernmentQuestions.isObligatedLoan = true;
+		 		 }else if(isObligatedLoan =="No"){
+		 			spouseGovernmentQuestions.isObligatedLoan = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isObligatedLoan = null;
+		 		 }
+		    	 
+		    	 if( isFederalDebt =="Yes"){ 
+		    		 spouseGovernmentQuestions.isFederalDebt = true;
+		 		 }else if( isFederalDebt =="No"){
+		 			spouseGovernmentQuestions.isFederalDebt = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isFederalDebt = null;
+		 		 }
+		
+		    	 if( isObligatedToPayAlimony =="Yes"){ 
+		    		 spouseGovernmentQuestions.isObligatedToPayAlimony = true;
+		 		 }else if(isObligatedToPayAlimony =="No"){
+		 			spouseGovernmentQuestions.isObligatedToPayAlimony = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isObligatedToPayAlimony = null;
+		 		 }
+		    	 
+		    	 if( isEndorser =="Yes"){ 
+		    		 spouseGovernmentQuestions.isEndorser = true;
+		 		 }else if(isEndorser =="No"){
+		 			spouseGovernmentQuestions.isEndorser = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isEndorser = null;
+		 		 }
+		
+		    	 if( isUSCitizen =="Yes"){ 
+		    		 spouseGovernmentQuestions.isUSCitizen = true;
+		 		 }else if(isUSCitizen =="No"){
+		 			spouseGovernmentQuestions.isUSCitizen = false;
+		 			permanentResidentAlien = quesDeclarationContxts[9].childContexts.No[0].value;
+						if(permanentResidentAlien =="Yes")
+							spouseGovernmentQuestions.permanentResidentAlien = true;
+						else if(permanentResidentAlien =="No")
+							spouseGovernmentQuestions.permanentResidentAlien = false;
+						else 
+							spouseGovernmentQuestions.permanentResidentAlien = null;
+		 			
+		 			
+		 		 }else{
+		 			spouseGovernmentQuestions.isUSCitizen = null;
+		 		 }
+		
+		    	 if( isOccupyPrimaryResidence =="Yes"){ 
+		    		 spouseGovernmentQuestions.isOccupyPrimaryResidence = true;
+		 		 }else if(isOccupyPrimaryResidence =="No"){
+		 			spouseGovernmentQuestions.isOccupyPrimaryResidence = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isOccupyPrimaryResidence = null;
+		 		 }
+		    	 
+		    	 if( isOwnershipInterestInProperty =="Yes"){ 
+		    		 spouseGovernmentQuestions.isOwnershipInterestInProperty = true;
+		    		 if(typeOfPropertyOwned==undefined && propertyTitleStatus==undefined){
+		    			 showErrorToastMessage(yesyNoErrorMessage);
+		    			 return;
+		    		 }
+		 		 }else if(isOwnershipInterestInProperty =="No"){
+		 			spouseGovernmentQuestions.isOwnershipInterestInProperty = false;
+		 		 }else{
+		 			spouseGovernmentQuestions.isOwnershipInterestInProperty = null;
+		 		 }
+		    	 
+		    	  spouseGovernmentQuestions.typeOfPropertyOwned=typeOfPropertyOwned;
+			     spouseGovernmentQuestions.propertyTitleStatus=propertyTitleStatus;
+		    	 appUserDetails.spouseGovernmentQuestions =spouseGovernmentQuestions;
+		    	 
+		
+		    	 saveAndUpdateLoanAppForm(appUserDetails,paintSpouseCustomerApplicationPageStep4b());
+    	}else{
+    		paintSpouseCustomerApplicationPageStep4b();
+    	}	 
     
-    	//paintCustomerApplicationPageStep4b();
     });
 
     $('#app-right-panel').append(saveAndContinueButton);
@@ -1091,32 +1106,41 @@ function paintSpouseCustomerApplicationPageStep4b(){
 
 	
 	 var questionsContainer = getQuestionsContainer(questions);
+	 
+	 var lqbFileId = checkLqbFileId();
+		if(lqbFileId){
+			buttonText = next;
+		}
+	 
 	
 	 var saveAndContinueButton = $('<div>').attr({
 	        "class": "cep-button-color app-save-btn"
-	    }).html("Save & continue").on('click', function() {
+	    }).html(buttonText).on('click', function() {
 	    	
-	    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
-	    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
-	    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
-	    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
-
-	    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
-	    		
+	    	if(this.innerText!=next){
+			    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
+			    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
+			    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
+			    	skipOptionalQuestion = $('.ce-option-checkbox').hasClass("ce-option-checked");
+		
+			    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
+			    		
+			    	}else{
+			    		if(ethnicity==undefined && race==undefined && sex==undefined){
+				    		showErrorToastMessage(yesyNoErrorMessage);
+				    		return false;
+				    	} 
+			    	}
+			    	appUserDetails.spouseGovernmentQuestions.ethnicity = ethnicity;
+			    	appUserDetails.spouseGovernmentQuestions.race = race;
+			    	appUserDetails.spouseGovernmentQuestions.sex =sex;
+			    	appUserDetails.spouseGovernmentQuestions.skipOptionalQuestion=skipOptionalQuestion;	
+			    	
+			    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+			    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5);
 	    	}else{
-	    		if(ethnicity==undefined && race==undefined && sex==undefined){
-		    		showErrorToastMessage(yesyNoErrorMessage);
-		    		return false;
-		    	} 
-	    	}
-	    	spouseGovernmentQuestions.ethnicity = ethnicity;
-	    	spouseGovernmentQuestions.race = race;
-	    	spouseGovernmentQuestions.sex =sex;
-	    	spouseGovernmentQuestions.skipOptionalQuestion=skipOptionalQuestion;	
-	    	
-	    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-	    	 saveAndUpdateLoanAppForm(appUserDetails,paintCustomerApplicationPageStep5);
-	    	//paintCustomerApplicationPageStep5();
+	    		paintCustomerApplicationPageStep5();
+	    	} 	 
 	    });
 
 	    $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
@@ -1249,48 +1273,58 @@ function paintCustomerSpouseApplicationPageStep5() {
 
     var questionsContainer = getQuestionsContainer(questions);
 
+    var lqbFileId = checkLqbFileId();
+	if(lqbFileId){
+		buttonText = next;
+	}
+    
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color app-save-btn"
-    }).html("Save & continue").on('click', function() {
+    }).html(buttonText).on('click', function() {
     	
-    	dateOfBirth = $('input[name="birthday"]').val();
-    	ssn =  $('input[name="ssn"]').val();
-    	secPhoneNumber =  $('input[name="phoneNumber"]').val();
-    	var dat=new Date(dateOfBirth);
-        var dateNow=new Date();
-        dateNow.setFullYear(dateNow.getFullYear()-18);
-        var yearCount=(dateNow.getTime()-dat.getTime());
-       var cbSsnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
-    	
-       var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
-       var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
-      
-       if($('.ce-option-checkbox').hasClass("ce-option-checked")){
-    	   var isSuccess=validateInput($('input[name="ssn"]'),$('input[name="ssn"]').val(),message);
-    	   if(!isSuccess){
-    		   return false;
-    	   }
-    	   
-       }else{
-    	   if(!questionOne){
-        	   return false;
-           }else if(!questionTwo){
-        	   return false;
-           }else if(yearCount<0){
-        	   showErrorToastMessage("You must be at least 18 years of age.");
-        	   return false;
-           }
-       }
-
-    		customerDetailTemp =  appUserDetails.customerSpouseDetail;
-    		customerDetailTemp.spouseDateOfBirth= dateOfBirth;//new Date(dateOfBirth).getTime();
-    		customerDetailTemp.spouseSsn = ssn;
-    		customerDetailTemp.spouseSecPhoneNumber = secPhoneNumber;
-    		//applicationFormSumbit();
-    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    		appUserDetails.cbSsnProvided = cbSsnProvided;
-    		appUserDetails.customerSpouseDetail = customerDetailTemp;
-			saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));   	
+    	if(this.innerText!=next){
+		    	dateOfBirth = $('input[name="birthday"]').val();
+		    	ssn =  $('input[name="ssn"]').val();
+		    	secPhoneNumber =  $('input[name="phoneNumber"]').val();
+		    	var dat=new Date(dateOfBirth);
+		        var dateNow=new Date();
+		        dateNow.setFullYear(dateNow.getFullYear()-18);
+		        var yearCount=(dateNow.getTime()-dat.getTime());
+		       var cbSsnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
+		    	
+		       var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
+		       var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
+		      
+		       if($('.ce-option-checkbox').hasClass("ce-option-checked")){
+		    	   var isSuccess=validateInput($('input[name="ssn"]'),$('input[name="ssn"]').val(),message);
+		    	   if(!isSuccess){
+		    		   return false;
+		    	   }
+		    	   
+		       }else{
+		    	   if(!questionOne){
+		        	   return false;
+		           }else if(!questionTwo){
+		        	   return false;
+		           }else if(yearCount<0){
+		        	   showErrorToastMessage("You must be at least 18 years of age.");
+		        	   return false;
+		           }
+		       }
+		
+		    		customerDetailTemp =  appUserDetails.customerSpouseDetail;
+		    		customerDetailTemp.spouseDateOfBirth= dateOfBirth;//new Date(dateOfBirth).getTime();
+		    		customerDetailTemp.spouseSsn = ssn;
+		    		customerDetailTemp.spouseSecPhoneNumber = secPhoneNumber;
+		    		//applicationFormSumbit();
+		    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+		    		appUserDetails.cbSsnProvided = cbSsnProvided;
+		    		appUserDetails.customerSpouseDetail = customerDetailTemp;
+					saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));  
+    	}else{
+    		applicationFormSumbit(appUserDetails);
+    	}
+					
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(socialSecurityWrapper)

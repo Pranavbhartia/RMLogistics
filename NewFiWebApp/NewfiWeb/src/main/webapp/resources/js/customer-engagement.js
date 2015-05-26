@@ -635,7 +635,7 @@ function paintRefinanceStep2() {
     	var isSuccess=validateInput(className,$('input[name="currentMortgageBalance"]').val(),message);
     
     	if(isSuccess){
-    		paintRefinanceStep3();
+    		paintRefinanceStepCEP();
     	}else{
     		return false;
     	}
@@ -651,7 +651,7 @@ function paintRefinanceStep1b() {
     $('#ce-refinance-cp').html(quesCont);
 }
 
-function paintRefinanceStep3() {
+function paintRefinanceStepCEP() {
         stages = 3;
 	   progressBaar(3);
         quesContxts = {};
@@ -690,7 +690,8 @@ function paintRefinanceStep3() {
         var saveAndContinueButton = $('<div>').attr({
             "class": "cep-button-color ce-save-btn"
         }).html("Save & continue").on('click', function() {
-            
+           
+        	
         	refinanceTeaserRate.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.isIncludeTaxes = quesContxts["isIncludeTaxes"].value;//quesContxts[1].value;
             refinanceTeaserRate.propertyTaxesPaid = quesContxts["propertyTaxesPaid"].value;//$('input[name="annualPropertyTaxes"]').val();
@@ -1901,7 +1902,7 @@ function getLoanAmountRowCEP(desc, detail, id) {
  
     
     var saveBtn = $('<div>').attr({
-    	"class" : "sm-save-btn float-right"
+    	"class" : "cep-button-color sm-save-btn float-right"
     }).html("Save").on('click',{"flag":flag},function(){
     
     	if(flag){
@@ -2111,7 +2112,7 @@ function changeToState(num){
             break;
         case 3:
             if(refinanceTeaserRate.loanType == "REF")
-                paintRefinanceStep3();  
+                paintRefinanceStepCEP();  
             else
                 paintNewResidenceTypeQues();
             break;
