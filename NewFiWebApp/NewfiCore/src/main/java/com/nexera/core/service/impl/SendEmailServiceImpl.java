@@ -368,8 +368,8 @@ public class SendEmailServiceImpl implements SendEmailService {
 			List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
 			emailRecipientList.add(emailRecipientVO);
 			emailEntity.setRecipients(emailRecipientList);
-			sendGridEmailService.sendAsyncMail(emailEntity);
 		}
+		sendGridEmailService.sendAsyncMail(emailEntity);
 		return true;
 
 	}
@@ -417,8 +417,8 @@ public class SendEmailServiceImpl implements SendEmailService {
 			List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
 			emailRecipientList.add(emailRecipientVO);
 			emailEntity.setRecipients(emailRecipientList);
-			sendGridEmailService.sendAsyncMail(emailEntity);
 		}
+		sendGridEmailService.sendAsyncMail(emailEntity);
 		return true;
 	}
 
