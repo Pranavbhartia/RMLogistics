@@ -142,7 +142,7 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
 
 	for (var i = 0; i < options.length; i++) {
 		var option = $('<div>').attr({
-			"class" : "ce-option",
+			"class" : "cep-button-color ce-option",
 			"value" : options[i].value
 		}).html(options[i].text).bind('click', {
 			"option" : options[i],
@@ -297,117 +297,122 @@ function paintCustomerApplicationPurchasePageStep1a() {
     }
     
 
-    
+    var lqbFileId = checkLqbFileId();
+	if(lqbFileId){
+		buttonText = next;
+	}
 
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color app-save-btn"
-    }).html("Save & continue").on('click', function(event) {
-    	var addressStreet = $('input[name="addressStreet"]').val();
-    	var inputState = $('input[name="state"]').val();
-    	var city = $('input[name="city"]').val();
-    	var zipCode = $('input[name="zipCode"]').val();
-    	var livingSince = $('input[name="startLivingTime"]').val();
-    	var monthlyRent =  $('input[name="rentPerMonth"]').val();
-    	var isSellYourhome = quesContxts[5].value;
+    }).html(buttonText).on('click', function(event) {
     	
-    	
-    	var propAddress= $('input[name="propStreetAddress"]').val();
-    	var propState = $('input[name="propState"]').val();
-    	var propCity = $('input[name="propCity"]').val();
-    	var propZipCode = $('input[name="propZipCode"]').val();
-    	
-
-    	
-    	
-    	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
-    	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
-    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
-    	var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
-    	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),"Please enter a valid 5-digit zipcode");
-    	if(inputState=="" || inputState==undefined){
-    		showErrorToastMessage(yesyNoErrorMessage);
-    		return false;
-    	}else if(!questionOne){
-    		return false;
-    	}else if(!questionTwo){
-    		return false;
-    	}        	
-    	if(!propertQuestionTwo){
-    		return false;
-    	}else{
-    		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){
-
-    			$('input[name="propZipCode"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
-    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
-       		 return false;
-       	 }
-    		
-    	}/*else if(!questionfour){
-    		return false;
-    	}*/
-    	if($('.ce-option-checkbox').hasClass('app-option-checked')){
-    		
-    	}else{
-    		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
-        	
-        	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
-        	if(propState==""||propState==undefined ||propState==null){
-        		showErrorToastMessage(stateErrorMessage);
-        		return false;
-        	}
-
-        	if(!propertQuestionOne){
-        		return false;
-        	}
-
-        	if(!propertQuestionfour){
-        		return false;
-        	}
-    	}
-    	//alert(isSellYourhome);
-    	
-        /*	var question=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
-        	if(!question){
-        		return false;
-        	}*/
-            customerDetail.addressStreet=addressStreet;
-    		customerDetail.addressCity = city;
-    		customerDetail.addressState = inputState;
-    		customerDetail.addressZipCode = zipCode;
-    		
-    		customerDetail.livingSince = livingSince;
-    		appUserDetails.monthlyRent = monthlyRent;
-    		//appUserDetails.isSellYourhome = isSellYourhome;
-    		
-    		//user.customerDetail = customerDetail;
-    		
-    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-    		
-    		appUserDetails.user.customerDetail = customerDetail;
-    		
-    		
-    		if(isSellYourhome =='Yes')
-    		appUserDetails.homeToSell = true;
-    		else
-    		appUserDetails.homeToSell = false;
-    		
-    		//appUserDetails.buyHome = buyHome;
-    		//alert(JSON.stringify(appUserDetails));
-    		
-
-    		
-    		//if(appUserDetails.propertyTypeMaster){
-    		appUserDetails.propertyTypeMaster.propStreetAddress=propAddress;
-    		appUserDetails.propertyTypeMaster.propState=propState;
-    		appUserDetails.propertyTypeMaster.propCity=propCity;
-    		appUserDetails.propertyTypeMaster.homeZipCode=propZipCode;
-    		//}
+    	if(this.innerText!=next){
+		    	var addressStreet = $('input[name="addressStreet"]').val();
+		    	var inputState = $('input[name="state"]').val();
+		    	var city = $('input[name="city"]').val();
+		    	var zipCode = $('input[name="zipCode"]').val();
+		    	var livingSince = $('input[name="startLivingTime"]').val();
+		    	var monthlyRent =  $('input[name="rentPerMonth"]').val();
+		    	var isSellYourhome = quesContxts[5].value;
+		    	
+		    	
+		    	var propAddress= $('input[name="propStreetAddress"]').val();
+		    	var propState = $('input[name="propState"]').val();
+		    	var propCity = $('input[name="propCity"]').val();
+		    	var propZipCode = $('input[name="propZipCode"]').val();
+		    	
+		
+		    	
+		    	
+		    	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
+		    	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
+		    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
+		    	var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+		    	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),"Please enter a valid 5-digit zipcode");
+		    	if(inputState=="" || inputState==undefined){
+		    		showErrorToastMessage(yesyNoErrorMessage);
+		    		return false;
+		    	}else if(!questionOne){
+		    		return false;
+		    	}else if(!questionTwo){
+		    		return false;
+		    	}        	
+		    	if(!propertQuestionTwo){
+		    		return false;
+		    	}else{
+		    		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){
+		
+		    			$('input[name="propZipCode"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+		    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
+		       		 return false;
+		       	 }
+		    		
+		    	}/*else if(!questionfour){
+		    		return false;
+		    	}*/
+		    	if($('.ce-option-checkbox').hasClass('app-option-checked')){
+		    		
+		    	}else{
+		    		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
+		        	
+		        	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
+		        	if(propState==""||propState==undefined ||propState==null){
+		        		showErrorToastMessage(stateErrorMessage);
+		        		return false;
+		        	}
+		
+		        	if(!propertQuestionOne){
+		        		return false;
+		        	}
+		
+		        	if(!propertQuestionfour){
+		        		return false;
+		        	}
+		    	}
+		    	//alert(isSellYourhome);
+		    	
+		        /*	var question=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+		        	if(!question){
+		        		return false;
+		        	}*/
+		            customerDetail.addressStreet=addressStreet;
+		    		customerDetail.addressCity = city;
+		    		customerDetail.addressState = inputState;
+		    		customerDetail.addressZipCode = zipCode;
+		    		
+		    		customerDetail.livingSince = livingSince;
+		    		appUserDetails.monthlyRent = monthlyRent;
+		    		//appUserDetails.isSellYourhome = isSellYourhome;
+		    		
+		    		//user.customerDetail = customerDetail;
+		    		
+		    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+		    		
+		    		appUserDetails.user.customerDetail = customerDetail;
+		    		
+		    		
+		    		if(isSellYourhome =='Yes')
+		    		appUserDetails.homeToSell = true;
+		    		else
+		    		appUserDetails.homeToSell = false;
+		    		
+		    		//appUserDetails.buyHome = buyHome;
+		    		//alert(JSON.stringify(appUserDetails));
+		    		
+		
+		    		
+		    		//if(appUserDetails.propertyTypeMaster){
+		    		appUserDetails.propertyTypeMaster.propStreetAddress=propAddress;
+		    		appUserDetails.propertyTypeMaster.propState=propState;
+		    		appUserDetails.propertyTypeMaster.propCity=propCity;
+		    		appUserDetails.propertyTypeMaster.homeZipCode=propZipCode;
+		    		//}
     		
     		saveAndUpdateLoanAppForm(appUserDetails ,paintloanamountBuyApp());
-    		
+    	}else{
+    		paintloanamountBuyApp();
+    	}
         	        	
-       
-   	
     });
 
     $('#app-right-panel').append(saveAndContinueButton);
@@ -443,26 +448,39 @@ function paintloanamountBuyApp() {
         contxt.drawQuestion();
         quesContxts.push(contxt);
     }
+    
+    var lqbFileId = checkLqbFileId();
+	if(lqbFileId){
+		buttonText = next;
+	}
+    
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
-    }).html("Save & continue").on('click', function() {
-        appUserDetails.purchaseDetails.housePrice = $('input[name="housePrice"]').val();
-        appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
-        
-        var questionOne=validateInput($('input[name="housePrice"]'),$('input[name="housePrice"]').val(),message);
-        var questionTwo=validateInput($('input[name="dwnPayment"]'),$('input[name="dwnPayment"]').val(),message);
-     if(!questionOne){
-    	 return false;
-     }else if(!questionTwo){
-    	 return false;
-     }
+    }).html(buttonText).on('click', function() {
+       
+    	if(this.innerText!=next){
+    	
+	    	appUserDetails.purchaseDetails.housePrice = $('input[name="housePrice"]').val();
+	        appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
+	        
+	        var questionOne=validateInput($('input[name="housePrice"]'),$('input[name="housePrice"]').val(),message);
+	        var questionTwo=validateInput($('input[name="dwnPayment"]'),$('input[name="dwnPayment"]').val(),message);
+		     if(!questionOne){
+		    	 return false;
+		     }else if(!questionTwo){
+		    	 return false;
+		     }
        
              appUserDetails.propertyTypeMaster.propStreetAddress=appUserDetails.propertyTypeMaster.propStreetAddress;
 		     appUserDetails.propertyTypeMaster.propState=appUserDetails.propertyTypeMaster.propState;
 		     appUserDetails.propertyTypeMaster.propCity=appUserDetails.propertyTypeMaster.propCity;
      
             saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2);
-        
+    	}else{
+    		// when click on next button
+    		paintCustomerApplicationPageStep2();
+    	}
+    	
 
     });
     $('#app-right-panel').append(saveAndContinueButton);
@@ -503,10 +521,18 @@ function paintWhereYouLiveStep(){
     if(appUserDetails.purchaseDetails.buyhomeZipTri&&appUserDetails.purchaseDetails.buyhomeZipTri!=""){
         addZipField("buyhomeZipPri",$(btn),appUserDetails.purchaseDetails.buyhomeZipTri);
     }
+    
+    var lqbFileId = checkLqbFileId();
+	if(lqbFileId){
+		buttonText = next;
+	}
+    
     var saveAndContinueButton = $('<div>').attr({
 	    "class": "cep-button-color ce-save-btn"
-	}).html("Save & continue").on('click', function() {
-		 var isSuccess=validateInput( $('input[name="buyhomeZipPri"]'), $('input[name="buyhomeZipPri"]').val(),"Please enter a valid 5-digit zipcode");
+	}).html(buttonText).on('click', function() {
+		 
+		if(this.innerText!=next){
+			var isSuccess=validateInput( $('input[name="buyhomeZipPri"]'), $('input[name="buyhomeZipPri"]').val(),"Please enter a valid 5-digit zipcode");
 		    if(!isSuccess){
 		    	return false;
 		    }else{
@@ -517,9 +543,9 @@ function paintWhereYouLiveStep(){
             		 return false;
             	 }
 		    }
-		  isCityOrZipKnown =quesContxts[0].value; 
-		  buyhomeZipPri = $('input[name="buyhomeZipPri"]').val();
-		   buyhomeZipSec = $('input[name="buyhomeZipPri1"]').val();
+		    isCityOrZipKnown =quesContxts[0].value; 
+		    buyhomeZipPri = $('input[name="buyhomeZipPri"]').val();
+		    buyhomeZipSec = $('input[name="buyhomeZipPri1"]').val();
 		    buyhomeZipTri = $('input[name="buyhomeZipPri2"]').val();
 		
 		// alert('buyhomeZipPri'+buyhomeZipPri);
@@ -530,14 +556,17 @@ function paintWhereYouLiveStep(){
 				 
 				 purchaseDetails = appUserDetails.purchaseDetails;
 			 }
-		  purchaseDetails.buyhomeZipPri = buyhomeZipPri;
-		  purchaseDetails.buyhomeZipSec=buyhomeZipSec;
-		  purchaseDetails.buyhomeZipTri=buyhomeZipTri;
-		  appUserDetails.purchaseDetails = purchaseDetails;
+			  purchaseDetails.buyhomeZipPri = buyhomeZipPri;
+			  purchaseDetails.buyhomeZipSec=buyhomeZipSec;
+			  purchaseDetails.buyhomeZipTri=buyhomeZipTri;
+			  appUserDetails.purchaseDetails = purchaseDetails;
 		
-		   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2());
-		
-	      });
+		   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2);
+		}else{
+			// when click on next button
+			paintCustomerApplicationPageStep2();
+		}
+	 });
 	
     
     $('#app-right-panel').append(saveAndContinueButton);
