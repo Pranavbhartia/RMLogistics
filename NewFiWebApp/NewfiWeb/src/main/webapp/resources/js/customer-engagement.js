@@ -373,7 +373,7 @@ function paintSelectLoanTypeQuestion() {
     
     var getStartedTxt = $('<div>').attr({
     	"class" : "ce-get-started"
-    }).html("Get Started Now");
+    }).html("Create your newfi account");
     
     $('#ce-main-container').append(rateIcon).append(titleText).append(getStartedTxt);
    
@@ -1022,10 +1022,10 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     });
     var regDisplayTitle = $('<div>').attr({
         "class": "reg-display-title"
-    }).html("Get Started Now");
+    }).html("Create your newfi account");
     var regDisplaySubTitle = $('<div>').attr({
         "class": "reg-display-title-subtxt"
-    }).html("Create a newfi account now to access our powerful lending tool and take control on your terms");
+    }).html("Create your account now to have immediate access to the powerful newfi lending tool.");
     var regInputContainerFname = $('<div>').attr({
         "class": "reg-input-cont reg-fname"
     });

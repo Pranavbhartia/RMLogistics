@@ -109,9 +109,11 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				LOG.info("Making Milestone chagne for App Fee with" + status);
 				loanService.saveLoanMilestone(loanId,
 				        Milestones.APP_FEE.getMilestoneID(), status);
-				makeANote(Integer.parseInt(objectMap.get(
-				        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-				        messageForNote);
+				/*
+				 * makeANote(Integer.parseInt(objectMap.get(
+				 * WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+				 * messageForNote);
+				 */
 				objectMap.put(
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 				        messageForNote);

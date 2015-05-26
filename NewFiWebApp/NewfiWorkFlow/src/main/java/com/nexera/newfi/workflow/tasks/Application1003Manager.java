@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.LoanProgressStatusMaster;
@@ -73,7 +72,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		                .getLosStatusID()))) {
 			int loanID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-			makeANote(loanID, LoanStatus.submittedMessage);
+			/* makeANote(loanID, LoanStatus.submittedMessage) */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        Milestones.App1003.getMilestoneKey());
 			sendEmail(objectMap, CommonConstants.SUBJECT_APPLICATION_SUBMITTED);
@@ -112,7 +111,8 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 				substitutions.put("-name-", names);
 				substitutions = doTemplateSubstitutions(substitutions,
 				        objectMap);
-				emailEntity.setSenderEmailId("web@newfi.com");
+				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName("Newfi System");
 				if (subject == null) {
 					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
@@ -177,10 +177,12 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			LoanTurnAroundTimeVO loanTurnAroundTimeVO = loanService
 			        .retrieveTurnAroundTimeByLoan(loanId, currMilestone
 			                .getWorkflowItemMaster().getId());
-			long turnaroundTime = loanTurnAroundTimeVO.getHours();
-
 			String content = WorkflowConstants.DISCLOSURE_AVAIL_NOTIFICATION_CONTENT;
-			content = content.replace("72", "" + turnaroundTime);
+
+			if (loanTurnAroundTimeVO != null) {
+				long turnaroundTime = loanTurnAroundTimeVO.getHours();
+				content = content.replace("72", "" + turnaroundTime);
+			}
 
 			NotificationVO notificationVO = new NotificationVO(loanId,
 			        notificationType.getNotificationTypeName(), content);

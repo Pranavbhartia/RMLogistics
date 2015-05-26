@@ -31,10 +31,11 @@ public class AlertManager extends NexeraWorkflowTask implements
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		LOG.debug(" Executing concrete class " + objectMap);
-		makeANote(
-		        Integer.parseInt(objectMap.get(
-		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-		        LoanStatus.initialContactMadeMessage);
+		/*
+		 * makeANote( Integer.parseInt(objectMap.get(
+		 * WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+		 * LoanStatus.initialContactMadeMessage)
+		 */;
 		objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 		        LoanStatus.initialContactMadeMessage);
 		sendEmail(objectMap, null);

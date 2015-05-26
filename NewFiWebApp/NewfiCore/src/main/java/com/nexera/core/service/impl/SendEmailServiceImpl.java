@@ -311,6 +311,15 @@ public class SendEmailServiceImpl implements SendEmailService {
 							        teamMember.getUser().getFirstName(),
 							        teamMember.getUser().getLastName()));
 						}
+					} else {
+						if (teamMember.getUser().getCustomerDetail() != null) {
+							EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+							emailRecipientVO.setEmailID(teamMember.getUser()
+							        .getUsername()
+							        + CommonConstants.SENDER_EMAIL_ID);
+							recipients.add(emailRecipientVO);
+
+						}
 					}
 				}
 			}
@@ -368,8 +377,8 @@ public class SendEmailServiceImpl implements SendEmailService {
 			List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
 			emailRecipientList.add(emailRecipientVO);
 			emailEntity.setRecipients(emailRecipientList);
-			sendGridEmailService.sendAsyncMail(emailEntity);
 		}
+		sendGridEmailService.sendAsyncMail(emailEntity);
 		return true;
 
 	}
@@ -417,8 +426,8 @@ public class SendEmailServiceImpl implements SendEmailService {
 			List<EmailRecipientVO> emailRecipientList = new ArrayList<>();
 			emailRecipientList.add(emailRecipientVO);
 			emailEntity.setRecipients(emailRecipientList);
-			sendGridEmailService.sendAsyncMail(emailEntity);
 		}
+		sendGridEmailService.sendAsyncMail(emailEntity);
 		return true;
 	}
 

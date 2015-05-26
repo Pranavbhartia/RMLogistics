@@ -12,6 +12,7 @@
 <link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
+<link href="resources/css/footer.css" rel="stylesheet">
 <link href="resources/css/style-resp.css" rel="stylesheet">
 
 </head>
@@ -36,14 +37,16 @@ var resendIndex=locationURL.indexOf("?resend");
 							<div class="err-msg hide"></div>
 				            </div>
 							<div class="forget-pass-btn-wrapper clearfix">
-                                 <div class="cancel-btn float-left" onclick="window.location='./'">Cancel</div>
-					             <div id="btnAction" class="reset-password float-right" onclick="$('#loginForm').submit();">Reset Password</div>
+                                 <div class="cancel-btn color-change float-left" onclick="window.location='./'">Cancel</div>
+					             <div id="btnAction" class="reset-password color-change float-right" onclick="$('#loginForm').submit();">Reset Password</div>
 				            </div>											
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
+		<jsp:include page="newFiFooter.jsp"></jsp:include>
+			
 	<script src="resources/js/jquery-2.1.3.min.js"></script>
 	<script src="resources/js/jquery-ui.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>
@@ -72,14 +75,14 @@ $(document).ready(function(e){
 	if(resendIndex != -1)
 	{
 		 title="Resend Registration Link";	 
-		 headerText="Enter your email ID. We will resend the registration link to that email.";
+		 headerText="Simply enter the email address used to create your account and we will send the link to verify your email.";
 		 buttonText ="Submit";
 		 $('#btnAction').text(buttonText);
 	}
 	else
 	{
 		title="Password Reset";
-		headerText="Enter the email address that you used to create your account.  We will send you an email with instructions to reset your password.";
+		headerText="Simply enter the email address used to create your account and we will send instructions to reset your password.";
 	}
 	$('#reg-display-title').text(title);
 	$('#reg-display-header-text').text(headerText);	

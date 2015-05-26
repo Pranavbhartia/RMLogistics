@@ -42,7 +42,7 @@ input,textarea {
 }
 
 input:-webkit-autofill {
-	-webkit-box-shadow: 0 0 0 1000px white inset !important;
+	-webkit-box-shadow: 0 0 0 1000px #fafafa inset !important;
 }
 
 .box-border-box {
@@ -2830,15 +2830,17 @@ input.calc-input {
 }
 
 .login-container {
-	margin-top: 110px;
-	margin-bottom: 100px;
+	 margin-top: 110px;
+	margin-bottom: 100px; 
+	/* margin: 150px 100px; */
 }
 
 .display-title {
 	text-align: center;
 	font-size: 36px;
 	line-height: 70px;
-	color: black;
+	color: #606060;
+	/* margin: 20px auto; */
 }
 
 .display-title-subtxt {
@@ -2870,10 +2872,14 @@ input.calc-input {
 
 .login-input-pwd {
 	background: url(../images/password.png) no-repeat 16px center;
+	
 }
-
+.new-login-input-pwd{
+	background: url(../images/password-login.png) no-repeat 16px center;
+	
+}
 .login-input {
-width: 100%;
+/* width: 100%;
         
 max-width: 300px;
 	height: 50px;
@@ -2881,18 +2887,33 @@ max-width: 300px;
 	
 padding-left: 10px;
 	border-radius: 3px;
-	/* border: transparent; */
-	/* background-color: #fff; */
+	border: transparent;
+	background-color: #fff;
 	background-color: #FAFAFA !important;    
 	border: 1px #E2E2E2 solid;
 	background-size: 16px auto;
-	color: #777;
+	color: #777; */
+	width: 100%;
+	height: 100%;
+	border:none;
+	font-size: 14px;	
+    /* background-color: #fafafa; */
 }
 
 .login-input-cont {
-	width: 100%;
+	/* width: 100%;
 	margin-bottom: 20px;
-	opacity: 0.8;
+	opacity: 0.8; */
+		width: 300px;
+	    height: 45px;
+	    line-height: 45px;
+	    border: 1px solid #dcdcdc;	  
+		background-color: #fafafa;
+	    background-repeat: no-repeat;	  
+		background-position: 10px center;
+	    border-radius: 3px;
+	    margin: 25px auto;
+	    padding-left: 40px;
 }
 
 .login-submit-button {
@@ -2901,7 +2922,7 @@ padding-left: 10px;
 	margin-bottom: 10px;
 	line-height: 40px;
 	color: #fff;
-	background-color: #3D7FB8;
+	background-color: rgba(24,72,141,0.9);
 	/*background-color: #6c9f2e;*/
 	border: 1px #fff solid;
 	border-radius: 3px;
@@ -2910,16 +2931,18 @@ padding-left: 10px;
 /*	font-size: 20px;*/
 	font-size: 16px;
 	width: 161px;
-	margin-left: 124px;
+	margin-left: 125px;
 }
-
+.login-submit-button:hover{
+	 background: #F47521;
+}
 .forgot-pwd {
 	height: 20px;
 	line-height: 20px;
 /*	text-align: center;*/
     text-align: left;
 	color: black;
-	margin-left: 117px;
+	margin-left: 125px;
 }
 
 .forgot-pwd-link {
@@ -2934,6 +2957,7 @@ padding-left: 10px;
 	line-height: 50px;
 	margin: 0 5px;
 	color: #fff;
+	font-size:15px;
 }
 
 .hdr-login-btn,.hdr-get-quote,.hdr-signup-btn {
@@ -2944,6 +2968,7 @@ padding-left: 10px;
 	background: url(../images/user_icon.png) no-repeat left center;
 	background-size: 16px auto;
 	padding-left: 20px;
+	font-size:15px;
 }
 
 .hdr-get-quote {
@@ -5176,7 +5201,7 @@ span.ps-prev{
 }
 
 .regis-input{
-	margin-left: 100px;
+	margin-left: 77px;
 }
 
 a.session-login-btn {

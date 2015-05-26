@@ -81,6 +81,9 @@ public class EmailProcessor implements Runnable {
 	@Value("${regex.pattern.9}")
 	private String regexPattern9;
 
+	@Value("${regex.pattern.10}")
+	private String regexPattern10;
+
 	@Autowired
 	NexeraUtility nexeraUtility;
 
@@ -274,12 +277,14 @@ public class EmailProcessor implements Runnable {
 							if (!loanFound) {
 								LoanTeamListVO loanTeamList = loanService
 								        .getLoanTeamListForLoan(loanVO);
-								for (LoanTeamVO teamMember : loanTeamList
-								        .getLoanTeamList()) {
-									if (teamMember.getUser().getId() == uploadedByUser
-									        .getId()) {
-										loanFound = true;
-										break;
+								if (uploadedByUser != null) {
+									for (LoanTeamVO teamMember : loanTeamList
+									        .getLoanTeamList()) {
+										if (teamMember.getUser().getId() == uploadedByUser
+										        .getId()) {
+											loanFound = true;
+											break;
+										}
 									}
 								}
 								if (!loanFound) {
@@ -311,12 +316,14 @@ public class EmailProcessor implements Runnable {
 											}
 										}
 										if (!loanFound) {
-											for (Loan loan : secondaryUser
-											        .getLoans()) {
-												if (loan.getId() == loanIdInt) {
-													loanFound = true;
-													uploadedByUser = secondaryUser;
-													break;
+											if (secondaryUser != null) {
+												for (Loan loan : secondaryUser
+												        .getLoans()) {
+													if (loan.getId() == loanIdInt) {
+														loanFound = true;
+														uploadedByUser = secondaryUser;
+														break;
+													}
 												}
 											}
 										}
@@ -324,7 +331,8 @@ public class EmailProcessor implements Runnable {
 								}
 
 							}
-						} else {
+						}
+						if (uploadedByUser == null) {
 							LOGGER.debug("Checking if this is seconday email");
 							User secondaryUser = null;
 							List<User> secondaryUserList = userProfileService
@@ -345,6 +353,7 @@ public class EmailProcessor implements Runnable {
 												        .contains(secondaryLoan
 												                .getLoanEmailId())) {
 													secondaryUser = secUser;
+													uploadedByUser = secondaryUser;
 													loanFound = true;
 													break;
 												}
@@ -375,6 +384,7 @@ public class EmailProcessor implements Runnable {
 						regexPatternStrings.add(regexPattern7);
 						regexPatternStrings.add(regexPattern8);
 						regexPatternStrings.add(regexPattern9);
+						regexPatternStrings.add(regexPattern10);
 						emailBody = extractMessage(emailBody,
 						        regexPatternStrings);
 
@@ -458,12 +468,12 @@ public class EmailProcessor implements Runnable {
 
 	public static String extractMessage(String originalMessage,
 	        List<String> regexPatternStrings) {
-		String cleanedMessage = null;
+		String cleanedMessage = originalMessage;
 		for (String regexPatternString : regexPatternStrings) {
 			Pattern PATTERN = Pattern.compile(regexPatternString,
 			        Pattern.MULTILINE | Pattern.DOTALL
 			                | Pattern.CASE_INSENSITIVE);
-			Matcher m = PATTERN.matcher(originalMessage);
+			Matcher m = PATTERN.matcher(cleanedMessage);
 			if (m.find()) {
 				cleanedMessage = m.replaceAll("");
 

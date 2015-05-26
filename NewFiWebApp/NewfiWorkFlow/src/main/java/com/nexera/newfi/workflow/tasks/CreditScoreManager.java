@@ -66,10 +66,11 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		LOG.debug("Execute Concrete class : CreditScoreManager" + objectMap);
-		makeANote(
-		        Integer.parseInt(objectMap.get(
-		                WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-		        LoanStatus.creditScoreMessage);
+		/*
+		 * makeANote( Integer.parseInt(objectMap.get(
+		 * WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
+		 * LoanStatus.creditScoreMessage)
+		 */;
 		objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 		        LoanStatus.creditScoreMessage);
 		objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
@@ -105,7 +106,8 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 				substitutions = doTemplateSubstitutions(substitutions,
 				        objectMap);
 
-				emailEntity.setSenderEmailId("web@newfi.com");
+				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
+				        + CommonConstants.SENDER_EMAIL_ID);
 				emailEntity.setSenderName("Newfi System");
 				if (subject == null) {
 					emailEntity.setSubject("Nexera Newfi Portal");
