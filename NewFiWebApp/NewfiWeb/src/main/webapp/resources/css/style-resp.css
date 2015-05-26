@@ -994,7 +994,7 @@
 		background-size:25px auto;
 	}
 	.filer-dropdown{
-		width:70px;
+		width:85px;
 		margin-left: 5px;
 		padding-left: 10px;
 	}
@@ -1194,6 +1194,10 @@
 	}
 	.alert-popup-cont-wrapper:before {
 		right: 93px;
+	}
+	.filter-dropdown-item{
+		padding-left: 10px;
+		font-size: 11px;
 	}
 }
 
