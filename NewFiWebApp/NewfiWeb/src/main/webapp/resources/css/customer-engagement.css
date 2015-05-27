@@ -316,8 +316,16 @@
     font-family: 'opensanssemibold';
 }
 
-.ce-option:hover,.ce-save-btn:hover,.app-option-choice:hover{
+.ce-option:hover,.ce-save-btn:hover {
 	background: #F47521;
+}
+
+.app-option-choice:hover{
+	background: #F47521;
+}
+
+.app-option-choice.out{
+	background-color: rgba(24,72,141,0.9);
 }
 
 .ce-err-input{

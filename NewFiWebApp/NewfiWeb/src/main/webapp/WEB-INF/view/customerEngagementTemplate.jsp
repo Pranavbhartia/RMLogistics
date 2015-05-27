@@ -58,6 +58,13 @@
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script src="resources/js/historySupport.js"></script>
 	<script>
+		resizeHeaderWidth();
+		$(window).resize(function() {
+			resizeHeaderWidth();	
+		});
+	</script>
+		
+	<script>
 	
 		$(document).ready(function() {
 			globalBinder();

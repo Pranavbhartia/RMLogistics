@@ -34,7 +34,7 @@ var resendIndex=locationURL.indexOf("?resend");
 						    <div class="reset-error hide" id="errorMessage"></div>
 						    
 							<div class="reg-input-reset-password reg-email" id="email-container">
-					        <input class="reg-input" placeholder="Email" id="emailID" >	
+					        <input type="email" class="reg-input" placeholder="Email" id="emailID" >	
 							<div class="err-msg hide"></div>
 				            </div>
 							<div class="forget-pass-btn-wrapper clearfix">
@@ -57,7 +57,12 @@ var resendIndex=locationURL.indexOf("?resend");
 	<script src="resources/js/message.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script src="resources/js/historySupport.js"></script>
-	
+	<script>
+		resizeHeaderWidth();
+		$(window).resize(function() {
+			resizeHeaderWidth();	
+		});
+	</script>
 </body>
 <script>
 
