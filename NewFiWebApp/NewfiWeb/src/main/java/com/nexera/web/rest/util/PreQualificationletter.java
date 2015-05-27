@@ -131,7 +131,10 @@ public class PreQualificationletter {
 			 String term = "360 months";
 			 String rate = thirtyYearRateVoDataSet.getString("teaserRate") + " %";
 			 String aPR = thirtyYearRateVoDataSet.getString("APR") +" %";
-			 String address = "TBB";
+			 
+			 String propcity = loaAppFormVO.getPropertyTypeMaster().getPropCity();
+			 String propstate = loaAppFormVO.getPropertyTypeMaster().getPropState();
+			 String propzip = loaAppFormVO.getPropertyTypeMaster().getHomeZipCode();
 			 
 			 UserVO internalUser = findInternalUserDetailVO(loaAppFormVO);
 			 String loanAdvisorName ="";
@@ -218,7 +221,7 @@ public class PreQualificationletter {
 			 
 			 /* Property Address */
 			 
-			 Paragraph paraAddress =new Paragraph("Property Address :"+address, font);
+			 Paragraph paraAddress =new Paragraph("Property Address :"+propcity +","+propstate +","+propzip, font);
 			 paraAddress.setIndentationLeft(120);
 			 document.add(paraAddress);
 			 
