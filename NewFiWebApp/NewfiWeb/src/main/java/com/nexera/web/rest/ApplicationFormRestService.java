@@ -49,6 +49,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
@@ -86,6 +87,9 @@ public class ApplicationFormRestService {
 
 	@Autowired
 	private LqbInterface lqbCacheInvoker;
+
+	@Autowired
+	private NexeraCacheableMethodInterface cacheableMethodInterface;
 
 	@Autowired
 	NexeraUtility nexeraUtility;
@@ -367,8 +371,8 @@ public class ApplicationFormRestService {
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
 			teaserRateList = rateService
-			        .parseLqbResponse(retrievePricingDetails(invokeRest(json
-			                .toString())));
+			        .parseLqbResponse(retrievePricingDetails(cacheableMethodInterface
+			                .cacheInvokeRest(loanNumber, json.toString())));
 
 			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 			teaserRateResponseVO.setLoanDuration("sample");
