@@ -17,10 +17,10 @@
 <script src="resources/js/jquery.Jcrop.js"></script>
 <script src="resources/js/jcrop.js"></script>
 <script src="resources/js/pgwslideshow.js"></script>
+<script src="resources/js/updateHandler.js"></script>
 <script src="resources/js/notification.js"></script>
 <script src="resources/js/milestone.js"></script>
 <script src="resources/js/uploadFile.js"></script>
-<script src="resources/js/notification.js"></script>
 <script src="resources/js/milestone.js"></script>
 <script src="resources/js/jquery.knob.js"></script>
 <script src="resources/js/buyHome.js"></script>

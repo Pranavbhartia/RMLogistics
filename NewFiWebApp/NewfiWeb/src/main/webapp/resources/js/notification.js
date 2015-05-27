@@ -13,7 +13,7 @@ function getNotificationContext(loanId, userId) {
 		alertWrapper : undefined,
 		headerText : "",
 		pushServerUrl : "/PushNotification/pushServlet/?task=notification&taskId=",
-		enablePushnotification : false,
+		enablePushnotification : updateHandler.enablePushnotification,
 		addToList : function(list, object) {
 			var exist = false;
 			for (var i = 0; i < list.length; i++) {
@@ -47,7 +47,8 @@ function getNotificationContext(loanId, userId) {
 				});
 			}
 		},
-		getNotificationUpdate : function(callback) {
+		//removed this function since we will make use of common update handler
+		/*getNotificationUpdate : function(callback) {
 			var ob = this;
 			if (ob.loanId != 0 && ob.enablePushnotification) {
 				var data = {};
@@ -122,10 +123,11 @@ function getNotificationContext(loanId, userId) {
 							}
 						});
 			}
-		},
+		},*/
 		updateOtherClients : function(change, callback) {
 			var ob = this;
 			if ((ob.loanId != 0 || change.loanId) && ob.enablePushnotification) {
+				change.task="notification";
 				var data = {};
 				var lnId = ob.loanId != 0 ? ob.loanId : change.loanId;
 				// code to call API to get Notification List for loan
@@ -502,8 +504,11 @@ function getNotificationContext(loanId, userId) {
 		}
 	};
 	// notificationContext.initContext();
-	if (notificationContext.loanId)
-		notificationContext.getNotificationUpdate();
+	if (notificationContext.loanId){
+		updateHandler.addLoanToTaskKey(notificationContext.loanId);
+		//Commented call since we will make use of common update handler
+		//notificationContext.getNotificationUpdate();	
+	}
 	return notificationContext;
 }
 function checkNotificationApplicable(notification) {

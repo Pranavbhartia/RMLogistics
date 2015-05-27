@@ -15,6 +15,7 @@
 				<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
             </div>
              <div class="float-right login-hdr hdr-contact-no">888-316-3934</div>
+              <div class="float-right hdr-contact-icon"></div>
 		</div>
 	</div>
 </div>

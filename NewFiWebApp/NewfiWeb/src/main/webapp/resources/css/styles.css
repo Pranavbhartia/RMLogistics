@@ -2945,22 +2945,41 @@ input.calc-input {
 
 .login-hdr {
 	line-height: 50px;
-	margin: 0 5px;
+	margin: 0 10px;
 	color: #fff;
 	font-size:15px;
 }
+
+
 
 .hdr-login-btn,.hdr-get-quote,.hdr-signup-btn {
 	cursor: pointer;
 }
 
-.hdr-login-btn {
+/* .hdr-login-btn {
 	background: url(../images/user_icon.png) no-repeat left center;
 	background-size: 16px auto;
 	padding-left: 20px;
 	font-size:15px;
+} */
+/*change login logo*/
+.hdr-login-btn {
+	
+  background-size: 16px auto;
+  font-size:15px;	
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  color: #fff;
+  margin-top:5px;
+  border-radius:10px;
+  text-align: center;
+  text-transform: capitalize;
+  cursor: pointer;
+  font-family: 'opensanssemibold';
+  border:1px solid white
 }
-
 .hdr-get-quote {
 	margin-top: 10px;
 	padding: 0 10px;
