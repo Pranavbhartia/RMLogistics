@@ -1002,8 +1002,10 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDeta
 				loanID,removeTeamItem);
 	});
 	row.append(nameCol).append(titleCol);
-	if(!custFlag)
+	if(userDetails.userRole.id==2){
 		row.append(delCol);
+	}
+		
 	return row;
 }
 var teamItm;
