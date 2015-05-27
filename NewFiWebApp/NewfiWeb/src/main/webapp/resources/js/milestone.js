@@ -663,6 +663,7 @@ function paintCustomerInfo ()
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
 	});	
+	$('#WFProgressHeaderBar').remove();
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
 	var subText = $('<div>').attr({
 		"class" : "loan-progress-sub-txt"

@@ -2496,7 +2496,7 @@ $('body').on('keypress',"input[name='startWorking']",function(e){
 	});
 $('body').on('focus',"input[name='ssn']",function(){
 	
-	$(this).mask("***-**-****");
+	$(this).mask("999-99-9999");
 		
 });
 $('body').on('focus',"input[name='phoneNumber']",function(){
