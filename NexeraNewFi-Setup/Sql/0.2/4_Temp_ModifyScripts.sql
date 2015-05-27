@@ -433,4 +433,6 @@ VALUES ('41','WELCOME_TO_NEWFI_HOME_OWNER_INSURANCE_COMPANY_TEMPLATE_ID','Welcom
 
 
 
-
+#Rajeswari - for NMLS ID
+ALTER TABLE `newfi_schema`.`internaluserdetails` 
+ADD COLUMN `nmls_id` VARCHAR(45) NULL AFTER `lqb_password`;
