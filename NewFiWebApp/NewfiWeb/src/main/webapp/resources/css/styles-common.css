@@ -245,7 +245,8 @@ k}
 	font-size: 12px;
 	border: 1px #dd4b39 solid;
 	border-left-width: 7px;
-	width:auto;
+	width: 300px;
+	margin: 20px auto;
 }
 .err-input {
   border: 1px solid #dd4b39;
