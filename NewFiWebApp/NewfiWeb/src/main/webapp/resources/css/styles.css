@@ -653,7 +653,7 @@ input[type="button"]:focus, button:focus {
   	border-radius: 3px;
 }
 .loan-summary-last-row .loan-summary-green-col-detail{
-	width: auto;
+	width: 120px;
 	color:#fff;
 	font-size: 15px;
 	background: #2DB018;
