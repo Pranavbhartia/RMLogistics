@@ -3,6 +3,8 @@
  */
 package com.newfi.nexera.process;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,11 +40,24 @@ public class NewFiResponseProcessor implements Callable
         ResponseVO responseVO = new ResponseVO();
         responseVO.setResponseCode( "200" );
         responseVO.setStatus( "0" );
+        responseVO.setResponseTime( getFormattedDate() );
         responseVO.setResponseMessage( payload );
         String jsonString = gson.toJson( responseVO );
         jsonString = removeUTFCharacters( jsonString );
         message.setPayload( jsonString );
         return message;
+    }
+
+
+    public String getFormattedDate()
+    {
+        String dateFormat = "MM/dd/YYYY hh:mm a";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat( dateFormat );
+        Date date = new Date();
+        String stringDate = simpleDateFormat.format( date );
+        return stringDate;
+
+
     }
 
 
