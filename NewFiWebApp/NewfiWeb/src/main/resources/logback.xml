@@ -23,13 +23,37 @@
 		</rollingPolicy>
  
 	</appender>
+	<appender name="BATCH-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${DEV_HOME}/batch-debug.log</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</Pattern>
+		</encoder>
  
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- rollover daily -->
+			<fileNamePattern>${DEV_HOME}/archived-batch/debug.%d{yyyy-MM-dd}.%i.log
+                        </fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>10MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+ 
+	</appender>
+ 	<logger name="batchJobs" level="DEBUG" additivity="false">
+        <appender-ref ref="BATCH-FILE"/>
+    </logger>
+  
+    
 	<logger name="com.nexera" level="debug"
 		additivity="false">
 		<appender-ref ref="FILE-AUDIT" />
 	</logger>
  
-	<root level="info">
+	<root level="all">
 		<appender-ref ref="FILE-AUDIT" />
 	</root>
  

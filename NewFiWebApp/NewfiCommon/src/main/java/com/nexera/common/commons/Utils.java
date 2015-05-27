@@ -278,6 +278,51 @@ public class Utils {
 		return creditScore;
 	}
 
+	public String constrtClickableCreditScore(CustomerDetail customerDetail,
+	        int loanId) {
+		// TODO Auto-generated method stub
+
+		String creditScore = "";
+		String equifaxScore = customerDetail.getEquifaxScore();
+		if (equifaxScore != null && !equifaxScore.isEmpty()) {
+			creditScore = CommonConstants.EQ + equifaxScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = "<span class='creditScoreClickableClass' loanId='"
+			        + loanId + "'>"
+			        + CommonConstants.EQ
+			        + CommonConstants.UNKNOWN_SCORE + "</span>"
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+		String transunionScore = customerDetail.getTransunionScore();
+		if (transunionScore != null && !transunionScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.TU + transunionScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore
+			        + "<span class='creditScoreClickableClass' loanId='"
+			        + loanId + "'>"
+			        + CommonConstants.TU
+			        + CommonConstants.UNKNOWN_SCORE+"</span>"
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+
+		String experianScore = customerDetail.getExperianScore();
+		if (experianScore != null && !experianScore.isEmpty()) {
+			creditScore = creditScore + CommonConstants.EX + experianScore
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		} else {
+			creditScore = creditScore
+			        + "<span class='creditScoreClickableClass' loanId='"
+			        + loanId + "'>"
+			        + CommonConstants.EX
+			        + CommonConstants.UNKNOWN_SCORE+"</span>"
+			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
+		}
+
+		return creditScore;
+	}
+
 	public List<String> getUnprotectedUrls() {
 
 		String[] unprotectedUrlsArray = unProtectedUrls.split(",");

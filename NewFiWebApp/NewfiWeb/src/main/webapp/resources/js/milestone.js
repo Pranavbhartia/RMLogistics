@@ -918,7 +918,10 @@ function getMilestoneTeamMembeTableRow(user,floatCls){
 				&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 			roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 	}
-	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id,floatCls);
+	var custFlag=false;
+	if(user.userRole.roleCd=="CUSTOMER")
+		custFlag=true;
+	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id,floatCls,custFlag,user);
 }
 
 function getRightLeftReference (workItemId)
@@ -949,7 +952,7 @@ function getMilestoneTeamMembeTableHeader(floatCls) {
 }
 
 // Function to get milestone team member row
-function getMilestoneTeamMemberRow(name, title,userID,floatCls) {
+function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDetails) {
 	var row = $('<div>').attr({
 		"class" : "ms-team-member-tr clearfix "+floatCls,
 		"userID":userID
@@ -962,10 +965,96 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls) {
 	var titleCol = $('<div>').attr({
 		"class" : "ms-team-member-tr-col2 float-left"
 	}).html(title);
+	var userid=undefined;
+	var homeOwnInsID=undefined;
+	var titleCompanyID=undefined;
+	if(userDetails.userRole.label=="Home Owners Insurance"){
+		homeOwnInsID=userDetails.id;
+	}else if(userDetails.userRole.label=="Title Company"){
+		titleCompanyID=userDetails.id;
+	}else{
+		userid=userDetails.id;
+	}
+	var delCol = $('<span>').attr({
+		"class" : "ms-team-member-tr-col2 float-left",
+		"userid":userid,
+		"homeOwnInsID":homeOwnInsID,
+		"titleCompanyID":titleCompanyID
+	}).html("X").bind("click",function(e){
+		var userID = $(this).attr("userid");
+		var loanID = selectedUserDetail==undefined?newfiObject.user.defaultLoanId:selectedUserDetail.loanID
+		var homeOwnInsID = $(this).attr("homeOwnInsID");
+		var titleCompanyID = $(this).attr("titleCompanyID");
+		if (userID == undefined)
+			userID = 0;
+		if (homeOwnInsID == undefined)
+			homeOwnInsID = 0;
+		if (titleCompanyID == undefined)
+			titleCompanyID = 0;
 
-	return row.append(nameCol).append(titleCol);
+		var input = {
+			"userID" : userID,
+			"homeOwnInsID" : homeOwnInsID,
+			"titleCompanyID" : titleCompanyID
+		};
+		teamItm=$(this).parent();
+		confirmRemoveUser(messageToDeleteUser, input,
+				loanID,removeTeamItem);
+	});
+	row.append(nameCol).append(titleCol);
+	if(!custFlag)
+		row.append(delCol);
+	return row;
+}
+var teamItm;
+function removeTeamItem(){
+	$(teamItm).remove();
+	teamItm=undefined;
+}
+$(document).on('click', '.creditScoreClickableClass', function(e) {
+	e.stopImmediatePropagation();
+	if(newfiObject.user.userRole.roleCd=="INTERNAL"){
+		var loanid=$(this).attr("loanid");
+		var textMessage="Are you sure you want to fetch Credit Score ?"
+		confirmFetchScore(textMessage, loanid)
+	}
+});
+
+function confirmFetchScore(textMessage, loanID,callback) {
+	$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	$('#overlay-popup-txt').html(textMessage);
+	$('#overlay-confirm').on('click', function() {
+		if(loanID){
+			fetchCreditScore(loanID,callback);
+			$('#overlay-popup').hide();
+			$('#overlay-confirm').on('click', function() {});			
+		}
+	});
+
+	$('#overlay-cancel').on('click', function() {
+		$('#overlay-popup').hide();
+		$('#overlay-confirm').on('click', function() {});
+	});
+
+	$('#overlay-popup').show();
 }
 
+function fetchCreditScore(loanid,callback){
+	var data={}
+	ajaxRequest("rest/application//pullTrimergeScore/"+loanid,"GET","json",data,function(response){
+		if(response.error){
+			showToastMessage(response.error.message);
+		}else{
+			var result=response.resultObject;
+			showToastMessage(result);
+			if(callback){
+				callback(response.resultObject,targetElement);
+			}
+		}
+		
+	});
+}
 
 function adjustBorderMilestoneContainer() {
 	$('.milestone-lc:first-child').find('.milestone-lc-border').css({

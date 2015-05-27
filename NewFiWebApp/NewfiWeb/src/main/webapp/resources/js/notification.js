@@ -13,7 +13,7 @@ function getNotificationContext(loanId, userId) {
 		alertWrapper : undefined,
 		headerText : "",
 		pushServerUrl : "/PushNotification/pushServlet/?task=notification&taskId=",
-		enablePushnotification : false,
+		enablePushnotification : updateHandler.enablePushnotification,
 		addToList : function(list, object) {
 			var exist = false;
 			for (var i = 0; i < list.length; i++) {
@@ -47,7 +47,8 @@ function getNotificationContext(loanId, userId) {
 				});
 			}
 		},
-		getNotificationUpdate : function(callback) {
+		//removed this function since we will make use of common update handler
+		/*getNotificationUpdate : function(callback) {
 			var ob = this;
 			if (ob.loanId != 0 && ob.enablePushnotification) {
 				var data = {};
@@ -122,10 +123,11 @@ function getNotificationContext(loanId, userId) {
 							}
 						});
 			}
-		},
+		},*/
 		updateOtherClients : function(change, callback) {
 			var ob = this;
 			if ((ob.loanId != 0 || change.loanId) && ob.enablePushnotification) {
+				change.task="notification";
 				var data = {};
 				var lnId = ob.loanId != 0 ? ob.loanId : change.loanId;
 				// code to call API to get Notification List for loan
@@ -502,8 +504,11 @@ function getNotificationContext(loanId, userId) {
 		}
 	};
 	// notificationContext.initContext();
-	if (notificationContext.loanId)
-		notificationContext.getNotificationUpdate();
+	if (notificationContext.loanId){
+		updateHandler.addLoanToTaskKey(notificationContext.loanId);
+		//Commented call since we will make use of common update handler
+		//notificationContext.getNotificationUpdate();	
+	}
 	return notificationContext;
 }
 function checkNotificationApplicable(notification) {
@@ -825,7 +830,8 @@ function getHashLocationForNotification(type,loanId){
 			case "NEEDS_LIST_SET_TYPE":
 				return "#myLoan/upload-my-needs";
 			case "VERIFY_EMAIL":
-				return "#myProfile";
+				resendEmail();
+				return "";
 		}
 		return "#myLoan/my-loan-progress";
 	}else{
@@ -847,11 +853,17 @@ function getHashLocationForNotification(type,loanId){
 				break;
 			case "NEEDS_LIST_SET_TYPE":
 				return baseHash+"needs";
-			case "VERIFY_EMAIL":
+			case "VERIFY_EMAIL":				
 				return baseHash+"detail";
 		}
 		return baseHash+"progress";
 	}
+}
+function resendEmail()
+{
+	var user=new Object();
+	user.emailId=newfiObject.user.emailId;
+	ajaxRequest("rest/userprofile/forgetPassword"+"?resend=true", "POST", "json", JSON.stringify(user));
 }
 function addClickHandlerToNotification(element,notification){
 	var hashLocation=getHashLocationForNotification(notification.notificationType,notification.loanID)

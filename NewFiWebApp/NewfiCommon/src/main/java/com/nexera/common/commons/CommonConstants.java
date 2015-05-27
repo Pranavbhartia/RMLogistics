@@ -188,6 +188,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_LOAN_CLEAR_TO_CLOSE = "LOAN_CLEAR_TO_CLOSE_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_FINAL_DOCS_SENT = "FINAL_DOCS_SENT_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_DOCS_ASSIGNED_TO_FUNDER = "DOCS_ASSIGNED_TO_FUNDER_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_NAME_PRE_QUAL_LETTER = "PRE_QUAL_LETTER_TEMPLATE_ID";
 
 	public static final String PURCHASE_CONTRACT = "Purchase Contract Including Addendums and Counter-offers";
 

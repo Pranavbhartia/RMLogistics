@@ -21,7 +21,6 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
-import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
@@ -501,8 +500,8 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setAlert_count("3");
 		if (customerDetail != null) {
 			// constructCreditScore(customerDetail.get);
-			loanCustomerVO.setCredit_score(utils
-			        .constrtCreditScore(customerDetail));
+			loanCustomerVO.setCredit_score(utils.constrtClickableCreditScore(
+			        customerDetail, loan.getId()));
 
 		} else {
 			loanCustomerVO.setCredit_score("-");
@@ -1281,8 +1280,8 @@ public class LoanServiceImpl implements LoanService {
 
 		if (customerDetail != null) {
 			// constructCreditScore(customerDetail.get);
-			loanStatus.setCreditInformation(utils
-			        .constrtCreditScore(customerDetail));
+			loanStatus.setCreditInformation(utils.constrtClickableCreditScore(
+			        customerDetail, loan.getId()));
 
 		} else {
 			loanStatus.setCreditInformation("-");
@@ -1886,4 +1885,5 @@ public class LoanServiceImpl implements LoanService {
 		// TODO Auto-generated method stub
 		return loanDao.checkIfLoanHasSalesManager(loanId);
 	}
+
 }

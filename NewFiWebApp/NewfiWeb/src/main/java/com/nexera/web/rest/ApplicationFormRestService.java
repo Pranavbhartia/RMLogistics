@@ -36,6 +36,7 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
@@ -50,6 +51,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
@@ -88,6 +90,9 @@ public class ApplicationFormRestService {
 
 	@Autowired
 	private LqbInterface lqbCacheInvoker;
+
+	@Autowired
+	private NexeraCacheableMethodInterface cacheableMethodInterface;
 
 	@Autowired
 	NexeraUtility nexeraUtility;
@@ -157,6 +162,64 @@ public class ApplicationFormRestService {
 		return new Gson().toJson(responseVO);
 	}
 
+	@RequestMapping(value = "/pullTrimergeScore/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getTrimergeScore(
+	        @PathVariable int loanID) {
+		LOG.debug("Inside pullTrimergeScore");
+		String status = null;
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		if (loanVO != null) {
+			Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
+			LoanAppFormVO loaAppFormVO = loanAppFormService
+			        .getLoanAppFormByLoan(loan);
+
+			if (loaAppFormVO != null) {
+				if (loanVO.getLqbFileId() != null) {
+					LOG.debug("Getting token for loan manager");
+					String sTicket = null;
+					try {
+
+						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+					} catch (Exception e) {
+						LOG.error("Exception caught while generating ticket "
+						        + e.getMessage());
+						status = "Unable to fetch authentication ticket, please try after sometime";
+						sTicket = null;
+					}
+					if (sTicket != null) {
+						LOG.debug("Token retrieved for loan manager" + sTicket);
+						JSONObject requestObject = lQBRequestUtil
+						        .pullTrimergeCreditScore(loanVO.getLqbFileId(),
+						                loaAppFormVO, sTicket);
+						if (requestObject != null) {
+							String response = invokeRest(requestObject
+							        .toString());
+							LOG.debug("Response for pulltrimergescore is "
+							        + response);
+							if (response != null && !response.contains("error")) {
+								status = "Details to pull trimerge score has been saved, you may see the updated score after a while";
+							} else {
+								status = "error while saving your request to pull trimerge score";
+							}
+						}
+
+					}
+				} else {
+					status = "LQB Information Not Present";
+					LOG.error(status);
+				}
+			} else {
+				status = "Unable to fetch the loanappform";
+				LOG.error(status);
+			}
+		} else {
+			status = "Unable to find the loan for this id";
+			LOG.error(status);
+		}
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(status);
+		return responseVO;
+	}
+
 	@RequestMapping(value = "/createLoan", method = RequestMethod.POST)
 	public @ResponseBody String createLoan(String appFormData,
 	        HttpServletRequest httpServletRequest) {
@@ -218,7 +281,8 @@ public class ApplicationFormRestService {
 			e.printStackTrace();
 			lockRateData = "error";
 		}
-		if (lockRateData == null || lockRateData.equals("error")||lockRateData.equals("")){
+		if (lockRateData == null || lockRateData.equals("error")
+		        || lockRateData.equals("")) {
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
@@ -344,8 +408,8 @@ public class ApplicationFormRestService {
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
 			teaserRateList = rateService
-			        .parseLqbResponse(retrievePricingDetails(invokeRest(json
-			                .toString())));
+			        .parseLqbResponse(retrievePricingDetails(cacheableMethodInterface
+			                .cacheInvokeRest(loanNumber, json.toString())));
 
 			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 			teaserRateResponseVO.setLoanDuration("sample");

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,11 +47,12 @@ public class LqbCacheInvoker implements LqbInterface {
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(LqbCacheInvoker.class);
 
-	// @Cacheable(cacheName = "teaserRate")
 	@Override
+	@Cacheable("teaserRate")
 	public String invokeRest(String appFormData) {
 
 		try {
+			LOGGER.debug("Input to LQB:" + appFormData);
 			HttpHeaders headers = new HttpHeaders();
 			HttpEntity request = new HttpEntity(appFormData, headers);
 			RestTemplate restTemplate = new RestTemplate();

@@ -226,7 +226,7 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 
-	@RequestMapping(value = "refer/{userName}/register.do")
+	@RequestMapping(value = "{userName}")
 	public ModelAndView referrerRegistration(@PathVariable String userName) {
 		ModelAndView mav = new ModelAndView();
 		LOG.info("Url referer from" + userName);
@@ -235,17 +235,18 @@ public class TemplateController extends DefaultController {
 			mav.addObject("userObject", userVO);
 			String userRole = userVO.getRoleName();
 			mav.addObject("userRole", userRole);
+			mav.setViewName("registerNew");
 		} catch (DatabaseException | NoRecordsFetchedException e) {
 			// TODO Auto-generated catch block
 			LOG.error("Error retrieving information related to username"
 			        + userName, e);
+			mav.setViewName("404");
 		}
 
-		mav.setViewName("registerNew");
 		return mav;
 	}
 
-	@RequestMapping(value="reset.do")
+	@RequestMapping(value = "reset.do")
 	public ModelAndView resetPassword(
 	        @RequestParam(value = "reference", required = false) String identifier,
 	        @RequestParam(value = "verifyEmailPath", required = false) String verifyEmailPath,
@@ -260,10 +261,9 @@ public class TemplateController extends DefaultController {
 			int rawOffSet = clientTimeZone.getRawOffset();
 			User userDetail = userProfileService.validateRegistrationLink(
 			        identifier, rawOffSet);
-			if (verifyEmailPath != null && !verifyEmailPath.isEmpty())
-			{
-				//Update the flag for Email Verified Here
-				mav.addObject("verifyEmailPath", "verifyEmail");	
+			if (verifyEmailPath != null && !verifyEmailPath.isEmpty()) {
+				// Update the flag for Email Verified Here
+				mav.addObject("verifyEmailPath", "verifyEmail");
 			}
 			if (userDetail == null) {
 				// Re direct to error page
@@ -271,7 +271,7 @@ public class TemplateController extends DefaultController {
 			} else {
 				// Show him the change password page and auto login him
 				UserVO userVO = User.convertFromEntityToVO(userDetail);
-				mav.addObject("userVO", userVO);				
+				mav.addObject("userVO", userVO);
 				mav.setViewName("changePassword");
 			}
 		} catch (InvalidInputException invalid) {
@@ -281,8 +281,6 @@ public class TemplateController extends DefaultController {
 		}
 		return mav;
 	}
-
-	
 
 	@RequestMapping(value = "forgotPassword.do")
 	public ModelAndView showForgetPasswordPage(

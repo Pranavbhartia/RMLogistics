@@ -108,7 +108,7 @@ function LoanPersonalInfoWrapper(user) {
 		"id" : "profileUrlId",
 		"readonly":"readonly",
 		"title":"Double click to copy",
-		"value":user.userProfileBaseUrl+""+user.username+"/register.do"
+		"value":user.userProfileBaseUrl+user.username
 	}).on("click",function(e){
 		$(this).zclip({
 			path: "resources/js/ZeroClipboard.swf",
@@ -218,7 +218,7 @@ function getPasswordInfoContainer(){
 
 	
 	var saveBtn = $('<div>').attr({
-		"class" : "prof-btn prof-save-btn",
+		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "changePassword()"
 	}).html("Update");
 	container.append(saveBtn);
@@ -239,7 +239,7 @@ function getLoanLqbInfoContainer(user){
 	container.append(passwordRow);
 	
 	var saveBtn = $('<div>').attr({
-		"class" : "prof-btn prof-save-btn",
+		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "updateLqbLMDetails()"
 	}).html("Update");
 	container.append(saveBtn);
@@ -300,7 +300,7 @@ function getLoanPersonalInfoContainer(user) {
 	}
 	
 	var saveBtn = $('<div>').attr({
-		"class" : "prof-btn prof-save-btn",
+		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "updateLMDetails()"
 	}).html("Save");
 	container.append(saveBtn);
@@ -819,7 +819,7 @@ function getCustPersonalInfoContainer(user) {
 	formWrapper.append(checkBox);
 				
 	var saveBtn = $('<div>').attr({
-		"class" : "prof-btn prof-save-btn",
+		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "updateUserDetails()"
 	}).html("Save");
 	formWrapper.append(saveBtn);

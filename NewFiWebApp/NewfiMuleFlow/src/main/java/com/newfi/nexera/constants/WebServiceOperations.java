@@ -22,10 +22,12 @@ public class WebServiceOperations
     public static String OP_NAME_LOAN_SAVE = "Save";
 
     public static String OP_NAME_LOAN_LOAD = "Load";
-    
+
     public static String OP_NAME_LOAN_BATCH_LOAD = "BatchLoad";
 
     public static String OP_NAME_GET_CREDIT_SCORE = "CreditScore";
+
+    public static String OP_NAME_SAVE_CREDIT_SCORE = "SaveCreditScore";
 
     public static String OP_NAME_LOAN_CO_BORROWER_SAVE = "coborowwerSave";
 
@@ -50,5 +52,6 @@ public class WebServiceOperations
     public static String OP_NAME_APP_VIEW_GET_VIEW_DESKTOP_URL = "GetViewDesktopUrl";
 
     public static String OP_NAME_APP_VIEW_GET_VIEW_LOAN_URL = "GetViewLoanUrl";
+
 
 }

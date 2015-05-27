@@ -20,7 +20,7 @@
 	<script src="/NewfiWeb/resources/js/buyHome.js"></script>
 	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
 	<script src="/NewfiWeb/resources/js/validation.js"></script>
-	<script src="resources/js/message.js"></script>
+	<script src="/NewfiWeb/resources/js/message.js"></script>
 </head>
 
 <body>
@@ -103,7 +103,7 @@
             </div>
             <div class="reg-row-rc-new reg-row-rc float-left">
               <div class="reg-input-cont reg-email">
-                <input class="reg-input" placeholder="Email" id="emailID">
+                <input type="email" class="reg-input" placeholder="Email" id="emailID">
                 <div class="err-msg hide"></div>
               </div>
             </div>
@@ -196,7 +196,12 @@
     
   </div>
 </div>
-	
+	<script>
+		resizeHeaderWidth();
+		$(window).resize(function() {
+			resizeHeaderWidth();	
+		});
+	</script>
 	<script>
 	//called to dismiss the toast mess on page navigation
 	globalBinder();
@@ -208,8 +213,8 @@
 		$(document).ready(function() {
 			
 			
-			if(window.location.href.indexOf("refer") > -1){
-				var url=window.location.href.split('refer');
+			if(window.location.href.indexOf("us") > -1){
+				var url=window.location.href.split('us');
 				baseurl=url[0];
 				
 			}else{
@@ -379,7 +384,7 @@
 		
 		function goToLoginPage(){
 			
-			window.location.href='../../';
+			window.location.href=baseurl;
 		}
 	</script>
 </body>
