@@ -706,7 +706,7 @@ public class LoanAppFormVO implements Serializable {
 		return loanAppForm;
 	}
 
-	private Loan parseVOtoEntityLoan(LoanVO loanVO) {
+	public Loan parseVOtoEntityLoan(LoanVO loanVO) {
 
 		Loan loan = new Loan();
 		loan.setId(loanVO.getId());

@@ -188,4 +188,5 @@ public interface LoanService {
 	        throws InvalidInputException, UndeliveredEmailException;
 
 	public void sendNoproductsAvailableEmail(UserVO userVO, int loanID);
+
 }
