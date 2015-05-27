@@ -2885,6 +2885,7 @@ input.calc-input {
 	
 }
 .login-input {
+	display: block;
 	width: 100%;
 	height: 100%;
 	padding:10px 0;
@@ -2908,6 +2909,7 @@ input.calc-input {
 	    border-radius: 3px;
 	    margin: 25px auto;
 	    padding-left: 40px;
+	    overflow: hidden;
 }
 
 .login-submit-button {
@@ -2932,10 +2934,11 @@ input.calc-input {
 .forgot-pwd {
 	height: 20px;
 	line-height: 20px;
-/*	text-align: center;*/
-    text-align: left;
+
+	text-align: center;
+    
 	color: black;
-	margin-left: 125px;
+	/* margin-left: 125px; */
 }
 
 .forgot-pwd-link {
@@ -5066,7 +5069,7 @@ input.calc-input {
 }
 
 .login-row-rc {
-    width: 60%;
+    width: 300px;
     margin: 0 auto;
 }
 
@@ -5216,7 +5219,7 @@ span.ps-prev{
 }
 
 .regis-input{
-	margin-left: 77px;
+	/* margin-left: 77px; */
 }
 
 a.session-login-btn {
