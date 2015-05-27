@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -1657,4 +1658,39 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public List<User> findBySecondaryEmail(String fromAddressString) {
 		return userProfileDao.getUserBySecondaryMail(fromAddressString);
 	}
+
+	@Override
+    public void sendEmailPreQualification(UserVO user,
+            ByteArrayOutputStream byteArrayOutputStream)
+            throws InvalidInputException, UndeliveredEmailException {
+		String subject = CommonConstants.PRE_QUALIFICATION_LETTER;
+		EmailVO emailEntity = new EmailVO();
+		
+		Template template = null;
+		
+		template = templateService.getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
+		
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { user.getFirstName() + " "
+		        + user.getLastName() });
+		
+
+		emailEntity.setAttachmentStream(byteArrayOutputStream);
+		emailEntity.setSenderEmailId(user.getUsername()+ CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject(subject);
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
+	    
+    }
+
+	
+	
+	
+	
 }

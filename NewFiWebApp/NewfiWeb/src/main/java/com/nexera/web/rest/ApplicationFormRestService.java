@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
+import com.nexera.web.rest.util.PreQualificationletter;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -95,6 +97,11 @@ public class ApplicationFormRestService {
 
 	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
 	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
+	
+	
+	@Autowired
+	private PreQualificationletter preQualificationletter;
+	
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -196,6 +203,15 @@ public class ApplicationFormRestService {
 
 					lockRateData = loadLoanRateData(loanNumber, sTicket);
 					LOG.debug("lockRateData" + lockRateData);
+					
+					// in case of Purchase send a mail with PDF attachement
+					if(null!= loaAppFormVO.getLoanType() && loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("PUR")){
+						
+						preQualificationletter.sendPreQualificationletter(loaAppFormVO,lockRateData);
+						
+						// send a pre-qualification mail
+					}
+					
 				}
 			}
 		} catch (Exception e) {

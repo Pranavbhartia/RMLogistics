@@ -1,5 +1,6 @@
 package com.nexera.core.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
@@ -135,5 +136,7 @@ public interface UserProfileService {
 	public List<User> geAllSalesManagers();
 
 	public List<User> findBySecondaryEmail(String fromAddressString);
+	
+	public void sendEmailPreQualification(UserVO userVO,ByteArrayOutputStream byteArrayOutputStream) throws InvalidInputException,UndeliveredEmailException;
 
 }
