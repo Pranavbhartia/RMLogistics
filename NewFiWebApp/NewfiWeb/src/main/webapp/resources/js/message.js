@@ -51,3 +51,4 @@ var ageErrorMessage="You must be at least 18 years of age.";
 
 
 var changePasswordErrorMessage="Error while changing your password. Please try again later.";
+var photoUploadErrorMessage="You must upload an image file with one of the following extensions:";

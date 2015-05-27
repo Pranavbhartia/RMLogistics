@@ -138,7 +138,7 @@ function createUploadPhotoContent() {
 	}).html("Save");
 	btnSaveDiv
 			.click(function() {
-
+                showOverlay();
 				var canvas = $('#pu-img')[0];
 				$("#popup-overlay").hide();
 				var dataurl = canvas.src;
@@ -176,7 +176,7 @@ function createUploadPhotoContent() {
 
 				formData.append("imageFileName",
 						$('#prof-image').prop("files")[0].name);
-				showOverlay();
+				
 				$
 						.ajax({
 							url : "uploadCommonImageToS3.do",
@@ -187,6 +187,7 @@ function createUploadPhotoContent() {
 							cache : false,
 							data : formData,
 							success : function(data) {
+								hideOverlay();
 								console.log('URL from S3:' + data);
 								if (data == null || data.trim() == '') {
 									showErrorToastMessage("File upload failed. Please try again");
@@ -235,6 +236,7 @@ function createUploadPhotoContent() {
 							},
 							error : function(e) {
 								// alert('error');
+								hideOverlay();
 							}
 						});
 			});
@@ -274,7 +276,7 @@ function validatePhotoExtention(filename) {
 			return true;
 		}
 	}
-	showToastMessage("You must upload an image file with one of the following extensions:"
+	showErrorToastMessage(photoUploadErrorMessage
 			+ extensionsArray.join(', ') + ".");
 	// alert("You must upload an image file with one of the following
 	// extensions:"+ extensionsArray.join(', ')+".");

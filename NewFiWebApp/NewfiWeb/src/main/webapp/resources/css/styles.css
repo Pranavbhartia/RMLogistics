@@ -2649,7 +2649,7 @@ input.calc-input {
   height: 100%;
   border: none;
   background-color: inherit;
-  width: 365px;
+  width: 325px;
   padding-left: 5px;
   padding-right: 10px;
 }
@@ -5216,4 +5216,10 @@ a.session-login-btn {
 	padding-top: 10px;
 	border-bottom: 1px #b7b7b7 solid;
 }
-
+.link-for-realtor{
+	  width: 0px;
+	  white-space: nowrap;
+	  font-size: 12px;
+	  margin-right: 195px;
+	  font-family: 'opensanssemibold';
+}
