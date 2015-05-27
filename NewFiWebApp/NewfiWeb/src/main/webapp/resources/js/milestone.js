@@ -976,7 +976,7 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDeta
 		userid=userDetails.id;
 	}
 	var delCol = $('<span>').attr({
-		"class" : "ms-team-member-tr-col2 float-left",
+		"class" : "ms-team-member-tr-col3 del-icon float-left",
 		"userid":userid,
 		"homeOwnInsID":homeOwnInsID,
 		"titleCompanyID":titleCompanyID

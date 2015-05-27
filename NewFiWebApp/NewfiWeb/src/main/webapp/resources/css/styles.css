@@ -3801,10 +3801,13 @@ input.calc-input {
 
 .ms-team-member-th-col1,.ms-team-member-th-col2,.ms-team-member-tr-col1,.ms-team-member-tr-col2
 	{
-	width: 50%;
+	width: 48%;
 	padding: 0 5px;
 }
-
+.del-icon{
+	color:#dd4b39;
+	cursor:pointer;
+}
 .ms-add-member-popup {
 	position: absolute;
 	right: 20px;

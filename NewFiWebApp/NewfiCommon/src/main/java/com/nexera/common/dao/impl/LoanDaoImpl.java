@@ -932,4 +932,20 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		}
 		return Boolean.TRUE;
 	}
+
+	@Override
+	public Loan findLoanByWorkflowExec(Integer workflowExecId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(Loan.class);
+		criteria.add(Restrictions.eq("customerWorkflow", workflowExecId));
+		Loan loan = (Loan) criteria.uniqueResult();
+		if (loan == null) {
+			criteria = session.createCriteria(Loan.class);
+			criteria.add(Restrictions.eq("loanManagerWorkflow", workflowExecId));
+			loan = (Loan) criteria.uniqueResult();
+		}
+
+		return loan;
+	}
+
 }

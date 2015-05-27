@@ -47,5 +47,6 @@ public interface WorkflowService {
 	public WorkflowItemExec getWorkflowItemExecBySucessItemID(
 	        WorkflowItemExec workflowItemexec);
 
+	WorkflowItemExec getWorkflowItemExecByID(int workflowItemExecId);
 	
 }
