@@ -114,8 +114,8 @@ function appendSettingsDropDown(){
 			var tutorialsRow=paintSettingsDropDown("tutorials","Tutorial","completeTutorials()","#");
 			
 		 if(newfiObject.user.userRole.roleDescription==customer){
-			 var tutorialStatusFlag=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
-			 if(tutorialStatusFlag && tutorialStatusFlag==true){
+			 var tutorialStatusFlag=newfiObject.user.customerDetail.tutorialStatus;
+			 if(tutorialStatusFlag){
 	            	flagKnowNewFi=false;
 	            }
 			 if(flagKnowNewFi){

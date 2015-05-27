@@ -663,6 +663,7 @@ function paintCustomerInfo ()
 	var wrapper = $('<div>').attr({
 		"class" : "loan-progress-wrapper"
 	});	
+	$('#WFProgressHeaderBar').remove();
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
 	var subText = $('<div>').attr({
 		"class" : "loan-progress-sub-txt"
@@ -1002,8 +1003,10 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDeta
 				loanID,removeTeamItem);
 	});
 	row.append(nameCol).append(titleCol);
-	if(!custFlag)
+	if(userDetails.userRole.id==2){
 		row.append(delCol);
+	}
+		
 	return row;
 }
 var teamItm;
