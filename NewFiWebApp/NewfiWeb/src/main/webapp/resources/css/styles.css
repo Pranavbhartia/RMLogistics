@@ -2648,8 +2648,9 @@ input.calc-input {
   height: 100%;
   border: none;
   background-color: inherit;
-  width: 325px;
+  width: 365px;
   padding-left: 5px;
+  padding-right: 10px;
 }
 
 .cust-profile-url {
