@@ -1407,6 +1407,16 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return userProfileDao.updateLqbProfile(user);
 
 	}
+	
+	@Override
+	@Transactional
+	
+	public Integer updateNMLSId(UserVO userVO)  {
+		User user = User.convertFromVOToEntity(userVO);
+		return userProfileDao.updateNMLS(user);
+
+	}
+
 
 	@Override
 	public CustomerDetail getCustomerDetail(int id) {

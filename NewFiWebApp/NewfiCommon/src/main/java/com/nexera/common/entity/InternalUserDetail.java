@@ -39,6 +39,8 @@ public class InternalUserDetail implements Serializable {
 
 	private InternalUserRoleMaster internaUserRoleMaster;
 
+	private String nmlsID;
+
 	public InternalUserDetail() {
 	}
 
@@ -98,6 +100,7 @@ public class InternalUserDetail implements Serializable {
 		}
 		detailVO.setLqbUsername(internalUserDetail.getLqbUsername());
 		detailVO.setLqbPassword(internalUserDetail.getLqbPassword());
+		detailVO.setNmlsID(internalUserDetail.getNmlsID());
 		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
 		        .getInternaUserRoleMaster()));
 
@@ -120,6 +123,7 @@ public class InternalUserDetail implements Serializable {
 		}
 		detail.setLqbPassword(internalUserDetailVO.getLqbPassword());
 		detail.setLqbUsername(internalUserDetailVO.getLqbUsername());
+		detail.setNmlsID(internalUserDetailVO.getNmlsID());
 		return detail;
 	}
 
@@ -165,5 +169,15 @@ public class InternalUserDetail implements Serializable {
 	public void setLqbPassword(String lqbPassword) {
 		this.lqbPassword = lqbPassword;
 	}
+	
+	@Column(name = "nmls_id")
+	public String getNmlsID() {
+		return nmlsID;
+	}
+
+	public void setNmlsID(String nmlsID) {
+		this.nmlsID = nmlsID;
+	}
+
 
 }

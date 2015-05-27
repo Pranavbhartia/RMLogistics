@@ -136,4 +136,5 @@ public interface UserProfileService {
 
 	public List<User> findBySecondaryEmail(String fromAddressString);
 
+	public Integer updateNMLSId(UserVO userVO);
 }
