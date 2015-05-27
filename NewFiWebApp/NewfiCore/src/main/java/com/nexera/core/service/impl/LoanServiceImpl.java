@@ -500,8 +500,7 @@ public class LoanServiceImpl implements LoanService {
 		loanCustomerVO.setAlert_count("3");
 		if (customerDetail != null) {
 			// constructCreditScore(customerDetail.get);
-			loanCustomerVO.setCredit_score(utils
-.constrtClickableCreditScore(
+			loanCustomerVO.setCredit_score(utils.constrtClickableCreditScore(
 			        customerDetail, loan.getId()));
 
 		} else {
@@ -1281,8 +1280,8 @@ public class LoanServiceImpl implements LoanService {
 
 		if (customerDetail != null) {
 			// constructCreditScore(customerDetail.get);
-			loanStatus.setCreditInformation(utils
-			        .constrtClickableCreditScore(customerDetail,loan.getId()));
+			loanStatus.setCreditInformation(utils.constrtClickableCreditScore(
+			        customerDetail, loan.getId()));
 
 		} else {
 			loanStatus.setCreditInformation("-");
@@ -1886,4 +1885,5 @@ public class LoanServiceImpl implements LoanService {
 		// TODO Auto-generated method stub
 		return loanDao.checkIfLoanHasSalesManager(loanId);
 	}
+
 }

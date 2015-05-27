@@ -62,11 +62,12 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 
 	@Autowired
 	private LoanService loanService;
-	
+
 	@Autowired
 	private UserProfileDao userProfileDao;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanAppFormServiceImpl.class);
+
 	@Override
 	@Transactional
 	public void save(LoanAppFormVO loaAppFormVO) {
@@ -87,16 +88,18 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	@Transactional
 	public LoanAppForm create(LoanAppFormVO loaAppFormVO) {
 		LOG.info("in create func of loanapp form..................");
-		if(null!= loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() && loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() != ""  ){
-			
+		if (null != loaAppFormVO.getPropertyTypeMaster().getHomeZipCode()
+		        && loaAppFormVO.getPropertyTypeMaster().getHomeZipCode() != "") {
+
 			zipcodeLookup(loaAppFormVO);
 		}
-		
-		LoanAppForm loanAppForm = loanAppFormDao.saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
-		// updating the user table coloum phone number
-		userProfileDao.UpdateUserProfile(loaAppFormVO.getUser().getPhoneNumber(), loaAppFormVO.getUser().getId());
 
-        	
+		LoanAppForm loanAppForm = loanAppFormDao
+		        .saveLoanAppFormWithDetails(loaAppFormVO.convertToEntity());
+		// updating the user table coloum phone number
+		userProfileDao.UpdateUserProfile(loaAppFormVO.getUser()
+		        .getPhoneNumber(), loaAppFormVO.getUser().getId());
+
 		return loanAppForm;
 		/*
 		 * LoanAppForm loanAppForm = null; if (loanAppFormID != null &&
@@ -105,21 +108,25 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		 */
 		// return this.buildLoanAppFormVO(loanAppForm);
 	}
-	
-	public void zipcodeLookup(LoanAppFormVO loanAppFormVO){
+
+	public void zipcodeLookup(LoanAppFormVO loanAppFormVO) {
 		LOG.info("Inside method zipcodeLookup");
 		try {
-	           ZipCodeLookupVO zipCodeLookup =  ZipCodeLookup.converToVo(findByZipCode(loanAppFormVO.getPropertyTypeMaster().getHomeZipCode()));
-	           PropertyTypeMasterVO propertyTypeMasterVO = loanAppFormVO.getPropertyTypeMaster();
-	           propertyTypeMasterVO.setPropState(zipCodeLookup.getStateLookup().getStateCode());
-	           propertyTypeMasterVO.setPropCity(zipCodeLookup.getCityName());
-	           loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
-	          
-			} catch (Exception e) {
-				LOG.error("Error in zipcodeLookup " + e.getMessage());
-	            e.printStackTrace();
-         }
-		
+			ZipCodeLookupVO zipCodeLookup = ZipCodeLookup
+			        .converToVo(findByZipCode(loanAppFormVO
+			                .getPropertyTypeMaster().getHomeZipCode()));
+			PropertyTypeMasterVO propertyTypeMasterVO = loanAppFormVO
+			        .getPropertyTypeMaster();
+			propertyTypeMasterVO.setPropState(zipCodeLookup.getStateLookup()
+			        .getStateCode());
+			propertyTypeMasterVO.setPropCity(zipCodeLookup.getCityName());
+			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
+
+		} catch (Exception e) {
+			LOG.error("Error in zipcodeLookup " + e.getMessage());
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -517,14 +524,14 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 			return null;
 		CustomerSpouseDetailVO customerSpouseDetailVO = new CustomerSpouseDetailVO();
 		customerSpouseDetailVO.setId(customerspousedetail.getId());
-		
-		if (null != customerspousedetail.getSpouseDateOfBirth()){
-			
+
+		if (null != customerspousedetail.getSpouseDateOfBirth()) {
+
 			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-			customerSpouseDetailVO.setSpouseDateOfBirth(df.format(customerspousedetail
-			        .getSpouseDateOfBirth()));
-		 }
-		
+			customerSpouseDetailVO.setSpouseDateOfBirth(df
+			        .format(customerspousedetail.getSpouseDateOfBirth()));
+		}
+
 		customerSpouseDetailVO
 		        .setSpouseSsn(customerspousedetail.getSpouseSsn());
 		customerSpouseDetailVO.setSpouseSecPhoneNumber(customerspousedetail
@@ -535,38 +542,46 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .isSelfEmployed());
 		customerSpouseDetailVO.setIsssIncomeOrDisability(customerspousedetail
 		        .isIsssIncomeOrDisability());
-		customerSpouseDetailVO.setIspensionOrRetirement(customerspousedetail.isIs_pension_or_retirement());
-		
+		customerSpouseDetailVO.setIspensionOrRetirement(customerspousedetail
+		        .isIs_pension_or_retirement());
 
-		customerSpouseDetailVO.setSpouseLastName(customerspousedetail.getSpouseLastName());
-		customerSpouseDetailVO.setStreetAddress(customerspousedetail.getStreetAddress());
+		customerSpouseDetailVO.setSpouseLastName(customerspousedetail
+		        .getSpouseLastName());
+		customerSpouseDetailVO.setStreetAddress(customerspousedetail
+		        .getStreetAddress());
 		customerSpouseDetailVO.setState(customerspousedetail.getState());
 		customerSpouseDetailVO.setCity(customerspousedetail.getCity());
 		customerSpouseDetailVO.setZip(customerspousedetail.getZip());
-		
-		
+
 		// income : start
-		if(null!= customerspousedetail.getSelfEmployedIncome())
-		customerSpouseDetailVO.setSelfEmployedIncome(customerspousedetail.getSelfEmployedIncome().toString());
-		
-		if(null != customerspousedetail.getSelfEmployedNoYear())
-		customerSpouseDetailVO.setSelfEmployedNoYear(customerspousedetail.getSelfEmployedNoYear().toString());
-		
-		if(null != customerspousedetail.getChildSupportAlimony())
-		customerSpouseDetailVO.setChildSupportAlimony(customerspousedetail.getChildSupportAlimony().toString());
-		
-		if(null!= customerspousedetail.getSocialSecurityIncome())
-			customerSpouseDetailVO.setSocialSecurityIncome(customerspousedetail.getSocialSecurityIncome().toString());
-		
-		if(null!= customerspousedetail.getDisabilityIncome())
-			customerSpouseDetailVO.setDisabilityIncome(customerspousedetail.getDisabilityIncome().toString());
-		
-		if(null!= customerspousedetail.getMonthlyPension() )
-			customerSpouseDetailVO.setMonthlyPension(customerspousedetail.getMonthlyPension().toString());
-		
-		if(null!= customerspousedetail.getRetirementIncome() )
-			customerSpouseDetailVO.setRetirementIncome(customerspousedetail.getRetirementIncome().toString());
-		
+		if (null != customerspousedetail.getSelfEmployedIncome())
+			customerSpouseDetailVO.setSelfEmployedIncome(customerspousedetail
+			        .getSelfEmployedIncome().toString());
+
+		if (null != customerspousedetail.getSelfEmployedNoYear())
+			customerSpouseDetailVO.setSelfEmployedNoYear(customerspousedetail
+			        .getSelfEmployedNoYear().toString());
+
+		if (null != customerspousedetail.getChildSupportAlimony())
+			customerSpouseDetailVO.setChildSupportAlimony(customerspousedetail
+			        .getChildSupportAlimony().toString());
+
+		if (null != customerspousedetail.getSocialSecurityIncome())
+			customerSpouseDetailVO.setSocialSecurityIncome(customerspousedetail
+			        .getSocialSecurityIncome().toString());
+
+		if (null != customerspousedetail.getDisabilityIncome())
+			customerSpouseDetailVO.setDisabilityIncome(customerspousedetail
+			        .getDisabilityIncome().toString());
+
+		if (null != customerspousedetail.getMonthlyPension())
+			customerSpouseDetailVO.setMonthlyPension(customerspousedetail
+			        .getMonthlyPension().toString());
+
+		if (null != customerspousedetail.getRetirementIncome())
+			customerSpouseDetailVO.setRetirementIncome(customerspousedetail
+			        .getRetirementIncome().toString());
+
 		// income ends:
 		customerSpouseDetailVO.setExperianScore(customerspousedetail
 		        .getExperianScore());
@@ -581,9 +596,10 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		                .getCurrentHomeMortgageBalance());
 		customerSpouseDetailVO.setNewHomeBudgetFromsale(customerspousedetail
 		        .getNewHomeBudgetFromsale());
-		
+
 		// skip my assest
-		customerSpouseDetailVO.setSkipMyAssets(customerspousedetail.getSkipMyAssets());
+		customerSpouseDetailVO.setSkipMyAssets(customerspousedetail
+		        .getSkipMyAssets());
 
 		return customerSpouseDetailVO;
 	}
@@ -624,7 +640,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		customerSpouseEmploymentIncomeVOTemp
 		        .setId(customerSpouseEmploymentIncome.getId());
 		customerSpouseEmploymentIncomeVOTemp
-        .setJobTitle(customerSpouseEmploymentIncome.getJobTitle());
+		        .setJobTitle(customerSpouseEmploymentIncome.getJobTitle());
 		customerSpouseEmploymentIncomeVOTemp
 		        .setEmployedSince(customerSpouseEmploymentIncome
 		                .getEmployedSince());
@@ -670,7 +686,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		CustomerEmploymentIncomeVO customerEmploymentITemp = new CustomerEmploymentIncomeVO();
 
 		customerEmploymentITemp.setId(customerEmploymentIncome.getId());
-		customerEmploymentITemp.setJobTitle(customerEmploymentIncome.getJobTitle());
+		customerEmploymentITemp.setJobTitle(customerEmploymentIncome
+		        .getJobTitle());
 		customerEmploymentITemp.setEmployedSince(customerEmploymentIncome
 		        .getEmployedSince());
 		customerEmploymentITemp.setEmployedAt(customerEmploymentIncome
@@ -742,36 +759,43 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		loanAppFormVO
 		        .setSsDisabilityIncome(loanAppForm.getSsDisabilityIncome());
 		loanAppFormVO.setIsSpouseOnLoan(loanAppForm.getIsSpouseOnLoan());
-		loanAppFormVO.setIsCoborrowerPresent(loanAppForm.getIsCoborrowerPresent());	
+		loanAppFormVO.setIsCoborrowerPresent(loanAppForm
+		        .getIsCoborrowerPresent());
 		loanAppFormVO.setSpouseName(loanAppForm.getSpouseName());
 		loanAppFormVO.setPaySecondMortgage(loanAppForm.getPaySecondMortgage());
 		loanAppFormVO.setLoanAppFormCompletionStatus(loanAppForm
 		        .getLoanAppFormCompletionStatus());
 		loanAppFormVO.setMonthlyRent(loanAppForm.getMonthlyRent());
-	
+
 		// Customer Income details: Start
-		if(null!= loanAppForm.getMonthlyIncome())
-		loanAppFormVO.setSelfEmployedMonthlyIncome(loanAppForm.getMonthlyIncome().toString());
-		if(null!= loanAppForm.getSelfEmployedNoYear())
-		loanAppFormVO.setSelfEmployedNoYear(loanAppForm.getSelfEmployedNoYear().toString());
-		if(null!= loanAppForm.getChildSupportAlimony())
-		loanAppFormVO.setChildSupportAlimony(loanAppForm.getChildSupportAlimony().toString());
-		if(null!= loanAppForm.getSocialSecurityIncome())
-		loanAppFormVO.setSocialSecurityIncome(loanAppForm.getSocialSecurityIncome().toString());
-		if(null!= loanAppForm.getSsDisabilityIncome())
-		loanAppFormVO.setSsDisabilityIncome(loanAppForm.getSsDisabilityIncome());
-		if(null!= loanAppForm.getMonthlyPension())
-		loanAppFormVO.setMonthlyPension(loanAppForm.getMonthlyPension());
-		if(null!= loanAppForm.getRetirementIncome())
-		loanAppFormVO.setRetirementIncome(loanAppForm.getRetirementIncome().toString());
-		
+		if (null != loanAppForm.getMonthlyIncome())
+			loanAppFormVO.setSelfEmployedMonthlyIncome(loanAppForm
+			        .getMonthlyIncome().toString());
+		if (null != loanAppForm.getSelfEmployedNoYear())
+			loanAppFormVO.setSelfEmployedNoYear(loanAppForm
+			        .getSelfEmployedNoYear().toString());
+		if (null != loanAppForm.getChildSupportAlimony())
+			loanAppFormVO.setChildSupportAlimony(loanAppForm
+			        .getChildSupportAlimony().toString());
+		if (null != loanAppForm.getSocialSecurityIncome())
+			loanAppFormVO.setSocialSecurityIncome(loanAppForm
+			        .getSocialSecurityIncome().toString());
+		if (null != loanAppForm.getSsDisabilityIncome())
+			loanAppFormVO.setSsDisabilityIncome(loanAppForm
+			        .getSsDisabilityIncome());
+		if (null != loanAppForm.getMonthlyPension())
+			loanAppFormVO.setMonthlyPension(loanAppForm.getMonthlyPension());
+		if (null != loanAppForm.getRetirementIncome())
+			loanAppFormVO.setRetirementIncome(loanAppForm.getRetirementIncome()
+			        .toString());
+
 		// Customer Income Detaisl : ends
-		
+
 		// skip my assets: Start
 		loanAppFormVO.setSkipMyAssets(loanAppForm.getSkipMyAssets());
-		
+
 		// skip my assets : Ends
-		
+
 		return loanAppFormVO;
 
 	}
@@ -813,10 +837,12 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .getPropTaxMonthlyOryearly());
 		propertyTypeMasterVO.setPropInsMonthlyOryearly(propertyTypeMaster
 		        .getPropInsMonthlyOryearly());
-		propertyTypeMasterVO.setPropStreetAddress(propertyTypeMaster.getPropStreetAddress());
+		propertyTypeMasterVO.setPropStreetAddress(propertyTypeMaster
+		        .getPropStreetAddress());
 		propertyTypeMasterVO.setPropCity(propertyTypeMaster.getPropCity());
 		propertyTypeMasterVO.setPropState(propertyTypeMaster.getPropState());
-		propertyTypeMasterVO.setHomeZipCode(propertyTypeMaster.getHomeZipCode());
+		propertyTypeMasterVO
+		        .setHomeZipCode(propertyTypeMaster.getHomeZipCode());
 		return propertyTypeMasterVO;
 
 	}
@@ -843,8 +869,9 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		governmentQuestionVO.setFederalDebt(governmentquestion.isFederalDebt());
 		governmentQuestionVO.setEndorser(governmentquestion.isEndorser());
 		governmentQuestionVO.setUSCitizen(governmentquestion.isUSCitizen());
-		
-		governmentQuestionVO.setPermanentResidentAlien(governmentquestion.getPermanentResidentAlien());
+
+		governmentQuestionVO.setPermanentResidentAlien(governmentquestion
+		        .getPermanentResidentAlien());
 		governmentQuestionVO.setOccupyPrimaryResidence(governmentquestion
 		        .isOccupyPrimaryResidence());
 		governmentQuestionVO.setOwnershipInterestInProperty(governmentquestion
@@ -894,9 +921,11 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .isEndorser());
 		spouseGovernmentQuestionVO.setUSCitizen(spouseGovernmentquestions
 		        .isUSCitizen());
-		
-		spouseGovernmentQuestionVO.setPermanentResidentAlien(spouseGovernmentquestions.isPermanentResidentAlien());
-		
+
+		spouseGovernmentQuestionVO
+		        .setPermanentResidentAlien(spouseGovernmentquestions
+		                .isPermanentResidentAlien());
+
 		spouseGovernmentQuestionVO
 		        .setOccupyPrimaryResidence(spouseGovernmentquestions
 		                .isOccupyPrimaryResidence());
@@ -969,11 +998,22 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 	public LoanAppForm findByuserID(int userid) {
 		return loanAppFormDao.findByuserID(userid);
 	}
-	
+
 	@Override
 	@Transactional
 	public ZipCodeLookup findByZipCode(String zipCode) throws Exception {
 		return loanAppFormDao.findByZipCode(zipCode);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanAppFormVO getLoanAppFormByLoan(Loan loan) {
+		LoanAppForm loanAppForm = loanAppFormDao.findByLoan(loan);
+		if (loanAppForm != null) {
+			return convertToLoanAppFormVO(loanAppForm);
+		} else {
+			return null;
+		}
 	}
 
 }
