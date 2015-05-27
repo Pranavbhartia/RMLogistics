@@ -231,8 +231,10 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		UserVO user = userProfileService.findUser(userID);
 		if (user != null) {
 			if (user.getCustomerDetail() != null) {
-				creditDisplay = utils.constrtCreditScore(CustomerDetail
-				        .convertFromVOToEntity(user.getCustomerDetail()));
+				creditDisplay = utils
+				        .constrtClickableCreditScore(CustomerDetail
+				        .convertFromVOToEntity(user.getCustomerDetail()),
+				        user.getDefaultLoanId());
 			}
 		}
 		return creditDisplay;

@@ -1011,6 +1011,48 @@ function removeTeamItem(){
 	$(teamItm).remove();
 	teamItm=undefined;
 }
+$(document).on('click', '.creditScoreClickableClass', function(e) {
+	e.stopImmediatePropagation();
+	var loanid=$(this).attr("loanid");
+	var textMessage="Are you sure you want to fetch Credit Score ?"
+	confirmFetchScore(textMessage, loanid)
+});
+
+function confirmFetchScore(textMessage, loanID,callback) {
+	$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	$('#overlay-popup-txt').html(textMessage);
+	$('#overlay-confirm').on('click', function() {
+		if(loanID){
+			fetchCreditScore(loanID,callback);
+			$('#overlay-popup').hide();
+			$('#overlay-confirm').on('click', function() {});			
+		}
+	});
+
+	$('#overlay-cancel').on('click', function() {
+		$('#overlay-popup').hide();
+		$('#overlay-confirm').on('click', function() {});
+	});
+
+	$('#overlay-popup').show();
+}
+
+function fetchCreditScore(loanid,callback){
+	var data={}
+	ajaxRequest("rest/application//pullTrimergeScore/"+loanid,"GET","json",data,function(response){
+		if(response.error){
+			showToastMessage(response.error.message);
+		}else{
+			var result=response.resultObject;
+			showToastMessage(result);
+			if(callback){
+				callback(response.resultObject,targetElement);
+			}
+		}
+		
+	});
+}
 
 function adjustBorderMilestoneContainer() {
 	$('.milestone-lc:first-child').find('.milestone-lc-border').css({
