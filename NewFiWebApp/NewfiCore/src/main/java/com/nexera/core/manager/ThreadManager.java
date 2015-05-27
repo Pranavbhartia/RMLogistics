@@ -86,8 +86,7 @@ import com.nexera.workflow.service.WorkflowService;
 @Component
 @Scope(value = "prototype")
 public class ThreadManager implements Runnable {
-	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(ThreadManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger("batchJobs");
 
 	private Loan loan;
 

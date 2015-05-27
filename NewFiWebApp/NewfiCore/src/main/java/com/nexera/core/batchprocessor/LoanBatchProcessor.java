@@ -44,8 +44,7 @@ import com.nexera.core.utility.NexeraUtility;
 
 public class LoanBatchProcessor extends QuartzJobBean {
 
-	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(LoanBatchProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger("batchJobs");
 
 	@Autowired
 	private LoanService loanService;
