@@ -108,7 +108,7 @@ function LoanPersonalInfoWrapper(user) {
 		"id" : "profileUrlId",
 		"readonly":"readonly",
 		"title":"Double click to copy",
-		"value":user.userProfileBaseUrl+""+user.username
+		"value":user.userProfileBaseUrl+user.username
 	}).on("click",function(e){
 		$(this).zclip({
 			path: "resources/js/ZeroClipboard.swf",
