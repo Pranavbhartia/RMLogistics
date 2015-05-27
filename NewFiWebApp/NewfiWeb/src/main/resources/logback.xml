@@ -46,13 +46,14 @@
  	<logger name="batchJobs" level="DEBUG" additivity="false">
         <appender-ref ref="BATCH-FILE"/>
     </logger>
+  
     
 	<logger name="com.nexera" level="debug"
 		additivity="false">
 		<appender-ref ref="FILE-AUDIT" />
 	</logger>
  
-	<root level="info">
+	<root level="all">
 		<appender-ref ref="FILE-AUDIT" />
 	</root>
  
