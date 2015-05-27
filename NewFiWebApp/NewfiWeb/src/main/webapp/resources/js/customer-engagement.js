@@ -373,7 +373,7 @@ function paintSelectLoanTypeQuestion() {
     
     var getStartedTxt = $('<div>').attr({
     	"class" : "ce-get-started"
-    }).html("Get Started Now");
+    }).html("Create your newfi account");
     
     $('#ce-main-container').append(rateIcon).append(titleText).append(getStartedTxt);
    
@@ -635,7 +635,7 @@ function paintRefinanceStep2() {
     	var isSuccess=validateInput(className,$('input[name="currentMortgageBalance"]').val(),message);
     
     	if(isSuccess){
-    		paintRefinanceStep3();
+    		paintRefinanceStepCEP();
     	}else{
     		return false;
     	}
@@ -651,7 +651,7 @@ function paintRefinanceStep1b() {
     $('#ce-refinance-cp').html(quesCont);
 }
 
-function paintRefinanceStep3() {
+function paintRefinanceStepCEP() {
         stages = 3;
 	   progressBaar(3);
         quesContxts = {};
@@ -690,7 +690,8 @@ function paintRefinanceStep3() {
         var saveAndContinueButton = $('<div>').attr({
             "class": "cep-button-color ce-save-btn"
         }).html("Save & continue").on('click', function() {
-            
+           
+        	
         	refinanceTeaserRate.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.isIncludeTaxes = quesContxts["isIncludeTaxes"].value;//quesContxts[1].value;
             refinanceTeaserRate.propertyTaxesPaid = quesContxts["propertyTaxesPaid"].value;//$('input[name="annualPropertyTaxes"]').val();
@@ -813,6 +814,7 @@ function paintNewResidenceTypeQues(){
             refinanceTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
             if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+            	removeToastMessage();
             	paintRefinanceHomeZipCode();	
             }else{
             	showErrorToastMessage("Please answser the questions");
@@ -823,6 +825,7 @@ function paintNewResidenceTypeQues(){
             buyHomeTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
             buyHomeTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
             if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+            	removeToastMessage();
             	paintHomeZipCode();	
             }else{
             	showErrorToastMessage("Please answser the questions");
@@ -1021,10 +1024,10 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     });
     var regDisplayTitle = $('<div>').attr({
         "class": "reg-display-title"
-    }).html("Get Started Now");
+    }).html("Create your newfi account");
     var regDisplaySubTitle = $('<div>').attr({
         "class": "reg-display-title-subtxt"
-    }).html("Create a newfi account now to access our powerful lending tool and take control on your terms");
+    }).html("Create your account now to have immediate access to the powerful newfi lending tool.");
     var regInputContainerFname = $('<div>').attr({
         "class": "reg-input-cont reg-fname"
     });
@@ -1219,6 +1222,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     return parentWrapper.append(regMainContainer);
 }
 function validateUsersBeforeRegistration(registration,teaseRateDataList){
+	
 	$('#overlay-loader').show();
     $.ajax({
         url: "rest/shopper/validate",
@@ -1247,6 +1251,7 @@ function validateUsersBeforeRegistration(registration,teaseRateDataList){
     });
 }
 function saveUserAndRedirect(registration,teaseRateDataList) {
+	
     // alert(JSON.stringify(registration));
     $('#overlay-loader').show();
     $.ajax({
@@ -1275,7 +1280,7 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
 }
 
 function saveAndUpdateLoanAppForm(appUserDetails) {
-	globalBinder();
+	
         $.ajax({
             url: "rest/application/applyloan",
             type: "POST",
@@ -1901,7 +1906,7 @@ function getLoanAmountRowCEP(desc, detail, id) {
  
     
     var saveBtn = $('<div>').attr({
-    	"class" : "sm-save-btn float-right"
+    	"class" : "cep-button-color sm-save-btn float-right"
     }).html("Save").on('click',{"flag":flag},function(){
     
     	if(flag){
@@ -2111,7 +2116,7 @@ function changeToState(num){
             break;
         case 3:
             if(refinanceTeaserRate.loanType == "REF")
-                paintRefinanceStep3();  
+                paintRefinanceStepCEP();  
             else
                 paintNewResidenceTypeQues();
             break;

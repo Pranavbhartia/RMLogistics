@@ -23,7 +23,7 @@
 <link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 <link href="resources/css/footer.css" rel="stylesheet">
 <script src="resources/js/jquery-2.1.3.min.js"></script>
-
+<script src="resources/js/common.js"></script>
 <script type="text/javascript">
 
 var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}"; 
@@ -79,22 +79,22 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 				</div>
 			</div>  -->
 			<div class="header-wrapper">
-	<div class="header-container container">
-		<div class="header-row row clearfix">
-			<div class="header-logo float-left"></div>
-			<div class="reg-header-btns-wrapper float-right clearfix">
-				<div class="float-left login-hdr hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>
-               <!--  <div class="float-left login-hdr hdr-login-btn" onclick="window.location='./'">Login</div> -->
-			</div>
-            <div class="soft-menu-icon float-right"></div>
-            <div class="soft-menu-wrapper">
-               <!--  <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div> -->
-				<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
+	        <div class="header-container container">
+		    <div class="header-row row clearfix">
+				<div class="header-logo float-left"></div>
+				<div class="reg-header-btns-wrapper float-right clearfix">
+					<!--  <div class="float-left login-hdr hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>-->
+	                <!-- <div class="float-left login-hdr hdr-login-btn" onclick="login()">Login</div> -->
+				</div>
+	            <div class="soft-menu-icon float-right"></div>
+	            <div class="soft-menu-wrapper">
+	                <!-- <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div> -->
+					<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
+	            </div>
+	             <div class="float-right login-hdr hdr-contact-no">888-316-3934</div>
+		    </div>
+	        </div>
             </div>
-             <div class="float-right login-hdr hdr-contact-no">Call Us 888-316-3934</div>
-		</div>
-	</div>
-</div>
 
 			<!-- Main Container -->
 			<div class="login-container container">
@@ -109,7 +109,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 							<div class="reg-input-row clearfix regis-input">	
 				                     <!--  <div class="login-row-lc float-left">Email Address</div> -->
 				                      <div class="login-row-rc float-left">
-				                        <div class="login-input-cont">
+				                        <div class="login-input-cont reg-email">
 								          <input type="text" class="login-input"
 									placeholder="Email" id="userId"> <input
 									type="hidden" id="inputEmail" name="j_username" class="hide"
@@ -120,7 +120,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 							<div class="reg-input-row clearfix regis-input">	
 				                       <!--  <div class="login-row-lc float-left">Password</div>  -->
 				                       <div class="login-row-rc float-left">
-							<div class="login-input-cont">
+							<div class="login-input-cont new-login-input-pwd">
 								<input type="password" class="login-input"
 									id="password" placeholder="Password"> <input
 									type="hidden" name="j_password" id="inputPassword" class="hide">
@@ -143,139 +143,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			
 			<!-- Footer -->
 			 <!-- <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div> -->
-    <footer id="footer" role="contentinfo">
-   <section class="section swatch-black">
-      <div class="footer-container">
-         <div class="row footer-element-normal-top footer-element-normal-bottom">
-            <div class="footer-col-md-3 float-left">
-               <div id="text-3" class="sidebar-widget  widget_text">
-                  <h3 class="footer-sidebar-header footer-border-width">Links</h3>
-                  <div class="textwidget">
-                     <div id="footer_ourbrands" class="sidebar-widget  widget_recent_entries">
-                        <ul class="footer-order-list">                          
-                           <li class="footer-list clearfix"><a class="footer-anchor" onclick="window.location='customerEngagement.do'">Check Rates</a><a></a></li>
-                           <li class=" footer-list clearfix"><a></a><a class="footer-anchor" onclick="window.location='./'">Login</a><a></a></li>
-                           <li class=" footer-list clearfix"><a></a><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/'">Nexsera Holding</a><a></a></li>                          
-                        </ul>
-                        <a>
-                        </a>
-                     </div>
-                  </div>
-                  <a>
-                  </a>
-               </div>
-            </div>
-            <a>
-            </a>
-<!--             <div class="footer-col-md-3 float-left">
-               <a></a>
-               <div id="sticky-posts-2" class="sidebar-widget  widget_recent_entries sidebar-widget  widget_ultimate_posts">
-                  <a>
-                     <h3 class="footer-sidebar-header footer-border-width">Careers</h3>
-                  </a>
-                  <ul class="footer-order-list">
-                     <a>
-                     </a>
-                     <li class=" footer-list clearfix">
-                        <a>
-                        </a>
-                        <div class="upw-content">
-                           <a>
-                           </a>
-                           <p class="post-title"><a>
-                              </a><a class="footer-anchor" href="http://www.nexeraholding.com/careers/call-center-loan-officer/" title="Call Center Loan Officer">
-                              Call Center Loan Officer            </a>
-                           </p>
-                        </div>
-                     </li>
-                     <li class=" footer-list clearfix">
-                        <div class="upw-content">
-                           <p class="post-title">
-                              <a class="footer-anchor" href="http://www.nexeraholding.com/careers/senior-underwriter/" title="Senior Underwriter">
-                              Senior Underwriter            </a>
-                           </p>
-                        </div>
-                     </li>
-                     <li class="footer-list clearfix">
-                        <div class="upw-content">
-                           <p class="post-title">
-                              <a class="footer-anchor" href="http://www.nexeraholding.com/careers/fundershipper/" title="Funder/Shipper">
-                              Funder/Shipper            </a>
-                           </p>
-                        </div>
-                     </li>
-                  </ul>
-               </div>
-            </div> -->
-            <div class="footer-col-md-3 float-left">
-               <div id="text-4" class="sidebar-widget  widget_text">
-                  <h3 class="footer-sidebar-header footer-border-width">Legal</h3>
-                  <div class="textwidget">
-                     <div id="footer_legal" class="sidebar-widget  widget_recent_entries">
-                        <ul class="footer-order-list">
-                           <li class=" footer-list clearfix"><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/information/#licensing'">Licensing</a></li>
-                           <li class="footer-list clearfix"><a class="footer-anchor" target="_blank" onclick="window.location='http://www.nmlsconsumeraccess.org/'">NMLS Consumer Access</a></li>
-                           <li class="footer-list clearfix"><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/privacy-policy/'">Privacy Policy</a></li>
-                           <li class="footer-list clearfix"><a class="footer-anchor" onclick="window.location='http://www.nexeraholding.com/information/'">Terms of Use</a></li>
-                        </ul>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            
-           <div class="footer-col-md-3 float-left">
-               <div class="footer-newfi-image"></div> 
-               <div class="footer-newfi-information">a new way to finance your home</div>
-               <div class="footer-newfi-information-subtxt">
-               <p class="footer-subtxt">2200 Powell Street, Suite 340</p>
-               <p class="footer-subtxt">Emeryville, CA 94608</p>
-               <p class="footer-subtxt">Call now 1-888-316-3934</p></div>
-
-            </div>
-            <div class="footer-icon-col-md-3">
-               <div id="text-5" class="sidebar-widget  widget_text">
-                  <div class="textwidget">
-                     <div class="footer-icon-container clearfix">
-                        <a href="https://www.linkedin.com/company/nexera-holding-llc" target="_blank">
-                           <div class="footerlinkedin"></div>
-                        </a>
-                        <a href="https://twitter.com/NexeraHolding" target="_blank">
-                           <div class="footertwitter"></div>
-                        </a>
-                        <a href="mailto:info@nexeraholding.com">
-                           <div class="footeremail"></div>
-                        </a>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </section>
-   <section class="section swatch-black">
-               <div class="container">
-               <!-- <div id="footer">
-	<div class="footer-bottom">
-		<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
-			<div class="footer-home-image float-left" id="footeHomeImage">
-			<div class="footer-home-text" id="footerHomeText">Equal Housing Lender</div>
-		</a></div>
-			
-	</div> -->
-	<div class="footer-container-text float-left"> © 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
-	<div class="footer-container-text2 float-right">
-   <a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
-   <div class="footer-login-inline-home-image" id="footeHomeImage"></div>
-   </a>
-  <a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
-  <div class="footer-login-inline-home-text" id="footerHomeText">Equal Housing Lender</div>
-   </a>  
-  </div>
-</div>
-<br>
-		</div></section>
-
-</footer>
+    <jsp:include page="newFiFooter.jsp"></jsp:include>
 			
 		
 	</div>

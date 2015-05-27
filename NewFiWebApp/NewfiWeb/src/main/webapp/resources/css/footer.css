@@ -28,8 +28,10 @@ section.section.swatch-black {
 }
 
 .footer-col-md-3 {
-  margin-left: 20px;
-  width: 25%;}
+  margin-right: 3%;
+  width: 30%;
+  float:left;
+  }
 
 .footer-sidebar-header {
   margin-bottom: 12px;
@@ -56,24 +58,26 @@ section.section.swatch-black {
   border-bottom: 1px solid rgba(255, 255, 255, 0.20);      
   margin-left: 0px;
   padding: 6px;
+  width:100%;
+  white-space: nowrap;
   /* padding-top: 13px; */
 }
 
 .footer-anchor {
-  font-family: OpenSanslight;
-  font-size: 12px;
-   color: white; 
-   cursor: pointer;
+	  font-family: OpenSanslight;
+	  font-size: 12px;
+	  color: white; 
+	  cursor: pointer;
 }
 
 .footer-icon-col-md-3 {
-  /* float: right; */
- 
-  padding-left: 25px;
+	  /* float: right; 
+	 
+	  padding-left: 25px;*/
 }
 
 .footer-icon-container{
-  padding-top: 15px;
+  	padding-top: 15px;
 }
 
 
@@ -126,18 +130,20 @@ div.footeremail:hover{
 }
 
 .footer-wrapper {
-  width: 100%;
-  height: 48px;
-  background-color: #FAFAFA;
-  z-index: 9999;
-  border-top: 1px solid #E5E5E5;
-  font-family:'OpenSans';
-  bottom:0;
+	  width: 100%;
+	  height: 48px;
+	  background-color: #FAFAFA;
+	  z-index: 9999;
+	  border-top: 1px solid #E5E5E5;
+	  font-family:'OpenSans';
+	  bottom:0;
 }
 .footer-newfi-image {
     background: url(../images/newfi_logo_big.png) no-repeat center;
     height: 51px;
-    background-size: 35%;
+    background-size: 100%;
+    /* height: 51px; */
+    width: 25%;
 }
 
 .footer-newfi-information {
@@ -146,7 +152,7 @@ div.footeremail:hover{
     font-size: 13px;
     text-align: left;
     /* margin-right: 0px; */
-    padding-left: 96px;
+   /*  padding-left: 96px; */
     color: white;
 }
 
@@ -162,7 +168,7 @@ p.footer-subtxt {
     font-size: 12px;
     text-align: left;
     margin: 0px;
-    margin-left: 98px;
+    /* margin-left: 98px; */
     color: white;
 }
 
@@ -259,4 +265,83 @@ div#footeHomeImage {
     width: 20px;    
     line-height: 17px;    
     margin-left: 37px;
+}
+
+/*footer-responsive-code*/
+@media (max-width: 475px) {
+	.footer-col-md-3{
+		float:none;
+		padding-left: 26px;			
+	}
+	.footer-container-text{
+		float:none;
+		padding: 15px 0px 0px 0px;
+	
+		width: 45%;
+}
+	.footer-container-text2{
+		float: none;
+		padding: 0px 0px 0 0;
+	}
+	.footer-icon-col-md-3{
+	    float:none;
+		
+	    padding: 15px 0 0 30px;
+	}
+}
+
+@media (min-width: 476px) and (max-width: 767px) {
+
+	.footer-col-md-3{
+	float: none;
+	margin: 0;	
+	padding-left: 26px;		
+	}
+	.footer-container-text{
+		float:left;
+		padding-left: 0px;
+		padding-right:10px;
+	}
+	.footer-container-text2{
+		float:left;
+		padding-left: 0;
+		padding-right:10px;
+	}
+	.footer-icon-col-md-3{
+	    float:none;
+		
+	    padding-left: 29px;
+		padding-right:10px;
+	}
+	.footer-newfi-image{
+		width:50%;
+	}
+}
+
+@media  (min-width: 768px) and (max-width: 991px) {
+	body{
+		overflow-x: hidden;
+	}
+	.footer-col-md-3{
+		width:16%;	
+		padding-left: 26px;	
+	}
+	.footer-container-text{
+		float:left;
+		padding-left: 10px;
+		padding-right:10px;
+	}
+	.footer-container-text2{
+		float:left;
+		padding-left: 10px;
+		padding-right:10px;
+	}
+	.footer-icon-col-md-3{
+	    float:none;
+        padding-left: 10px;
+		padding-right:10px;
+	}
+	.footer-newfi-image{
+		width:50%;
+	}
 }

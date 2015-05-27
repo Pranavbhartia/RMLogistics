@@ -277,7 +277,7 @@ function getMessageDashboardWrapper() {
 					{
 						"class" : "message-cont-textinput",
 						"id" : "textareaParent",
-						"placeholder" : "Type your message here. Recipients are hightlighted with blue circle, click to toggle. When done click send"
+						"placeholder" : "Type your message here. Recipients are highlighted with blue circle, click to toggle. When finished click send"
 					});
 
 	textContainer.append(textBox);

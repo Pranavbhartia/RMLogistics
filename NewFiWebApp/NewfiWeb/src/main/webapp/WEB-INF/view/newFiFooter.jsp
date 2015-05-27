@@ -2,7 +2,7 @@
    <section class="section swatch-black">
       <div class="footer-container">
          <div class="row footer-element-normal-top footer-element-normal-bottom">
-            <div class="footer-col-md-3 float-left">
+            <div class="footer-col-md-3 column-one">
                <div id="text-3" class="sidebar-widget  widget_text">
                   <h3 class="footer-sidebar-header footer-border-width">Links</h3>
                   <div class="textwidget">
@@ -22,47 +22,8 @@
             </div>
             <a>
             </a>
-<!--             <div class="footer-col-md-3 float-left">
-               <a></a>
-               <div id="sticky-posts-2" class="sidebar-widget  widget_recent_entries sidebar-widget  widget_ultimate_posts">
-                  <a>
-                     <h3 class="footer-sidebar-header footer-border-width">Careers</h3>
-                  </a>
-                  <ul class="footer-order-list">
-                     <a>
-                     </a>
-                     <li class=" footer-list clearfix">
-                        <a>
-                        </a>
-                        <div class="upw-content">
-                           <a>
-                           </a>
-                           <p class="post-title"><a>
-                              </a><a class="footer-anchor" href="http://www.nexeraholding.com/careers/call-center-loan-officer/" title="Call Center Loan Officer">
-                              Call Center Loan Officer            </a>
-                           </p>
-                        </div>
-                     </li>
-                     <li class=" footer-list clearfix">
-                        <div class="upw-content">
-                           <p class="post-title">
-                              <a class="footer-anchor" href="http://www.nexeraholding.com/careers/senior-underwriter/" title="Senior Underwriter">
-                              Senior Underwriter            </a>
-                           </p>
-                        </div>
-                     </li>
-                     <li class="footer-list clearfix">
-                        <div class="upw-content">
-                           <p class="post-title">
-                              <a class="footer-anchor" href="http://www.nexeraholding.com/careers/fundershipper/" title="Funder/Shipper">
-                              Funder/Shipper            </a>
-                           </p>
-                        </div>
-                     </li>
-                  </ul>
-               </div>
-            </div> -->
-            <div class="footer-col-md-3 float-left">
+
+            <div class="footer-col-md-3 column-two">
                <div id="text-4" class="sidebar-widget  widget_text">
                   <h3 class="footer-sidebar-header footer-border-width">Legal</h3>
                   <div class="textwidget">
@@ -78,13 +39,13 @@
                </div>
             </div>
             
-           <div class="footer-col-md-3 float-left">
+           <div class="footer-col-md-3 column-three">
                <div class="footer-newfi-image"></div> 
                <div class="footer-newfi-information">a new way to finance your home</div>
                <div class="footer-newfi-information-subtxt">
                <p class="footer-subtxt">2200 Powell Street, Suite 340</p>
                <p class="footer-subtxt">Emeryville, CA 94608</p>
-               <p class="footer-subtxt">Call now 1-888-316-3934</p></div>
+               <p class="footer-subtxt">888-316-3934</p></div>
 
             </div>
             <div class="footer-icon-col-md-3">

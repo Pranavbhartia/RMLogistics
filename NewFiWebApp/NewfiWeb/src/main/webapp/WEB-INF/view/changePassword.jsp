@@ -35,8 +35,8 @@
 							<div class="err-msg hide"></div>
 				            </div>
 							<div class="forget-pass-btn-wrapper clearfix">
-                                 <div class="cancel-btn float-left" onclick="window.location='./'">Cancel</div>
-					             <div class="reset-password float-right" onclick="$('#changePwdForm').submit();">Reset Password</div>
+                                 <div class="cancel-btn color-change float-left" onclick="window.location='./'">Cancel</div>
+					             <div class="reset-password color-change float-right" onclick="$('#changePwdForm').submit();">Reset Password</div>
 				            </div>											
 						</form>
 					</div>
@@ -108,7 +108,8 @@ $('#changePwdForm').submit(function(event){
 	            window.location.href = data;            
 	        },
 	        error: function(data) {           
-	            showErrorToastMessage("error while creating user");
+	            /* showErrorToastMessage("error while creating user"); */
+	            showErrorToastMessage(changePasswordErrorMessage);
 	            hideOverlay();
 	        }
 	    });
