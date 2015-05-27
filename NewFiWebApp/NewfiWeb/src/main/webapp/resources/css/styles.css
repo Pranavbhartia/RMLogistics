@@ -3241,6 +3241,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: 2px;
 	margin-top: -4px;
+	-ms-transform: rotate(135deg); 
+	-webkit-transform : rotate( 135deg);
+	-moz-transform : rotate( 135deg);
+	-o-transform : rotate( 135deg);
 	transform: rotate(135deg);
 	border-bottom-width: 14px;
 }
@@ -3264,6 +3268,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: 2px;
 	margin-top: -4px;
+	-ms-transform: rotate(135deg); 
+	-webkit-transform : rotate( 135deg);
+	-moz-transform : rotate( 135deg);
+	-o-transform : rotate( 135deg);
 	transform: rotate(135deg);
 	border-bottom-width: 15px;
 	z-index: -1;
@@ -3283,6 +3291,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: -4px;
 	margin-top: -5px;
+	-ms-transform: rotate(45deg); 
+	-webkit-transform : rotate( 45deg);
+	-moz-transform : rotate( 45deg);
+	-o-transform : rotate( 45deg);
 	transform: rotate(45deg);
 	border-top-width: 14px;
 }
@@ -3306,6 +3318,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: -5px;
 	margin-top: -6px;
+	-ms-transform: rotate(45deg); 
+	-webkit-transform : rotate( 45deg);
+	-moz-transform : rotate( 45deg);
+	-o-transform : rotate( 45deg);
 	transform: rotate(45deg);
 	border-top-width: 15px;
 	z-index: -1;

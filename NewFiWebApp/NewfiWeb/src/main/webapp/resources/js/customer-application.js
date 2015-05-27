@@ -297,7 +297,9 @@ function getContextApplicationSelectQues(contxt) {
 
     var selectedOption = $('<div>').attr({
         "class": "app-option-selected"
-    }).html("Select One").on('click', function() {
+    }).html("Select One").on('click', function(e) {
+    	e.stopPropagation();
+    	$('.app-dropdown-cont').hide();
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
 
@@ -364,7 +366,9 @@ function getApplicationSelectQues(question,val) {
 
     var selectedOption = $('<div>').attr({
         "class": "app-option-selected"
-    }).html("Select One").on('click', function() {
+    }).html("Select One").on('click', function(e) {
+    	e.stopPropagation();
+    	$('.app-dropdown-cont').hide();
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
 
@@ -4309,7 +4313,9 @@ function getYearMonthOptionContainer(contxt){
     	 "class": "app-option-selected"
     }).data("value",options[0].value)
     .text(options[0].text)
-    .on('click', function() {
+    .on('click', function(e) {
+    	e.stopPropagation();
+    	$('.app-dropdown-cont').hide();
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
 
@@ -5606,3 +5612,7 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
         
     });
 }
+
+$(document).on('click',function(){
+	$('.app-dropdown-cont').hide();
+});
