@@ -338,3 +338,9 @@
 .cust-eng{
 	position:fixed;
 }
+.hdr-contact-icon{
+	  background: url(../images/phone.png) no-repeat center;
+	  width: 15px;
+	  height: 15px;
+	  padding: 25px 1px;
+}
