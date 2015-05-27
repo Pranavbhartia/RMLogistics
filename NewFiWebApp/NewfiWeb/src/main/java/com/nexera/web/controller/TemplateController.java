@@ -235,13 +235,14 @@ public class TemplateController extends DefaultController {
 			mav.addObject("userObject", userVO);
 			String userRole = userVO.getRoleName();
 			mav.addObject("userRole", userRole);
+			mav.setViewName("registerNew");
 		} catch (DatabaseException | NoRecordsFetchedException e) {
 			// TODO Auto-generated catch block
 			LOG.error("Error retrieving information related to username"
 			        + userName, e);
+			mav.setViewName("404");
 		}
 
-		mav.setViewName("registerNew");
 		return mav;
 	}
 
