@@ -151,7 +151,8 @@ public class ApplicationFormRestService {
 	}
 
 	@RequestMapping(value = "/pullTrimergeScore/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody String getTrimergeScore(@PathVariable int loanID) {
+	public @ResponseBody CommonResponseVO getTrimergeScore(
+	        @PathVariable int loanID) {
 		LOG.debug("Inside pullTrimergeScore");
 		String status = null;
 		LoanVO loanVO = loanService.getLoanByID(loanID);
@@ -199,7 +200,8 @@ public class ApplicationFormRestService {
 			status = "Unable to find the loan for this id";
 			LOG.error(status);
 		}
-		return status;
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(status);
+		return responseVO;
 	}
 
 	@RequestMapping(value = "/createLoan", method = RequestMethod.POST)
