@@ -1662,6 +1662,51 @@ function paintUserNameDropDown(values, hideAddUser) {
 		}
 		
 	}
+	var addUserdropDownRow = $('<div>')
+	.attr({
+		"id" : "add-member-user",
+		"class" : "add-member-dropdown-row"
+	})
+	.html("Add New User")
+	.on(
+			'click',
+			function(event) {
+
+				event.stopPropagation();
+				var callback = showAddUserPopUp;
+
+				var memberType = $('#add-memeber-user-type');
+				var userRoleBased = memberType.attr("userRoleBased")
+				var code = memberType.attr("code")
+				if (userRoleBased == "false") {
+					if (code == "TITLE_COMPANY")
+						callback = function() {
+							var context;
+							if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+								context = getCreateTitleCompanyContext(newfiObject.user.defaultLoanId);
+							else
+								context = getCreateTitleCompanyContext(selectedUserDetail.loanID);
+
+							context.showCreateTitleCompanyPopup();
+
+						}
+					else if (code == "HOME_OWN_INS")
+						callback = function() {
+							var context;
+							if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+								context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+							else
+								context = getCreateHomeOwnInsCompanyContext(selectedUserDetail.loanID);
+
+							context.showCreateCompanyPopup();
+						}
+
+				}
+				callback(event);
+
+			});
+		if (!hideAddUser)
+				dropdownCont.append(addUserdropDownRow);
 
 	if (values != undefined && values.length > 0) {
 		for (var i = 0; i < values.length; i++) {
@@ -1722,51 +1767,7 @@ function paintUserNameDropDown(values, hideAddUser) {
 		dropdownCont.append(dropDownRow);
 	}
 
-	var addUserdropDownRow = $('<div>')
-			.attr({
-				"id" : "add-member-user",
-				"class" : "add-member-dropdown-row"
-			})
-			.html("Add New User")
-			.on(
-					'click',
-					function(event) {
-
-						event.stopPropagation();
-						var callback = showAddUserPopUp;
-
-						var memberType = $('#add-memeber-user-type');
-						var userRoleBased = memberType.attr("userRoleBased")
-						var code = memberType.attr("code")
-						if (userRoleBased == "false") {
-							if (code == "TITLE_COMPANY")
-								callback = function() {
-									var context;
-									if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-										context = getCreateTitleCompanyContext(newfiObject.user.defaultLoanId);
-									else
-										context = getCreateTitleCompanyContext(selectedUserDetail.loanID);
-
-									context.showCreateTitleCompanyPopup();
-
-								}
-							else if (code == "HOME_OWN_INS")
-								callback = function() {
-									var context;
-									if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-										context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
-									else
-										context = getCreateHomeOwnInsCompanyContext(selectedUserDetail.loanID);
-
-									context.showCreateCompanyPopup();
-								}
-
-						}
-						callback(event);
-
-					});
-	if (!hideAddUser)
-		dropdownCont.append(addUserdropDownRow);
+	
 }
 
 $(document).click(function() {
