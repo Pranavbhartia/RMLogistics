@@ -769,6 +769,19 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
+	public Integer updateNMLS(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.nmlsID = :nmlsID WHERE internalusr.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("id", user.getInternalUserDetail().getId());
+		query.setParameter("nmlsID", user.getInternalUserDetail()
+		        .getNmlsID());
+		int result = query.executeUpdate();
+		LOG.info("updated Successfully");
+		return result;
+	}
+
+	@Override
 	public Integer updateLqbProfile(User user) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword "
