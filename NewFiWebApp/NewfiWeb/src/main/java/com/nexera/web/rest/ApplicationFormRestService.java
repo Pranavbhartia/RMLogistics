@@ -35,6 +35,7 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
@@ -161,12 +162,16 @@ public class ApplicationFormRestService {
 		String status = null;
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		if (loanVO != null) {
-			LoanAppFormVO loaAppFormVO = loanVO.getLoanAppForms().get(0);
+			Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
+			LoanAppFormVO loaAppFormVO = loanAppFormService
+			        .getLoanAppFormByLoan(loan);
+
 			if (loaAppFormVO != null) {
 				if (loanVO.getLqbFileId() != null) {
 					LOG.debug("Getting token for loan manager");
 					String sTicket = null;
 					try {
+
 						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 					} catch (Exception e) {
 						LOG.error("Exception caught while generating ticket "

@@ -6,6 +6,7 @@
 <script src="resources/js/moment.min.js"></script>
 <script src="resources/js/bootstrap-datetimepicker.js"></script>
 <script src="resources/js/perfect-scrollbar.js"></script>
+<script src="resources/js/jquery.mask.js"></script>
 <script src="resources/js/common.js"></script>
 <script src="resources/js/script.js"></script>
 <script src="resources/js/messageDashboard.js"></script>
@@ -40,7 +41,12 @@
 <script src="resources/js/numericInput.js"></script>
 <script src="resources/js/validation.js"></script>
 <script src="resources/js/message.js"></script>
-<script src="resources/js/include/masked-input.js"></script>
+<!-- <script src="resources/js/include/masked-input.js"></script> -->
 <div id="dialog" >
 </div>
-
+<script>
+	resizeHeaderWidth();
+	$(window).resize(function() {
+		resizeHeaderWidth();	
+	});
+</script>

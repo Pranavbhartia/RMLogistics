@@ -47,8 +47,7 @@ import com.nexera.core.utility.NexeraUtility;
 @Scope(value = "prototype")
 public class EmailProcessor implements Runnable {
 
-	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(EmailProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger("batchJobs");
 
 	private Message message;
 

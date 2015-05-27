@@ -827,7 +827,10 @@ function getSchedulerContainer(contxt, tempData) {
 	});
 	var col3Btn = $('<div>').attr({
 		"class" : "msg-btn-clear float-left"
-	}).html("Clear");
+	}).html("Clear")
+	.click(function(){
+		$('#sch-msg-message').val('');
+	});
 	col3.append(col3Btn);
 	buttonRow.append(col1).append(col2).append(col3);
 	container.append(header).append(dtPickerRow).append(messageBox).append(
@@ -970,7 +973,10 @@ function appendTakeNoteContainer(customer) {
 
 	var col3Btn = $('<div>').attr({
 		"class" : "msg-btn-clear float-left"
-	}).html("Clear");
+	}).html("Clear")
+	.click(function() {
+		$('.note-msg-textbox').val('');
+	});
 	col3.append(col3Btn);
 	col3.click(function(e) {
 		$("#" + customer.loanID + "_msgBody").val('');
@@ -2339,7 +2345,7 @@ function appendZipEditRow() {
 
 		$(this).trigger('keydown');
 		$(this).autocomplete("search");
-	});
+	}).mask('99999');
 
 	var errMessage = $('<div>').attr({
 		"class" : "err-msg hide"

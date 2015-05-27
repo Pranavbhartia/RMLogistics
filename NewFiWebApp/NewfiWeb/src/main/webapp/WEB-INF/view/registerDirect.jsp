@@ -61,7 +61,7 @@
 					<div class="reg-row-lc float-left">Your email id</div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-email">
-							<input class="reg-input" placeholder="Email" id="emailID">
+							<input type="email" class="reg-input" placeholder="Email" id="emailID">
 							<div class="err-msg hide"></div>
 						</div>
 					</div>
@@ -80,7 +80,12 @@
 			</div>			
 		</div>
 	</div>
-	
+	<script>
+		resizeHeaderWidth();
+		$(window).resize(function() {
+			resizeHeaderWidth();	
+		});
+	</script>
 	<script>
 		$(document).ready(function() {
 			globalBinder();

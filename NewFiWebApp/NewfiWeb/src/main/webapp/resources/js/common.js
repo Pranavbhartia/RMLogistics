@@ -1011,3 +1011,8 @@ function goToLogin(){
 	
 	window.location='./';
 }
+
+function resizeHeaderWidth(){
+	var windowWidth = $(window).width();
+	$('.header-wrapper').css("width", windowWidth + 'px');
+}

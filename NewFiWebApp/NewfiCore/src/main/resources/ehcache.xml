@@ -14,7 +14,7 @@
 
 	<cache name="teaserRate" eternal="false" maxElementsInMemory="100"
 		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
-		timeToLiveSeconds="900" memoryStoreEvictionPolicy="LRU" />
+		timeToLiveSeconds="2000" memoryStoreEvictionPolicy="LRU" />
 
 	<cache name="lqbAuthToken" eternal="false" maxElementsInMemory="100"
 		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"

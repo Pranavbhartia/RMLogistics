@@ -1,7 +1,5 @@
 //JavaScript functions for customer engagement pages
 
-
-
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {
         type: question.type,

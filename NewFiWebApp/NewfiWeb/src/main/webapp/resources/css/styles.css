@@ -36,6 +36,10 @@ body {
 	color: #606060;
 }
 
+footer{
+	overflow: hidden;
+}
+
 input,textarea {
 	outline: none;
 	resize: none !important;
@@ -2907,22 +2911,21 @@ input.calc-input {
 }
 
 .login-submit-button {
-	/* width: 100%; */
 	height: 40px;
+	margin: 0 auto;
+	clear: both;
+	display: block;
 	margin-bottom: 10px;
 	line-height: 40px;
 	color: #fff;
-	background-color: rgba(24,72,141,0.9);
-	/*background-color: #6c9f2e;*/
+	background-color: rgba(24, 72, 141, 0.9);
 	border: 1px #fff solid;
 	border-radius: 3px;
 	text-align: center;
-	cursor: pointer;
-/*	font-size: 20px;*/
 	font-size: 16px;
 	width: 161px;
-	margin-left: 125px;
 }
+
 .login-submit-button:hover{
 	 background: #F47521;
 }
@@ -5064,6 +5067,7 @@ input.calc-input {
 
 .login-row-rc {
     width: 60%;
+    margin: 0 auto;
 }
 
 .display-title-bottom-subtxt {
