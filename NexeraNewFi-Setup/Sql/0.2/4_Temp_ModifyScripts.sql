@@ -432,5 +432,9 @@ INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`
 VALUES ('41','WELCOME_TO_NEWFI_HOME_OWNER_INSURANCE_COMPANY_TEMPLATE_ID','Welcome mail for home insurance owner company','2015-04-10 12:53:34','0e2334f7-07ce-4992-8c14-a98ebd3b8258');
 
 
+# Utsav on 27th May
+INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
+VALUES ('42','PRE_QUAL_LETTER_TEMPLATE_ID','Prequal Letter Template','2015-04-10 12:53:34','ef40dd3a-acd4-41b2-9c98-72ce2d4eb414');
+
 
 
