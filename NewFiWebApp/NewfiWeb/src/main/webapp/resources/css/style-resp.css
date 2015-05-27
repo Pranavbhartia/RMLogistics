@@ -359,6 +359,7 @@
 	}
 	.ce-option{
 		width: 100%;
+		font-size: 18px;
 	}
 	.reg-input-row {
 		/* width: 400px; */
@@ -985,7 +986,7 @@
 		height: 10px;
 	}
 	.cus-name{
-		padding-left: 10px;
+		padding-left: 5px;
 	}
 	.cus-img-icn{
 		width: 25px;
@@ -994,7 +995,7 @@
 		background-size:25px auto;
 	}
 	.filer-dropdown{
-		width:70px;
+		width:85px;
 		margin-left: 5px;
 		padding-left: 10px;
 	}
@@ -1194,6 +1195,13 @@
 	}
 	.alert-popup-cont-wrapper:before {
 		right: 93px;
+	}
+	.filter-dropdown-item{
+		padding-left: 10px;
+		font-size: 11px;
+	}
+	.soft-menu-icon{
+		margin-right: 10px;
 	}
 }
 

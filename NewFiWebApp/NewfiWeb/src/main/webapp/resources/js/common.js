@@ -377,9 +377,8 @@ function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
 	var statusIcnWidth = $('.onl-status-icn').width();
 	var cusImgWidth = $('.cus-img-icn').width();
-	var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 5;
-	// $('.cus-name').outerWidth(cusNameWidth);
-	$('.cus-name').attr('style', 'max-width:' + cusNameWidth);
+	var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 40;
+	$('.cus-name').attr('style', 'width:' + cusNameWidth + 'px');
 }
 
 // Function to adjust center panel in customer Engagement Page
