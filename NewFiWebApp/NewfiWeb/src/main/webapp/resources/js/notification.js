@@ -825,7 +825,8 @@ function getHashLocationForNotification(type,loanId){
 			case "NEEDS_LIST_SET_TYPE":
 				return "#myLoan/upload-my-needs";
 			case "VERIFY_EMAIL":
-				return "#myProfile";
+				resendEmail();
+				return "";
 		}
 		return "#myLoan/my-loan-progress";
 	}else{
@@ -847,11 +848,17 @@ function getHashLocationForNotification(type,loanId){
 				break;
 			case "NEEDS_LIST_SET_TYPE":
 				return baseHash+"needs";
-			case "VERIFY_EMAIL":
+			case "VERIFY_EMAIL":				
 				return baseHash+"detail";
 		}
 		return baseHash+"progress";
 	}
+}
+function resendEmail()
+{
+	var user=new Object();
+	user.emailId=newfiObject.user.emailId;
+	ajaxRequest("rest/userprofile/forgetPassword"+"?resend=true", "POST", "json", JSON.stringify(user));
 }
 function addClickHandlerToNotification(element,notification){
 	var hashLocation=getHashLocationForNotification(notification.notificationType,notification.loanID)
