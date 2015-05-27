@@ -599,11 +599,12 @@ function createDropZone(needID) {
 						}
 						unSupportedFile = new Array();
 						console.info(unSupportedFile);
-
+						$('#overlay-loader').hide();
 					},
 					addedfile : function() {
 						showOverleyMessage("This can take a minute,<br/> we are uploading your documents to our secure storage folder.");
 						$('#file-upload-icn').addClass('file-upload-loading');
+						$('#overlay-loader').show();
 					}
 				});
 	} else {
