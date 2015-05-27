@@ -1668,7 +1668,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		
 		Template template = null;
 		
-		template = templateService.getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI);
+		template = templateService.getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PRE_QUAL_LETTER);
 		
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
