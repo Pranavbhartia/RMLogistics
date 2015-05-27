@@ -150,6 +150,44 @@ public class ApplicationFormRestService {
 		return new Gson().toJson(responseVO);
 	}
 
+	@RequestMapping(value = "/pullTrimergeScore/{loanNumber}", method = RequestMethod.POST)
+	public @ResponseBody String getTrimergeScore(String appFormData,
+	        @PathVariable String loanNumber,
+	        HttpServletRequest httpServletRequest) {
+		LOG.debug("Inside pullTrimergeScore" + appFormData);
+		String status = null;
+		Gson gson = new Gson();
+		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+		        LoanAppFormVO.class);
+		LOG.debug("Getting token for loan manager");
+		String sTicket = null;
+		try {
+			sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+		} catch (Exception e) {
+			LOG.error("Exception caught while generating ticket "
+			        + e.getMessage());
+			status = "Unable to fetch authentication ticket, please try after sometime";
+			sTicket = null;
+		}
+		if (sTicket != null) {
+			LOG.debug("Token retrieved for loan manager" + sTicket);
+			JSONObject requestObject = lQBRequestUtil.pullTrimergeCreditScore(
+			        loanNumber, loaAppFormVO, sTicket);
+			if (requestObject != null) {
+				String response = invokeRest(requestObject.toString());
+				LOG.debug("Response for pulltrimergescore is " + response);
+				if (response != null && !response.contains("error")) {
+					status = "Details to pull trimerge score has been saved, you may see the updated score after a while";
+				} else {
+					status = "error while saving your request to pull trimerge score";
+				}
+			}
+
+		}
+
+		return status;
+	}
+
 	@RequestMapping(value = "/createLoan", method = RequestMethod.POST)
 	public @ResponseBody String createLoan(String appFormData,
 	        HttpServletRequest httpServletRequest) {
@@ -202,7 +240,8 @@ public class ApplicationFormRestService {
 			e.printStackTrace();
 			lockRateData = "error";
 		}
-		if (lockRateData == null || lockRateData.equals("error")||lockRateData.equals("")){
+		if (lockRateData == null || lockRateData.equals("error")
+		        || lockRateData.equals("")) {
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
