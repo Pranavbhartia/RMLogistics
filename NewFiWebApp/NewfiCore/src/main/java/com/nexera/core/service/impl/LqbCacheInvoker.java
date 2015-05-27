@@ -101,7 +101,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			 */
 			boolean loanMangerFound = false;
 			List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
-			if (null != loanTeam && loanTeam.size() > 0)
+			if (null != loanTeam && loanTeam.size() > 0){
 				for (UserVO user : loanTeam) {
 					if (null != user.getInternalUserDetail()
 					        && user.getInternalUserDetail()
@@ -117,6 +117,7 @@ public class LqbCacheInvoker implements LqbInterface {
 						break;
 					}
 				}
+		   }
 			/* This is the case when LM is not found */
 			if (!loanMangerFound) {
 				for (UserVO user : loanTeam) {

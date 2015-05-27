@@ -1,6 +1,7 @@
 package com.nexera.web.rest.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,6 +9,9 @@ import java.net.MalformedURLException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,7 +27,9 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
 
 
@@ -35,12 +41,12 @@ public class PreQualificationletter {
 	@Autowired
 	private UserProfileService userProfileService;
 
-	public  void sendPreQualificationletter(LoanAppFormVO loaAppFormVO,String lockRateData) {
+	public  void sendPreQualificationletter(LoanAppFormVO loaAppFormVO,String lockRateData, HttpServletRequest httpServletRequest) {
 	    
 	    ByteArrayOutputStream byteArrayOutputStream =  new ByteArrayOutputStream();
 		
 		JSONObject thirtyYearRateVoDataSet = thirtyYearRateVoDataSet(lockRateData);
-		createPdf(loaAppFormVO,thirtyYearRateVoDataSet,byteArrayOutputStream);
+		createPdf(loaAppFormVO,thirtyYearRateVoDataSet,byteArrayOutputStream,httpServletRequest);
 		try {
 	        userProfileService.sendEmailPreQualification(loaAppFormVO.getUser(),byteArrayOutputStream);
         } catch (InvalidInputException | UndeliveredEmailException e) {
@@ -74,18 +80,25 @@ public class PreQualificationletter {
 	} 
 
 	
-	public static void createPdf(LoanAppFormVO loaAppFormVO,JSONObject thirtyYearRateVoDataSet,OutputStream outputStream){
+	public static void createPdf(LoanAppFormVO loaAppFormVO,JSONObject thirtyYearRateVoDataSet,OutputStream outputStream, HttpServletRequest httpServletRequest){
 		
 		//OutputStream file;
 		Document document = new Document();
         try {
 	        //file = new FileOutputStream(new File("D:\\Abhishek-Project\\RareMile_Projects\\Nexera\\pdf\\test.pdf"));
 	        
+        	@SuppressWarnings("deprecation")
+            String basePath = httpServletRequest.getRealPath("/");
+        
+        	String absoluteFilePath = "";
+        	absoluteFilePath = basePath + File.separator + "resources" +File.separator +"images"+ File.separator+"newfi_logo_big.png";
+        	File file = new File(absoluteFilePath);
+        	
 			PdfWriter.getInstance(document, outputStream);
 	        
 			
 			//Inserting Image in PDF
-		     Image image = Image.getInstance ("D:\\Abhishek-Project\\RareMile_Projects\\Nexera\\pdf\\newFi1.png");
+		     Image image = Image.getInstance (file.getAbsolutePath());
 		    
 		     //Open Declaration void com.itextpdf.text.Image.scaleAbsolute(float newWidth, float newHeight)
 		     image.scaleAbsolute(120f, 37f);//image width,height
@@ -120,11 +133,28 @@ public class PreQualificationletter {
 			 String aPR = thirtyYearRateVoDataSet.getString("APR") +" %";
 			 String address = "TBB";
 			 
-			 String loanAdvisorName = "Loan Advisor First and Last Name";
+			 UserVO internalUser = findInternalUserDetailVO(loaAppFormVO);
+			 String loanAdvisorName ="";
+			 String loanAdvisor ="";
+			 String directPhoneNum ="Phone No:";
+			 String NMLS = "NMLS ID :";
 			 
-			 String loanAdvisor = "Senior Loan Advisor";
-			 String directPhoneNum = "9986173516";
-			 
+			 if(null!=internalUser){
+				 loanAdvisorName = internalUser.getDisplayName();
+			     loanAdvisor = "Senior Loan Advisor";
+			     if(null!= internalUser.getPhoneNumber() && internalUser.getPhoneNumber()!=" ")
+			    	 directPhoneNum = directPhoneNum + internalUser.getPhoneNumber();
+			     else{
+			    	 directPhoneNum ="";
+			     }
+			     if(null!= internalUser.getInternalUserDetail().getNmlsID())
+			    	 NMLS = NMLS + internalUser.getInternalUserDetail().getNmlsID();
+			     else{
+			    	 NMLS ="";
+			     }
+			 }else{
+				 loanAdvisorName ="Sales Manager";
+			 }
 			 
 			 
 			 String text = "Congratulations! Based on the financial information you provided newfi,  you have been pre-qualified for a loan with the following terms:";
@@ -211,6 +241,7 @@ public class PreQualificationletter {
 			 document.add(Chunk.NEWLINE);
 			 document.add(new Paragraph(loanAdvisorName));
 			 document.add(new Paragraph(loanAdvisor));
+			 document.add(new Paragraph(NMLS));
 			 document.add(new Paragraph(directPhoneNum));
 			 
 			 
@@ -255,9 +286,36 @@ public class PreQualificationletter {
 		
 	}
 		
-		public static void main(String[] args) {
-			System.out.println(dollerFormatedAmount("3000000"));
-        }
+		public static UserVO findInternalUserDetailVO(LoanAppFormVO loaAppFormVO){
+			
+			
+			UserVO internalUser = null;
+			List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
+			if (null != loanTeam && loanTeam.size() > 0){
+				for (UserVO user : loanTeam) {
+					if (null != user.getInternalUserDetail() && null!= user.getInternalUserDetail().getInternalUserRoleMasterVO() && user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleName().equalsIgnoreCase("LM")) {
+						/* this user would be either realtor or LM */
+						internalUser = user;
+						
+						break;
+					}
+				}
+		   }
+			return internalUser;
+		}
+		
+		
+		/*public static void main(String[] args) {
+			//System.out.println(dollerFormatedAmount("3000000"));
+			
+			String basePath = "D:/Abhishek-Project/RareMile_Projects/Nexera/Servers/apache-tomcat-7.0.34/webapps/NewfiWeb";
+	        
+        	String absoluteFilePath = "";
+        	absoluteFilePath = basePath + File.separator + "resources" +File.separator +"images"+ File.separator+"newfi_logo_big.png";
+        	File file = new File(absoluteFilePath);
+        	System.out.println(file.getAbsolutePath());
+			
+        }*/
 	
 
 }

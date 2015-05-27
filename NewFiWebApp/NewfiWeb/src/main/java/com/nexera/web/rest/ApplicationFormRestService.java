@@ -270,7 +270,7 @@ public class ApplicationFormRestService {
 					// in case of Purchase send a mail with PDF attachement
 					if(null!= loaAppFormVO.getLoanType() && loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("PUR")){
 						
-						preQualificationletter.sendPreQualificationletter(loaAppFormVO,lockRateData);
+						preQualificationletter.sendPreQualificationletter(loaAppFormVO,lockRateData,httpServletRequest);
 						
 						// send a pre-qualification mail
 					}
