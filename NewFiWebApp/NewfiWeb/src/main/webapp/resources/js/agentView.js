@@ -308,6 +308,27 @@ function appendAgentDashboardContainer() {
 		"class" : "agent-wrapper-header agent-wrapper-header-active"
 	}).html("Leads");
 
+	var text=$('<div>').attr({
+		"class" : " cust-profile-url float-right"
+	}).html("Add customer : ");	
+	
+		var emailInput = $('<input>').attr({
+			"class" : "cust-personal-info-header-url loan-detail-link",
+			"id" : "profileUrlId",
+			"readonly":"readonly",
+			"title":"Double click to copy",
+			"value":newfiObject.baseUrl+"us/"+newfiObject.user.username
+		}).on('click',function(){
+		window.open(newfiObject.baseUrl+"us/"+newfiObject.user.username)	;
+	});
+	
+	
+	if(newfiObject.user.userRole.roleDescription=="Realtor"){
+		 text.append(emailInput);
+		 leadsHeader.append(text);
+    
+	}
+
 	var leadsContainer = $('<div>').attr({
 		"id" : "leads-container",
 		"class" : "agent-wrapper-container"
