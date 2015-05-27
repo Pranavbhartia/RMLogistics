@@ -129,7 +129,6 @@ input[type="button"]:focus, button:focus {
 	top: 0;
 	width: 100%;
 	min-width:320px;
-	overflow:hidden;
 	height: 50px;
 	background-color: #428bca;
 	z-index: 9999;
