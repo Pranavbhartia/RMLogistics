@@ -1013,9 +1013,11 @@ function removeTeamItem(){
 }
 $(document).on('click', '.creditScoreClickableClass', function(e) {
 	e.stopImmediatePropagation();
-	var loanid=$(this).attr("loanid");
-	var textMessage="Are you sure you want to fetch Credit Score ?"
-	confirmFetchScore(textMessage, loanid)
+	if(newfiObject.user.userRole.roleCd=="INTERNAL"){
+		var loanid=$(this).attr("loanid");
+		var textMessage="Are you sure you want to fetch Credit Score ?"
+		confirmFetchScore(textMessage, loanid)
+	}
 });
 
 function confirmFetchScore(textMessage, loanID,callback) {
