@@ -129,4 +129,6 @@ public interface LoanDao extends GenericDao {
 	public LoanVO findLoanByLoanEmailId(String loanEmailId);
 
 	public Boolean checkIfLoanHasSalesManager(Long loanId);
+
+	public Loan findLoanByWorkflowExec(Integer workflowExecId);
 }

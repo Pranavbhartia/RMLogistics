@@ -268,6 +268,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 		return workflowMasterList;
 	}
 
-	
+	@Override
+	public WorkflowItemExec getWorkflowItemExecByID(int workflowItemExecId) {
+		return (WorkflowItemExec) workflowItemExecDao.load(
+		        WorkflowItemExec.class, workflowItemExecId);
+	}
 
 }

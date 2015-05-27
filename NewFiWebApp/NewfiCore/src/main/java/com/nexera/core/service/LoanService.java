@@ -189,4 +189,6 @@ public interface LoanService {
 
 	public void sendNoproductsAvailableEmail(UserVO userVO, int loanID);
 
+	public Loan getLoanByWorkflowItemExecId(int workflowItemExecId);
+
 }
