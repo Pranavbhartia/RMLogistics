@@ -102,7 +102,7 @@ function LoanPersonalInfoWrapper(user) {
 	var text=$('<div>').attr({
 		"class" : " cust-profile-url float-right"
 	}).html("Share this URL to refer: ");	
-	newfiObject.userProfileBaseUrl=user.userProfileBaseUrl;
+	
 	var emailInput = $('<input>').attr({
 		"class" : "cust-personal-info-header-url loan-detail-link",
 		"id" : "profileUrlId",
