@@ -87,7 +87,10 @@ import com.nexera.core.service.StateLookupService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.workflow.bean.WorkflowExec;
+import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.enums.WorkItemStatus;
+import com.nexera.workflow.service.WorkflowService;
 
 @Component
 public class LoanServiceImpl implements LoanService {
@@ -100,6 +103,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private SendEmailService sendEmailService;
+
+	@Autowired
+	private WorkflowService workflowService;
 
 	@Autowired
 	private TemplateService templateService;
@@ -1884,6 +1890,28 @@ public class LoanServiceImpl implements LoanService {
 	public Boolean checkIfLoanHasSalesManager(Long loanId) {
 		// TODO Auto-generated method stub
 		return loanDao.checkIfLoanHasSalesManager(loanId);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Loan getLoanByWorkflowItemExecId(int workflowItemExecId) {
+		LOG.debug("Inside method getLoanByWorkflowItemExecId");
+		Loan loan = null;
+		WorkflowItemExec workflowItemExec = workflowService
+		        .getWorkflowItemExecByID(workflowItemExecId);
+		if (workflowItemExec != null) {
+			WorkflowExec workflowExec = workflowItemExec.getParentWorkflow();
+			if (workflowExec != null) {
+				loan = findLoanByWorkflowExec(workflowExec);
+			}
+		}
+		return loan;
+	}
+
+	@Transactional(readOnly = true)
+	public Loan findLoanByWorkflowExec(WorkflowExec workflowExec) {
+		LOG.debug("Inside method findLoanByWorkflowExec");
+		return loanDao.findLoanByWorkflowExec(workflowExec.getId());
 	}
 
 }
