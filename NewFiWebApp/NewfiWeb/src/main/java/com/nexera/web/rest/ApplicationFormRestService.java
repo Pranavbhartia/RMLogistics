@@ -150,41 +150,55 @@ public class ApplicationFormRestService {
 		return new Gson().toJson(responseVO);
 	}
 
-	@RequestMapping(value = "/pullTrimergeScore/{loanNumber}", method = RequestMethod.POST)
-	public @ResponseBody String getTrimergeScore(String appFormData,
-	        @PathVariable String loanNumber,
-	        HttpServletRequest httpServletRequest) {
-		LOG.debug("Inside pullTrimergeScore" + appFormData);
+	@RequestMapping(value = "/pullTrimergeScore/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody String getTrimergeScore(@PathVariable int loanID) {
+		LOG.debug("Inside pullTrimergeScore");
 		String status = null;
-		Gson gson = new Gson();
-		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
-		        LoanAppFormVO.class);
-		LOG.debug("Getting token for loan manager");
-		String sTicket = null;
-		try {
-			sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-		} catch (Exception e) {
-			LOG.error("Exception caught while generating ticket "
-			        + e.getMessage());
-			status = "Unable to fetch authentication ticket, please try after sometime";
-			sTicket = null;
-		}
-		if (sTicket != null) {
-			LOG.debug("Token retrieved for loan manager" + sTicket);
-			JSONObject requestObject = lQBRequestUtil.pullTrimergeCreditScore(
-			        loanNumber, loaAppFormVO, sTicket);
-			if (requestObject != null) {
-				String response = invokeRest(requestObject.toString());
-				LOG.debug("Response for pulltrimergescore is " + response);
-				if (response != null && !response.contains("error")) {
-					status = "Details to pull trimerge score has been saved, you may see the updated score after a while";
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		if (loanVO != null) {
+			LoanAppFormVO loaAppFormVO = loanVO.getLoanAppForms().get(0);
+			if (loaAppFormVO != null) {
+				if (loanVO.getLqbFileId() != null) {
+					LOG.debug("Getting token for loan manager");
+					String sTicket = null;
+					try {
+						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+					} catch (Exception e) {
+						LOG.error("Exception caught while generating ticket "
+						        + e.getMessage());
+						status = "Unable to fetch authentication ticket, please try after sometime";
+						sTicket = null;
+					}
+					if (sTicket != null) {
+						LOG.debug("Token retrieved for loan manager" + sTicket);
+						JSONObject requestObject = lQBRequestUtil
+						        .pullTrimergeCreditScore(loanVO.getLqbFileId(),
+						                loaAppFormVO, sTicket);
+						if (requestObject != null) {
+							String response = invokeRest(requestObject
+							        .toString());
+							LOG.debug("Response for pulltrimergescore is "
+							        + response);
+							if (response != null && !response.contains("error")) {
+								status = "Details to pull trimerge score has been saved, you may see the updated score after a while";
+							} else {
+								status = "error while saving your request to pull trimerge score";
+							}
+						}
+
+					}
 				} else {
-					status = "error while saving your request to pull trimerge score";
+					status = "LQB Information Not Present";
+					LOG.error(status);
 				}
+			} else {
+				status = "Unable to fetch the loanappform";
+				LOG.error(status);
 			}
-
+		} else {
+			status = "Unable to find the loan for this id";
+			LOG.error(status);
 		}
-
 		return status;
 	}
 

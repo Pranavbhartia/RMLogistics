@@ -63,8 +63,9 @@ public class EmailProcessor implements Runnable {
 	@Value("${regex.pattern.3}")
 	private String regexPattern3;
 
-	@Value("${regex.pattern.4}")
-	private String regexPattern4;
+	/*
+	 * @Value("${regex.pattern.4}") private String regexPattern4;
+	 */
 
 	@Value("${regex.pattern.5}")
 	private String regexPattern5;
@@ -378,7 +379,7 @@ public class EmailProcessor implements Runnable {
 						regexPatternStrings.add(regexPattern1);
 						regexPatternStrings.add(regexPattern2);
 						regexPatternStrings.add(regexPattern3);
-						regexPatternStrings.add(regexPattern4);
+						/* regexPatternStrings.add(regexPattern4); */
 						regexPatternStrings.add(regexPattern5);
 						regexPatternStrings.add(regexPattern6);
 						regexPatternStrings.add(regexPattern7);
