@@ -108,7 +108,8 @@ $('#changePwdForm').submit(function(event){
 	            window.location.href = data;            
 	        },
 	        error: function(data) {           
-	            showErrorToastMessage("error while creating user");
+	            /* showErrorToastMessage("error while creating user"); */
+	            showErrorToastMessage(changePasswordErrorMessage);
 	            hideOverlay();
 	        }
 	    });
