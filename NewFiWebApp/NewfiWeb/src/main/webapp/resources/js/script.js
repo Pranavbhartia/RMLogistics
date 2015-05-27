@@ -376,11 +376,11 @@ function paintGettingToKnowPage() {
     });
     
     var prevBtn = $('<div>').attr({
-    	"class" : "slider-btn slider-prev-btn float-left"
+    	"class" : "slider-btn slider-prev-btn cep-button-color float-left"
     }).html('Previous');
     
     var nextBtn = $('<div>').attr({
-    	"class" : "slider-btn slider-next-btn float-right"
+    	"class" : "slider-btn slider-next-btn cep-button-color float-right"
     }).html('Next');
     
     btnWrapper.append(prevBtn).append(nextBtn);
@@ -540,7 +540,7 @@ function paintProfileCompleteStep2(user) {
         dataType: "json",
         success: function(data) {},
         error: function(error) {
-            alert("error" + error);
+            showErrorToastMessage(error);
         }
     });
     /*
@@ -766,7 +766,7 @@ function lockLoanRate(lockratedata){
                 if(message.indexOf("HOUR_CUTOFF")>=0){
                     message="Rates can be locked between : 08:30 AM PST - 04:00 PM PST";
                 }
-                alert(message);
+                showToastMessage(message);
             }else{
             	rateLockRequestedFlag = true;
         	    $('input').attr("readonly","true");
@@ -782,7 +782,7 @@ function lockLoanRate(lockratedata){
             //need to redirect to milestone page/reload the page
         },
         error: function() {
-            alert("error");
+            showErrorToastMessage("error");
             $('#overlay-loader').hide(); 
         }
     });
@@ -938,7 +938,7 @@ function fetchLockRatedata(loanNumber,appUserDetailsParam)
 			clearOverlayMessage();
 		},
 		error:function(erro){
-			alert("error inside createLoan ");
+			showErrorToastMessage(errorInCreateLoan);
 			 $('#overlay-loader').hide();
 		}
 		
@@ -2337,7 +2337,7 @@ $(document).on('click', '#alert-notification-btn', function(e) {
             showAlertNotificationPopup();
         }
     } else {
-        appendAlertNotificationPopup();
+        	appendAlertNotificationPopup();
     }
 });
 
@@ -2875,7 +2875,7 @@ function saveTaxAndInsurance(){
              $('#overlay-loader').hide();
         },
         error:function(erro){
-            alert("error inside createLoan ");
+            showErrorToastMessage(errorInCreateLoan);
              $('#overlay-loader').hide();
         }
         
