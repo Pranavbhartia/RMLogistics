@@ -63,9 +63,15 @@ function getCustomerSecondaryLeftNav() {
     
     if(newfi.appUserDetails){
         try{
-        	var tutorialStatus = newfiObject.user.customerDetail.tutorialStatus;
+
+        	var tutorialStatus = null;
+        	//if(newfi.appUserDetails instanceof String)
+             tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
+        	//else
+        		//tutorialStatus = newfi.appUserDetails.user.customerDetail.tutorialStatus;
+
         	
-            if(tutorialStatus && tutorialStatus==true || removedKnwoNewFi ==true){
+            if(tutorialStatus==true || removedKnwoNewFi ==true){
             	flagKnowNewFi=false;
             }
         }catch(e){

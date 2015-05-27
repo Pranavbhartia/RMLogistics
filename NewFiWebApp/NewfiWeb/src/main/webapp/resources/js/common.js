@@ -993,7 +993,6 @@ function finishedTutorial(element, url){
 			if(data.error== null)
 				{
 				removedKnwoNewFi = true;
-				newfiObject.user.customerDetail.tutorialStatus =  true;
 				//showToastMessage("Successfully updated");
 			}else{
 				showErrorToastMessage(data.error.message);
