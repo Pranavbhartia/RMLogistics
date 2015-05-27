@@ -2046,14 +2046,14 @@ function getTeamListTableRow(user, loanID) {
 			.append(trCol5);
 }
 
-function confirmRemoveUser(textMessage, input, loanID) {
+function confirmRemoveUser(textMessage, input, loanID,callback) {
 
 	$('#overlay-confirm').off();
 	$('#overlay-cancel').off();
 
 	$('#overlay-popup-txt').html(textMessage);
 	$('#overlay-confirm').on('click', function() {
-		removeUserFromLoanTeam(input, loanID);
+		removeUserFromLoanTeam(input, loanID,callback);
 		$('#overlay-popup').hide();
 	});
 
@@ -3746,7 +3746,7 @@ function getLoanDetails(loanID) {
 	ajaxRequest("rest/loan/" + loanID, "GET", "json", {}, paintAgentLoanPage);
 }
 
-function removeUserFromLoanTeam(input, loanID) {
+function removeUserFromLoanTeam(input, loanID,callback) {
 
 	var userID = input.userID;
 	var homeOwnInsID = input.homeOwnInsID;
@@ -3755,10 +3755,12 @@ function removeUserFromLoanTeam(input, loanID) {
 			+ homeOwnInsID + "&titleCompanyID=" + titleCompanyID;
 
 	ajaxRequest("rest/loan/" + loanID + "/team?" + queryString, "DELETE",
-			"json", {}, onReturnOfRemoveUserFromLoanTeam);
+			"json", {},function(response){
+				onReturnOfRemoveUserFromLoanTeam(response,callback);
+			});
 }
 
-function onReturnOfRemoveUserFromLoanTeam(data) {
+function onReturnOfRemoveUserFromLoanTeam(data,callback) {
 
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
@@ -3785,6 +3787,8 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 				+ "][loanid=" + loanID + "]");
 
 	teamMemberRow.parent().parent().remove();
+	if(callback)
+		callback();
 }
 
 function addUserToLoanTeam(input, loanID, callback) {

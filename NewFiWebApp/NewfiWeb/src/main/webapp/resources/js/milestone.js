@@ -918,7 +918,10 @@ function getMilestoneTeamMembeTableRow(user,floatCls){
 				&& user.internalUserDetail.internalUserRoleMasterVO.roleDescription)
 			roleLabel = user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
 	}
-	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id,floatCls);
+	var custFlag=false;
+	if(user.userRole.roleCd=="CUSTOMER")
+		custFlag=true;
+	return getMilestoneTeamMemberRow(dispName, roleLabel,user.id,floatCls,custFlag,user);
 }
 
 function getRightLeftReference (workItemId)
@@ -949,7 +952,7 @@ function getMilestoneTeamMembeTableHeader(floatCls) {
 }
 
 // Function to get milestone team member row
-function getMilestoneTeamMemberRow(name, title,userID,floatCls) {
+function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDetails) {
 	var row = $('<div>').attr({
 		"class" : "ms-team-member-tr clearfix "+floatCls,
 		"userID":userID
@@ -962,10 +965,52 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls) {
 	var titleCol = $('<div>').attr({
 		"class" : "ms-team-member-tr-col2 float-left"
 	}).html(title);
+	var userid=undefined;
+	var homeOwnInsID=undefined;
+	var titleCompanyID=undefined;
+	if(userDetails.userRole.label=="Home Owners Insurance"){
+		homeOwnInsID=userDetails.id;
+	}else if(userDetails.userRole.label=="Title Company"){
+		titleCompanyID=userDetails.id;
+	}else{
+		userid=userDetails.id;
+	}
+	var delCol = $('<span>').attr({
+		"class" : "ms-team-member-tr-col2 float-left",
+		"userid":userid,
+		"homeOwnInsID":homeOwnInsID,
+		"titleCompanyID":titleCompanyID
+	}).html("X").bind("click",function(e){
+		var userID = $(this).attr("userid");
+		var loanID = selectedUserDetail==undefined?newfiObject.user.defaultLoanId:selectedUserDetail.loanID
+		var homeOwnInsID = $(this).attr("homeOwnInsID");
+		var titleCompanyID = $(this).attr("titleCompanyID");
+		if (userID == undefined)
+			userID = 0;
+		if (homeOwnInsID == undefined)
+			homeOwnInsID = 0;
+		if (titleCompanyID == undefined)
+			titleCompanyID = 0;
 
-	return row.append(nameCol).append(titleCol);
+		var input = {
+			"userID" : userID,
+			"homeOwnInsID" : homeOwnInsID,
+			"titleCompanyID" : titleCompanyID
+		};
+		teamItm=$(this).parent();
+		confirmRemoveUser(messageToDeleteUser, input,
+				loanID,removeTeamItem);
+	});
+	row.append(nameCol).append(titleCol);
+	if(!custFlag)
+		row.append(delCol);
+	return row;
 }
-
+var teamItm;
+function removeTeamItem(){
+	$(teamItm).remove();
+	teamItm=undefined;
+}
 
 function adjustBorderMilestoneContainer() {
 	$('.milestone-lc:first-child').find('.milestone-lc-border').css({
