@@ -637,6 +637,23 @@ public class UserProfileRest {
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
 	}
+	
+	@RequestMapping(value = "/nmls", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO updateNMLSId(String updateUserInfo) {
+
+		Gson gson = new Gson();
+		UserVO userVO = null;
+		try {
+			userVO = gson.fromJson(updateUserInfo, UserVO.class);
+			userProfileService.updateNMLSId(userVO);
+		} catch (Exception e) {
+			LOG.error("Error while updataing the user datails ::",
+			        e.getMessage());
+		}
+		CommonResponseVO commonResponseVO = new CommonResponseVO();
+		commonResponseVO.setResultObject("success");
+		return commonResponseVO;
+	}
 
 	@RequestMapping(value = "/internaluserstatemapping", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO updateInternalUserStateMapping(

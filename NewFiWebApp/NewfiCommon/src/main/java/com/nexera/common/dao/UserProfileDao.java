@@ -121,4 +121,6 @@ public interface UserProfileDao extends GenericDao {
 
 	public List<User> getUserBySecondaryMail(String emailAddress);
 
+	public Integer updateNMLS(User user);
+
 }

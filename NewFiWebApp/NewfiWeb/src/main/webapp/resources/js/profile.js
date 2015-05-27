@@ -292,7 +292,7 @@ function getLoanPersonalInfoContainer(user) {
 	        }
 	}
  	
-	var licensesRow = getLicensesRow();
+	var licensesRow = getLicensesRow(user);
 	container.append(licensesRow);
 	
 	if(user.internalUserStateMappingVOs == undefined){
@@ -307,7 +307,7 @@ function getLoanPersonalInfoContainer(user) {
 	return container;
 }
 
-function getLicensesRow() {
+function getLicensesRow(user) {
 	var row = $('<div>').attr({
 		"id" : "licenseRow",
 		"class" : "clearfix"
@@ -321,16 +321,18 @@ function getLicensesRow() {
 		"class" : "prof-form-rc float-left"
 	});
 	
-	appendLicensedStates(rowCol2);
+	appendLicensedStates(rowCol2,user);
 		
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function appendLicensedStates(element){
+function appendLicensedStates(element, user){
 	element.html('');
 	if(!jQuery.isEmptyObject(internalUserStates)){
 		$('#licenseRow').show();
-	}else{
+	}
+	
+	else{
 		return;
 	}
 	for(var key in internalUserStates){
@@ -365,6 +367,39 @@ function appendLicensedStates(element){
 		element.append(licenseRow);
 		
 	}
+	if (user.internalUserDetail && user.internalUserDetail.nmlsID != undefined && user.internalUserDetail.nmlsID!= "")
+	{
+		var nmlsRow = getNMLSDisplayRow(user.internalUserDetail.nmlsID);
+		element.append(nmlsRow);
+	}
+}
+
+function getNMLSDisplayRow (nmlsid)
+{
+	var licenseRow = $('<div>').attr({
+		"class" : "license-row clearfix"
+	});
+	
+	var state = $('<div>').attr({
+		"class" : "state-val float-left"
+	}).text("NMLS");
+	state.append(" : ");
+	
+	var licenseNumber = $('<div>').attr({
+		"class" : "license-val float-left"
+	}).text(nmlsid);
+	var key = "NMLS";
+	var removeIcn = $('<div>').attr({
+		"class" : "message-recipient-remove-icn float-right"
+	}).bind('click',{"key":key},function(event){
+		var key = event.data.key;
+		$(this).closest('.license-row').remove();
+		internalUserStates[key].isChecked = false;		
+		//deleteStateLicenseMapping(internalUserStates[key]);
+		//delete internalUserStates[key];
+	});
+	
+	return licenseRow.append(state).append(licenseNumber).append(removeIcn);	
 }
 
 function getLoanManager(user){
@@ -1486,6 +1521,11 @@ function appendAddLicencePopup(element) {
 	}).text("Save")
 	.bind('click',function(e){
 		e.stopPropagation();
+		if ($(this).attr("state-id") == "NMLS")
+		{
+			saveNMLS($('#licenseId').val());
+			return;
+		}
 		var licenseVal = $('#licenseId').val();
 		
 		if(licenseVal == undefined || licenseVal == ""){
@@ -1520,7 +1560,35 @@ function appendAddLicencePopup(element) {
 	$(element).append(wrapper);
 }
 
-
+function saveNMLS(nmlsID)
+{
+		var userProfileJson = new Object();
+		userProfileJson.id = $("#userid").val();
+		var internalUserDetail = new Object();
+		internalUserDetail.id = internalUserDetailId;
+		internalUserDetail.nmlsID =nmlsID;
+		userProfileJson.internalUserDetail=internalUserDetail;
+		console.info("userProfileJson:"+userProfileJson);
+		$('#overlay-loader').show();
+		 $.ajax({
+				url : "rest/userprofile/nmls",
+				type : "POST",
+				cache:false,
+				data : {
+					"updateUserInfo" : JSON.stringify(userProfileJson)
+				},
+				dataType : "json",
+				success : function(data) {
+					$('#overlay-loader').hide();					
+					removeAddLicencePopup();
+					showToastMessage(updateSuccessMessage);
+				},
+				error : function(error) {
+					$('#overlay-loader').hide();
+					showErrorToastMessage(updateErrorMessage);
+				}
+			});	
+}
 function zipCodeLookUpListCallBack(response) {
 	if(response.error == null){
 		currentZipcodeLookUp = response.resultObject;
@@ -1531,6 +1599,7 @@ function appendStateDropDown(elementToApeendTo,states) {
 
 	var parentToAppendTo = $('#'+elementToApeendTo);
 	parentToAppendTo.html('');
+	
 	for(var i=0; i<states.length; i++){
 		var stateRow = $('<div>').attr({
 			"class" : "state-dropdown-row"
@@ -1550,10 +1619,6 @@ function appendStateDropDown(elementToApeendTo,states) {
 		
 		parentToAppendTo.append(stateRow);
 	}
-	
-		
-		
-	
 }
 function appendStateDropDownForProperty(elementToApeendTo,states){
 	var parentToAppendTo = $('#'+elementToApeendTo);
@@ -1591,7 +1656,18 @@ function appendManagerStateDropDown(elementToApeendTo,stateList) {
 	var parentToAppendTo = $('#'+elementToApeendTo);
 	parentToAppendTo.html('');
 	var $containerToAppend=$("<div>");
+	
+	if (!userIsRealtor()
+			&& newfiObject.user.userRole.id!=4)
+	{			
+		var nmlsElement = new Object();
+		nmlsElement.id="NMLS";
+		nmlsElement.stateCode="NMLS";
+		stateList.splice(0, 0, nmlsElement);
+		stateList.join();
+	}
 	for(var i=0; i<stateList.length; i++){
+		console.log(i);
 		var stateRow = $('<div>').attr({
 			"class" : "state-dropdown-row agent-state-dropdown-row clearfix",
 			"id" : stateList[i].id,
@@ -1615,37 +1691,17 @@ function appendManagerStateDropDown(elementToApeendTo,stateList) {
 		stateRow.bind('click',function(e){
 			e.stopPropagation();
 			$('#stateId').val($(this).text());
-			$('#save-license-btn').attr("state-id",this.id);
-			/*var internalUserStateMappingVO=new Object();
-			internalUserStateMappingVO.userId=$("#userid").val();
-			internalUserStateMappingVO.stateId=this.id;
-			if($("#checkBox_"+this.id).hasClass("doc-unchecked")){
-				$("#checkBox_"+this.id).removeClass("doc-unchecked").addClass("doc-checked");
-				internalUserStateMappingVO.isChecked=true;		
-				//internalUserStates.push({id:this.id,"obj":internalUserStateMappingVO});	
-				internalUserStates[this.id]=internalUserStateMappingVO;
-			}else{
-				internalUserStates[this.id].isChecked = false;
-				//$('.message-recipient-remove-icn[data-id="'+this.id+'"]').closest('.prof-form-input-textarea-block').remove();
-				$("#checkBox_"+this.id).addClass("doc-unchecked").removeClass("doc-checked");
-				internalUserStateMappingVO=internalUserStates[this.id];
-				if(internalUserStateMappingVO.isChecked!=typeof underdefined)
-					internalUserStateMappingVO.isChecked=false;
-				internalUserStates[this.id]=internalUserStateMappingVO;
-			}*/
-			appendUserStatesInLMProfile($('#inputTextarea'));
-				
+			$('#save-license-btn').attr("state-id",this.id);			
+			appendUserStatesInLMProfile($('#inputTextarea'));				
 				//$('#stateId').val(this.name);
 				toggleStateDropDown();
 			});
 		if(states.indexOf((stateList[i].id).toString())>-1){
 			stateRow.prependTo($containerToAppend);
-
 		}
 		else{ 
 			$containerToAppend.append(stateRow);
 		}
-		//$containerToAppend.append(stateRow);
 		
 	}
 	parentToAppendTo.append($containerToAppend);
