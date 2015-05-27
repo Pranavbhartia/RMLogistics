@@ -13,6 +13,7 @@ public class InternalUserDetailVO implements Serializable {
 	private InternalUserRoleMasterVO internalUserRoleMasterVO;
 	private String lqbUsername;
 	private String lqbPassword;
+	private String nmlsID;
 
 	public int getId() {
 		return id;
@@ -69,6 +70,14 @@ public class InternalUserDetailVO implements Serializable {
 
 	public void setLqbPassword(String lqbPassword) {
 		this.lqbPassword = lqbPassword;
+	}
+
+	public String getNmlsID() {
+		return nmlsID;
+	}
+
+	public void setNmlsID(String nmlsID) {
+		this.nmlsID = nmlsID;
 	}
 
 }

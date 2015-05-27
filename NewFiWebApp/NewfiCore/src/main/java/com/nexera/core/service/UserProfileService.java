@@ -139,4 +139,5 @@ public interface UserProfileService {
 	
 	public void sendEmailPreQualification(UserVO userVO,ByteArrayOutputStream byteArrayOutputStream) throws InvalidInputException,UndeliveredEmailException;
 
+	public Integer updateNMLSId(UserVO userVO);
 }
