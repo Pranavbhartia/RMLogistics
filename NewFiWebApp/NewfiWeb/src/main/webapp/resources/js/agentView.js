@@ -1662,6 +1662,51 @@ function paintUserNameDropDown(values, hideAddUser) {
 		}
 		
 	}
+	var addUserdropDownRow = $('<div>')
+	.attr({
+		"id" : "add-member-user",
+		"class" : "add-member-dropdown-row"
+	})
+	.html("Add New User")
+	.on(
+			'click',
+			function(event) {
+
+				event.stopPropagation();
+				var callback = showAddUserPopUp;
+
+				var memberType = $('#add-memeber-user-type');
+				var userRoleBased = memberType.attr("userRoleBased")
+				var code = memberType.attr("code")
+				if (userRoleBased == "false") {
+					if (code == "TITLE_COMPANY")
+						callback = function() {
+							var context;
+							if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+								context = getCreateTitleCompanyContext(newfiObject.user.defaultLoanId);
+							else
+								context = getCreateTitleCompanyContext(selectedUserDetail.loanID);
+
+							context.showCreateTitleCompanyPopup();
+
+						}
+					else if (code == "HOME_OWN_INS")
+						callback = function() {
+							var context;
+							if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+								context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
+							else
+								context = getCreateHomeOwnInsCompanyContext(selectedUserDetail.loanID);
+
+							context.showCreateCompanyPopup();
+						}
+
+				}
+				callback(event);
+
+			});
+		if (!hideAddUser)
+				dropdownCont.append(addUserdropDownRow);
 
 	if (values != undefined && values.length > 0) {
 		for (var i = 0; i < values.length; i++) {
@@ -1722,51 +1767,7 @@ function paintUserNameDropDown(values, hideAddUser) {
 		dropdownCont.append(dropDownRow);
 	}
 
-	var addUserdropDownRow = $('<div>')
-			.attr({
-				"id" : "add-member-user",
-				"class" : "add-member-dropdown-row"
-			})
-			.html("Add New User")
-			.on(
-					'click',
-					function(event) {
-
-						event.stopPropagation();
-						var callback = showAddUserPopUp;
-
-						var memberType = $('#add-memeber-user-type');
-						var userRoleBased = memberType.attr("userRoleBased")
-						var code = memberType.attr("code")
-						if (userRoleBased == "false") {
-							if (code == "TITLE_COMPANY")
-								callback = function() {
-									var context;
-									if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-										context = getCreateTitleCompanyContext(newfiObject.user.defaultLoanId);
-									else
-										context = getCreateTitleCompanyContext(selectedUserDetail.loanID);
-
-									context.showCreateTitleCompanyPopup();
-
-								}
-							else if (code == "HOME_OWN_INS")
-								callback = function() {
-									var context;
-									if (newfiObject.user.userRole.roleCd == "CUSTOMER")
-										context = getCreateHomeOwnInsCompanyContext(newfiObject.user.defaultLoanId)
-									else
-										context = getCreateHomeOwnInsCompanyContext(selectedUserDetail.loanID);
-
-									context.showCreateCompanyPopup();
-								}
-
-						}
-						callback(event);
-
-					});
-	if (!hideAddUser)
-		dropdownCont.append(addUserdropDownRow);
+	
 }
 
 $(document).click(function() {
@@ -2046,14 +2047,14 @@ function getTeamListTableRow(user, loanID) {
 			.append(trCol5);
 }
 
-function confirmRemoveUser(textMessage, input, loanID) {
+function confirmRemoveUser(textMessage, input, loanID,callback) {
 
 	$('#overlay-confirm').off();
 	$('#overlay-cancel').off();
 
 	$('#overlay-popup-txt').html(textMessage);
 	$('#overlay-confirm').on('click', function() {
-		removeUserFromLoanTeam(input, loanID);
+		removeUserFromLoanTeam(input, loanID,callback);
 		$('#overlay-popup').hide();
 	});
 
@@ -3746,7 +3747,7 @@ function getLoanDetails(loanID) {
 	ajaxRequest("rest/loan/" + loanID, "GET", "json", {}, paintAgentLoanPage);
 }
 
-function removeUserFromLoanTeam(input, loanID) {
+function removeUserFromLoanTeam(input, loanID,callback) {
 
 	var userID = input.userID;
 	var homeOwnInsID = input.homeOwnInsID;
@@ -3755,10 +3756,12 @@ function removeUserFromLoanTeam(input, loanID) {
 			+ homeOwnInsID + "&titleCompanyID=" + titleCompanyID;
 
 	ajaxRequest("rest/loan/" + loanID + "/team?" + queryString, "DELETE",
-			"json", {}, onReturnOfRemoveUserFromLoanTeam);
+			"json", {},function(response){
+				onReturnOfRemoveUserFromLoanTeam(response,callback);
+			});
 }
 
-function onReturnOfRemoveUserFromLoanTeam(data) {
+function onReturnOfRemoveUserFromLoanTeam(data,callback) {
 
 	var editLoanTeamVO = data.resultObject;
 	var result = editLoanTeamVO.operationResult;
@@ -3785,6 +3788,8 @@ function onReturnOfRemoveUserFromLoanTeam(data) {
 				+ "][loanid=" + loanID + "]");
 
 	teamMemberRow.parent().parent().remove();
+	if(callback)
+		callback();
 }
 
 function addUserToLoanTeam(input, loanID, callback) {
