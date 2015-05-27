@@ -8,7 +8,14 @@ var mobileCarrierConstants=[];
 var userRole="Customer";
 
 //var userStates=[];
+$(document).on('click',function(e){
+	if($('#add-licence-popup').css("display") == "block"){
+		$('#add-licence-popup').hide();
+	}
 
+	
+
+});
 function showCustomerProfilePage() {
 	scrollToTop();
 	synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
@@ -1421,7 +1428,18 @@ function getManagerStateRow() {
 		"class" : "link-pointer"
 	}).text("Add License")
 	.bind('click',function(e){
-		appendAddLicencePopup(this);
+		e.stopImmediatePropagation();
+		if($('#add-licence-popup').length==1){
+			
+			if($('#add-licence-popup').css("display")=="block"){
+				$('#add-licence-popup').hide();
+			}else{
+				$('#add-licence-popup').show();
+			}
+			}else{
+				appendAddLicencePopup(this);
+			}
+		
 	});
 	
 	rowCol2.append(addLicence);
@@ -2882,11 +2900,13 @@ function saveInternalUserStatesAndLicense(internalUserStateMappingparam){
 	        cache:false,
 	        success: function(data) {
 	        	$('#overlay-loader').hide();
+	        	$('#add-licence-popup').hide();
 	        	internalUserStateMappingVO = data.resultObject; 
 	        	internalUserStates[internalUserStateMappingVO.stateId] = internalUserStateMappingVO;
 	        },
 	        error: function() {
 	        	$('#overlay-loader').hide();
+	        	$('#add-licence-popup').hide();
 	            showErrorToastMessage(errorMessage);
 	           
 	        }

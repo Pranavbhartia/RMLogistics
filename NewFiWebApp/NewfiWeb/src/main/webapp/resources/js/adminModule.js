@@ -6,7 +6,7 @@ var Realtor="";
 var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
-
+var flagKnowNewFi=true;
 
 $(document).on('click',function(e){
 	if($('#admin-add-usertype-dropdown-cont').css("display") == "block"){
@@ -114,8 +114,14 @@ function appendSettingsDropDown(){
 			var tutorialsRow=paintSettingsDropDown("tutorials","Tutorial","completeTutorials()","#");
 			
 		 if(newfiObject.user.userRole.roleDescription==customer){
-		 	 
-					container.append(tutorialsRow); 
+			 var tutorialStatusFlag=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
+			 if(tutorialStatusFlag && tutorialStatusFlag==true){
+	            	flagKnowNewFi=false;
+	            }
+			 if(flagKnowNewFi){
+				 container.append(tutorialsRow);
+			 }
+					 
 	
 		 }				
 	}   
