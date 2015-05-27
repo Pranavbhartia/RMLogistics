@@ -67,6 +67,7 @@
 	<servlet-mapping>
 		<servlet-name>webapp</servlet-name>
 		<url-pattern>*.do</url-pattern>
+		<url-pattern>/refer/</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

@@ -39,7 +39,7 @@ import com.nexera.core.utility.NexeraUtility;
 public class EmailBatchProcessor extends QuartzJobBean {
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(EmailBatchProcessor.class);
+	        .getLogger("batchJobs");
 
 	@Value("${mail.store.protocol}")
 	private String protocol;
