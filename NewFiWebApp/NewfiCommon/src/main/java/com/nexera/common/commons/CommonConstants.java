@@ -297,5 +297,7 @@ public interface CommonConstants {
 	public static final String SEND_EMAIL_TO_INTERNAL_USERS = "internalUsers";
 
 	public static final String STICKET = "sTicket";
+	
+	public static final String PRE_QUALIFICATION_LETTER ="Pre-Qualification letter";
 
 }
