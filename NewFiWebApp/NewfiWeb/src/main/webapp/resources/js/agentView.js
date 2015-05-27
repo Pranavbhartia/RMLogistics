@@ -483,6 +483,7 @@ function appendCustomers(elementId, customers) {
 
 		$('#' + elementId).append(row);
 	}
+	updateHandler.initiateRequest();
 
 }
 

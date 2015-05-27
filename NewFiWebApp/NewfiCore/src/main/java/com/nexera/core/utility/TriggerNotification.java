@@ -84,6 +84,7 @@ public class TriggerNotification extends Thread {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("action", "new");
 		map.put("data", notificationVo);
+		map.put("task", "notification");
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter sw = new StringWriter();
 		try {
@@ -113,6 +114,7 @@ public class TriggerNotification extends Thread {
 		map.put("notificationID", "LNDI" + notificationVo.getId());
 		map.put("id", notificationVo.getId());
 		map.put("loanId", notificationVo.getLoanID());
+		map.put("task", "notification");
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter sw = new StringWriter();
 		try {
@@ -142,6 +144,7 @@ public class TriggerNotification extends Thread {
 		map.put("notificationID", "LNDI" + notificationVo.getId());
 		map.put("id", notificationVo.getId());
 		map.put("loanId", notificationVo.getLoanID());
+		map.put("task", "notification");
 		ObjectMapper mapper = new ObjectMapper();
 		StringWriter sw = new StringWriter();
 		try {
@@ -156,6 +159,34 @@ public class TriggerNotification extends Thread {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("task", "notification");
 		params.put("taskId", notificationVo.getLoanID() + "");
+		params.put("data", sw.toString());
+		TriggerNotification triggerNotification = new TriggerNotification(
+		        params, url);
+		triggerNotification.start();
+
+	}
+
+	public static void triggerMilestoneStatusChange(int loanId,
+	        int milestoneId, String status, String url) {
+
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("wfID", milestoneId);
+		map.put("status", status);
+		map.put("task", "milestone");
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter sw = new StringWriter();
+		try {
+			mapper.writeValue(sw, map);
+		} catch (JsonGenerationException e) {
+			LOGGER.error("Exception caught " + e.getMessage());
+		} catch (JsonMappingException e) {
+			LOGGER.error("Exception caught " + e.getMessage());
+		} catch (IOException e) {
+			LOGGER.error("Exception caught " + e.getMessage());
+		}
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put("task", "notification");
+		params.put("taskId", loanId + "");
 		params.put("data", sw.toString());
 		TriggerNotification triggerNotification = new TriggerNotification(
 		        params, url);
