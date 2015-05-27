@@ -56,6 +56,8 @@ public class RestInterceptor implements Callable
             || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION )
             || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
+        } else if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE ) ) {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_SAVE );
         } else {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
         }
@@ -165,12 +167,24 @@ public class RestInterceptor implements Callable
                 }
                 inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
                 String sDataContentQueryDefault = Utils.readFileAsString( "loadCreditinfo.xml" );
-                /*
-                 * if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
-                 * sDataContentQueryDefault = Utils.applyMapOnString(
-                 * restParameters.getLoanVO().getsDataContentMap(),
-                 * sDataContentQueryDefault ); }
-                 */
+                inputParams[2] = sDataContentQueryDefault;
+                inputParams[3] = restParameters.getLoanVO().getFormat();
+
+            } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE ) ) {
+                LOG.debug( "Operation Chosen Was SaveCreditScore " );
+                inputParams = new Object[4];
+                if ( restParameters.getLoanVO().getsTicket() != null
+                    && !restParameters.getLoanVO().getsTicket().equalsIgnoreCase( "" ) ) {
+                    inputParams[0] = restParameters.getLoanVO().getsTicket();
+                } else {
+                    inputParams[0] = NewFiManager.userTicket;
+                }
+                inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+                String sDataContentQueryDefault = Utils.readFileAsString( "saveCreditScore.xml" );
+                if ( restParameters.getLoanVO().getsDataContentMap() != null ) {
+                    sDataContentQueryDefault = Utils.applyMapOnString( restParameters.getLoanVO().getsDataContentMap(),
+                        sDataContentQueryDefault );
+                }
                 inputParams[2] = sDataContentQueryDefault;
                 inputParams[3] = restParameters.getLoanVO().getFormat();
 

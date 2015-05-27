@@ -513,8 +513,8 @@ public class LQBRequestUtil {
 		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
 		hashmap.put("LOGIN_NAME", "testact");
 		hashmap.put("PASSWORD", "1234nexera");
-		hashmap.put("equifaxStatus", "Y");
-		hashmap.put("experianStatus", "Y");
+		hashmap.put("equifaxStatus", "N");
+		hashmap.put("experianStatus", "N");
 		hashmap.put("transunionStatus", "Y");
 
 		return hashmap;
@@ -523,8 +523,8 @@ public class LQBRequestUtil {
 	HashMap<String, String> getCoBorrowerCredit(HashMap<String, String> hashmap) {
 		hashmap.put("creditCoborrowerCardId",
 		        "eb228885-b484-404a-99ff-b28511dd3e38");
-		hashmap.put("equifaxCoborrowerStatus", "Y");
-		hashmap.put("experianCoborrowerStatus", "Y");
+		hashmap.put("equifaxCoborrowerStatus", "N");
+		hashmap.put("experianCoborrowerStatus", "N");
 		hashmap.put("LOGIN_Coborrower_NAME", "testact");
 		hashmap.put("PASS_COBORROWER_WORD", "1234nexera");
 		hashmap.put("transunionCoborrowerStatus", "Y");
@@ -732,6 +732,71 @@ public class LQBRequestUtil {
 			}
 
 		}
+
+		return hashmap;
+	}
+
+	public JSONObject pullTrimergeCreditScore(String loanNumber,
+	        LoanAppFormVO loanAppFormVO, String sTicket) {
+
+		HashMap<String, String> hashmap = new HashMap<>();
+		hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail()
+		        .getSsn());
+		hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
+		        .getFirstName());
+		hashmap.put("lastName", loanAppFormVO.getLoan().getUser().getLastName());
+		hashmap.put("userSSNnumber", loanAppFormVO.getUser()
+		        .getCustomerDetail().getSsn());
+		hashmap.put("applicantCity", loanAppFormVO.getUser()
+		        .getCustomerDetail().getAddressCity());
+		hashmap.put("applicantState", loanAppFormVO.getUser()
+		        .getCustomerDetail().getAddressState());
+		hashmap.put("applicantZipCode", loanAppFormVO.getUser()
+		        .getCustomerDetail().getAddressZipCode());
+		if (null == loanAppFormVO.getUser().getCustomerDetail()
+		        .getAddressStreet()
+		        || "".equalsIgnoreCase(loanAppFormVO.getUser()
+		                .getCustomerDetail().getAddressStreet())) {
+			hashmap.put("applicantAddress", "undisclosed");
+		} else {
+			hashmap.put("applicantAddress", loanAppFormVO.getUser()
+			        .getCustomerDetail().getAddressStreet());
+		}
+
+		hashmap = saveTrimergeStatus(hashmap);
+
+		JSONObject jsonObject = new JSONObject(hashmap);
+
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+
+		try {
+			jsonChild.put("sLoanNumber", loanNumber);
+			jsonChild.put("sDataContentMap", jsonObject);
+			jsonChild.put("format", "0");
+			jsonChild.put("sTicket", sTicket);
+
+			json.put("opName", "SaveCreditScore");
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOG.error("Exception caught " + e.getMessage());
+			json = null;
+		}
+
+		LOG.debug("jsonMapObject Save operation" + json);
+
+		return json;
+
+	}
+
+	HashMap<String, String> saveTrimergeStatus(HashMap<String, String> hashmap) {
+
+		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
+		hashmap.put("LOGIN_NAME", "testact");
+		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("equifaxStatus", "Y");
+		hashmap.put("experianStatus", "Y");
+		hashmap.put("transunionStatus", "Y");
 
 		return hashmap;
 	}
