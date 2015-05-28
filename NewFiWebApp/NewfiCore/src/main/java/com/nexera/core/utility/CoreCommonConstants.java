@@ -36,6 +36,8 @@ public interface CoreCommonConstants {
 
 	public static String SOAP_XML_LOAD_LOAN_STATUS = "sStatusT";
 
+	public static String SOAP_XML_USER_SSN_NUMBER = "aBSsn";
+
 	public static String SOAP_XML_RATE_LOCK_STATUS = "sRateLockStatusT";
 
 	public static String SOAP_XML_RATE_LOCK_EXPIRED_DATE = "sRLckdExpiredD";

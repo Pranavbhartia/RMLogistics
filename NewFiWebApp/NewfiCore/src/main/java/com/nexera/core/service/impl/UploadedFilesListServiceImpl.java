@@ -46,6 +46,7 @@ import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
@@ -953,31 +954,43 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		try {
 
 			for (Integer key : mapFileMappingToNeed.keySet()) {
-
-				FileAssignmentMappingVO mapping = mapFileMappingToNeed.get(key);
-				List<Integer> fileIds = mapping.getFileIds();
-				Integer newFileRowId = null;
-				if (mapping.getIsMiscellaneous()) {
-					UploadedFilesList filesList = loanService
-					        .fetchUploadedFromLoanNeedId(key);
-					LOG.info("fetchUploadedFromLoanNeedId returned : "
-					        + filesList);
-					if (filesList != null) {
-						fileIds.add(filesList.getId());
-					}
-					newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
-					        assignedBy);
-
+				LoanNeedsList loanNeed = loanNeedListDAO.findById(key);
+				
+				NeedsListMaster needMaster = loanNeed.getNeedsListMaster();
+				LOG.info("Need Master label: "+needMaster.getLabel());
+				System.out.println("Need Master label: "+needMaster.getLabel());
+				if(needMaster.getLabel().equals(CommonConstants.EXTRA_DOCUMENT)){
+					FileAssignmentMappingVO mapping = mapFileMappingToNeed.get(key);
+					List<Integer> fileIds = mapping.getFileIds();
 					for (Integer fileId : fileIds) {
 						deactivateFileUsingFileId(fileId);
 					}
-				} else {
-					newFileRowId = fileIds.get(0);
-				}
-				LOG.info("new file pdf path :: " + newFileRowId);
-				updateFileInLoanNeedList(key, newFileRowId);
-				updateIsAssignedToTrue(newFileRowId);
+					mapFileMappingToNeed.remove(key);
+				}else{
+					FileAssignmentMappingVO mapping = mapFileMappingToNeed.get(key);
+					List<Integer> fileIds = mapping.getFileIds();
+					Integer newFileRowId = null;
+					if (mapping.getIsMiscellaneous()) {
+						UploadedFilesList filesList = loanService
+						        .fetchUploadedFromLoanNeedId(key);
+						LOG.info("fetchUploadedFromLoanNeedId returned : "
+						        + filesList);
+						if (filesList != null) {
+							fileIds.add(filesList.getId());
+						}
+						newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
+						        assignedBy);
 
+						for (Integer fileId : fileIds) {
+							deactivateFileUsingFileId(fileId);
+						}
+					} else {
+						newFileRowId = fileIds.get(0);
+					}
+					LOG.info("new file pdf path :: " + newFileRowId);
+					updateFileInLoanNeedList(key, newFileRowId);
+					updateIsAssignedToTrue(newFileRowId);
+				}
 			}
 			changeWorkItem(mapFileMappingToNeed, loanId);
 			isSuccess = true;
