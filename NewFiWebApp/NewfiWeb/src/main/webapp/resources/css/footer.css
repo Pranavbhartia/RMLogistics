@@ -6,10 +6,16 @@ section.section.swatch-black {
 .footer-container {
     position: relative;    
     z-index: 3;
-    width: 1170px;
     margin-right: auto;    
     margin-left: auto;       
      
+}
+.ce-footer-wrapper{
+	position:absolute;
+}
+.ce-footer-container{
+	padding-left:0;
+	
 }
 
 .footer-container {
@@ -19,8 +25,11 @@ section.section.swatch-black {
 .footer-container-text {
     font-family: opensanslight;
     font-size: 12px;
-    padding: 38px 0px 0px 323px;
+    padding-top: 40px;
+    padding-right: 10px;
     color: white;
+    width: 66.66666%;
+    text-align: right;
 }
 
 .footer-element-normal-bottom {
@@ -28,10 +37,10 @@ section.section.swatch-black {
 }
 
 .footer-col-md-3 {
-  margin-right: 3%;
-  width: 30%;
-  float:left;
-  }
+	width: 33.3333333%;
+	padding:0 20px;
+	float: left;
+}
 
 .footer-sidebar-header {
   margin-bottom: 12px;
@@ -78,6 +87,7 @@ section.section.swatch-black {
 
 .footer-icon-container{
   	padding-top: 15px;
+  	margin-left: 20px;
 }
 
 
@@ -139,11 +149,8 @@ div.footeremail:hover{
 	  bottom:0;
 }
 .footer-newfi-image {
-    background: url(../images/newfi_logo_big.png) no-repeat center;
-    height: 51px;
-    background-size: 100%;
-    /* height: 51px; */
-    width: 25%;
+	background: url(../images/newfi_logo_big.png) no-repeat left center;
+	height: 60px;
 }
 
 .footer-newfi-information {
@@ -250,6 +257,7 @@ div#footeHomeImage {
 }
 .footer-container-text2 {
     padding: 15px 0px 0px 0px;
+    margin-left: 25px;
 }
 
 .footer-login-inline-home-text {
@@ -268,53 +276,73 @@ div#footeHomeImage {
 }
 
 /*footer-responsive-code*/
+
+@media (max-width: 767px) {
+
+	.footer-col-md-3{
+		float: none;
+		margin: 0;	
+		width: 100%;	
+		padding: 0;	
+	}
+	.footer-container-text{
+		float:left;
+	
+		padding: 0px 15px 0 0;
+		height: 45px;
+		width: 75%;
+		display: flex;
+		justify-content: flex-end;
+		text-align: center;
+		flex-direction: column;
+}
+	.footer-container-text2{
+		width: 25%;
+		padding-left: 0;
+		margin-left: 0;
+		padding: 2px 0 0 0;
+	}
+	.footer-icon-col-md-3{
+	    float:none;
+		padding-right:10px;
+	}
+	.footer-element-normal-bottom {
+		padding: 0 10px;
+		margin: 5px 0;
+	}
+	.footer-icon-container{
+	  	margin-left: 0;
+	}
+}
+
 @media (max-width: 475px) {
 	.footer-col-md-3{
 		float:none;
-		padding-left: 26px;			
+		width: 100%;
 	}
 	.footer-container-text{
-		float:none;
+		float: none;
+		width: 100%;
+		height: auto;
 		padding: 15px 0px 0px 0px;
-	
-		width: 45%;
-}
+	}
 	.footer-container-text2{
 		float: none;
-		padding: 0px 0px 0 0;
+		width: 100%;
+		padding: 5px 0px 0 0;
 	}
 	.footer-icon-col-md-3{
 	    float:none;
-		
-	    padding: 15px 0 0 30px;
 	}
-}
-
-@media (min-width: 476px) and (max-width: 767px) {
-
-	.footer-col-md-3{
-	float: none;
-	margin: 0;	
-	padding-left: 26px;		
+	.footer-element-normal-bottom {
+		padding: 0 10px;
+		margin: 5px 0;
 	}
-	.footer-container-text{
-		float:left;
-		padding-left: 0px;
-		padding-right:10px;
+	.footer-login-inline-home-image{
+		margin: 0 auto;
 	}
-	.footer-container-text2{
-		float:left;
-		padding-left: 0;
-		padding-right:10px;
-	}
-	.footer-icon-col-md-3{
-	    float:none;
-		
-	    padding-left: 29px;
-		padding-right:10px;
-	}
-	.footer-newfi-image{
-		width:50%;
+	.footer-login-inline-home-text{
+	  	text-align: center;
 	}
 }
 
@@ -322,26 +350,26 @@ div#footeHomeImage {
 	body{
 		overflow-x: hidden;
 	}
+	.footer-container{
+		width: 100%;
+	}
 	.footer-col-md-3{
-		width:16%;	
-		padding-left: 26px;	
+		padding: 0 15px;
 	}
 	.footer-container-text{
-		float:left;
-		padding-left: 10px;
-		padding-right:10px;
 	}
 	.footer-container-text2{
 		float:left;
-		padding-left: 10px;
-		padding-right:10px;
 	}
 	.footer-icon-col-md-3{
 	    float:none;
         padding-left: 10px;
 		padding-right:10px;
 	}
-	.footer-newfi-image{
-		width:50%;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+	.footer-container{
+		width: 100%;
 	}
 }

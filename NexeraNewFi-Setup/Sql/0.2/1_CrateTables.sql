@@ -640,6 +640,7 @@ CREATE TABLE `internaluserdetails` (
   `user_role` int(11) DEFAULT NULL,
   `lqb_username` varchar(255) DEFAULT NULL,
   `lqb_password` varchar(255) DEFAULT NULL,
+  `nmls_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_internalUserManager_idx` (`manager`),
   KEY `fk_internalUserRole_idx` (`user_role`),
@@ -654,7 +655,7 @@ CREATE TABLE `internaluserdetails` (
 
 LOCK TABLES `internaluserdetails` WRITE;
 /*!40000 ALTER TABLE `internaluserdetails` DISABLE KEYS */;
-INSERT INTO `internaluserdetails` VALUES (1,2,1,2,'fsJV304Ey6cT6NOn4BuByg==','ycmeuaJoQyt7BgnalnWhsg==');
+INSERT INTO `internaluserdetails` VALUES (1,2,1,2,'fsJV304Ey6cT6NOn4BuByg==','ycmeuaJoQyt7BgnalnWhsg==',NULL);
 /*!40000 ALTER TABLE `internaluserdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2219,4 +2220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-05-28 18:31:48
+-- Dump completed on 2015-05-28 20:32:06

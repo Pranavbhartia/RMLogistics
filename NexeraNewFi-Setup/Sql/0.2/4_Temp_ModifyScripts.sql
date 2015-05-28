@@ -438,5 +438,9 @@ VALUES ('42','PRE_QUAL_LETTER_TEMPLATE_ID','Prequal Letter Template','2015-04-10
 ### Anoop: 
 ### Added all the above to 1_ script
 
+
 ########
 
+#Rajeswari - for NMLS ID
+ALTER TABLE `newfi_schema`.`internaluserdetails` 
+ADD COLUMN `nmls_id` VARCHAR(45) NULL AFTER `lqb_password`;

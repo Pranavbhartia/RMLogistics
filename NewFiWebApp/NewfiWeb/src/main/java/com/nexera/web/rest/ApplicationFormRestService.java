@@ -3,6 +3,7 @@ package com.nexera.web.rest;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,6 +35,7 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
@@ -42,6 +44,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
@@ -50,6 +53,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
@@ -101,11 +105,9 @@ public class ApplicationFormRestService {
 
 	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
 	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
-	
-	
+
 	@Autowired
 	private PreQualificationletter preQualificationletter;
-	
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -191,14 +193,43 @@ public class ApplicationFormRestService {
 						        .pullTrimergeCreditScore(loanVO.getLqbFileId(),
 						                loaAppFormVO, sTicket);
 						if (requestObject != null) {
-							String response = invokeRest(requestObject
+							String response = "error";
+							HashMap<String, String> map = invokeRest(requestObject
 							        .toString());
+							if (map != null) {
+								response = map.get("responseMessage");
+							}
 							LOG.debug("Response for pulltrimergescore is "
 							        + response);
 							if (response != null && !response.contains("error")) {
-								status = "Details to pull trimerge score has been saved, you may see the updated score after a while";
+								status = "Trimerge requested, your score would be updated shortly";
+								org.json.JSONObject creditScoreJSONObject = nexeraUtility
+								        .createCreditScoreJSONObject(
+								                WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
+								                loan.getLqbFileId(), sTicket, 0);
+								if (creditScoreJSONObject != null) {
+									org.json.JSONObject creditScoreJSONResponse = lqbInvoker
+									        .invokeLqbService(creditScoreJSONObject
+									                .toString());
+									if (creditScoreJSONResponse != null) {
+										if (!creditScoreJSONResponse
+										        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+											String creditScores = creditScoreJSONResponse
+											        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+											List<CreditScoreResponseVO> creditScoreResponseList = nexeraUtility
+											        .parseCreditScoresResponse(creditScores);
+											Map<String, String> creditScoreMap = nexeraUtility
+											        .fillCreditScoresInMap(creditScoreResponseList);
+											loanService
+											        .saveCreditScoresForBorrower(
+											                creditScoreMap,
+											                loan, null);
+											creditScoreMap.clear();
+										}
+									}
+								}
 							} else {
-								status = "error while saving your request to pull trimerge score";
+								status = "error while saving your request to pull trimerge score, please make sure your SSN is valid";
 							}
 						}
 
@@ -231,17 +262,26 @@ public class ApplicationFormRestService {
 			LOG.debug("Getting token for loan manager");
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 			LOG.debug("Token retrieved for loan manager" + sTicket);
-			String loanNumber = invokeRest((lQBRequestUtil
+
+			String loanNumber = "error";
+			HashMap<String, String> map = invokeRest((lQBRequestUtil
 			        .prepareCreateLoanJson(
 			                (CommonConstants.CREATET_LOAN_TEMPLATE), sTicket))
 			        .toString());
+			if (map != null) {
+				loanNumber = map.get("responseMessage");
+			}
 
 			LOG.debug("createLoanResponse is" + loanNumber);
 
 			if (!"".equalsIgnoreCase(loanNumber)) {
 
-				String response = invokeRest((lQBRequestUtil.saveLoan(
-				        loanNumber, loaAppFormVO, sTicket)).toString());
+				String response = "error";
+				map = invokeRest((lQBRequestUtil.saveLoan(loanNumber,
+				        loaAppFormVO, sTicket)).toString());
+				if (map != null) {
+					response = map.get("responseMessage");
+				}
 				LOG.debug("Save Loan Response is " + response);
 				if (null != loaAppFormVO.getLoan()
 				        && !loanNumber.equals("error")) {
@@ -265,15 +305,21 @@ public class ApplicationFormRestService {
 
 					lockRateData = loadLoanRateData(loanNumber, sTicket);
 					LOG.debug("lockRateData" + lockRateData);
-					
+
 					// in case of Purchase send a mail with PDF attachement
-					if(null!= loaAppFormVO.getLoanType() && loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("PUR")){
-						
-						preQualificationletter.sendPreQualificationletter(loaAppFormVO,lockRateData,httpServletRequest);
-						
-						// send a pre-qualification mail
+
+					if (null != loaAppFormVO.getLoanType()
+					        && loaAppFormVO.getLoanType().getLoanTypeCd()
+					                .equalsIgnoreCase("PUR")) {
+
+						String thirtyYearRateVoDataSet = preQualificationletter
+						        .thirtyYearRateVoDataSet(lockRateData);
+						preQualificationletter.sendPreQualificationletter(
+						        loaAppFormVO, thirtyYearRateVoDataSet,
+						        httpServletRequest);
+
 					}
-					
+
 				}
 			}
 		} catch (Exception e) {
@@ -295,6 +341,25 @@ public class ApplicationFormRestService {
 
 	}
 
+	@RequestMapping(value = "/sendPreQualiticationLatter", method = RequestMethod.POST)
+	public CommonResponseVO sendPreQualificationLatter(String appFormData,
+	        String rateDataSet, HttpServletRequest httpServletRequest) {
+
+		Gson gson = new Gson();
+		CommonResponseVO responseVO = null;
+		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+		        LoanAppFormVO.class);
+		try {
+			preQualificationletter.sendPreQualificationletter(loaAppFormVO,
+			        rateDataSet, httpServletRequest);
+			responseVO = RestUtil.wrapObjectForSuccess("success");
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return responseVO;
+	}
+
 	@RequestMapping(value = "/changeLoanAmount", method = RequestMethod.POST)
 	public @ResponseBody String changeLoanAmount(String appFormData,
 	        HttpServletRequest httpServletRequest) {
@@ -309,8 +374,14 @@ public class ApplicationFormRestService {
 			LOG.debug("createLoanResponse is" + loanNumber);
 			if (!"".equalsIgnoreCase(loanNumber)) {
 
-				String response = invokeRest((lQBRequestUtil.saveLoan(
-				        loanNumber, loaAppFormVO, sTicket)).toString());
+				String response = "error";
+				HashMap<String, String> map = invokeRest((lQBRequestUtil
+				        .saveLoan(loanNumber, loaAppFormVO, sTicket))
+				        .toString());
+				if (map != null) {
+					response = map.get("responseMessage");
+				}
+
 				LOG.debug("Save Loan Response is " + response);
 				String loanAppFrm = gson.toJson(loaAppFormVO);
 				createApplication(loanAppFrm, httpServletRequest);
@@ -406,9 +477,18 @@ public class ApplicationFormRestService {
 			json.put(CommonConstants.OPNAME, "Load");
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
+			HashMap<String, String> lqbResponse = cacheableMethodInterface
+			        .cacheInvokeRest(loanNumber, json.toString());
+			String responseMessage = "error";
+			if (lqbResponse != null
+			        && lqbResponse.containsKey("responseMessage"))
+				responseMessage = lqbResponse.get("responseMessage");
 			teaserRateList = rateService
-			        .parseLqbResponse(retrievePricingDetails(cacheableMethodInterface
-			                .cacheInvokeRest(loanNumber, json.toString())));
+			        .parseLqbResponse(retrievePricingDetails(responseMessage));
+
+			String responseTime = "";
+			if (lqbResponse != null && lqbResponse.containsKey("responseTime"))
+				responseTime = lqbResponse.get("responseTime");
 
 			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 			teaserRateResponseVO.setLoanDuration("sample");
@@ -416,7 +496,9 @@ public class ApplicationFormRestService {
 
 			if (teaserRateList != null)
 				teaserRateList.add(0, teaserRateResponseVO);
-
+			for (TeaserRateResponseVO responseVo : teaserRateList) {
+				responseVo.setResponseTime(responseTime);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -428,6 +510,8 @@ public class ApplicationFormRestService {
 
 	private String retrievePricingDetails(String xml) {
 		String pricingResultXml = null;
+		LOG.debug("Inside retrievePricingDetails method with xml data value : "+xml);
+		
 		try {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -471,8 +555,8 @@ public class ApplicationFormRestService {
 
 	}
 
-	private String invokeRest(String appFormData) {
-
+	private HashMap<String, String> invokeRest(String appFormData) {
+		HashMap<String, String> map = new HashMap<String, String>();
 		LOG.info("Invoking rest Service with Input " + appFormData);
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -485,14 +569,15 @@ public class ApplicationFormRestService {
 			        + jsonObject.get("responseMessage").toString());
 			// teaserRateList =
 			// parseLqbResponse(jsonObject.get("responseMessage").toString());
-			return jsonObject.get("responseMessage").toString();
-
+			map.put("responseMessage", jsonObject.get("responseMessage")
+			        .toString());
+			map.put("responseTime", jsonObject.get("responseTime").toString());
+			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.debug("error in post entity");
-			return "error";
+			return null;
 		}
-
 	}
 
 	@RequestMapping(value = "/savetaxandinsurance", method = RequestMethod.POST)

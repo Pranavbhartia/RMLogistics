@@ -2,7 +2,9 @@ package com.nexera.core.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
+import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
@@ -190,5 +192,8 @@ public interface LoanService {
 	public void sendNoproductsAvailableEmail(UserVO userVO, int loanID);
 
 	public Loan getLoanByWorkflowItemExecId(int workflowItemExecId);
+
+	public void saveCreditScoresForBorrower(Map<String, String> creditScoreMap,
+	        Loan loan, ExceptionMaster exceptionMaster);
 
 }

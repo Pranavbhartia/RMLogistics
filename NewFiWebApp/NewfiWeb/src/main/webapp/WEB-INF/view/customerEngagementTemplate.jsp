@@ -5,16 +5,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="resources/images/title-logo.png">
+<link rel="shortcut icon" type="image/x-icon" href="resources/images/newfiHome.ico">
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/jquery-ui.css" rel="stylesheet">
+<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
 <link href="resources/css/styles.css" rel="stylesheet">
 <link href="resources/css/styles-common.css" rel="stylesheet">
 <link href="resources/css/customer-engagement.css" rel="stylesheet">
 <link href="resources/css/customer-application.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
 <link href="resources/css/footer.css" rel="stylesheet">
-<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="resources/css/style-resp.css" rel="stylesheet">
+
 
 </head>
 <body>
@@ -24,26 +25,7 @@
 			<div id="ce-main-container"></div>			
 		</div>
 	</div>
-	<footer class="footer-wrapper cust-eng" id="footer-wrapper">
-    	<div class="footer-wrapper-container container">	
-        	<div class="footer-text1 float-left">
-            	<div class="footer-text">
-                	© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327
-    			</div>
-    			<div class="footer-text-links">
-         			<a class="footer-inline-txt" href="http://www.nexeraholding.com/information/#licensing" target="_blank">Licensing</a><a class="footer-inline-txt" href="http://www.nmlsconsumeraccess.org/" target="_blank">NMLS Consumer Access</a><a class="footer-inline-txt" href="http://www.nexeraholding.com/privacy-policy/" target="_blank">Privacy Policy</a><a class="footer-inline-txt" href="http://www.nexeraholding.com/information/" target="_blank">Terms of Use</a>
-    			</div>
-  			</div>		
-   			<div class="footer-text2 float-right">
-   				<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
-   					<div class="footer-inline-home-image" id="footeHomeImage"></div>
-   				</a>
-  				<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
-  					<div class="footer-inline-home-text" id="footerHomeText">Equal Housing Lender</div>
-   				</a>  
-  			</div>
-		</div>
-	</footer>
+	<jsp:include page="customer-engagement-footer.jsp"></jsp:include>
 	<script src="resources/js/jquery-2.1.3.min.js"></script>
 	<script src="resources/js/jquery-ui.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>
@@ -71,6 +53,7 @@
 			adjustCustomerEngagementPageOnResize();
 			$(window).resize(function(){
 				adjustCustomerEngagementPageOnResize();
+				
 			});
             
 			/* $(document).on('keydown','input[name="currentMortgageBalance"]',function(){

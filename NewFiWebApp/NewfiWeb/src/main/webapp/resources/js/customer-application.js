@@ -483,6 +483,7 @@ function getApplicationTextQues(question) {
 				});
 			}
 
+
 			
 			   if (question.name == 'ssn') {
 				  // $('input[name="ssn"]').mask("999-99-9999");
@@ -499,6 +500,7 @@ function getApplicationTextQues(question) {
 
 	  if(question.name =="birthday"){
 		  optionCont.removeClass("app-input").addClass("prof-form-input date-picker").attr("placeholder","MM/DD/YYYY");
+		 // $('input[name=birthday]').mask("__/__/____");
 	  }
 	
   }else{
@@ -531,6 +533,7 @@ function getApplicationTextQues(question) {
 			}
 	      
 	    });
+	   
 	  
   }
 	
@@ -543,6 +546,7 @@ function getApplicationTextQues(question) {
 
     return container.append(quesTextCont).append(optionsContainer);
 }
+
 
 function getApplicationMultipleChoiceQues(question,value) {
     var container = $('<div>').attr({
@@ -2293,14 +2297,18 @@ function getMultiTextQuestion(quesText, value) {
     return wrapper.append(container);
 }
 
-$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(){
-    $(this).datepicker({
+$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(e){
+
+	$(this).datepicker({
 		format: "M yyyy",
 	    minViewMode: "months",
-	    endDate: "today",
-	    autoclose : true
+	    autoclose : true,
+		maxDate: 0,
+		defaultDate:'',
+	    constrainInput: false
     }).on('changeDate',function(e){
     	e.stopImmediatePropagation();
+    	e.preventDefault();
     	var year = $(this).data('datepicker').getFormattedDate('yyyy');
     	var month = $(this).data('datepicker').getFormattedDate('mm');
     	var currentYear = new Date().getFullYear();
@@ -2315,6 +2323,7 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     	
     });
 });
+
 
 $('body').on('keypress',"input[name='beforeTax']",function(){
 	
@@ -2453,7 +2462,7 @@ $('body').on('focus',"input[name='purchaseTime']",function(e){
 	 var k = e.which;
      var ok = k >= 65 && k <= 90 || // A-Z
          k >= 97 && k <= 122 || // a-z
-         k >= 48 && k <= 57; // 0-9
+         k >= 48 && k <= 57 || k == 32;; // 0-9
      
      if (!ok){
          e.preventDefault();
@@ -2467,7 +2476,7 @@ $('body').on('keypress',"input[name='birthday']",function(e){
         var k = e.which;
         var ok = k >= 65 && k <= 90 || // A-Z
             k >= 97 && k <= 122 || // a-z
-            k >= 48 && k <= 57; // 0-9
+            k >= 48 && k <= 57 || k == 32 ; // 0-9
         
         if (!ok){
             e.preventDefault();
@@ -2479,7 +2488,7 @@ $('body').on('keypress',"input[name='startLivingTime']",function(e){
         var k = e.which;
         var ok = k >= 65 && k <= 90 || // A-Z
             k >= 97 && k <= 122 || // a-z
-            k >= 48 && k <= 57; // 0-9
+            k >= 48 && k <= 57 || k == 32;; // 0-9
         
         if (!ok){
             e.preventDefault();
@@ -2491,7 +2500,7 @@ $('body').on('keypress',"input[name='startWorking']",function(e){
         var k = e.which;
         var ok = k >= 65 && k <= 90 || // A-Z
             k >= 97 && k <= 122 || // a-z
-            k >= 48 && k <= 57; // 0-9
+            k >= 48 && k <= 57 || k == 32; // 0-9
         
         if (!ok){
             e.preventDefault();
@@ -2505,6 +2514,9 @@ $('body').on('focus',"input[name='ssn']",function(){
 });
 $('body').on('focus',"input[name='phoneNumber']",function(){
     $(this).mask("(999) 999-9999");
+});
+$('body').on('focus',"input[name='birthday']",function(){
+    $(this).mask("99/99/9999");
 });
 
 
@@ -4235,7 +4247,7 @@ function appProgressBaar(num){
 
 function putCurrencyFormat(name){
 	
-	$("input[name="+name+"]").keydown(function() {
+	$("input[name="+name+"]").focus(function() {
     	$("input[name="+name+"]").maskMoney({
 			thousands:',',
 			decimal:'.',
@@ -4246,13 +4258,6 @@ function putCurrencyFormat(name){
 		});		
     });
 }
-
-
-
-
-
- 
- 
 
 function getMonthYearTextQuestion(question) {
 	 var container = $('<div>').attr({
@@ -5219,8 +5224,12 @@ $.ajax({
                 var ob;
                 try{
                     ob=JSON.parse(data);
+	                if(ob.length>0){
+	                    responseTime=ob[0].responseTime;
+	                }
                 }catch(exception){
                     ob={};
+                	responseTime="";
                     console.log("Invalid Data");
                 }
                // alert('createLoan data is '+data)
@@ -5597,8 +5606,12 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
             var ob;
             try{
                 ob=JSON.parse(data);
+                if(ob.length>0){
+                    responseTime=ob[0].responseTime;
+                }
             }catch(exception){
                 ob={};
+                responseTime="";
                 console.log("Invalid Data");
             }
            // alert('createLoan data is '+data)

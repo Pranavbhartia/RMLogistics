@@ -382,6 +382,7 @@ input[type="button"]:focus, button:focus {
 	height: 2000px;
 	border-left: 1px solid #dcdcdc;
 	margin-left: -1px;
+	z-index: 999;
 }
 
 .lp-t2-item {
@@ -3185,14 +3186,19 @@ input.calc-input {
 	color: #428bca;
 	margin-bottom: 2px;
 	padding-top: 2px;
+	cursor:pointer;
 }
 
 .milestone-lc-text {
 	text-align: right;
+	float: right;
+	clear: both;
 }
 
 .milestone-rc-text {
 	text-align: left;
+	float:left;
+	clear: both;
 }
 
 .milestone-plain-text {
@@ -3817,12 +3823,19 @@ input.calc-input {
 
 .ms-team-member-th-col1,.ms-team-member-th-col2,.ms-team-member-tr-col1,.ms-team-member-tr-col2
 	{
-	width: 48%;
-	padding: 0 5px;
+	width: 45%;
+	padding: 0 9px;
+	white-space: nowrap;
 }
 .del-icon{
-	color:#dd4b39;
-	cursor:pointer;
+	  color: #dd4b39;
+	  cursor: pointer;
+	  background: url(../images/close-blue.png) no-repeat left;
+	  width: 10px;
+	  height: 10px;
+	  background-size: 100%;
+	  margin-top: 9px;
+	  margin-right: 6px;
 }
 .ms-add-member-popup {
 	position: absolute;
@@ -4363,11 +4376,15 @@ input.calc-input {
     border-top: 3px solid #428bca;
     z-index: 999;
 }
-
+.overlay-popup-btn-wrapper {
+	  width: 210px;
+	  margin: 0 auto;
+}
 .overlay-popup-txt {
     font-size: 14px;
     line-height: 30px;
     margin-bottom: 10px;
+    text-align:center;
 }
 
 .overlay-btn {
@@ -5064,7 +5081,11 @@ input.calc-input {
   	background: white;
   	padding-left:0px !important;
   	width: 82%;
-        margin-left: 57px;
+    margin: 0 auto;
+}
+
+.pgwSlideshow .ps-current>ul>li img {
+	padding-top: 10px;
 }
 
 .pgwSlideshow .ps-list{
@@ -5117,6 +5138,7 @@ input.calc-input {
 	font-weight: bold;
 	color: rgb(244, 117, 33);
 	margin-left: 4px;
+	cursor: help;
 }
 
 .outer-session-expire{
@@ -5220,7 +5242,7 @@ a.prof-form-verfied-mess {
 .ps-current {
 	  margin: 10px 0 0 0;
 	  border-radius: 7px;
-	  height: 406px !important;
+	  /* height: 406px !important; */
 	  border: 1px solid gainsboro;
 }
 
@@ -5270,4 +5292,8 @@ a.session-login-btn {
 }
 .creditScoreClickableClass{
 	
+}
+
+.pre-qualification{
+	margin-top: 20px;
 }

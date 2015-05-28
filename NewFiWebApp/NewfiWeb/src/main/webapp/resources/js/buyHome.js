@@ -247,8 +247,7 @@ function paintloanamount() {
 
         buyHomeTeaserRate.purchaseDetails.housePrice = $('input[name="homeWorthToday"]').val();
         buyHomeTeaserRate.purchaseDetails.loanAmount = (getFloatValue($('input[name="homeWorthToday"]').val()) -getFloatValue($('input[name="currentMortgageBalance"]').val()));
-        
-        
+ 
         var questionOne=validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);
       
 

@@ -27,11 +27,11 @@ function getAgentSecondaryLeftNav() {
 	newfiObject.applicationNavTab=undefined;
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 ="";
-	/*if(!selectedUserDetail.lqbFileId){
+	if(!userIsRealtor()){
 		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
 		newfiObject.applicationNavTab=step1;
-	}*/
-	step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
+	}
+	//step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
 	var step2 = '';
 	if (!userIsRealtor()) {
 		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
@@ -1594,6 +1594,8 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 								&& (code != "TITLE_COMPANY" && code != "HOME_OWN_INS")) {
 							showErrorToastMessage(selectUserType);
 							return false;
+						}else{
+							removeToastMessage();
 						}
 						var internalRoleID = $('#add-memeber-user-type').attr(
 								"internalRoleID");
@@ -1626,6 +1628,8 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 								/*showToastMessage("Please select a user type");*/
 								showErrorToastMessage(selectUserType);
 								return false;
+							}else{
+								removeToastMessage();
 							}
 							var internalRoleID = $('#add-memeber-user-type')
 									.attr("internalRoleID");
@@ -1811,6 +1815,9 @@ function userTypeClicked(event) {
 		hideUserTypeDropDown();
 	} else {
 		showUserTypeDropDown();
+	}
+	if($("#add-username-dropdown-cont").css("display") == "block"){
+		$("#add-username-dropdown-cont").hide();
 	}
 }
 
@@ -2182,7 +2189,7 @@ function appendCustomerEditProfilePopUp() {
 		$popup.click(function() {
 			return false;
 		});
-	});
+	}).mask('00/00/0000');
 
 	row.append(label).append(dobInput).append(appendErrorMessage());
 	$('#cus-prof-container').append(row);

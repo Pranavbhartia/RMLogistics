@@ -1,6 +1,5 @@
 package com.nexera.core.service.impl;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -115,7 +114,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 	}
 
 	private void sendPaymentMail(User user, String templateId, String subject,
-	        ByteArrayOutputStream attachmentStream) {
+	        LoanApplicationFee loanApplicationFee) {
 		LOG.debug("Sending mail");
 		// Making the Mail VOs
 		EmailVO emailVO = new EmailVO();
@@ -123,7 +122,41 @@ public class BraintreePaymentGatewayServiceImpl implements
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() });
+		if (loanApplicationFee != null) {
+			substitutions.put("-date-", new String[] { loanApplicationFee
+			        .getModifiedDate().toString() });
+			if (user.getCustomerDetail() != null) {
+				if (user.getCustomerDetail().getAddressStreet() != null) {
+					substitutions.put("-address-", new String[] { user
+					        .getCustomerDetail().getAddressStreet() });
+				} else {
+					substitutions.put("-address-", new String[] { "" });
+				}
+				if (user.getCustomerDetail().getAddressCity() != null) {
+					substitutions.put("-city-", new String[] { user
+					        .getCustomerDetail().getAddressCity() });
+				} else {
+					substitutions.put("-city-", new String[] { "" });
+				}
+				if (user.getCustomerDetail().getAddressState() != null) {
+					substitutions.put("-state-", new String[] { user
+					        .getCustomerDetail().getAddressState() });
+				} else {
+					substitutions.put("-state-", new String[] { "" });
+				}
+				if (user.getCustomerDetail().getAddressCity() != null) {
+					substitutions.put("-zip-", new String[] { user
+					        .getCustomerDetail().getAddressZipCode() });
+				} else {
+					substitutions.put("-zip-", new String[] { "" });
+				}
+			}
 
+			if (loanApplicationFee.getFee() != null) {
+				substitutions.put("-amount-", new String[] { loanApplicationFee
+				        .getFee().toString() });
+			}
+		}
 		if (user.getUsername() != null) {
 			emailVO.setSenderEmailId(user.getUsername()
 			        + CommonConstants.SENDER_EMAIL_ID);
@@ -135,7 +168,6 @@ public class BraintreePaymentGatewayServiceImpl implements
 		emailVO.setSubject(subject);
 		emailVO.setTemplateId(templateId);
 		emailVO.setTokenMap(substitutions);
-		emailVO.setAttachmentStream(attachmentStream);
 		try {
 			sendEmailService.sendEmailForCustomer(emailVO, user);
 		} catch (InvalidInputException e) {
@@ -434,8 +466,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PAYMENT);
 			sendPaymentMail(transactionDetails.getUser(), template.getValue(),
 			        DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,
-			        receiptPdfService.generateReceipt(LoanApplicationFee
-			                .convertEntityToVO(applicationFee)));
+			        applicationFee);
 			paymentStatus = LoanStatus.APP_PAYMENT_SUCCESS;
 		} else if (transaction.getStatus() == Transaction.Status.AUTHORIZATION_EXPIRED
 		        || transaction.getStatus() == Transaction.Status.FAILED

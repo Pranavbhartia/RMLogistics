@@ -421,6 +421,9 @@
 	.footer-wrapper-container {
 		padding-left: 50px;
 	}
+	.center-text-session-expire {
+	 	margin: 100px auto;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
@@ -732,6 +735,10 @@
 /*Custom breakpoints for milestone page*/
 @media (max-width: 599px){
 	
+	.milestone-lc-text{
+		float: left;
+	}
+	
 	.loan-progress-milestone-wrapper {
 		width: 400px;
 		max-width: 95%;
@@ -832,6 +839,9 @@
 /*Custom breakpoints for milestone page*/
 
 @media (min-width: 768px) and (max-width: 850px){
+	.milestone-lc-text{
+		float: left;
+	}
 	.loan-progress-milestone-wrapper {
 		width: 400px;
 		max-width: 95%;
@@ -1239,6 +1249,19 @@
 	}
 	.footer-wrapper-container{
 		padding-right: 5px;
+	}
+	.pgwSlideshow{
+		width: 95%;
+	}
+	.slider-prev-next-btn-row {
+	    width: 95%;
+	}
+	.slider-btn{
+		width: 110px;
+	}
+	.getting-to-know-btn {
+	    width: 240px;
+	    font-size: 14px;
 	}
 }
 

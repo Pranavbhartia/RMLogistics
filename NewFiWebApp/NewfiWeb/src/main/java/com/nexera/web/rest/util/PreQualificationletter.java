@@ -27,7 +27,6 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
-import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.UserProfileService;
@@ -41,11 +40,9 @@ public class PreQualificationletter {
 	@Autowired
 	private UserProfileService userProfileService;
 
-	public  void sendPreQualificationletter(LoanAppFormVO loaAppFormVO,String lockRateData, HttpServletRequest httpServletRequest) {
+	public  void sendPreQualificationletter(LoanAppFormVO loaAppFormVO,String thirtyYearRateVoDataSet, HttpServletRequest httpServletRequest) {
 	    
 	    ByteArrayOutputStream byteArrayOutputStream =  new ByteArrayOutputStream();
-		
-		JSONObject thirtyYearRateVoDataSet = thirtyYearRateVoDataSet(lockRateData);
 		createPdf(loaAppFormVO,thirtyYearRateVoDataSet,byteArrayOutputStream,httpServletRequest);
 		try {
 	        userProfileService.sendEmailPreQualification(loaAppFormVO.getUser(),byteArrayOutputStream);
@@ -57,7 +54,8 @@ public class PreQualificationletter {
     }
 	
 	
-	public static JSONObject thirtyYearRateVoDataSet(String lockRateData){
+	
+	public String thirtyYearRateVoDataSet(String lockRateData){
 		
 		
 		JSONObject thirtyYearRateVoDataSet = null;
@@ -76,17 +74,19 @@ public class PreQualificationletter {
 		    
 		}
 		
-		return thirtyYearRateVoDataSet;
+		return thirtyYearRateVoDataSet.toString();
 	} 
 
 	
-	public static void createPdf(LoanAppFormVO loaAppFormVO,JSONObject thirtyYearRateVoDataSet,OutputStream outputStream, HttpServletRequest httpServletRequest){
+	public static void createPdf(LoanAppFormVO loaAppFormVO,String thirtyYearRateVoData,OutputStream outputStream, HttpServletRequest httpServletRequest){
 		
 		//OutputStream file;
 		Document document = new Document();
         try {
 	        //file = new FileOutputStream(new File("D:\\Abhishek-Project\\RareMile_Projects\\Nexera\\pdf\\test.pdf"));
 	        
+        	JSONObject thirtyYearRateVoDataSet = new JSONObject(thirtyYearRateVoData);
+        	
         	@SuppressWarnings("deprecation")
             String basePath = httpServletRequest.getRealPath("/");
         
@@ -139,19 +139,20 @@ public class PreQualificationletter {
 			 UserVO internalUser = findInternalUserDetailVO(loaAppFormVO);
 			 String loanAdvisorName ="";
 			 String loanAdvisor ="";
-			 String directPhoneNum ="Phone No:";
-			 String NMLS = "NMLS ID :";
+			 String directPhoneNum ="";
+			 String NMLS = "";
 			 
 			 if(null!=internalUser){
+				 
 				 loanAdvisorName = internalUser.getDisplayName();
 			     loanAdvisor = "Senior Loan Advisor";
 			     if(null!= internalUser.getPhoneNumber() && internalUser.getPhoneNumber()!=" ")
-			    	 directPhoneNum = directPhoneNum + internalUser.getPhoneNumber();
+			    	 directPhoneNum = "Phone No : " + internalUser.getPhoneNumber();
 			     else{
 			    	 directPhoneNum ="";
 			     }
 			     if(null!= internalUser.getInternalUserDetail().getNmlsID())
-			    	 NMLS = NMLS + internalUser.getInternalUserDetail().getNmlsID();
+			    	 NMLS = "NMLS ID :" + internalUser.getInternalUserDetail().getNmlsID();
 			     else{
 			    	 NMLS ="";
 			     }

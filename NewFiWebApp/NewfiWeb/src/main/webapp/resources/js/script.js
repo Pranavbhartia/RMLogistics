@@ -911,7 +911,7 @@ function paintFixYourRatePage(appUserDetails) {
 }
 
 
-
+var responseTime;
 function fetchLockRatedata(loanNumber,appUserDetailsParam)
 {
 //alert('inside create loan method');
@@ -926,8 +926,12 @@ function fetchLockRatedata(loanNumber,appUserDetailsParam)
 		    var ob;
             try{
                 ob=JSON.parse(data);
+                if(ob.length>0){
+                    responseTime=ob[0].responseTime;
+                }
             }catch(exception){
                 ob={};
+                responseTime="";
                 console.log("Invalid Data");
             }
            // alert('fetchLockRatedata data is '+JSON.stringify(data));
@@ -1405,7 +1409,7 @@ function getLoanSummaryHeader() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html("Rates as of "+getCurrentDate());
+    }).html("Rates as of "+responseTime);
     headerCont.append(col1).append(col2);
     return headerCont;
 }
@@ -1456,8 +1460,8 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var val="";
     if(rateVoObj.teaserRate)
         val=parseFloat(rateVoObj.teaserRate).toFixed(3)+" %";
-    var lcRow4 = getLoanSummaryRow("Interest Rate", val, "teaserRateId");
-    var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR +" %", "aprid");
+    var lcRow4 = getLoanSummaryRow("Interest Rate", val, "lockInterestRate");
+    var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR +" %", "lockrateaprid");
     //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVO[index].closingCost), "closingCostId");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);
     var rightCol = $('<div>').attr({
@@ -2332,6 +2336,10 @@ $(document).on('click', function(e) {
 });
 $(document).on('click', '#alert-notification-btn', function(e) {
     e.stopImmediatePropagation();
+    
+    if($('#alert-popup-wrapper-settings').css("display") == "block"){
+		hideSettingsPopup();
+	}
     if ($(this).has('#alert-popup-cont-wrapper').length == 1) {
         if ($('#alert-popup-cont-wrapper').css("display") == "block") {
             hideAlertNotificationPopup();
@@ -2445,8 +2453,47 @@ function getLoanSliderWrapper(lqbData,appUserDetails) {
     }
     var rateBtn = $('<div>');
     getRequestRateLockStatus(rateBtn);
+    
+    var sendPreQualification = $('<div>').attr({
+        "class": "rate-btn pre-qualification"
+    }).html("Send Pre-Qualification Letter").on('click',function(){
+    	
+    	sendPreQualificationLetter();
+    });
+    
+    if(appUserDetails.loanType.loanTypeCd == "PUR"){
+    	return wrapper.append(container).append(rateBtn).append(sendPreQualification);
+    }
+    
+ 
     return wrapper.append(container).append(rateBtn);
 }
+
+
+function sendPreQualificationLetter(){
+	
+	$.ajax({
+		
+		url:"rest/application/sendPreQualiticationLatter",
+		type:"POST",
+		data:{"appFormData" : JSON.stringify(appUserDetails),"rateDataSet":JSON.stringify(closingCostHolder.valueSet)},
+		dataType:"application/json",
+		cache:false,
+		success:function(data){
+			showToastMessage("Pre-qualificaion letter is send ");
+		},
+		error:function(data){
+			if(data.status != 200)
+			showToastMessage("Error");
+			else{
+				showToastMessage("Pre-qualificaion letter is send to your email id");
+
+			}
+		}
+		
+	});
+}
+
 
 function getRequestRateLockStatus(element){
     if(!appUserDetails.loan.isRateLocked){

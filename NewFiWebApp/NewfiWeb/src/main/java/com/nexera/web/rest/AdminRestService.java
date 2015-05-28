@@ -1,10 +1,8 @@
 package com.nexera.web.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.vo.CommonResponseVO;
-import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.TemplateVO;
 import com.nexera.core.service.MileStoneTurnAroundTimeService;
@@ -33,51 +30,47 @@ public class AdminRestService {
 	private TemplateService templateService;
 
 	@RequestMapping(value = "/retrieveTurnAround", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO loadAllMileStoneTurnAround() {
+	public @ResponseBody CommonResponseVO loadAllMileStoneTurnAround() {
 
 		List<MileStoneTurnAroundTimeVO> aroundTimeVOs;
-		System.out.println("retrieveTurnAround method");
 		aroundTimeVOs = aroundTimeService.loadAllMileStoneTurnAround();
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(aroundTimeVOs);
+		        .wrapObjectForSuccess(aroundTimeVOs);
 
 		return responseVO;
 	}
 
 	@RequestMapping(value = "/saveMileStoneTurnArounds", method = RequestMethod.POST)
-	public @ResponseBody
-	CommonResponseVO saveOrUpdateMileStoneTurnArounds(
-			@RequestBody String strAroundTimeVOs)
-			throws NoRecordsFetchedException {
+	public @ResponseBody CommonResponseVO saveOrUpdateMileStoneTurnArounds(
+	        @RequestBody String strAroundTimeVOs)
+	        throws NoRecordsFetchedException {
 		TypeToken<List<MileStoneTurnAroundTimeVO>> token = new TypeToken<List<MileStoneTurnAroundTimeVO>>() {
 		};
 		List<MileStoneTurnAroundTimeVO> aroundTimeVOs = new Gson().fromJson(
-				strAroundTimeVOs, token.getType());
+		        strAroundTimeVOs, token.getType());
 		aroundTimeService.saveOrUpdateMileStoneTurnArounds(aroundTimeVOs);
 		CommonResponseVO responseVO = new CommonResponseVO();
 		return responseVO;
 	}
 
 	@RequestMapping(value = "/retrieveTemplates", method = RequestMethod.GET)
-	public @ResponseBody
-	CommonResponseVO loadAllTemplates() {
+	public @ResponseBody CommonResponseVO loadAllTemplates() {
 
 		List<TemplateVO> templateVOs = templateService.getListsTemplate();
 		CommonResponseVO responseVO = RestUtil
-				.wrapObjectForSuccess(templateVOs);
+		        .wrapObjectForSuccess(templateVOs);
 
 		return responseVO;
 	}
 
 	@RequestMapping(value = "/saveTemplates", method = RequestMethod.POST)
-	public @ResponseBody
-	CommonResponseVO saveOrUpdateTemplates(@RequestBody String strTemplateVOs)
-			throws NoRecordsFetchedException {
+	public @ResponseBody CommonResponseVO saveOrUpdateTemplates(
+	        @RequestBody String strTemplateVOs)
+	        throws NoRecordsFetchedException {
 		TypeToken<List<TemplateVO>> token = new TypeToken<List<TemplateVO>>() {
 		};
 		List<TemplateVO> templateVOs = new Gson().fromJson(strTemplateVOs,
-				token.getType());
+		        token.getType());
 		templateService.saveOrUpdate(templateVOs);
 		CommonResponseVO responseVO = new CommonResponseVO();
 		return responseVO;
