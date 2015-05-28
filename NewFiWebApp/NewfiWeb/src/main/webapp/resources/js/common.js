@@ -56,7 +56,7 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 				if(component&&component.length==0){
 					component=$(document.body)
 				}
-				var content="<div class='outer-session-expire float-right'><div class='center-text-session-expire'>"+response.message+"</div></div>"
+				var content="<div class='rp-agent-dashboard float-left'><div class='center-text-session-expire'>"+response.message+"</div></div>"
 				$(component).html(content);
 			}else{
 				successCallBack(response);	
