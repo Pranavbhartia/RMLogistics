@@ -23,7 +23,7 @@
 
 		<!-- Uncomment this if you require maven to publish the war in a specific 
 			folder such as the tomcat's webapps <dev.deployment.path>E:\Nexera\apache-tomcat-7.0.56\webapps</dev.deployment.path> -->
-		<dev.deployment.path>/apps/tomcat/apache-tomcat-7.0.55/webapps</dev.deployment.path>
+		<dev.deployment.path>C:\Software\apache-tomcat-7.0.59\webapps</dev.deployment.path>
 		<!-- Spring -->
 
 		<spring.security>3.2.3.RELEASE</spring.security>

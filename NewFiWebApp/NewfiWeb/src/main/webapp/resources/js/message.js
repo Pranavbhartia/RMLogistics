@@ -53,6 +53,7 @@ var ageErrorMessage="You must be at least 18 years of age.";
 var changePasswordErrorMessage="Error while changing your password. Please try again later.";
 var photoUploadErrorMessage="You must upload an image file with one of the following extensions:";
 var messageToEnterValidEmail="Please enter valid email ID";
+var feildShouldNotBeZero="The answers of the questions should not be zero."
 
 //Messages in script.js
 var errorInCreateLoan="Error inside createLoan";
