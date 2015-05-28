@@ -90,7 +90,7 @@
 			hideOverlay();
         	$("#popup-overlay").hide();
 			console.log("Showing toast now");
-			showToastMessage("Payment successful!");
+			showToastMessage("Payment successful");
 			var referenceMileStone = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"];
 			if (!referenceMileStone)
 			{
