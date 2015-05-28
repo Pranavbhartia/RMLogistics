@@ -735,10 +735,6 @@
 /*Custom breakpoints for milestone page*/
 @media (max-width: 599px){
 	
-	.milestone-lc-text{
-		float: left;
-	}
-	
 	.loan-progress-milestone-wrapper {
 		width: 400px;
 		max-width: 95%;
@@ -839,9 +835,6 @@
 /*Custom breakpoints for milestone page*/
 
 @media (min-width: 768px) and (max-width: 850px){
-	.milestone-lc-text{
-		float: left;
-	}
 	.loan-progress-milestone-wrapper {
 		width: 400px;
 		max-width: 95%;

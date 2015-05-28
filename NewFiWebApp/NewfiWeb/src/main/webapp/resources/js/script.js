@@ -220,7 +220,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                     paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);}
                 	else{
                 		showToastMessage("Please fill the application path ");
-                		window.location.href ="./home.do#myLoan/my-application";
+                		window.location.href =newfiObject.baseUrl+"home.do#myLoan/my-application";
                 		return false;
                 	}
                 }
@@ -256,14 +256,14 @@ function paintApplicationAlreadySubmittedPage() {
 		"class" : "getting-to-know-btn margin-0-auto"
 	}).html("View my rate options").on('click',function(){
 		
-		window.location.href ="./home.do#myLoan/lock-my-rate";
+		window.location.href =newfiObject.baseUrl+"home.do#myLoan/lock-my-rate";
 	});
 	
 	var btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
 	}).html("Talk to a loan advisor").on('click',function(){
 		
-		window.location.href ="./home.do#myTeam";
+		window.location.href =newfiObject.baseUrl+"home.do#myTeam";
 	});
 	
 	$('#center-panel-cont').append(descText).append(btn1).append(btn2).append(btn3);
