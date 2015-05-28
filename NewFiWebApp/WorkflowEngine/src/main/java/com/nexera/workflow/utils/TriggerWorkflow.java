@@ -44,7 +44,7 @@ public class TriggerWorkflow extends Thread {
 
 	@Override
 	public void run() {
-
+		HttpClient client = new DefaultHttpClient();
 		try {
 			
 			int wfID = Integer.parseInt(params.get("wfID").toString());
@@ -67,7 +67,7 @@ public class TriggerWorkflow extends Thread {
 			}
 			map.put("data", sw.toString());
 
-			HttpClient client = new DefaultHttpClient();
+
 			HttpPost post = new HttpPost(url);
 
 			// add header
@@ -100,6 +100,8 @@ public class TriggerWorkflow extends Thread {
 			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (IOException e) {
 			LOGGER.error("Exception caught " + e.getMessage());
+		} finally {
+			client.getConnectionManager().closeExpiredConnections();
 		}
 
 	}

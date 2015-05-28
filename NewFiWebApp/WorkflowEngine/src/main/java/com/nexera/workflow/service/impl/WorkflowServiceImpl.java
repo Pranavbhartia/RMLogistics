@@ -175,6 +175,8 @@ public class WorkflowServiceImpl implements WorkflowService {
 		workflowItemExecDao.saveOrUpdate(workflowItemExecution);
 		if (pushNotificationFlag) {
 			try {
+				if (workflowItemExecution.getStatus().equals(
+				        WorkItemStatus.COMPLETED.getStatus()))
 				TriggerWorkflow.triggerMilestoneStatusChange(
 				        workflowItemExecution.getId(),
 				        workflowItemExecution.getStatus(), url, appUrl);

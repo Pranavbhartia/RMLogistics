@@ -1,4 +1,5 @@
 var updateHandler={
+	taskKeyDictionary:{},
 	taskKey:"",
 	pushServerUrl : "/PushNotification/pushServlet/?taskId=",
 	enablePushnotification:false,
@@ -6,14 +7,16 @@ var updateHandler={
 	clearUpdateHandler:function(){
 		this.taskKey="";
 		this.requestEnabled=false;
+		taskKeyDictionary={}
 	},
 	addLoanToTaskKey:function(loanId,callback){
 		var ob=this;
-		if(ob.taskKey.indexOf(loanId)<0){
+		if(!ob.taskKeyDictionary[loanId]){
 			if(ob.taskKey=="")
 				ob.taskKey=loanId+"";
 			else
 				ob.taskKey=ob.taskKey+","+loanId;
+			ob.taskKeyDictionary[loanId]=true;
 		}
 	},
 	initiateRequest:function(){
