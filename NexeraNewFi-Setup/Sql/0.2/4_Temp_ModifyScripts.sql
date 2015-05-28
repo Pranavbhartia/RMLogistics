@@ -415,10 +415,7 @@ ALTER TABLE `newfi_schema`.`loan` change `rate_locked` `lock_status` enum('0','1
 INSERT INTO `newfi_schema`.`needslistmaster` (`id`, `need_category`, `label`, `description`, `modified_date`, `is_custom`) VALUES ('40', 'Other', 'Extra', 'Extra', NULL, '0');
 
 ########
-
-### Anoop: 
 ### Added all the above to 1_ script
-
 ########
 
 #Utsav on 22nd May 
@@ -436,5 +433,10 @@ VALUES ('41','WELCOME_TO_NEWFI_HOME_OWNER_INSURANCE_COMPANY_TEMPLATE_ID','Welcom
 INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`value`)
 VALUES ('42','PRE_QUAL_LETTER_TEMPLATE_ID','Prequal Letter Template','2015-04-10 12:53:34','ef40dd3a-acd4-41b2-9c98-72ce2d4eb414');
 
+########
 
+### Anoop: 
+### Added all the above to 1_ script
+
+########
 
