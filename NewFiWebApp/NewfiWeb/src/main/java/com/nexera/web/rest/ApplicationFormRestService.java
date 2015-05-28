@@ -510,6 +510,8 @@ public class ApplicationFormRestService {
 
 	private String retrievePricingDetails(String xml) {
 		String pricingResultXml = null;
+		LOG.debug("Inside retrievePricingDetails method with xml data value : "+xml);
+		
 		try {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory

@@ -43,8 +43,6 @@ public class PreQualificationletter {
 	public  void sendPreQualificationletter(LoanAppFormVO loaAppFormVO,String thirtyYearRateVoDataSet, HttpServletRequest httpServletRequest) {
 	    
 	    ByteArrayOutputStream byteArrayOutputStream =  new ByteArrayOutputStream();
-		
-		//JSONObject thirtyYearRateVoDataSet = thirtyYearRateVoDataSet(lockRateData);
 		createPdf(loaAppFormVO,thirtyYearRateVoDataSet,byteArrayOutputStream,httpServletRequest);
 		try {
 	        userProfileService.sendEmailPreQualification(loaAppFormVO.getUser(),byteArrayOutputStream);
@@ -141,19 +139,20 @@ public class PreQualificationletter {
 			 UserVO internalUser = findInternalUserDetailVO(loaAppFormVO);
 			 String loanAdvisorName ="";
 			 String loanAdvisor ="";
-			 String directPhoneNum ="Phone No:";
-			 String NMLS = "NMLS ID :";
+			 String directPhoneNum ="";
+			 String NMLS = "";
 			 
 			 if(null!=internalUser){
+				 
 				 loanAdvisorName = internalUser.getDisplayName();
 			     loanAdvisor = "Senior Loan Advisor";
 			     if(null!= internalUser.getPhoneNumber() && internalUser.getPhoneNumber()!=" ")
-			    	 directPhoneNum = directPhoneNum + internalUser.getPhoneNumber();
+			    	 directPhoneNum = "Phone No : " + internalUser.getPhoneNumber();
 			     else{
 			    	 directPhoneNum ="";
 			     }
 			     if(null!= internalUser.getInternalUserDetail().getNmlsID())
-			    	 NMLS = NMLS + internalUser.getInternalUserDetail().getNmlsID();
+			    	 NMLS = "NMLS ID :" + internalUser.getInternalUserDetail().getNmlsID();
 			     else{
 			    	 NMLS ="";
 			     }

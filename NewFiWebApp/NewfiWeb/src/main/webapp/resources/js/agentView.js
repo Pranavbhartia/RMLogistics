@@ -27,11 +27,11 @@ function getAgentSecondaryLeftNav() {
 	newfiObject.applicationNavTab=undefined;
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 ="";
-	/*if(!selectedUserDetail.lqbFileId){
+	if(!userIsRealtor()){
 		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
 		newfiObject.applicationNavTab=step1;
-	}*/
-	step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
+	}
+	//step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
 	var step2 = '';
 	if (!userIsRealtor()) {
 		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
