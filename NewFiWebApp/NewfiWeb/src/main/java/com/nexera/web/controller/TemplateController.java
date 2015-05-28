@@ -81,7 +81,8 @@ public class TemplateController extends DefaultController {
 		try {
 
 			User user = getUserObject();
-
+			LOG.info("User has logged in successfully and has requested home Page"
+			        + user.getUsername());
 			if (UserRolesEnum.CUSTOMER.toString().equals(
 			        user.getUserRole().getRoleCd())) {
 				loadDefaultValuesForCustomer(model, req, user);
@@ -95,8 +96,8 @@ public class TemplateController extends DefaultController {
 			}
 
 		} catch (Exception e) {
-			// TODO: Handle exception scenario
 
+			LOG.error("Exception in Home page ", e);
 			e.printStackTrace();
 		}
 		return mav;
