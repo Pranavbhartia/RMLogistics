@@ -202,7 +202,7 @@ public class ApplicationFormRestService {
 								org.json.JSONObject creditScoreJSONObject = nexeraUtility
 								        .createCreditScoreJSONObject(
 								                WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
-								                loan.getLqbFileId(), 0);
+								                loan.getLqbFileId(), sTicket, 0);
 								if (creditScoreJSONObject != null) {
 									org.json.JSONObject creditScoreJSONResponse = lqbInvoker
 									        .invokeLqbService(creditScoreJSONObject

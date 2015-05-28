@@ -941,12 +941,14 @@ public class NexeraUtility {
 	}
 
 	public JSONObject createCreditScoreJSONObject(String opName,
-	        String lqbLoanId, int format) {
+	        String sTicket, String lqbLoanId, int format) {
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
 		try {
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
 			        lqbLoanId);
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_TICKET,
+			        sTicket);
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
 
 			json.put("opName", opName);
