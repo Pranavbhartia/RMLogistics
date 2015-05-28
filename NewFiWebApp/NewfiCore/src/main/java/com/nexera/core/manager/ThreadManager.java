@@ -96,6 +96,8 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	LqbInvoker lqbInvoker;
+	
+	
 
 	private ExceptionMaster exceptionMaster;
 
@@ -975,7 +977,7 @@ public class ThreadManager implements Runnable {
 		Date timeBeforeCallMade = new Date();
 		JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
 		        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
-		        loan.getLqbFileId());
+		        nexeraUtility.asciiTrim( loan.getLqbFileId()));
 		if (getListOfDocs != null) {
 			JSONObject receivedResponseForDocs = lqbInvoker
 			        .invokeLqbService(getListOfDocs.toString());
