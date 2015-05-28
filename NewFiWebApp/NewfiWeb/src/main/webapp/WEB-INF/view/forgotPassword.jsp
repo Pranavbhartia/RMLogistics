@@ -32,8 +32,9 @@ var resendIndex=locationURL.indexOf("?resend");
 					<div class="login-form-wrapper">
 						<form id="loginForm" name="loginForm" action="#" method="POST">
 						    <div class="reset-error hide" id="errorMessage"></div>
+						    
 							<div class="reg-input-reset-password reg-email" id="email-container">
-					        <input class="reg-input" placeholder="Email" id="emailID" >	
+					        <input type="email" class="reg-input" placeholder="Email" id="emailID" >	
 							<div class="err-msg hide"></div>
 				            </div>
 							<div class="forget-pass-btn-wrapper clearfix">
@@ -56,7 +57,12 @@ var resendIndex=locationURL.indexOf("?resend");
 	<script src="resources/js/message.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script src="resources/js/historySupport.js"></script>
-	
+	<script>
+		resizeHeaderWidth();
+		$(window).resize(function() {
+			resizeHeaderWidth();	
+		});
+	</script>
 </body>
 <script>
 
@@ -111,8 +117,10 @@ $('#loginForm').submit(function(event){
 		$(".reg-input-reset-password").removeClass('ce-err-input');
 	}
 	if (!emailRegex.test(user.emailId)) {
-		$("#emailID").next('.err-msg').html("Email ID is not valid").show();
-		$(".reg-input-reset-password").addClass('err-input').focus();
+		/* $("#emailID").next('.err-msg').html("Email ID is not valid").show();
+		$(".reg-input-reset-password").addClass('err-input').focus(); */
+		$("#errorMessage").text(messageToEnterValidEmail);
+		$("#errorMessage").show();
 		$('#emailID').val('');
 		return;
 	}else {	
@@ -128,8 +136,8 @@ function paintForgetPasswordResponse(data){
 		$("#emailID").next('.err-msg').hide();
 		$(".reg-input-reset-password").removeClass('err-input');
 	}else{
-		$("#emailID").next('.err-msg').html(data.error.message).show();
-		$(".reg-input-reset-password").addClass('err-input').focus();
+		$("#errorMessage").text(messageToEnterValidEmail);
+		$("#errorMessage").show();
 		$('#emailID').val('');
 	}
 }

@@ -11,13 +11,14 @@ public interface LoanAppFormService {
 
 	public LoanAppForm create(LoanAppFormVO loaAppFormVO);
 
-
 	public LoanAppFormVO find(LoanAppFormVO loanAppFormVO);
 
-	
 	public LoanAppForm findByLoan(Loan loan);
+
 	public LoanAppForm findByuserID(int userid);
 
 	public ZipCodeLookup findByZipCode(String zipCode) throws Exception;
+
+	public LoanAppFormVO getLoanAppFormByLoan(Loan loan);
 
 }

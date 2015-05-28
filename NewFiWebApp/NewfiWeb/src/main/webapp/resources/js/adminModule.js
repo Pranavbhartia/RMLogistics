@@ -6,12 +6,13 @@ var Realtor="";
 var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
-
+var flagKnowNewFi=true;
 
 $(document).on('click',function(e){
 	if($('#admin-add-usertype-dropdown-cont').css("display") == "block"){
 		$('#admin-add-usertype-dropdown-cont').hide();
 	}
+
 	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
@@ -22,7 +23,9 @@ $(document).on('click',function(e){
 
 });
 $(document).on('click', '#admin-create-user-popup', function(event) {
+
 	event.stopImmediatePropagation();
+	
 });
 
 
@@ -46,7 +49,7 @@ $('#alert-settings-btn').click(function(e){
 			userDescription=newfiObject.user.userRole.roleDescription;
 		}
 	
-	event.stopImmediatePropagation();
+	e.stopImmediatePropagation();
 	if($('#alert-popup-wrapper-settings').length==1){
 		
 		if($('#alert-popup-wrapper-settings').css("display") == "block"){
@@ -54,7 +57,7 @@ $('#alert-settings-btn').click(function(e){
 			hideSettingsPopup();
 		}else{
 			
-			showSettingsPopup();
+			$('#alert-popup-wrapper-settings').show();
 		}
 	}else{
 		
@@ -111,8 +114,14 @@ function appendSettingsDropDown(){
 			var tutorialsRow=paintSettingsDropDown("tutorials","Tutorial","completeTutorials()","#");
 			
 		 if(newfiObject.user.userRole.roleDescription==customer){
-		 	 
-					container.append(tutorialsRow); 
+			 var tutorialStatusFlag=newfiObject.user.customerDetail.tutorialStatus;
+			 if(tutorialStatusFlag){
+	            	flagKnowNewFi=false;
+	            }
+			 if(flagKnowNewFi){
+				 container.append(tutorialsRow);
+			 }
+					 
 	
 		 }				
 	}   

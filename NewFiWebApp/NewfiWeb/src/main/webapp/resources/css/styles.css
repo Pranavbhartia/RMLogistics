@@ -36,6 +36,10 @@ body {
 	color: #606060;
 }
 
+footer{
+	overflow: hidden;
+}
+
 input,textarea {
 	outline: none;
 	resize: none !important;
@@ -653,7 +657,7 @@ input[type="button"]:focus, button:focus {
   	border-radius: 3px;
 }
 .loan-summary-last-row .loan-summary-green-col-detail{
-	width: auto;
+	width: 120px;
 	color:#fff;
 	font-size: 15px;
 	background: #2DB018;
@@ -2649,7 +2653,7 @@ input.calc-input {
   height: 100%;
   border: none;
   background-color: inherit;
-  width: 365px;
+  width: 325px;
   padding-left: 5px;
   padding-right: 10px;
 }
@@ -2881,6 +2885,7 @@ input.calc-input {
 	
 }
 .login-input {
+	display: block;
 	width: 100%;
 	height: 100%;
 	padding:10px 0;
@@ -2904,35 +2909,36 @@ input.calc-input {
 	    border-radius: 3px;
 	    margin: 25px auto;
 	    padding-left: 40px;
+	    overflow: hidden;
 }
 
 .login-submit-button {
-	/* width: 100%; */
 	height: 40px;
+	margin: 0 auto;
+	clear: both;
+	display: block;
 	margin-bottom: 10px;
 	line-height: 40px;
 	color: #fff;
-	background-color: rgba(24,72,141,0.9);
-	/*background-color: #6c9f2e;*/
+	background-color: rgba(24, 72, 141, 0.9);
 	border: 1px #fff solid;
 	border-radius: 3px;
 	text-align: center;
-	cursor: pointer;
-/*	font-size: 20px;*/
 	font-size: 16px;
 	width: 161px;
-	margin-left: 125px;
 }
+
 .login-submit-button:hover{
 	 background: #F47521;
 }
 .forgot-pwd {
 	height: 20px;
 	line-height: 20px;
-/*	text-align: center;*/
-    text-align: left;
+
+	text-align: center;
+    
 	color: black;
-	margin-left: 125px;
+	/* margin-left: 125px; */
 }
 
 .forgot-pwd-link {
@@ -2945,22 +2951,41 @@ input.calc-input {
 
 .login-hdr {
 	line-height: 50px;
-	margin: 0 5px;
+	margin: 0 10px;
 	color: #fff;
 	font-size:15px;
 }
+
+
 
 .hdr-login-btn,.hdr-get-quote,.hdr-signup-btn {
 	cursor: pointer;
 }
 
-.hdr-login-btn {
+/* .hdr-login-btn {
 	background: url(../images/user_icon.png) no-repeat left center;
 	background-size: 16px auto;
 	padding-left: 20px;
 	font-size:15px;
+} */
+/*change login logo*/
+.hdr-login-btn {
+	
+  background-size: 16px auto;
+  font-size:15px;	
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  color: #fff;
+  margin-top:5px;
+  border-radius:10px;
+  text-align: center;
+  text-transform: capitalize;
+  cursor: pointer;
+  font-family: 'opensanssemibold';
+  border:1px solid white
 }
-
 .hdr-get-quote {
 	margin-top: 10px;
 	padding: 0 10px;
@@ -3216,6 +3241,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: 2px;
 	margin-top: -4px;
+	-ms-transform: rotate(135deg); 
+	-webkit-transform : rotate( 135deg);
+	-moz-transform : rotate( 135deg);
+	-o-transform : rotate( 135deg);
 	transform: rotate(135deg);
 	border-bottom-width: 14px;
 }
@@ -3239,6 +3268,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: 2px;
 	margin-top: -4px;
+	-ms-transform: rotate(135deg); 
+	-webkit-transform : rotate( 135deg);
+	-moz-transform : rotate( 135deg);
+	-o-transform : rotate( 135deg);
 	transform: rotate(135deg);
 	border-bottom-width: 15px;
 	z-index: -1;
@@ -3258,6 +3291,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: -4px;
 	margin-top: -5px;
+	-ms-transform: rotate(45deg); 
+	-webkit-transform : rotate( 45deg);
+	-moz-transform : rotate( 45deg);
+	-o-transform : rotate( 45deg);
 	transform: rotate(45deg);
 	border-top-width: 14px;
 }
@@ -3281,6 +3318,10 @@ input.calc-input {
 	border-width: 2px;
 	margin-left: -5px;
 	margin-top: -6px;
+	-ms-transform: rotate(45deg); 
+	-webkit-transform : rotate( 45deg);
+	-moz-transform : rotate( 45deg);
+	-o-transform : rotate( 45deg);
 	transform: rotate(45deg);
 	border-top-width: 15px;
 	z-index: -1;
@@ -3776,10 +3817,13 @@ input.calc-input {
 
 .ms-team-member-th-col1,.ms-team-member-th-col2,.ms-team-member-tr-col1,.ms-team-member-tr-col2
 	{
-	width: 50%;
+	width: 48%;
 	padding: 0 5px;
 }
-
+.del-icon{
+	color:#dd4b39;
+	cursor:pointer;
+}
 .ms-add-member-popup {
 	position: absolute;
 	right: 20px;
@@ -5044,7 +5088,8 @@ input.calc-input {
 }
 
 .login-row-rc {
-    width: 60%;
+    width: 300px;
+    margin: 0 auto;
 }
 
 .display-title-bottom-subtxt {
@@ -5193,7 +5238,7 @@ span.ps-prev{
 }
 
 .regis-input{
-	margin-left: 77px;
+	/* margin-left: 77px; */
 }
 
 a.session-login-btn {
@@ -5216,4 +5261,13 @@ a.session-login-btn {
 	padding-top: 10px;
 	border-bottom: 1px #b7b7b7 solid;
 }
-
+.link-for-realtor{
+	  width: 0px;
+	  white-space: nowrap;
+	  font-size: 12px;
+	  margin-right: 195px;
+	  font-family: 'opensanssemibold';
+}
+.creditScoreClickableClass{
+	
+}

@@ -38,8 +38,7 @@ import com.nexera.core.utility.NexeraUtility;
 @DisallowConcurrentExecution
 public class EmailBatchProcessor extends QuartzJobBean {
 
-	private static final Logger LOGGER = LoggerFactory
-	        .getLogger("batchJobs");
+	private static final Logger LOGGER = LoggerFactory.getLogger("batchJobs");
 
 	@Value("${mail.store.protocol}")
 	private String protocol;

@@ -30,8 +30,7 @@ import com.nexera.core.utility.NexeraUtility;
 @Scope(value = "prototype")
 public class UserManager implements Runnable {
 
-	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(UserManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger("batchJobs");
 
 	@Autowired
 	private Utils utils;

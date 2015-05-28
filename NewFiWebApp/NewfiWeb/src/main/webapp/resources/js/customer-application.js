@@ -297,7 +297,9 @@ function getContextApplicationSelectQues(contxt) {
 
     var selectedOption = $('<div>').attr({
         "class": "app-option-selected"
-    }).html("Select One").on('click', function() {
+    }).html("Select One").on('click', function(e) {
+    	e.stopPropagation();
+    	$('.app-dropdown-cont').hide();
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
 
@@ -364,7 +366,9 @@ function getApplicationSelectQues(question,val) {
 
     var selectedOption = $('<div>').attr({
         "class": "app-option-selected"
-    }).html("Select One").on('click', function() {
+    }).html("Select One").on('click', function(e) {
+    	e.stopPropagation();
+    	$('.app-dropdown-cont').hide();
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
 
@@ -2496,7 +2500,7 @@ $('body').on('keypress',"input[name='startWorking']",function(e){
 	});
 $('body').on('focus',"input[name='ssn']",function(){
 	
-	$(this).mask("***-**-****");
+	$(this).mask("999-99-9999");
 		
 });
 $('body').on('focus',"input[name='phoneNumber']",function(){
@@ -3533,7 +3537,7 @@ function paintCustomerApplicationPageStep5() {
     
     var isAuthorizedCheckBox = $('<div>').attr({
     	"class" : "ce-option-checkbox"
-    }).text("I authorize newfi to pull my credit report for the purposes of appying for a mortgage loan")
+    }).text("I authorize newfi to pull my credit report to find the best rates and programs that meet my situation ")
     .bind('click',function(){
     	if($(this).hasClass('ce-option-checked')){
     		$(this).removeClass('ce-option-checked');
@@ -4309,7 +4313,9 @@ function getYearMonthOptionContainer(contxt){
     	 "class": "app-option-selected"
     }).data("value",options[0].value)
     .text(options[0].text)
-    .on('click', function() {
+    .on('click', function(e) {
+    	e.stopPropagation();
+    	$('.app-dropdown-cont').hide();
         $(this).parent().find('.app-dropdown-cont').toggle();
     });
 
@@ -5606,3 +5612,7 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
         
     });
 }
+
+$(document).on('click',function(){
+	$('.app-dropdown-cont').hide();
+});

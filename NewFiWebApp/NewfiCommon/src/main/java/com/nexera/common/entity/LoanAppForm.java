@@ -39,7 +39,7 @@ public class LoanAppForm implements Serializable {
 	private String maritalStatus;
 	private Boolean ownsOtherProperty;
 	private Boolean ispensionOrRetirement;
-	
+
 	private Boolean receiveAlimonyChildSupport;
 	private Boolean rentedOtherProperty;
 	private Boolean secondMortgage;
@@ -47,21 +47,18 @@ public class LoanAppForm implements Serializable {
 	private Boolean isselfEmployed;
 	private String selfEmployedIncome;
 	private Boolean isssIncomeOrDisability;
-	
-	
-	
+
 	private BigDecimal monthlyIncome;
-	private Integer  selfEmployedNoYear;
+	private Integer selfEmployedNoYear;
 	private BigDecimal childSupportAlimony;
-	private BigDecimal  socialSecurityIncome;
+	private BigDecimal socialSecurityIncome;
 	private String ssDisabilityIncome;
 	private String monthlyPension;
-	private BigDecimal  retirementIncome;
+	private BigDecimal retirementIncome;
 	private Boolean isCoborrowerPresent;
 	private Boolean ssnProvided;
 	private Boolean cbSsnProvided;
-	
-	
+
 	private Boolean skipMyAssets;
 
 	private Boolean isSpouseOnLoan;
@@ -202,10 +199,6 @@ public class LoanAppForm implements Serializable {
 	public void setSecondMortgage(Boolean secondMortgage) {
 		this.secondMortgage = secondMortgage;
 	}
-	
-	
-	
-	
 
 	@Column(name = "iscoborrower_present", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -216,8 +209,6 @@ public class LoanAppForm implements Serializable {
 	public void setIsCoborrowerPresent(Boolean isCoborrowerPresent) {
 		this.isCoborrowerPresent = isCoborrowerPresent;
 	}
-	
-	
 
 	@Column(name = "pay_sec_mortgage", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -239,9 +230,6 @@ public class LoanAppForm implements Serializable {
 		this.isSpouseOnLoan = isSpouseOnLoan;
 	}
 
-	
-	
-	
 	@Column(name = "ssn_provided")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getSsnProvided() {
@@ -252,7 +240,6 @@ public class LoanAppForm implements Serializable {
 		this.ssnProvided = ssnProvided;
 	}
 
-	
 	@Column(name = "cb_ssn_provided")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
 	public Boolean getCbSsnProvided() {
@@ -626,6 +613,7 @@ public class LoanAppForm implements Serializable {
 	public void setSkipMyAssets(Boolean skipMyAssets) {
 		this.skipMyAssets = skipMyAssets;
 	}
+
 	/*
 	 * @OneToOne(fetch = FetchType.LAZY)
 	 * 

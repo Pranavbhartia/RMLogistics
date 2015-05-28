@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
 import com.nexera.common.vo.LoanVO;
@@ -72,6 +73,22 @@ public class WorkflowRestService {
 			LOG.error(e.getMessage());
 			response = RestUtil.wrapObjectForFailure(null, "500",
 			        e.getMessage());
+		}
+		return response;
+	}
+
+	@RequestMapping(value = "loan/{milestoneID}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getLoanFromMilestone(
+	        @PathVariable int workflowitemexecId) {
+		LOG.debug("Inside method getLoanFromMilestone");
+		CommonResponseVO response = null;
+		Loan loan = loanService.getLoanByWorkflowItemExecId(workflowitemexecId);
+		if (loan != null) {
+			LoanVO loanVO = Loan.convertFromEntityToVO(loan);
+			response = RestUtil.wrapObjectForSuccess(loanVO);
+		} else {
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        "Loan not found");
 		}
 		return response;
 	}
@@ -302,7 +319,7 @@ public class WorkflowRestService {
 				System.out.println(workflowItemExecId
 				        + "----------------------");
 				map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
-						workflowItemExecId);
+				        workflowItemExecId);
 				StringWriter sw = new StringWriter();
 				mapper.writeValue(sw, map);
 				workflowService.saveParamsInExecTable(workflowItemExecId,

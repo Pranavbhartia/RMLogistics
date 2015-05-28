@@ -24,7 +24,26 @@
 			<div id="ce-main-container"></div>			
 		</div>
 	</div>
-	<jsp:include page="newFiFooter.jsp"></jsp:include>
+	<footer class="footer-wrapper cust-eng" id="footer-wrapper">
+    	<div class="footer-wrapper-container container">	
+        	<div class="footer-text1 float-left">
+            	<div class="footer-text">
+                	© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327
+    			</div>
+    			<div class="footer-text-links">
+         			<a class="footer-inline-txt" href="http://www.nexeraholding.com/information/#licensing" target="_blank">Licensing</a><a class="footer-inline-txt" href="http://www.nmlsconsumeraccess.org/" target="_blank">NMLS Consumer Access</a><a class="footer-inline-txt" href="http://www.nexeraholding.com/privacy-policy/" target="_blank">Privacy Policy</a><a class="footer-inline-txt" href="http://www.nexeraholding.com/information/" target="_blank">Terms of Use</a>
+    			</div>
+  			</div>		
+   			<div class="footer-text2 float-right">
+   				<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
+   					<div class="footer-inline-home-image" id="footeHomeImage"></div>
+   				</a>
+  				<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
+  					<div class="footer-inline-home-text" id="footerHomeText">Equal Housing Lender</div>
+   				</a>  
+  			</div>
+		</div>
+	</footer>
 	<script src="resources/js/jquery-2.1.3.min.js"></script>
 	<script src="resources/js/jquery-ui.js"></script>
 	<script src="resources/js/bootstrap.min.js"></script>
@@ -38,6 +57,13 @@
 	<script src="resources/js/message.js"></script>
 	<script src="resources/js/include/jquery-maskMoney.js"></script>
 	<script src="resources/js/historySupport.js"></script>
+	<script>
+		resizeHeaderWidth();
+		$(window).resize(function() {
+			resizeHeaderWidth();	
+		});
+	</script>
+		
 	<script>
 	
 		$(document).ready(function() {

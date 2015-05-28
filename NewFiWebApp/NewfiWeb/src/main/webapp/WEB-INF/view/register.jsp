@@ -29,7 +29,7 @@
 					<input class="reg-input" placeholder="Last Name">
 				</div>
 				<div class="reg-input-cont reg-email">
-					<input class="reg-input" placeholder="Email">	
+					<input type="email" class="reg-input" placeholder="Email">	
 				</div>
 				
 				<div class="reg-btn-wrapper clearfix">
@@ -50,6 +50,12 @@
 	<script src="resources/js/message.js"></script>
 	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
     <script src="/NewfiWeb/resources/js/validation.js"></script>
+    <script>
+		resizeHeaderWidth();
+		$(window).resize(function() {
+			resizeHeaderWidth();	
+		});
+	</script>
 	<script>
 		$(document).ready(function() {
 			globalBinder();

@@ -5,7 +5,7 @@
 	}
 	.home-container{
 		padding-right: 5px;
-		overflow: visible;
+		overflow: hidden;
 	}
 	.left-panel{
 		display: none;
@@ -329,6 +329,10 @@
     .cus-prof-popup:before {
 		bottom: 100%;
 		top: auto;
+		-ms-transform: rotate(90deg); 
+		-webkit-transform : rotate( 90deg);
+		-moz-transform : rotate( 90deg);
+		-o-transform : rotate( 90deg);
 		transform: rotate(90deg);
 		border-right-color: #428bca;
 		margin-bottom: 3px;
@@ -378,6 +382,7 @@
 	.reg-display-title-subtxt{
 		max-width: 100%;
 		padding: 0 10px;
+		margin-bottom: 15px;
 	}
 	.cust-eng-step-hdr,.cust-app-step-hdr {
 		display: block;
@@ -583,6 +588,10 @@
     }
     .cus-prof-popup:before,.cus-prof-popup:after {
 		left: 100%;
+		-ms-transform: rotate(180deg); 
+		-webkit-transform : rotate( 180deg);
+		-moz-transform : rotate( 180deg);
+		-o-transform : rotate( 180deg);
 		transform: rotate(180deg);
 	}
 	.cus-prof-popup{
@@ -765,6 +774,10 @@
 	.milestone-lc-header-txt:after{
 		left: 0;
 		border-color: transparent;
+		-ms-transform: rotate(45deg); 
+		-webkit-transform : rotate( 45deg);
+		-moz-transform : rotate( 45deg);
+		-o-transform : rotate( 45deg);
 		transform: rotate(45deg);
 		border-top-width: 14px;
 		margin-left: -11px;
@@ -772,10 +785,14 @@
 		border-top-color:#ebebeb;
 	}
 	
-	.m-not-started  .milestone-lc-header-txt:before{
-		left:0;
+	.m-not-started  .milestone-lc-header-txt:before {
+		left: 0;
 		margin-top: -6px;
-		margin-left:-10px;
+		margin-left: -10px;
+		-ms-transform: rotate(45deg); 
+		-webkit-transform : rotate( 45deg);
+		-moz-transform : rotate( 45deg);
+		-o-transform : rotate( 45deg);
 		transform: rotate(45deg);
 		border-color: rgba(136, 183, 213, 0);
 		border-top-color: #888;
@@ -857,6 +874,10 @@
 	.milestone-lc-header-txt:after{
 		left: 0;
 		border-color: transparent;
+		-ms-transform: rotate(45deg); 
+		-webkit-transform : rotate( 45deg);
+		-moz-transform : rotate( 45deg);
+		-o-transform : rotate( 45deg);
 		transform: rotate(45deg);
 		border-top-width: 14px;
 		margin-left: -11px;
@@ -868,6 +889,10 @@
 		left:0;
 		margin-top: -6px;
 		margin-left:-10px;
+		-ms-transform: rotate(45deg); 
+		-webkit-transform : rotate( 45deg);
+		-moz-transform : rotate( 45deg);
+		-o-transform : rotate( 45deg);
 		transform: rotate(45deg);
 		border-color: rgba(136, 183, 213, 0);
 		border-top-color: #888;
@@ -1202,6 +1227,18 @@
 	}
 	.soft-menu-icon{
 		margin-right: 10px;
+	}
+	.reg-display-title{
+		font-size: 24px;
+	}
+	.login-row-rc {
+		width: 100%;
+	}
+	.footer-text1{
+		padding: 0 5px;
+	}
+	.footer-wrapper-container{
+		padding-right: 5px;
 	}
 }
 

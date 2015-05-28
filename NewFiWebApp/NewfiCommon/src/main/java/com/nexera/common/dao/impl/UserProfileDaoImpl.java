@@ -330,8 +330,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public Integer saveUserWithDetails(User user) {
-		// Override userName to Null
-		user.setUsername(null);
+
 		Integer userId = (Integer) this.save(user);
 
 		// Check if username is unique in user table, if not, append userID
