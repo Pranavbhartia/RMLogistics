@@ -1449,7 +1449,7 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 }
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
-	
+	removeAllPopups();
 	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
 		event.stopPropagation();
 		var data = {};
@@ -1676,12 +1676,16 @@ $(document).resize(function(){
 });
 
 $(document).on('click',function(){
+	removeAllPopups();
+});
+
+function removeAllPopups(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
 	removeQCPopup();
 	removeNotificationPopup();
-});
+}
 
 $(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
 	e.stopPropagation();
