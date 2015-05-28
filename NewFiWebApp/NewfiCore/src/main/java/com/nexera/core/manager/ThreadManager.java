@@ -171,9 +171,10 @@ public class ThreadManager implements Runnable {
 			Map<String, String> map = new HashMap<String, String>();
 			int format = 0;
 			LOGGER.debug("Invoking load service of lendinqb ");
-			JSONObject loadOperationObject = createLoadJsonObject(map,
-			        WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD,
-			        loan.getLqbFileId(), format);
+			JSONObject loadOperationObject = nexeraUtility
+			        .createLoadJsonObject(map,
+			                WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD,
+			                loan.getLqbFileId(), format, exceptionMaster);
 			if (loadOperationObject != null) {
 				LOGGER.debug("Invoking LQB service to fetch Loan status ");
 				JSONObject loadJSONResponse = lqbInvoker
@@ -459,8 +460,10 @@ public class ThreadManager implements Runnable {
 		 */
 
 		LOGGER.debug("Fetch Credit Score For This Loan ");
-		if (!fetchCreditScore(loan)) {
-			success = false;
+		if (loan.getLqbFileId() != null) {
+			if (!fetchCreditScore(loan)) {
+				success = false;
+			}
 		}
 
 		LOGGER.debug("Check whether purchase document is about to expire");
@@ -1219,27 +1222,6 @@ public class ThreadManager implements Runnable {
 
 			jsonChild.put(WebServiceMethodParameters.PARAMETER_APP_CODE,
 			        appCode);
-			json.put("opName", opName);
-			json.put("loanVO", jsonChild);
-		} catch (JSONException e) {
-			LOGGER.error("Invalid Json String ");
-			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-			        e.getMessage());
-			nexeraUtility.sendExceptionEmail(e.getMessage());
-		}
-		return json;
-	}
-
-	public JSONObject createLoadJsonObject(Map<String, String> requestXMLMap,
-	        String opName, String lqbLoanId, int format) {
-		JSONObject json = new JSONObject();
-		JSONObject jsonChild = new JSONObject();
-		try {
-			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
-			        lqbLoanId);
-			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
-			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_XML_QUERY_MAP,
-			        requestXMLMap);
 			json.put("opName", opName);
 			json.put("loanVO", jsonChild);
 		} catch (JSONException e) {
