@@ -382,6 +382,7 @@ input[type="button"]:focus, button:focus {
 	height: 2000px;
 	border-left: 1px solid #dcdcdc;
 	margin-left: -1px;
+	z-index: 999;
 }
 
 .lp-t2-item {
@@ -5072,7 +5073,11 @@ input.calc-input {
   	background: white;
   	padding-left:0px !important;
   	width: 82%;
-        margin-left: 57px;
+    margin: 0 auto;
+}
+
+.pgwSlideshow .ps-current>ul>li img {
+	padding-top: 10px;
 }
 
 .pgwSlideshow .ps-list{
@@ -5229,7 +5234,7 @@ a.prof-form-verfied-mess {
 .ps-current {
 	  margin: 10px 0 0 0;
 	  border-radius: 7px;
-	  height: 406px !important;
+	  /* height: 406px !important; */
 	  border: 1px solid gainsboro;
 }
 
