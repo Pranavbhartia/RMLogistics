@@ -4376,11 +4376,15 @@ input.calc-input {
     border-top: 3px solid #428bca;
     z-index: 999;
 }
-
+.overlay-popup-btn-wrapper {
+	  width: 210px;
+	  margin: 0 auto;
+}
 .overlay-popup-txt {
     font-size: 14px;
     line-height: 30px;
     margin-bottom: 10px;
+    text-align:center;
 }
 
 .overlay-btn {
