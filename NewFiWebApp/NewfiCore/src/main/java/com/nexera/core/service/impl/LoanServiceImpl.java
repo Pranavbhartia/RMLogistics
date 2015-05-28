@@ -27,6 +27,7 @@ import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.dao.LoanTurnAroundTimeDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.Loan;
@@ -87,6 +88,8 @@ import com.nexera.core.service.StateLookupService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.NexeraUtility;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -100,6 +103,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private NexeraUtility nexeraUtility;
 
 	@Autowired
 	private SendEmailService sendEmailService;
@@ -1954,6 +1960,53 @@ public class LoanServiceImpl implements LoanService {
 	public Loan findLoanByWorkflowExec(WorkflowExec workflowExec) {
 		LOG.debug("Inside method findLoanByWorkflowExec");
 		return loanDao.findLoanByWorkflowExec(workflowExec.getId());
+	}
+
+	@Override
+	public void saveCreditScoresForBorrower(Map<String, String> creditScoreMap,
+	        Loan loan, ExceptionMaster exceptionMaster) {
+		LOG.debug("Inside method saveCreditScores ");
+		CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
+		if (customerDetail != null) {
+			if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
+				String borrowerEquifaxScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE);
+				customerDetail.setEquifaxScore(borrowerEquifaxScore);
+				String borrowerExperianScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE);
+				customerDetail.setExperianScore(borrowerExperianScore);
+				String borrowerTransunionScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE);
+				customerDetail.setTransunionScore(borrowerTransunionScore);
+
+				LOG.debug("Updating customer details ");
+				userProfileService.updateCustomerScore(customerDetail);
+
+			} else {
+				LOG.error("Credit Scores Not Found For This Loan ");
+				if (exceptionMaster != null) {
+					nexeraUtility.putExceptionMasterIntoExecution(
+					        exceptionMaster,
+					        "Credit Score Not Found for this loan ");
+					nexeraUtility
+					        .sendExceptionEmail("Credit score not found for this loan "
+					                + loan.getId());
+				}
+			}
+		} else {
+			LOG.error("Customer Details Not Found With this user id ");
+			if (exceptionMaster != null) {
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "Customer details not found for this user id "
+				                + loan.getUser().getId());
+				nexeraUtility
+				        .sendExceptionEmail("Customer Details Not Found for this user "
+				                + loan.getUser().getFirstName()
+				                + " "
+				                + loan.getUser().getLastName());
+			}
+
+		}
 	}
 
 }
