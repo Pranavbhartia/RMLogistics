@@ -829,9 +829,8 @@ function getHashLocationForNotification(type,loanId){
 				break;
 			case "NEEDS_LIST_SET_TYPE":
 				return "#myLoan/upload-my-needs";
-			case "VERIFY_EMAIL":
-				resendEmail();
-				return "";
+			case "VERIFY_EMAIL":				
+				return resendEmail;
 		}
 		return "#myLoan/my-loan-progress";
 	}else{
@@ -866,8 +865,12 @@ function resendEmail()
 	ajaxRequest("rest/userprofile/forgetPassword"+"?resend=true", "POST", "json", JSON.stringify(user));
 }
 function addClickHandlerToNotification(element,notification){
-	var hashLocation=getHashLocationForNotification(notification.notificationType,notification.loanID)
-	if(hashLocation!=""){
+	var hashLocation=getHashLocationForNotification(notification.notificationType,notification.loanID);
+	if (typeof(hashLocation) == "function")
+	{
+		$(element).bind("click",function(e){hashLocation()});
+	}
+	else if(hashLocation!=""){
 		$(element).bind("click",{"target":hashLocation},navigateToHash);
 	}
 }
