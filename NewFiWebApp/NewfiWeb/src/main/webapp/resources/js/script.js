@@ -2336,6 +2336,10 @@ $(document).on('click', function(e) {
 });
 $(document).on('click', '#alert-notification-btn', function(e) {
     e.stopImmediatePropagation();
+    
+    if($('#alert-popup-wrapper-settings').css("display") == "block"){
+		hideSettingsPopup();
+	}
     if ($(this).has('#alert-popup-cont-wrapper').length == 1) {
         if ($('#alert-popup-cont-wrapper').css("display") == "block") {
             hideAlertNotificationPopup();
