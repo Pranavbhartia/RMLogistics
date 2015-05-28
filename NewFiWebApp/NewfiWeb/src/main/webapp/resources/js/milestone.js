@@ -1449,7 +1449,7 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 }
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
-	
+	removeAllPopups();
 	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
 		event.stopPropagation();
 		var data = {};
@@ -1676,12 +1676,16 @@ $(document).resize(function(){
 });
 
 $(document).on('click',function(){
+	removeAllPopups();
+});
+
+function removeAllPopups(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
 	removeQCPopup();
 	removeNotificationPopup();
-});
+}
 
 $(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
 	e.stopPropagation();
@@ -1921,13 +1925,23 @@ function appendAppFeeEditPopup(element,milestoneId) {
 		"class" : "popup-textbox",
 		"placeholder" : "Change Fee here"
 		
-	});
+	}).keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});		
+    });
 	
 	var submitBtn = $('<div>').attr({
 		"class" : "popup-save-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":newFee,"milestoneId":milestoneId},function(event){
 		
 		var newFee=event.data.comment.val();
+		newFee=newFee.replace('$', '');
 		var milestoneId=event.data.milestoneId;
 		if(newFee){
 			var url="rest/workflow/invokeaction/"+milestoneId;
@@ -1943,7 +1957,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 				JSON.stringify(data),
 				function(response) {
 					if (response.error) {
-						showToastMessage(response.error.message);
+						showErrorToastMessage(response.error.message);
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId];							
 						$("#WF"+milestoneId).find("#"+milestoneId+"fee").html("$"+newFee);						

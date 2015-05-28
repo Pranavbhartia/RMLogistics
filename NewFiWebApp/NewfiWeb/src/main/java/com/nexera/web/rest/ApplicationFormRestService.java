@@ -294,14 +294,17 @@ public class ApplicationFormRestService {
 					LOG.debug("lockRateData" + lockRateData);
 
 					// in case of Purchase send a mail with PDF attachement
+
 					if (null != loaAppFormVO.getLoanType()
 					        && loaAppFormVO.getLoanType().getLoanTypeCd()
 					                .equalsIgnoreCase("PUR")) {
 
+						String thirtyYearRateVoDataSet = preQualificationletter
+						        .thirtyYearRateVoDataSet(lockRateData);
 						preQualificationletter.sendPreQualificationletter(
-						        loaAppFormVO, lockRateData, httpServletRequest);
+						        loaAppFormVO, thirtyYearRateVoDataSet,
+						        httpServletRequest);
 
-						// send a pre-qualification mail
 					}
 
 				}
@@ -323,6 +326,25 @@ public class ApplicationFormRestService {
 		}
 		return lockRateData;
 
+	}
+
+	@RequestMapping(value = "/sendPreQualiticationLatter", method = RequestMethod.POST)
+	public CommonResponseVO sendPreQualificationLatter(String appFormData,
+	        String rateDataSet, HttpServletRequest httpServletRequest) {
+
+		Gson gson = new Gson();
+		CommonResponseVO responseVO = null;
+		LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+		        LoanAppFormVO.class);
+		try {
+			preQualificationletter.sendPreQualificationletter(loaAppFormVO,
+			        rateDataSet, httpServletRequest);
+			responseVO = RestUtil.wrapObjectForSuccess("success");
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return responseVO;
 	}
 
 	@RequestMapping(value = "/changeLoanAmount", method = RequestMethod.POST)
