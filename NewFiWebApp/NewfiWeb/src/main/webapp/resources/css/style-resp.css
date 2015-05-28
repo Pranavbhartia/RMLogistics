@@ -421,6 +421,9 @@
 	.footer-wrapper-container {
 		padding-left: 50px;
 	}
+	.center-text-session-expire {
+	 	margin: 100px auto;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
@@ -1239,6 +1242,19 @@
 	}
 	.footer-wrapper-container{
 		padding-right: 5px;
+	}
+	.pgwSlideshow{
+		width: 95%;
+	}
+	.slider-prev-next-btn-row {
+	    width: 95%;
+	}
+	.slider-btn{
+		width: 110px;
+	}
+	.getting-to-know-btn {
+	    width: 240px;
+	    font-size: 14px;
 	}
 }
 
