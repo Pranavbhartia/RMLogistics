@@ -166,7 +166,7 @@
 			var footerHeight=$('.footer-wrapper').height();
 			var headerHeight=$('.header-wrapper').height();
 			height=height-headerHeight;
-			$('.home-container').css("height",height+ "px");
+			$('.home-container').css("min-height",height+ "px");
 		}
 	</script>
 	
