@@ -3185,6 +3185,7 @@ input.calc-input {
 	color: #428bca;
 	margin-bottom: 2px;
 	padding-top: 2px;
+	cursor:pointer;
 }
 
 .milestone-lc-text {
