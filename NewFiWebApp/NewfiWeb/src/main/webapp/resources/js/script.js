@@ -911,7 +911,7 @@ function paintFixYourRatePage(appUserDetails) {
 }
 
 
-
+var responseTime;
 function fetchLockRatedata(loanNumber,appUserDetailsParam)
 {
 //alert('inside create loan method');
@@ -926,8 +926,12 @@ function fetchLockRatedata(loanNumber,appUserDetailsParam)
 		    var ob;
             try{
                 ob=JSON.parse(data);
+                if(ob.length>0){
+                    responseTime=ob[0].responseTime;
+                }
             }catch(exception){
                 ob={};
+                responseTime="";
                 console.log("Invalid Data");
             }
            // alert('fetchLockRatedata data is '+JSON.stringify(data));
@@ -1405,7 +1409,7 @@ function getLoanSummaryHeader() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html("Rates as of "+getCurrentDate());
+    }).html("Rates as of "+responseTime);
     headerCont.append(col1).append(col2);
     return headerCont;
 }

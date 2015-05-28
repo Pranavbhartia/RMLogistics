@@ -193,8 +193,12 @@ public class ApplicationFormRestService {
 						        .pullTrimergeCreditScore(loanVO.getLqbFileId(),
 						                loaAppFormVO, sTicket);
 						if (requestObject != null) {
-							String response = invokeRest(requestObject
+							String response = "error";
+							HashMap<String, String> map = invokeRest(requestObject
 							        .toString());
+							if (map != null) {
+								response = map.get("responseMessage");
+							}
 							LOG.debug("Response for pulltrimergescore is "
 							        + response);
 							if (response != null && !response.contains("error")) {
@@ -258,17 +262,26 @@ public class ApplicationFormRestService {
 			LOG.debug("Getting token for loan manager");
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 			LOG.debug("Token retrieved for loan manager" + sTicket);
-			String loanNumber = invokeRest((lQBRequestUtil
+
+			String loanNumber = "error";
+			HashMap<String, String> map = invokeRest((lQBRequestUtil
 			        .prepareCreateLoanJson(
 			                (CommonConstants.CREATET_LOAN_TEMPLATE), sTicket))
 			        .toString());
+			if (map != null) {
+				loanNumber = map.get("responseMessage");
+			}
 
 			LOG.debug("createLoanResponse is" + loanNumber);
 
 			if (!"".equalsIgnoreCase(loanNumber)) {
 
-				String response = invokeRest((lQBRequestUtil.saveLoan(
-				        loanNumber, loaAppFormVO, sTicket)).toString());
+				String response = "error";
+				map = invokeRest((lQBRequestUtil.saveLoan(loanNumber,
+				        loaAppFormVO, sTicket)).toString());
+				if (map != null) {
+					response = map.get("responseMessage");
+				}
 				LOG.debug("Save Loan Response is " + response);
 				if (null != loaAppFormVO.getLoan()
 				        && !loanNumber.equals("error")) {
@@ -361,8 +374,14 @@ public class ApplicationFormRestService {
 			LOG.debug("createLoanResponse is" + loanNumber);
 			if (!"".equalsIgnoreCase(loanNumber)) {
 
-				String response = invokeRest((lQBRequestUtil.saveLoan(
-				        loanNumber, loaAppFormVO, sTicket)).toString());
+				String response = "error";
+				HashMap<String, String> map = invokeRest((lQBRequestUtil
+				        .saveLoan(loanNumber, loaAppFormVO, sTicket))
+				        .toString());
+				if (map != null) {
+					response = map.get("responseMessage");
+				}
+
 				LOG.debug("Save Loan Response is " + response);
 				String loanAppFrm = gson.toJson(loaAppFormVO);
 				createApplication(loanAppFrm, httpServletRequest);
@@ -458,9 +477,18 @@ public class ApplicationFormRestService {
 			json.put(CommonConstants.OPNAME, "Load");
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
+			HashMap<String, String> lqbResponse = cacheableMethodInterface
+			        .cacheInvokeRest(loanNumber, json.toString());
+			String responseMessage = "error";
+			if (lqbResponse != null
+			        && lqbResponse.containsKey("responseMessage"))
+				responseMessage = lqbResponse.get("responseMessage");
 			teaserRateList = rateService
-			        .parseLqbResponse(retrievePricingDetails(cacheableMethodInterface
-			                .cacheInvokeRest(loanNumber, json.toString())));
+			        .parseLqbResponse(retrievePricingDetails(responseMessage));
+
+			String responseTime = "";
+			if (lqbResponse != null && lqbResponse.containsKey("responseTime"))
+				responseTime = lqbResponse.get("responseTime");
 
 			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
 			teaserRateResponseVO.setLoanDuration("sample");
@@ -468,7 +496,9 @@ public class ApplicationFormRestService {
 
 			if (teaserRateList != null)
 				teaserRateList.add(0, teaserRateResponseVO);
-
+			for (TeaserRateResponseVO responseVo : teaserRateList) {
+				responseVo.setResponseTime(responseTime);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -523,8 +553,8 @@ public class ApplicationFormRestService {
 
 	}
 
-	private String invokeRest(String appFormData) {
-
+	private HashMap<String, String> invokeRest(String appFormData) {
+		HashMap<String, String> map = new HashMap<String, String>();
 		LOG.info("Invoking rest Service with Input " + appFormData);
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -537,14 +567,15 @@ public class ApplicationFormRestService {
 			        + jsonObject.get("responseMessage").toString());
 			// teaserRateList =
 			// parseLqbResponse(jsonObject.get("responseMessage").toString());
-			return jsonObject.get("responseMessage").toString();
-
+			map.put("responseMessage", jsonObject.get("responseMessage")
+			        .toString());
+			map.put("responseTime", jsonObject.get("responseTime").toString());
+			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOG.debug("error in post entity");
-			return "error";
+			return null;
 		}
-
 	}
 
 	@RequestMapping(value = "/savetaxandinsurance", method = RequestMethod.POST)
