@@ -471,7 +471,8 @@ function getNotificationContext(loanId, userId) {
 							}
 							if (milestoneId) {
 								var ctx = workFlowContext.mileStoneContextList[milestoneId];
-								ctx.updateMilestoneView("1");
+								if(ctx.workItem.status!="3")
+									ctx.updateMilestoneView("1");
 							}
 						}
 

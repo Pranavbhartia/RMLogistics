@@ -3191,10 +3191,14 @@ input.calc-input {
 
 .milestone-lc-text {
 	text-align: right;
+	float: right;
+	clear: both;
 }
 
 .milestone-rc-text {
 	text-align: left;
+	float:left;
+	clear: both;
 }
 
 .milestone-plain-text {
@@ -4372,11 +4376,15 @@ input.calc-input {
     border-top: 3px solid #428bca;
     z-index: 999;
 }
-
+.overlay-popup-btn-wrapper {
+	  width: 210px;
+	  margin: 0 auto;
+}
 .overlay-popup-txt {
     font-size: 14px;
     line-height: 30px;
     margin-bottom: 10px;
+    text-align:center;
 }
 
 .overlay-btn {
