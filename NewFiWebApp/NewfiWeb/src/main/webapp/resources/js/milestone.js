@@ -1003,9 +1003,9 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDeta
 				loanID,removeTeamItem);
 	});
 	row.append(nameCol).append(titleCol);
-	if(userDetails.userRole.id==2){
+	var showDelBtnFlag=checkDeleteBtnApplicable(userDetails);
+	if(!custFlag&&showDelBtnFlag)
 		row.append(delCol);
-	}
 		
 	return row;
 }
@@ -1022,7 +1022,21 @@ $(document).on('click', '.creditScoreClickableClass', function(e) {
 		confirmFetchScore(textMessage, loanid)
 	}
 });
+function checkDeleteBtnApplicable(userDetails){
+	try{
+		if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+			if(userDetails.userRole.roleCd=="INTERNAL")
+				return false;
+			else
+				return true;
+		}else if(newfiObject.user.userRole.roleCd=="INTERNAL"){
+			return true;
+		}
+	}catch(e){
 
+	}
+	return false;
+}
 function confirmFetchScore(textMessage, loanID,callback) {
 	$('#overlay-confirm').off();
 	$('#overlay-cancel').off();
@@ -1435,7 +1449,7 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 }
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
-	
+	removeAllPopups();
 	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
 		event.stopPropagation();
 		var data = {};
@@ -1662,12 +1676,16 @@ $(document).resize(function(){
 });
 
 $(document).on('click',function(){
+	removeAllPopups();
+});
+
+function removeAllPopups(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
 	removeQCPopup();
 	removeNotificationPopup();
-});
+}
 
 $(document).on('click','#loan-manager-popup, #loan-status-popup',function(e){
 	e.stopPropagation();
@@ -1907,13 +1925,23 @@ function appendAppFeeEditPopup(element,milestoneId) {
 		"class" : "popup-textbox",
 		"placeholder" : "Change Fee here"
 		
-	});
+	}).keydown(function() {
+    	$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});		
+    });
 	
 	var submitBtn = $('<div>').attr({
 		"class" : "popup-save-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":newFee,"milestoneId":milestoneId},function(event){
 		
 		var newFee=event.data.comment.val();
+		newFee=newFee.replace('$', '');
 		var milestoneId=event.data.milestoneId;
 		if(newFee){
 			var url="rest/workflow/invokeaction/"+milestoneId;
@@ -1929,7 +1957,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 				JSON.stringify(data),
 				function(response) {
 					if (response.error) {
-						showToastMessage(response.error.message);
+						showErrorToastMessage(response.error.message);
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId];							
 						$("#WF"+milestoneId).find("#"+milestoneId+"fee").html("$"+newFee);						

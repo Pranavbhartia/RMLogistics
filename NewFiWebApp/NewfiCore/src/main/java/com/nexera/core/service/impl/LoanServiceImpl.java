@@ -731,7 +731,7 @@ public class LoanServiceImpl implements LoanService {
 		loan = completeLoanModel(loanVO);
 
 		int loanId = (int) loanDao.save(loan);
-		LOG.info("Saving turn around time for loan");
+		LOG.info("Saving turn around time for loan" + loanId);
 		saveAllLoanTurnAroundTimeForLoan(loanId);
 		LOG.info("Saved turn around time");
 		addDefaultLoanTeam(loanVO, loanId);
@@ -1582,6 +1582,48 @@ public class LoanServiceImpl implements LoanService {
 		        .getRequestedRate() != null ? loanLockRateVO.getRequestedRate()
 		        : "" });
 		substitutions.put("-rateexpirationdate-", new String[] { " " });
+		String loanManagerName = null;
+		List<UserVO> loanManagersList = new ArrayList<UserVO>();
+		LoanTeamListVO loanTeamListVO = getLoanTeamListForLoan(loan);
+		if (loanTeamListVO != null) {
+			if (loanTeamListVO.getLoanTeamList() != null) {
+				for (LoanTeamVO loanTeam : loanTeamListVO.getLoanTeamList()) {
+					if (loanTeam.getUser() != null) {
+						if (loanTeam.getUser().getInternalUserDetail() != null) {
+							if (loanTeam.getUser().getInternalUserDetail()
+							        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+							        .getRoleId()) {
+								loanManagersList.add(loanTeam.getUser());
+							}
+						}
+					}
+				}
+			}
+		}
+		int count = 0;
+		if (loanManagersList.size() == 1) {
+			loanManagerName = loanManagersList.get(0).getFirstName() + " "
+			        + loanManagersList.get(0).getLastName();
+		} else {
+			for (UserVO userVO : loanManagersList) {
+				if (utils.getLoggedInUser() != null) {
+					if (userVO.getId() == utils.getLoggedInUser().getId()) {
+						loanManagerName = userVO.getFirstName() + " "
+						        + userVO.getLastName();
+						count = count + 1;
+					}
+				} else {
+					loanManagerName = userVO.getFirstName() + " "
+					        + userVO.getLastName();
+				}
+			}
+		}
+		if (count == 0) {
+			loanManagerName = loanManagersList.get(0).getFirstName() + " "
+			        + loanManagersList.get(0).getLastName();
+		}
+		substitutions
+		        .put("-loanmanagername-", new String[] { loanManagerName });
 
 		if (loan.getUser() != null) {
 			emailEntity.setSenderEmailId(loan.getUser().getUsername()
