@@ -1456,8 +1456,8 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var val="";
     if(rateVoObj.teaserRate)
         val=parseFloat(rateVoObj.teaserRate).toFixed(3)+" %";
-    var lcRow4 = getLoanSummaryRow("Interest Rate", val, "teaserRateId");
-    var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR +" %", "aprid");
+    var lcRow4 = getLoanSummaryRow("Interest Rate", val, "lockInterestRate");
+    var lcRow5 = getLoanSummaryRow("APR", rateVoObj.APR +" %", "lockrateaprid");
     //var lcRow6 = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVO[index].closingCost), "closingCostId");
     leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);
     var rightCol = $('<div>').attr({
@@ -2445,8 +2445,47 @@ function getLoanSliderWrapper(lqbData,appUserDetails) {
     }
     var rateBtn = $('<div>');
     getRequestRateLockStatus(rateBtn);
+    
+    var sendPreQualification = $('<div>').attr({
+        "class": "rate-btn pre-qualification"
+    }).html("Send Pre-Qualification Letter").on('click',function(){
+    	
+    	sendPreQualificationLetter();
+    });
+    
+    if(appUserDetails.loanType.loanTypeCd == "PUR"){
+    	return wrapper.append(container).append(rateBtn).append(sendPreQualification);
+    }
+    
+ 
     return wrapper.append(container).append(rateBtn);
 }
+
+
+function sendPreQualificationLetter(){
+	
+	$.ajax({
+		
+		url:"rest/application/sendPreQualiticationLatter",
+		type:"POST",
+		data:{"appFormData" : JSON.stringify(appUserDetails),"rateDataSet":JSON.stringify(closingCostHolder.valueSet)},
+		dataType:"application/json",
+		cache:false,
+		success:function(data){
+			showToastMessage("Pre-qualificaion letter is send ");
+		},
+		error:function(data){
+			if(data.status != 200)
+			showToastMessage("Error");
+			else{
+				showToastMessage("Pre-qualificaion letter is send to your email id");
+
+			}
+		}
+		
+	});
+}
+
 
 function getRequestRateLockStatus(element){
     if(!appUserDetails.loan.isRateLocked){
