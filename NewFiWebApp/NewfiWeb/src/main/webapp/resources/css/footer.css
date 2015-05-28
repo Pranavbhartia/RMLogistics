@@ -10,6 +10,13 @@ section.section.swatch-black {
     margin-left: auto;       
      
 }
+.ce-footer-wrapper{
+	position:absolute;
+}
+.ce-footer-container{
+	padding-left:0;
+	
+}
 
 .footer-container {
     /* margin: 10px; */

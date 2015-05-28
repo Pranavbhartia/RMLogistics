@@ -26,12 +26,19 @@ function validateInput(element,inputVal,message){
 		$('input[name="' + name + '"]').addClass('ce-err-input').show();
 		return false;
 
+	}else{
+		if(inputVal == "$0"){
+			$('input[name="' + name + '"]').next('.err-msg').html(feildShouldNotBeZero).show();
+			$('input[name="' + name + '"]').addClass('ce-err-input').show();
+			return false;
+		}else{
+			$('input[name="' + name + '"]').next('.err-msg').hide();
+			$('input[name="' + name + '"]').removeClass('ce-err-input');
+			return true;
+		}
+		
 	}
-	else{
-		$('input[name="' + name + '"]').next('.err-msg').hide();
-		$('input[name="' + name + '"]').removeClass('ce-err-input');
-		return true;
-	}
+	
 	
 	
 	
