@@ -1003,9 +1003,9 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDeta
 				loanID,removeTeamItem);
 	});
 	row.append(nameCol).append(titleCol);
-	if(userDetails.userRole.id==2){
+	var showDelBtnFlag=checkDeleteBtnApplicable(userDetails);
+	if(!custFlag&&showDelBtnFlag)
 		row.append(delCol);
-	}
 		
 	return row;
 }
@@ -1022,7 +1022,21 @@ $(document).on('click', '.creditScoreClickableClass', function(e) {
 		confirmFetchScore(textMessage, loanid)
 	}
 });
+function checkDeleteBtnApplicable(userDetails){
+	try{
+		if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+			if(userDetails.userRole.roleCd=="INTERNAL")
+				return false;
+			else
+				return true;
+		}else if(newfiObject.user.userRole.roleCd=="INTERNAL"){
+			return true;
+		}
+	}catch(e){
 
+	}
+	return false;
+}
 function confirmFetchScore(textMessage, loanID,callback) {
 	$('#overlay-confirm').off();
 	$('#overlay-cancel').off();
