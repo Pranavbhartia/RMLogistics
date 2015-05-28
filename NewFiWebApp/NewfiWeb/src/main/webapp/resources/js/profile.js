@@ -1114,11 +1114,12 @@ function getDOBRow(user) {
 		"id" : "dateOfBirthId",
 		
 	}).datepicker({
-		orientation : "top auto",
-		autoclose : true,
-		maxDate: new Date() ,
-		changeMonth: true,
-		changeYear: true
+		 orientation : "top auto",
+		 changeMonth: true,
+         changeYear: true,
+         maxDate:new Date()
+
+		
 	});
 	
 	var errMessage = $('<div>').attr({
