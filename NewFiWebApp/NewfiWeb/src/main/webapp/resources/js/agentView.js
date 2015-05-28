@@ -2182,7 +2182,7 @@ function appendCustomerEditProfilePopUp() {
 		$popup.click(function() {
 			return false;
 		});
-	});
+	}).mask('00/00/0000');
 
 	row.append(label).append(dobInput).append(appendErrorMessage());
 	$('#cus-prof-container').append(row);

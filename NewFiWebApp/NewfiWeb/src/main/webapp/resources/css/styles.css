@@ -3185,6 +3185,7 @@ input.calc-input {
 	color: #428bca;
 	margin-bottom: 2px;
 	padding-top: 2px;
+	cursor:pointer;
 }
 
 .milestone-lc-text {
@@ -5117,6 +5118,7 @@ input.calc-input {
 	font-weight: bold;
 	color: rgb(244, 117, 33);
 	margin-left: 4px;
+	cursor: help;
 }
 
 .outer-session-expire{
@@ -5270,4 +5272,8 @@ a.session-login-btn {
 }
 .creditScoreClickableClass{
 	
+}
+
+.pre-qualification{
+	margin-top: 20px;
 }

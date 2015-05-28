@@ -27,6 +27,7 @@ import com.nexera.common.dao.LoanMilestoneMasterDao;
 import com.nexera.common.dao.LoanNeedListDao;
 import com.nexera.common.dao.LoanTurnAroundTimeDao;
 import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.Loan;
@@ -87,6 +88,8 @@ import com.nexera.core.service.StateLookupService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.NexeraUtility;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -100,6 +103,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private Utils utils;
+
+	@Autowired
+	private NexeraUtility nexeraUtility;
 
 	@Autowired
 	private SendEmailService sendEmailService;
@@ -1582,6 +1588,48 @@ public class LoanServiceImpl implements LoanService {
 		        .getRequestedRate() != null ? loanLockRateVO.getRequestedRate()
 		        : "" });
 		substitutions.put("-rateexpirationdate-", new String[] { " " });
+		String loanManagerName = null;
+		List<UserVO> loanManagersList = new ArrayList<UserVO>();
+		LoanTeamListVO loanTeamListVO = getLoanTeamListForLoan(loan);
+		if (loanTeamListVO != null) {
+			if (loanTeamListVO.getLoanTeamList() != null) {
+				for (LoanTeamVO loanTeam : loanTeamListVO.getLoanTeamList()) {
+					if (loanTeam.getUser() != null) {
+						if (loanTeam.getUser().getInternalUserDetail() != null) {
+							if (loanTeam.getUser().getInternalUserDetail()
+							        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+							        .getRoleId()) {
+								loanManagersList.add(loanTeam.getUser());
+							}
+						}
+					}
+				}
+			}
+		}
+		int count = 0;
+		if (loanManagersList.size() == 1) {
+			loanManagerName = loanManagersList.get(0).getFirstName() + " "
+			        + loanManagersList.get(0).getLastName();
+		} else {
+			for (UserVO userVO : loanManagersList) {
+				if (utils.getLoggedInUser() != null) {
+					if (userVO.getId() == utils.getLoggedInUser().getId()) {
+						loanManagerName = userVO.getFirstName() + " "
+						        + userVO.getLastName();
+						count = count + 1;
+					}
+				} else {
+					loanManagerName = userVO.getFirstName() + " "
+					        + userVO.getLastName();
+				}
+			}
+		}
+		if (count == 0) {
+			loanManagerName = loanManagersList.get(0).getFirstName() + " "
+			        + loanManagersList.get(0).getLastName();
+		}
+		substitutions
+		        .put("-loanmanagername-", new String[] { loanManagerName });
 
 		if (loan.getUser() != null) {
 			emailEntity.setSenderEmailId(loan.getUser().getUsername()
@@ -1912,6 +1960,53 @@ public class LoanServiceImpl implements LoanService {
 	public Loan findLoanByWorkflowExec(WorkflowExec workflowExec) {
 		LOG.debug("Inside method findLoanByWorkflowExec");
 		return loanDao.findLoanByWorkflowExec(workflowExec.getId());
+	}
+
+	@Override
+	public void saveCreditScoresForBorrower(Map<String, String> creditScoreMap,
+	        Loan loan, ExceptionMaster exceptionMaster) {
+		LOG.debug("Inside method saveCreditScores ");
+		CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
+		if (customerDetail != null) {
+			if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
+				String borrowerEquifaxScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE);
+				customerDetail.setEquifaxScore(borrowerEquifaxScore);
+				String borrowerExperianScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE);
+				customerDetail.setExperianScore(borrowerExperianScore);
+				String borrowerTransunionScore = creditScoreMap
+				        .get(CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE);
+				customerDetail.setTransunionScore(borrowerTransunionScore);
+
+				LOG.debug("Updating customer details ");
+				userProfileService.updateCustomerScore(customerDetail);
+
+			} else {
+				LOG.error("Credit Scores Not Found For This Loan ");
+				if (exceptionMaster != null) {
+					nexeraUtility.putExceptionMasterIntoExecution(
+					        exceptionMaster,
+					        "Credit Score Not Found for this loan ");
+					nexeraUtility
+					        .sendExceptionEmail("Credit score not found for this loan "
+					                + loan.getId());
+				}
+			}
+		} else {
+			LOG.error("Customer Details Not Found With this user id ");
+			if (exceptionMaster != null) {
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "Customer details not found for this user id "
+				                + loan.getUser().getId());
+				nexeraUtility
+				        .sendExceptionEmail("Customer Details Not Found for this user "
+				                + loan.getUser().getFirstName()
+				                + " "
+				                + loan.getUser().getLastName());
+			}
+
+		}
 	}
 
 }

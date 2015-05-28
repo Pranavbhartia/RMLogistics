@@ -2297,14 +2297,18 @@ function getMultiTextQuestion(quesText, value) {
     return wrapper.append(container);
 }
 
-$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(){
-    $(this).datepicker({
+$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(e){
+
+	$(this).datepicker({
 		format: "M yyyy",
 	    minViewMode: "months",
-	    endDate: "today",
-	    autoclose : true
+	    autoclose : true,
+		maxDate: 0,
+		defaultDate:'',
+	    constrainInput: false
     }).on('changeDate',function(e){
     	e.stopImmediatePropagation();
+    	e.preventDefault();
     	var year = $(this).data('datepicker').getFormattedDate('yyyy');
     	var month = $(this).data('datepicker').getFormattedDate('mm');
     	var currentYear = new Date().getFullYear();
@@ -2319,6 +2323,7 @@ $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] 
     	
     });
 });
+
 
 $('body').on('keypress',"input[name='beforeTax']",function(){
 	
@@ -2457,7 +2462,7 @@ $('body').on('focus',"input[name='purchaseTime']",function(e){
 	 var k = e.which;
      var ok = k >= 65 && k <= 90 || // A-Z
          k >= 97 && k <= 122 || // a-z
-         k >= 48 && k <= 57; // 0-9
+         k >= 48 && k <= 57 || k == 32;; // 0-9
      
      if (!ok){
          e.preventDefault();
@@ -2483,7 +2488,7 @@ $('body').on('keypress',"input[name='startLivingTime']",function(e){
         var k = e.which;
         var ok = k >= 65 && k <= 90 || // A-Z
             k >= 97 && k <= 122 || // a-z
-            k >= 48 && k <= 57; // 0-9
+            k >= 48 && k <= 57 || k == 32;; // 0-9
         
         if (!ok){
             e.preventDefault();
@@ -2495,7 +2500,7 @@ $('body').on('keypress',"input[name='startWorking']",function(e){
         var k = e.which;
         var ok = k >= 65 && k <= 90 || // A-Z
             k >= 97 && k <= 122 || // a-z
-            k >= 48 && k <= 57; // 0-9
+            k >= 48 && k <= 57 || k == 32; // 0-9
         
         if (!ok){
             e.preventDefault();
@@ -4253,13 +4258,6 @@ function putCurrencyFormat(name){
 		});		
     });
 }
-
-
-
-
-
- 
- 
 
 function getMonthYearTextQuestion(question) {
 	 var container = $('<div>').attr({
