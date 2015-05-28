@@ -162,7 +162,7 @@
 			var footerHeight=$('.footer-wrapper').height();
 			var headerHeight=$('.header-wrapper').height();
 			height=height-headerHeight;
-			$('.content').css("height",height+ "px");
+			$('.content').css("min-height",height+ "px");
 		}
 		var newfi = ${newfi};
 		var baseUrl = "${baseUrl}";
