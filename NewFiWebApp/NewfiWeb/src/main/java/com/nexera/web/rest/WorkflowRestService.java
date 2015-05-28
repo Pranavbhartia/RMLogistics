@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,20 +79,22 @@ public class WorkflowRestService {
 		return response;
 	}
 
-	@RequestMapping(value = "loan/{milestoneID}", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getLoanFromMilestone(
-	        @PathVariable int workflowitemexecId) {
+	@RequestMapping(value = "loan", method = RequestMethod.POST)
+	public @ResponseBody String getLoanFromMilestone(HttpServletRequest request) {
+		String milestoneId = request.getParameter("milestoneID");
 		LOG.debug("Inside method getLoanFromMilestone");
 		CommonResponseVO response = null;
-		Loan loan = loanService.getLoanByWorkflowItemExecId(workflowitemexecId);
+		Loan loan = loanService.getLoanByWorkflowItemExecId(Integer
+		        .parseInt(milestoneId));
 		if (loan != null) {
 			LoanVO loanVO = Loan.convertFromEntityToVO(loan);
-			response = RestUtil.wrapObjectForSuccess(loanVO);
+			response = RestUtil.wrapObjectForSuccess(loan.getId());
+			return loan.getId() + "";
 		} else {
 			response = RestUtil.wrapObjectForFailure(null, "500",
 			        "Loan not found");
 		}
-		return response;
+		return "error";
 	}
 
 	@RequestMapping(value = "details/{loanID}", method = RequestMethod.GET)
