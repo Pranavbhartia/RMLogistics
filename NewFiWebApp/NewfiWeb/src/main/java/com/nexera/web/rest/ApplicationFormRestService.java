@@ -1,5 +1,6 @@
 package com.nexera.web.rest;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -30,6 +34,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
@@ -45,6 +50,7 @@ import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
+import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
@@ -54,6 +60,7 @@ import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.CoreCommonConstants;
+import com.nexera.core.utility.LoadXMLHandler;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
@@ -189,50 +196,95 @@ public class ApplicationFormRestService {
 					}
 					if (sTicket != null) {
 						LOG.debug("Token retrieved for loan manager" + sTicket);
-						JSONObject requestObject = lQBRequestUtil
-						        .pullTrimergeCreditScore(loanVO.getLqbFileId(),
-						                loaAppFormVO, sTicket);
-						if (requestObject != null) {
-							String response = "error";
-							HashMap<String, String> map = invokeRest(requestObject
-							        .toString());
-							if (map != null) {
-								response = map.get("responseMessage");
-							}
-							LOG.debug("Response for pulltrimergescore is "
-							        + response);
-							if (response != null && !response.contains("error")) {
-								status = "Trimerge requested, your score would be updated shortly";
-								org.json.JSONObject creditScoreJSONObject = nexeraUtility
-								        .createCreditScoreJSONObject(
-								                WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
-								                loan.getLqbFileId(), sTicket, 0);
-								if (creditScoreJSONObject != null) {
-									org.json.JSONObject creditScoreJSONResponse = lqbInvoker
-									        .invokeLqbService(creditScoreJSONObject
-									                .toString());
-									if (creditScoreJSONResponse != null) {
-										if (!creditScoreJSONResponse
-										        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
-											String creditScores = creditScoreJSONResponse
-											        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-											List<CreditScoreResponseVO> creditScoreResponseList = nexeraUtility
-											        .parseCreditScoresResponse(creditScores);
-											Map<String, String> creditScoreMap = nexeraUtility
-											        .fillCreditScoresInMap(creditScoreResponseList);
-											loanService
-											        .saveCreditScoresForBorrower(
-											                creditScoreMap,
-											                loan, null);
-											creditScoreMap.clear();
+						Map<String, String> hashmap = new HashMap<String, String>();
+						String userSSN = null;
+						org.json.JSONObject loadOperationObject = nexeraUtility
+						        .createLoadJsonObject(
+						                hashmap,
+						                WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD,
+						                loan.getLqbFileId(), 0, null);
+						if (loadOperationObject != null) {
+							org.json.JSONObject loadJSONResponse = lqbInvoker
+							        .invokeLqbService(loadOperationObject
+							                .toString());
+							if (loadJSONResponse != null) {
+								if (!loadJSONResponse
+								        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+									String loadResponse = loadJSONResponse
+									        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+									loadResponse = nexeraUtility
+									        .removeBackSlashDelimiter(loadResponse);
+									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
+									if (loadResponseList != null) {
+										for (LoadResponseVO loadResponseVO : loadResponseList) {
+											String fieldId = loadResponseVO
+											        .getFieldId();
+											if (fieldId
+											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_USER_SSN_NUMBER)) {
+												userSSN = loadResponseVO
+												        .getFieldValue();
+												if (userSSN.contains("-")) {
+													break;
+												}
+											}
 										}
 									}
 								}
-							} else {
-								status = "error while saving your request to pull trimerge score, please make sure your SSN is valid";
 							}
 						}
+						if (userSSN != null) {
+							JSONObject requestObject = lQBRequestUtil
+							        .pullTrimergeCreditScore(
+							                loanVO.getLqbFileId(),
+							                loaAppFormVO, sTicket, userSSN);
+							if (requestObject != null) {
+								String response = "error";
+								HashMap<String, String> map = invokeRest(requestObject
+								        .toString());
+								if (map != null) {
+									response = map.get("responseMessage");
+								}
+								LOG.debug("Response for pulltrimergescore is "
+								        + response);
+								if (response != null
+								        && !response.contains("error")) {
 
+									org.json.JSONObject creditScoreJSONObject = nexeraUtility
+									        .createCreditScoreJSONObject(
+									                WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
+									                loan.getLqbFileId(),
+									                sTicket, 0);
+									if (creditScoreJSONObject != null) {
+										org.json.JSONObject creditScoreJSONResponse = lqbInvoker
+										        .invokeLqbService(creditScoreJSONObject
+										                .toString());
+										if (creditScoreJSONResponse != null) {
+											if (!creditScoreJSONResponse
+											        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+												status = "Trimerge requested, your score would be updated shortly";
+												String creditScores = creditScoreJSONResponse
+												        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+												List<CreditScoreResponseVO> creditScoreResponseList = nexeraUtility
+												        .parseCreditScoresResponse(creditScores);
+												Map<String, String> creditScoreMap = nexeraUtility
+												        .fillCreditScoresInMap(creditScoreResponseList);
+												loanService
+												        .saveCreditScoresForBorrower(
+												                creditScoreMap,
+												                loan, null);
+												creditScoreMap.clear();
+											} else {
+												status = "Unable to authenticate user for this loan";
+											}
+										}
+									}
+								} else {
+									status = "error while saving your request to pull trimerge score, please make sure your SSN is valid";
+								}
+							}
+						} else {
+							status = "Unable to fetch user  ssn number from lqb ";
+						}
 					}
 				} else {
 					status = "LQB Information Not Present";
@@ -510,8 +562,9 @@ public class ApplicationFormRestService {
 
 	private String retrievePricingDetails(String xml) {
 		String pricingResultXml = null;
-		LOG.debug("Inside retrievePricingDetails method with xml data value : "+xml);
-		
+		LOG.debug("Inside retrievePricingDetails method with xml data value : "
+		        + xml);
+
 		try {
 
 			DocumentBuilderFactory factory = DocumentBuilderFactory
@@ -553,6 +606,30 @@ public class ApplicationFormRestService {
 
 		return pricingResultXml;
 
+	}
+
+	private List<LoadResponseVO> parseLqbResponse(String loadResponse) {
+
+		// get a factory
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		try {
+
+			// get a new instance of parser
+			SAXParser sp = spf.newSAXParser();
+			LoadXMLHandler handler = new LoadXMLHandler();
+			// parse the file and also register this class for call backs
+			sp.parse(new InputSource(new StringReader(loadResponse)), handler);
+			return handler.getLoadResponseVOList();
+
+		} catch (SAXException se) {
+			LOG.error("Exception caught" + se.getMessage());
+		} catch (ParserConfigurationException pce) {
+			LOG.error("Exception caught" + pce.getMessage());
+		} catch (IOException ie) {
+			LOG.error("Exception caught" + ie.getMessage());
+		}
+
+		return null;
 	}
 
 	private HashMap<String, String> invokeRest(String appFormData) {

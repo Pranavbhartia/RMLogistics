@@ -1026,4 +1026,27 @@ public class NexeraUtility {
 		return creditScoreMap;
 	}
 
+	public JSONObject createLoadJsonObject(Map<String, String> requestXMLMap,
+	        String opName, String lqbLoanId, int format,
+	        ExceptionMaster exceptionMaster) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        lqbLoanId);
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_XML_QUERY_MAP,
+			        requestXMLMap);
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			if (exceptionMaster != null) {
+				putExceptionMasterIntoExecution(exceptionMaster, e.getMessage());
+				sendExceptionEmail(e.getMessage());
+			}
+		}
+		return json;
+	}
+
 }
