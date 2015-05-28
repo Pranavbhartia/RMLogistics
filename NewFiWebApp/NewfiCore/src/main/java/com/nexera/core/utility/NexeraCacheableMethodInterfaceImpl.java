@@ -5,6 +5,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -101,8 +102,9 @@ public class NexeraCacheableMethodInterfaceImpl implements
 
 	@Override
 	@Cacheable(value = "applicateRate")
-	public String cacheInvokeRest(String loanNumber, String appFormData) {
-
+	public HashMap<String, String> cacheInvokeRest(String loanNumber,
+	        String appFormData) {
+		HashMap<String, String> map = new HashMap<String, String>();
 		LOGGER.info("Invoking rest Service with Input " + appFormData);
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -115,12 +117,15 @@ public class NexeraCacheableMethodInterfaceImpl implements
 			        + jsonObject.get("responseMessage").toString());
 			// teaserRateList =
 			// parseLqbResponse(jsonObject.get("responseMessage").toString());
-			return jsonObject.get("responseMessage").toString();
-
+			map.put("responseMessage", jsonObject.get("responseMessage")
+			        .toString());
+			map.put("responseTime", jsonObject.get("responseTime")
+			        .toString());
+			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.debug("error in post entity");
-			return "error";
+			return null;
 		}
 
 	}

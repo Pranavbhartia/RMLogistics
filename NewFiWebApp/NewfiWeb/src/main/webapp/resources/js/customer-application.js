@@ -5226,8 +5226,12 @@ $.ajax({
                 var ob;
                 try{
                     ob=JSON.parse(data);
+	                if(ob.length>0){
+	                    responseTime=ob[0].responseTime;
+	                }
                 }catch(exception){
                     ob={};
+                	responseTime="";
                     console.log("Invalid Data");
                 }
                // alert('createLoan data is '+data)
@@ -5604,8 +5608,12 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
             var ob;
             try{
                 ob=JSON.parse(data);
+                if(ob.length>0){
+                    responseTime=ob[0].responseTime;
+                }
             }catch(exception){
                 ob={};
+                responseTime="";
                 console.log("Invalid Data");
             }
            // alert('createLoan data is '+data)
