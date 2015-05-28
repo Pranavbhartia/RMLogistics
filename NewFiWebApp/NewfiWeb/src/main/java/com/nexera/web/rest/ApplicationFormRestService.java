@@ -3,6 +3,7 @@ package com.nexera.web.rest;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -34,6 +35,7 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
@@ -42,6 +44,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
@@ -50,6 +53,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
@@ -101,11 +105,9 @@ public class ApplicationFormRestService {
 
 	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
 	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
-	
-	
+
 	@Autowired
 	private PreQualificationletter preQualificationletter;
-	
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -196,9 +198,34 @@ public class ApplicationFormRestService {
 							LOG.debug("Response for pulltrimergescore is "
 							        + response);
 							if (response != null && !response.contains("error")) {
-								status = "Details to pull trimerge score has been saved, you may see the updated score after a while";
+								status = "Trimerge requested, your score would be updated shortly";
+								org.json.JSONObject creditScoreJSONObject = nexeraUtility
+								        .createCreditScoreJSONObject(
+								                WebServiceOperations.OP_NAME_GET_CREDIT_SCORE,
+								                loan.getLqbFileId(), 0);
+								if (creditScoreJSONObject != null) {
+									org.json.JSONObject creditScoreJSONResponse = lqbInvoker
+									        .invokeLqbService(creditScoreJSONObject
+									                .toString());
+									if (creditScoreJSONResponse != null) {
+										if (!creditScoreJSONResponse
+										        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+											String creditScores = creditScoreJSONResponse
+											        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+											List<CreditScoreResponseVO> creditScoreResponseList = nexeraUtility
+											        .parseCreditScoresResponse(creditScores);
+											Map<String, String> creditScoreMap = nexeraUtility
+											        .fillCreditScoresInMap(creditScoreResponseList);
+											loanService
+											        .saveCreditScoresForBorrower(
+											                creditScoreMap,
+											                loan, null);
+											creditScoreMap.clear();
+										}
+									}
+								}
 							} else {
-								status = "error while saving your request to pull trimerge score";
+								status = "error while saving your request to pull trimerge score, please make sure your SSN is valid";
 							}
 						}
 
@@ -265,15 +292,18 @@ public class ApplicationFormRestService {
 
 					lockRateData = loadLoanRateData(loanNumber, sTicket);
 					LOG.debug("lockRateData" + lockRateData);
-					
+
 					// in case of Purchase send a mail with PDF attachement
-					if(null!= loaAppFormVO.getLoanType() && loaAppFormVO.getLoanType().getLoanTypeCd().equalsIgnoreCase("PUR")){
-						
-						preQualificationletter.sendPreQualificationletter(loaAppFormVO,lockRateData,httpServletRequest);
-						
+					if (null != loaAppFormVO.getLoanType()
+					        && loaAppFormVO.getLoanType().getLoanTypeCd()
+					                .equalsIgnoreCase("PUR")) {
+
+						preQualificationletter.sendPreQualificationletter(
+						        loaAppFormVO, lockRateData, httpServletRequest);
+
 						// send a pre-qualification mail
 					}
-					
+
 				}
 			}
 		} catch (Exception e) {
