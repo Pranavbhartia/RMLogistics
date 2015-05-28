@@ -30,6 +30,10 @@ $(document).on('click', '#admin-create-user-popup', function(event) {
 
 
 $('#alert-settings-btn').click(function(e){
+	if($('#alert-popup-cont-wrapper').css('display')=="block"){
+		$('#alert-popup-cont-wrapper').hide();
+	}
+	
 	if(newfiObject.user.userRole.id==3){
 		if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==2){
 			salesManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
