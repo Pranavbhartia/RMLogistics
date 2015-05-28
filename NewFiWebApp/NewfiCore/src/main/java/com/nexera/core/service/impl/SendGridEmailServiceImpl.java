@@ -158,12 +158,14 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 				        "sendEmailUsingTemplate : recipient email id is null or empty!");
 			}
 			recipientEmailIdsList.add(recipientVO.getEmailID());
-			for (Iterator<String> iterator = emailEntity.getCCList().iterator(); iterator
-			        .hasNext();) {
-				String emailId = iterator.next();
-				if (recipientVO.getEmailID().equalsIgnoreCase(emailId)) {
-					LOG.debug("This email id already exist in recepient list, hence removing it from CC list");
-					iterator.remove();
+			if (emailEntity.getCCList() != null) {
+				for (Iterator<String> iterator = emailEntity.getCCList()
+				        .iterator(); iterator.hasNext();) {
+					String emailId = iterator.next();
+					if (recipientVO.getEmailID().equalsIgnoreCase(emailId)) {
+						LOG.debug("This email id already exist in recepient list, hence removing it from CC list");
+						iterator.remove();
+					}
 				}
 			}
 		}
