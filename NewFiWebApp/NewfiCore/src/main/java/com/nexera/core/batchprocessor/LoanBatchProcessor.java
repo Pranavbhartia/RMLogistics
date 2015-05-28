@@ -73,7 +73,7 @@ public class LoanBatchProcessor extends QuartzJobBean {
 	        throws JobExecutionException {
 
 		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-		LOGGER.debug("Triggering the Quartz Schedular ");
+		LOGGER.info("Triggering the Quartz Schedular ");
 		loadExceptionMaster();
 		BatchJobMaster batchJobMaster = getBatchJobMasterById(2);
 		if (batchJobMaster != null) {
@@ -81,11 +81,11 @@ public class LoanBatchProcessor extends QuartzJobBean {
 				taskExecutor = getTaskExecutor();
 				BatchJobExecution batchJobExecution = putBatchIntoExecution(batchJobMaster);
 				try {
-					LOGGER.debug("Invoking modifiedLoanListByAppCode service of lendinqb ");
+					LOGGER.info("Invoking modifiedLoanListByAppCode service of lendinqb ");
 					List<ModifiedLoanListResponseVO> modifiedLoanResponseList = null;
 					JSONObject modifiedLoanListOperationObject = createLoanModifiedListJsonObject(WebServiceOperations.OP_NAME_LIST_MODIFIED_LOANS_BY_APP_CODE);
 					if (modifiedLoanListOperationObject != null) {
-						LOGGER.debug("Invoking LQB service to fetch modified Loans ");
+						LOGGER.info("Invoking LQB service to fetch modified Loans ");
 						JSONObject modifiedLoanListJSONResponse = lqbInvoker
 						        .invokeLqbService(modifiedLoanListOperationObject
 						                .toString());
@@ -107,7 +107,7 @@ public class LoanBatchProcessor extends QuartzJobBean {
 					if (modifiedLoanResponseList != null) {
 						for (ModifiedLoanListResponseVO modifiedLoanListResponseVO : modifiedLoanResponseList) {
 							if (modifiedLoanListResponseVO.getValid()) {
-								LOGGER.debug("This loan is still valid in lqb "
+								LOGGER.info("This loan is still valid in lqb "
 								        + modifiedLoanListResponseVO
 								                .getLoanName());
 								for (Loan loan : loanList) {
@@ -118,10 +118,13 @@ public class LoanBatchProcessor extends QuartzJobBean {
 										                        .getLoanName())) {
 											modifiedLoans.add(loan);
 										}
+									} else {
+										LOGGER.info("This loan doesnt have an lqb id associated with it "
+										        + loan.getId());
 									}
 								}
 							} else {
-								LOGGER.debug("Loan has been deleted in LQB, hence removing this loan"
+								LOGGER.info("Loan has been deleted in LQB, hence removing this loan"
 								        + modifiedLoanListResponseVO
 								                .getLoanName());
 								JSONObject ClearModifiedLoanByNameByAppCodeObject = createClearModifiedLoanObject(
@@ -129,7 +132,9 @@ public class LoanBatchProcessor extends QuartzJobBean {
 								        modifiedLoanListResponseVO
 								                .getLoanName());
 								if (ClearModifiedLoanByNameByAppCodeObject != null) {
-									LOGGER.debug("Invoking LQB service to fetch Loan status ");
+									LOGGER.info("Invoking LQB service to clear Loan "
+									        + modifiedLoanListResponseVO
+									                .getLoanName());
 									lqbInvoker
 									        .invokeLqbService(ClearModifiedLoanByNameByAppCodeObject
 									                .toString());
@@ -171,12 +176,12 @@ public class LoanBatchProcessor extends QuartzJobBean {
 					taskExecutor.shutdown();
 
 				} finally {
-					LOGGER.debug("Updating the end time for this batch job ");
+					LOGGER.info("Updating the end time for this batch job ");
 					updateBatchJobExecution(batchJobExecution);
 
 				}
 			} else {
-				LOGGER.debug("Batch Jobs Not Running ");
+				LOGGER.info("Batch Jobs Not Running ");
 			}
 		}
 	}
@@ -219,12 +224,12 @@ public class LoanBatchProcessor extends QuartzJobBean {
 	}
 
 	private BatchJobMaster getBatchJobMasterById(int batchJobId) {
-		LOGGER.debug("Inside method getBatchJobMasterById ");
+		LOGGER.info("Inside method getBatchJobMasterById ");
 		return batchService.getBatchJobMasterById(batchJobId);
 	}
 
 	private List<LoanMilestoneMaster> getLoanMilestoneMasterList() {
-		LOGGER.debug("Inside method getLoanMilestoneMasterList ");
+		LOGGER.info("Inside method getLoanMilestoneMasterList ");
 
 		return loanService.getLoanMilestoneMasterList();
 	}
@@ -232,7 +237,7 @@ public class LoanBatchProcessor extends QuartzJobBean {
 	private ExceptionMaster loadExceptionMaster() {
 
 		if (exceptionMaster == null) {
-			LOGGER.debug("Loading Loan ExceptionMaster ");
+			LOGGER.info("Loading Loan ExceptionMaster ");
 			exceptionMaster = nexeraUtility
 			        .getExceptionMasterByType(CoreCommonConstants.EXCEPTION_TYPE_LOAN_BATCH);
 
