@@ -981,7 +981,7 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDeta
 		"userid":userid,
 		"homeOwnInsID":homeOwnInsID,
 		"titleCompanyID":titleCompanyID
-	}).html("X").bind("click",function(e){
+	}).bind("click",function(e){
 		var userID = $(this).attr("userid");
 		var loanID = selectedUserDetail==undefined?newfiObject.user.defaultLoanId:selectedUserDetail.loanID
 		var homeOwnInsID = $(this).attr("homeOwnInsID");

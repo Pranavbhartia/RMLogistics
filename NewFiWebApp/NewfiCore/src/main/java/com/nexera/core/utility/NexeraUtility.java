@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
@@ -44,6 +45,9 @@ import javax.crypto.spec.PBEParameterSpec;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -75,6 +79,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfCopy;
@@ -87,6 +93,7 @@ import com.nexera.common.entity.ExceptionMasterExecution;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.NonFatalException;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.ExceptionService;
@@ -933,27 +940,90 @@ public class NexeraUtility {
 		return json;
 	}
 
-	/*
-	 * public static void main(String[] args) throws InvalidKeyException,
-	 * NoSuchAlgorithmException, InvalidKeySpecException,
-	 * NoSuchPaddingException, InvalidAlgorithmParameterException,
-	 * IllegalBlockSizeException, BadPaddingException, IOException { String
-	 * userName = "Nexera_RareMile"; String password = "Portal0262"; byte[] salt
-	 * = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32, (byte) 0x56,
-	 * (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
-	 * 
-	 * String crypticKey ="ezeon8547";
-	 * 
-	 * String encryptedlqbUserName = encrypt(salt, crypticKey, userName);
-	 * System.out.println(encryptedlqbUserName); String encryptedlqbPassword =
-	 * encrypt(salt, crypticKey, password);
-	 * System.out.println(encryptedlqbPassword);
-	 * 
-	 * String encryptedlqbName = decrypt(salt, crypticKey,
-	 * "MvwYMBzMJWOhzo4yuY0Y2g=="); String encryptedlqbPass = decrypt(salt,
-	 * crypticKey, "yrcUbfET1xe8/axuOVHY0Q==");
-	 * 
-	 * }
-	 */
+	public JSONObject createCreditScoreJSONObject(String opName,
+	        String sTicket, String lqbLoanId, int format) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_LOAN_NUMBER,
+			        lqbLoanId);
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_S_TICKET,
+			        sTicket);
+			jsonChild.put(WebServiceMethodParameters.PARAMETER_FORMAT, format);
+
+			json.put("opName", opName);
+			json.put("loanVO", jsonChild);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			json = null;
+		}
+		return json;
+	}
+
+	public List<CreditScoreResponseVO> parseCreditScoresResponse(
+	        String creditScoreResponse) {
+
+		// get a factory
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+		try {
+
+			// get a new instance of parser
+			SAXParser sp = spf.newSAXParser();
+			CreditScoreXMLHandler handler = new CreditScoreXMLHandler();
+			// parse the file and also register this class for call backs
+			sp.parse(new InputSource(new StringReader(creditScoreResponse)),
+			        handler);
+			return handler.getCreditScoreResponseList();
+
+		} catch (SAXException se) {
+			LOGGER.error("Exception caught " + se.getMessage());
+		} catch (ParserConfigurationException pce) {
+			LOGGER.error("Exception caught " + pce.getMessage());
+		} catch (IOException ie) {
+			LOGGER.error("Exception caught " + ie.getMessage());
+		}
+
+		return null;
+	}
+
+	public Map<String, String> fillCreditScoresInMap(
+	        List<CreditScoreResponseVO> creditScoreResponseVOList) {
+		LOGGER.debug("Inside method fillCreditScoresInMap");
+		Map<String, String> creditScoreMap = new HashMap<String, String>();
+		for (CreditScoreResponseVO creditScoreResponseVO : creditScoreResponseVOList) {
+			if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE)) {
+				creditScoreMap.put(
+				        CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE,
+				        creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE)) {
+				creditScoreMap
+				        .put(CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE,
+				                creditScoreResponseVO.getFieldValue());
+			} else if (creditScoreResponseVO.getFieldId().equals(
+			        CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE)) {
+				creditScoreMap
+				        .put(CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE,
+				                creditScoreResponseVO.getFieldValue());
+			}
+		}
+		return creditScoreMap;
+	}
 
 }

@@ -641,9 +641,11 @@ public class ThreadManager implements Runnable {
 					String creditScores = creditScoreJSONResponse
 					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
 					List<CreditScoreResponseVO> creditScoreResponseList = parseCreditScoresResponse(creditScores);
-					Map<String, String> creditScoreMap = fillCreditScoresInMap(creditScoreResponseList);
+					Map<String, String> creditScoreMap = nexeraUtility
+					        .fillCreditScoresInMap(creditScoreResponseList);
 					LOGGER.debug("Save Credit Score For This Borrower ");
-					saveCreditScoresForBorrower(creditScoreMap);
+					loanService.saveCreditScoresForBorrower(creditScoreMap,
+					        loan, exceptionMaster);
 					saveCreditScoresForCoBorrower(creditScoreMap);
 					creditScoreMap.clear();
 				}
@@ -816,46 +818,6 @@ public class ThreadManager implements Runnable {
 	        CustomerSpouseDetail customerSpouseDetail) {
 		LOGGER.debug("Updating updateCustomerSpouseScore ");
 		userProfileService.updateCustomerSpouseScore(customerSpouseDetail);
-	}
-
-	private Map<String, String> fillCreditScoresInMap(
-	        List<CreditScoreResponseVO> creditScoreResponseVOList) {
-		LOGGER.debug("Inside method fillCreditScoresInMap");
-		Map<String, String> creditScoreMap = new HashMap<String, String>();
-		for (CreditScoreResponseVO creditScoreResponseVO : creditScoreResponseVOList) {
-			if (creditScoreResponseVO.getFieldId().equals(
-			        CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE)) {
-				creditScoreMap.put(
-				        CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE,
-				        creditScoreResponseVO.getFieldValue());
-			} else if (creditScoreResponseVO.getFieldId().equals(
-			        CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE)) {
-				creditScoreMap.put(
-				        CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE,
-				        creditScoreResponseVO.getFieldValue());
-			} else if (creditScoreResponseVO.getFieldId().equals(
-			        CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE)) {
-				creditScoreMap.put(
-				        CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE,
-				        creditScoreResponseVO.getFieldValue());
-			} else if (creditScoreResponseVO.getFieldId().equals(
-			        CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE)) {
-				creditScoreMap.put(
-				        CoreCommonConstants.SOAP_XML_CO_BORROWER_EQUIFAX_SCORE,
-				        creditScoreResponseVO.getFieldValue());
-			} else if (creditScoreResponseVO.getFieldId().equals(
-			        CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE)) {
-				creditScoreMap
-				        .put(CoreCommonConstants.SOAP_XML_CO_BORROWER_TRANSUNION_SCORE,
-				                creditScoreResponseVO.getFieldValue());
-			} else if (creditScoreResponseVO.getFieldId().equals(
-			        CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE)) {
-				creditScoreMap
-				        .put(CoreCommonConstants.SOAP_XML_CO_BORROWER_EXPERIAN_SCORE,
-				                creditScoreResponseVO.getFieldValue());
-			}
-		}
-		return creditScoreMap;
 	}
 
 	private void updateLastModifiedTimeForThisLoan(Loan loan) {

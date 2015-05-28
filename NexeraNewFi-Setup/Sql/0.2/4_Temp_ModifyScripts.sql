@@ -437,4 +437,6 @@ INSERT INTO `newfi_schema`.`template`(`id`,`key`,`description`,`modified_date`,`
 VALUES ('42','PRE_QUAL_LETTER_TEMPLATE_ID','Prequal Letter Template','2015-04-10 12:53:34','ef40dd3a-acd4-41b2-9c98-72ce2d4eb414');
 
 
-
+#Rajeswari - for NMLS ID
+ALTER TABLE `newfi_schema`.`internaluserdetails` 
+ADD COLUMN `nmls_id` VARCHAR(45) NULL AFTER `lqb_password`;
