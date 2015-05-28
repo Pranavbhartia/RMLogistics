@@ -3191,10 +3191,14 @@ input.calc-input {
 
 .milestone-lc-text {
 	text-align: right;
+	float: right;
+	clear: both;
 }
 
 .milestone-rc-text {
 	text-align: left;
+	float:left;
+	clear: both;
 }
 
 .milestone-plain-text {
