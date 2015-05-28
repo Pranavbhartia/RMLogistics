@@ -6,7 +6,8 @@ var states=[];
 var internalUserDetailId;
 var mobileCarrierConstants=[];
 var userRole="Customer";
-
+var loggedInUser ;
+var nmlsAdded = false;
 //var userStates=[];
 $(document).on('click',function(e){
 	if($('#add-licence-popup').css("display") == "block"){
@@ -95,7 +96,7 @@ function LoanPersonalInfoWrapper(user) {
 /* 	 var wrapper = $('<div>').attr({
 		"class" : "cust-personal-info-wrapper"
 	});  */
-
+	loggedInUser = user;
 	var wrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
 	});
@@ -296,14 +297,14 @@ function getLoanPersonalInfoContainer(user) {
 		for(var i=0;i<userStateMappingVOs.length;i++) {
 				states.push(userStateMappingVOs[i].stateId.toString());
 				internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
-	        }
+	    }
 	}
  	
 	var licensesRow = getLicensesRow(user);
 	container.append(licensesRow);
 	
 	if(user.internalUserStateMappingVOs == undefined){
-		licensesRow.addClass('hide');
+		//licensesRow.addClass('hide');
 	}
 	
 	var saveBtn = $('<div>').attr({
@@ -338,8 +339,17 @@ function appendLicensedStates(element, user){
 	if(!jQuery.isEmptyObject(internalUserStates)){
 		$('#licenseRow').show();
 	}
-	
-	else{
+	 if (user.internalUserDetail && user.internalUserDetail.nmlsID != undefined && user.internalUserDetail.nmlsID!= "")
+	{
+		var nmlsRow = getNMLSDisplayRow(user.internalUserDetail.nmlsID);
+		element.append(nmlsRow);
+		$('#licenseRow').show();
+		if(jQuery.isEmptyObject(internalUserStates)){
+			return;
+		}
+	}
+	else if(jQuery.isEmptyObject(internalUserStates)){
+		$('#licenseRow').hide();
 		return;
 	}
 	for(var key in internalUserStates){
@@ -374,11 +384,7 @@ function appendLicensedStates(element, user){
 		element.append(licenseRow);
 		
 	}
-	if (user.internalUserDetail && user.internalUserDetail.nmlsID != undefined && user.internalUserDetail.nmlsID!= "")
-	{
-		var nmlsRow = getNMLSDisplayRow(user.internalUserDetail.nmlsID);
-		element.append(nmlsRow);
-	}
+	
 }
 
 function getNMLSDisplayRow (nmlsid)
@@ -401,14 +407,23 @@ function getNMLSDisplayRow (nmlsid)
 	}).bind('click',{"key":key},function(event){
 		var key = event.data.key;
 		$(this).closest('.license-row').remove();
-		internalUserStates[key].isChecked = false;		
+		if (internalUserStates[key])
+		{
+			internalUserStates[key].isChecked = false;
+		}
+		deleteStateLicenseMapping(internalUserStates[key]);
+		delete internalUserStates[key];
+		saveNMLS("");
 		//deleteStateLicenseMapping(internalUserStates[key]);
 		//delete internalUserStates[key];
 	});
 	
 	return licenseRow.append(state).append(licenseNumber).append(removeIcn);	
 }
-
+function deleteNMLSRow()
+{
+	
+}
 function getLoanManager(user){
 
 		
@@ -1567,7 +1582,7 @@ function appendAddLicencePopup(element) {
 		removeAddLicencePopup();
 		saveInternalUserStatesAndLicense(internalUserStateMappingVO);
 		
-		appendLicensedStates($('#licensedStateList'));
+		appendLicensedStates($('#licensedStateList'),loggedInUser);
 	});
 	
 	
@@ -1599,6 +1614,18 @@ function saveNMLS(nmlsID)
 				success : function(data) {
 					$('#overlay-loader').hide();					
 					removeAddLicencePopup();
+					var internalUserStateMappingVO = {};
+					var isNew = true;
+					if(internalUserStates[$(this).attr("state-id")]){
+						isNew = true;
+						internalUserStateMappingVO = internalUserStates[$(this).attr("state-id")];
+					}
+					
+					internalUserStateMappingVO.userId=$("#userid").val();
+					internalUserStateMappingVO.stateId=$(this).attr("state-id");
+					internalUserStateMappingVO.license=nmlsID;
+					loggedInUser.internalUserDetail.nmlsID = nmlsID;
+					appendLicensedStates($('#licensedStateList'), loggedInUser);					
 					showToastMessage(updateSuccessMessage);
 				},
 				error : function(error) {
@@ -1676,13 +1703,14 @@ function appendManagerStateDropDown(elementToApeendTo,stateList) {
 	var $containerToAppend=$("<div>");
 	
 	if (!userIsRealtor()
-			&& newfiObject.user.userRole.id!=4)
+			&& newfiObject.user.userRole.id!=4 && !nmlsAdded)
 	{			
 		var nmlsElement = new Object();
 		nmlsElement.id="NMLS";
 		nmlsElement.stateCode="NMLS";
 		stateList.splice(0, 0, nmlsElement);
 		stateList.join();
+		nmlsAdded=true;
 	}
 	for(var i=0; i<stateList.length; i++){
 		console.log(i);
