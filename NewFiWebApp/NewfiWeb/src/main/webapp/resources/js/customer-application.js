@@ -483,6 +483,7 @@ function getApplicationTextQues(question) {
 				});
 			}
 
+
 			
 			   if (question.name == 'ssn') {
 				  // $('input[name="ssn"]').mask("999-99-9999");
@@ -499,6 +500,7 @@ function getApplicationTextQues(question) {
 
 	  if(question.name =="birthday"){
 		  optionCont.removeClass("app-input").addClass("prof-form-input date-picker").attr("placeholder","MM/DD/YYYY");
+		 // $('input[name=birthday]').mask("__/__/____");
 	  }
 	
   }else{
@@ -531,6 +533,7 @@ function getApplicationTextQues(question) {
 			}
 	      
 	    });
+	   
 	  
   }
 	
@@ -543,6 +546,7 @@ function getApplicationTextQues(question) {
 
     return container.append(quesTextCont).append(optionsContainer);
 }
+
 
 function getApplicationMultipleChoiceQues(question,value) {
     var container = $('<div>').attr({
@@ -2505,6 +2509,9 @@ $('body').on('focus',"input[name='ssn']",function(){
 });
 $('body').on('focus',"input[name='phoneNumber']",function(){
     $(this).mask("(999) 999-9999");
+});
+$('body').on('focus',"input[name='birthday']",function(){
+    $(this).mask("99/99/9999");
 });
 
 

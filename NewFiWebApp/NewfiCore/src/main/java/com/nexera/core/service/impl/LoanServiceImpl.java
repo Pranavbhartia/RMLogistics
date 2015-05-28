@@ -731,7 +731,7 @@ public class LoanServiceImpl implements LoanService {
 		loan = completeLoanModel(loanVO);
 
 		int loanId = (int) loanDao.save(loan);
-		LOG.info("Saving turn around time for loan");
+		LOG.info("Saving turn around time for loan" + loanId);
 		saveAllLoanTurnAroundTimeForLoan(loanId);
 		LOG.info("Saved turn around time");
 		addDefaultLoanTeam(loanVO, loanId);
