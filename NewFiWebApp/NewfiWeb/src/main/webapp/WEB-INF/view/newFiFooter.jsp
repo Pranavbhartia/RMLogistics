@@ -1,6 +1,6 @@
 <footer id="footer" role="contentinfo">
    <section class="section swatch-black">
-      <div class="footer-container">
+      <div class="footer-container container">
          <div class="row footer-element-normal-top footer-element-normal-bottom">
             <div class="footer-col-md-3 column-one">
                <div id="text-3" class="sidebar-widget  widget_text">
@@ -69,7 +69,7 @@
       </div>
    </section>
    <section class="section swatch-black">
-               <div class="container">
+               <div class="footer-container container">
                <!-- <div id="footer">
 	<div class="footer-bottom">
 		<a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
@@ -79,7 +79,7 @@
 			
 	</div> -->
 	<div class="footer-container-text float-left"> © 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div>
-	<div class="footer-container-text2 float-right">
+	<div class="footer-container-text2 float-left">
    <a href="http://portal.hud.gov/hudportal/HUD" target="_blank">
    <div class="footer-login-inline-home-image" id="footeHomeImage"></div>
    </a>
