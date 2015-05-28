@@ -4247,7 +4247,7 @@ function appProgressBaar(num){
 
 function putCurrencyFormat(name){
 	
-	$("input[name="+name+"]").keydown(function() {
+	$("input[name="+name+"]").focus(function() {
     	$("input[name="+name+"]").maskMoney({
 			thousands:',',
 			decimal:'.',
