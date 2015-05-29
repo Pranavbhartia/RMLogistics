@@ -1340,8 +1340,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			LOG.error("User registration failed. Generating an alert"
 			        + loaAppFormVO);
-			LOG.error("error while creating user in shopper registartion  creating user"
-			        + e.getStackTrace());
+			LOG.error(
+			        "error while creating user in shopper registartion  creating user",
+			        e.getStackTrace());
 			e.getCause().printStackTrace();
 			throw new FatalException("Error in User registration");
 
@@ -1695,6 +1696,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
+
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
 		        template);
 

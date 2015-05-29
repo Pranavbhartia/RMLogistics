@@ -1,56 +1,33 @@
 var updateHandler={
+	taskKeyDictionary:{},
 	taskKey:"",
-	pushServerUrl : "/PushNotification/pushServlet/?taskId=",
-	enablePushnotification:false,
-	requestEnabled:false,
+	enablePushnotification:true,
+	requestEnabledCount:0,
+	requestEnabledCountLimit:2,
+	updateCtxHolder:{},
 	clearUpdateHandler:function(){
 		this.taskKey="";
-		this.requestEnabled=false;
+		this.requestEnabledCount=0;
+		taskKeyDictionary={}
 	},
 	addLoanToTaskKey:function(loanId,callback){
 		var ob=this;
-		if(ob.taskKey.indexOf(loanId)<0){
+		if(!ob.taskKeyDictionary[loanId]){
 			if(ob.taskKey=="")
 				ob.taskKey=loanId+"";
 			else
 				ob.taskKey=ob.taskKey+","+loanId;
+			ob.taskKeyDictionary[loanId]=true;
 		}
 	},
 	initiateRequest:function(){
-		if(!this.requestEnabled){
-			this.getUpdate();
-			this.requestEnabled=true;
-		}
-	},
-	getUpdate : function(callback) {
-		var ob = this;
-		if (ob.taskKey != "" && ob.enablePushnotification) {
-			var data = {};
-			// code to call API to get Notification List for loan
-			// http://localhost:8080/PushNotification/pushServlet/?task=notification&taskId=1
-			ajaxRequest(
-				ob.pushServerUrl + ob.taskKey,
-				"GET",
-				"json",
-				data,
-				function(response) {
-
-				},
-				false,
-				undefined,
-				function(response) {
-					ob.getUpdate();
-					if (response.error) {
-						showToastMessage(response.error.message);
-					} else {
-						if(response.task=="notification"){
-							ob.updateNotification(response);
-						}else if(response.task=="milestone"){
-							ob.updateMilestone(response);
-						}
-					}
-				}
-			);
+		while(this.requestEnabledCount<this.requestEnabledCountLimit){
+			if(this.requestEnabledCount<this.requestEnabledCountLimit){
+				this.requestEnabledCount=this.requestEnabledCount+1;
+				var contxt=getUpdaterContext(this.requestEnabledCount);
+				this.updateCtxHolder[this.requestEnabledCount]=contxt;
+				contxt.getUpdate(undefined);
+			}
 		}
 	},
 	updateNotification:function(response){
@@ -127,4 +104,46 @@ var updateHandler={
 			WFContxt.updateMilestoneView(status+"");
 		}
 	}
+}
+function getUpdaterContext(reqKey){
+	var updHandler={
+		pushServerUrl : "/PushNotification/pushServlet/?taskId=",
+		reqKey:reqKey,
+		clearUpdateHandler:function(){
+			updateHandler.taskKey="";
+			taskKeyDictionary={}
+		},
+		getUpdate : function(callback) {
+			var ob = this;
+			if (updateHandler.taskKey != "" && updateHandler.enablePushnotification) {
+				var data = {};
+				// code to call API to get Notification List for loan
+				// http://localhost:8080/PushNotification/pushServlet/?task=notification&taskId=1
+				ajaxRequest(
+					ob.pushServerUrl + updateHandler.taskKey+"&key="+ob.reqKey,
+					"GET",
+					"json",
+					data,
+					function(response) {
+
+					},
+					false,
+					undefined,
+					function(response) {
+						ob.getUpdate();
+						if (response.error) {
+							showToastMessage(response.error.message);
+						} else {
+							if(response.task=="notification"){
+								updateHandler.updateNotification(response);
+							}else if(response.task=="milestone"){
+								updateHandler.updateMilestone(response);
+							}
+						}
+					}
+				);
+			}
+		}
+	}
+	return updHandler;
 }
