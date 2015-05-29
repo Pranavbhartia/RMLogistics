@@ -48,15 +48,21 @@ function populateTemplate() {
 	
 
 		header.append(leftCon);
-		container.append(leadsWrapper);
+		var column=appendHeaderColumn();
+		container.append(column).append(leadsWrapper);
+
+
 		tunrarounfDashboardMainContainer.append(header).append(container);
-			for (i = 0; i < TemplateVO.length; i++) {
+
+		
+			for (var i = 0; i < TemplateVO.length; i++) {
 			this.appendTextField(
 					TemplateVO[i].id,
 					TemplateVO[i].desc, 
 					TemplateVO[i].value,
 					TemplateVO[i].smsText);
 		}
+
 		var saveBtn = $('<div>')
 				.attr({
 					"class" : "prof-cust-save-btn float-left"
@@ -106,7 +112,7 @@ function populateTemplate() {
 		"class" : "prof-form-row clearfix"
 	});
 	var rowCol1 = $('<div>').attr({
-		"class" : "prof-form-row-desc float-left"
+		"class" : "template-column-val float-left"
 	}).html(name);
 
 	var rowCol2 = $('<div>').attr({
@@ -118,7 +124,7 @@ function populateTemplate() {
 	});
 	
 	var emailInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg",
+		"class" : "prof-form-input prof-form-input-lg col-one",
 		"value" : value,
 		"id" : "create_" + id
 	});
@@ -126,16 +132,17 @@ function populateTemplate() {
 	inputCont.append(emailInput);
 	rowCol2.append(inputCont);
 	var rowCol3 = $('<div>').attr({
-			"class" : "prof-form-rc float-left"
+			"class" : "prof-form-rc float-left "
 	});
 	var col3Cont = $('<div>').attr({
 			"class" : "prof-form-input-cont"
 	});
 	
 	var smsInput = $('<input>').attr({
-			"class" : "prof-form-input prof-form-input-lg",
+			"class" : "prof-form-input prof-form-input-lg col-two",
 			"value" : smsText,
-			"id" : "sms_" + id
+			"id" : "sms_" + id,
+			"maxlength":50
 		});
 	col3Cont.append(smsInput);
 	rowCol3.append(col3Cont);
@@ -143,4 +150,20 @@ function populateTemplate() {
 		$('#templateContainer').append(row);
 		
 	}
+}
+
+function appendHeaderColumn(){
+	var row = $('<div>').attr({
+		"class" : "prof-form-row clearfix"
+	});
+	var Column1 = $('<div>').attr({
+		"class" : "prof-form-row header-col-1 float-left"
+	}).html("Template Name");
+	var Column2 = $('<div>').attr({
+		"class" : "prof-form-row header-col-2 float-left"
+	}).html("Template ID");
+	var Column3 = $('<div>').attr({
+		"class" : "prof-form-row header-col-3 float-left"
+	}).html("SMS Text");
+	return row.append(Column1).append(Column2).append(Column3);
 }
