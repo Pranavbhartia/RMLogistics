@@ -124,7 +124,6 @@
 	background: #F47521;
 }
 
-
 .width-75{
  width: 75px !important;
 }
@@ -206,6 +205,7 @@
 .cep-button-color{
 	background-color: rgba(24,72,141,0.9);
 }
-.cep-button-color:hover {
+/* .cep-button-color:hover {
     background: #F47521;
-}
+} */
+

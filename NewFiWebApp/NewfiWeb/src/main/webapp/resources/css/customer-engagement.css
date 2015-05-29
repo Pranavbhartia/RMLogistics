@@ -320,9 +320,9 @@
 	background: #F47521;
 }
 
-.app-option-choice:hover{
+/* .app-option-choice:hover{
 	background: #F47521;
-}
+} */
 
 .app-option-choice.out{
 	background-color: rgba(24,72,141,0.9);
@@ -351,4 +351,8 @@
 	  width: 15px;
 	  height: 15px;
 	  padding: 25px 1px;
+}
+
+.choice-hover{
+	background: #F47521;
 }
