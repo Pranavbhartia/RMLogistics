@@ -2985,7 +2985,11 @@ input.calc-input {
   text-transform: capitalize;
   cursor: pointer;
   font-family: 'opensanssemibold';
-  border:1px solid white
+  border:1px solid white;
+  background:#428bca;
+}
+.hdr-login-btn:hover{
+  background: #F47521;
 }
 .hdr-get-quote {
 	margin-top: 10px;
