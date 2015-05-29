@@ -1,5 +1,13 @@
 //JavaScript functions for customer engagement pages
 
+$(document).on('mouseover','.app-option-choice',function(){
+	$(this).parent().find('.app-option-choice').removeClass('choice-hover');
+	$(this).addClass('choice-hover');
+});
+$(document).on('mouseleave','.app-option-choice',function(){
+	$(this).removeClass('choice-hover');
+});
+
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {
         type: question.type,
@@ -232,7 +240,7 @@ function getContextApplicationYearMonthCEP(contxt) {
 
 
 function optionClicked(element, ctx, option, value, skipCondition) {
-    $(element).parent().find('.app-option-choice').attr("isSelected", "false").focus();
+    $(element).parent().find('.app-option-choice').attr("isSelected", "false").mouseleave();
     $(element).attr("isSelected", "true");
     ctx.clickHandler(value);
     if (ctx.value != value || skipCondition) {

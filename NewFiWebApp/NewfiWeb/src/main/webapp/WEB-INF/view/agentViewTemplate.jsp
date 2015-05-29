@@ -24,7 +24,7 @@
 </head>
 
 <body>
-<div id="popup-overlay" class="popup-overlay" style="display: none;position: fixed; height: 100%; width: 100%; overflow: auto;z-index: 9999; background-color: rgba(255, 255, 255, 0.901961) !important;">
+<div id="popup-overlay" class="popup-overlay">
 	</div>
 	<jsp:include page="header.jsp"></jsp:include>
 	<div class="home-container container">
