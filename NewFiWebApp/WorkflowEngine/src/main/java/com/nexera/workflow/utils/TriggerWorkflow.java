@@ -59,11 +59,14 @@ public class TriggerWorkflow extends Thread {
 			try {
 				mapper.writeValue(sw, params);
 			} catch (JsonGenerationException e) {
-				LOGGER.error("Exception caught " + e.getMessage());
+				LOGGER.error("Exception caught while triggering workflow change"
+				        + e.getMessage());
 			} catch (JsonMappingException e) {
-				LOGGER.error("Exception caught " + e.getMessage());
+				LOGGER.error("Exception caught while triggering workflow change "
+				        + e.getMessage());
 			} catch (IOException e) {
-				LOGGER.error("Exception caught " + e.getMessage());
+				LOGGER.error("Exception caught while triggering workflow change "
+				        + e.getMessage());
 			}
 			map.put("data", sw.toString());
 
@@ -119,11 +122,14 @@ public class TriggerWorkflow extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering workflow change "
+			        + e.getMessage());
 		} catch (JsonMappingException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering workflow change "
+			        + e.getMessage());
 		} catch (IOException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering workflow change "
+			        + e.getMessage());
 		}
 		appUrl = appUrl + "rest/workflow/loan";
 		TriggerWorkflow triggerWorkflow = new TriggerWorkflow(map, url, appUrl);
@@ -182,7 +188,8 @@ public class TriggerWorkflow extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error while triggering workflow change"
+			        + e.getMessage());
 		} finally {
 			httpClient.getConnectionManager().closeExpiredConnections();
 		}

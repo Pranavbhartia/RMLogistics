@@ -39,9 +39,9 @@ public class TriggerNotification extends Thread {
 
 	@Override
 	public void run() {
-
+		HttpClient client = new DefaultHttpClient();
 		try {
-			HttpClient client = new DefaultHttpClient();
+
 			HttpPost post = new HttpPost(url);
 
 			// add header
@@ -74,6 +74,8 @@ public class TriggerNotification extends Thread {
 			LOGGER.error("Exception caught " + e.getMessage());
 		} catch (IOException e) {
 			LOGGER.error("Exception caught " + e.getMessage());
+		} finally {
+			client.getConnectionManager().closeExpiredConnections();
 		}
 
 	}
@@ -90,11 +92,14 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		} catch (JsonMappingException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		} catch (IOException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("task", "notification");
@@ -120,11 +125,14 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		} catch (JsonMappingException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		} catch (IOException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("task", "notification");
@@ -150,11 +158,14 @@ public class TriggerNotification extends Thread {
 		try {
 			mapper.writeValue(sw, map);
 		} catch (JsonGenerationException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		} catch (JsonMappingException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		} catch (IOException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught while triggering notification change "
+			        + e.getMessage());
 		}
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("task", "notification");
@@ -166,31 +177,4 @@ public class TriggerNotification extends Thread {
 
 	}
 
-	public static void triggerMilestoneStatusChange(int loanId,
-	        int milestoneId, String status, String url) {
-
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("wfID", milestoneId);
-		map.put("status", status);
-		map.put("task", "milestone");
-		ObjectMapper mapper = new ObjectMapper();
-		StringWriter sw = new StringWriter();
-		try {
-			mapper.writeValue(sw, map);
-		} catch (JsonGenerationException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
-		} catch (JsonMappingException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
-		} catch (IOException e) {
-			LOGGER.error("Exception caught " + e.getMessage());
-		}
-		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("task", "notification");
-		params.put("taskId", loanId + "");
-		params.put("data", sw.toString());
-		TriggerNotification triggerNotification = new TriggerNotification(
-		        params, url);
-		triggerNotification.start();
-
-	}
 }
