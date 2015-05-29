@@ -64,18 +64,27 @@ function getCustomerSecondaryLeftNav() {
     if(newfi.appUserDetails){
         try{
 
-        	var tutorialStatus = null;
+        	var tutorialStatus = undefined;
+        	if(newfiObject.appUserDetails.user == undefined){
+        		itutorialStatus = JSON.parse(newfiObject.appUserDetails).user.customerDetail.tutorialStatus;
+        		
+        	}
+        	else{
+        		tutorialStatus = newfi.appUserDetails.user.customerDetail.tutorialStatus;
+        	}
+        	
+        	//var tutorialStatus = undefined;
         	//if(newfi.appUserDetails instanceof String)
-             tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
+            // tutorialStatus=JSON.parse(newfi.appUserDetails).user.customerDetail.tutorialStatus;
         	//else
-        		//tutorialStatus = newfi.appUserDetails.user.customerDetail.tutorialStatus;
+        	//var tutorialStatus = newfi.appUserDetails.user.customerDetail.tutorialStatus;
 
         	
             if(tutorialStatus==true || removedKnwoNewFi ==true){
             	flagKnowNewFi=false;
             }
         }catch(e){
-
+          console.log("catch");
         }
     }
     var step1 = "";
@@ -90,12 +99,21 @@ function getCustomerSecondaryLeftNav() {
     var flag=true;
     if(newfi.appUserDetails){
         try{
-            var loan=JSON.parse(newfi.appUserDetails).loan;
-            if(loan.lqbFileId&&loan.lqbFileId!=""){
+        	var loan = undefined;
+        	
+        	if(newfiObject.appUserDetails.user == undefined){
+        		loan = JSON.parse(newfiObject.appUserDetails).loan;
+        		
+        	}
+        	else{
+        		loan = newfiObject.appUserDetails.loan;
+        	}
+        	
+            if(loan.lqbFileId && loan.lqbFileId!=""){
                 flag=false;
             }
         }catch(e){
-
+        	 console.log("catch");
         }
     }
     var step2 = "";
