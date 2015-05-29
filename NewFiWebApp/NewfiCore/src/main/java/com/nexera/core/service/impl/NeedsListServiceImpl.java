@@ -744,7 +744,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForCustomer(emailEntity,
-					        loanVO.getId());
+					        loanVO.getId(), template);
 				} catch (InvalidInputException | UndeliveredEmailException e) {
 					LOGGER.error("Exception caught while sending email "
 					        + e.getMessage());
@@ -816,7 +816,8 @@ public class NeedsListServiceImpl implements NeedsListService {
 		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 		try {
-			sendEmailService.sendEmailForCustomer(emailEntity, loanVO.getId());
+			sendEmailService.sendEmailForCustomer(emailEntity, loanVO.getId(),
+			        template);
 		} catch (InvalidInputException | UndeliveredEmailException e) {
 			LOGGER.error("Exception caught while sending email "
 			        + e.getMessage());

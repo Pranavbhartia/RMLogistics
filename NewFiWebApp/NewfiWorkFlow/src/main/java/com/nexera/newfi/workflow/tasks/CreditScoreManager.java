@@ -123,32 +123,13 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForCustomer(emailEntity,
-					        loanVO.getId());
+					        loanVO.getId(), template);
 				} catch (InvalidInputException e) {
 					LOG.error("Exception caught " + e.getMessage());
 				} catch (UndeliveredEmailException e) {
 					LOG.error("Exception caught " + e.getMessage());
 				}
 
-				// Sending sms to user now
-				if (loanVO.getUser() != null) {
-					if (loanVO.getUser().getCustomerDetail() != null) {
-						if (loanVO.getUser().getCarrierInfo() != null) {
-							if (loanVO.getUser().getPhoneNumber() != null
-							        && loanVO.getUser().getPhoneNumber()
-							                .equalsIgnoreCase("")) {
-								LOG.info("Sending SMS "
-								        + Long.valueOf(loanVO.getUser()
-								                .getPhoneNumber()));
-								smsServiceHelper.sendNotificationSMS(loanVO
-								        .getUser().getCarrierInfo(), Long
-								        .valueOf(loanVO.getUser()
-								                .getPhoneNumber()));
-							}
-						}
-					}
-
-				}
 			}
 		}
 	}

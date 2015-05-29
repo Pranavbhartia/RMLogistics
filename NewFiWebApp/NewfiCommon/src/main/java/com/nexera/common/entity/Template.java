@@ -22,6 +22,7 @@ public class Template implements Serializable {
 	private String value;
 	private String description;
 	private Date modifiedDate;
+	private String smsText;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +33,8 @@ public class Template implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	public String getKey() {
 		return key;
 	}
@@ -49,7 +50,8 @@ public class Template implements Serializable {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	public String getDescription() {
 		return description;
 	}
@@ -58,7 +60,7 @@ public class Template implements Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "modified_date",updatable=false)
+	@Column(name = "modified_date", updatable = false)
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -85,4 +87,14 @@ public class Template implements Serializable {
 		template.setModifiedDate(new Date());
 		return template;
 	}
+
+	@Column(name = "sms_text")
+	public String getSmsText() {
+		return smsText;
+	}
+
+	public void setSmsText(String smsText) {
+		this.smsText = smsText;
+	}
+
 }

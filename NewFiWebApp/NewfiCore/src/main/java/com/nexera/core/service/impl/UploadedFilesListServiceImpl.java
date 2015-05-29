@@ -53,8 +53,6 @@ import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.exception.FatalException;
-import com.nexera.common.exception.InvalidInputException;
-import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.FileAssignmentMappingVO;
@@ -854,17 +852,16 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		return emailEntity;
 	}
 
-	private void sendEmail(EmailVO emailVO, Loan loan) {
-		LOG.debug("Sending Email ");
-		try {
-			sendEmailService.sendEmailForTeam(emailVO, loan.getId());
-		} catch (InvalidInputException e) {
-			LOG.error("Exception caught " + e.getMessage());
-		} catch (UndeliveredEmailException e) {
-			LOG.error("Exception caught " + e.getMessage());
-		}
-
-	}
+	/*
+	 * private void sendEmail(EmailVO emailVO, Loan loan) {
+	 * LOG.debug("Sending Email "); try {
+	 * sendEmailService.sendEmailForTeam(emailVO, loan.getId()); } catch
+	 * (InvalidInputException e) { LOG.error("Exception caught " +
+	 * e.getMessage()); } catch (UndeliveredEmailException e) {
+	 * LOG.error("Exception caught " + e.getMessage()); }
+	 * 
+	 * }
+	 */
 
 	private List<UploadedFilesList> filesToDeleteList(
 	        List<UploadedFilesList> list, List<String> uuidEdocList) {
@@ -955,19 +952,23 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 			for (Integer key : mapFileMappingToNeed.keySet()) {
 				LoanNeedsList loanNeed = loanNeedListDAO.findById(key);
-				
+
 				NeedsListMaster needMaster = loanNeed.getNeedsListMaster();
-				LOG.info("Need Master label: "+needMaster.getLabel());
-				System.out.println("Need Master label: "+needMaster.getLabel());
-				if(needMaster.getLabel().equals(CommonConstants.EXTRA_DOCUMENT)){
-					FileAssignmentMappingVO mapping = mapFileMappingToNeed.get(key);
+				LOG.info("Need Master label: " + needMaster.getLabel());
+				System.out.println("Need Master label: "
+				        + needMaster.getLabel());
+				if (needMaster.getLabel()
+				        .equals(CommonConstants.EXTRA_DOCUMENT)) {
+					FileAssignmentMappingVO mapping = mapFileMappingToNeed
+					        .get(key);
 					List<Integer> fileIds = mapping.getFileIds();
 					for (Integer fileId : fileIds) {
 						deactivateFileUsingFileId(fileId);
 					}
 					mapFileMappingToNeed.remove(key);
-				}else{
-					FileAssignmentMappingVO mapping = mapFileMappingToNeed.get(key);
+				} else {
+					FileAssignmentMappingVO mapping = mapFileMappingToNeed
+					        .get(key);
 					List<Integer> fileIds = mapping.getFileIds();
 					Integer newFileRowId = null;
 					if (mapping.getIsMiscellaneous()) {
@@ -978,8 +979,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 						if (filesList != null) {
 							fileIds.add(filesList.getId());
 						}
-						newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
-						        assignedBy);
+						newFileRowId = mergeAndUploadFiles(fileIds, loanId,
+						        userId, assignedBy);
 
 						for (Integer fileId : fileIds) {
 							deactivateFileUsingFileId(fileId);
