@@ -54,7 +54,8 @@ function populateTemplate() {
 			this.appendTextField(
 					TemplateVO[i].id,
 					TemplateVO[i].desc, 
-					TemplateVO[i].value);
+					TemplateVO[i].value,
+					TemplateVO[i].smsText);
 		}
 		var saveBtn = $('<div>')
 				.attr({
@@ -68,6 +69,7 @@ function populateTemplate() {
 							for (i = 0; i < TemplateVO.length; i++) {
 								if ($("#create_"+ TemplateVO[i].id).val() != "") {
 									TemplateVO[i].value = $("#create_"+ TemplateVO[i].id).val();
+									TemplateVO[i].smsText = $("#sms_"+ TemplateVO[i].id).val();
 									saveContextObj.push(TemplateVO[i]);
 								}
 							}
@@ -98,7 +100,7 @@ function populateTemplate() {
 		$(saveBtnDiv).insertAfter('#container');
 	}
 
-	context.appendTextField = function(id, name, value) {
+	context.appendTextField = function(id, name, value, smsText) {
 
 	var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
@@ -121,11 +123,23 @@ function populateTemplate() {
 		"id" : "create_" + id
 	});
 	
-		
-		
-		inputCont.append(emailInput);
-		rowCol2.append(inputCont);
-		row.append(rowCol1).append(rowCol2);
+	inputCont.append(emailInput);
+	rowCol2.append(inputCont);
+	var rowCol3 = $('<div>').attr({
+			"class" : "prof-form-rc float-left"
+	});
+	var col3Cont = $('<div>').attr({
+			"class" : "prof-form-input-cont"
+	});
+	
+	var smsInput = $('<input>').attr({
+			"class" : "prof-form-input prof-form-input-lg",
+			"value" : smsText,
+			"id" : "sms_" + id
+		});
+	col3Cont.append(smsInput);
+	rowCol3.append(col3Cont);
+	row.append(rowCol1).append(rowCol2).append(rowCol3);
 		$('#templateContainer').append(row);
 		
 	}
