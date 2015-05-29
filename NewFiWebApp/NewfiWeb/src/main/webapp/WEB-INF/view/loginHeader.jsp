@@ -12,7 +12,7 @@
             <div class="soft-menu-icon float-right"></div>
             <div class="soft-menu-wrapper">
                 <div class="soft-menu-hdr cursor-pointer" onclick="window.location='${baseUrl}'">Login</div>
-				<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
+				<div class="soft-menu-hdr cursor-pointer" onclick="window.location='${baseUrl}+/customerEngagement.do'">Check Rates</div>
             </div>
              <div class="float-right login-hdr hdr-contact-no">888-316-3934</div>
               <div class="float-right hdr-contact-icon"></div>

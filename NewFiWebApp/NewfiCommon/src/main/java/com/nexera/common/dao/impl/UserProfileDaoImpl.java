@@ -336,6 +336,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		// Check if username is unique in user table, if not, append userID
 
 		String newUserName = user.getUsername().split("@")[0];
+		newUserName = newUserName.replaceAll("\\.", "_");
 		if (this.checkUserNameIsUnique(newUserName) == null) {
 			user.setUsername(newUserName);
 		} else {
@@ -774,8 +775,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		String hql = "UPDATE InternalUserDetail internalusr set internalusr.nmlsID = :nmlsID WHERE internalusr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", user.getInternalUserDetail().getId());
-		query.setParameter("nmlsID", user.getInternalUserDetail()
-		        .getNmlsID());
+		query.setParameter("nmlsID", user.getInternalUserDetail().getNmlsID());
 		int result = query.executeUpdate();
 		LOG.info("updated Successfully");
 		return result;
