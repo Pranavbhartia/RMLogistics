@@ -45,7 +45,7 @@ public class PreQualificationletter {
 	    ByteArrayOutputStream byteArrayOutputStream =  new ByteArrayOutputStream();
 		createPdf(loaAppFormVO,thirtyYearRateVoDataSet,byteArrayOutputStream,httpServletRequest);
 		try {
-	        userProfileService.sendEmailPreQualification(loaAppFormVO.getUser(),byteArrayOutputStream);
+	        userProfileService.sendEmailPreQualification(loaAppFormVO,byteArrayOutputStream);
         } catch (InvalidInputException | UndeliveredEmailException e) {
 	       
 	        e.printStackTrace();
