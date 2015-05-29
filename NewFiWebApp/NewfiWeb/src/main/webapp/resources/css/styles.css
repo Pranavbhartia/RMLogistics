@@ -3825,7 +3825,7 @@ input.calc-input {
 	{
 	width: 45%;
 	padding: 0 9px;
-	white-space: nowrap;
+
 }
 .del-icon{
 	  color: #dd4b39;
@@ -4213,7 +4213,7 @@ input.calc-input {
 /*Milestone page styles for add member to loan team*/
 #ms-add-member-popup .add-member-sel,#ms-add-member-popup .add-member-sel-search
 	{
-	width: 180px;
+	width: 187px;
 	text-align: left;
 }
 
