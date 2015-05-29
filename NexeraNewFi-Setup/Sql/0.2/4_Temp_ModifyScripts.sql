@@ -455,3 +455,51 @@ ADD COLUMN `nmls_id` VARCHAR(45) NULL AFTER `lqb_password`;
 
 ALTER TABLE `newfi_schema`.`template` 
 ADD COLUMN `sms_text` VARCHAR(100) NULL;
+
+
+#SMS text Master Table
+UPDATE `newfi_schema`.`template` SET `sms_text`='Payment has been made on your newfi account.' WHERE `id`='1';
+
+UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi.' WHERE `id`='2';
+
+UPDATE `newfi_schema`.`template` SET `sms_text`='An update was posted to the newfi portal ' WHERE `id`='3';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi' WHERE `id`='2';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi payment was unsuccessful. So please login and retry the payment' WHERE `id`='4';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan status has changed.' WHERE `id`='5';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi' WHERE `id`='6';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi account password is not updated' WHERE `id`='7';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Reset password instructions have been sent' WHERE `id`='8';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Login to get to know newfi system' WHERE `id`='9';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan rates can be checked now' WHERE `id`='10';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi application has not been completed yet.' WHERE `id`='11';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi application has not been completed yet.' WHERE `id`='12';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi application has not been completed yet.' WHERE `id`='13';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi application has been submitted.' WHERE `id`='14';
+UPDATE `newfi_schema`.`template` SET `sms_text`='There wasn\'t any loan product match for you.' WHERE `id`='15';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Come back, We miss you!' WHERE `id`='16';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your credit score is available now.' WHERE `id`='17';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your rate lock request has been submitted.' WHERE `id`='18';
+UPDATE `newfi_schema`.`template` SET `sms_text`='A fantastic rate for your mortgage loan is now available.' WHERE `id`='19';
+UPDATE `newfi_schema`.`template` SET `sms_text`='We are now ready to order an appraisal on your newfi loan.' WHERE `id`='20';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Application fee has been paid on your newfi loan.' WHERE `id`='21';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Appraisal has been ordered on your newfi loan.' WHERE `id`='22';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Appraisal has been ordered on your newfi loan.' WHERE `id`='23';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Appraisal has been received on your newfi loan.' WHERE `id`='24';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Copy of the homeowner’s insurance policy is now needed on your newfi loan.' WHERE `id`='25';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your initial disclosures are ready to sign.' WHERE `id`='26';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Thank you for completing your disclosures.' WHERE `id`='27';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Needed items are added for your newfi loan.' WHERE `id`='28';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your Needs List Has Been Updated' WHERE `id`='29';
+UPDATE `newfi_schema`.`template` SET `sms_text`='We are still waiting for your documents.' WHERE `id`='30';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan has been Pre Approved' WHERE `id`='31';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan has been approved with conditions.' WHERE `id`='32';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan has been suspended.' WHERE `id`='33';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan has been declined.' WHERE `id`='34';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan is clear to close.' WHERE `id`='35';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Final docs have been sent on your newfi loan/' WHERE `id`='36';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Docs have been sent on your newfi loan.' WHERE `id`='37';
+UPDATE `newfi_schema`.`template` SET `sms_text`='There wasn\'t any loan product match for you.' WHERE `id`='38';
+UPDATE `newfi_schema`.`template` SET `sms_text`='There wasn\'t any loan product match for you.' WHERE `id`='39';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi.' WHERE `id`='40';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi.' WHERE `id`='41';
+UPDATE `newfi_schema`.`template` SET `sms_text`='Your PreQualification letter has been sent to your email.' WHERE `id`='42';

@@ -27,6 +27,9 @@ public class RestInterceptor implements HandlerInterceptor {
 	@Value("${redirect.path}")
 	private String redirectPath;
 
+	@Value("${application.loginpage}")
+	private String loginPage;
+
 	@Override
 	public void afterCompletion(HttpServletRequest arg0,
 	        HttpServletResponse arg1, Object arg2, Exception arg3)
@@ -46,14 +49,13 @@ public class RestInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request,
 	        HttpServletResponse response, Object arg2) throws Exception {
 		// TODO Auto-generated method stub
-		String path = request.getServerName() + ":" + request.getServerPort()
-		        + "/" + request.getContextPath();
+
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("status", "Session Expired");
 		map.put("message",
 		        "For your protection, we have logged you out due to "
 		                + "inactivity.</br>Simply click this <a class='session-login-btn' href='http://"
-		                + path + "'>Login</a> to start a new session.");
+		                + loginPage + "'>Login</a> to start a new session.");
 
 		List<String> unprotectedUrls = utils.getUnprotectedUrls();
 		LOG.debug("Serving getPathInfo" + request.getPathInfo());
@@ -65,7 +67,7 @@ public class RestInterceptor implements HandlerInterceptor {
 
 		if (utils.getLoggedInUser() == null) {
 			LOG.error("User is not logged in");
-			LOG.debug(request.getServletPath() + "is a protected.... URL");
+			LOG.debug(request.getServletPath() + " is a protected.... URL");
 			// response.sendRedirect(redirectPath);
 			//
 			response.setContentType("application/json");
