@@ -57,3 +57,7 @@ var feildShouldNotBeZero="The answers of the questions should not be zero."
 
 //Messages in script.js
 var errorInCreateLoan="Error inside createLoan";
+
+//Message in customerEngagement.js
+var answerQuestionOne="Please answer the question";
+var zipCodeMessage="Please enter a valid 5-digit zipcode";

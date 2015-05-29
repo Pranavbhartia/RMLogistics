@@ -35,7 +35,7 @@ function getNotificationContext(loanId, userId) {
 				ajaxRequest("rest/notification", "GET", "json", data, function(
 						response) {
 					if (response.error) {
-						showToastMessage(response.error.message)
+						showErrorToastMessage(response.error.message)
 					} else {
 						var notificationList = response.resultObject;
 						ob.userNotificationList = notificationList;
@@ -135,7 +135,7 @@ function getNotificationContext(loanId, userId) {
 						+ JSON.stringify(change), "POST", "json", data,
 						function(response) {
 							if (response.error) {
-								showToastMessage(response.error.message);
+								showErrorToastMessage(response.error.message);
 							} else {
 								if (callback) {
 									callback(ob);
@@ -154,7 +154,7 @@ function getNotificationContext(loanId, userId) {
 				ajaxRequest("rest/notification", "GET", "json", data, function(
 						response) {
 					if (response.error) {
-						showToastMessage(response.error.message);
+						showErrorToastMessage(response.error.message);
 					} else {
 						var notificationList = response.resultObject;
 						ob.loanNotificationList = notificationList;
@@ -306,7 +306,7 @@ function getNotificationContext(loanId, userId) {
 					data,
 					function(response) {
 						if (response.error) {
-							showToastMessage(response.error.message);
+							showErrorToastMessage(response.error.message);
 						} else {
 							showToastMessage("Notification Dismissed");
 
@@ -364,7 +364,7 @@ function getNotificationContext(loanId, userId) {
 			ajaxRequest("rest/notification", "PUT", "json", JSON
 					.stringify(data), function(response) {
 				if (response.error) {
-					showToastMessage(response.error.message);
+					showErrorToastMessage(response.error.message);
 				} else {
 					showToastMessage("Success");
 
@@ -441,7 +441,7 @@ function getNotificationContext(loanId, userId) {
 					JSON.stringify(data),
 					function(response) {
 						if (response.error) {
-							showToastMessage(response.error.message);
+							showErrorToastMessage(response.error.message);
 						} else {
 							showToastMessage("Notification Scheduled");
 							var milestoneId;
@@ -486,7 +486,7 @@ function getNotificationContext(loanId, userId) {
 			ajaxRequest("rest/notification/bytype", "GET", "json", data,
 					function(response) {
 						if (response.error) {
-							showToastMessage(response.error.message)
+							showErrorToastMessage(response.error.message)
 						} else {
 							var notificationList = response.resultObject;
 							ob.loanNotificationList = notificationList;

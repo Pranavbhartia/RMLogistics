@@ -19,17 +19,28 @@ function appendErrorMessage(){
 
 function validateInput(element,inputVal,message){
 	var name=$(element).attr('name');
+	var width=$(element).css('width');
 	//$('input[name="currentMortgageBalance"]')
 
-	if(inputVal == undefined || inputVal == ""){
-		$('input[name="' + name + '"]').next('.err-msg').html(message).show();
-		$('input[name="' + name + '"]').addClass('ce-err-input').show();
-		return false;
-
-	}else{
-		if(inputVal == "$0"){
+	if(inputVal == undefined || inputVal == "" ){
+		if(inputVal == "$0" || inputVal == 0){
 			$('input[name="' + name + '"]').next('.err-msg').html(feildShouldNotBeZero).show();
 			$('input[name="' + name + '"]').addClass('ce-err-input').show();
+			$(".err-msg").css('width',width);
+			return false;
+		}else{
+			$('input[name="' + name + '"]').next('.err-msg').html(message).show();
+			$('input[name="' + name + '"]').addClass('ce-err-input').show();
+			$(".err-msg").css('width',width);
+			return false;
+		}
+		
+
+	}else{
+		if(inputVal == "$0" || inputVal == 0){
+			$('input[name="' + name + '"]').next('.err-msg').html(feildShouldNotBeZero).show();
+			$('input[name="' + name + '"]').addClass('ce-err-input').show();
+			$(".err-msg").css('width',width);
 			return false;
 		}else{
 			$('input[name="' + name + '"]').next('.err-msg').hide();
