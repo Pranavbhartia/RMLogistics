@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -69,7 +70,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			return jsonObject.get("responseMessage").toString();
 
 		} catch (Exception e) {
-			LOGGER.error("Exception caught " + e.getMessage());
+			LOGGER.error("Exception caught ", e);
 		}
 
 		return null;
@@ -101,7 +102,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			 */
 			boolean loanMangerFound = false;
 			List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
-			if (null != loanTeam && loanTeam.size() > 0){
+			if (null != loanTeam && loanTeam.size() > 0) {
 				for (UserVO user : loanTeam) {
 					if (null != user.getInternalUserDetail()
 					        && user.getInternalUserDetail()
@@ -117,7 +118,7 @@ public class LqbCacheInvoker implements LqbInterface {
 						break;
 					}
 				}
-		   }
+			}
 			/* This is the case when LM is not found */
 			if (!loanMangerFound) {
 				for (UserVO user : loanTeam) {
@@ -151,6 +152,13 @@ public class LqbCacheInvoker implements LqbInterface {
 		} else {
 			return null;
 		}
+
+	}
+
+	@Override
+	@CacheEvict(value = "teaserRate")
+	public void invalidateTeaserRateCache(String appFormData) {
+		LOGGER.info("Invalidating teaser rate cache for " + appFormData);
 
 	}
 

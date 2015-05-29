@@ -559,8 +559,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
-	
-
 	private void sendEmailWithQuotes(UserVO user,
 	        List<LqbTeaserRateVo> teaseRateDataList)
 	        throws InvalidInputException, UndeliveredEmailException {
@@ -1340,8 +1338,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 			LOG.error("User registration failed. Generating an alert"
 			        + loaAppFormVO);
-			LOG.error("error while creating user in shopper registartion  creating user"
-			        + e.getStackTrace());
+			LOG.error(
+			        "error while creating user in shopper registartion  creating user",
+			        e.getStackTrace());
 			e.getCause().printStackTrace();
 			throw new FatalException("Error in User registration");
 
@@ -1408,16 +1407,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 		return userProfileDao.updateLqbProfile(user);
 
 	}
-	
+
 	@Override
 	@Transactional
-	
-	public Integer updateNMLSId(UserVO userVO)  {
+	public Integer updateNMLSId(UserVO userVO) {
 		User user = User.convertFromVOToEntity(userVO);
 		return userProfileDao.updateNMLS(user);
 
 	}
-
 
 	@Override
 	public CustomerDetail getCustomerDetail(int id) {
@@ -1501,10 +1498,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 			if (userVO != null) {
 				String lqbUsername = userVO.getInternalUserDetail()
 				        .getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
-				
+
 				String lqbPassword = userVO.getInternalUserDetail()
 				        .getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
-				
+
 				if (lqbUsername != null && lqbPassword != null) {
 					JSONObject authOperationObject = NexeraUtility
 					        .createAuthObject(
@@ -1670,24 +1667,25 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	@Override
-    public void sendEmailPreQualification(UserVO user,
-            ByteArrayOutputStream byteArrayOutputStream)
-            throws InvalidInputException, UndeliveredEmailException {
+	public void sendEmailPreQualification(UserVO user,
+	        ByteArrayOutputStream byteArrayOutputStream)
+	        throws InvalidInputException, UndeliveredEmailException {
 		String subject = CommonConstants.PRE_QUALIFICATION_LETTER;
 		EmailVO emailEntity = new EmailVO();
-		
+
 		Template template = null;
-		
-		template = templateService.getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PRE_QUAL_LETTER);
-		
+
+		template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PRE_QUAL_LETTER);
+
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() + " "
 		        + user.getLastName() });
-		
 
 		emailEntity.setAttachmentStream(byteArrayOutputStream);
-		emailEntity.setSenderEmailId(user.getUsername()+ CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderEmailId(user.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject(subject);
 		emailEntity.setTokenMap(substitutions);
@@ -1696,11 +1694,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
-	    
-    }
 
-	
-	
-	
-	
+	}
+
 }
