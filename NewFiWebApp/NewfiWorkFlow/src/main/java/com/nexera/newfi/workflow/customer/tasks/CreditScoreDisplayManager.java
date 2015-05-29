@@ -11,15 +11,12 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.newfi.workflow.service.IWorkflowService;
-import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 
-	@Autowired
-	private EngineTrigger engineTrigger;
 	@Autowired
 	private IWorkflowService iWorkflowService;
 	@Autowired
@@ -62,7 +59,7 @@ public class CreditScoreDisplayManager implements IWorkflowTaskExecutor {
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("Inside method updateReminder");
 		return null;
 	}

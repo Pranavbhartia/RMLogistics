@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
@@ -28,7 +29,7 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 	@Autowired
 	private LoanService loanService;
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 	@Autowired
 	WorkflowService workflowService;
 	@Autowired
@@ -99,7 +100,8 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 					String params = Utils.convertMapToJson(inputMap);
 					workflowService.saveParamsInExecTable(
 					        parentEWorkflowItemExec.getId(), params);
-
+					EngineTrigger engineTrigger = applicationContext
+					        .getBean(EngineTrigger.class);
 					engineTrigger
 					        .startWorkFlowItemExecution(parentEWorkflowItemExec
 					                .getId());
@@ -124,6 +126,7 @@ public class SystemEduTask extends NexeraWorkflowTask implements
 		}
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		return null;
 	}

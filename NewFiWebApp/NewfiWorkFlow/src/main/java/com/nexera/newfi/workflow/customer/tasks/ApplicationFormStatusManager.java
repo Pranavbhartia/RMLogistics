@@ -11,15 +11,11 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.core.service.LoanAppFormService;
-import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
 public class ApplicationFormStatusManager implements IWorkflowTaskExecutor {
-
-	@Autowired
-	private EngineTrigger engineTrigger;
 
 	@Autowired
 	private LoanAppFormService loanAppFormService;

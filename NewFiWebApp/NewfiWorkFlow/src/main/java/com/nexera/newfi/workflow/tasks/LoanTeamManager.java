@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -47,8 +48,10 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	private UserProfileService userProfileService;
 	@Autowired
 	private WorkflowService workflowService;
+
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
+
 	@Autowired
 	private IWorkflowService iWorkflowService;
 	@Autowired
@@ -57,12 +60,12 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	private NotificationService notificationService;
 
 	@Override
-    public String execute(HashMap<String, Object> objectMap) {
+	public String execute(HashMap<String, Object> objectMap) {
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
 	@Override
-    public String renderStateInfo(HashMap<String, Object> inputMap) {
+	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		LOG.debug("RenderStateInfo of LoanTeamManager" + inputMap);
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -75,8 +78,10 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	@Override
-    public String checkStatus(HashMap<String, Object> inputMap) {
-		
+	public String checkStatus(HashMap<String, Object> inputMap) {
+
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO();
@@ -125,7 +130,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 		editLoanTeamVO.setTitleCompanyID(titleCompanyID);
 		String message = null;
 		if (userID != null && userID > 0) {
-			LOG.debug("Adding user to Loan "+ userID);
+			LOG.debug("Adding user to Loan " + userID);
 			UserVO user = new UserVO(userID);
 			boolean result = loanService.addToLoanTeam(loanVO, user);
 			if (result) {
@@ -144,19 +149,20 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 			        + user.getDisplayName() + " Role : "
 			        + user.getUserRole().getRoleDescription();
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
-			LOG.debug("Adding TitleCompanyMasterVO to Loan "+ titleCompanyID);
+			LOG.debug("Adding TitleCompanyMasterVO to Loan " + titleCompanyID);
 			TitleCompanyMasterVO company = new TitleCompanyMasterVO();
 			company.setId(titleCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
 			        User.convertFromEntityToVO(utils.getLoggedInUser()));
 			editLoanTeamVO.setTitleCompany(company);
 			editLoanTeamVO.setOperationResult(true);
-			
+
 			changeState(loanID);
 			message = LoanStatus.titleCompanyAddedMessage + " Name : "
 			        + company.getName();
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
-			LOG.debug("Adding homeOwnInsCompanyID to Loan "+ homeOwnInsCompanyID);
+			LOG.debug("Adding homeOwnInsCompanyID to Loan "
+			        + homeOwnInsCompanyID);
 			HomeOwnersInsuranceMasterVO company = new HomeOwnersInsuranceMasterVO();
 			company.setId(homeOwnInsCompanyID);
 			company = loanService.addToLoanTeam(loanVO, company,
@@ -191,6 +197,8 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 
 	private void changeState(int loanID) {
 		LOG.debug("Changing State of a Loan" + loanID);
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		WorkflowExec workflowExec = new WorkflowExec();
 		workflowExec.setId(loanVO.getLoanManagerWorkflowID());
@@ -211,7 +219,7 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		// Do Nothing - No reminders were part of this
 		return null;
 	}

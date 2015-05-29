@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -20,7 +21,7 @@ public class SMSPreferenceManager implements IWorkflowTaskExecutor {
 	private UserProfileService userProfileService;
 
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(SMSPreferenceManager.class);
@@ -46,6 +47,8 @@ public class SMSPreferenceManager implements IWorkflowTaskExecutor {
 		if (userVo.getMobileAlertsPreference() != null) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
 			        WorkItemStatus.COMPLETED.getStatus());
@@ -62,7 +65,7 @@ public class SMSPreferenceManager implements IWorkflowTaskExecutor {
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("Inside method updateReminder");
 		return null;
 	}
