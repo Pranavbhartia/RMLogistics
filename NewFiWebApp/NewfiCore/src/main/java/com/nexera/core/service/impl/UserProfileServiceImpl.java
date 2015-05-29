@@ -83,7 +83,6 @@ import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.InternalUserStateMappingVO;
 import com.nexera.common.vo.LoanAppFormVO;
-import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.NotificationVO;
@@ -94,7 +93,6 @@ import com.nexera.common.vo.RefinanceVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
-import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.core.helper.MessageServiceHelper;
@@ -1337,6 +1335,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 					}
 				}
 			}
+			LOG.info("User registration complete, iniating workflow"
+			        + userVOObj.getUsername());
+			this.crateWorkflowItems(userVOObj.getDefaultLoanId());
 			return userVOObj;
 		} catch (Exception e) {
 
@@ -1344,7 +1345,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        + loaAppFormVO);
 			LOG.error(
 			        "error while creating user in shopper registartion  creating user",
-			        e.getStackTrace());
+			        e);
 			e.getCause().printStackTrace();
 			throw new FatalException("Error in User registration");
 
@@ -1685,8 +1686,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
-		substitutions.put("-name-", new String[] { loaAppFormVO.getUser().getFirstName() + " "
-		        + loaAppFormVO.getUser().getLastName() });
+		substitutions.put("-name-", new String[] { loaAppFormVO.getUser()
+		        .getFirstName() + " " + loaAppFormVO.getUser().getLastName() });
 
 		emailEntity.setAttachmentStream(byteArrayOutputStream);
 		emailEntity.setSenderEmailId(loaAppFormVO.getUser().getUsername()
@@ -1696,11 +1697,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
-		ccList.add(loaAppFormVO.getUser().getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		ccList.add(loaAppFormVO.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
-		
-		sendEmailService.sendEmailForTeam(emailEntity,loaAppFormVO.getLoan().getId(), template);
-		
+
+		sendEmailService.sendEmailForTeam(emailEntity, loaAppFormVO.getLoan()
+		        .getId(), template);
+
 	}
 
 }

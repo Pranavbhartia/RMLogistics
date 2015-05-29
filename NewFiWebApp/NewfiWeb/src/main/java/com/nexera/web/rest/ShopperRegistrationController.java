@@ -97,14 +97,13 @@ public class ShopperRegistrationController {
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
 			        teaseRateDatalist);
 
-			userProfileService.crateWorkflowItems(user.getDefaultLoanId());
-			LOG.info("User succesfully created" + user);
+			LOG.info("User succesfully created, now trying to autologin" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (FatalException e) {
-			LOG.error("error while creating user");
+			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered");
 		} catch (Exception e) {
-			LOG.error("error while creating user" + e.getStackTrace());
+			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered ");
 		}
 		String redirectUrl = profileUrl + "home.do#myLoan/myTeam";
@@ -259,6 +258,7 @@ public class ShopperRegistrationController {
 		// request.getSession().invalidate();
 		// LOG.debug("Clearing old sessions");
 		// }
+		LOG.info("Auto login for: " + emailId);
 		emailId = emailId + ":" + DisplayMessageConstants.IS_SHOPPER;
 
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
