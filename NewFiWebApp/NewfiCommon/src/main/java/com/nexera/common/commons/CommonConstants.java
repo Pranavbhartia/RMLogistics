@@ -300,4 +300,5 @@ public interface CommonConstants {
 	
 	public static final String PRE_QUALIFICATION_LETTER ="Pre-Qualification letter";
 
+	public static final String EXTRA_DOCUMENT = "Extra";
 }
