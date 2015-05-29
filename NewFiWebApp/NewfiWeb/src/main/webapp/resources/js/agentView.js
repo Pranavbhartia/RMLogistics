@@ -1594,6 +1594,8 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 								&& (code != "TITLE_COMPANY" && code != "HOME_OWN_INS")) {
 							showErrorToastMessage(selectUserType);
 							return false;
+						}else{
+							removeToastMessage();
 						}
 						var internalRoleID = $('#add-memeber-user-type').attr(
 								"internalRoleID");
@@ -1626,6 +1628,8 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 								/*showToastMessage("Please select a user type");*/
 								showErrorToastMessage(selectUserType);
 								return false;
+							}else{
+								removeToastMessage();
 							}
 							var internalRoleID = $('#add-memeber-user-type')
 									.attr("internalRoleID");
@@ -1811,6 +1815,9 @@ function userTypeClicked(event) {
 		hideUserTypeDropDown();
 	} else {
 		showUserTypeDropDown();
+	}
+	if($("#add-username-dropdown-cont").css("display") == "block"){
+		$("#add-username-dropdown-cont").hide();
 	}
 }
 

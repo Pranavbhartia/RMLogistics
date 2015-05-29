@@ -779,7 +779,7 @@ function updateLMDetails() {
     			  	}
     			  	$('#overlay-loader').hide();
     			//showLoanManagerProfilePage();
-    			window.location.href = "./home.do#loan";
+    			window.location.href = newfiObject.baseUrl+"home.do#loan";
             }else{
             	$('#overlay-loader').hide();
             	$("#managerID").val('');

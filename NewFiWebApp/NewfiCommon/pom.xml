@@ -200,6 +200,14 @@
 				</filters>
 			</build>
 		</profile>
+		<profile>
+			<id>prod</id>
+			<build>
+				<filters>
+					<filter>src/main/resources/filter-prod.properties</filter>
+				</filters>
+			</build>
+		</profile>
 	</profiles>
 
 	<pluginRepositories>

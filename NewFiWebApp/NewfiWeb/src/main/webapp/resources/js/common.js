@@ -1010,7 +1010,7 @@ function finishedTutorial(element, url){
 
 function goToLogin(){
 	
-	window.location='./';
+	window.location=newfiObject.baseUrl;
 }
 
 function resizeHeaderWidth(){

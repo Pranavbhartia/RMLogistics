@@ -737,7 +737,7 @@ public class LQBRequestUtil {
 	}
 
 	public JSONObject pullTrimergeCreditScore(String loanNumber,
-	        LoanAppFormVO loanAppFormVO, String sTicket) {
+	        LoanAppFormVO loanAppFormVO, String sTicket, String ssnNumber) {
 
 		HashMap<String, String> hashmap = new HashMap<>();
 		hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail()
@@ -745,8 +745,7 @@ public class LQBRequestUtil {
 		hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
 		        .getFirstName());
 		hashmap.put("lastName", loanAppFormVO.getLoan().getUser().getLastName());
-		hashmap.put("userSSNnumber", loanAppFormVO.getUser()
-		        .getCustomerDetail().getSsn());
+		hashmap.put("userSSNnumber", ssnNumber);
 		hashmap.put("applicantCity", loanAppFormVO.getUser()
 		        .getCustomerDetail().getAddressCity());
 		hashmap.put("applicantState", loanAppFormVO.getUser()

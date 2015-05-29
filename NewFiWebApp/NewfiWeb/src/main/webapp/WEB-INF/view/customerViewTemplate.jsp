@@ -70,7 +70,10 @@
 			
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
-			changeLeftPanel(2,callBackFun);
+			if(window.location.hash=="")
+				changeLeftPanel(2,callBackFun);
+			else
+				callBackFun();
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
 			
@@ -159,7 +162,7 @@
 			var footerHeight=$('.footer-wrapper').height();
 			var headerHeight=$('.header-wrapper').height();
 			height=height-headerHeight;
-			$('.content').css("height",height+ "px");
+			$('.content').css("min-height",height+ "px");
 		}
 		var newfi = ${newfi};
 		var baseUrl = "${baseUrl}";

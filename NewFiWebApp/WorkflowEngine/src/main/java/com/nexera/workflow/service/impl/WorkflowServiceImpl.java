@@ -7,6 +7,7 @@ import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import com.nexera.workflow.dao.WorkflowItemMasterDao;
 import com.nexera.workflow.dao.WorkflowMasterDao;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
+import com.nexera.workflow.utils.TriggerWorkflow;
 
 @Component
 public class WorkflowServiceImpl implements WorkflowService {
@@ -38,6 +40,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(WorkflowServiceImpl.class);
+	@Value("${notification.enablePush}")
+	private boolean pushNotificationFlag;
+	@Value("${notification.serverURL}")
+	private String url;
+	@Value("${profile.url}")
+	private String appUrl;
 
 	/*
 	 * (non-Javadoc)
@@ -165,7 +173,17 @@ public class WorkflowServiceImpl implements WorkflowService {
 	        WorkflowItemExec workflowItemExecution) {
 		LOGGER.debug("Inside method updateWorkflowItemExecutionStatus ");
 		workflowItemExecDao.saveOrUpdate(workflowItemExecution);
-
+		if (pushNotificationFlag) {
+			try {
+				if (workflowItemExecution.getStatus().equals(
+				        WorkItemStatus.COMPLETED.getStatus()))
+				TriggerWorkflow.triggerMilestoneStatusChange(
+				        workflowItemExecution.getId(),
+				        workflowItemExecution.getStatus(), url, appUrl);
+			} catch (Exception e) {
+				LOGGER.error("ERROR while triggering Milestone change push notification");
+			}
+		}
 	}
 
 	/*
