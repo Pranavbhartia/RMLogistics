@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,9 @@ public class TemplateController extends DefaultController {
 
 	@Autowired
 	private NexeraUtility nexeraUtility;
+
+	@Value("${profile.url}")
+	private String baseUrl;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(TemplateController.class);
@@ -208,6 +212,7 @@ public class TemplateController extends DefaultController {
 	@RequestMapping(value = "customerEngagement.do")
 	public ModelAndView showCustomerEngagementPage() {
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("customerEngagementTemplate");
 		return mav;
 	}
@@ -215,6 +220,7 @@ public class TemplateController extends DefaultController {
 	@RequestMapping(value = "register.do")
 	public ModelAndView showCustomerRegisterPage() {
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("register");
 		return mav;
 	}
@@ -222,6 +228,7 @@ public class TemplateController extends DefaultController {
 	@RequestMapping(value = "registerNew.do")
 	public ModelAndView showCustomerRegisterNewPage() {
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("registerDirect");
 
 		return mav;
@@ -230,12 +237,14 @@ public class TemplateController extends DefaultController {
 	@RequestMapping(value = "{userName}")
 	public ModelAndView referrerRegistration(@PathVariable String userName) {
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		LOG.info("Url referer from" + userName);
 		try {
 			UserVO userVO = userProfileService.findByUserName(userName);
 			mav.addObject("userObject", userVO);
 			String userRole = userVO.getRoleName();
 			mav.addObject("userRole", userRole);
+			mav.addObject("baseUrl", baseUrl);
 			mav.setViewName("registerNew");
 		} catch (DatabaseException | NoRecordsFetchedException e) {
 			// TODO Auto-generated catch block
@@ -254,6 +263,7 @@ public class TemplateController extends DefaultController {
 	        HttpServletRequest request) throws InvalidInputException {
 		ModelAndView mav = new ModelAndView();
 		LOG.info("Resettting password for" + identifier);
+		mav.addObject("baseUrl", baseUrl);
 		try {
 			// Getting user locale
 			Locale clientLocale = request.getLocale();
@@ -278,6 +288,7 @@ public class TemplateController extends DefaultController {
 		} catch (InvalidInputException invalid) {
 			// Stay on same page
 			mav.addObject("error", ErrorConstants.LINK_EXPIRED_ERROR);
+
 			mav.setViewName("forgotPassword");
 		}
 		return mav;
@@ -287,6 +298,7 @@ public class TemplateController extends DefaultController {
 	public ModelAndView showForgetPasswordPage(
 	        @RequestParam(value = "resend", required = false) String resend) {
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("forgotPassword");
 		return mav;
 	}

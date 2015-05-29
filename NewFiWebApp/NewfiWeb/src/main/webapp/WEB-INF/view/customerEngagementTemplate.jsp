@@ -48,6 +48,7 @@
 		
 	<script>
 	
+	
 		$(document).ready(function() {
 			globalBinder();
 			adjustCustomerEngagementPageOnResize();
