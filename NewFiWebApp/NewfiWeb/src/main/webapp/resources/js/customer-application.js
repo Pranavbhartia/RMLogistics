@@ -1611,6 +1611,7 @@ function paintCustomerApplicationPageStep2() {
     });
     $('#app-right-panel').append(saveAndContinueButton);
     addStateCityZipLookUp();
+    restrictSpecialChar("coBorrowerName");
 }
 
 function getContextApplicationYesNoQues(contxt) {

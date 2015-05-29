@@ -821,10 +821,11 @@ function customerPersonalInfoWrapper(user) {
 	wrapper.append(header).append(container);
 	$('#profile-main-container').append(wrapper);
 
-			appendChangePasswordContainer(user);
+	appendChangePasswordContainer(user);
 
-
-	
+			restrictSpecialChar("firstName");
+			restrictSpecialChar("lastName");
+			
 }
 
 function getCustPersonalInfoContainer(user) {
@@ -912,6 +913,7 @@ function getCustomerNameFormRow(user) {
 		"class" : "prof-form-input",
 		"placeholder" : "First Name",
 		"value" : user.firstName,
+		"name":"firstName",
 		"id" : "firstNameId"
 	});
 
@@ -930,6 +932,7 @@ function getCustomerNameFormRow(user) {
 		"class" : "prof-form-input",
 		"placeholder" : "Last Name",
 		"value" : user.lastName,
+		"name":"lastName",
 		"id" : "lastNameId"
 	});
 	

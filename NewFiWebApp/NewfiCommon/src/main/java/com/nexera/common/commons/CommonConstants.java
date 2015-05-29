@@ -303,4 +303,16 @@ public interface CommonConstants {
 	public static final String PRE_QUALIFICATION_LETTER = "Pre-Qualification letter";
 
 	public static final String EXTRA_DOCUMENT = "Extra";
+	
+	// Marking page rate
+	
+	public static final String HOMEWORTHTODAY = "350000";
+	public static final String LOANAMOUNT  ="280000";
+	public static final String STATEFROMAPI ="California";
+	public static final String CITY ="Santa Clara";
+	public static final String ZIPCODE ="94087";
+	public static final String OCCTYPE ="0";
+	public static final String SUBPROPTYPE ="0";
+	public static final String LOANPURPOSE ="2";
+	
 }
