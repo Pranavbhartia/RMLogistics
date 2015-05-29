@@ -12,6 +12,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,7 @@ public class MarketingTeaseRate {
 	
 	@RequestMapping(value="/marketingTeaseRate", method = RequestMethod.GET)
 	public String findMarkeingTeaseRates(String teaseRate){
-		
-		System.out.println("hiii");
-		
+		LOG.info(" ");
 		Gson gson = new Gson();
 		String lockRateData = null;
 		String lqbResponse = lqbCacheInvoker.invokeRest(createRequestPayload().toString());
@@ -53,6 +52,8 @@ public class MarketingTeaseRate {
 			List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
 			lockRateData = gson.toJson(teaserRateList);
 		}else{
+			LOG.info(" ");
+			
 			lockRateData = "error";
 		}
 		return lockRateData;
@@ -61,7 +62,8 @@ public class MarketingTeaseRate {
 	
 	
 	private static JSONObject createRequestPayload(){
-	
+		
+		LOG.info(" ");
 		
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
@@ -84,6 +86,7 @@ public class MarketingTeaseRate {
 	        json.put("loanVO", jsonChild);
         } catch (JSONException e) {
 	       
+        	LOG.error(" ");
 	        e.printStackTrace();
         }
 
@@ -93,7 +96,7 @@ public class MarketingTeaseRate {
 	
 	public List<TeaserRateResponseVO> parseLqbResponse(
 	        String lqbTeaserRateResponse) {
-
+		LOG.info(" ");
 		
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		try {
@@ -115,10 +118,13 @@ public class MarketingTeaseRate {
 			}
 
 		} catch (SAXException se) {
+			LOG.error(" ");
 			se.printStackTrace();
 		} catch (ParserConfigurationException pce) {
+			LOG.error(" ");
 			pce.printStackTrace();
 		} catch (IOException ie) {
+			LOG.error(" ");
 			ie.printStackTrace();
 		}
 
@@ -127,10 +133,26 @@ public class MarketingTeaseRate {
 	
 	
 	
-	public static void main(String[] args) {
-	    
-		System.out.println(createRequestPayload());
-    }
+   public String thirtyYearRateVoDataSet(String lockRateData){
+		
+		
+		org.json.JSONObject thirtyYearRateVoDataSet = null;
+		JSONArray  jsonArray = new JSONArray (lockRateData);
+		
+		
+		for (int i=1; i<jsonArray.length(); i++) {
+		    org.json.JSONObject item = jsonArray.getJSONObject(i);
+		    String loanDuration = item.getString("loanDuration");
+		    if(loanDuration.indexOf("30")==0){
+		    	JSONArray rateVOArray = item.getJSONArray("rateVO");
+			    thirtyYearRateVoDataSet = rateVOArray.getJSONObject(rateVOArray.length()/2);
+			   
+			    break;
+		    }
+		    
+		}
+		
+		return thirtyYearRateVoDataSet.toString();
+	} 
 	
-
 }

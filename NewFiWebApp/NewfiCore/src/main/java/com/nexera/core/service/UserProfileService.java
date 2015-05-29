@@ -137,7 +137,7 @@ public interface UserProfileService {
 
 	public List<User> findBySecondaryEmail(String fromAddressString);
 	
-	public void sendEmailPreQualification(UserVO userVO,ByteArrayOutputStream byteArrayOutputStream) throws InvalidInputException,UndeliveredEmailException;
+	public void sendEmailPreQualification(LoanAppFormVO loaAppFormVO,ByteArrayOutputStream byteArrayOutputStream) throws InvalidInputException,UndeliveredEmailException;
 
 	public Integer updateNMLSId(UserVO userVO);
 }
