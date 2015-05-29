@@ -2668,7 +2668,12 @@ input.calc-input {
 	line-height: 40px;
 	padding: 10px 0;
 }
-
+.template-column-val{
+	width: 180px;
+	text-align: right;
+	text-align: left;
+	padding-left: 26px;
+}
 .prof-form-row-desc {
 	width: 25%;
 	height:40px;
@@ -2712,7 +2717,7 @@ input.calc-input {
 }
 
 .prof-form-input-cont{
-	width:200px;
+	width:265px;
 	margin-right: 15px;
 	float: left;
 }
@@ -2747,7 +2752,13 @@ input.calc-input {
 .prof-form-input-lg {
 	width: 200px;
 }
-
+.col-one{
+	width:264px;
+	
+}
+.col-two{
+	width:412px;
+}
 .prof-btn {
 	width: 120px;
 	height: 40px;
@@ -5310,4 +5321,22 @@ a.session-login-btn {
 	z-index: 9999;
 	background-color: rgba(255, 255, 255, 0.901961) !important;
 	padding-bottom: 100px;
+}
+
+.header-col-1 {
+    margin-left: 21px;
+    font-family: opensanssemiBold;
+    font-size: 13px;
+}
+
+.header-col-2 {
+    margin-left: 119px;
+    font-family: opensanssemiBold;
+    font-size: 13px;
+}
+
+.header-col-3 {
+    margin-left: 287px;
+    font-family: opensanssemiBold;
+    font-size: 13px;
 }
