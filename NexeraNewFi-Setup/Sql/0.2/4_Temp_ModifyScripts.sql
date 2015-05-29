@@ -463,7 +463,6 @@ UPDATE `newfi_schema`.`template` SET `sms_text`='Payment has been made on your n
 UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi.' WHERE `id`='2';
 
 UPDATE `newfi_schema`.`template` SET `sms_text`='An update was posted to the newfi portal ' WHERE `id`='3';
-UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi' WHERE `id`='2';
 UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi payment was unsuccessful. So please login and retry the payment' WHERE `id`='4';
 UPDATE `newfi_schema`.`template` SET `sms_text`='Your newfi loan status has changed.' WHERE `id`='5';
 UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi' WHERE `id`='6';

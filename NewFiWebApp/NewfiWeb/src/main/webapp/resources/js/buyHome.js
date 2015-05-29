@@ -415,7 +415,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             clearOverlayMessage();
         },
         error: function() {
-            alert("error");
+        	showErrorToastMessage("error");
             hideOverlay();
         }
     });

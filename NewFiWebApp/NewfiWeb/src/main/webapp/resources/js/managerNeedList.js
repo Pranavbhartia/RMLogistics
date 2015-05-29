@@ -110,11 +110,11 @@ function getLoanNeedsManagerContext(loanId){
 			var label=$("#need_doc_title").val();
 			var desc=$("#need_doc_desc").val();
 			if(label==""){
-				alert("Invalid document title");
+				showErrorToastMessage("Invalid document title");
 			}else if(desc==""){
-				alert("Invalid document description");
+				showErrorToastMessage("Invalid document description");
 			}else if(category==""){
-				alert("Invalid document type");
+				showErrorToastMessage("Invalid document type");
 			}else{
 				var data={};
 				data.category=category;
@@ -144,7 +144,7 @@ function getLoanNeedsManagerContext(loanId){
 								callback();
 							}
 						}else{
-							alert("Need already exist");
+							showErrorToastMessage("Need already exists");
 						}
 				}else{
 					ob.ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
