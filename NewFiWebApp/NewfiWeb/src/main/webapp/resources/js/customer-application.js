@@ -4211,7 +4211,7 @@ function saveUserAndLockRate(appUserDetails) {
             paintLockRate(tempdata, appUserDetails);
         },
         error: function() {
-            alert("error");
+        	showErrorToastMessage("error");
             $('#overlay-loader').hide(); 
         }
  
@@ -4460,7 +4460,7 @@ function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
     			callBack();
     		},
     		error:function(erro){
-    			alert("error");
+    			showErrorToastMessage("error");
     		}
     		
     	});
@@ -5251,7 +5251,7 @@ $.ajax({
             clearOverlayMessage();
 		},
 		error:function(erro){
-			alert("error inside createLoan ");
+			showErrorToastMessage("error inside createLoan ");
 			 $('#overlay-loader').hide();
 		}
 		
@@ -5619,7 +5619,7 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
              $('#overlay-loader').hide();
         },
         error:function(erro){
-            alert("error inside createLoan ");
+        	showErrorToastMessage("error inside createLoan ");
              $('#overlay-loader').hide();
         }
         

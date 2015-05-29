@@ -982,7 +982,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                  
             },
             error: function(data) {
-                alert("error inside paintRefinanceSeeRates :" +data);
+                showErrorToastMessage("error inside paintRefinanceSeeRates :" +data);
                 
                 hideOverlay();
             }
