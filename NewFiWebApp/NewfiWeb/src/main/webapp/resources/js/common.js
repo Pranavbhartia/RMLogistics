@@ -59,6 +59,7 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 				var content="<div class='rp-agent-dashboard float-left'><div class='center-text-session-expire'>"+response.message+"</div></div>"
 				$(component).html(content);
 			}else{
+				if(successCallBack)
 				successCallBack(response);	
 			}
 		},
@@ -1016,3 +1017,26 @@ function resizeHeaderWidth(){
 	var windowWidth = $(window).width();
 	$('.header-wrapper').css("width", windowWidth + 'px');
 }
+
+
+function restrictSpecialChar(name){
+	
+	$('input[name="'+name+'"]').bind('keypress', function (e) {
+	    console.log(e.which);
+
+	    var k = e.which;
+	    var ok = k >= 65 && k <= 90 || // A-Z
+	    k >= 97 && k <= 122 || // a-z
+	    k >= 48 && k <= 57; // 0-9
+
+	    if (!ok) {
+	        e.preventDefault();
+	        console.log("hii");
+	        return false;
+
+	    }
+
+	});
+}
+
+
