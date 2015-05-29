@@ -148,7 +148,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 				}
 				try {
 					sendEmailService.sendEmailForLoanManagers(emailEntity,
-					        loanVO.getId());
+					        loanVO.getId(), template);
 				} catch (InvalidInputException e) {
 					LOG.error("Exception Caught " + e.getMessage());
 				} catch (UndeliveredEmailException e) {

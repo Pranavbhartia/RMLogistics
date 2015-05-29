@@ -1515,7 +1515,8 @@ public class LoanServiceImpl implements LoanService {
 		        .generatePrivateMessage(loanID,
 		                LoanStatus.ratesLockedRequested,
 		                utils.getLoggedInUser(), false);
-		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId(),
+		        template);
 
 		// TODO send mail to LM ............... change template id and
 		// substitutions
@@ -1567,7 +1568,8 @@ public class LoanServiceImpl implements LoanService {
 			emailEntity.setCCList(loanManagerccList);
 		}
 
-		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId());
+		sendEmailService.sendEmailForLoanManagers(emailEntity, loan.getId(),
+		        template);
 	}
 
 	@Override
@@ -1669,8 +1671,8 @@ public class LoanServiceImpl implements LoanService {
 			        + CommonConstants.SENDER_EMAIL_ID);
 
 			emailEntity.setCCList(loanManagerccList);
-			sendEmailService
-			        .sendEmailForLoanManagers(emailEntity, loan.getId());
+			sendEmailService.sendEmailForLoanManagers(emailEntity,
+			        loan.getId(), template);
 			emailEntity.setCCList(null);
 		}
 		List<String> ccList = new ArrayList<String>();
@@ -1678,7 +1680,8 @@ public class LoanServiceImpl implements LoanService {
 		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 
-		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+		sendEmailService.sendEmailForCustomer(emailEntity, loan.getId(),
+		        template);
 
 	}
 
@@ -1716,7 +1719,8 @@ public class LoanServiceImpl implements LoanService {
 			emailEntity.setCCList(ccList);
 			try {
 
-				sendEmailService.sendEmailForCustomer(emailEntity, loanId);
+				sendEmailService.sendEmailForCustomer(emailEntity, loanId,
+				        template);
 			} catch (InvalidInputException e) {
 				LOG.error("Mail send failed--" + e);
 			} catch (UndeliveredEmailException e) {
@@ -1769,7 +1773,7 @@ public class LoanServiceImpl implements LoanService {
 
 			try {
 				sendEmailService.sendEmailForLoanManagers(
-				        loanManagerEmailEntity, loanId);
+				        loanManagerEmailEntity, loanId, loanManagerTemplate);
 			} catch (InvalidInputException e) {
 				LOG.error("Mail send failed--" + e);
 			} catch (UndeliveredEmailException e) {
@@ -1804,7 +1808,8 @@ public class LoanServiceImpl implements LoanService {
 		ccList.add(userVO.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 		try {
-			sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, userVO);
+			sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, userVO,
+			        template);
 		} catch (InvalidInputException e) {
 			LOG.error("Mail send failed--" + e);
 		} catch (UndeliveredEmailException e) {
@@ -1854,7 +1859,7 @@ public class LoanServiceImpl implements LoanService {
 		}
 		try {
 			sendEmailService.sendEmailForLoanManagers(loanManagerEmailEntity,
-			        loanID);
+			        loanID, loanManagerTemplate);
 		} catch (InvalidInputException e) {
 			LOG.error("Mail send failed--" + e);
 		} catch (UndeliveredEmailException e) {

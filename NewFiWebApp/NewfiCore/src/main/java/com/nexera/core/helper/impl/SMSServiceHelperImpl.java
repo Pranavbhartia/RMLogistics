@@ -15,8 +15,8 @@ import com.sendgrid.SendGrid.Email;
 @Component
 public class SMSServiceHelperImpl implements SMSServiceHelper {
 
-	@Value("${sms.body}")
-	private String smsBodyText;
+	@Value("${sms.newfi.url}")
+	private String smsNewfiUrl;
 
 	@Autowired
 	private SendGridEmailService sendGridEmailService;
@@ -25,7 +25,8 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 	        .getLogger(SMSServiceHelperImpl.class);
 
 	@Override
-	public String sendNotificationSMS(String carrierName, long phoneNumber) {
+	public String sendNotificationSMS(String carrierName, long phoneNumber,
+	        String emailText) {
 		LOGGER.debug("Inside method sendNotificationSMS ");
 		String carrierEmailAddress = null;
 		int maxLength = 140;
@@ -60,7 +61,7 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 		}
 
 		carrierEmailAddress = String.valueOf(phoneNumber) + carrierName;
-		if (send(maxLength, carrierEmailAddress)) {
+		if (send(maxLength, carrierEmailAddress, emailText)) {
 			return "Message Successfully Sent ";
 		} else {
 			return "Message was not send ";
@@ -68,21 +69,28 @@ public class SMSServiceHelperImpl implements SMSServiceHelper {
 
 	}
 
-	public boolean send(int maxlength, String mailAddress) {
+	public boolean send(int maxlength, String mailAddress, String emailText) {
 		String[] tos = new String[1];
 		tos[0] = mailAddress;
 		Email email = new Email();
-		int msgLength;
+		int msgLength = 0;
+		if (emailText == null) {
+			emailText = "";
+		}
 		String subject = " ";
 		LOGGER.debug("Calculating message Length ");
+
 		msgLength = CommonConstants.SENDER_DEFAULT_USER_NAME.length()
 		        + CommonConstants.SENDER_EMAIL_ID.length() + 1
-		        + subject.length() + 1 + smsBodyText.length();
+		        + subject.length() + 1 + emailText.length()
+		        + smsNewfiUrl.length() + 1;
+
 		if (msgLength > maxlength) {
 			LOGGER.error("Message Length Too Long ");
 			return false;
 		}
-		email.setText(smsBodyText);
+		email.setText(emailText + ". " + CommonConstants.SMS_DEFAULT_TEXT
+		        + ". " + smsNewfiUrl);
 		email.setFrom(CommonConstants.SENDER_DEFAULT_USER_NAME
 		        + CommonConstants.SENDER_EMAIL_ID);
 		email.setSubject(subject);

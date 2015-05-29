@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
@@ -79,9 +80,11 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	@Override
-	public boolean sendEmailForTeam(EmailVO emailEntity, int loanId)
-	        throws InvalidInputException, UndeliveredEmailException {
+	public boolean sendEmailForTeam(EmailVO emailEntity, int loanId,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException {
 		LoanVO loanVO = loanService.getLoanByID(loanId);
+
 		if (loanVO != null) {
 			LoanTeamListVO loanTeam = loanService
 			        .getLoanTeamListForLoan(loanVO);
@@ -89,7 +92,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 			        loanVO, loanTeam, CommonConstants.SEND_EMAIL_TO_TEAM);
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
-			sendSMS(loanVO.getUser());
+			sendSMS(loanVO.getUser(), template.getSmsText());
 			return true;
 		} else {
 			return false;
@@ -98,8 +101,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	@Override
-	public boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId)
-	        throws InvalidInputException, UndeliveredEmailException {
+	public boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException {
 		LoanVO loanVO = loanService.getLoanByID(loanId);
 		if (loanVO != null) {
 			LoanTeamListVO loanTeam = loanService
@@ -114,7 +118,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 			}
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
-			sendSMS(loanVO.getUser());
+			sendSMS(loanVO.getUser(), template.getSmsText());
 			return true;
 		} else {
 			return false;
@@ -123,8 +127,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	@Override
-	public boolean sendEmailForInternalUsers(EmailVO emailEntity, int loanId)
-	        throws InvalidInputException, UndeliveredEmailException {
+	public boolean sendEmailForInternalUsers(EmailVO emailEntity, int loanId,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException {
 		LoanVO loanVO = loanService.getLoanByID(loanId);
 		if (loanVO != null) {
 			LoanTeamListVO loanTeam = loanService
@@ -141,7 +146,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 
 			emailEntity.setRecipients(emailRecipientList);
 			sendGridEmailService.sendAsyncMail(emailEntity);
-			sendSMS(loanVO.getUser());
+			sendSMS(loanVO.getUser(), template.getSmsText());
 			return true;
 		} else {
 			return false;
@@ -149,8 +154,9 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	@Override
-	public boolean sendEmailForCustomer(EmailVO emailEntity, int loanId)
-	        throws InvalidInputException, UndeliveredEmailException {
+	public boolean sendEmailForCustomer(EmailVO emailEntity, int loanId,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException {
 		LoanVO loanVO = loanService.getLoanByID(loanId);
 		if (loanVO != null) {
 			LoanTeamListVO loanTeam = loanService
@@ -172,7 +178,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 				}
 			}
 			sendGridEmailService.sendAsyncMail(emailEntity);
-			sendSMS(loanVO.getUser());
+			sendSMS(loanVO.getUser(), template.getSmsText());
 			return true;
 		} else {
 			return false;
@@ -359,8 +365,8 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	private boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO,
-	        boolean verifyEmailCheck) throws InvalidInputException,
-	        UndeliveredEmailException {
+	        boolean verifyEmailCheck, Template template)
+	        throws InvalidInputException, UndeliveredEmailException {
 		boolean canSend = false;
 		if (!verifyEmailCheck) {
 			canSend = true;
@@ -384,33 +390,36 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	@Override
-	public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException {
-		return sendEmailForCustomer(emailEntity, userVO, true);
+	public boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException {
+		return sendEmailForCustomer(emailEntity, userVO, true, template);
 	}
 
 	@Override
 	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,
-	        UserVO userVO) throws InvalidInputException,
+	        UserVO userVO, Template template) throws InvalidInputException,
 	        UndeliveredEmailException {
-		return sendEmailForCustomer(emailEntity, userVO, false);
+		return sendEmailForCustomer(emailEntity, userVO, false, template);
 	}
 
 	@Override
-	public boolean sendEmailForCustomer(EmailVO emailEntity, User user)
-	        throws InvalidInputException, UndeliveredEmailException {
-		return sendEmailForCustomer(emailEntity, user, true);
+	public boolean sendEmailForCustomer(EmailVO emailEntity, User user,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException {
+		return sendEmailForCustomer(emailEntity, user, true, template);
 	}
 
 	@Override
-	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity, User user)
-	        throws InvalidInputException, UndeliveredEmailException {
-		return sendEmailForCustomer(emailEntity, user, false);
+	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,
+	        User user, Template template) throws InvalidInputException,
+	        UndeliveredEmailException {
+		return sendEmailForCustomer(emailEntity, user, false, template);
 	}
 
 	private boolean sendEmailForCustomer(EmailVO emailEntity, User user,
-	        boolean verifyEmail) throws InvalidInputException,
-	        UndeliveredEmailException {
+	        boolean verifyEmail, Template template)
+	        throws InvalidInputException, UndeliveredEmailException {
 		boolean canSend = false;
 		if (!verifyEmail) {
 			canSend = true;
@@ -432,7 +441,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 	}
 
 	@Override
-	public void sendSMS(UserVO user) {
+	public void sendSMS(UserVO user, String emailText) {
 		if (user != null) {
 			if (user.getPhoneNumber() != null
 			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
@@ -440,14 +449,14 @@ public class SendEmailServiceImpl implements SendEmailService {
 					LOG.info("Sending SMS "
 					        + Long.valueOf(user.getPhoneNumber()));
 					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
-					        Long.valueOf(user.getPhoneNumber()));
+					        Long.valueOf(user.getPhoneNumber()), emailText);
 				}
 			}
 		}
 	}
 
 	@Override
-	public void sendSMS(User user) {
+	public void sendSMS(User user, String emailText) {
 		if (user != null) {
 			if (user.getPhoneNumber() != null
 			        && !user.getPhoneNumber().equalsIgnoreCase("")) {
@@ -455,7 +464,7 @@ public class SendEmailServiceImpl implements SendEmailService {
 					LOG.info("Sending SMS "
 					        + Long.valueOf(user.getPhoneNumber()));
 					smsServiceHelper.sendNotificationSMS(user.getCarrierInfo(),
-					        Long.valueOf(user.getPhoneNumber()));
+					        Long.valueOf(user.getPhoneNumber()), emailText);
 				}
 			}
 		}

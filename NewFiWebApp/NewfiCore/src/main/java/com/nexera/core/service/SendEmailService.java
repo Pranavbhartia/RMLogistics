@@ -1,5 +1,6 @@
 package com.nexera.core.service;
 
+import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -19,32 +20,38 @@ public interface SendEmailService {
 	boolean sendMail(EmailVO emailEntity, boolean sync)
 	        throws InvalidInputException, UndeliveredEmailException;
 
-	boolean sendEmailForTeam(EmailVO emailEntity, int loanId)
+	boolean sendEmailForTeam(EmailVO emailEntity, int loanId, Template template)
 	        throws InvalidInputException, UndeliveredEmailException;
 
-	boolean sendEmailForInternalUsers(EmailVO emailEntity, int loanId)
-	        throws InvalidInputException, UndeliveredEmailException;
+	boolean sendEmailForInternalUsers(EmailVO emailEntity, int loanId,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException;
 
-	boolean sendEmailForCustomer(EmailVO emailEntity, int loanId)
-	        throws InvalidInputException, UndeliveredEmailException;
+	boolean sendEmailForCustomer(EmailVO emailEntity, int loanId,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException;
 
-	boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException;
+	boolean sendEmailForCustomer(EmailVO emailEntity, UserVO userVO,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException;
 
-	boolean sendEmailForCustomer(EmailVO emailEntity, User user)
-	        throws InvalidInputException, UndeliveredEmailException;
+	boolean sendEmailForCustomer(EmailVO emailEntity, User user,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException;
 
-	boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId)
-	        throws InvalidInputException, UndeliveredEmailException;
+	boolean sendEmailForLoanManagers(EmailVO emailEntity, int loanId,
+	        Template template) throws InvalidInputException,
+	        UndeliveredEmailException;
 
-	public void sendSMS(UserVO user);
+	public void sendSMS(UserVO user, String emailText);
 
-	public void sendSMS(User user);
-
-	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity, User user)
-	        throws InvalidInputException, UndeliveredEmailException;
+	public void sendSMS(User user, String emailText);
 
 	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,
-	        UserVO userVO) throws InvalidInputException,
+	        User user, Template template) throws InvalidInputException,
+	        UndeliveredEmailException;
+
+	public boolean sendUnverifiedEmailToCustomer(EmailVO emailEntity,
+	        UserVO userVO, Template template) throws InvalidInputException,
 	        UndeliveredEmailException;
 }

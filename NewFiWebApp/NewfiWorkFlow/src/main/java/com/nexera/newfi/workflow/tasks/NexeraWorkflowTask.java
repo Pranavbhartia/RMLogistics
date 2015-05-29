@@ -87,7 +87,7 @@ public abstract class NexeraWorkflowTask {
 				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForTeam(emailEntity,
-					        loanVO.getId());
+					        loanVO.getId(), template);
 				} catch (InvalidInputException e) {
 					LOG.error("Exception Caught " + e.getMessage());
 				} catch (UndeliveredEmailException e) {
@@ -140,7 +140,7 @@ public abstract class NexeraWorkflowTask {
 				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForCustomer(emailEntity,
-					        loanVO.getId());
+					        loanVO.getId(), template);
 				} catch (InvalidInputException e) {
 					LOG.error("Exception Caught " + e.getMessage());
 				} catch (UndeliveredEmailException e) {

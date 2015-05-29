@@ -555,7 +555,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
-		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
+		        template);
 
 	}
 
@@ -599,7 +600,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 
 		emailEntity.setCCList(ccList);
-		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
+		        template);
 	}
 
 	@Override
@@ -1474,7 +1476,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
-		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
+		        template);
 	}
 
 	@Override
@@ -1693,7 +1696,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
-		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user);
+
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
+		        template);
 
 	}
 
