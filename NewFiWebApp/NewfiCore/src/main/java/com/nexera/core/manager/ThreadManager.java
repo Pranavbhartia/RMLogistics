@@ -96,8 +96,6 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	LqbInvoker lqbInvoker;
-	
-	
 
 	private ExceptionMaster exceptionMaster;
 
@@ -962,7 +960,8 @@ public class ThreadManager implements Runnable {
 
 		emailEntity.setCCList(ccList);
 		try {
-			sendEmailService.sendEmailForCustomer(emailEntity, loan.getId());
+			sendEmailService.sendEmailForCustomer(emailEntity, loan.getId(),
+			        template);
 		} catch (InvalidInputException | UndeliveredEmailException e) {
 			LOGGER.error("Exception caught while sending email "
 			        + e.getMessage());
@@ -977,7 +976,7 @@ public class ThreadManager implements Runnable {
 		Date timeBeforeCallMade = new Date();
 		JSONObject getListOfDocs = createListEDocsByLoanNumberObject(
 		        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER,
-		        nexeraUtility.asciiTrim( loan.getLqbFileId()));
+		        nexeraUtility.asciiTrim(loan.getLqbFileId()));
 		if (getListOfDocs != null) {
 			JSONObject receivedResponseForDocs = lqbInvoker
 			        .invokeLqbService(getListOfDocs.toString());

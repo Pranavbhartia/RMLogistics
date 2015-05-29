@@ -8,8 +8,6 @@ public class TemplateVO {
 	private String value;
 	private String smsText;
 
-	
-
 	public Integer getId() {
 		return id;
 	}
@@ -41,6 +39,7 @@ public class TemplateVO {
 	public void setValue(String value) {
 		this.value = value;
 	}
+
 	public String getSmsText() {
 		return smsText;
 	}
@@ -48,4 +47,5 @@ public class TemplateVO {
 	public void setSmsText(String smsText) {
 		this.smsText = smsText;
 	}
+
 }

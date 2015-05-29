@@ -228,11 +228,11 @@ public class MessageServiceImpl implements MessageService {
 		// Set template information
 		emailVO.setTemplateBased(Boolean.TRUE);
 		emailVO.setTemplateId(template.getValue());
-
-		sendGridEmailService.sendAsyncMail(emailVO);
 		LoanVO loan = loanService.getLoanByID(messagesVO.getLoanId());
+		sendGridEmailService.sendAsyncMail(emailVO);
+
 		if (loan != null && loan.getUser() != null)
-			sendEmailService.sendSMS(loan.getUser());
+			sendEmailService.sendSMS(loan.getUser(), template.getSmsText());
 
 	}
 

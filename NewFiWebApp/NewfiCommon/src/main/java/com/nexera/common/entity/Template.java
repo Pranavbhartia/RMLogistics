@@ -24,8 +24,6 @@ public class Template implements Serializable {
 	private Date modifiedDate;
 	private String smsText;
 
-
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
@@ -35,8 +33,8 @@ public class Template implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	public String getKey() {
 		return key;
 	}
@@ -52,7 +50,8 @@ public class Template implements Serializable {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	@Column(updatable=false)
+
+	@Column(updatable = false)
 	public String getDescription() {
 		return description;
 	}
@@ -61,7 +60,7 @@ public class Template implements Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "modified_date",updatable=false)
+	@Column(name = "modified_date", updatable = false)
 	public Date getModifiedDate() {
 		return modifiedDate;
 	}
@@ -69,7 +68,7 @@ public class Template implements Serializable {
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	
+
 	@Column(name = "sms_text")
 	public String getSmsText() {
 		return smsText;
@@ -78,6 +77,7 @@ public class Template implements Serializable {
 	public void setSmsText(String smsText) {
 		this.smsText = smsText;
 	}
+
 	public static TemplateVO convertEntityToVO(Template template) {
 		TemplateVO templateVO = new TemplateVO();
 		templateVO.setId(template.getId());
@@ -98,4 +98,5 @@ public class Template implements Serializable {
 		template.setSmsText(templateVO.getSmsText());
 		return template;
 	}
+
 }

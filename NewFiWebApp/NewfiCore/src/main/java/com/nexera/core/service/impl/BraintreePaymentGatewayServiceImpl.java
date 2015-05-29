@@ -113,7 +113,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 		return clientToken;
 	}
 
-	private void sendPaymentMail(User user, String templateId, String subject,
+	private void sendPaymentMail(User user, Template template, String subject,
 	        LoanApplicationFee loanApplicationFee) {
 		LOG.debug("Sending mail");
 		// Making the Mail VOs
@@ -166,10 +166,10 @@ public class BraintreePaymentGatewayServiceImpl implements
 		}
 		emailVO.setSenderName(CommonConstants.SENDER_NAME);
 		emailVO.setSubject(subject);
-		emailVO.setTemplateId(templateId);
+		emailVO.setTemplateId(template.getValue());
 		emailVO.setTokenMap(substitutions);
 		try {
-			sendEmailService.sendEmailForCustomer(emailVO, user);
+			sendEmailService.sendEmailForCustomer(emailVO, user, template);
 		} catch (InvalidInputException e) {
 			LOG.error("Exception caught " + e.getMessage());
 		} catch (UndeliveredEmailException e) {
@@ -464,7 +464,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 			loanDao.update(transactionDetails);
 			Template template = templateService
 			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PAYMENT);
-			sendPaymentMail(transactionDetails.getUser(), template.getValue(),
+			sendPaymentMail(transactionDetails.getUser(), template,
 			        DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,
 			        applicationFee);
 			paymentStatus = LoanStatus.APP_PAYMENT_SUCCESS;
@@ -478,7 +478,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 
 			Template template = templateService
 			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PAYMENT_UNSUCCESSFUL);
-			sendPaymentMail(transactionDetails.getUser(), template.getValue(),
+			sendPaymentMail(transactionDetails.getUser(), template,
 			        DisplayMessageConstants.PAYMENT_UNSUCCESSFUL_SUBJECT, null);
 
 			// Update the transaction details table to change status to 2.
