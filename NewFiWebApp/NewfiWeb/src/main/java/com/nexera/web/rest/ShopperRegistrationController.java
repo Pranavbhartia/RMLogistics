@@ -257,13 +257,15 @@ public class ShopperRegistrationController {
 		// request.getSession().invalidate();
 		// LOG.debug("Clearing old sessions");
 		// }
-		emailId = emailId + ":"+ DisplayMessageConstants.IS_SHOPPER;
+		emailId = emailId + ":" + DisplayMessageConstants.IS_SHOPPER;
 
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 		        emailId, password);
 		HttpSession session = request.getSession(false);
 		String sessionId = (session != null) ? session.getId() : null;
 		if (sessionId == null) {
+			LOG.info("Session was not there, hence creating one for email: "
+			        + emailId);
 			request.getSession(Boolean.TRUE);
 		}
 		request.setAttribute("engagementPath", "true");
