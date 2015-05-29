@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowConstants;
@@ -26,9 +27,9 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private LoanService loanService;
 	@Autowired
-	private EngineTrigger engineTrigger;
-	@Autowired
 	private IWorkflowService iWorkflowService;
+	@Autowired
+	private ApplicationContext applicationContext;
 	@Autowired
 	private NotificationService notificationService;
 
@@ -64,6 +65,8 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 		        CoreCommonConstants.RATE_LOCKED)) {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
 			        WorkItemStatus.COMPLETED.getStatus());
 			dismissAllLockYourRateAlert(loan.getId());

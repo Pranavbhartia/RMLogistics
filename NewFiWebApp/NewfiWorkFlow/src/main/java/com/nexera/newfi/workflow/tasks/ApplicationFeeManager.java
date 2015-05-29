@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
@@ -52,7 +53,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	@Autowired
 	private WorkflowService workflowService;
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 
 	@Autowired
 	TemplateService templateService;
@@ -201,6 +202,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		// Batch will take care to update the WorkflowItem as correct status
 		// Keeping it for an additional fall back - but not required
 		LOG.info("Checking Status for Application Fee Manager" + inputMap);
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = new LoanVO(loanID);
@@ -215,6 +218,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			// This means Brain Tree has approved the fee payment
 			String params = Utils.convertMapToJson(inputMap);
 			workflowService.saveParamsInExecTable(workflowItemExecId, params);
+
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);
 			return WorkItemStatus.COMPLETED.toString();
 		}

@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.xml.sax.InputSource;
@@ -106,7 +107,7 @@ public class ThreadManager implements Runnable {
 	LoanService loanService;
 
 	@Autowired
-	EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 
 	@Autowired
 	NexeraUtility nexeraUtility;
@@ -557,6 +558,8 @@ public class ThreadManager implements Runnable {
 				        currentLoanStatus, workflowItemExec.getId()));
 				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
 				        params);
+				EngineTrigger engineTrigger = applicationContext
+				        .getBean(EngineTrigger.class);
 				engineTrigger.startWorkFlowItemExecution(workflowItemExec
 				        .getId());
 			}
@@ -590,6 +593,8 @@ public class ThreadManager implements Runnable {
 					        loan.getId());
 					map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
 					        workflowItemExec.getId());
+					EngineTrigger engineTrigger = applicationContext
+					        .getBean(EngineTrigger.class);
 					engineTrigger.invokeReminder(workflowItemExec.getId(), map);
 				}
 			}
@@ -679,6 +684,8 @@ public class ThreadManager implements Runnable {
 				String params = Utils.convertMapToJson(map);
 				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
 				        params);
+				EngineTrigger engineTrigger = applicationContext
+				        .getBean(EngineTrigger.class);
 				engineTrigger.startWorkFlowItemExecution(workflowItemExec
 				        .getId());
 			}
@@ -706,6 +713,8 @@ public class ThreadManager implements Runnable {
 				String params = Utils.convertMapToJson(map);
 				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
 				        params);
+				EngineTrigger engineTrigger = applicationContext
+				        .getBean(EngineTrigger.class);
 				engineTrigger.startWorkFlowItemExecution(workflowItemExec
 				        .getId());
 			}

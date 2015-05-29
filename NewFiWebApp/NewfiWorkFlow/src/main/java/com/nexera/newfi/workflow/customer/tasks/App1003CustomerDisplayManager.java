@@ -14,10 +14,10 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.newfi.workflow.tasks.NexeraWorkflowTask;
-import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class App1003CustomerDisplayManager extends NexeraWorkflowTask implements
         IWorkflowTaskExecutor {
@@ -30,8 +30,7 @@ public class App1003CustomerDisplayManager extends NexeraWorkflowTask implements
 	private LoanService loanService;
 	@Autowired
 	private LoanAppFormService loanAppFormService;
-	@Autowired
-	private EngineTrigger engineTrigger;
+
 	@Autowired
 	private WorkflowService workflowService;
 	private static final Logger LOG = LoggerFactory

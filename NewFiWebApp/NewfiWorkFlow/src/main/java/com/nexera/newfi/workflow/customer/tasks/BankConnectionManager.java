@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -20,7 +21,7 @@ public class BankConnectionManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private LoanDao loanDao;
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(BankConnectionManager.class);
@@ -51,6 +52,8 @@ public class BankConnectionManager implements IWorkflowTaskExecutor {
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			LOG.debug("Triggering workflowitem " + workflowItemExecId);
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
 			        WorkItemStatus.STARTED.toString());
 			return WorkItemStatus.STARTED.toString();
@@ -65,7 +68,7 @@ public class BankConnectionManager implements IWorkflowTaskExecutor {
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("Inside method updateReminder");
 		return null;
 	}

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -32,7 +33,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	@Autowired
 	NeedsListService needsListService;
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 	@Autowired
 	private WorkflowService workflowService;
 	@Autowired
@@ -44,10 +45,12 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(NeededItemsManager.class);
 
+	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
+	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
@@ -63,9 +66,12 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		return new Gson().toJson(neededItemScoreVO);
 	}
 
+	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		NeededItemScoreVO neededItemScoreVO = needsListService
 		        .getNeededItemsScore(loanId);
 		String status = null;
@@ -114,6 +120,7 @@ public class NeededItemsManager implements IWorkflowTaskExecutor {
 		return null;
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("updateReminder of Needs items " + objectMap);
 		MilestoneNotificationTypes notificationType = MilestoneNotificationTypes.NEEDED_ITEMS_NOTIFICATION_TYPE;
