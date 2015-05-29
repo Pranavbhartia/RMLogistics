@@ -167,7 +167,7 @@ public class LoanRestService {
 			editLoanTeamVO.setHomeOwnInsCompany(company);
 			editLoanTeamVO.setOperationResult(true);
 		} else
-			return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
+			return RestUtil.wrapObjectForFailure(null, "400", "User could not be added to team");
 
 		CommonResponseVO responseVO = RestUtil
 		        .wrapObjectForSuccess(editLoanTeamVO);
@@ -437,7 +437,7 @@ public class LoanRestService {
 			        .findTitleCompanyByName(titleCompany);
 			return RestUtil.wrapObjectForSuccess(companyList);
 		}
-		return RestUtil.wrapObjectForFailure(null, "400", "Bad request");
+		return RestUtil.wrapObjectForFailure(null, "400", "User could not be added to team");
 	}
 
 	@RequestMapping(value = "/titleCompany", method = RequestMethod.POST)
