@@ -7,7 +7,7 @@
 			<div class="header-logo float-left"></div>
 			<div class="reg-header-btns-wrapper float-right clearfix">
 				<!--  <div class="float-left login-hdr hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>-->
-                <div class="float-left login-hdr hdr-login-btn" onclick="login()">Login</div>
+                <div class="float-left login-hdr hdr-login-btn" onclick="javascript:goToLoginPage();">Login</div>
 			</div>
             <div class="soft-menu-icon float-right"></div>
             <div class="soft-menu-wrapper">
@@ -23,17 +23,3 @@
 	<div id="overlay-toast-txt" class="overlay-toast-txt hide"></div>
 	<div id="overlay-toast-error-txt" class="overlay-toast-txt hide"></div>
 </div>
-<script type= "text/javascript" >
-
-     function login(){
-    	 
-    	 pathName = window.location.pathname;
-    	 if(pathName!= undefined  && pathName.indexOf("register.do")>0){
-    		 window.location.href='../../';
-    	  }
-    	 else{
-    		 window.location.href='./';
-    		 }
-    	
-     }
-</script>
