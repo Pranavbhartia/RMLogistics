@@ -107,8 +107,10 @@ public class ShopperRegistrationController {
 			LOG.error("error while creating user" + e.getStackTrace());
 			throw new FatalException("User could not be registered ");
 		}
+		String redirectUrl = profileUrl + "home.do#myLoan/myTeam";
+		LOG.info("Redirecting user to login page: " + redirectUrl);
 
-		return profileUrl + "home.do#myLoan/myTeam";
+		return redirectUrl;
 	}
 
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)
@@ -273,7 +275,13 @@ public class ShopperRegistrationController {
 
 		Authentication authenticatedUser = authenticationManager
 		        .authenticate(token);
+		LOG.info("User authentication object retrieved. "
+		        + authenticatedUser.getName() + " Principal: "
+		        + authenticatedUser.getPrincipal());
 
 		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+
+		LOG.info("Security context set for the user:"
+		        + authenticatedUser.getName());
 	}
 }
