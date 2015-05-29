@@ -88,6 +88,8 @@ public interface CommonConstants {
 
 	public static final String SENDER_DEFAULT_USER_NAME = "support";
 
+	public static final String SMS_DEFAULT_TEXT = "Please login to newfi";
+
 	public static final String RAREMILE_SUPPORT_EMAIL_ID = "";
 
 	public static final String EMAIL_FOOTER = "Thanks and Regards," + "<br>"
@@ -297,8 +299,8 @@ public interface CommonConstants {
 	public static final String SEND_EMAIL_TO_INTERNAL_USERS = "internalUsers";
 
 	public static final String STICKET = "sTicket";
-	
-	public static final String PRE_QUALIFICATION_LETTER ="Pre-Qualification letter";
+
+	public static final String PRE_QUALIFICATION_LETTER = "Pre-Qualification letter";
 
 	public static final String EXTRA_DOCUMENT = "Extra";
 	

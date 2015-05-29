@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -119,8 +120,7 @@ public class NexeraCacheableMethodInterfaceImpl implements
 			// parseLqbResponse(jsonObject.get("responseMessage").toString());
 			map.put("responseMessage", jsonObject.get("responseMessage")
 			        .toString());
-			map.put("responseTime", jsonObject.get("responseTime")
-			        .toString());
+			map.put("responseTime", jsonObject.get("responseTime").toString());
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,4 +130,10 @@ public class NexeraCacheableMethodInterfaceImpl implements
 
 	}
 
+	@Override
+	@CacheEvict(value = "applicateRate")
+	public void invalidateApplicationRateCache(String loanNumber,
+	        String appFormData) {
+		LOGGER.info("Invalidatagin cache for loan: " + loanNumber);
+	}
 }

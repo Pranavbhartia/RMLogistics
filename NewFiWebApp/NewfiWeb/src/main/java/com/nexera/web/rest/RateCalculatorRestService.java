@@ -47,13 +47,11 @@ public class RateCalculatorRestService {
 	@Value("${muleUrlForLoan}")
 	private String muleLoanUrl;
 
-
 	@Autowired
 	LqbInterface lqbCacheInvoker;
 
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
-	public @ResponseBody
-	String getTeaserRate(String teaseRate) {
+	public @ResponseBody String getTeaserRate(String teaseRate) {
 		Gson gson = new Gson();
 		String lockRateData = null;
 		try {
@@ -71,22 +69,29 @@ public class RateCalculatorRestService {
 			// List<TeaserRateResponseVO> teaserRateResponseVO =
 			// invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
 			JSONObject jsonObject = createMapforJson(teaserRateVO);
-			String lqbResponse = lqbCacheInvoker
-			        .invokeRest(CreateTeaserRateJson(jsonObject,
-			                "RunQuickPricer").toString());
-			if(null != lqbResponse){
-				List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
-				lockRateData = gson.toJson(teaserRateList);
-			}else{
+			String appFormData = CreateTeaserRateJson(jsonObject,
+			        "RunQuickPricer").toString();
+			try {
+				String lqbResponse = lqbCacheInvoker.invokeRest(appFormData);
+				if (null != lqbResponse) {
+					List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
+					lockRateData = gson.toJson(teaserRateList);
+				} else {
+					lockRateData = "error";
+					lqbCacheInvoker.invalidateTeaserRateCache(appFormData);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 				lockRateData = "error";
+				lqbCacheInvoker.invalidateTeaserRateCache(appFormData);
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			lockRateData = "error";
+
 		}
-		
+
 		LOG.info("Json resonse returned to JSP is" + lockRateData);
 		return lockRateData;
 	}

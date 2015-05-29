@@ -1009,7 +1009,9 @@ function finishedTutorial(element, url){
 }
 
 function goToLogin(){
-	
+	if(newfiObject==undefined || newfiObject.baseUrl==undefined){
+		window.location="${pageContext.request.contextPath}";
+	}
 	window.location=newfiObject.baseUrl;
 }
 

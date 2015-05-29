@@ -28,7 +28,16 @@ public class NewFiWebServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static Integer key = 1;
 
+	private static void toggleKey() {
+		synchronized (key) {
+			if (key.intValue() == 1)
+				key = 2;
+			else
+				key = 1;
+		}
+	}
 	@RequestMapping
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		AsyncContext aCtx = request.startAsync(request, response);
@@ -36,17 +45,18 @@ public class NewFiWebServlet extends HttpServlet {
 		ServletContext appScope = request.getServletContext();
 		// String task=(String) request.getParameter("task");
 		String taskId = (String) request.getParameter("taskId");
+		String reqKey = (String) request.getParameter("key");
 		// String channel=task+"-"+taskId;
 
 		Map<String, HashSet<String>> taskKeyDictionary = (Map<String, HashSet<String>>) appScope
 		        .getAttribute("taskKeyDictionary");
 
 		Map<String, List<AsyncContext>> aucWatchers = (Map<String, List<AsyncContext>>) appScope
-		        .getAttribute("watchers");
+		        .getAttribute("watchers" + reqKey);
 		if (aucWatchers == null) {
 			synchronized (appScope) {
 				aucWatchers = new HashMap<String, List<AsyncContext>>();
-				appScope.setAttribute("watchers", aucWatchers);
+				appScope.setAttribute("watchers" + reqKey, aucWatchers);
 			}
 		}
 		if (taskKeyDictionary == null) {
@@ -90,11 +100,11 @@ public class NewFiWebServlet extends HttpServlet {
 		        .getAttribute("taskKeyDictionary");
 
 		Map<String, List<AsyncContext>> aucWatchers = (Map<String, List<AsyncContext>>) appScope
-		        .getAttribute("watchers");
+		        .getAttribute("watchers" + key);
 		if (aucWatchers == null) {
 			synchronized (appScope) {
 				aucWatchers = new HashMap<String, List<AsyncContext>>();
-				appScope.setAttribute("watchers", aucWatchers);
+				appScope.setAttribute("watchers" + key, aucWatchers);
 			}
 		}
 		List<AsyncContext> watchers;
@@ -128,6 +138,7 @@ public class NewFiWebServlet extends HttpServlet {
 
 			}
 		}
+		toggleKey();
 	}
 
 }

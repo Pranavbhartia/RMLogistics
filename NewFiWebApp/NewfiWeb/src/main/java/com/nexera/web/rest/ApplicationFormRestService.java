@@ -529,30 +529,47 @@ public class ApplicationFormRestService {
 			json.put(CommonConstants.OPNAME, "Load");
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
-			HashMap<String, String> lqbResponse = cacheableMethodInterface
-			        .cacheInvokeRest(loanNumber, json.toString());
-			String responseMessage = "error";
-			if (lqbResponse != null
-			        && lqbResponse.containsKey("responseMessage"))
-				responseMessage = lqbResponse.get("responseMessage");
-			teaserRateList = rateService
-			        .parseLqbResponse(retrievePricingDetails(responseMessage));
+			try {
+				HashMap<String, String> lqbResponse = cacheableMethodInterface
+				        .cacheInvokeRest(loanNumber, json.toString());
+				String responseMessage = "error";
+				if (lqbResponse != null
+				        && lqbResponse.containsKey("responseMessage")) {
+					responseMessage = lqbResponse.get("responseMessage");
+				} else {
+					LOG.debug("Invalidating cache since response contains error");
+					cacheableMethodInterface.invalidateApplicationRateCache(
+					        loanNumber, json.toString());
+				}
+				teaserRateList = rateService
+				        .parseLqbResponse(retrievePricingDetails(responseMessage));
 
-			String responseTime = "";
-			if (lqbResponse != null && lqbResponse.containsKey("responseTime"))
-				responseTime = lqbResponse.get("responseTime");
+				String responseTime = "";
+				if (lqbResponse != null
+				        && lqbResponse.containsKey("responseTime")) {
+					responseTime = lqbResponse.get("responseTime");
+				}
 
-			TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
-			teaserRateResponseVO.setLoanDuration("sample");
-			teaserRateResponseVO.setLoanNumber(loanNumber);
+				TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
+				teaserRateResponseVO.setLoanDuration("sample");
+				teaserRateResponseVO.setLoanNumber(loanNumber);
 
-			if (teaserRateList != null)
-				teaserRateList.add(0, teaserRateResponseVO);
-			for (TeaserRateResponseVO responseVo : teaserRateList) {
-				responseVo.setResponseTime(responseTime);
+				if (teaserRateList != null)
+					teaserRateList.add(0, teaserRateResponseVO);
+				for (TeaserRateResponseVO responseVo : teaserRateList) {
+					responseVo.setResponseTime(responseTime);
+				}
+			} catch (Exception e) {
+				LOG.error(
+				        "Invalidating cache since there was a run time error",
+				        e);
+				cacheableMethodInterface.invalidateApplicationRateCache(
+				        loanNumber, json.toString());
 			}
+
 		} catch (JSONException e) {
-			e.printStackTrace();
+			LOG.error("JSON Exception for application rate of loanNumber: "
+			        + loanNumber, e);
 		}
 
 		LOG.debug("loadLoanRateData" + gson.toJson(teaserRateList));
