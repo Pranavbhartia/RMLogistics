@@ -217,7 +217,7 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 				        .getAttachmentStream();
 				InputStream inputStream = new ByteArrayInputStream(
 				        arrayOutputStream.toByteArray());
-				email.addAttachment("receipt.pdf", inputStream);
+				email.addAttachment("prequal-letter.pdf", inputStream);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				LOG.error("Exception caught " + e.getMessage());
