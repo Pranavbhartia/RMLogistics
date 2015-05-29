@@ -435,6 +435,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
 			criteria.add(Restrictions.eq("loan.id", loan.getId()));
+			criteria.add(Restrictions.eq("active", true));
 			List<LoanTeam> team = criteria.list();
 
 			if (team != null && !team.isEmpty()) {
