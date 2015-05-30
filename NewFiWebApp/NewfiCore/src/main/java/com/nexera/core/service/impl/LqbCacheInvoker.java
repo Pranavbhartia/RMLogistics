@@ -7,6 +7,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -50,8 +51,8 @@ public class LqbCacheInvoker implements LqbInterface {
 
 	@Override
 	@Cacheable("teaserRate")
-	public String invokeRest(String appFormData) {
-
+	public HashMap<String, String> invokeRest(String appFormData) {
+		HashMap<String, String> map = new HashMap<String, String>();
 		try {
 			LOGGER.debug("Input to LQB:" + appFormData);
 			HttpHeaders headers = new HttpHeaders();
@@ -66,8 +67,11 @@ public class LqbCacheInvoker implements LqbInterface {
 			LOGGER.debug("Time taken after invoking this rest call for teaser rate is "
 			        + date1);
 			JSONObject jsonObject = new JSONObject(returnedUser);
-
-			return jsonObject.get("responseMessage").toString();
+			map.put("responseMessage", jsonObject.get("responseMessage")
+			        .toString());
+			map.put("responseTime", jsonObject.get("responseTime")
+			        .toString());
+			return map;
 
 		} catch (Exception e) {
 			LOGGER.error("Exception caught ", e);

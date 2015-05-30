@@ -958,8 +958,12 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                 var ob;
                 try{
                     ob=JSON.parse(data);
+                    if(ob.length>0){
+                        responseTime=ob[0].responseTime;
+                }
                 }catch(exception){
                     ob={};
+                    responseTime="";
                     console.log("Invalid Data");
                 }
                 var quesTxt = "Loan Rates and Fees";
@@ -1652,7 +1656,7 @@ function getLoanSummaryHeaderCEP() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html(getCurrentDate());
+    }).html(responseTime);
     headerCont.append(col1).append(col2);
     return headerCont;
 }
