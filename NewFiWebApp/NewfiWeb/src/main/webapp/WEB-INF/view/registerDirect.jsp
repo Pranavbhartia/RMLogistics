@@ -232,7 +232,7 @@
 		
 	 function goToLoginPage(){
 			
-			window.location.href=${baseUrl};
+			window.location.href="${baseUrl}";
 		}
 	</script>
 </body>
