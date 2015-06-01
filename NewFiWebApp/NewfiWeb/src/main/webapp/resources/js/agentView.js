@@ -2065,7 +2065,7 @@ function getTeamListTableRow(user, loanID) {
 		"homeOwnInsID" : user.homeOwnInsID,
 		"titleCompanyID" : user.titleCompanyID
 	});
-	userDelIcn.click(function() {
+	userDelIcn.click(function(e) {
 		var userID = $(this).attr("userid");
 		var loanID = $(this).attr("loanid");
 		var homeOwnInsID = $(this).attr("homeOwnInsID");
@@ -2082,7 +2082,7 @@ function getTeamListTableRow(user, loanID) {
 			"homeOwnInsID" : homeOwnInsID,
 			"titleCompanyID" : titleCompanyID
 		};
-
+		e.stopImmediatePropagation();
 		confirmRemoveUser(messageToDeleteUser, input,
 				loanID);
 	});
