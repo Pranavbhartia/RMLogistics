@@ -18,7 +18,16 @@ LOAN_ENUM = {
 	DECLINED : "DECLINED"
 };
 
+$(document).on('click',"#cus-prof-popup",function(){
 
+	if($('#state-dropdown-wrapper').css("display") == "block"){
+		toggleStateDropDown();
+	}
+	if($('#carrier-dropdown-wrapper').css("display")=="block"){
+		toggleCarrierDropDown();
+	}
+
+});
 function getAgentSecondaryLeftNav() {
 	var leftTab2Wrapper = $('<div>').attr({
 		"class" : "lp-t2-wrapper",

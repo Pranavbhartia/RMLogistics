@@ -21,6 +21,7 @@ $(document).on('click',function(e){
 		$('#admin-create-user-popup').hide();
 	}
 
+
 });
 $(document).on('click', '#admin-create-user-popup', function(event) {
 

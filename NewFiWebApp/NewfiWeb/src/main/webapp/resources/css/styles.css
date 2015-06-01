@@ -144,6 +144,7 @@ input[type="button"]:focus, button:focus {
 	width: 88px;
 	background: url(../images/logo.png) no-repeat;
 	background-position: center;
+	cursor:pointer;
 }
 
 .hdr-btn-item {
@@ -2959,7 +2960,7 @@ input.calc-input {
 .forgot-pwd-link {
 /*	color: #d7d7d7;*/
 	color: #428bca;
-	margin-left:5px;
+	margin-left:6px;
 	cursor: pointer;
 	text-decoration: underline;
 }
@@ -5341,4 +5342,11 @@ a.session-login-btn {
     margin-left: 287px;
     font-family: opensanssemiBold;
     font-size: 13px;
+}
+
+.hdr-contact-icon{
+	  background: url(../images/phone2.png) no-repeat center;
+	  width: 15px;
+	  height: 15px;
+	  margin: 17.5px 0px;
 }

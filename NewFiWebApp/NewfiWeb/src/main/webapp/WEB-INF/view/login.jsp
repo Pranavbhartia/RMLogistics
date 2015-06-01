@@ -91,7 +91,10 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 	                <!-- <div class="soft-menu-hdr cursor-pointer" onclick="window.location='./'">Login</div> -->
 					<div class="soft-menu-hdr cursor-pointer" onclick="window.location='customerEngagement.do'">Check Rates</div>
 	            </div>
+	            <a href="tel:1-888-316-3934">
 	             <div class="float-right login-hdr hdr-contact-no">888-316-3934</div>
+	              <div class="float-right hdr-contact-icon"></div>
+              </a>
 		    </div>
 	        </div>
             </div>
@@ -143,7 +146,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			
 			<!-- Footer -->
 			 <!-- <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div> -->
-    <jsp:include page="newFiFooter.jsp"></jsp:include>
+    <jsp:include page="inlineFooter.jsp"></jsp:include>
 			
 		
 	</div>
@@ -155,11 +158,19 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 		$(window).resize(function(){
 			adjustLoginContainer();
 		});
-		
+		adjustInlineFooter();
 		function adjustLoginContainer(){
 			$('.login-body-wrapper').css({
 				"min-height" : $(window).height()
 			});			
+		}
+		function adjustInlineFooter(){
+
+			var height=window.innerHeight;
+			var footerHeight=$('.footer-wrapper').height();
+			var headerHeight=$('.header-wrapper').height();
+			height=height-headerHeight-209;
+			$('.login-container').css("min-height",height+ "px");
 		}
 	});
 </script>
