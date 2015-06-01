@@ -2113,7 +2113,7 @@ $(document).on('click', '#ld-customer .loan-detail-link', function(event) {
 $(document).on('click', '#cus-prof-popup', function(event) {
 	event.stopImmediatePropagation();
 });
-
+$("#overlay-popup").on("click",function(e){e.stopImmediatePropagation();})
 $(document).on('keyup', function(e) {
 	if (e.which == 27) {
 		hideCustomerEditProfilePopUp();
@@ -2124,6 +2124,8 @@ $(document).click(function() {
 	if ($('#cus-prof-popup').css("display") == "block") {
 		hideCustomerEditProfilePopUp();
 	}
+	if($('#overlay-popup').css("display")== "block")
+		$('#overlay-popup').hide();
 });
 
 function appendCustomerEditProfilePopUp() {
