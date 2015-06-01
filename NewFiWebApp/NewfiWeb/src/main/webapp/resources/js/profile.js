@@ -1796,18 +1796,19 @@ function searchInStateArray(searchTerm){
 	return searchedStateList;
 }
 
+$(document).on('click',function(e){
+	if($('#state-dropdown-wrapper').css("display") == "block"){
+		toggleStateDropDown();
+	};
+});
 
 function toggleStateDropDown() {
-
 		$('#state-dropdown-wrapper').slideToggle("slow",function(e){
-			
 			$('#state-dropdown-wrapper').perfectScrollbar({
 				suppressScrollX : true
 			});
 			$('#state-dropdown-wrapper').perfectScrollbar('update');		
 		});
-
-	
 }
 
 function toggleCarrierDropDown() {

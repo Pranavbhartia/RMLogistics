@@ -2803,6 +2803,7 @@ input.calc-input {
 	background-image: url(../images/person-placeholder.png);
 	border-radius: 50%;
 	background-size: cover;
+	cursor: pointer;
 }
 
 .prof-upload-icn {
