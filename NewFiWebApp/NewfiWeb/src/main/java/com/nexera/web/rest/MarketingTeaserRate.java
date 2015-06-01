@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,25 +34,25 @@ import com.nexera.web.rest.util.TeaserRateHandler;
 
 
 @RestController
-@RequestMapping(value = "/teaseRate")
-public class MarketingTeaseRate {
+@RequestMapping(value = "/teaserRate")
+public class MarketingTeaserRate {
 	
 	
-	private static final Logger LOG = LoggerFactory.getLogger(MarketingTeaseRate.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MarketingTeaserRate.class);
 	
 	@Autowired
 	LqbInterface lqbCacheInvoker;
 	
 	
-	@RequestMapping(value="/marketingTeaseRate", method = RequestMethod.GET)
-	public List<MarketingPageRateVo> findMarkeingTeaseRates(String teaseRate){
+	@RequestMapping(value="/marketingTeaserRate", method = RequestMethod.POST)
+	public List<MarketingPageRateVo> findMarkeingTeaseRates(@RequestBody String teaserRate){
 		LOG.info(" Inside findMarkeingTeaseRates method");
 		Gson gson = new Gson();
 		String lockRateData = null;
 
 		List<MarketingPageRateVo> marketingPageRateVo = null;
 
-		HashMap<String, String> map = lqbCacheInvoker.invokeRest(createRequestPayload().toString());
+		HashMap<String, String> map = lqbCacheInvoker.invokeRest(teaserRate);
 		String responseTime = map.get("responseTime");
 		String lqbResponse = map.get("responseMessage");
 

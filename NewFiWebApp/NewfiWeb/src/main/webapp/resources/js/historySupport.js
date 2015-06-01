@@ -239,7 +239,7 @@ function bindDataToSN() {
  *            any data that needs to be passed to the function ex: loanId in
  *            case of loan manager view
  */
-function saveState(primaryNav, secondaryNav, url) {
+function saveState(primaryNav, secondaryNav, url,num) {
 
 	// console.log("Save state called : "+primaryNav+","+secondaryNav+","+url);
 	var hashUrl = "";
@@ -248,15 +248,20 @@ function saveState(primaryNav, secondaryNav, url) {
 	// } else {
 	// hashUrl = 'pn=' + primaryNav + "&sn=" + secondaryNav + "&" + url;
 	// }
-
-	hashUrl = primaryNav + getUrlHashFunction(secondaryNav, "/")
-			+ getUrlHashFunction(url, "/");
-
-	if(!historyCallback){
-		history.pushState(getRandomID(), null, "#" + hashUrl);
+	if(typeof(num)=="undefined"){
+		hashUrl = primaryNav + getUrlHashFunction(secondaryNav, "/")
+				+ getUrlHashFunction(url, "/");
+		if(!historyCallback){
+			history.pushState(getRandomID(), null, "#" + hashUrl);
 		
+		}
+		historyCallback = false;
+	}else{
+		hashUrl="CE-"+num;
+		if(window.location.hash!=hashUrl)
+			history.pushState(getRandomID(), null, "#" + hashUrl);
 	}
-	historyCallback = false;
+	
 	
 }
 
@@ -275,6 +280,13 @@ function retrieveState() {
 	// parse the parameters out from the url key
 	var params = {};
 	if (newLocation) {
+		if(newLocation.indexOf("CE-")>=0){
+			var vals=newLocation.split("-")
+			var num=parseInt(vals[1]);
+			num=num+1;
+			changeToState(num);
+			return;
+		}
 		var entries = newLocation.split("/");
 		if (entries[0])
 			params.pn = entries[0];
