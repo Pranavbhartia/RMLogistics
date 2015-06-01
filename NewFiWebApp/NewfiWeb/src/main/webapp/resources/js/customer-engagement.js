@@ -1008,8 +1008,12 @@ function progressBaar(num) {
             $('#stepNoId_' + i).html(i);
         }
         sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-        if(typeof(newfiObject)==='undefined')
-            window.location.hash="#CE-"+(num-1);
+        if(typeof(newfiObject)==='undefined'){
+            //window.location.hash="#CE-"+(num-1);
+            if(window.location.hash!=("#CE-"+(num-1)))
+                saveState(undefined, undefined, undefined,(num-1));
+        }
+            
     }
    
 
