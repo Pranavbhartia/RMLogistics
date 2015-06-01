@@ -307,22 +307,13 @@ public class SendEmailServiceImpl implements SendEmailService {
 				if (teamMember.getUser().getEmailVerified() != null) {
 					if (teamMember.getUser().getEmailVerified()) {
 						recipients.add(getReceipientVO(teamMember));
-						if (teamMember.getUser().getCustomerDetail() != null
-						        && teamMember.getUser().getCustomerDetail()
-						                .getSecEmailId() != null
-						        && !teamMember.getUser().getCustomerDetail()
-						                .getSecEmailId().isEmpty()) {
-							recipients.add(getReceipientVO(teamMember.getUser()
-							        .getCustomerDetail().getSecEmailId(),
-							        teamMember.getUser().getFirstName(),
-							        teamMember.getUser().getLastName()));
+						if (teamMember.getUser().getCustomerDetail() != null && teamMember.getUser().getCustomerDetail().getSecEmailId() != null&& !teamMember.getUser().getCustomerDetail().getSecEmailId().isEmpty()) {
+							recipients.add(getReceipientVO(teamMember.getUser().getCustomerDetail().getSecEmailId(),teamMember.getUser().getFirstName(),teamMember.getUser().getLastName()));
 						}
 					} else {
 						if (teamMember.getUser().getCustomerDetail() != null) {
 							EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-							emailRecipientVO.setEmailID(teamMember.getUser()
-							        .getUsername()
-							        + CommonConstants.SENDER_EMAIL_ID);
+							emailRecipientVO.setEmailID(teamMember.getUser().getUsername()+ CommonConstants.SENDER_EMAIL_ID);
 							recipients.add(emailRecipientVO);
 
 						}
