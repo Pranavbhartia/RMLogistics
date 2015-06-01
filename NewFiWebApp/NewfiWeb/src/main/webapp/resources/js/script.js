@@ -2528,11 +2528,17 @@ function getRequestRateLockStatus(element){
                 	element.addClass("rate-btn");
                     element.html("Contact Your Loan Advisor").on('click',function(){
                      //changeLeftPanel(1);
-                        if(typeof(selectedUserDetail)!=='undefined'){
-                            window.location.hash="#loan/"+selectedUserDetail.loanID+"/progress"
-                        }else{
-                            window.location.hash="#myTeam";    
-                        }
+                    	
+                    	if(newfiObject.user.userRole.roleCd!="REALTOR"){
+                    	
+	                        if(typeof(selectedUserDetail)!=='undefined'){
+	                            window.location.hash="#loan/"+selectedUserDetail.loanID+"/progress"
+	                        }else{
+	                            window.location.hash="#myTeam";  
+	                        }
+                    	}else{
+                    		showToastMessage("Please contact to customer");
+                    	}
                     });
                 }
             }
