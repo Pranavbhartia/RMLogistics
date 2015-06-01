@@ -104,9 +104,11 @@ public class EmailProcessor implements Runnable {
 		LOGGER.debug("Inside run method ");
 		boolean sendEmail = false;
 		boolean systemGenerated = false;
+		boolean entireTeam = true;
 		try {
 			MimeMessage mimeMsg = (MimeMessage) message;
 			if (mimeMsg != null) {
+				List<String> mailerList = new ArrayList<String>();
 				MimeMessage mimeMessage = new MimeMessage(mimeMsg);
 				if (mimeMessage != null) {
 					String subject = message.getSubject();
@@ -127,11 +129,16 @@ public class EmailProcessor implements Runnable {
 						        fromAddressString.indexOf("<") + 1,
 						        fromAddressString.indexOf(">")).trim();
 
+					LOGGER.debug("Adding the sender in the mailer list for note message ");
+					mailerList.add(fromAddressString);
 					String toAddressString = null;
 					for (Address address : toAddress) {
+
 						if ((address.toString())
 						        .contains(CommonConstants.SENDER_EMAIL_ID)) {
 							toAddressString = address.toString();
+						} else {
+							mailerList.add(address.toString());
 						}
 
 					}
@@ -164,6 +171,7 @@ public class EmailProcessor implements Runnable {
 							}
 						} else if (toAddressArray.length == 2) {
 							LOGGER.debug("This is a reply mail, must contain a message id");
+							entireTeam = true;
 							messageId = toAddressArray[0];
 							loanId = toAddressArray[1];
 							loanId = loanId.replace(
@@ -399,7 +407,8 @@ public class EmailProcessor implements Runnable {
 								extractAttachmentAndUploadEverything(emailBody,
 								        loanVO, uploadedByUser,
 								        loanVO.getUser(), mimeMessage,
-								        messageId, sendEmail, systemGenerated);
+								        messageId, sendEmail, systemGenerated,
+								        mailerList, entireTeam);
 
 							} else {
 								LOGGER.error("user who uploaded not found in database");
@@ -468,11 +477,30 @@ public class EmailProcessor implements Runnable {
 			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 
-		while (body.contains("\n\n") || body.contains("\n \n")) {
-			body = body.replace("\n \n", "\n");
-			body = body.replace("\n\n", "\n");
-		}
+		/*
+		 * while (body.contains("\n\n") || body.contains("\n \n")) { body =
+		 * body.replace("\n \n", "\n"); body = body.replace("\n\n", "\n"); }
+		 */
+		body = removeExtraLines(body);
 		return body;
+	}
+
+	private String removeExtraLines(String string) {
+		char[] characterArray = string.toCharArray();
+		for (int i = 0; i < characterArray.length; i++) {
+			if (characterArray[i] == '\n') {
+				int j = i + 1;
+				while (characterArray[j] == '\n') {
+					characterArray[j] = '\0';
+
+					j = j + 1;
+
+				}
+			}
+
+		}
+		String newString = new String(characterArray);
+		return newString;
 	}
 
 	public static String extractMessage(String originalMessage,
@@ -497,7 +525,7 @@ public class EmailProcessor implements Runnable {
 	private void extractAttachmentAndUploadEverything(String emailBody,
 	        LoanVO loanVO, User uploadedByUser, UserVO actualUser,
 	        MimeMessage mimeMessage, String messageId, boolean sendEmail,
-	        boolean systemGenerated) {
+	        boolean systemGenerated, List<String> mailerList, boolean entireTeam) {
 		try {
 			String successNoteText = "";
 			String failureNoteText = "";
@@ -569,13 +597,15 @@ public class EmailProcessor implements Runnable {
 				LOGGER.debug("Mail did not have any attachment ");
 				messageServiceHelper.generateEmailDocumentMessage(
 				        loanVO.getId(), uploadedByUser, messageId, emailBody,
-				        null, true, sendEmail, systemGenerated);
+				        null, true, sendEmail, systemGenerated, mailerList,
+				        entireTeam);
 
 				if (!lqbFieldFound) {
 					String lqbFieldIdMessage = "Your needs list should be set before you try to upload a document";
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        lqbFieldIdMessage, null, true, sendEmail, true);
+					        lqbFieldIdMessage, null, true, sendEmail, true,
+					        mailerList, entireTeam);
 				}
 
 			} else {
@@ -583,16 +613,18 @@ public class EmailProcessor implements Runnable {
 				if (!checkUploadSuccessList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
 					if (checkUploadFailureList.isEmpty()) {
-						successNoteText = "Files Uploaded Successfully";
+						successNoteText = "Files sent as attachment have been uploaded to the Loan File";
 					} else {
 						successNoteText = "Some files got successfully uploaded to the system";
 					}
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        emailBody, null, true, sendEmail, false);
+					        emailBody, null, true, sendEmail, false,
+					        mailerList, entireTeam);
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        successNoteText, fileVOList, true, sendEmail, true);
+					        successNoteText, fileVOList, true, sendEmail, true,
+					        mailerList, entireTeam);
 				}
 				if (!checkUploadFailureList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were not uploaded ");
@@ -600,7 +632,8 @@ public class EmailProcessor implements Runnable {
 						failureNoteText = "No file was uploaded to the system, please note the system supports only .pdf, .img, .jpg or .png files only";
 						messageServiceHelper.generateEmailDocumentMessage(
 						        loanVO.getId(), uploadedByUser, messageId,
-						        emailBody, null, true, sendEmail, false);
+						        emailBody, null, true, sendEmail, false,
+						        mailerList, entireTeam);
 
 					} else {
 						failureNoteText = "Some files were not uploaded, please note only .pdf, .jpg, .img or .png files  are supported by the system";
@@ -608,7 +641,8 @@ public class EmailProcessor implements Runnable {
 
 					messageServiceHelper.generateEmailDocumentMessage(
 					        loanVO.getId(), uploadedByUser, messageId,
-					        failureNoteText, null, false, true, true);
+					        failureNoteText, null, false, true, true,
+					        mailerList, entireTeam);
 				}
 			}
 		} catch (MessagingException me) {
