@@ -22,18 +22,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.SimpleFormatter;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor.WHITE;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -841,7 +840,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14 ,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;
-						writeCurrentDateAndTimeInExcel(sheet);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -875,7 +874,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;		
-						writeCurrentDateAndTimeInExcel(sheet);
+						writeCurrentDateAndTimeInExcel(sheet,restResponse);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -909,7 +908,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;	
-						writeCurrentDateAndTimeInExcel(sheet);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -943,7 +942,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;		
-						writeCurrentDateAndTimeInExcel(sheet);
+						writeCurrentDateAndTimeInExcel(sheet,restResponse);
 						}
 					}
 					if("Mammoth Jumbo 15 YR Fixed".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
@@ -976,7 +975,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 14,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;	
-						writeCurrentDateAndTimeInExcel(sheet);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse);
 						}
 					}
 					if("Cascades Jumbo 15 YR Fixed".equals(fileHeading) && "CASCADES JUMBO FIXED PRODUCTS".equals(filePatternKey)){
@@ -1045,13 +1044,19 @@ public class Utility {
 	 * Method to write date in excel workbook
 	 * @param workBook
 	 */
-	private void writeCurrentDateAndTimeInExcel(HSSFSheet sheet){
+	private void writeCurrentDateAndTimeInExcel(HSSFSheet sheet, RestResponse response){
 		
-		Integer startRow = 7;
-		Integer startCell = 16;
+		Integer startRow = 9;
+		Integer startCell = 2;
 		HSSFRow row = null;
 		HSSFCell cell = null;
-		String currentDate = getCurrentDate();
+		String currentDate  = getCurrentDate();
+		StringBuilder sb = new StringBuilder("Lending Rates as of: ");
+		sb.append(currentDate);
+		String timeZone = getCurrentTimeZone();
+		sb.append("(");
+		sb.append(timeZone);
+		sb.append(")");
 		
 		if(null == sheet.getRow(startRow)){
 			row = sheet.createRow(startRow);
@@ -1063,21 +1068,7 @@ public class Utility {
 			cell = row.createCell(startCell);
 		}
 		
-		writeValueToCell(currentDate, cell);
-		
-		String currentTime = getCurrentTime();
-		
-		if(null == sheet.getRow(++startRow)){
-			row = sheet.createRow(startRow);
-		}else{
-			row = sheet.getRow(startRow);
-		}
-		
-		if(null != row){
-			cell = row.createCell(startCell);
-		}
-		
-		writeValueToCell(currentTime, cell);
+		writeValueToCell(sb.toString(), cell);	
 		
 		
 	}
@@ -1087,22 +1078,12 @@ public class Utility {
 	 */
 	private String getCurrentDate(){
 		
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/YYYY");
+		DateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy, HH:mm:SS Z");
 		Date date = new Date();
 		String textDate = dateFormat.format(date);
 		return textDate;		
 	}
 	
-	/**
-	 * Method to get current date in a string
-	 */
-	private String getCurrentTime(){
-		
-		DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-		Calendar cal = Calendar.getInstance();
-		String textTime = dateFormat.format(cal.getTime());
-		return textTime;		
-	}
 	
 	/**
 	 * Method to add date to given date
@@ -1134,7 +1115,13 @@ public class Utility {
 		//makeChangesInFormulaCell(288, 18, sheet);
 		
 	}
-	
+	 /**
+	  * Method to make changes in fields depending on date
+	  * @param startRow
+	  * @param startCell
+	  * @param sheet
+	  * @throws java.text.ParseException
+	  */
 	private void makeChangesInFormulaCell(int startRow, int startCell, HSSFSheet sheet) throws java.text.ParseException{
 		
 		int endRow = startRow + 3;
@@ -1161,11 +1148,38 @@ public class Utility {
 			}
 			
 			cell = row.getCell(startCell);
-			String currentDate = getCurrentDate();
+			String currentDate = getCurrentDateForFormulaCells();
 			String newDate = addDaysToCurrentDate(currentDate, noOfDays);
 			writeValueToCell(newDate, cell);
 			startRow++;
 		}
+		
+	}
+	
+	/**
+	 * Method to get the current time zone 
+	 * @return
+	 */
+	private String getCurrentTimeZone(){
+		
+		Calendar cal = Calendar.getInstance();
+		  TimeZone timeZone = cal.getTimeZone();
+		  String currentTimeZone = timeZone.getDisplayName();
+		
+		return currentTimeZone;
+	}
+	
+	/**
+	 * Method to get date in format MM/dd/yyyy
+	 * @return
+	 */
+	private String getCurrentDateForFormulaCells(){
+		
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		Date date = new Date();
+		String textDate = dateFormat.format(date);
+		return textDate;	
 		
 	}
 	

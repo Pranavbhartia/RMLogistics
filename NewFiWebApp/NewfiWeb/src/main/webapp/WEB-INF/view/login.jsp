@@ -13,17 +13,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="resources/images/newfiHome.ico">
-<link href="resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="resources/css/jquery-ui.css" rel="stylesheet">
-<link href="resources/css/dropzone.css" rel="stylesheet">
-<link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
-<link href="resources/css/styles-common.css" rel="stylesheet">
-<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
-<link href="resources/css/footer.css" rel="stylesheet">
-<script src="resources/js/jquery-2.1.3.min.js"></script>
-<script src="resources/js/common.js"></script>
+<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
+<link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/dropzone.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles-common.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/footer.css" rel="stylesheet">
+<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
+<script src="${initParam.resourcesPath}/resources/js/common.js"></script>
 <script type="text/javascript">
 
 var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}"; 

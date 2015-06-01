@@ -5,7 +5,7 @@
 	}
 	.home-container{
 		padding-right: 5px;
-		overflow: hidden;
+		overflow-x: hidden;
 	}
 	.left-panel{
 		display: none;
@@ -269,9 +269,9 @@
         font-size: 28px;
     }
     .ce-rate-icon {
-      height: 150px;
+      height: 50px;
       margin-top: 10px;
-      background-size: 150px;
+      /* background-size: 150px; */
     }
     .ce-ques-text {
       font-size: 13px;
@@ -423,6 +423,15 @@
 	}
 	.center-text-session-expire {
 	 	margin: 100px auto;
+	}
+	.create-user-popup-cont {
+	    width: 100%;
+	}
+	.create-user-popup{
+		width: 400px;
+	}
+	.add-member-input-cont{
+		padding-right: 10px;
 	}
 }
 
@@ -1255,6 +1264,9 @@
 	.getting-to-know-btn {
 	    width: 240px;
 	    font-size: 14px;
+	}
+	.ce-cp{
+		padding: 0 10px;
 	}
 }
 

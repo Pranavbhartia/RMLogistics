@@ -1,7 +1,7 @@
 var updateHandler={
 	taskKeyDictionary:{},
 	taskKey:"",
-	enablePushnotification:true,
+	enablePushnotification:false,
 	requestEnabledCount:0,
 	requestEnabledCountLimit:2,
 	updateCtxHolder:{},
