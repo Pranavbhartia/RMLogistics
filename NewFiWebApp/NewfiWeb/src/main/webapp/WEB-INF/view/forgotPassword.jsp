@@ -46,7 +46,7 @@ var resendIndex=locationURL.indexOf("?resend");
 				</div>
 			</div>
 		</div>
-		<jsp:include page="newFiFooter.jsp"></jsp:include>
+		<jsp:include page="inlineFooter.jsp"></jsp:include>
 			
 	<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>

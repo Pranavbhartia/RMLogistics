@@ -48,6 +48,11 @@ var stateErrorMessage="Please select your state";
 var gonernamentQuestionErrorMessage="Please give answers of all the questions";
 var selectQuestionErrorMessage="Please select any one that applies";
 var ageErrorMessage="You must be at least 18 years of age.";
+var applicationFormnotEditable="Application form not editable";
+var applicationNotSubmitted="Your application could not be submitted";
+var errorInCreateLoan="error inside createLoan ";
+var W2EmplayeeMandatoryErrorMesssage="W2 Employment Details are Mandatory";
+var maxIncomeNeeded="Maximum 2 income needed";
 
 
 var changePasswordErrorMessage="Error while changing your password. Please try again later.";

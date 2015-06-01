@@ -40,10 +40,28 @@ appUserDetails.governmentquestion = governmentquestion;
 appUserDetails.refinancedetails = refinancedetails;
 appUserDetails.loan = loan;
 appUserDetails.loanType = loanType;
-
 appUserDetails.spouseGovernmentQuestions = spouseGovernmentQuestions;
 
-
+$(document).on('click',function(){
+	
+	if($('#state-dropdown-wrapper').css("display") == "block"){
+		toggleStateDropDown();
+	}
+	if($('#carrier-dropdown-wrapper').css("display")=="block"){
+		toggleCarrierDropDown();
+	}
+	if($('#state-dropdown-wrapper-property').css("display") == "block"){
+		$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+			$('#state-dropdown-wrapper-property').perfectScrollbar({
+				suppressScrollX : true
+			});
+			$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+		});
+	}
+	
+	
+	
+});
 
 if (sessionStorage.loanAppFormData) {
 	appUserDetails = JSON.parse(sessionStorage.loanAppFormData);
@@ -54,12 +72,6 @@ if (sessionStorage.loanAppFormData) {
 
 
 var formCompletionStatus = 1;
-
-
-
-
-
-
 var applicationItemsList = [ 
                              {
 							    "text":"Loan Purpose",
@@ -1707,7 +1719,7 @@ function getContextApplicationTextQues(contxt) {
     			}
     			
     		}).keypress(function(key) {
-    			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ){
+    			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ||$('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode" ){
     				
   				  if(key.charCode < 48 || key.charCode > 57) return false;
   			}
@@ -1737,7 +1749,7 @@ function getContextApplicationTextQues(contxt) {
     			}
     			
     		}).keypress(function(key) {
-    			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ){
+    			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" || $('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode"){
     				
     				  if(key.charCode < 48 || key.charCode > 57) return false;
     			}
@@ -1902,7 +1914,7 @@ function paintMyIncome() {
     	        		return false;
     	        	}
     	    	}else{
-    	    		showErrorToastMessage("W2 Employment Details are Mandatory");
+    	    		showErrorToastMessage(W2EmplayeeMandatoryErrorMesssage);
     	    		return isStatus;
     	    	}
 
@@ -2838,7 +2850,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 				
 				if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 2){
-					showErrorToastMessage("Maximum 2 income needed");
+					showErrorToastMessage(maxIncomeNeeded);
 				     return false;
 				}
 				var quesTxt = "About how much do you make a year";
@@ -4466,7 +4478,7 @@ function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
     		
     	});
     }else{
-        showToastMessage("Application form not editable");
+        showErrorToastMessage(applicationFormnotEditable);
     }
 }
 
@@ -5236,7 +5248,7 @@ $.ajax({
                // alert('createLoan data is '+data)
 
                 if(data=="error"){
-                    showErrorToastMessage("Your application could not be submitted");
+                    showErrorToastMessage(applicationNotSubmitted);
                    }else{
                 	   if(flag)
                 		{
@@ -5252,7 +5264,7 @@ $.ajax({
             clearOverlayMessage();
 		},
 		error:function(erro){
-			showErrorToastMessage("error inside createLoan ");
+			showErrorToastMessage(errorInCreateLoan);
 			 $('#overlay-loader').hide();
 		}
 		
@@ -5620,7 +5632,7 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
              $('#overlay-loader').hide();
         },
         error:function(erro){
-        	showErrorToastMessage("error inside createLoan ");
+        	showErrorToastMessage(errorInCreateLoan);
              $('#overlay-loader').hide();
         }
         

@@ -14,8 +14,10 @@
                 <div class="soft-menu-hdr cursor-pointer" onclick="window.location='${baseUrl}'">Login</div>
 				<div class="soft-menu-hdr cursor-pointer" onclick="window.location='${baseUrl}+/customerEngagement.do'">Check Rates</div>
             </div>
+            <a href="tel:1-888-316-3934">
              <div class="float-right login-hdr hdr-contact-no">888-316-3934</div>
               <div class="float-right hdr-contact-icon"></div>
+              </a>
 		</div>
 	</div>
 </div>

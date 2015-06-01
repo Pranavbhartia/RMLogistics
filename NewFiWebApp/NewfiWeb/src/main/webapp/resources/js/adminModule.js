@@ -20,6 +20,9 @@ $(document).on('click',function(e){
 	if ($('#admin-create-user-popup').css("display") == "block") {
 		$('#admin-create-user-popup').hide();
 	}
+	if($('.overlay-popup-wrapper ').css("display")=="block"){
+		$('.overlay-popup-wrapper').hide();
+	}
 
 });
 $(document).on('click', '#admin-create-user-popup', function(event) {
