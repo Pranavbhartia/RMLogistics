@@ -19,6 +19,9 @@
 
 </head>
 <body>
+	<div id="overlay-loader" class="overlay-loader hide">
+				<div id="overlay-loader-text"></div>
+	</div>
 	<div class="header-wrapper">
 	<div class="header-container container">
 		<div class="header-row row clearfix">
