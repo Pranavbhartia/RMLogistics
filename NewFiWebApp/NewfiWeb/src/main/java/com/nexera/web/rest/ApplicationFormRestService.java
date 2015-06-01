@@ -384,9 +384,9 @@ public class ApplicationFormRestService {
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
 				        .getId());
-				messageServiceHelper.generatePrivateMessage(loaAppFormVO
-				        .getLoan().getId(), LoanStatus.ratesLocked, utils
-				        .getLoggedInUser(), false);
+				// messageServiceHelper.generatePrivateMessage(loaAppFormVO
+				// .getLoan().getId(), LoanStatus.ratesLocked, utils
+				// .getLoggedInUser(), false);
 			}
 		}
 		return lockRateData;
