@@ -227,6 +227,9 @@
 		display: block;
 		margin-bottom: 10px;
 	}
+	.prof-form-row .state-dropdown-wrapper{
+		margin-top: -9px;
+	}
 	.prof-form-input-lg{
 		width: 250px;
 	}
@@ -1261,9 +1264,13 @@
 	.slider-btn{
 		width: 110px;
 	}
+	.getting-to-know-row{
+		padding-left: 10px;
+	}
 	.getting-to-know-btn {
 	    width: 240px;
 	    font-size: 14px;
+	    float: left;
 	}
 	.ce-cp{
 		padding: 0 10px;
