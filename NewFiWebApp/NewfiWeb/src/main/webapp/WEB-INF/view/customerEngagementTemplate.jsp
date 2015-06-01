@@ -43,6 +43,10 @@
 		</div>
 	</div>
 </div>
+<div id="overlay-toast" class="overlay-toast-wrapper">
+	<div id="overlay-toast-txt" class="overlay-toast-txt hide"></div>
+	<div id="overlay-toast-error-txt" class="overlay-toast-txt hide"></div>
+</div>
 	<div class="home-container container home-container_CEP">
 		<div class="container-row row clearfix">
 			<div id="ce-main-container"></div>			
