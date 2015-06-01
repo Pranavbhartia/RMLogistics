@@ -341,8 +341,27 @@ function paintHomeZipCode() {
     $('#ce-refinance-cp').html(quesCont);
 }
 
+
+
+/*function callRestAPi(){
+	
+	$.ajax({
+		
+		url:"http://localhost:8080/NewfiWeb/rest/teaseRate/marketingTeaseRate",
+		type:"GET",
+		success:function(data){
+			 alert(data);
+		},
+		error:function(){}
+		
+	});
+	
+}*/
+
 function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAccountBtn) {
-    stages = 5;
+    
+	//callRestAPi();
+	stages = 5;
     homeProgressBaar(5);
     if (!parentContainer) {
         parentContainer = $('#ce-refinance-cp');

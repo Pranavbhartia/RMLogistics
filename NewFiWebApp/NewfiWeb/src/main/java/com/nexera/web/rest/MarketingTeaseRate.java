@@ -2,6 +2,7 @@ package com.nexera.web.rest;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.xml.sax.SAXException;
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
+import com.nexera.common.vo.lqb.MarketingPageRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.web.rest.util.TeaserRateHandler;
@@ -42,12 +44,14 @@ public class MarketingTeaseRate {
 	
 	
 	@RequestMapping(value="/marketingTeaseRate", method = RequestMethod.GET)
-	public String findMarkeingTeaseRates(String teaseRate){
-		LOG.info(" ");
+	public List<MarketingPageRateVo> findMarkeingTeaseRates(String teaseRate){
+		LOG.info(" Inside findMarkeingTeaseRates method");
 		Gson gson = new Gson();
 		String lockRateData = null;
-		HashMap<String, String> map = lqbCacheInvoker
-		        .invokeRest(createRequestPayload().toString());
+
+		List<MarketingPageRateVo> marketingPageRateVo = null;
+
+		HashMap<String, String> map = lqbCacheInvoker.invokeRest(createRequestPayload().toString());
 		String responseTime = map.get("responseTime");
 		String lqbResponse = map.get("responseMessage");
 
@@ -57,19 +61,21 @@ public class MarketingTeaseRate {
 				responseVo.setResponseTime(responseTime);
 			}
 			lockRateData = gson.toJson(teaserRateList);
+			
+			marketingPageRateVo = thirtyYearRateVoDataSet(lockRateData);
 		}else{
-			LOG.info(" ");
+			LOG.info("lqbResponse is not correct");
 			
 			lockRateData = "error";
 		}
-		return lockRateData;
+		return marketingPageRateVo;
 		
 	}
 	
 	
 	private static JSONObject createRequestPayload(){
 		
-		LOG.info(" ");
+		LOG.info(" inside create Request Payload method");
 		
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
@@ -92,7 +98,7 @@ public class MarketingTeaseRate {
 	        json.put("loanVO", jsonChild);
         } catch (JSONException e) {
 	       
-        	LOG.error(" ");
+        	LOG.error("error while  inside create Request Payload method ");
 	        e.printStackTrace();
         }
 
@@ -102,7 +108,7 @@ public class MarketingTeaseRate {
 	
 	public List<TeaserRateResponseVO> parseLqbResponse(
 	        String lqbTeaserRateResponse) {
-		LOG.info(" ");
+		LOG.info("Inside parseLqbResponse method ");
 		
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		try {
@@ -124,13 +130,13 @@ public class MarketingTeaseRate {
 			}
 
 		} catch (SAXException se) {
-			LOG.error(" ");
+			LOG.error(" error while parseLqbResponse");
 			se.printStackTrace();
 		} catch (ParserConfigurationException pce) {
-			LOG.error(" ");
+			LOG.error(" error while parseLqbResponse");
 			pce.printStackTrace();
 		} catch (IOException ie) {
-			LOG.error(" ");
+			LOG.error(" error while parseLqbResponse");
 			ie.printStackTrace();
 		}
 
@@ -139,26 +145,32 @@ public class MarketingTeaseRate {
 	
 	
 	
-   public String thirtyYearRateVoDataSet(String lockRateData){
+   public List<MarketingPageRateVo> thirtyYearRateVoDataSet(String lockRateData){
 		
-		
+	   List<MarketingPageRateVo> marketingPageRatelist = new ArrayList<MarketingPageRateVo>();
+	  
 		org.json.JSONObject thirtyYearRateVoDataSet = null;
 		JSONArray  jsonArray = new JSONArray (lockRateData);
+		Gson gson = new Gson(); 
 		
 		
-		for (int i=1; i<jsonArray.length(); i++) {
+		for (int i=0; i<jsonArray.length(); i++) {
 		    org.json.JSONObject item = jsonArray.getJSONObject(i);
 		    String loanDuration = item.getString("loanDuration");
-		    if(loanDuration.indexOf("30")==0){
+		    if(loanDuration.indexOf("30")==0 || loanDuration.indexOf("15")==0){
 		    	JSONArray rateVOArray = item.getJSONArray("rateVO");
 			    thirtyYearRateVoDataSet = rateVOArray.getJSONObject(rateVOArray.length()/2);
-			   
-			    break;
+			    LqbTeaserRateVo LqbTeaserRateVo = gson.fromJson(thirtyYearRateVoDataSet.toString(), LqbTeaserRateVo.class);
+			    
+			    MarketingPageRateVo marketingPageRateVo = new MarketingPageRateVo();
+			    marketingPageRateVo.setLoanDuration(loanDuration.split(" ")[0]+"Year Fixed");
+			    marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
+			    marketingPageRatelist.add(marketingPageRateVo);
 		    }
 		    
 		}
 		
-		return thirtyYearRateVoDataSet.toString();
+		return marketingPageRatelist;
 	} 
 	
 }
