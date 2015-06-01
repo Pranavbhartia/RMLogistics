@@ -29,6 +29,7 @@
 	<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/newfiModel.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/common.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/teaserRate.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/script.js"></script>
@@ -169,6 +170,19 @@
 			    }
 			}); 
 			
+			onpopstate = function(event) {
+	            console.log('history modified');
+	            if(location.hash.trim()!=''){
+	                historyCallback= true;
+	                refreshSupport=true;
+	            }
+	            retrieveState();
+	        };
+			if(location.hash.trim()!='' ){
+	            historyCallback= true;
+	            refreshSupport=true;
+	            retrieveState();
+	        }
 
 		});
 		function adjustInlineFooter(){
