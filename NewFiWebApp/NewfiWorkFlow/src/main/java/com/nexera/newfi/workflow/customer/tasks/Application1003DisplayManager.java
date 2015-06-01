@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
@@ -34,8 +35,10 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 	private LoanService loanService;
 	@Autowired
 	private LoanAppFormService loanAppFormService;
+
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
+
 	@Autowired
 	private WorkflowService workflowService;
 	private static final Logger LOG = LoggerFactory
@@ -82,6 +85,8 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 			String params = Utils.convertMapToJson(inputMap);
 			workflowService.saveParamsInExecTable(workflowItemExecutionId,
 			        params);
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecutionId);
 			return WorkItemStatus.COMPLETED.getStatus();
 		}

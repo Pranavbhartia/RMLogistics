@@ -1,5 +1,13 @@
 //JavaScript functions for customer engagement pages
 
+$(document).on('mouseover','.app-option-choice',function(){
+	$(this).parent().find('.app-option-choice').removeClass('choice-hover');
+	$(this).addClass('choice-hover');
+});
+$(document).on('mouseleave','.app-option-choice',function(){
+	$(this).removeClass('choice-hover');
+});
+
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {
         type: question.type,
@@ -232,7 +240,7 @@ function getContextApplicationYearMonthCEP(contxt) {
 
 
 function optionClicked(element, ctx, option, value, skipCondition) {
-    $(element).parent().find('.app-option-choice').attr("isSelected", "false").focus();
+    $(element).parent().find('.app-option-choice').attr("isSelected", "false").mouseleave();
     $(element).attr("isSelected", "true");
     ctx.clickHandler(value);
     if (ctx.value != value || skipCondition) {
@@ -562,6 +570,7 @@ function getTextQuestion(quesText, clickEvent, name) {
             'clickEvent': clickEvent,
             "name": name
         }, function(event) {
+        	removeToastMessage();
             var key = event.data.name;
             inputValue = $('input[name="' + key + '"]').val();
             refinanceTeaserRate[key] = inputValue;
@@ -572,7 +581,7 @@ function getTextQuestion(quesText, clickEvent, name) {
                  if(isSuccess){
                 	 if(inputValue.length >5 ||inputValue.length < 5){
 
-                		 $('input[name="' + key + '"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+                		 $('input[name="' + key + '"]').next('.err-msg').html(zipCodeMessage).show();
                 		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
                 		 return false;
                 	 }else{
@@ -627,7 +636,7 @@ function paintRefinanceStep2() {
     }).html("Save & continue").bind('click', {
         'contxt': contxt
     }, function(event) {
-        
+    	removeToastMessage();
     	refinanceTeaserRate.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
         var className=$('input[name="currentMortgageBalance"]');
     	var isSuccess=validateInput(className,$('input[name="currentMortgageBalance"]').val(),message);
@@ -688,7 +697,7 @@ function paintRefinanceStepCEP() {
         var saveAndContinueButton = $('<div>').attr({
             "class": "cep-button-color ce-save-btn"
         }).html("Save & continue").on('click', function() {
-           
+           removeToastMessage();
         	
         	refinanceTeaserRate.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.isIncludeTaxes = quesContxts["isIncludeTaxes"].value;//quesContxts[1].value;
@@ -703,29 +712,18 @@ function paintRefinanceStepCEP() {
 
           // alert(questionOne+""+questionThree+""+questionFour);
             
-           if(questionOne){
-        	   if(questionThree){
-        		   if(questionFour){
-        			   if(refinanceTeaserRate.isIncludeTaxes=="Yes"|| refinanceTeaserRate.isIncludeTaxes=="No"){
-                   		
-                   		 paintRefinanceHomeWorthToday();
-                   		}else{
-                   			showErrorToastMessage("Please answer the question");
-                   			return false;
-                   		}
-        		   }else{
-
-        			   return false;
-        		   }
-        	   }else{
-
-              		return false;
-        	   }
-           }else{
-
+           if(!questionOne && !questionThree && !questionFour){
         	   return false;
            }
            
+           if(refinanceTeaserRate.isIncludeTaxes=="Yes"|| refinanceTeaserRate.isIncludeTaxes=="No"){
+      			
+      		}else{
+      			showErrorToastMessage(answerQuestionOne);
+      			return false;
+      		}		  
+            paintRefinanceHomeWorthToday();
+        			 
         });
         $('#ce-refinance-cp').append(saveAndContinueButton);
     }
@@ -807,7 +805,7 @@ function paintNewResidenceTypeQues(){
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").on('click', function() {
-        
+    	removeToastMessage();
         if(refinanceTeaserRate.loanType){
             refinanceTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
@@ -881,7 +879,8 @@ function paintRefinanceHomeInformation() {
    
     var saveAndContinueButton = $('<div>').attr({
         "class": "app-save-btn"
-    }).html("Save & continue").on('click', function() {    	       
+    }).html("Save & continue").on('click', function() {    	
+    	removeToastMessage();
     });
 
     var container = quesHeaderTextCont.append(questionsContainer).append(saveAndContinueButton);
@@ -959,8 +958,12 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                 var ob;
                 try{
                     ob=JSON.parse(data);
+                    if(ob.length>0){
+                        responseTime=ob[0].responseTime;
+                }
                 }catch(exception){
                     ob={};
+                    responseTime="";
                     console.log("Invalid Data");
                 }
                 var quesTxt = "Loan Rates and Fees";
@@ -1653,7 +1656,7 @@ function getLoanSummaryHeaderCEP() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html(getCurrentDate());
+    }).html(responseTime);
     headerCont.append(col1).append(col2);
     return headerCont;
 }

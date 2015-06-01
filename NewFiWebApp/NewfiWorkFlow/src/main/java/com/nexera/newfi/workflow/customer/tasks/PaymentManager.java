@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.LoanStatus;
@@ -22,9 +23,9 @@ import com.nexera.workflow.task.IWorkflowTaskExecutor;
 @Component
 public class PaymentManager implements IWorkflowTaskExecutor {
 	@Autowired
-	private EngineTrigger engineTrigger;
-	@Autowired
 	private LoanService loanService;
+	@Autowired
+	private ApplicationContext applicationContext;
 	@Autowired
 	private TransactionService transactionService;
 	@Autowired
@@ -72,6 +73,8 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 		        Milestones.APP_FEE.getMilestoneKey());
 		if (mileStone != null && mileStone.getComments() != null) {
 			if (mileStone.getComments().equals(LoanStatus.APP_PAYMENT_PENDING)) {
+				EngineTrigger engineTrigger = applicationContext
+				        .getBean(EngineTrigger.class);
 				engineTrigger.changeStateOfWorkflowItemExec(
 				        workflowItemExecutionId,
 				        WorkItemStatus.STARTED.getStatus());

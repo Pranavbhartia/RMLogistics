@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -22,7 +23,7 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 	@Autowired
 	private LoanService loanService;
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 	@Autowired
 	private IWorkflowService iWorkflowService;
 	private static final Logger LOG = LoggerFactory
@@ -56,6 +57,8 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 	@Override
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		String status = null;
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String comment = inputMap.get(
@@ -79,8 +82,9 @@ public class QCDecisionManager extends NexeraWorkflowTask implements
 		        false);
 	}
 
+	@Override
 	public String updateReminder(HashMap<String, Object> objectMap) {
-		// Do Nothing : 
+		// Do Nothing :
 		return null;
 	}
 }

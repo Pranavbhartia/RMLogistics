@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.vo.LoanVO;
@@ -27,7 +28,7 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 	private WorkflowService workflowService;
 
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LMContactManager.class);
@@ -53,6 +54,8 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 		LoanVO loanVo = loanService.getActiveLoanOfUser(userVo);
 		int workflowId = loanVo.getLoanManagerWorkflowID();
 
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		List<WorkflowItemExec> list = engineTrigger
 		        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
 		for (WorkflowItemExec workflowItem : list) {
@@ -81,7 +84,7 @@ public class LMContactManager implements IWorkflowTaskExecutor {
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("Inside method updateReminder");
 		return null;
 	}

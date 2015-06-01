@@ -97,18 +97,19 @@ public class ShopperRegistrationController {
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
 			        teaseRateDatalist);
 
-			userProfileService.crateWorkflowItems(user.getDefaultLoanId());
-			LOG.info("User succesfully created" + user);
+			LOG.info("User succesfully created, now trying to autologin" + user);
 			authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (FatalException e) {
-			LOG.error("error while creating user");
+			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered");
 		} catch (Exception e) {
-			LOG.error("error while creating user" + e.getStackTrace());
+			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered ");
 		}
+		String redirectUrl = profileUrl + "home.do#myLoan/myTeam";
+		LOG.info("Redirecting user to login page: " + redirectUrl);
 
-		return profileUrl + "home.do#myLoan/myTeam";
+		return redirectUrl;
 	}
 
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)
@@ -257,13 +258,16 @@ public class ShopperRegistrationController {
 		// request.getSession().invalidate();
 		// LOG.debug("Clearing old sessions");
 		// }
-		emailId = emailId + ":"+ DisplayMessageConstants.IS_SHOPPER;
+		LOG.info("Auto login for: " + emailId);
+		emailId = emailId + ":" + DisplayMessageConstants.IS_SHOPPER;
 
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 		        emailId, password);
 		HttpSession session = request.getSession(false);
 		String sessionId = (session != null) ? session.getId() : null;
 		if (sessionId == null) {
+			LOG.info("Session was not there, hence creating one for email: "
+			        + emailId);
 			request.getSession(Boolean.TRUE);
 		}
 		request.setAttribute("engagementPath", "true");
@@ -271,7 +275,13 @@ public class ShopperRegistrationController {
 
 		Authentication authenticatedUser = authenticationManager
 		        .authenticate(token);
+		LOG.info("User authentication object retrieved. "
+		        + authenticatedUser.getName() + " Principal: "
+		        + authenticatedUser.getPrincipal());
 
 		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+
+		LOG.info("Security context set for the user:"
+		        + authenticatedUser.getName());
 	}
 }

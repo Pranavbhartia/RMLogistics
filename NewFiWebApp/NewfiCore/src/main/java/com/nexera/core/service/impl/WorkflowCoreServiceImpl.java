@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,15 +19,18 @@ import com.nexera.workflow.vo.WorkflowVO;
 
 @Component
 public class WorkflowCoreServiceImpl implements WorkflowCoreService {
-	@Autowired
-	EngineTrigger engineTrigger;
 
 	@Autowired
 	LoanService loanService;
 
+	@Autowired
+	private ApplicationContext applicationContext;
+
 	@Override
 	@Transactional
 	public void createWorkflow(WorkflowVO workflowVO) throws Exception {
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		Map<String, Integer> map = engineTrigger.triggerWorkFlow();
 
 		loanService.saveWorkflowInfo(workflowVO.getLoanID(),
@@ -37,7 +41,8 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 
 	@Override
 	public void changeWorkItemState(WorkflowItemExecVO workItem) {
-
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		engineTrigger.changeStateOfWorkflowItemExec(workItem.getId(),
 		        workItem.getStatus());
 
@@ -45,6 +50,8 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 
 	@Override
 	public List<WorkflowItemExecVO> getWorkflowItems(int workflowId) {
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		List<WorkflowItemExec> list = engineTrigger
 		        .getWorkflowItemExecByWorkflowMasterExec(workflowId);
 		List<WorkflowItemExecVO> volist = new ArrayList<WorkflowItemExecVO>();

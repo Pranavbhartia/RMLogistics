@@ -48,12 +48,18 @@ public class MarketingTeaseRate {
 		LOG.info(" Inside findMarkeingTeaseRates method");
 		Gson gson = new Gson();
 		String lockRateData = null;
+
 		List<MarketingPageRateVo> marketingPageRateVo = null;
-		
-		String lqbResponse = lqbCacheInvoker.invokeRest(createRequestPayload().toString());
-		
+
+		HashMap<String, String> map = lqbCacheInvoker.invokeRest(createRequestPayload().toString());
+		String responseTime = map.get("responseTime");
+		String lqbResponse = map.get("responseMessage");
+
 		if(null != lqbResponse){
 			List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
+			for (TeaserRateResponseVO responseVo : teaserRateList) {
+				responseVo.setResponseTime(responseTime);
+			}
 			lockRateData = gson.toJson(teaserRateList);
 			
 			marketingPageRateVo = thirtyYearRateVoDataSet(lockRateData);

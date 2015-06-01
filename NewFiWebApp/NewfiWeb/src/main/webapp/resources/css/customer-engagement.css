@@ -320,9 +320,9 @@
 	background: #F47521;
 }
 
-.app-option-choice:hover{
+/* .app-option-choice:hover{
 	background: #F47521;
-}
+} */
 
 .app-option-choice.out{
 	background-color: rgba(24,72,141,0.9);
@@ -347,8 +347,12 @@
 	position:fixed;
 }
 .hdr-contact-icon{
-	  background: url(../images/phone.png) no-repeat center;
+	  background: url(../images/phone2.png) no-repeat center;
 	  width: 15px;
 	  height: 15px;
 	  padding: 25px 1px;
+}
+
+.choice-hover{
+	background: #F47521;
 }

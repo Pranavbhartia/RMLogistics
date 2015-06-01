@@ -249,12 +249,12 @@ function paintloanamount() {
         buyHomeTeaserRate.purchaseDetails.loanAmount = (getFloatValue($('input[name="homeWorthToday"]').val()) -getFloatValue($('input[name="currentMortgageBalance"]').val()));
  
         var questionOne=validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);
-      
+        var questionTwo=validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
+  	 
 
-        if (questionOne) {
-        	  var questionTwo=validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
-        	  if(questionTwo){
-        		  if (validateDownPaymentOrPurchasePrice($('input[name="homeWorthToday"]'), $('input[name="currentMortgageBalance"]')))
+        if (questionOne && questionTwo) {
+        	
+        		if (validateDownPaymentOrPurchasePrice($('input[name="homeWorthToday"]'), $('input[name="currentMortgageBalance"]')))
               	{
               		paintNewResidenceTypeQues();
               	} 
@@ -262,9 +262,7 @@ function paintloanamount() {
         		  return false;
         	  }
         	
-        } else {
-            return false;
-        }
+       
        
     });
     $('#ce-refinance-cp').append(saveAndContinueButton);

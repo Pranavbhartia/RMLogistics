@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowConstants;
@@ -25,7 +26,7 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private LoanService loanService;
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 	@Autowired
 	private IWorkflowService iWorkflowService;
 	private static final Logger LOG = LoggerFactory
@@ -51,6 +52,8 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		LOG.info("checkStatus Rate Locked");
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
 		int userId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		UserVO user = new UserVO(userId);
@@ -58,6 +61,7 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 		if (loan.getLockStatus().equalsIgnoreCase(
 		        CoreCommonConstants.RATE_LOCKED)) {
 			LOG.info("Chaning Status to Completeed");
+
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 			engineTrigger.startWorkFlowItemExecution(workflowItemExecId);

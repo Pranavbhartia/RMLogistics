@@ -413,7 +413,7 @@ function appendCustomers(elementId, customers) {
 			"customer" : customer
 		}, function(event) {
 			event.stopImmediatePropagation();
-
+            removeToastMessage();
 			resetSelectedUserDetailObject(event.data.customer);
 			if (userIsRealtor()) {
 				saveState('loan', selectedUserDetail.loanID, "team");
@@ -786,9 +786,9 @@ function getSchedulerContainer(contxt, tempData) {
 				snoozeTime.setMinutes(dat.getMinutes())
 				var message = $("#sch-msg-message").val();
 				if (message == "") {
-					showToastMessage("Invalid Message");
+					showErrorToastMessage("Invalid Message");
 				} else if (snoozeTime == "Invalid Date") {
-					showToastMessage("Invalid Date");
+					showErrorToastMessage("Invalid Date");
 				} else {
 					var data = {};
 					data.content = message;
@@ -2879,8 +2879,10 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 					var company = new Object();
 					company.name = $('#create-hoic-name').val();
 					company.address = $('#create-hoic-address').val();
-					company.phoneNumber = $('#create-hoic-phone-number').val();
-					company.fax = $('#create-hoic-fax-number').val();
+					var phoneNumber=$('#create-hoic-phone-number').val();
+					company.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+					var fax=$('#create-hoic-fax-number').val();
+					company.fax = fax.replace(/[^0-9]/g, '');
 					company.emailID = $('#create-hoic-email-id').val();
 					company.primaryContact = $('#create-hoic-primary-contact')
 							.val();
@@ -2898,6 +2900,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 						showErrorToastMessage(emailEmptyMessage);
 						return;
 					}
+				
 					console.log("Create company button clicked. User : "
 							+ JSON.stringify(company));
 					// TODO-write method to call add company
@@ -3152,6 +3155,7 @@ function getCreateTitleCompanyContext(loanID) {
 					if(!companyName || !phoneNumber || !userEmailID){
 						return false;
 					}
+					
 				/*	if (company.name == "") {
 						showErrorToastMessage(companyNameEmptyMessage);
 						return;

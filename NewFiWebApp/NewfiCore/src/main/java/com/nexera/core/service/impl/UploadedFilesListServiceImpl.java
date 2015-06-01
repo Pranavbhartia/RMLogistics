@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,7 +132,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	private LoanNeedListDao loanNeedListDAO;
 
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 
 	@Override
 	@Transactional
@@ -1063,6 +1064,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loanVO.getId());
 			String params = Utils.convertMapToJson(map);
 			workflowService.saveParamsInExecTable(workItemRef.getId(), params);
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			engineTrigger.startWorkFlowItemExecution(workItemRef.getId());
 		}
 	}

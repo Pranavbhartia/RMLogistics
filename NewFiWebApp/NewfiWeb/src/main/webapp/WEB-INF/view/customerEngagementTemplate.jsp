@@ -48,6 +48,7 @@
 		
 	<script>
 	
+	
 		$(document).ready(function() {
 			globalBinder();
 			adjustCustomerEngagementPageOnResize();
@@ -70,9 +71,11 @@
 			paintSelectLoanTypeQuestion();
 			
 			$(document).on('click','#progressBaarId_1',function(){
+				removeToastMessage();
 				paintRefinanceMainContainer();
 			});
 			$(document).on('click','#progressBaarId_2',function(){
+				removeToastMessage();
 				if(stages>1){
 					progressBaar(2);
 					//paintRefinanceLiveNow();
@@ -80,6 +83,7 @@
 				}
 			});
 			$(document).on('click','#progressBaarId_3',function(){
+				removeToastMessage();
 				if(stages>2){
 					progressBaar(3);
 					//paintRefinanceStartLiving();
@@ -87,18 +91,21 @@
 				}
 			});
 			$(document).on('click','#progressBaarId_4',function(){
+				removeToastMessage();
 				if(stages>3){
 					progressBaar(4);
 					paintRefinanceHomeWorthToday();
 				}
 			});
 			$(document).on('click','#progressBaarId_5',function(){
+				removeToastMessage();
 				if(stages>4){
 					progressBaar(5);
 					paintNewResidenceTypeQues();
 				}
 			});
 			$(document).on('click','#progressBaarId_6',function(){
+				removeToastMessage();
 				if(stages>5){
 					progressBaar(6);
 					paintRefinanceHomeZipCode();
@@ -108,21 +115,25 @@
 			//--- Buy home progress baar button 
 			
 			$(document).on('click','#homeProgressBaarId_1',function(){
+				removeToastMessage();
 				paintBuyHomeContainer();
 			});
 			$(document).on('click','#homeProgressBaarId_2',function(){
+				removeToastMessage();
 				if(active>1){
 					homeProgressBaar(2);
 					paintRentOfYourHouse();
 				}
 			});
 			$(document).on('click','#homeProgressBaarId_3',function(){
+				removeToastMessage();
 				if(active>2){
 					homeProgressBaar(3);
 					paintNewResidenceTypeQues();
 				}
 			});
 			 $(document).on('click','#homeProgressBaarId_4',function(){
+				 removeToastMessage();
 				if(active>3){
 					homeProgressBaar(4);
 					paintHomeZipCode();

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +48,7 @@ public class WorkflowRestService {
 	@Autowired
 	private WorkflowService workflowService;
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 	@Autowired
 	private LoanService loanService;
 	@Autowired
@@ -121,6 +122,8 @@ public class WorkflowRestService {
 		LOG.info("milestoneAddTeamVO----" + milestoneAddTeamVOStr);
 		CommonResponseVO response = null;
 		try {
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			Gson gson = new Gson();
 			MilestoneLoanTeamVO milestoneNoticationVO = gson.fromJson(
 			        milestoneAddTeamVOStr, MilestoneLoanTeamVO.class);
@@ -159,6 +162,8 @@ public class WorkflowRestService {
 		CommonResponseVO response = null;
 		try {
 
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			Gson gson = new Gson();
 			EmailNotificationVo emailNotificationVo = gson.fromJson(
 			        milestoneNotificationStr, EmailNotificationVo.class);
@@ -208,7 +213,8 @@ public class WorkflowRestService {
 		LOG.info("workflowItemId----" + workflowItemId);
 		CommonResponseVO response = null;
 		try {
-
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			workflowService.saveParamsInExecTable(workflowItemId, params);
 
 			String result = engineTrigger
@@ -230,6 +236,8 @@ public class WorkflowRestService {
 		LOG.info("workflowItemId----" + workflowItemId);
 		CommonResponseVO response = null;
 		try {
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			workflowService.saveParamsInExecTable(workflowItemId, params);
 			String result = engineTrigger.invokeActionMethod(workflowItemId);
 			response = RestUtil.wrapObjectForSuccess(mapStatus(result));
@@ -261,7 +269,8 @@ public class WorkflowRestService {
 		LOG.info("workflowId----" + workflowId);
 		CommonResponseVO response = null;
 		try {
-
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			workflowService.saveParamsInExecTable(workflowId, params);
 			String result = engineTrigger.getRenderStateInfoOfItem(workflowId);
 			response = RestUtil.wrapObjectForSuccess(result);
@@ -318,6 +327,8 @@ public class WorkflowRestService {
 			TypeReference<HashMap<String, Object>> typeRefList = new TypeReference<HashMap<String, Object>>() {
 			};
 			map = mapper.readValue(data, typeRefList);
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			HashMap<Integer, String> resultStatus = new HashMap<Integer, String>();
 			for (Integer workflowItemExecId : milestoneItems) {
 				System.out.println(workflowItemExecId

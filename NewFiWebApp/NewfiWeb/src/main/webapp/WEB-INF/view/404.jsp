@@ -5,16 +5,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="resources/images/newfiHome.ico">
-<link href="resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="resources/css/jquery-ui.css" rel="stylesheet">
-<link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
-<link href="resources/css/404-style.css" rel="stylesheet">
-<link href="resources/css/footer.css" rel="stylesheet">
-<script src="resources/js/jquery-2.1.3.min.js"></script>
-<script src="resources/js/jquery-ui.js"></script>
-<script src="resources/js/bootstrap.min.js"></script>
+<link rel="shortcut icon" type="image/x-icon" href="/NewfiWeb/resources/images/newfiHome.ico">
+<link href="/NewfiWeb/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/jquery-ui.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/styles.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/style-resp.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/404-style.css" rel="stylesheet">
+<link href="/NewfiWeb/resources/css/footer.css" rel="stylesheet">
+<script src="/NewfiWeb/resources/js/jquery-2.1.3.min.js"></script>
+<script src="/NewfiWeb/resources/js/jquery-ui.js"></script>
+<script src="/NewfiWeb/resources/js/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -24,7 +24,7 @@
 		<div class="header-row row clearfix">
 			<div class="header-logo float-left"></div>
 			<div class="reg-header-btns-wrapper float-right clearfix">
-				<div class="float-left login-hdr-error-page hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>
+				<div class="float-left login-hdr-error-page hdr-signup-btn" onclick="window.location='https://www.newfi.com/NewfiWeb/customerEngagement.do'">Check Rates</div>
                <!--  <div class="float-left login-hdr hdr-login-btn" onclick="window.location='./'">Login</div> -->
 			</div>
             
@@ -43,11 +43,11 @@
 			<!---End-header---->
 			<!--start-content------>
 			<div class="content">
-			<!-- 	<img src="resources/images/404-error-img.png" title="error"/> -->
+			<!-- 	<img src="/NewfiWeb/resources/images/404-error-img.png" title="error"/> -->
 				<div class="err-text1">OOPS!!!That was not supposed to happen.</div>
 				<p class="label-txt" style="">We apologize for the inconvenience</p>
 				<p class="label-txt">Click the link below to be redirected to the home page.</p><br>  
-				<div class="" name="Login" value="Login" onclick="window.location='./'" style="
+				<div class="" name="Login" value="Login" onclick="window.location='https://www.newfi.com/NewfiWeb'" style="
                  width: 150px;    height: 40px;    line-height: 40px;    font-size: 16px;    color: #fff;    background-color: #6c9f2e;    border-radius: 3px;    text-align: center;    text-transform: capitalize;    cursor: pointer;    font-family: 'opensanssemibold'; margin: 0 auto;
                  margin-top: 15px;margin-bottom: 15px;">Home</div>
 				<div class="copy-right">

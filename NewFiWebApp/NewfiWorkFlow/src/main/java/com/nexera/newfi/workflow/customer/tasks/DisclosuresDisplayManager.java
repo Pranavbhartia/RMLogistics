@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -28,8 +29,9 @@ public class DisclosuresDisplayManager implements IWorkflowTaskExecutor {
 	private IWorkflowService iWorkflowService;
 	@Autowired
 	private WorkflowService workflowService;
+
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(DisclosuresDisplayManager.class);
@@ -58,6 +60,8 @@ public class DisclosuresDisplayManager implements IWorkflowTaskExecutor {
 		WorkflowItemExec wfItemExec = workflowService
 		        .getWorkflowItemExecBySucessItemID(currentItem);
 		if (wfItemExec.getStatus().equals(WorkItemStatus.STARTED.getStatus())) {
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			engineTrigger.changeStateOfWorkflowItemExec(
 			        workflowItemExecutionId, wfItemExec.getStatus());
 		}
@@ -71,7 +75,7 @@ public class DisclosuresDisplayManager implements IWorkflowTaskExecutor {
 	}
 
 	@Override
-    public String updateReminder(HashMap<String, Object> objectMap) {
+	public String updateReminder(HashMap<String, Object> objectMap) {
 		LOG.debug("Inside method updateReminder");
 		return null;
 	}

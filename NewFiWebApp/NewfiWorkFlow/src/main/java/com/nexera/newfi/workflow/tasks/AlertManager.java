@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +24,10 @@ public class AlertManager extends NexeraWorkflowTask implements
 
 	@Autowired
 	NotificationService notificationService;
+
 	@Autowired
-	private EngineTrigger engineTrigger;
+	private ApplicationContext applicationContext;
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(AlertManager.class);
 
@@ -62,6 +65,8 @@ public class AlertManager extends NexeraWorkflowTask implements
 			        + WorkItemStatus.PENDING.getStatus());
 			int workflowItemExecId = Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
+			EngineTrigger engineTrigger = applicationContext
+			        .getBean(EngineTrigger.class);
 			engineTrigger.changeStateOfWorkflowItemExec(workflowItemExecId,
 			        WorkItemStatus.PENDING.getStatus());
 			status = WorkItemStatus.PENDING.getStatus();

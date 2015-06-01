@@ -1657,7 +1657,7 @@ function getContextApplicationYesNoQues(contxt) {
 }
 
 function optionClicked(element,ctx,option,value,skipCondition){
-	$(element).parent().find('.app-option-choice').attr("isSelected","false").focus();
+	$(element).parent().find('.app-option-choice').attr("isSelected","false").mouseleave();
 	$(element).attr("isSelected","true");
 	ctx.clickHandler(value);
 	if(ctx.value!=value||skipCondition){
