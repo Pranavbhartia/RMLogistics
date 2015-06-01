@@ -5,21 +5,21 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="resources/images/newfiHome.ico">
-<link href="resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="resources/css/jquery-ui.css" rel="stylesheet">
-<link href="resources/css/font-awesome.min.css" rel="stylesheet">
-<link href="resources/css/perfect-scrollbar.min.css" rel="stylesheet">
-<link href="resources/css/datepicker.css" rel="stylesheet">
-<link href="resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
-<link href="resources/css/dropzone.css" rel="stylesheet">
-<link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
-<link href="resources/css/customer-application.css" rel="stylesheet">
-<link href="resources/css/customer-engagement.css" rel="stylesheet">
-<link href="resources/css/style-admin.css" rel="stylesheet">
-<link href="resources/css/footer.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
+<link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/font-awesome.min.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/perfect-scrollbar.min.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/datepicker.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/dropzone.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/customer-application.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/customer-engagement.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/style-admin.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/footer.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
 <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 </head>
 

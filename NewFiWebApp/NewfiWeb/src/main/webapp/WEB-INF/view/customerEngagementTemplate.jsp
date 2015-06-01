@@ -5,16 +5,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="resources/images/newfiHome.ico">
-<link href="resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="resources/css/jquery-ui.css" rel="stylesheet">
-<link href="resources/css/jquery.Jcrop.css" rel="stylesheet">
-<link href="resources/css/styles.css" rel="stylesheet">
-<link href="resources/css/styles-common.css" rel="stylesheet">
-<link href="resources/css/customer-engagement.css" rel="stylesheet">
-<link href="resources/css/customer-application.css" rel="stylesheet">
-<link href="resources/css/footer.css" rel="stylesheet">
-<link href="resources/css/style-resp.css" rel="stylesheet">
+<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
+<link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery.Jcrop.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles-common.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/customer-engagement.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/customer-application.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/footer.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
 
 
 </head>
@@ -26,19 +26,19 @@
 		</div>
 	</div>
 	<jsp:include page="customer-engagement-footer.jsp"></jsp:include>
-	<script src="resources/js/jquery-2.1.3.min.js"></script>
-	<script src="resources/js/jquery-ui.js"></script>
-	<script src="resources/js/bootstrap.min.js"></script>
-	<script src="resources/js/common.js"></script>
-	<script src="resources/js/teaserRate.js"></script>
-	<script src="resources/js/script.js"></script>
-	<script src="resources/js/customer-application.js"></script>
-	<script src="resources/js/customer-engagement.js"></script>
-	<script src="resources/js/buyHome.js"></script>
-	<script src="resources/js/validation.js"></script>
-	<script src="resources/js/message.js"></script>
-	<script src="resources/js/include/jquery-maskMoney.js"></script>
-	<script src="resources/js/historySupport.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/common.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/teaserRate.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/script.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/customer-application.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/customer-engagement.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/buyHome.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/validation.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/message.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/include/jquery-maskMoney.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/historySupport.js"></script>
 	<script>
 		resizeHeaderWidth();
 		$(window).resize(function() {
