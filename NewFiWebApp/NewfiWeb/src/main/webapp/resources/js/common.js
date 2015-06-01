@@ -46,10 +46,10 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 		data : data,
 		contentType : "application/json",
 		success : function(response) {
-			if (isPagination) {
-				removePaginationScrollIcon(div);
-			} else {
+			if(isPagination===undefined){
 				hideOverlay();
+			} else if (isPagination == true) {
+				removePaginationScrollIcon(div);
 			}
 			if(response.status&&response.status==="Session Expired"){
 				var component=$("#right-panel");
@@ -67,10 +67,10 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 		complete:function(response){
 		
 			if(completeCallback){
-				if(isPagination){
-					removePaginationScrollIcon(div);
-				} else {
+				if(isPagination===undefined){
 					hideOverlay();
+				} else if (isPagination == true) {
+					removePaginationScrollIcon(div);
 				}
 				var data = {};
 				if (response.responseJSON)
