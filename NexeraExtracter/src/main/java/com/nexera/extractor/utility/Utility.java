@@ -1068,7 +1068,7 @@ public class Utility {
 			cell = row.createCell(startCell);
 		}
 		
-		writeValueToCell(sb.toString(), cell);
+		writeValueToCell(sb.toString(), cell);	
 		
 		
 	}
