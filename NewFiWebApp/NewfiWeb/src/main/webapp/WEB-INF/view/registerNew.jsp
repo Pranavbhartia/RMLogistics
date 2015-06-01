@@ -384,7 +384,7 @@
 		
 		function goToLoginPage(){
 			
-			window.location.href=baseurl;
+			window.location.href="${baseurl}";
 		}
 	</script>
 </body>
