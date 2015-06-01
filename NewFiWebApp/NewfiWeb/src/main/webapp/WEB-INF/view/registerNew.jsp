@@ -6,21 +6,21 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="resources/images/newfiHome.ico">
-<link href="/NewfiWeb/resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/jquery-ui.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/styles.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/styles-common.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/style-resp.css" rel="stylesheet">
-<script src="/NewfiWeb/resources/js/jquery-2.1.3.min.js"></script>
-	<script src="/NewfiWeb/resources/js/jquery-ui.js"></script>
-	<script src="/NewfiWeb/resources/js/bootstrap.min.js"></script>
-	<script src="/NewfiWeb/resources/js/common.js"></script>
-	<script src="/NewfiWeb/resources/js/customer-engagement.js"></script>
-	<script src="/NewfiWeb/resources/js/buyHome.js"></script>
-	<script src="/NewfiWeb/resources/js/historySupport.js"></script>
-	<script src="/NewfiWeb/resources/js/validation.js"></script>
-	<script src="/NewfiWeb/resources/js/message.js"></script>
+<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
+<link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles-common.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
+<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/common.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/customer-engagement.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/buyHome.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/historySupport.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/validation.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/message.js"></script>
 </head>
 
 <body>
