@@ -37,6 +37,7 @@ import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.MasterDataService;
 import com.nexera.core.service.MessageService;
+import com.nexera.core.service.UserProfileService;
 
 @Component
 @DependsOn(value = "needsListServiceImpl")
@@ -65,6 +66,9 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 	@Autowired
 	Utils utils;
+
+	@Autowired
+	UserProfileService userProfileService;
 
 	@Override
 	@Async
@@ -204,7 +208,8 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 	@Async
 	public void generateEmailDocumentMessage(int loanId, User loggedInUser,
 	        String messageId, String noteText, List<FileVO> fileUrls,
-	        boolean successFlag, boolean sendEmail, boolean systemGenerated) {
+	        boolean successFlag, boolean sendEmail, boolean systemGenerated,
+	        List<String> mailerList, boolean entireTeam) {
 		/*
 		 * 1. Create messageVO object. 2. set senderUserId as the createdBy of
 		 * the note. Permission will be all the users who are part of the loan
@@ -219,13 +224,29 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		String message = CommunicationLogConstants.DOCUMENT_UPLOAD;
 
 		if (systemGenerated) {
-			setGlobalPermissionsToMessage(loanId, messageVO,
-			        userProfileDao
-			                .findByUserId(CommonConstants.SYSTEM_USER_USERID),
-			        message);
+			if (entireTeam) {
+				setPermissionsToMessageBasedOnMailerList(
+				        loanId,
+				        messageVO,
+				        userProfileDao
+				                .findByUserId(CommonConstants.SYSTEM_USER_USERID),
+				        message, mailerList);
+			} else {
+				setGlobalPermissionsToMessage(
+				        loanId,
+				        messageVO,
+				        userProfileDao
+				                .findByUserId(CommonConstants.SYSTEM_USER_USERID),
+				        message);
+			}
 		} else {
-			setGlobalPermissionsToMessage(loanId, messageVO, loggedInUser,
-			        message);
+			if (entireTeam) {
+				setPermissionsToMessageBasedOnMailerList(loanId, messageVO,
+				        loggedInUser, message, mailerList);
+			} else {
+				setGlobalPermissionsToMessage(loanId, messageVO, loggedInUser,
+				        message);
+			}
 		}
 
 		/*
@@ -242,6 +263,67 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		messageVO.setLinks(fileUrls);
 		messageVO.setParentId(messageId);
 		this.saveMessage(messageVO, MessageTypeEnum.EMAIL.toString(), sendEmail);
+
+	}
+
+	private void setPermissionsToMessageBasedOnMailerList(int loanId,
+	        MessageVO messageVO, User loggedInUser, String message,
+	        List<String> mailerList) {
+
+		List<UserVO> userVOList = new ArrayList<>();
+		for (String emailId : mailerList) {
+			User user = userProfileService.findUserByMail(emailId);
+			if (user != null) {
+				UserVO userVO = User.convertFromEntityToVO(user);
+				userVOList.add(userVO);
+			}
+		}
+
+		List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
+		for (UserVO userVo : userVOList) {
+
+			if (userVo.getId() != loggedInUser.getId()) {
+				MessageUserVO otherUser = messageVO.createNewUserVO();
+				otherUser.setUserID(userVo.getId());
+				otherUser.setUserName(userVo.getDisplayName());
+				otherUser.setImgUrl(userVo.getPhotoImageUrl());
+				try {
+					otherUser.setRoleName(userProfileDao
+					        .findUserRoleForMongo(userVo.getId()));
+				} catch (DatabaseException | NoRecordsFetchedException e) {
+					// THIS SHOULD NEVER HAPPEN
+					LOG.error("Trying to fetch a user who does not exist. ", e);
+				}
+
+				messageUserVOs.add(otherUser);
+			} else {
+				if (message != null) {
+					message = message.replace(
+					        CommunicationLogConstants.USER,
+					        loggedInUser.getFirstName() + " "
+					                + loggedInUser.getLastName());
+				}
+
+			}
+
+		}
+
+		MessageUserVO createdUserVO = messageVO.createNewUserVO();
+		createdUserVO.setUserID(loggedInUser.getId());
+		createdUserVO.setImgUrl(loggedInUser.getPhotoImageUrl());
+		createdUserVO.setUserName(loggedInUser.getFirstName() + " "
+		        + loggedInUser.getLastName());
+		try {
+			String roleName = userProfileDao.findUserRoleForMongo(loggedInUser
+			        .getId());
+			createdUserVO.setRoleName(roleName);
+		} catch (DatabaseException | NoRecordsFetchedException e) {
+			// THIS SHOULD NEVER HAPPEN
+			LOG.error("Trying to fetch a user who does not exist. ", e);
+		}
+		messageVO.setCreatedUser(createdUserVO);
+		messageVO.setMessage(message);
+		messageVO.setOtherUsers(messageUserVOs);
 
 	}
 
