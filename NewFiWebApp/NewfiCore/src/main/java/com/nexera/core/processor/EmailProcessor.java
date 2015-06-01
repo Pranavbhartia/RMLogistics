@@ -232,6 +232,7 @@ public class EmailProcessor implements Runnable {
 						        .sendExceptionEmail("Invalid loan id for this email "
 						                + ne.getMessage());
 					}
+					loanIdInt = 4;
 
 					if (loanIdInt != -1) {
 						boolean loanFound = false;
@@ -362,11 +363,14 @@ public class EmailProcessor implements Runnable {
 									}
 								}
 								if (!loanFound) {
-									for (Loan loan : secondaryUser.getLoans()) {
-										if (loan.getId() == loanIdInt) {
-											uploadedByUser = secondaryUser;
-											loanFound = true;
-											break;
+									if (secondaryUser != null) {
+										for (Loan loan : secondaryUser
+										        .getLoans()) {
+											if (loan.getId() == loanIdInt) {
+												uploadedByUser = secondaryUser;
+												loanFound = true;
+												break;
+											}
 										}
 									}
 								}
@@ -463,6 +467,11 @@ public class EmailProcessor implements Runnable {
 			        e.getMessage());
 			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
+
+		while (body.contains("\n\n") || body.contains("\n \n")) {
+			body = body.replace("\n \n", "\n");
+			body = body.replace("\n\n", "\n");
+		}
 		return body;
 	}
 
@@ -527,7 +536,7 @@ public class EmailProcessor implements Runnable {
 								if (checkUploadVO != null) {
 									if (checkUploadVO.getIsUploadSuccess()) {
 										FileVO fileVO = new FileVO();
-										fileVO.setFileName(checkUploadVO
+										fileVO.setFileName(bodyPart
 										        .getFileName());
 										fileVO.setUrl(checkUploadVO.getUuid());
 										fileVOList.add(fileVO);
@@ -574,7 +583,7 @@ public class EmailProcessor implements Runnable {
 				if (!checkUploadSuccessList.isEmpty()) {
 					LOGGER.debug("Mail contains attachment which were successfully uploaded ");
 					if (checkUploadFailureList.isEmpty()) {
-						successNoteText = "All files got successfully uploaded to the system";
+						successNoteText = "Files Uploaded Successfully";
 					} else {
 						successNoteText = "Some files got successfully uploaded to the system";
 					}
