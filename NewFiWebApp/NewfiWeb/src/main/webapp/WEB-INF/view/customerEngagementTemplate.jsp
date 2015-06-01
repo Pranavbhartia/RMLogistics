@@ -216,7 +216,7 @@
 			var height=window.innerHeight;
 			var footerHeight=$('.footer-wrapper').height();
 			var headerHeight=$('.header-wrapper').height();
-			height=height-headerHeight - 100;
+			height=height-headerHeight - 47;
 			$('.home-container').css("min-height",height+ "px");
 		}
 	</script>

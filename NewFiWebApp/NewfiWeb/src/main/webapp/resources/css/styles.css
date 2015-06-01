@@ -1097,7 +1097,7 @@ input[type="button"]:focus, button:focus {
 .doc-desc {
 	height: 51px !important;
 	word-break: break-word;
-	padding: 5px 10%;
+	padding: 5px 0%;
 	text-align: center;
 	overflow: hidden;
 }
