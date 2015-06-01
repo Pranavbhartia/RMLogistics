@@ -899,10 +899,10 @@ function getAdminTeamListTableRow(user) {
 		
 		});
 
-		userDelIcn.click(function() {
+		userDelIcn.click(function(e) {
 			var userID = $(this).attr("userid");
-
-	    RemoveUserFromUserListAdmin(messageToDeleteUser,userID);
+			e.stopImmediatePropagation();
+	    	RemoveUserFromUserListAdmin(messageToDeleteUser,userID);
 		});
 		if(user.userRole.id==3){
 			if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
