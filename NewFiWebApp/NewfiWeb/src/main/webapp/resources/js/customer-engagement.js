@@ -995,6 +995,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
  
 var refreshSupport=true;
 function progressBaar(num) {
+		adjustCustomerEngagementPageOnResize();
         var count = 7;
         $('#step-no').text(num);
         $("#progressBaarId_" + num).removeClass('ce-lp-in-progress').removeClass('ce-lp-complete').addClass('ce-lp-in-progress');

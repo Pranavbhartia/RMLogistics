@@ -55,7 +55,7 @@
 			adjustCustomerEngagementPageOnResize();
 			$(window).resize(function(){
 				adjustCustomerEngagementPageOnResize();
-				
+				adjustInlineFooter();
 			});
 			adjustInlineFooter();
 			/* $(document).on('keydown','input[name="currentMortgageBalance"]',function(){
@@ -186,11 +186,10 @@
 
 		});
 		function adjustInlineFooter(){
-
 			var height=window.innerHeight;
 			var footerHeight=$('.footer-wrapper').height();
 			var headerHeight=$('.header-wrapper').height();
-			height=height-headerHeight;
+			height=height-headerHeight - 100;
 			$('.home-container').css("min-height",height+ "px");
 		}
 	</script>

@@ -5,16 +5,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="/NewfiWeb/resources/images/newfiHome.ico">
-<link href="/NewfiWeb/resources/css/bootstrap.min.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/jquery-ui.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/styles.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/style-resp.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/404-style.css" rel="stylesheet">
-<link href="/NewfiWeb/resources/css/footer.css" rel="stylesheet">
-<script src="/NewfiWeb/resources/js/jquery-2.1.3.min.js"></script>
-<script src="/NewfiWeb/resources/js/jquery-ui.js"></script>
-<script src="/NewfiWeb/resources/js/bootstrap.min.js"></script>
+<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
+<link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/404-style.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/footer.css" rel="stylesheet">
+<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
+<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
+<script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -43,7 +43,7 @@
 			<!---End-header---->
 			<!--start-content------>
 			<div class="content">
-			<!-- 	<img src="/NewfiWeb/resources/images/404-error-img.png" title="error"/> -->
+			<!-- 	<img src="${initParam.resourcesPath}/resources/images/404-error-img.png" title="error"/> -->
 				<div class="err-text1">OOPS!!!That was not supposed to happen.</div>
 				<p class="label-txt" style="">We apologize for the inconvenience</p>
 				<p class="label-txt">Click the link below to be redirected to the home page.</p><br>  

@@ -34,6 +34,7 @@ body {
 	-webkit-user-select: none;
 	/* prevent copy paste, to allow, change 'none' to 'text' */
 	color: #606060;
+	position: relative;
 }
 
 footer{
@@ -185,10 +186,11 @@ input[type="button"]:focus, button:focus {
 
 .home-container {
 	margin-top: 50px;
+	padding-bottom: 120px;
 }
 
 .home-container_CEP {
-	margin-bottom: 50px;
+	padding-bottom: 50px;
 }
 
 .left-panel-wrapper {
@@ -476,7 +478,7 @@ input[type="button"]:focus, button:focus {
 .center-panel {
 	width: 840px;
 	min-height: 800px;
-	margin-bottom: 80px;
+	/* margin-bottom: 80px; */
 	padding-top: 15px;
 	margin-left: 98px;
 	padding-left: 15px;
@@ -2222,7 +2224,7 @@ input[type="button"]:focus, button:focus {
 	border-top: 4px #428bca solid;
 	border-radius: 3px;
 	background: #fff;
-	z-index: 99;
+	z-index: 999;
 }
 
 .cus-prof-popup {
@@ -2338,7 +2340,7 @@ input[type="button"]:focus, button:focus {
 .create-user-popup {
 	right: 0;
 	top: 50px;
-	width: 780px;
+	width: 650px;
 	padding: 10px;
 }
 
@@ -2365,7 +2367,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .create-user-popup-input {
-	width: 225px;
+	width: 200px;
 	height: 40px;
 	line-height: 40px;
 	padding-left: 10px;
@@ -4937,19 +4939,19 @@ input.calc-input {
 }
 
 .lp-details-icn {
-	background: url(../images/t2-pic1-inactive.png) no-repeat center;
-}
-
-.lp-rates-icn {
 	background: url(../images/t2-pic2-inactive.png) no-repeat center;
 }
 
-.lp-upload-icn {
+.lp-rates-icn {
 	background: url(../images/t2-pic3-inactive.png) no-repeat center;
 }
 
-.lp-progess-icn {
+.lp-upload-icn {
 	background: url(../images/t2-pic4-inactive.png) no-repeat center;
+}
+
+.lp-progess-icn {
+	background: url(../images/t2-pic5-inactive.png) no-repeat center;
 }
 
 .lp-item .work-on-loan-active{
@@ -5141,11 +5143,10 @@ input.calc-input {
 	padding-top: 10px;
 }
 .createAccButton{
-	margin-top: 80px;
-	margin-left: 250px;
+	margin: 80px auto 0;
 }
 .letUsContactCenter{
-	margin-left: 260px;
+	text-align: center;
 }
 .questionMark{
 	font-size: 14px;
