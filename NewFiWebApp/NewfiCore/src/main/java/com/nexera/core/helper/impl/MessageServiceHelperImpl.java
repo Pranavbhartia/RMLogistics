@@ -280,14 +280,27 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 				UserVO userVO = User.convertFromEntityToVO(user);
 				userVOList.add(userVO);
 			}
-			List<User> salesManagerList = userProfileService
-			        .geAllSalesManagers();
-			User salesManager = salesManagerList.get(0);
-			if (salesManager != null) {
-				UserVO userVO = User.convertFromEntityToVO(salesManager);
-				if (!userVOList.contains(userVO)) {
-					userVOList.add(userVO);
+
+		}
+
+		List<User> salesManagerList = userProfileService.geAllSalesManagers();
+		User salesManager = salesManagerList.get(0);
+		boolean found = false;
+		UserVO salesManagerVO = null;
+		if (salesManager != null) {
+			salesManagerVO = User.convertFromEntityToVO(salesManager);
+			for (UserVO user : userVOList) {
+				if (user.getEmailId().equalsIgnoreCase(
+				        salesManagerVO.getEmailId())) {
+					found = true;
 				}
+
+			}
+		}
+
+		if (!found) {
+			if (salesManager != null) {
+				userVOList.add(salesManagerVO);
 			}
 		}
 

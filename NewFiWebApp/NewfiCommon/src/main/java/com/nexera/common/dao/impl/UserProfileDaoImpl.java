@@ -340,6 +340,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		String newUserName = user.getUsername().split("@")[0];
 		newUserName = newUserName.replaceAll("\\.", "_");
+		newUserName = newUserName.replaceAll("\\+", "_");
 		if (this.checkUserNameIsUnique(newUserName) == null) {
 			user.setUsername(newUserName);
 		} else {

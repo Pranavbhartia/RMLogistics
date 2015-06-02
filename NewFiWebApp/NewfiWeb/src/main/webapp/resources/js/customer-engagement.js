@@ -1349,7 +1349,9 @@ function getLoanSummaryHeaderCEP() {
         var col2 = $('<div>').attr({
             "class": "loan-summary-header-col2 float-left"
         }).html(currentDateTime);
-        headerCont.append(col1).append(col2);
+        headerCont.append(col1);
+        if(responseTime!="")
+            headerCont.append(col2);
         return headerCont;
     }
 

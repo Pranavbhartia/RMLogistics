@@ -567,10 +567,17 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										$(ob.stateInfoContainer).addClass("cursor-pointer");
 									}
 									if(tempOb.status)
+									{
+										tempOb.status=checkCreditScore(tempOb.status);
+										
+										if (tempOb.status == "NA") {
+											ob.stateInfoContainer.html();
+										}
+										else
 										{
-											tempOb.status=checkCreditScore(tempOb.status);
 											ob.stateInfoContainer.html(" "+tempOb.status);
 										}
+									}
 										
 								}
 							}
