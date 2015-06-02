@@ -78,10 +78,15 @@ public class RateCalculatorRestService {
 				String lqbResponse = map.get("responseMessage");
 				if (null != lqbResponse) {
 					List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
-					for (TeaserRateResponseVO responseVo : teaserRateList) {
-						responseVo.setResponseTime(responseTime);
+					if (teaserRateList != null) {
+						for (TeaserRateResponseVO responseVo : teaserRateList) {
+							responseVo.setResponseTime(responseTime);
+						}
+						lockRateData = gson.toJson(teaserRateList);
+					} else {
+						lockRateData = "error";
+						lqbCacheInvoker.invalidateTeaserRateCache(appFormData);
 					}
-					lockRateData = gson.toJson(teaserRateList);
 				} else {
 					lockRateData = "error";
 					lqbCacheInvoker.invalidateTeaserRateCache(appFormData);
