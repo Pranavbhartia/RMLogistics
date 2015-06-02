@@ -14,7 +14,7 @@ public interface CoreCommonConstants {
 	public static int PROPERTY_TYPE_RENTING = 2;
 
 	// Disclosures related constants
-	public static String DOCUMENT_TYPE_INITIAL_DISCLOSURES = "INITIAL  DISCLOSURES";
+	public static String FOLDER_NAME_INITIAL_DISCLOSURES = "INITIAL DISCLOSURES";
 
 	public static String SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE = "Disclosure Available";
 
