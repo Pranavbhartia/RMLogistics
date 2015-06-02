@@ -47,9 +47,11 @@
 	margin-top: 41px;
 	color:#606060;
 }
-
-.reg-display-title-subtxt{
+.cus-eng-reg{
 	width: 338px;
+}
+.reg-display-title-subtxt{
+	width: 550px;
 	line-height: 20px;
 	font-size: 14px;
 	margin: 5px auto;
