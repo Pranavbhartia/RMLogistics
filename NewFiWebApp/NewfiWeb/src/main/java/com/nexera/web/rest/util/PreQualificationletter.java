@@ -62,6 +62,8 @@ public class PreQualificationletter {
 	public String thirtyYearRateVoDataSet(String lockRateData) {
 
 		JSONObject thirtyYearRateVoDataSet = null;
+		LOGGER.debug("In thirtyYearRateVoDataSet. lockRateData is: "
+		        + lockRateData);
 		JSONArray jsonArray = new JSONArray(lockRateData);
 
 		for (int i = 1; i < jsonArray.length(); i++) {
