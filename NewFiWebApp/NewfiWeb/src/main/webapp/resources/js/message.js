@@ -18,7 +18,7 @@ var userRemovalErrorMessage="An error occurred, kindly contact admin.";//line 36
 var userRemoveSuccessMessage="User removed successfully";
 var userExsistErrorMessage="User already exists on the loan team.";//line 3730
 var userAddedToLoanTeamSuccessMessage="User added to loan team.";//line 3743
-var emailAldreadyExsist="Email already exists!!";//line 3892
+var emailAldreadyExsist="Email already exists.";//line 3892
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";

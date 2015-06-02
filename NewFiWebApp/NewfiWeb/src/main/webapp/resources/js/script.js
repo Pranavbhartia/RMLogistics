@@ -2491,13 +2491,13 @@ function sendPreQualificationLetter(){
 		dataType:"application/json",
 		cache:false,
 		success:function(data){
-			showToastMessage("Pre-qualificaion letter is send ");
+			showToastMessage("Pre-qualification letter is send ");
 		},
 		error:function(data){
 			if(data.status != 200)
 			showToastMessage("Error");
 			else{
-				showToastMessage("Pre-qualificaion letter is send to your email id");
+				showToastMessage("Pre-qualification letter is send to your email id");
 
 			}
 		}
