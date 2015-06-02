@@ -7,7 +7,7 @@ buyHomeTeaserRate.purchaseDetails = purchaseDetails;
 var buyHomeitemsList = ["Loan Purpose", "Loan Amount", "Home Information",
     "Zip Code", "Your Rates"
 ];
-var errorMessageForZipcode="Please enter a valid 5-digit zipcode";
+
 function getBuyHomeLeftPanel() {
     var container = $('<div>').attr({
         "class": "ce-lp float-left"
@@ -619,7 +619,7 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
         var className=$('input[name="' + key + '"]');
        
         if ("zipCode"== key) {
-            var isSuccess = validateInput(className,$('input[name="zipCode"]').val(), errorMessageForZipcode);
+            var isSuccess = validateInput(className,$('input[name="zipCode"]').val(), zipCodeMessage);
        
             if (isSuccess) {
                 if ($('input[name="zipCode"]').val().length > 5 || $('input[name="zipCode"]').val().length < 5) {
