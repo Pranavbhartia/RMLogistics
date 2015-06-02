@@ -67,8 +67,8 @@ var feildShouldNotBeZero="The answers of the questions should not be zero.";
 
 //Messages in script.js
 var errorInCreateLoan="Error inside createLoan";
-var preQualificationLetterSent="Pre-qualificaion letter is sent ";
-var preQualificationLetterSentToEmail="Pre-qualificaion letter is sent to your email id";
+var preQualificationLetterSent="Pre-qualification letter is sent ";
+var preQualificationLetterSentToEmail="Pre-qualification letter is sent to your email id";
 var fillApplicationPath="Please fill the application path ";
 var RateLockRequested="Rate Lock Requested";
 
