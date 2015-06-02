@@ -123,8 +123,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 			loanAppFormVO.setPropertyTypeMaster(propertyTypeMasterVO);
 
 		} catch (Exception e) {
-			LOG.error("Error in zipcodeLookup " + e.getMessage());
-			e.printStackTrace();
+			LOG.error("Error in zipcodeLookup ", e);
+
 		}
 
 	}

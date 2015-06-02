@@ -402,15 +402,15 @@ public class NexeraUtility {
 
 		} catch (Exception e) {
 
-			LOGGER.error("Exception in convertImageToPDF : " + e.getMessage());
+			LOGGER.error("Exception in convertImageToPDF : ", e);
 			throw new FatalException("Cannot convert image to PDF");
 		} finally {
 			if (fss != null) {
 				try {
 					fss.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					// TODO Auto'-generated catch block
+					LOGGER.warn("Issue closing file stream", e);
 				}
 			}
 			if (in != null) {
@@ -418,7 +418,7 @@ public class NexeraUtility {
 					in.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					LOGGER.warn("Issue closing file stream", e);
 				}
 			}
 

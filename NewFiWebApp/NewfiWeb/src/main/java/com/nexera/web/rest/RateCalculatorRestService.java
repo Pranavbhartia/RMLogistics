@@ -78,22 +78,29 @@ public class RateCalculatorRestService {
 				String lqbResponse = map.get("responseMessage");
 				if (null != lqbResponse) {
 					List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
-					for (TeaserRateResponseVO responseVo : teaserRateList) {
-						responseVo.setResponseTime(responseTime);
+					if (teaserRateList != null) {
+						for (TeaserRateResponseVO responseVo : teaserRateList) {
+							responseVo.setResponseTime(responseTime);
+						}
+						lockRateData = gson.toJson(teaserRateList);
+					} else {
+						lockRateData = "error";
+						lqbCacheInvoker.invalidateTeaserRateCache(appFormData);
 					}
-					lockRateData = gson.toJson(teaserRateList);
+
 				} else {
 					lockRateData = "error";
 					lqbCacheInvoker.invalidateTeaserRateCache(appFormData);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOG.error("Error in getTeaserRate", e);
+
 				lockRateData = "error";
 				lqbCacheInvoker.invalidateTeaserRateCache(appFormData);
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error in getTeaserRate", e);
 			lockRateData = "error";
 
 		}
@@ -195,7 +202,7 @@ public class RateCalculatorRestService {
 				shopperCounty = "Santa Clara";
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error in createMapforJson", e);
 		}
 
 		HashMap<String, String> hashmap = new HashMap<String, String>();
@@ -223,9 +230,9 @@ public class RateCalculatorRestService {
 
 			json.put("loanVO", jsonChild);
 
-			System.out.println("jsonMapObject" + json);
+			LOG.debug("Json string is: ", json);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			LOG.error("Error in CreateTeaserRateJson", e);
 		}
 		return json;
 	}
@@ -243,10 +250,10 @@ public class RateCalculatorRestService {
 			LOG.info("State Utility Response is " + geoResponse);
 			// String state = parseXML(geoResponse);
 			JSONObject json = new JSONObject(geoResponse);
-			System.out.println(json.get("county"));
+			LOG.debug(json.get("county").toString());
 			return json;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error in getStateUtlity", e);
 		}
 
 		return null;
@@ -283,11 +290,11 @@ public class RateCalculatorRestService {
 			}
 
 		} catch (SAXException se) {
-			se.printStackTrace();
+			LOG.error("Error in parseLqbResponse", se);
 		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
+			LOG.error("Error in parseLqbResponse", pce);
 		} catch (IOException ie) {
-			ie.printStackTrace();
+			LOG.error("Error in parseLqbResponse", ie);
 		}
 
 		return null;
@@ -295,7 +302,7 @@ public class RateCalculatorRestService {
 
 	private String parseXML(String xml) {
 		String state = "";
-		System.out.println("xml is" + xml);
+		LOG.debug("xml is" + xml);
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 			        .newInstance();
@@ -308,8 +315,8 @@ public class RateCalculatorRestService {
 			        xml)));
 			NodeList nodeList = document.getDocumentElement().getChildNodes();
 
-			System.out.println("document is" + document);
-			System.out.println("nodeList is" + nodeList);
+			LOG.debug("document is" + document);
+			LOG.debug("nodeList is" + nodeList);
 
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);
@@ -317,7 +324,7 @@ public class RateCalculatorRestService {
 
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) node;
-					System.out.println("State : "
+					LOG.debug("State : "
 					        + eElement.getElementsByTagName("STATE").item(0)
 					                .getTextContent());
 					state = eElement.getElementsByTagName("STATE").item(0)
@@ -329,7 +336,7 @@ public class RateCalculatorRestService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Error in parseXML", e);
 		}
 
 		return state;

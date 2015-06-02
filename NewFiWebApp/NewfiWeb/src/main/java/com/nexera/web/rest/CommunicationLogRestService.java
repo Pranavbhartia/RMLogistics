@@ -82,7 +82,7 @@ public class CommunicationLogRestService {
 
 		} catch (Exception e) {
 			LOG.error("Error in retrieving communication log", e);
-			e.printStackTrace();
+
 		}
 
 		return response;
@@ -124,7 +124,7 @@ public class CommunicationLogRestService {
 
 		} catch (Exception e) {
 			LOG.error("Error in retrieving communication log", e);
-			e.printStackTrace();
+
 		}
 
 		return response;

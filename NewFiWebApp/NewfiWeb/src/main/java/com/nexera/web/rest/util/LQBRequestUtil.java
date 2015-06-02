@@ -33,7 +33,7 @@ public class LQBRequestUtil {
 
 			LOG.debug("jsonMapObject" + json);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			LOG.error("Error prepareCreateLoanJson json for loan", e);
 		}
 		return json;
 	}
@@ -52,7 +52,7 @@ public class LQBRequestUtil {
 
 			LOG.debug("jsonMapObject" + json);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			LOG.error("Error prepareLockLoanRateJson json for loan", e);
 		}
 		return json;
 	}
@@ -336,7 +336,7 @@ public class LQBRequestUtil {
 			return json;
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			LOG.debug("JSONException ", e);
 			return null;
 		}
 

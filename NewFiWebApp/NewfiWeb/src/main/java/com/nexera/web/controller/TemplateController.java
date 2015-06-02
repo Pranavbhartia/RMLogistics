@@ -65,15 +65,7 @@ public class TemplateController extends DefaultController {
 
 		ModelAndView mav = new ModelAndView();
 
-		try {
-
-			mav.setViewName("calculator");
-
-		} catch (Exception e) {
-			// TODO: Handle exception scenario
-
-			e.printStackTrace();
-		}
+		mav.setViewName("calculator");
 		return mav;
 	}
 
@@ -102,7 +94,7 @@ public class TemplateController extends DefaultController {
 		} catch (Exception e) {
 
 			LOG.error("Exception in Home page ", e);
-			e.printStackTrace();
+
 		}
 		return mav;
 	}
@@ -200,9 +192,8 @@ public class TemplateController extends DefaultController {
 
 		} catch (Exception e) {
 
-			LOG.error("Exception whiile saving s3 url in the data base"
-			        + e.getMessage());
-			e.printStackTrace();
+			LOG.error("Exception whiile saving s3 url in the data base", e);
+
 		}
 
 		return s3Path;

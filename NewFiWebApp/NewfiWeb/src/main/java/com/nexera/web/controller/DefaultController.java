@@ -150,10 +150,11 @@ public class DefaultController implements InitializingBean {
 					if (loanTeamVO.getUser() != null
 					        && loanTeamVO.getUser().getFirstName() != null
 					        && loanTeamVO.getUser().getLastName() != null) {
-						intialsList.add(loanTeamVO.getUser().getFirstName().toUpperCase()
-						        .charAt(0)
+						intialsList.add(loanTeamVO.getUser().getFirstName()
+						        .toUpperCase().charAt(0)
 						        + ""
-						        + loanTeamVO.getUser().getLastName().toUpperCase().charAt(0));
+						        + loanTeamVO.getUser().getLastName()
+						                .toUpperCase().charAt(0));
 					} else {
 						intialsList.add(" ");
 					}
@@ -182,7 +183,7 @@ public class DefaultController implements InitializingBean {
 			model.addAttribute("baseUrl", baseUrl);
 		} catch (JSONException e) {
 
-			e.printStackTrace();
+			LOG.error("Exception creating JSON ", e);
 		}
 
 		model.addAttribute("newfi", newfi);
@@ -230,7 +231,7 @@ public class DefaultController implements InitializingBean {
 			model.addAttribute("baseUrl", baseUrl);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Exception creating JSON ", e);
 		}
 
 		model.addAttribute("newfi", newfi);

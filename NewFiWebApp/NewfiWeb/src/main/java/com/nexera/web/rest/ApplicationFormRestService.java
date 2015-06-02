@@ -147,7 +147,7 @@ public class ApplicationFormRestService {
 			return new Gson().toJson(loaAppFormVO);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.debug("applyloan faile ", e);
 		}
 		// CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(null);
 		return null;
@@ -375,7 +375,7 @@ public class ApplicationFormRestService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.debug("lockRateData failed ", e);
 			lockRateData = "error";
 		}
 		if (lockRateData == null || lockRateData.equals("error")
@@ -407,7 +407,7 @@ public class ApplicationFormRestService {
 			responseVO = RestUtil.wrapObjectForSuccess("success");
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			LOG.error(" sendPreQualificationLatter failed", e);
 		}
 		return responseVO;
 	}
@@ -444,7 +444,7 @@ public class ApplicationFormRestService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(" changeLoanAmount failed", e);
 			lockRateData = "error";
 		}
 		if (lockRateData == null || lockRateData == "error") {
@@ -479,7 +479,7 @@ public class ApplicationFormRestService {
 			LOG.debug("lockRateData" + lockRateData);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(" fetchLockRatedata failed; " + loanNumber, e);
 			return "error";
 		}
 		return lockRateData;
@@ -507,7 +507,7 @@ public class ApplicationFormRestService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("lockLoanRateLoan failed", e);
 			return "error";
 		}
 		return lockRateData;
@@ -618,7 +618,7 @@ public class ApplicationFormRestService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("retrievePricingDetails failed", e);
 		}
 
 		return pricingResultXml;
@@ -668,8 +668,8 @@ public class ApplicationFormRestService {
 			map.put("responseTime", jsonObject.get("responseTime").toString());
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.debug("error in post entity");
+			LOG.error("invokeRest failed", e);
+
 			return null;
 		}
 	}
@@ -687,7 +687,7 @@ public class ApplicationFormRestService {
 			createApplication(loanAppFrm, httpServletRequest);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("saveTaxAndInsurance failed", e);
 
 		}
 

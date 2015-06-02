@@ -185,7 +185,7 @@ public class FileUploadRest {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("setAssignmentToFiles failed", e);
 			commonResponseVO = RestUtil.wrapObjectForSuccess(false);
 		}
 
@@ -246,9 +246,10 @@ public class FileUploadRest {
 		UploadFileScreenVO uploadFileScreenVO = new UploadFileScreenVO();
 
 		try {
-			
-			uploadFileScreenVO.setLoanEmailID(loanService.getLoanByID(loanId).getLoanEmailId());
-			
+
+			uploadFileScreenVO.setLoanEmailID(loanService.getLoanByID(loanId)
+			        .getLoanEmailId());
+
 			loanNeedsVO = needsListService.getLoanNeedsList(loanId);
 			listLoanNeedsListMap = needsListService.getLoanNeedsMap(loanId);
 
