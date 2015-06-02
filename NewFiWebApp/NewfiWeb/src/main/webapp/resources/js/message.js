@@ -22,6 +22,7 @@ var emailAldreadyExsist="Email already exists!!";//line 3892
 var invalidMessage="Invalid Message";
 var invalidDate="Invalid Date";
 var enterMessage="Please enter a message";
+var errorMessageForZipcode="ZipCode cannot be empty";
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
