@@ -4,7 +4,7 @@ public interface LoanStatus {
 	String inUnderwritingMessage = "In Underwriting";
 	String underwritingClearToCloseMessage = "Approved With Conditions";
 	String initialContactMadeMessage = "Initial Contact Made";
-	String submittedMessage = "1003 submitted";
+	String submittedMessage = "Submitted";
 	String appraisalReceivedMessage = "Appraisal Received";
 	String creditScoreMessage = "Credit information received";
 	String disclosureAvailMessage = "Disclosures are available";
