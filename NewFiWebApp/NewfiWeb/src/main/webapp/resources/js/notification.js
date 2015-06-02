@@ -308,7 +308,7 @@ function getNotificationContext(loanId, userId) {
 						if (response.error) {
 							showErrorToastMessage(response.error.message);
 						} else {
-							showToastMessage("Notification Dismissed");
+							showToastMessage(notificationDismisses);
 
 							// code for updating all other clients start
 							var notificationOb;
@@ -366,7 +366,7 @@ function getNotificationContext(loanId, userId) {
 				if (response.error) {
 					showErrorToastMessage(response.error.message);
 				} else {
-					showToastMessage("Success");
+					showToastMessage(notificationSuccess);
 
 					// code for updating all other clients start
 					var notificationOb;
@@ -443,7 +443,7 @@ function getNotificationContext(loanId, userId) {
 						if (response.error) {
 							showErrorToastMessage(response.error.message);
 						} else {
-							showToastMessage("Notification Scheduled");
+							showToastMessage(notificationSceduled);
 							var milestoneId;
 							if (data.milestoneId) {
 								milestoneId = data.milestoneId;

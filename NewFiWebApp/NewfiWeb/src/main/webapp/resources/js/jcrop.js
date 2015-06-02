@@ -190,7 +190,7 @@ function createUploadPhotoContent() {
 								hideOverlay();
 								console.log('URL from S3:' + data);
 								if (data == null || data.trim() == '') {
-									showErrorToastMessage("File upload failed. Please try again");
+									showErrorToastMessage(uploadFailed);
 									return;
 								}
 								if (checkIfSafari) {

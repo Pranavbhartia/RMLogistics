@@ -482,7 +482,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 		}).html("Add additional source of income").bind('click',function(){
 			var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 			if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 2){
-				showToastMessage("Maximum 2 income needed");
+				showToastMessage(max2Needed);
 				return false;
 			}
 			var quesTxt = "About how much do you make a year";
@@ -1307,7 +1307,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 		           }else if(!questionTwo){
 		        	   return false;
 		           }else if(yearCount<0){
-		        	   showErrorToastMessage("You must be at least 18 years of age.");
+		        	   showErrorToastMessage(ageErrorMessage);
 		        	   return false;
 		           }
 		       }

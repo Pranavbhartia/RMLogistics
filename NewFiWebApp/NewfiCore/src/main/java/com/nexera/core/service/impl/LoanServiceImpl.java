@@ -1744,11 +1744,12 @@ public class LoanServiceImpl implements LoanService {
 			}
 			loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
 			loanManagerEmailEntity.setSubject("No Products Available");
-			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
+
 			loanManagerEmailEntity
 			        .setTemplateId(loanManagerTemplate.getValue());
 
 			String loanManagerUsername = null;
+			String loanManagerName = null;
 			LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
 			for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
 				if (loanTeam.getUser() != null) {
@@ -1758,10 +1759,16 @@ public class LoanServiceImpl implements LoanService {
 						        .getRoleId()) {
 							loanManagerUsername = loanTeam.getUser()
 							        .getUsername();
+							loanManagerName = loanTeam.getUser().getFirstName()
+							        + " " + loanTeam.getUser().getLastName();
 						}
 					}
 				}
 			}
+
+			loanManagerSubstitutions.put("-name-",
+			        new String[] { loanManagerName });
+			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
 			List<String> loanManagerccList = new ArrayList<String>();
 			if (loanManagerUsername != null) {
 				loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
@@ -1829,9 +1836,9 @@ public class LoanServiceImpl implements LoanService {
 
 		loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		loanManagerEmailEntity.setSubject("No Products Available");
-		loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
-		loanManagerEmailEntity.setTemplateId(loanManagerTemplate.getValue());
 
+		loanManagerEmailEntity.setTemplateId(loanManagerTemplate.getValue());
+		String loanManagerName = null;
 		String loanManagerUsername = null;
 		LoanVO loanVO = getActiveLoanOfUser(userVO);
 		if (loanVO != null) {
@@ -1844,10 +1851,16 @@ public class LoanServiceImpl implements LoanService {
 						        .getRoleId()) {
 							loanManagerUsername = loanTeam.getUser()
 							        .getUsername();
+							loanManagerName = loanTeam.getUser().getFirstName()
+							        + " " + loanTeam.getUser().getLastName();
 						}
 					}
 				}
 			}
+
+			loanManagerSubstitutions.put("-name-",
+			        new String[] { loanManagerName });
+			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
 			List<String> loanManagerccList = new ArrayList<String>();
 			if (loanManagerUsername != null) {
 				loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
