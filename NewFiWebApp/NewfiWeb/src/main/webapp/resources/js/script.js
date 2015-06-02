@@ -781,7 +781,7 @@ function lockLoanRate(lockratedata){
                 }
                 showToastMessage(message);
             }else{
-            	rateLockRequestedFlag = true;
+            	//rateLockRequestedFlag = true;
         	    $('input').attr("readonly","true");
                 showToastMessage(RateLockRequested);
                 /*element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
