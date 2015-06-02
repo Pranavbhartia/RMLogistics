@@ -333,6 +333,8 @@ public class ApplicationFormRestService {
 				        loaAppFormVO, sTicket)).toString());
 				if (map != null) {
 					response = map.get("responseMessage");
+				} else {
+					return "error";
 				}
 				LOG.debug("Save Loan Response is " + response);
 				if (null != loaAppFormVO.getLoan()
