@@ -474,22 +474,39 @@ public class EmailProcessor implements Runnable {
 			        e.getMessage());
 			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
-
+		body = removeExtraLines(body);
 		return body;
 	}
 
-	/*
-	 * private String removeExtraLines(String string) { char[] characterArray =
-	 * string.toCharArray(); for (int i = 0; i < characterArray.length; i++) {
-	 * if (characterArray[i] == '\n') { int j = i + 1; while (characterArray[j]
-	 * == '\n') { characterArray[j] = '\0';
-	 * 
-	 * j = j + 1;
-	 * 
-	 * } }
-	 * 
-	 * } String newString = new String(characterArray); return newString; }
-	 */
+	private String removeExtraLines(String string) {
+		try {
+			char[] characterArray = string.toCharArray();
+			for (int i = 0; i < characterArray.length - 1; i++) {
+				if (characterArray[i] == '\n' || characterArray[i] == '\r') {
+					if (i != characterArray.length - 1
+					        && i != characterArray.length) {
+						int j = i + 1;
+						while (characterArray[j] == '\n'
+						        || characterArray[j] == '\r') {
+							characterArray[j] = '\0';
+							if (j == characterArray.length - 1) {
+								break;
+							}
+							j = j + 1;
+
+						}
+					}
+				}
+
+			}
+			String newString = new String(characterArray);
+			return newString;
+		} catch (Exception e) {
+			LOGGER.error("Exception caught " + e.getMessage());
+			return string;
+		}
+	}
+
 	public static String extractMessage(String originalMessage,
 	        List<String> regexPatternStrings) {
 		String cleanedMessage = originalMessage;
