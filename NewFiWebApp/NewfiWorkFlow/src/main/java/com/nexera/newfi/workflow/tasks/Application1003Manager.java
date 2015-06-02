@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.LoanProgressStatusMaster;
@@ -81,6 +82,9 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			LOG.info("Saving Loan as INprogres");
 			loanService.saveLoanProgress(loanID, new LoanProgressStatusMaster(
 			        LoanProgressStatusMasterEnum.IN_PROGRESS));
+			loanService.saveLoanMilestone(loanID,
+			        Milestones.App1003.getMilestoneID(),
+			        LoanStatus.submittedMessage);
 		}
 		return returnStatus;
 	}
