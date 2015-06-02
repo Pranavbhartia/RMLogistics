@@ -41,7 +41,7 @@ var workFlowContext = {
 							} else {
 								if(response.resultObject.loanManagerWorkflowID==0){
 									if(ob.initAttempted){
-										showToastMessage("Master Tables Not Populated")
+										showToastMessage(masterTable);
 									}else{
 										ob.initAttempted=true;
 										ob.createWorkflow(function(ob){
@@ -1726,7 +1726,7 @@ function appendLoanStatusPopup(element,milestoneId) {
 				JSON.stringify(data),
 				function(response) {
 					if (response.error) {
-						showToastMessage(response.error.message)
+						showErrorToastMessage(response.error.message)
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId];
 						contxt.updateMilestoneView(COMPLETED);
@@ -1735,7 +1735,7 @@ function appendLoanStatusPopup(element,milestoneId) {
 					}
 			},false);
 		}else{
-			showToastMessage("Please Select an Option");
+			showErrorToastMessage(selectAnOption);
 		}
 	});
 	
@@ -1812,7 +1812,7 @@ function appendQCPopup(element,milestoneId) {
 				JSON.stringify(data),
 				function(response) {
 					if (response.error) {
-						showToastMessage(response.error.message)
+						showErrorToastMessage(response.error.message)
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId]
 						contxt.updateMilestoneView("3")
@@ -1820,7 +1820,7 @@ function appendQCPopup(element,milestoneId) {
 					}
 			},false);
 		}else{
-			showToastMessage("Please Select an Option");
+			showErrorToastMessage(selectAnOption);
 		}
 	});
 	
@@ -1910,7 +1910,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 					}
 			},false);
 		}else{
-			showToastMessage("Add a value");
+			showToastMessage(addValue);
 		}
 	});
 	var cancelBtn = $('<div>').attr({
@@ -1965,7 +1965,7 @@ function appendLoanManagerPopup(element,loanManagerArray){
 	removeLoanManagerPopup();
 	if (loanManagerArray == undefined || loanManagerArray.length == 0)
 	{
-		showToastMessage("No Loan Advisor is added on the loan yet");
+		showErrorToastMessage(noLoanAdvisorAdded);
 		return;
 	}
 	var leftOffset = $(element).offset().left;

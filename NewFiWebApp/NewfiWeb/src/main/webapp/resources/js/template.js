@@ -8,7 +8,7 @@ function populateTemplate() {
 	ajaxRequest("rest/admin/retrieveTemplates", "GET", "json", data, function(
 			response) {
 		if (response.error) {
-			showToastMessage(response.error.message)
+			showErrorToastMessage(response.error.message)
 		} else {
 
 			if (response.resultObject == undefined
@@ -86,12 +86,12 @@ function populateTemplate() {
 									JSON.stringify(saveContextObj),
 									function(response) {
 										if (response.error) {
-											showToastMessage(response.error.message);
+											showErrorToastMessage(response.error.message);
 										} else {
 
 											// alert("Success");
 											populateTemplate();
-											showToastMessage("Successfully saved");
+											showToastMessage(savesuccessfull);
 
 										}
 

@@ -66,7 +66,7 @@ function saveParentMessage() {
 	var messageText = $("#textareaParent").val();
 
 	if ($.trim(messageText) == "") {
-		showToastMessage("Please enter some text!");
+		showToastMessage(enterSomeText);
 		return false;
 	}
 	doSavemessageAjaxCall(messageText);
@@ -144,7 +144,7 @@ function setCurrentMessageReplyId(parentMessageId) {
 
 function setReplyToMessageObject(messageText) {
 	if (messageText == "") {
-		showToastMessage("Please enter some text!");
+		showToastMessage(enterSomeText);
 		return false;
 	}
 	doSavemessageAjaxCall(messageText);
