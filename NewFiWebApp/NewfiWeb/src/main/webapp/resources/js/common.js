@@ -1000,7 +1000,7 @@ function finishedTutorial(element, url){
 			}
 		},
 		error:function(data){
-			showErrorToastMessage("Error while updating tutorial status");
+			showErrorToastMessage(tutorialStatusMessage);
 		}
 	});
 	

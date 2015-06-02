@@ -230,7 +230,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                 	if(JSON.parse(newfiObject.appUserDetails).loanType.description !="None"){
                     paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);}
                 	else{
-                		showToastMessage("Please fill the application path ");
+                		showToastMessage(fillApplicationPath);
                 		window.location.href =newfiObject.baseUrl+"home.do#myLoan/my-application";
                 		return false;
                 	}
@@ -783,7 +783,7 @@ function lockLoanRate(lockratedata){
             }else{
             	rateLockRequestedFlag = true;
         	    $('input').attr("readonly","true");
-                showToastMessage("Rate Lock Requested");
+                showToastMessage(RateLockRequested);
                 /*element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
                 alert('loan is locked');*/
             }
@@ -2491,13 +2491,13 @@ function sendPreQualificationLetter(){
 		dataType:"application/json",
 		cache:false,
 		success:function(data){
-			showToastMessage("Pre-qualificaion letter is send ");
+			showToastMessage(preQualificationLetterSent);
 		},
 		error:function(data){
 			if(data.status != 200)
-			showToastMessage("Error");
+			showErrorToastMessage("Error");
 			else{
-				showToastMessage("Pre-qualificaion letter is send to your email id");
+				showToastMessage(preQualificationLetterSentToEmail);
 
 			}
 		}

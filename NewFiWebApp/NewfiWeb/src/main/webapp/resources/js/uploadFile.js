@@ -472,7 +472,7 @@ function uploadDocument(event) {
 			this.options.url = "rest/fileupload/documentUploadWithNeed";
 		});
 	} else {
-		showErrorToastMessage("Please complete your Loan Profile")
+		showErrorToastMessage(completeYourLoanProfile);
 	}
 }
 
@@ -602,14 +602,14 @@ function createDropZone(needID) {
 						$('#overlay-loader').hide();
 					},
 					addedfile : function() {
-						showOverleyMessage("This can take a minute,<br/> we are uploading your documents to our secure storage folder.");
+						showOverleyMessage(overlayMessage);
 						$('#file-upload-icn').addClass('file-upload-loading');
 						$('#overlay-loader').show();
 					}
 				});
 	} else {
 		$("#drop-zone").on("click", function() {
-			showErrorToastMessage("Please complete your Loan Profile")
+			showErrorToastMessage(completeYourLoanProfile);
 		});
 	}
 }

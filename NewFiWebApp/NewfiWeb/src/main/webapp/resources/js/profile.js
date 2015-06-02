@@ -460,7 +460,7 @@ function getLoanManager(user){
 					var roleID = "3";//Since we are looking for loan manager
 					if (roleID == undefined
 							&& (code != "TITLE_COMPANY" && code != "HOME_OWN_INS")) {
-						showToastMessage("Please select a user type");
+						showToastMessage(selectUserType);
 						return false;
 					}
 					var internalRoleID = "1";//Since we are looking for loan manager
@@ -490,7 +490,7 @@ function getLoanManager(user){
 						var code = $("#managerID").attr("code");
 						var roleID = "3";//Since we are looking for loan manager
 						if (roleID == undefined) {
-							showToastMessage("Please select a user type");
+							showToastMessage(selectUserType);
 							return false;
 						}
 						var internalRoleID = "1";//Since we are looking for loan manager
