@@ -344,7 +344,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		if (this.checkUserNameIsUnique(newUserName) == null) {
 			user.setUsername(newUserName);
 		} else {
-			user.setUsername(newUserName + "+" + userId);
+			user.setUsername(newUserName + "_" + userId);
 		}
 
 		this.update(user);
