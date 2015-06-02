@@ -20,6 +20,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.MessageTypeEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -279,6 +280,15 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 				UserVO userVO = User.convertFromEntityToVO(user);
 				userVOList.add(userVO);
 			}
+			List<User> salesManagerList = userProfileService
+			        .geAllSalesManagers();
+			User salesManager = salesManagerList.get(0);
+			if (salesManager != null) {
+				UserVO userVO = User.convertFromEntityToVO(salesManager);
+				if (!userVOList.contains(userVO)) {
+					userVOList.add(userVO);
+				}
+			}
 		}
 
 		List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
@@ -337,8 +347,35 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		List<LoanTeamVO> loanTeamVos = teamList.getLoanTeamList();
 
 		List<MessageUserVO> messageUserVOs = new ArrayList<MessageVO.MessageUserVO>();
+		List<UserVO> userVOList = new ArrayList<UserVO>();
+		boolean salesManagerFound = false;
 		for (LoanTeamVO loanTeamVO : loanTeamVos) {
-			UserVO userVo = loanTeamVO.getUser();
+			UserVO userVO = loanTeamVO.getUser();
+
+			if (userVO != null) {
+				userVOList.add(userVO);
+				if (userVO.getInternalUserDetail() != null) {
+					if (userVO.getInternalUserDetail()
+					        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.SM
+					        .getRoleId()) {
+						salesManagerFound = true;
+					}
+				}
+			}
+		}
+
+		if (!salesManagerFound) {
+			List<User> userList = userProfileService.geAllSalesManagers();
+			if (userList != null) {
+				User user = userList.get(0);
+				if (user != null) {
+					UserVO userVO = User.convertFromEntityToVO(user);
+					userVOList.add(userVO);
+				}
+			}
+
+		}
+		for (UserVO userVo : userVOList) {
 			if (userVo.getId() != loggedInUser.getId()) {
 				MessageUserVO otherUser = messageVO.createNewUserVO();
 				otherUser.setUserID(userVo.getId());
