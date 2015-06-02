@@ -477,32 +477,26 @@ public class EmailProcessor implements Runnable {
 			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
 
-		/*
-		 * while (body.contains("\n\n") || body.contains("\n \n")) { body =
-		 * body.replace("\n \n", "\n"); body = body.replace("\n\n", "\n"); }
-		 */
-		body = removeExtraLines(body);
+		while (body.contains("\n\n") || body.contains("\n \n")) {
+			body = body.replace("\n \n", "\n");
+			body = body.replace("\n\n", "\n");
+		}
+
 		return body;
 	}
 
-	private String removeExtraLines(String string) {
-		char[] characterArray = string.toCharArray();
-		for (int i = 0; i < characterArray.length; i++) {
-			if (characterArray[i] == '\n') {
-				int j = i + 1;
-				while (characterArray[j] == '\n') {
-					characterArray[j] = '\0';
-
-					j = j + 1;
-
-				}
-			}
-
-		}
-		String newString = new String(characterArray);
-		return newString;
-	}
-
+	/*
+	 * private String removeExtraLines(String string) { char[] characterArray =
+	 * string.toCharArray(); for (int i = 0; i < characterArray.length; i++) {
+	 * if (characterArray[i] == '\n') { int j = i + 1; while (characterArray[j]
+	 * == '\n') { characterArray[j] = '\0';
+	 * 
+	 * j = j + 1;
+	 * 
+	 * } }
+	 * 
+	 * } String newString = new String(characterArray); return newString; }
+	 */
 	public static String extractMessage(String originalMessage,
 	        List<String> regexPatternStrings) {
 		String cleanedMessage = originalMessage;
