@@ -115,7 +115,7 @@
 				if(stages>2){
 					progressBaar(3);
 					//paintRefinanceStartLiving();
-					paintRefinanceStep3();
+					paintRefinanceStepCEP();
 				}
 			});
 			$(document).on('click','#progressBaarId_4',function(){
