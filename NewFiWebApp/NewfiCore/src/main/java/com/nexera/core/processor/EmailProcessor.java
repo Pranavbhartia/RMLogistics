@@ -122,8 +122,8 @@ public class EmailProcessor implements Runnable {
 						entireTeam = false;
 					} else if (toAddress.length == 2) {
 						for (Address address : toAddress) {
-							if (address.toString().contains(
-							        CommonConstants.SENDER_EMAIL_ID)) {
+							if (address.toString().equalsIgnoreCase(
+							        fromAddress[0].toString())) {
 								LOGGER.debug("Contains 2 recepients, where one of them is having catch all email id, hence we will notify the entire team");
 								sendEmail = true;
 								entireTeam = true;
