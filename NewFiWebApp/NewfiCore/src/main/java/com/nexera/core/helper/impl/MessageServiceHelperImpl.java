@@ -225,27 +225,29 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 
 		if (systemGenerated) {
 			if (entireTeam) {
-				setPermissionsToMessageBasedOnMailerList(
-				        loanId,
-				        messageVO,
-				        userProfileDao
-				                .findByUserId(CommonConstants.SYSTEM_USER_USERID),
-				        message, mailerList);
-			} else {
 				setGlobalPermissionsToMessage(
 				        loanId,
 				        messageVO,
 				        userProfileDao
 				                .findByUserId(CommonConstants.SYSTEM_USER_USERID),
 				        message);
+			} else {
+
+				setPermissionsToMessageBasedOnMailerList(
+				        loanId,
+				        messageVO,
+				        userProfileDao
+				                .findByUserId(CommonConstants.SYSTEM_USER_USERID),
+				        message, mailerList);
 			}
 		} else {
 			if (entireTeam) {
-				setPermissionsToMessageBasedOnMailerList(loanId, messageVO,
-				        loggedInUser, message, mailerList);
-			} else {
 				setGlobalPermissionsToMessage(loanId, messageVO, loggedInUser,
 				        message);
+			} else {
+				setPermissionsToMessageBasedOnMailerList(loanId, messageVO,
+				        loggedInUser, message, mailerList);
+
 			}
 		}
 

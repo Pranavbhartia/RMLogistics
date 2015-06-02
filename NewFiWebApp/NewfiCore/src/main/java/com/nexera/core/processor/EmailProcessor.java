@@ -104,7 +104,7 @@ public class EmailProcessor implements Runnable {
 		LOGGER.debug("Inside run method ");
 		boolean sendEmail = false;
 		boolean systemGenerated = false;
-		boolean entireTeam = true;
+		boolean entireTeam = false;
 		try {
 			MimeMessage mimeMsg = (MimeMessage) message;
 			if (mimeMsg != null) {
@@ -120,6 +120,7 @@ public class EmailProcessor implements Runnable {
 						sendEmail = false;
 					} else {
 						sendEmail = true;
+						entireTeam = true;
 					}
 					LOGGER.debug("From Address is  " + fromAddress[0]);
 					String fromAddressString = fromAddress[0].toString();
@@ -171,7 +172,6 @@ public class EmailProcessor implements Runnable {
 							}
 						} else if (toAddressArray.length == 2) {
 							LOGGER.debug("This is a reply mail, must contain a message id");
-							entireTeam = true;
 							messageId = toAddressArray[0];
 							loanId = toAddressArray[1];
 							loanId = loanId.replace(
@@ -240,8 +240,6 @@ public class EmailProcessor implements Runnable {
 						        .sendExceptionEmail("Invalid loan id for this email "
 						                + ne.getMessage());
 					}
-					loanIdInt = 4;
-
 					if (loanIdInt != -1) {
 						boolean loanFound = false;
 						LoanVO loanVO = loanService.getLoanByID(loanIdInt);
@@ -475,11 +473,6 @@ public class EmailProcessor implements Runnable {
 			nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
 			        e.getMessage());
 			nexeraUtility.sendExceptionEmail(e.getMessage());
-		}
-
-		while (body.contains("\n\n") || body.contains("\n \n")) {
-			body = body.replace("\n \n", "\n");
-			body = body.replace("\n\n", "\n");
 		}
 
 		return body;
