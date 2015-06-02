@@ -1527,7 +1527,7 @@ function appendLoanDetailsRow(label, value, isLink, linkUrl) {
 		rightCol.addClass('loan-detail-link');
 		if (linkUrl) {
 			rightCol.click(function(e) {
-				event.stopPropagation();
+				e.stopPropagation();
 				if (linkUrl.substring(0, 1) == "#") {
 					$(linkUrl).click();
 				} else {
