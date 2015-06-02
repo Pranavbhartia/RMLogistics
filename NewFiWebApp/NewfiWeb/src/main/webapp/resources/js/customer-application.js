@@ -1149,7 +1149,7 @@ $('#app-right-panel').html("");
 	}).html(buttonText).on('click', function() {
 		
 		  
-		if(this.innerText!=next){
+		if(this.innerHTML!=next){
 			   isSecondaryMortgage = quesContxts[0].value;
 			   if(isSecondaryMortgage=="" || isSecondaryMortgage==undefined || isSecondaryMortgage==null){
 				   showErrorToastMessage(yesyNoErrorMessage);
@@ -1487,7 +1487,7 @@ function paintCustomerApplicationPageStep2() {
        // alert('quesContxts[0].value'+quesContxts[0].value);
               //  alert('quesContxts[1].value'+quesContxts[1].value);
         
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
 	    	maritalStatus = quesContxts[0].value;
 	    	appUserDetails.maritalStatus =  maritalStatus;
     	
@@ -1907,7 +1907,7 @@ function paintMyIncome() {
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function(event) {
     
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
     	        var isStatus=[];
     	        
     	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
@@ -3125,7 +3125,7 @@ function paintCustomerApplicationPageStep4a() {
     }).html(buttonText).on('click', function() {
     	
     	
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
 	    	for(var i=0;i<quesDeclarationContxts.length;i++){
 	    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
 	    			showErrorToastMessage(gonernamentQuestionErrorMessage);
@@ -3376,7 +3376,7 @@ function paintCustomerApplicationPageStep4a() {
 	        "class": "cep-button-color app-save-btn"
 	    }).html(buttonText).on('click', function() {
 	    	
-	    	if(this.innerText!=next){
+	    	if(this.innerHTML!=next){
             //dateOfBirth = $('input[name="birthday"]').val();
 		    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
 		    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
@@ -3621,7 +3621,7 @@ function paintCustomerApplicationPageStep5() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function() {
     	
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
     	
 		    	dateOfBirth = $('input[name="birthday"]').val();
 		    	ssn =  $('input[name="ssn"]').val();
