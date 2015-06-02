@@ -2750,8 +2750,7 @@ function appendCreateUserPopup() {
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-cust-save-btn"
 	}).html("save").on(
-			'click',
-			function(event) {
+			'click',function(event) {
 				event.stopImmediatePropagation();
 
 				var user = new Object();
@@ -2759,7 +2758,7 @@ function appendCreateUserPopup() {
 				user.firstName = $('#create-user-first-name').val();
 				user.lastName = $('#create-user-last-name').val();
 				//console.log("Create user button clicked. User : "
-						+ JSON.stringify(user));
+						
 
 				if (user.firstName == "") {
 					//showErrorToastMessage(firstNameEmptyMessage);
@@ -2913,7 +2912,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 					}
 				
 					//console.log("Create company button clicked. User : "
-							+ JSON.stringify(company));
+							
 					// TODO-write method to call add company
 					//console.log("Adding company");
 					ob.addCompany();
