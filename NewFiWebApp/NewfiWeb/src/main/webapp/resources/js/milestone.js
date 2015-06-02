@@ -346,6 +346,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			var ajaxURL = "";
 			data.loanID=workFlowContext.loanId;
 			//need to move this logic to a different function
+			ob.stateInfoContainer=txtRow1;
 			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
 				ajaxURL = "";
@@ -464,7 +465,6 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			}
 			
 			
-			ob.stateInfoContainer=txtRow1;
 			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){
 				ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
