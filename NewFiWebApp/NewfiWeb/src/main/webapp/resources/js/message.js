@@ -18,11 +18,12 @@ var userRemovalErrorMessage="An error occurred, kindly contact admin.";//line 36
 var userRemoveSuccessMessage="User removed successfully";
 var userExsistErrorMessage="User already exists on the loan team.";//line 3730
 var userAddedToLoanTeamSuccessMessage="User added to loan team.";//line 3743
-var emailAldreadyExsist="Email already exists!!";//line 3892
+var emailAldreadyExsist="Email already exists";//line 3892
 var invalidMessage="Invalid Message";
 var invalidDate="Invalid Date";
 var enterMessage="Please enter a message";
 var errorMessageForZipcode="ZipCode cannot be empty";
+
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
@@ -66,8 +67,8 @@ var feildShouldNotBeZero="The answers of the questions should not be zero.";
 
 //Messages in script.js
 var errorInCreateLoan="Error inside createLoan";
-var preQualificationLetterSent="Pre-qualificaion letter is sent ";
-var preQualificationLetterSentToEmail="Pre-qualificaion letter is sent to your email id";
+var preQualificationLetterSent="Pre-qualification letter is sent ";
+var preQualificationLetterSentToEmail="Pre-qualification letter is sent to your email id";
 var fillApplicationPath="Please fill the application path ";
 var RateLockRequested="Rate Lock Requested";
 
