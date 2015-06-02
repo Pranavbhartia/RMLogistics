@@ -46,10 +46,10 @@ public class TriggerWorkflow extends Thread {
 	public void run() {
 		HttpClient client = new DefaultHttpClient();
 		try {
-			
+
 			int wfID = Integer.parseInt(params.get("wfID").toString());
 			String loanId = getLoanIdForWorkFlowExecId(wfID);
-			if(loanId.equals("error"))
+			if (loanId.equals("error"))
 				return;
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("task", "milestone");
@@ -69,7 +69,6 @@ public class TriggerWorkflow extends Thread {
 				        + e.getMessage());
 			}
 			map.put("data", sw.toString());
-
 
 			HttpPost post = new HttpPost(url);
 
@@ -109,7 +108,6 @@ public class TriggerWorkflow extends Thread {
 
 	}
 
-	
 	public static void triggerMilestoneStatusChange(int milestoneId,
 	        String status, String url, String appUrl) {
 
@@ -150,19 +148,22 @@ public class TriggerWorkflow extends Thread {
 		StringBuffer outBuffer = new StringBuffer();
 		HttpClient httpClient = new DefaultHttpClient();
 		try {
-			/*HttpGet httpGetRequest = new HttpGet(appUrl + milestoneId);
-			HttpResponse httpResponse = httpClient.execute(httpGetRequest);*/
+			/*
+			 * HttpGet httpGetRequest = new HttpGet(appUrl + milestoneId);
+			 * HttpResponse httpResponse = httpClient.execute(httpGetRequest);
+			 */
 
-			HttpPost httpPostReq=new HttpPost(appUrl);
+			HttpPost httpPostReq = new HttpPost(appUrl);
 			httpPostReq.setHeader("contentType", "application/json");
 			List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-			urlParameters.add(new BasicNameValuePair("milestoneID", milestoneId+""));
+			urlParameters.add(new BasicNameValuePair("milestoneID", milestoneId
+			        + ""));
 			httpPostReq.setEntity(new UrlEncodedFormEntity(urlParameters));
 			HttpResponse httpResponse = httpClient.execute(httpPostReq);
-					
-			System.out.println("----------------------------------------");
-			System.out.println(httpResponse.getStatusLine());
-			System.out.println("----------------------------------------");
+
+			LOGGER.debug("----------------------------------------");
+			LOGGER.debug(httpResponse.getStatusLine().toString());
+			LOGGER.debug("----------------------------------------");
 
 			HttpEntity entity = httpResponse.getEntity();
 
@@ -176,10 +177,10 @@ public class TriggerWorkflow extends Thread {
 					while ((bytesRead = bis.read(buffer)) != -1) {
 						String chunk = new String(buffer, 0, bytesRead);
 						outBuffer.append(chunk);
-						System.out.println(chunk);
+						LOGGER.debug(chunk);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					LOGGER.error("Error while triggering workflow change", e);
 				} finally {
 					try {
 						inputStream.close();
@@ -188,8 +189,7 @@ public class TriggerWorkflow extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("Error while triggering workflow change"
-			        + e.getMessage());
+			LOGGER.error("Error while triggering workflow change", e);
 		} finally {
 			httpClient.getConnectionManager().closeExpiredConnections();
 		}

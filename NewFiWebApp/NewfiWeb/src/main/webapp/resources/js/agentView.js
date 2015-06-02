@@ -795,9 +795,9 @@ function getSchedulerContainer(contxt, tempData) {
 				snoozeTime.setMinutes(dat.getMinutes())
 				var message = $("#sch-msg-message").val();
 				if (message == "") {
-					showErrorToastMessage("Invalid Message");
+					showErrorToastMessage(invalidMessage);
 				} else if (snoozeTime == "Invalid Date") {
-					showErrorToastMessage("Invalid Date");
+					showErrorToastMessage(invalidDate);
 				} else {
 					var data = {};
 					data.content = message;
@@ -964,7 +964,7 @@ function appendTakeNoteContainer(customer) {
 		$("#" + customer.loanID + "_msgBody").val('');
 		resetSelectedUserDetailObject(e.data.customer);
 		if (text == null || text.trim() == "") {
-			showToastMessage("Please enter a message");
+			showToastMessage(enterMessage);
 			return;
 		}
 
@@ -1088,7 +1088,7 @@ function paintMyLoansViewCallBack(data) {
 // function to reset slected UserdetailObject
 var selectedUserDetail;
 function resetSelectedUserDetailObject(userObject) {
-console.log(userObject);
+    //console.log(userObject);
 	// userObject this is a "LoanCustomerVO" object
 
 	selectedUserDetail = new Object();
@@ -1368,9 +1368,14 @@ function appendCustomerLoanDetails(loanDetails) {
 		appendLoanDetailsRow("Loan URL in LQB", loanDetails.lqbFileId,  true,
 				loanDetails.lqbUrl);
 	} else {
-		appendLoanDetailsRow("Loan URL in LQB",
-				"Click here to set your LQB credentials", true,
-				"#lp-loan-manager-profile");
+		if(loanDetails.lqbUrl=="-"){
+			appendLoanDetailsRow("Loan URL in LQB","-");
+		}else{
+			appendLoanDetailsRow("Loan URL in LQB",
+					"Click here to set your LQB credentials", true,
+					"#lp-loan-manager-profile");	
+		}
+		
 	}
 
 	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
@@ -1496,7 +1501,7 @@ function updatePurchaseDocumentExpiryDate() {
 }
 
 function showExpiryDateResponse(response) {
-	console.info(response);
+//	console.info(response);
 	if (response.error == null) {
 		showToastMessage(expiryDateExpected);
 	} else {
@@ -1596,7 +1601,7 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 					'input',
 					function() {
 						var name = $('#add-member-input').val();
-						console.log("Name entered : " + name);
+						//console.log("Name entered : " + name);
 						var code = $('#add-memeber-user-type').attr("code");
 						var roleID = $('#add-memeber-user-type').attr("roleID");
 						if (roleID == undefined
@@ -1629,7 +1634,7 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 							hideUserNameDropDown();
 						} else {
 							var name = "";
-							console.log("Name entered : " + name);
+							//console.log("Name entered : " + name);
 							var code = $('#add-memeber-user-type').attr("code");
 							var roleID = $('#add-memeber-user-type').attr(
 									"roleID");
@@ -1786,7 +1791,7 @@ function paintUserNameDropDown(values, hideAddUser) {
 									"homeOwnInsID" : homeOwnInsID,
 									"titleCompanyID" : titleCompanyID
 								};
-								console.log("User id : " + userID);
+								//console.log("User id : " + userID);
 								hideUserNameDropDown();
 								hideMilestoneAddTeamMemberPopup(); // For
 								// milestone
@@ -2750,16 +2755,15 @@ function appendCreateUserPopup() {
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-cust-save-btn"
 	}).html("save").on(
-			'click',
-			function(event) {
+			'click',function(event) {
 				event.stopImmediatePropagation();
 
 				var user = new Object();
 				user.emailId = $('#create-user-emailId').val();
 				user.firstName = $('#create-user-first-name').val();
 				user.lastName = $('#create-user-last-name').val();
-				console.log("Create user button clicked. User : "
-						+ JSON.stringify(user));
+				//console.log("Create user button clicked. User : "
+						
 
 				if (user.firstName == "") {
 					//showErrorToastMessage(firstNameEmptyMessage);
@@ -2912,10 +2916,10 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 						return;
 					}
 				
-					console.log("Create company button clicked. User : "
-							+ JSON.stringify(company));
+					//console.log("Create company button clicked. User : "
+							
 					// TODO-write method to call add company
-					console.log("Adding company");
+					//console.log("Adding company");
 					ob.addCompany();
 				});
 
@@ -3060,7 +3064,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 			} else {
 				$('create-tc-email-id').val('');
 				$('create-hoic-email-id').val('');
-				console.log("Home owners ins company added");
+				//console.log("Home owners ins company added");
 				ob.response = response;
 				if (callback) {
 					callback(ob);
@@ -3181,10 +3185,10 @@ function getCreateTitleCompanyContext(loanID) {
 						showErrorToastMessage(emailEmptyMessage);
 						return;
 					}
-					console.log("Create company button clicked. User : "
-							+ JSON.stringify(company));
+					//console.log("Create company button clicked. User : "
+							//+ JSON.stringify(company));
 					// TODO-write method to call add company
-					console.log("Adding company");
+					//console.log("Adding company");
 					ob.addCompany();
 
 				});
@@ -3329,7 +3333,7 @@ function getCreateTitleCompanyContext(loanID) {
 				showToastMessage(response.error.message);
 			} else {
 				$('#create-tc-email-id').val('');
-				console.log("Title company added");
+				//console.log("Title company added");
 				ob.response = response;
 				if (callback) {
 					callback(ob);
@@ -4012,7 +4016,7 @@ function createUserAndAddToLoanTeam(user) {
 }
 
 function onReturnOfCreateUserAndAddToLoanTeam(data) {
-	console.log("Return : " + JSON.stringify(data));
+	//console.log("Return : " + JSON.stringify(data));
 	
 	if(data.error!= undefined && data.error.code=="522"){
 		showErrorToastMessage(emailAldreadyExsist);
@@ -4036,7 +4040,7 @@ function onReturnOfCreateUserAndAddToLoanTeam(data) {
 
 // Click function to show payment page
 $(document).on('click', '.pay-application-fee', function(event) {
-	console.log("Pay application fee clicked!");
+	//console.log("Pay application fee clicked!");
 	showOverlay();
 	$('body').addClass('body-no-scroll');
 	url = "./payment/paymentpage.do";
@@ -4046,14 +4050,14 @@ $(document).on('click', '.pay-application-fee', function(event) {
 		type : "GET",
 		cache:false,
 		success : function(data) {
-			console.log("Show payment called with data : " + data);
+			//console.log("Show payment called with data : " + data);
 			$("#popup-overlay").html(data);
 			hideOverlay();
 			$("#popup-overlay").show();
 		},
 		error : function(e) {
 			hideOverlay();
-			console.error("error : " + e);
+			//console.error("error : " + e);
 		}
 	});
 });

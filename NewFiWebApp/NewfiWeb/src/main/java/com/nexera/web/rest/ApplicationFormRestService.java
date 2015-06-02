@@ -147,7 +147,7 @@ public class ApplicationFormRestService {
 			return new Gson().toJson(loaAppFormVO);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.debug("applyloan faile ", e);
 		}
 		// CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(null);
 		return null;
@@ -307,7 +307,7 @@ public class ApplicationFormRestService {
 	        HttpServletRequest httpServletRequest) {
 		LOG.debug("Inside createLoan" + appFormData);
 		Gson gson = new Gson();
-		String lockRateData = null;
+		String lockRateData = "error";
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
@@ -346,36 +346,40 @@ public class ApplicationFormRestService {
 				// Code for automating Needs List creation
 
 				if (response != null && !response.equalsIgnoreCase("error")) {
+					try {
+						lockRateData = null;
+						Integer loanId = loaAppFormVO.getLoan().getId();
+						// needsListService.createInitilaNeedsList(loanId);
+						userProfileService
+						        .dismissAlert(
+						                MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
+						                loanId,
+						                WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 
-					Integer loanId = loaAppFormVO.getLoan().getId();
-					// needsListService.createInitilaNeedsList(loanId);
-					userProfileService
-					        .dismissAlert(
-					                MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
-					                loanId,
-					                WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+						lockRateData = loadLoanRateData(loanNumber, sTicket);
+						LOG.debug("lockRateData" + lockRateData);
 
-					lockRateData = loadLoanRateData(loanNumber, sTicket);
-					LOG.debug("lockRateData" + lockRateData);
+						// in case of Purchase send a mail with PDF attachement
 
-					// in case of Purchase send a mail with PDF attachement
+						if (null != loaAppFormVO.getLoanType()
+						        && loaAppFormVO.getLoanType().getLoanTypeCd()
+						                .equalsIgnoreCase("PUR")) {
 
-					if (null != loaAppFormVO.getLoanType()
-					        && loaAppFormVO.getLoanType().getLoanTypeCd()
-					                .equalsIgnoreCase("PUR")) {
+							String thirtyYearRateVoDataSet = preQualificationletter
+							        .thirtyYearRateVoDataSet(lockRateData);
+							preQualificationletter.sendPreQualificationletter(
+							        loaAppFormVO, thirtyYearRateVoDataSet,
+							        httpServletRequest);
 
-						String thirtyYearRateVoDataSet = preQualificationletter
-						        .thirtyYearRateVoDataSet(lockRateData);
-						preQualificationletter.sendPreQualificationletter(
-						        loaAppFormVO, thirtyYearRateVoDataSet,
-						        httpServletRequest);
-
+						}
+					} catch (Exception e) {
+						LOG.debug("Load rate data failed ", e);
+						lockRateData = "";
 					}
-
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.debug("lockRateData failed ", e);
 			lockRateData = "error";
 		}
 		if (lockRateData == null || lockRateData.equals("error")
@@ -407,7 +411,7 @@ public class ApplicationFormRestService {
 			responseVO = RestUtil.wrapObjectForSuccess("success");
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			LOG.error(" sendPreQualificationLatter failed", e);
 		}
 		return responseVO;
 	}
@@ -444,7 +448,7 @@ public class ApplicationFormRestService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(" changeLoanAmount failed", e);
 			lockRateData = "error";
 		}
 		if (lockRateData == null || lockRateData == "error") {
@@ -479,7 +483,7 @@ public class ApplicationFormRestService {
 			LOG.debug("lockRateData" + lockRateData);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error(" fetchLockRatedata failed; " + loanNumber, e);
 			return "error";
 		}
 		return lockRateData;
@@ -507,7 +511,7 @@ public class ApplicationFormRestService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("lockLoanRateLoan failed", e);
 			return "error";
 		}
 		return lockRateData;
@@ -554,11 +558,17 @@ public class ApplicationFormRestService {
 				teaserRateResponseVO.setLoanDuration("sample");
 				teaserRateResponseVO.setLoanNumber(loanNumber);
 
-				if (teaserRateList != null)
+				if (teaserRateList != null) {
 					teaserRateList.add(0, teaserRateResponseVO);
-				for (TeaserRateResponseVO responseVo : teaserRateList) {
-					responseVo.setResponseTime(responseTime);
+					for (TeaserRateResponseVO responseVo : teaserRateList) {
+						responseVo.setResponseTime(responseTime);
+					}
+				} else {
+					LOG.warn("teaserRateList is null for: " + loanNumber);
+					cacheableMethodInterface.invalidateApplicationRateCache(
+					        loanNumber, json.toString());
 				}
+
 			} catch (Exception e) {
 				LOG.error(
 				        "Invalidating cache since there was a run time error",
@@ -618,7 +628,7 @@ public class ApplicationFormRestService {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("retrievePricingDetails failed", e);
 		}
 
 		return pricingResultXml;
@@ -668,8 +678,8 @@ public class ApplicationFormRestService {
 			map.put("responseTime", jsonObject.get("responseTime").toString());
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOG.debug("error in post entity");
+			LOG.error("invokeRest failed", e);
+
 			return null;
 		}
 	}
@@ -687,7 +697,7 @@ public class ApplicationFormRestService {
 			createApplication(loanAppFrm, httpServletRequest);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("saveTaxAndInsurance failed", e);
 
 		}
 

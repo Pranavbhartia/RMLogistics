@@ -19,6 +19,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Type;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nexera.common.vo.CustomerBankAccountDetailsVO;
 import com.nexera.common.vo.CustomerDetailVO;
@@ -35,6 +37,9 @@ import com.nexera.common.vo.CustomerSpouseDetailVO;
 @Table(name = "customerdetails")
 @NamedQuery(name = "CustomerDetail.findAll", query = "SELECT c FROM CustomerDetail c")
 public class CustomerDetail implements Serializable {
+
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(CustomerDetail.class);
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String addressCity;
@@ -471,7 +476,7 @@ public class CustomerDetail implements Serializable {
 
 		customerDetail.setSubscriptionsStatus(2);
 		if (inputEntity != null) {
-			
+
 			customerDetail.setAddressCity(inputEntity.getAddressCity());
 			customerDetail.setAddressStreet(inputEntity.getAddressStreet());
 			customerDetail.setAddressState(inputEntity.getAddressState());
@@ -482,10 +487,11 @@ public class CustomerDetail implements Serializable {
 					customerDetail.setDateOfBirth(df.parse(inputEntity
 					        .getDateOfBirth()));
 				} catch (ParseException e) {
-					e.printStackTrace();
+					LOG.error("Parse exception for DOB of user: "
+					        + inputEntity.getId());
 				}
 			}
-			customerDetail.setId(inputEntity.getId());
+
 			customerDetail.setId(inputEntity.getId());
 			customerDetail.setTransunionScore(inputEntity.getTransunionScore());
 			customerDetail.setEquifaxScore(inputEntity.getEquifaxScore());

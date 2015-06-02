@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.braintreegateway.BraintreeGateway;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
@@ -27,7 +26,6 @@ import com.nexera.common.exception.PaymentException;
 import com.nexera.common.exception.PaymentUnsuccessfulException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.core.service.BraintreePaymentGatewayService;
-import com.nexera.web.constants.JspLookup;
 
 /**
  * The REST controller for all the payment operations
@@ -148,7 +146,7 @@ public class PaymentRestService {
 			return jsonBuilder.toJson(result);
 		} catch (UndeliveredEmailException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("UndeliveredEmailException caught : " + e.getMessage(), e);
 		} catch (Exception e) {
 			LOG.error("Exception caught : " + e.getMessage(), e);
 			result.addProperty(CommonConstants.SUCCESS_KEY,

@@ -104,7 +104,7 @@ public class EmailProcessor implements Runnable {
 		LOGGER.debug("Inside run method ");
 		boolean sendEmail = false;
 		boolean systemGenerated = false;
-		boolean entireTeam = true;
+		boolean entireTeam = false;
 		try {
 			MimeMessage mimeMsg = (MimeMessage) message;
 			if (mimeMsg != null) {
@@ -115,11 +115,26 @@ public class EmailProcessor implements Runnable {
 					LOGGER.debug("Mail subject is " + subject);
 					Address[] fromAddress = message.getFrom();
 					Address[] toAddress = message.getAllRecipients();
-					if (toAddress.length > 1) {
+					if (toAddress.length > 2) {
 						LOGGER.debug("User is sending this message to multiple recepient ");
+						LOGGER.debug("Contains specifc number of recepient, chosen by user, hence need not to make the note visible to entire team");
 						sendEmail = false;
+						entireTeam = false;
+					} else if (toAddress.length == 2) {
+						for (Address address : toAddress) {
+							if (address.toString().equalsIgnoreCase(
+							        fromAddress[0].toString())) {
+								LOGGER.debug("Contains 2 recepients, where one of them is having catch all email id, hence we will notify the entire team");
+								sendEmail = true;
+								entireTeam = true;
+							}
+						}
+
 					} else {
+						LOGGER.debug("Only one recepient, that too will be having the catchall email id, hence we will notify the entire team");
 						sendEmail = true;
+						entireTeam = true;
+
 					}
 					LOGGER.debug("From Address is  " + fromAddress[0]);
 					String fromAddressString = fromAddress[0].toString();
@@ -138,7 +153,20 @@ public class EmailProcessor implements Runnable {
 						        .contains(CommonConstants.SENDER_EMAIL_ID)) {
 							toAddressString = address.toString();
 						} else {
-							mailerList.add(address.toString());
+							if (address != null) {
+								String emailAddress = address.toString();
+								if (emailAddress.contains("<")) {
+									emailAddress = emailAddress.substring(
+									        emailAddress.indexOf("<") + 1,
+									        emailAddress.length());
+								}
+								if (emailAddress.contains(">")) {
+									emailAddress = emailAddress.substring(0,
+									        emailAddress.indexOf(">"));
+								}
+
+								mailerList.add(emailAddress);
+							}
 						}
 
 					}
@@ -171,7 +199,6 @@ public class EmailProcessor implements Runnable {
 							}
 						} else if (toAddressArray.length == 2) {
 							LOGGER.debug("This is a reply mail, must contain a message id");
-							entireTeam = true;
 							messageId = toAddressArray[0];
 							loanId = toAddressArray[1];
 							loanId = loanId.replace(
@@ -240,8 +267,6 @@ public class EmailProcessor implements Runnable {
 						        .sendExceptionEmail("Invalid loan id for this email "
 						                + ne.getMessage());
 					}
-					loanIdInt = 4;
-
 					if (loanIdInt != -1) {
 						boolean loanFound = false;
 						LoanVO loanVO = loanService.getLoanByID(loanIdInt);
@@ -476,31 +501,37 @@ public class EmailProcessor implements Runnable {
 			        e.getMessage());
 			nexeraUtility.sendExceptionEmail(e.getMessage());
 		}
-
-		/*
-		 * while (body.contains("\n\n") || body.contains("\n \n")) { body =
-		 * body.replace("\n \n", "\n"); body = body.replace("\n\n", "\n"); }
-		 */
 		body = removeExtraLines(body);
 		return body;
 	}
 
 	private String removeExtraLines(String string) {
-		char[] characterArray = string.toCharArray();
-		for (int i = 0; i < characterArray.length; i++) {
-			if (characterArray[i] == '\n') {
-				int j = i + 1;
-				while (characterArray[j] == '\n') {
-					characterArray[j] = '\0';
+		try {
+			char[] characterArray = string.toCharArray();
+			for (int i = 0; i < characterArray.length - 1; i++) {
+				if (characterArray[i] == '\n' || characterArray[i] == '\r') {
+					if (i != characterArray.length - 1
+					        && i != characterArray.length) {
+						int j = i + 1;
+						while (characterArray[j] == '\n'
+						        || characterArray[j] == '\r') {
+							characterArray[j] = '\0';
+							if (j == characterArray.length - 1) {
+								break;
+							}
+							j = j + 1;
 
-					j = j + 1;
-
+						}
+					}
 				}
-			}
 
+			}
+			String newString = new String(characterArray);
+			return newString;
+		} catch (Exception e) {
+			LOGGER.error("Exception caught " + e.getMessage());
+			return string;
 		}
-		String newString = new String(characterArray);
-		return newString;
 	}
 
 	public static String extractMessage(String originalMessage,
@@ -560,7 +591,8 @@ public class EmailProcessor implements Runnable {
 								        .uploadFileByEmail(inputStream,
 								                content, actualUser.getId(),
 								                loanVO.getId(),
-								                uploadedByUser.getId());
+								                uploadedByUser.getId(),
+								                bodyPart.getFileName());
 								if (checkUploadVO != null) {
 									if (checkUploadVO.getIsUploadSuccess()) {
 										FileVO fileVO = new FileVO();

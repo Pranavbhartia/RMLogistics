@@ -43,7 +43,7 @@ public class NexeraCacheableMethodInterfaceImpl implements
 	NexeraUtility nexeraUtility;
 
 	private static final Logger LOGGER = LoggerFactory
-	        .getLogger(NexeraUtility.class);
+	        .getLogger(NexeraCacheableMethodInterfaceImpl.class);
 
 	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
 	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
@@ -64,7 +64,7 @@ public class NexeraCacheableMethodInterfaceImpl implements
 			        | IllegalBlockSizeException | BadPaddingException
 			        | IOException e) {
 
-				e.printStackTrace();
+				LOGGER.error("Error in decryption : " + lqbUsername, e);
 			}
 
 			lqbPassword = lqbPassword.replaceAll("[^\\x00-\\x7F]", "");
@@ -77,7 +77,7 @@ public class NexeraCacheableMethodInterfaceImpl implements
 			        | IllegalBlockSizeException | BadPaddingException
 			        | IOException e) {
 
-				e.printStackTrace();
+				LOGGER.error("Error in decryption : " + lqbPassword, e);
 			}
 
 			org.json.JSONObject authOperationObject = NexeraUtility
@@ -123,8 +123,8 @@ public class NexeraCacheableMethodInterfaceImpl implements
 			map.put("responseTime", jsonObject.get("responseTime").toString());
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.debug("error in post entity");
+
+			LOGGER.debug("error in post entity. ", e);
 			return null;
 		}
 

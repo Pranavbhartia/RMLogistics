@@ -1043,9 +1043,9 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Inside method checkWhetherDisclosuredReceived");
 		for (LQBedocVO edoc : edocsList) {
 
-			String documentType = edoc.getDoc_type();
-			if (documentType
-			        .equalsIgnoreCase(CoreCommonConstants.DOCUMENT_TYPE_INITIAL_DISCLOSURES)) {
+			String folderName = edoc.getFolder_name();
+			if (folderName
+			        .equalsIgnoreCase(CoreCommonConstants.FOLDER_NAME_INITIAL_DISCLOSURES)) {
 				LOGGER.debug("Disclosure has been received ");
 
 				NeedsListMaster needsListMasterDisclosureAvailable = getNeedsListMasterByType(CoreCommonConstants.SYSTEM_GENERATED_NEED_MASTER_DISCLOSURES_AVAILABILE);

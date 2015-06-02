@@ -73,7 +73,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			User user = (User) obj;
 			Hibernate.initialize(user.getUserRole());
 			Hibernate.initialize(user.getInternalUserDetail());
-			return (User) obj;
+			if (user.getInternalUserStateMappings() != null) {
+				Hibernate.initialize(user.getInternalUserStateMappings());
+			}
+			return user;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in authenticateUser() ",
 			        hibernateException);
@@ -337,10 +340,11 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 		String newUserName = user.getUsername().split("@")[0];
 		newUserName = newUserName.replaceAll("\\.", "_");
+		newUserName = newUserName.replaceAll("\\+", "_");
 		if (this.checkUserNameIsUnique(newUserName) == null) {
 			user.setUsername(newUserName);
 		} else {
-			user.setUsername(newUserName + "+" + userId);
+			user.setUsername(newUserName + "_" + userId);
 		}
 
 		this.update(user);

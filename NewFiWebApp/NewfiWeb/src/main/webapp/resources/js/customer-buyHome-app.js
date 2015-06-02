@@ -306,7 +306,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function(event) {
     	
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next ){
 		    	var addressStreet = $('input[name="addressStreet"]').val();
 		    	var inputState = $('input[name="state"]').val();
 		    	var city = $('input[name="city"]').val();
@@ -458,7 +458,7 @@ function paintloanamountBuyApp() {
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function() {
        
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
     	
 	    	appUserDetails.purchaseDetails.housePrice = $('input[name="housePrice"]').val();
 	        appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
@@ -531,7 +531,7 @@ function paintWhereYouLiveStep(){
 	    "class": "cep-button-color ce-save-btn"
 	}).html(buttonText).on('click', function() {
 		 
-		if(this.innerText!=next){
+		if(this.innerHTML!=next){
 			var isSuccess=validateInput( $('input[name="buyhomeZipPri"]'), $('input[name="buyhomeZipPri"]').val(),"Please enter a valid 5-digit zipcode");
 		    if(!isSuccess){
 		    	return false;

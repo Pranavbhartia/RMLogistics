@@ -198,7 +198,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        | IllegalBlockSizeException | BadPaddingException
 			        | IOException e) {
 
-				e.printStackTrace();
+				LOG.error("Exception in FindUser for: " + userid, e);
 			}
 		}
 		return userListVO;

@@ -1387,6 +1387,7 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public LoanVO wrapperCallForDashboard(Integer loanID) {
 		Loan loan = this.fetchLoanById(loanID);
+		String lqbLoanId = loan.getLqbFileId();
 		LoanVO loanVO = Loan.convertFromEntityToVO(loan);
 		LOG.info("--" + LoanTypeMasterEnum.PUR.toString());
 		if (loanVO.getLoanType().getLoanTypeCd()
@@ -1408,13 +1409,21 @@ public class LoanServiceImpl implements LoanService {
 				loanStatus.setCreditDecission(loanMilestone.getComments());
 			}
 			loanVO.setUserLoanStatus(loanStatus);
-			String lqbUrl = userProfileService.getLQBUrl(utils
-			        .getLoggedInUser().getId(), loanID);
-			if (lqbUrl != null && lqbUrl.equals(lqbDefaultUrl)) {
+			String lqbUrl;
+			if (lqbLoanId == null || lqbLoanId.isEmpty()) {
 				loanVO.setLqbInformationAvailable(Boolean.FALSE);
+				loanVO.setLqbUrl("-");
 			} else {
-				loanVO.setLqbInformationAvailable(Boolean.TRUE);
-				loanVO.setLqbUrl(lqbUrl);
+				lqbUrl = userProfileService.getLQBUrl(utils.getLoggedInUser()
+				        .getId(), loanID);
+
+				if (lqbUrl != null && lqbUrl.equals(lqbDefaultUrl)) {
+					loanVO.setLqbInformationAvailable(Boolean.FALSE);
+				} else {
+					loanVO.setLqbInformationAvailable(Boolean.TRUE);
+					loanVO.setLqbUrl(lqbUrl);
+				}
+
 			}
 
 			String docId = needListService.checkCreditReport(loanID);
@@ -1744,11 +1753,12 @@ public class LoanServiceImpl implements LoanService {
 			}
 			loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
 			loanManagerEmailEntity.setSubject("No Products Available");
-			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
+
 			loanManagerEmailEntity
 			        .setTemplateId(loanManagerTemplate.getValue());
 
 			String loanManagerUsername = null;
+			String loanManagerName = null;
 			LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
 			for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
 				if (loanTeam.getUser() != null) {
@@ -1758,10 +1768,16 @@ public class LoanServiceImpl implements LoanService {
 						        .getRoleId()) {
 							loanManagerUsername = loanTeam.getUser()
 							        .getUsername();
+							loanManagerName = loanTeam.getUser().getFirstName()
+							        + " " + loanTeam.getUser().getLastName();
 						}
 					}
 				}
 			}
+
+			loanManagerSubstitutions.put("-name-",
+			        new String[] { loanManagerName });
+			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
 			List<String> loanManagerccList = new ArrayList<String>();
 			if (loanManagerUsername != null) {
 				loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
@@ -1829,9 +1845,9 @@ public class LoanServiceImpl implements LoanService {
 
 		loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		loanManagerEmailEntity.setSubject("No Products Available");
-		loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
-		loanManagerEmailEntity.setTemplateId(loanManagerTemplate.getValue());
 
+		loanManagerEmailEntity.setTemplateId(loanManagerTemplate.getValue());
+		String loanManagerName = null;
 		String loanManagerUsername = null;
 		LoanVO loanVO = getActiveLoanOfUser(userVO);
 		if (loanVO != null) {
@@ -1844,10 +1860,16 @@ public class LoanServiceImpl implements LoanService {
 						        .getRoleId()) {
 							loanManagerUsername = loanTeam.getUser()
 							        .getUsername();
+							loanManagerName = loanTeam.getUser().getFirstName()
+							        + " " + loanTeam.getUser().getLastName();
 						}
 					}
 				}
 			}
+
+			loanManagerSubstitutions.put("-name-",
+			        new String[] { loanManagerName });
+			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
 			List<String> loanManagerccList = new ArrayList<String>();
 			if (loanManagerUsername != null) {
 				loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME

@@ -175,7 +175,7 @@ public class ShopperRegistrationController {
 			        request);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error in user registration", e);
 		}
 
 		return profileUrl + "home.do";

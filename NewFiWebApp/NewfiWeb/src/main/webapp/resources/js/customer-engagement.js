@@ -813,7 +813,7 @@ function paintNewResidenceTypeQues(){
             	removeToastMessage();
             	paintRefinanceHomeZipCode();	
             }else{
-            	showErrorToastMessage("Please answser the questions");
+            	showErrorToastMessage(yesyNoErrorMessage);
             }
             
         }
@@ -824,7 +824,7 @@ function paintNewResidenceTypeQues(){
             	removeToastMessage();
             	paintHomeZipCode();	
             }else{
-            	showErrorToastMessage("Please answser the questions");
+            	showErrorToastMessage(yesyNoErrorMessage);
             }
            // paintHomeZipCode();
         }
@@ -985,7 +985,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                  
             },
             error: function(data) {
-                showErrorToastMessage("error inside paintRefinanceSeeRates :" +data);
+                showErrorToastMessage(errorInrefinanceRates+data);
                 
                 hideOverlay();
             }
@@ -1091,7 +1091,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
         if($('input[name="fname"]').val()==""){
-        	$('input[name="fname"]').next('.err-msg').html("First name cannot be empty").show();
+        	$('input[name="fname"]').next('.err-msg').html(firstNameEmptyMessage).show();
     		$(".reg-input-cont.reg-fname").addClass('err-input').focus();
 			//showErrorToastMessage("Firstname cannot be empty");
 			return;
@@ -1100,7 +1100,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     		$(".reg-input-cont.reg-fname").removeClass('err-input');
     	}
         if($('input[name="lname"]').val()==""){
-        	$('input[name="lname"]').next('.err-msg').html("Last name cannot be empty").show();
+        	$('input[name="lname"]').next('.err-msg').html(lastNameEmptyMessage).show();
         	$(".reg-input-cont.reg-lname").addClass('err-input').focus();
         		//showErrorToastMessage("LastName cannot be empty");
         		return;
@@ -1109,7 +1109,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         	$(".reg-input-cont.reg-lname").removeClass('err-input');
         }
         if($('input[name="email"]').val()==""){
-        	$('input[name="email"]').next('.err-msg').html("Email cannot be empty").show();
+        	$('input[name="email"]').next('.err-msg').html(emailEmptyMessage).show();
         	$(".reg-input-cont.reg-email").addClass('err-input').focus();
         	//showErrorToastMessage("Email cannot be empty");
         	return;
@@ -1120,7 +1120,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
         	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
             if (!regex.test($('input[name="email"]').val())) {
-            	$('input[name="email"]').next('.err-msg').html("Incorrect Email ID").show();
+            	$('input[name="email"]').next('.err-msg').html(incorrectEmailID).show();
         		$(".reg-input-cont.reg-email").addClass('err-input').focus();
             //showErrorToastMessage("Incorrect Email");
         	return;
@@ -1349,7 +1349,9 @@ function getLoanSummaryHeaderCEP() {
         var col2 = $('<div>').attr({
             "class": "loan-summary-header-col2 float-left"
         }).html(currentDateTime);
-        headerCont.append(col1).append(col2);
+        headerCont.append(col1);
+        if(responseTime!="")
+            headerCont.append(col2);
         return headerCont;
     }
 

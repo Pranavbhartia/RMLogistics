@@ -1,7 +1,5 @@
 package com.nexera.web.rest;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -176,8 +174,7 @@ public class UserProfileRest {
 			userprofile = gson.toJson(userVO);
 
 		} catch (Exception e) {
-			LOG.error("Error while getting the user datails ", e.getMessage());
-			e.printStackTrace();
+			LOG.error("Error while getting the user datails ", e);
 
 		}
 
@@ -254,13 +251,13 @@ public class UserProfileRest {
 				        .authenticate(token);
 				SecurityContextHolder.getContext().setAuthentication(
 				        authenticatedUser);
-				//TODO link expiration
-					UserVO userVOUpdate=new UserVO();
-					userVOUpdate.setId(updatePassword.getUserId());
-					userVOUpdate.setEmailEncryptionToken(null);
-					userProfileService.updateTokenDetails(User.convertFromVOToEntity(userVOUpdate));
+				// TODO link expiration
+				UserVO userVOUpdate = new UserVO();
+				userVOUpdate.setId(updatePassword.getUserId());
+				userVOUpdate.setEmailEncryptionToken(null);
+				userProfileService.updateTokenDetails(User
+				        .convertFromVOToEntity(userVOUpdate));
 
-				
 				// Update his login time here
 			}
 		} catch (InputValidationException inputValidation) {
@@ -361,9 +358,8 @@ public class UserProfileRest {
 
 		} catch (Exception e) {
 			commonResponseVO.setResultObject("error");
-			e.printStackTrace();
-			LOG.error("Error while updataing the user datails ::",
-			        e.getMessage());
+
+			LOG.error("Error while updataing the user datails ::", e);
 		}
 
 		return commonResponseVO;
@@ -434,10 +430,10 @@ public class UserProfileRest {
 			        "User Already Present"));
 		} catch (InvalidInputException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error while saveing user with same email", e);
 		} catch (UndeliveredEmailException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Error while saveing user with same email", e);
 		}
 		return new Gson().toJson(RestUtil.wrapObjectForSuccess(userVO));
 
@@ -452,7 +448,7 @@ public class UserProfileRest {
 			userVO = new Gson().fromJson(userVOStr, UserVO.class);
 		} catch (Exception e) {
 			LOG.error("Error message : " + e.getMessage(), e);
-			e.printStackTrace();
+
 		}
 		LOG.debug("Parsed the json string");
 		if (userVO.getUsername() == null)
@@ -473,7 +469,7 @@ public class UserProfileRest {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOG.error("Error message : " + e.getMessage(), e);
-			e.printStackTrace();
+
 		}
 
 		LOG.info("Returning the json : "
@@ -492,15 +488,15 @@ public class UserProfileRest {
 			userProfileService.disableUser(userId);
 			result.addProperty("success", 1);
 		} catch (NoRecordsFetchedException e) {
-			LOG.error("disableUser : NoRecordsFetchedException thrown, message : "
-			        + e.getMessage());
-			e.printStackTrace();
+			LOG.error(
+			        "disableUser : NoRecordsFetchedException thrown, message : ",
+			        e);
+
 			result.addProperty("success", 0);
 			result.addProperty("message", "User not found in database");
 		} catch (DatabaseException e) {
-			LOG.error("disableUser : DatabaseException thrown, message : "
-			        + e.getMessage());
-			e.printStackTrace();
+			LOG.error("disableUser : DatabaseException thrown, message : ", e);
+
 			result.addProperty("success", 0);
 			result.addProperty("message", "Technical issue has occurred!");
 		}
@@ -520,15 +516,15 @@ public class UserProfileRest {
 			userProfileService.enableUser(userId);
 			result.addProperty("success", 1);
 		} catch (NoRecordsFetchedException e) {
-			LOG.error("disableUser : NoRecordsFetchedException thrown, message : "
-			        + e.getMessage());
-			e.printStackTrace();
+			LOG.error(
+			        "disableUser : NoRecordsFetchedException thrown, message : ",
+			        e);
+
 			result.addProperty("success", 0);
 			result.addProperty("message", "User not found in database");
 		} catch (DatabaseException e) {
-			LOG.error("disableUser : DatabaseException thrown, message : "
-			        + e.getMessage());
-			e.printStackTrace();
+			LOG.error("disableUser : DatabaseException thrown, message : ", e);
+
 			result.addProperty("success", 0);
 			result.addProperty("message", "Technical issue has occurred!");
 		}
@@ -592,21 +588,9 @@ public class UserProfileRest {
 		try {
 			result = userProfileService.parseCsvAndAddUsers(file);
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidInputException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UndeliveredEmailException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO: handle exception
-			e.printStackTrace();
+			LOG.error("Issue in addusersfrom csv", e);
 		}
 		return result.toString();
 	}
@@ -637,7 +621,7 @@ public class UserProfileRest {
 		commonResponseVO.setResultObject("success");
 		return commonResponseVO;
 	}
-	
+
 	@RequestMapping(value = "/nmls", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO updateNMLSId(String updateUserInfo) {
 

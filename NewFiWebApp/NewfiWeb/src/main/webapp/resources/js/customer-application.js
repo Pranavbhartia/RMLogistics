@@ -482,7 +482,7 @@ function getApplicationTextQues(question) {
 	        "class": "app-input",
 	        "name": question.name,
 	        "value":question.value
-	    }).on("keyup", function(e){
+	    }).on("focus", function(e){
 	          	
 	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
 				$('input[name='+question.name+']').maskMoney({
@@ -520,7 +520,7 @@ function getApplicationTextQues(question) {
 	        "class": "app-input app-append-width",
 	        "name": question.name,
 	        "value":question.value
-	    }).on("keyup", function(e){
+	    }).on("focus", function(e){
 	          	
 	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
 				$('input[name='+question.name+']').maskMoney({
@@ -1149,7 +1149,7 @@ $('#app-right-panel').html("");
 	}).html(buttonText).on('click', function() {
 		
 		  
-		if(this.innerText!=next){
+		if(this.innerHTML!=next){
 			   isSecondaryMortgage = quesContxts[0].value;
 			   if(isSecondaryMortgage=="" || isSecondaryMortgage==undefined || isSecondaryMortgage==null){
 				   showErrorToastMessage(yesyNoErrorMessage);
@@ -1487,7 +1487,7 @@ function paintCustomerApplicationPageStep2() {
        // alert('quesContxts[0].value'+quesContxts[0].value);
               //  alert('quesContxts[1].value'+quesContxts[1].value);
         
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
 	    	maritalStatus = quesContxts[0].value;
 	    	appUserDetails.maritalStatus =  maritalStatus;
     	
@@ -1623,7 +1623,7 @@ function paintCustomerApplicationPageStep2() {
     });
     $('#app-right-panel').append(saveAndContinueButton);
     addStateCityZipLookUp();
-    restrictSpecialChar("coBorrowerName");
+    
 }
 
 function getContextApplicationYesNoQues(contxt) {
@@ -1705,7 +1705,7 @@ function getContextApplicationTextQues(contxt) {
     	    }).bind("change",{"contxt":contxt},function(event){
     	    	var ctx=event.data.contxt;
     	    	ctx.value=$(this).val();
-    	    }).on("load keydown", function(e){
+    	    }).on("load focus", function(e){
     	          
     			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
     				$('input[name='+contxt.name+']').maskMoney({
@@ -1717,6 +1717,7 @@ function getContextApplicationTextQues(contxt) {
     				    allowNegative:false
     				});
     			}
+    			
     			
     		}).keypress(function(key) {
     			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ||$('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode" ){
@@ -1735,7 +1736,7 @@ function getContextApplicationTextQues(contxt) {
     	    }).bind("change",{"contxt":contxt},function(event){
     	    	var ctx=event.data.contxt;
     	    	ctx.value=$(this).val();
-    	    }).on("load keydown", function(e){
+    	    }).on("load focus", function(e){
     	          
     			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
     				$('input[name='+contxt.name+']').maskMoney({
@@ -1747,6 +1748,8 @@ function getContextApplicationTextQues(contxt) {
     				    allowNegative:false
     				});
     			}
+    			/* this is the piece of code to retrict user put special charector*/
+    			restrictSpecialChar(contxt.name);
     			
     		}).keypress(function(key) {
     			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" || $('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode"){
@@ -1903,11 +1906,11 @@ function paintMyIncome() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function(event) {
-    
-    	if(this.innerText!=next){
-    	        var isStatus=[];
+    	 var isStatus=[];
+    	if(this.innerHTML!=next){
+    	       
     	        
-    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
+/*    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
     	    		isStatus.push( $('.ce-option-checkbox[value='+0+']'));
     	    		var status=validateInputOfChecked(isStatus[0]);
     	        	if(status==false){
@@ -1916,12 +1919,11 @@ function paintMyIncome() {
     	    	}else{
     	    		showErrorToastMessage(W2EmplayeeMandatoryErrorMesssage);
     	    		return isStatus;
-    	    	}
-
-    	      	 isStatus  = validateCheckbox(isStatus);
-    	        if(isStatus!=null||isStatus!=""){	
+    	    	}*/
+ 	      	 isStatus  = validateCheckbox(isStatus);
+    	        if(isStatus.length>0){	
     	      	 
-    	        	for(var i=1;i<isStatus.length;i++){
+    	        	for(var i=0;i<isStatus.length;i++){
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
@@ -1931,6 +1933,9 @@ function paintMyIncome() {
     	        	}
     	        	
     	        	
+    	        }else{
+    	        	showErrorToastMessage(selectAnyOne);
+    	        	return false;
     	        }
     	       /* var isChecked=0;
 if($('.ce-option-checkbox').hasClass('myassets')){
@@ -2107,7 +2112,23 @@ if($('.ce-option-checkbox').hasClass('myassets')){
         }
         
     	}else{
-    		
+    		/*isStatus  = validateCheckbox(isStatus);
+	        if(isStatus!=null||isStatus!=""){	
+	      	 
+	        	for(var i=1;i<isStatus.length;i++){
+	        		var status=validateInputOfChecked(isStatus[i]);
+    	        	if(status==false){
+    	        		return false;
+    	        	}
+	        		
+	        			
+	        	}
+	        	
+	        	
+	        }else{
+	        	showErrorToastMessage(selectAnyOne);
+	        	return false;
+	        }    		*/
     		// when click on next button
     		 if (appUserDetails.isSpouseOnLoan == true ||appUserDetails.isCoborrowerPresent == true ) {
     	            paintMySpouseIncome();
@@ -2592,6 +2613,8 @@ function paintRefinanceSelfEmployed(divId,value) {
     	$('#ce-option_' + divId).toggle();
     	
     	putCurrencyFormat("selfEmployedIncome");
+    	restrictSpecialChar("selfEmployedYears");
+    	restrictChar("selfEmployedYears");
     }
 }
 
@@ -3120,7 +3143,7 @@ function paintCustomerApplicationPageStep4a() {
     }).html(buttonText).on('click', function() {
     	
     	
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
 	    	for(var i=0;i<quesDeclarationContxts.length;i++){
 	    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
 	    			showErrorToastMessage(gonernamentQuestionErrorMessage);
@@ -3371,7 +3394,7 @@ function paintCustomerApplicationPageStep4a() {
 	        "class": "cep-button-color app-save-btn"
 	    }).html(buttonText).on('click', function() {
 	    	
-	    	if(this.innerText!=next){
+	    	if(this.innerHTML!=next){
             //dateOfBirth = $('input[name="birthday"]').val();
 		    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
 		    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
@@ -3616,7 +3639,7 @@ function paintCustomerApplicationPageStep5() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function() {
     	
-    	if(this.innerText!=next){
+    	if(this.innerHTML!=next){
     	
 		    	dateOfBirth = $('input[name="birthday"]').val();
 		    	ssn =  $('input[name="ssn"]').val();
@@ -4270,6 +4293,8 @@ function putCurrencyFormat(name){
 		    allowNegative:false
 		});		
     });
+	
+	restrictSpecialChar(name);
 }
 
 function getMonthYearTextQuestion(question) {
@@ -5001,7 +5026,7 @@ function getContextApplicationTextQuesCEP(contxt) {
     }).bind("change",{"contxt":contxt},function(event){
     	var ctx=event.data.contxt;
     	ctx.value=$(this).val();
-    }).on("load keydown", function(e){
+    }).on("load focus", function(e){
           
 		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri' ){
 			$('input[name='+contxt.name+']').maskMoney({
@@ -5097,7 +5122,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"class" : "ce-input",
 		"name" : name,
 		"value" : value
-	}).on("load keydown", function(e){
+	}).on("load focus", function(e){
           
 		if(name != 'zipCode' && name != 'mortgageyearsleft'){
 			$('input[name='+name+']').maskMoney({
