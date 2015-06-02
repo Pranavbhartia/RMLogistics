@@ -2494,7 +2494,7 @@ function sendPreQualificationLetter(){
 		cache:false,
 		success:function(data){
 
-			showToastMessage("Pre-qualification letter is send ");
+			
 
 			showToastMessage(preQualificationLetterSent);
 
@@ -2504,7 +2504,7 @@ function sendPreQualificationLetter(){
 			showErrorToastMessage("Error");
 			else{
 
-				showToastMessage("Pre-qualification letter is send to your email id");
+			
 
 				showToastMessage(preQualificationLetterSentToEmail);
 
