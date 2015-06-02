@@ -73,7 +73,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 			User user = (User) obj;
 			Hibernate.initialize(user.getUserRole());
 			Hibernate.initialize(user.getInternalUserDetail());
-			return (User) obj;
+			if (user.getInternalUserStateMappings() != null) {
+				Hibernate.initialize(user.getInternalUserStateMappings());
+			}
+			return user;
 		} catch (HibernateException hibernateException) {
 			LOG.error("Exception caught in authenticateUser() ",
 			        hibernateException);
