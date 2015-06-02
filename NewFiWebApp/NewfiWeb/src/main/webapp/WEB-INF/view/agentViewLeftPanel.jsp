@@ -68,16 +68,7 @@
 		<div class="lp-alert-wrapper lp-item clearfix" id="lp-imp-alerts">
 			<div class="lp-alert-header" id="alertHeder">important alerts</div>
 			<div id="notificationParentContainer">
-				<div class="lp-alert-item-container clearfix">
-					<div class="lp-alert-item float-left">Salaried-W-2 forms-
-						Pending</div>
-					<div class="lp-alert-close-btn float-right"></div>
-				</div>
-				<div class="lp-alert-item-container clearfix">
-					<div class="lp-alert-item float-left">Salaried-W-2 forms-
-						Pending</div>
-					<div class="lp-alert-close-btn float-right"></div>
-				</div>
+			
 			</div>
 		</div>
 	</div>
