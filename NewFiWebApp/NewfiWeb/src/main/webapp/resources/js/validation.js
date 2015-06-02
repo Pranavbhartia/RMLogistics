@@ -52,7 +52,7 @@ function validateInput(element,inputVal,message){
 
 function validateCheckbox(isStatus){
 
-        for(var i=0;i<$('.ce-option-checkbox').length;i++){
+        for(var i=1;i<$('.ce-option-checkbox').length;i++){
 	
 		if($('.ce-option-checkbox[value='+i+']').hasClass('app-option-checked')){
 			isStatus.push( $('.ce-option-checkbox[value='+i+']'));

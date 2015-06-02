@@ -1910,7 +1910,7 @@ function paintMyIncome() {
     	if(this.innerHTML!=next){
     	       
     	        
-/*    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
+  	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
     	    		isStatus.push( $('.ce-option-checkbox[value='+0+']'));
     	    		var status=validateInputOfChecked(isStatus[0]);
     	        	if(status==false){
@@ -1919,7 +1919,7 @@ function paintMyIncome() {
     	    	}else{
     	    		showErrorToastMessage(W2EmplayeeMandatoryErrorMesssage);
     	    		return isStatus;
-    	    	}*/
+    	    	}
  	      	 isStatus  = validateCheckbox(isStatus);
     	        if(isStatus.length>0){	
     	      	 
@@ -1933,9 +1933,6 @@ function paintMyIncome() {
     	        	}
     	        	
     	        	
-    	        }else{
-    	        	showErrorToastMessage(selectAnyOne);
-    	        	return false;
     	        }
     	       /* var isChecked=0;
 if($('.ce-option-checkbox').hasClass('myassets')){
