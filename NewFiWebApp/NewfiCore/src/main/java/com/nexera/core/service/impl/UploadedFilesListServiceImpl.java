@@ -275,7 +275,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
-		        userId, loanId, assignedBy, isAssignedToNeed);
+		        userId, loanId, assignedBy, isAssignedToNeed, null);
 
 		if (newFile.exists()) {
 			newFile.delete();
@@ -288,7 +288,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
 	        Integer userId, Integer assignedBy, String lqbDocumentID,
-	        String uuidValue) {
+	        String uuidValue, String fileName) {
 
 		/*
 		 * commenting code for password protection
@@ -354,7 +354,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setUploadedBy(user);
 		uploadedFilesList.setUploadedDate(new Date());
 		uploadedFilesList.setLoan(loan);
-		uploadedFilesList.setFileName(file.getName());
+		if (fileName == null) {
+			uploadedFilesList.setFileName(file.getName());
+		} else {
+			uploadedFilesList.setFileName(fileName);
+		}
 		uploadedFilesList.setS3ThumbPath(s3PathThumbNail);
 		uploadedFilesList.setAssignedBy(assignByUser);
 		uploadedFilesList.setUuidFileId(uuidValue);
@@ -383,7 +387,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
 	        Integer userId, Integer loanId, Integer assignedBy,
-	        Boolean isNeedAssigned) {
+	        Boolean isNeedAssigned, String fileName) {
 		String s3Path = null;
 
 		LOG.info("File content type  : " + contentType);
@@ -431,7 +435,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					// Upload the file to S3. Insert in to File table
 					Integer savedRowId = addUploadedFilelistObejct(serverFile,
 					        loanId, userId, assignedBy, lqbDocumentId,
-					        uuidValue);
+					        uuidValue, fileName);
 					LOG.info("Added File document row : " + savedRowId);
 					checkVo.setUploadFileId(savedRowId);
 
@@ -581,7 +585,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public CheckUploadVO uploadFileByEmail(InputStream stream,
 	        String contentType, Integer userId, Integer loanId,
-	        Integer assignedBy) throws Exception {
+	        Integer assignedBy, String fileName) throws Exception {
 		File file = nexeraUtility.convertInputStreamToFile(stream);
 		CheckUploadVO checkUploadVO = null;
 		Boolean isAssignedToNeed = false;
@@ -596,7 +600,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				contentType = "image/tiff";
 
 			checkUploadVO = uploadFile(file, contentType, userId, loanId,
-			        assignedBy, isAssignedToNeed);
+			        assignedBy, isAssignedToNeed, fileName);
 
 			if (file.exists()) {
 				file.delete();

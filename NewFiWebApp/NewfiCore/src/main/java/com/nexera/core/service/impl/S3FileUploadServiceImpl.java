@@ -42,11 +42,13 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.nexera.core.utility.NexeraUtility;
 
 import eu.medsea.mimeutil.MimeUtil;
+
 /**
  * @author Akash bhatia
  * @created 05-Aug-2014
  * 
- * Brief: Write a quick description of what the class is supposed to do.
+ *          Brief: Write a quick description of what the class is supposed to
+ *          do.
  * 
  */
 @Component
@@ -66,78 +68,75 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 	@Autowired
 	private NexeraUtility nexeraUtility;
-	
-	//private static final String FILE_BUCKET = "x3-profile-img";
+
+	// private static final String FILE_BUCKET = "x3-profile-img";
 	private String uniqueBucketName;
-	//private static final String S3_BASE_URL = "https://s3.amazonaws.com/";
+	// private static final String S3_BASE_URL = "https://s3.amazonaws.com/";
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(S3FileUploadServiceImpl.class);
+	        .getLogger(S3FileUploadServiceImpl.class);
 
 	private static Calendar calendar = Calendar.getInstance();
 	{
 		calendar.add(Calendar.YEAR, 5);
 	}
 
-	public String uploadToS3(File file,String subfolderInBucket , String prefix ) {
-		LOGGER.info("Trying to upload : +"+subfolderInBucket+" --- "+prefix+"  in document");
-		LOGGER.info("fileBucket: +"+fileBucket+" s3BaseUrl-- "+s3BaseUrl+"  secretKey - "+secretKey  + " accessKey "+accessKey);
+	public String uploadToS3(File file, String subfolderInBucket, String prefix) {
+		LOGGER.info("Trying to upload : +" + subfolderInBucket + " --- "
+		        + prefix + "  in document");
+		LOGGER.info("fileBucket: +" + fileBucket + " s3BaseUrl-- " + s3BaseUrl
+		        + "  secretKey - " + secretKey + " accessKey " + accessKey);
 		Collection<?> mimeTypes = MimeUtil.getMimeTypes(file);
-		/*if (mimeTypes == null || !mimeTypes.toString().contains("image/")) {
-
-			LOGGER.error("Uploaded file was not a image. "+file.getName());
-			return null;
-
-		}
-		String thumbnailName = "_thumb_" + file.getName().replaceAll(" ", "_");
-
-		File thumbnail = new File(file.getParent() + System.getProperty("file.separator")
-				+ thumbnailName);
-		boolean conversion = false;
-		try {
-			Thumbnails.of(file).size(Integer.parseInt("300"),Integer.parseInt("300")).toFile(thumbnail);
-			conversion = true;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		File imageFile = null;
-		if(!conversion){
-			imageFile = file;
-		}else{
-			imageFile = thumbnail;
-		}*/
-		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+		/*
+		 * if (mimeTypes == null || !mimeTypes.toString().contains("image/")) {
+		 * 
+		 * LOGGER.error("Uploaded file was not a image. "+file.getName());
+		 * return null;
+		 * 
+		 * } String thumbnailName = "_thumb_" + file.getName().replaceAll(" ",
+		 * "_");
+		 * 
+		 * File thumbnail = new File(file.getParent() +
+		 * System.getProperty("file.separator") + thumbnailName); boolean
+		 * conversion = false; try {
+		 * Thumbnails.of(file).size(Integer.parseInt("300"
+		 * ),Integer.parseInt("300")).toFile(thumbnail); conversion = true; }
+		 * catch (IOException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } File imageFile = null; if(!conversion){
+		 * imageFile = file; }else{ imageFile = thumbnail; }
+		 */
+		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,
+		        secretKey);
 		AmazonS3 s3 = new AmazonS3Client(awsCredentials);
-		//s3.setEndpoint(s3BaseUrl);
-		//s3.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1));
+		// s3.setEndpoint(s3BaseUrl);
+		// s3.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1));
 		uniqueBucketName = (accessKey + "-" + fileBucket).toLowerCase();
 		boolean bucketExists = s3.doesBucketExist(uniqueBucketName);
 		if (!bucketExists) {
 			s3.createBucket(uniqueBucketName);
 		}
 
-		
-		if(subfolderInBucket==null){
-			long random =generateRandomString();
-			subfolderInBucket=""+random;
+		if (subfolderInBucket == null) {
+			long random = generateRandomString();
+			subfolderInBucket = "" + random;
 		}
 		String key = null;
-		
-		String fileName = nexeraUtility.randomStringOfLength()+"."+FilenameUtils.getExtension(file.getName());
-		if(prefix != null){
-			
-			key = subfolderInBucket + "/"+prefix +fileName.replaceAll(" ", "_");
-		}else{
-			key = subfolderInBucket + "/" +fileName.replaceAll(" ", "_");
+		String fileName = null;
+
+		fileName = nexeraUtility.randomStringOfLength() + "."
+		        + FilenameUtils.getExtension(file.getName());
+		if (prefix != null) {
+
+			key = subfolderInBucket + "/" + prefix
+			        + fileName.replaceAll(" ", "_");
+		} else {
+			key = subfolderInBucket + "/" + fileName.replaceAll(" ", "_");
 		}
-	  
 
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
-				uniqueBucketName, key, file);
+		        uniqueBucketName, key, file);
 
 		putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
 
-		
 		ObjectMetadata metadata = new ObjectMetadata();
 		metadata.setCacheControl("public");
 		metadata.setExpirationTime(getCacheExpiryDate());
@@ -145,30 +144,31 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 		s3.putObject(putObjectRequest);
 
-		return s3BaseUrl + uniqueBucketName + "/"+key;
+		return s3BaseUrl + uniqueBucketName + "/" + key;
 
 	}
-	
+
 	public Boolean deleteImageFromS3(String url) {
-		
-		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+
+		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,
+		        secretKey);
 		AmazonS3 s3 = new AmazonS3Client(awsCredentials);
 		String uniqueBucketName = (accessKey + "-" + fileBucket).toLowerCase();
-		String toRemove=s3BaseUrl+uniqueBucketName;
-		String key=url.substring(toRemove.length()+1);
+		String toRemove = s3BaseUrl + uniqueBucketName;
+		String key = url.substring(toRemove.length() + 1);
 		try {
 			s3.deleteObject(uniqueBucketName, key);
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
-		
+
 	}
 
 	public String uploadProtectedFileToS3(File file, String absolutePath) {
 
-		
-		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,
+		        secretKey);
 		AmazonS3 s3 = new AmazonS3Client(awsCredentials);
 
 		uniqueBucketName = (accessKey + "-" + fileBucket).toLowerCase();
@@ -179,7 +179,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 		String key = absolutePath.substring(1, absolutePath.length());
 		PutObjectRequest putObjectRequest = new PutObjectRequest(
-				uniqueBucketName, key, file);
+		        uniqueBucketName, key, file);
 
 		putObjectRequest.setCannedAcl(CannedAccessControlList.Private);
 		ObjectMetadata metadata = new ObjectMetadata();
@@ -202,6 +202,7 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 
 	}
 
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
 		MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
@@ -209,22 +210,23 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 	}
 
 	public String downloadFile(String fileUrl, String filePath)
-			throws Exception {
-		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-		
+	        throws Exception {
+		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,
+		        secretKey);
+
 		AmazonS3 s3 = new AmazonS3Client(awsCredentials);
 		uniqueBucketName = (accessKey + "-" + fileBucket).toLowerCase();
 		String key = fileUrl.replace(s3BaseUrl + uniqueBucketName, "");
 		key = key.substring(1, key.length());
 		GetObjectRequest getObjectRequest = new GetObjectRequest(
-				uniqueBucketName, key);
+		        uniqueBucketName, key);
 		S3Object s3Object = s3.getObject(getObjectRequest);
 		InputStream inputStream = null;
 		try {
 			inputStream = new BufferedInputStream(s3Object.getObjectContent());
 
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(
-					filePath));
+			        filePath));
 			byte buf[] = new byte[1024];
 			int len;
 			while ((len = inputStream.read(buf)) > 0)
@@ -233,40 +235,40 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 			out.close();
 
 			return filePath;
-		}/* catch (IOException e) {
-
-			throw new Exception(e);
-		} */finally {
+		}/*
+		 * catch (IOException e) {
+		 * 
+		 * throw new Exception(e); }
+		 */finally {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					LOGGER.error("Error closing Amazon stream while downloading: "
-							+ fileUrl);
+					        + fileUrl);
 				}
 			}
 		}
 
 	}
-	
-	
-	public byte[] getInputStreamOfFile(String fileUrl)
-			throws Exception {
-		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-		
+
+	public byte[] getInputStreamOfFile(String fileUrl) throws Exception {
+		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey,
+		        secretKey);
+
 		AmazonS3 s3 = new AmazonS3Client(awsCredentials);
 		uniqueBucketName = (accessKey + "-" + fileBucket).toLowerCase();
 		String key = fileUrl.replace(s3BaseUrl + uniqueBucketName, "");
 		key = key.substring(1, key.length());
 		GetObjectRequest getObjectRequest = new GetObjectRequest(
-				uniqueBucketName, key);
+		        uniqueBucketName, key);
 		S3Object s3Object = s3.getObject(getObjectRequest);
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
-		
+
 		try {
-			
+
 			inputStream = new BufferedInputStream(s3Object.getObjectContent());
 			byte[] buffer = new byte[8192];
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -280,26 +282,25 @@ public class S3FileUploadServiceImpl implements InitializingBean {
 				// TODO call exception class
 			}
 			return baos.toByteArray();
-			
-		}/* catch (IOException e) {
 
-		throw new Exception(e);
-	} */finally {
-		if (inputStream != null) {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				LOGGER.error("Error closing Amazon stream while downloading: "
-						+ fileUrl);
+		}/*
+		 * catch (IOException e) {
+		 * 
+		 * throw new Exception(e); }
+		 */finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					LOGGER.error("Error closing Amazon stream while downloading: "
+					        + fileUrl);
+				}
 			}
 		}
+
 	}
 
-}
-
-	
-	
 	public static long generateRandomString() {
 		// TODO Auto-generated method stub
 		UUID uuid = UUID.randomUUID();
