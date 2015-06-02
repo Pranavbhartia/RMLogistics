@@ -2493,13 +2493,21 @@ function sendPreQualificationLetter(){
 		dataType:"application/json",
 		cache:false,
 		success:function(data){
+
+			
+
 			showToastMessage(preQualificationLetterSent);
+
 		},
 		error:function(data){
 			if(data.status != 200)
 			showErrorToastMessage("Error");
 			else{
+
+			
+
 				showToastMessage(preQualificationLetterSentToEmail);
+
 
 			}
 		}
