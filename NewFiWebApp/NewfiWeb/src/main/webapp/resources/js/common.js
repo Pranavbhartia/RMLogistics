@@ -1041,4 +1041,21 @@ function restrictSpecialChar(name){
 	});
 }
 
+function restrictChar(name){
+	
+	$('input[name="'+name+'"]').bind('keypress', function (e) {
+	    console.log(e.which);
+
+	    var k = e.which;
+	    var ok = k >= 48 && k <= 57; // 0-9
+
+	    if (!ok) {
+	        e.preventDefault();
+	        return false;
+
+	    }
+
+	});
+}
+
 

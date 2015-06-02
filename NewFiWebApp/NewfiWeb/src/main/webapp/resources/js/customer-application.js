@@ -482,7 +482,7 @@ function getApplicationTextQues(question) {
 	        "class": "app-input",
 	        "name": question.name,
 	        "value":question.value
-	    }).on("keyup", function(e){
+	    }).on("focus", function(e){
 	          	
 	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
 				$('input[name='+question.name+']').maskMoney({
@@ -520,7 +520,7 @@ function getApplicationTextQues(question) {
 	        "class": "app-input app-append-width",
 	        "name": question.name,
 	        "value":question.value
-	    }).on("keyup", function(e){
+	    }).on("focus", function(e){
 	          	
 	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
 				$('input[name='+question.name+']').maskMoney({
@@ -1623,7 +1623,7 @@ function paintCustomerApplicationPageStep2() {
     });
     $('#app-right-panel').append(saveAndContinueButton);
     addStateCityZipLookUp();
-    restrictSpecialChar("coBorrowerName");
+    
 }
 
 function getContextApplicationYesNoQues(contxt) {
@@ -1705,7 +1705,7 @@ function getContextApplicationTextQues(contxt) {
     	    }).bind("change",{"contxt":contxt},function(event){
     	    	var ctx=event.data.contxt;
     	    	ctx.value=$(this).val();
-    	    }).on("load keydown", function(e){
+    	    }).on("load focus", function(e){
     	          
     			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
     				$('input[name='+contxt.name+']').maskMoney({
@@ -1717,6 +1717,7 @@ function getContextApplicationTextQues(contxt) {
     				    allowNegative:false
     				});
     			}
+    			
     			
     		}).keypress(function(key) {
     			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ||$('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode" ){
@@ -1735,7 +1736,7 @@ function getContextApplicationTextQues(contxt) {
     	    }).bind("change",{"contxt":contxt},function(event){
     	    	var ctx=event.data.contxt;
     	    	ctx.value=$(this).val();
-    	    }).on("load keydown", function(e){
+    	    }).on("load focus", function(e){
     	          
     			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
     				$('input[name='+contxt.name+']').maskMoney({
@@ -1747,6 +1748,8 @@ function getContextApplicationTextQues(contxt) {
     				    allowNegative:false
     				});
     			}
+    			/* this is the piece of code to retrict user put special charector*/
+    			restrictSpecialChar(contxt.name);
     			
     		}).keypress(function(key) {
     			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" || $('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode"){
@@ -2592,6 +2595,8 @@ function paintRefinanceSelfEmployed(divId,value) {
     	$('#ce-option_' + divId).toggle();
     	
     	putCurrencyFormat("selfEmployedIncome");
+    	restrictSpecialChar("selfEmployedYears");
+    	restrictChar("selfEmployedYears");
     }
 }
 
@@ -4270,6 +4275,8 @@ function putCurrencyFormat(name){
 		    allowNegative:false
 		});		
     });
+	
+	restrictSpecialChar(name);
 }
 
 function getMonthYearTextQuestion(question) {
@@ -5001,7 +5008,7 @@ function getContextApplicationTextQuesCEP(contxt) {
     }).bind("change",{"contxt":contxt},function(event){
     	var ctx=event.data.contxt;
     	ctx.value=$(this).val();
-    }).on("load keydown", function(e){
+    }).on("load focus", function(e){
           
 		if(contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri' ){
 			$('input[name='+contxt.name+']').maskMoney({
@@ -5097,7 +5104,7 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"class" : "ce-input",
 		"name" : name,
 		"value" : value
-	}).on("load keydown", function(e){
+	}).on("load focus", function(e){
           
 		if(name != 'zipCode' && name != 'mortgageyearsleft'){
 			$('input[name='+name+']').maskMoney({
