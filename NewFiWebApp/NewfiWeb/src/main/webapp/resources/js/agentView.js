@@ -1370,10 +1370,12 @@ function appendCustomerLoanDetails(loanDetails) {
 	} else {
 		if(loanDetails.lqbUrl=="-"){
 			appendLoanDetailsRow("Loan URL in LQB","-");
+		}else{
+			appendLoanDetailsRow("Loan URL in LQB",
+					"Click here to set your LQB credentials", true,
+					"#lp-loan-manager-profile");	
 		}
-		appendLoanDetailsRow("Loan URL in LQB",
-				"Click here to set your LQB credentials", true,
-				"#lp-loan-manager-profile");
+		
 	}
 
 	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
