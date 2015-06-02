@@ -8,7 +8,7 @@ function turnAroundTime() {
 	ajaxRequest("rest/admin/retrieveTurnAround", "GET", "json", data, function(
 			response) {
 		if (response.error) {
-			showToastMessage(response.error.message)
+			showErrorToastMessage(response.error.message)
 		} else {
 
 			if (response.resultObject == undefined
@@ -124,12 +124,12 @@ function turnAroundTime() {
 									JSON.stringify(saveContextObj),
 									function(response) {
 										if (response.error) {
-											showToastMessage(response.error.message);
+											showErrorToastMessage(response.error.message);
 										} else {
 
 											// alert("Success");
 											turnAroundTime();
-											showToastMessage("Successfully saved");
+											showToastMessage(savesuccessfull);
 
 										}
 

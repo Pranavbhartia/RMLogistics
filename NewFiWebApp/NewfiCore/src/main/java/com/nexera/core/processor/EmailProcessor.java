@@ -115,12 +115,26 @@ public class EmailProcessor implements Runnable {
 					LOGGER.debug("Mail subject is " + subject);
 					Address[] fromAddress = message.getFrom();
 					Address[] toAddress = message.getAllRecipients();
-					if (toAddress.length > 1) {
+					if (toAddress.length > 2) {
 						LOGGER.debug("User is sending this message to multiple recepient ");
+						LOGGER.debug("Contains specifc number of recepient, chosen by user, hence need not to make the note visible to entire team");
 						sendEmail = false;
+						entireTeam = false;
+					} else if (toAddress.length == 2) {
+						for (Address address : toAddress) {
+							if (address.toString().equalsIgnoreCase(
+							        fromAddress[0].toString())) {
+								LOGGER.debug("Contains 2 recepients, where one of them is having catch all email id, hence we will notify the entire team");
+								sendEmail = true;
+								entireTeam = true;
+							}
+						}
+
 					} else {
+						LOGGER.debug("Only one recepient, that too will be having the catchall email id, hence we will notify the entire team");
 						sendEmail = true;
 						entireTeam = true;
+
 					}
 					LOGGER.debug("From Address is  " + fromAddress[0]);
 					String fromAddressString = fromAddress[0].toString();
@@ -139,7 +153,20 @@ public class EmailProcessor implements Runnable {
 						        .contains(CommonConstants.SENDER_EMAIL_ID)) {
 							toAddressString = address.toString();
 						} else {
-							mailerList.add(address.toString());
+							if (address != null) {
+								String emailAddress = address.toString();
+								if (emailAddress.contains("<")) {
+									emailAddress = emailAddress.substring(
+									        emailAddress.indexOf("<") + 1,
+									        emailAddress.length());
+								}
+								if (emailAddress.contains(">")) {
+									emailAddress = emailAddress.substring(0,
+									        emailAddress.indexOf(">"));
+								}
+
+								mailerList.add(emailAddress);
+							}
 						}
 
 					}
@@ -564,7 +591,8 @@ public class EmailProcessor implements Runnable {
 								        .uploadFileByEmail(inputStream,
 								                content, actualUser.getId(),
 								                loanVO.getId(),
-								                uploadedByUser.getId());
+								                uploadedByUser.getId(),
+								                bodyPart.getFileName());
 								if (checkUploadVO != null) {
 									if (checkUploadVO.getIsUploadSuccess()) {
 										FileVO fileVO = new FileVO();

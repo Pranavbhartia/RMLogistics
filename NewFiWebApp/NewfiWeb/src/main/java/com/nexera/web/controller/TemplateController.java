@@ -201,24 +201,47 @@ public class TemplateController extends DefaultController {
 	}
 
 	@RequestMapping(value = "customerEngagement.do")
-	public ModelAndView showCustomerEngagementPage() {
+	public ModelAndView showCustomerEngagementPage(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+
+		// Check if the user has session now. If yes, force invalidate it.
+		Object session = request.getSession(false);
+		if (session != null) {
+			request.getSession(false).invalidate();
+		}
+		// Create a new session now.
+		LOG.debug("Creating a new session for the user");
+		request.getSession(true);
 		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("customerEngagementTemplate");
 		return mav;
 	}
 
 	@RequestMapping(value = "register.do")
-	public ModelAndView showCustomerRegisterPage() {
+	public ModelAndView showCustomerRegisterPage(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+		// Check if the user has session now. If yes, force invalidate it.
+		Object session = request.getSession(false);
+		if (session != null) {
+			request.getSession(false).invalidate();
+		}
+		// Create a new session now.
+		LOG.debug("Creating a new session for the user");
 		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("register");
 		return mav;
 	}
 
 	@RequestMapping(value = "registerNew.do")
-	public ModelAndView showCustomerRegisterNewPage() {
+	public ModelAndView showCustomerRegisterNewPage(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+		// Check if the user has session now. If yes, force invalidate it.
+		Object session = request.getSession(false);
+		if (session != null) {
+			request.getSession(false).invalidate();
+		}
+		// Create a new session now.
+		LOG.debug("Creating a new session for the user");
 		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("registerDirect");
 
@@ -226,8 +249,17 @@ public class TemplateController extends DefaultController {
 	}
 
 	@RequestMapping(value = "{userName}")
-	public ModelAndView referrerRegistration(@PathVariable String userName) {
+	public ModelAndView referrerRegistration(@PathVariable String userName,
+	        HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
+		// Check if the user has session now. If yes, force invalidate it.
+		Object session = request.getSession(false);
+		if (session != null) {
+			request.getSession(false).invalidate();
+		}
+		// Create a new session now.
+		LOG.debug("Creating a new session for the user");
+		request.getSession(true);
 		mav.addObject("baseUrl", baseUrl);
 		LOG.info("Url referer from" + userName);
 		try {
@@ -253,6 +285,14 @@ public class TemplateController extends DefaultController {
 	        @RequestParam(value = "verifyEmailPath", required = false) String verifyEmailPath,
 	        HttpServletRequest request) throws InvalidInputException {
 		ModelAndView mav = new ModelAndView();
+		// Check if the user has session now. If yes, force invalidate it.
+		Object session = request.getSession(false);
+		if (session != null) {
+			request.getSession(false).invalidate();
+		}
+		// Create a new session now.
+		LOG.debug("Creating a new session for the user");
+		request.getSession(true);
 		LOG.info("Resettting password for" + identifier);
 		mav.addObject("baseUrl", baseUrl);
 		try {
@@ -287,7 +327,16 @@ public class TemplateController extends DefaultController {
 
 	@RequestMapping(value = "forgotPassword.do")
 	public ModelAndView showForgetPasswordPage(
-	        @RequestParam(value = "resend", required = false) String resend) {
+	        @RequestParam(value = "resend", required = false) String resend,
+	        HttpServletRequest request) {
+		// Check if the user has session now. If yes, force invalidate it.
+		Object session = request.getSession(false);
+		if (session != null) {
+			request.getSession(false).invalidate();
+		}
+		// Create a new session now.
+		LOG.debug("Creating a new session for the user");
+		request.getSession(true);
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("baseUrl", baseUrl);
 		mav.setViewName("forgotPassword");

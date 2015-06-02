@@ -1000,7 +1000,7 @@ function finishedTutorial(element, url){
 			}
 		},
 		error:function(data){
-			showErrorToastMessage("Error while updating tutorial status");
+			showErrorToastMessage(tutorialStatusMessage);
 		}
 	});
 	
@@ -1034,6 +1034,23 @@ function restrictSpecialChar(name){
 	    if (!ok) {
 	        e.preventDefault();
 	        console.log("hii");
+	        return false;
+
+	    }
+
+	});
+}
+
+function restrictChar(name){
+	
+	$('input[name="'+name+'"]').bind('keypress', function (e) {
+	    console.log(e.which);
+
+	    var k = e.which;
+	    var ok = k >= 48 && k <= 57; // 0-9
+
+	    if (!ok) {
+	        e.preventDefault();
 	        return false;
 
 	    }

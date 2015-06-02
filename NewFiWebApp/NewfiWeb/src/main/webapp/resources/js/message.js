@@ -19,6 +19,10 @@ var userRemoveSuccessMessage="User removed successfully";
 var userExsistErrorMessage="User already exists on the loan team.";//line 3730
 var userAddedToLoanTeamSuccessMessage="User added to loan team.";//line 3743
 var emailAldreadyExsist="Email already exists!!";//line 3892
+var invalidMessage="Invalid Message";
+var invalidDate="Invalid Date";
+var enterMessage="Please enter a message";
+var errorMessageForZipcode="ZipCode cannot be empty";
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
@@ -56,13 +60,54 @@ var maxIncomeNeeded="Maximum 2 income needed";
 
 
 var changePasswordErrorMessage="Error while changing your password. Please try again later.";
-var photoUploadErrorMessage="You must upload an image file with one of the following extensions:";
 var messageToEnterValidEmail="Please enter valid email ID";
-var feildShouldNotBeZero="The answers of the questions should not be zero."
+var feildShouldNotBeZero="The answers of the questions should not be zero.";
 
 //Messages in script.js
 var errorInCreateLoan="Error inside createLoan";
+var preQualificationLetterSent="Pre-qualificaion letter is sent ";
+var preQualificationLetterSentToEmail="Pre-qualificaion letter is sent to your email id";
+var fillApplicationPath="Please fill the application path ";
+var RateLockRequested="Rate Lock Requested";
 
 //Message in customerEngagement.js
 var answerQuestionOne="Please answer the question";
 var zipCodeMessage="Please enter a valid 5-digit zipcode";
+var errorInrefinanceRates="error inside paintRefinanceSeeRates :";
+var incorrectEmailID="Incorrect Email ID";
+
+
+//Messages in common.js
+var tutorialStatusMessage="Error while updating tutorial status";
+
+//Messages in customerSpouseDetails.js
+var max2Needed="Maximum 2 income needed";
+
+//Messages in jcrop.js
+var uploadFailed="File upload failed. Please try again";
+var photoUploadErrorMessage="You must upload an image file with one of the following extensions:";
+
+//Messages in managerNeedList.js
+var savesuccessfull="Save Successful";
+var invalidDocumentTitle="Invalid document title";
+var invalidDocumentDescription="Invalid document description";
+var invalidDocumentType="Invalid document type";
+var needAlreadyExists="Need already exists";
+
+//Messages in messageDashBoard.js
+var enterSomeText="Please enter some text!";
+
+//Messages in mileStone.js
+var masterTable="Master Tables Not Populated";
+var selectAnOption="Please Select an Option";
+var addValue="Add a value";
+var noLoanAdvisorAdded="No Loan Advisor is added on the loan yet";
+
+//Messages in notification.js
+var notificationDismisses="Notification Dismissed";
+var notificationSuccess="Success";
+var notificationSceduled="Notification Scheduled";
+
+//Message in uploadFile.js
+var completeYourLoanProfile="Please complete your Loan Profile";
+var overlayMessage="This can take a minute,<br/> we are uploading your documents to our secure storage folder.";
