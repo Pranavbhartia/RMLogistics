@@ -558,11 +558,17 @@ public class ApplicationFormRestService {
 				teaserRateResponseVO.setLoanDuration("sample");
 				teaserRateResponseVO.setLoanNumber(loanNumber);
 
-				if (teaserRateList != null)
+				if (teaserRateList != null) {
 					teaserRateList.add(0, teaserRateResponseVO);
-				for (TeaserRateResponseVO responseVo : teaserRateList) {
-					responseVo.setResponseTime(responseTime);
+					for (TeaserRateResponseVO responseVo : teaserRateList) {
+						responseVo.setResponseTime(responseTime);
+					}
+				} else {
+					LOG.warn("teaserRateList is null for: " + loanNumber);
+					cacheableMethodInterface.invalidateApplicationRateCache(
+					        loanNumber, json.toString());
 				}
+
 			} catch (Exception e) {
 				LOG.error(
 				        "Invalidating cache since there was a run time error",

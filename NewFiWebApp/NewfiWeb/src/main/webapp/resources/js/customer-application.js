@@ -1906,11 +1906,11 @@ function paintMyIncome() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function(event) {
-    
+    	 var isStatus=[];
     	if(this.innerHTML!=next){
-    	        var isStatus=[];
+    	       
     	        
-    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
+/*    	    	if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
     	    		isStatus.push( $('.ce-option-checkbox[value='+0+']'));
     	    		var status=validateInputOfChecked(isStatus[0]);
     	        	if(status==false){
@@ -1919,12 +1919,11 @@ function paintMyIncome() {
     	    	}else{
     	    		showErrorToastMessage(W2EmplayeeMandatoryErrorMesssage);
     	    		return isStatus;
-    	    	}
-
-    	      	 isStatus  = validateCheckbox(isStatus);
-    	        if(isStatus!=null||isStatus!=""){	
+    	    	}*/
+ 	      	 isStatus  = validateCheckbox(isStatus);
+    	        if(isStatus.length>0){	
     	      	 
-    	        	for(var i=1;i<isStatus.length;i++){
+    	        	for(var i=0;i<isStatus.length;i++){
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
@@ -1934,6 +1933,9 @@ function paintMyIncome() {
     	        	}
     	        	
     	        	
+    	        }else{
+    	        	showErrorToastMessage(selectAnyOne);
+    	        	return false;
     	        }
     	       /* var isChecked=0;
 if($('.ce-option-checkbox').hasClass('myassets')){
@@ -2110,7 +2112,23 @@ if($('.ce-option-checkbox').hasClass('myassets')){
         }
         
     	}else{
-    		
+    		/*isStatus  = validateCheckbox(isStatus);
+	        if(isStatus!=null||isStatus!=""){	
+	      	 
+	        	for(var i=1;i<isStatus.length;i++){
+	        		var status=validateInputOfChecked(isStatus[i]);
+    	        	if(status==false){
+    	        		return false;
+    	        	}
+	        		
+	        			
+	        	}
+	        	
+	        	
+	        }else{
+	        	showErrorToastMessage(selectAnyOne);
+	        	return false;
+	        }    		*/
     		// when click on next button
     		 if (appUserDetails.isSpouseOnLoan == true ||appUserDetails.isCoborrowerPresent == true ) {
     	            paintMySpouseIncome();
