@@ -1368,6 +1368,9 @@ function appendCustomerLoanDetails(loanDetails) {
 		appendLoanDetailsRow("Loan URL in LQB", loanDetails.lqbFileId,  true,
 				loanDetails.lqbUrl);
 	} else {
+		if(loanDetails.lqbUrl=="-"){
+			appendLoanDetailsRow("Loan URL in LQB","-");
+		}
 		appendLoanDetailsRow("Loan URL in LQB",
 				"Click here to set your LQB credentials", true,
 				"#lp-loan-manager-profile");

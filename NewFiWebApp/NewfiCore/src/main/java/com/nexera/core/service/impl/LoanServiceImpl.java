@@ -1387,6 +1387,7 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public LoanVO wrapperCallForDashboard(Integer loanID) {
 		Loan loan = this.fetchLoanById(loanID);
+		String lqbLoanId = loan.getLqbFileId();
 		LoanVO loanVO = Loan.convertFromEntityToVO(loan);
 		LOG.info("--" + LoanTypeMasterEnum.PUR.toString());
 		if (loanVO.getLoanType().getLoanTypeCd()
@@ -1408,13 +1409,21 @@ public class LoanServiceImpl implements LoanService {
 				loanStatus.setCreditDecission(loanMilestone.getComments());
 			}
 			loanVO.setUserLoanStatus(loanStatus);
-			String lqbUrl = userProfileService.getLQBUrl(utils
-			        .getLoggedInUser().getId(), loanID);
-			if (lqbUrl != null && lqbUrl.equals(lqbDefaultUrl)) {
+			String lqbUrl;
+			if (lqbLoanId == null || lqbLoanId.isEmpty()) {
 				loanVO.setLqbInformationAvailable(Boolean.FALSE);
+				loanVO.setLqbUrl("-");
 			} else {
-				loanVO.setLqbInformationAvailable(Boolean.TRUE);
-				loanVO.setLqbUrl(lqbUrl);
+				lqbUrl = userProfileService.getLQBUrl(utils.getLoggedInUser()
+				        .getId(), loanID);
+
+				if (lqbUrl != null && lqbUrl.equals(lqbDefaultUrl)) {
+					loanVO.setLqbInformationAvailable(Boolean.FALSE);
+				} else {
+					loanVO.setLqbInformationAvailable(Boolean.TRUE);
+					loanVO.setLqbUrl(lqbUrl);
+				}
+
 			}
 
 			String docId = needListService.checkCreditReport(loanID);
