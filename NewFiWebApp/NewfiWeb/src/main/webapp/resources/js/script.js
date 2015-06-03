@@ -1420,7 +1420,7 @@ function getLoanSummaryHeader() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html("Rates as of "+responseTime);
+    }).html("Rates as of "+getCurrentDate(responseTime));
     headerCont.append(col1);
     if(responseTime!="")
         headerCont.append(col2);
