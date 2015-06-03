@@ -1338,7 +1338,7 @@ function getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcc
 }
 
 function getLoanSummaryHeaderCEP() {
-	currentDateTime= getCurrentDate();
+	currentDateTime= getCurrentDate(responseTime);
 	  
 	   var headerCont = $('<div>').attr({
             "class": "loan-summary-header clearfix"
@@ -1356,29 +1356,7 @@ function getLoanSummaryHeaderCEP() {
     }
 
 
-function getCurrentDate(){
-	var d = new Date();
 
-	var month = d.getMonth()+1;
-	var day = d.getDate();
-	var hours = d.getHours();
-
-	var ampm = d.getHours() >= 12 ? 'pm' : 'am';
-
-	hours = hours % 12;
-	  hours = hours ? hours : 12; 
-
-	var time = hours + ":" + d.getMinutes();
-
-
-	var output = 
-	    ((''+month).length<2 ? '0' : '') + month + '/' +
-	    ((''+day).length<2 ? '0' : '') + day + '/' +
-	    d.getFullYear()+'   '+
-	    time +' '+ampm;
-
-	return output;
-}
 
 function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
   
@@ -1663,7 +1641,7 @@ function getLoanSummaryHeaderCEP() {
     }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
-    }).html(responseTime);
+    }).html(getCurrentDate(responseTime));
     headerCont.append(col1).append(col2);
     return headerCont;
 }

@@ -40,7 +40,8 @@ public class NewFiResponseProcessor implements Callable
         ResponseVO responseVO = new ResponseVO();
         responseVO.setResponseCode( "200" );
         responseVO.setStatus( "0" );
-        responseVO.setResponseTime( getFormattedDate() );
+		responseVO.setResponseTime(System.currentTimeMillis() + "");// getFormattedDate()
+															   // );
         responseVO.setResponseMessage( payload );
         String jsonString = gson.toJson( responseVO );
         jsonString = removeUTFCharacters( jsonString );
