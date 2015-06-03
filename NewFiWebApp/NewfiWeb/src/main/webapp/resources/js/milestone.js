@@ -584,16 +584,23 @@ function getInternalEmployeeMileStoneContext( workItem) {
 							
 							else{
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
+								attachCursorPointerClassToElement(ob.stateInfoContainer);
 							}
 						}
 					});
 			}else{
 				
 				ob.stateInfoContainer.html(ob.workItem.stateInfo);
+				attachCursorPointerClassToElement(ob.stateInfoContainer);
 			}	
 		}		
 	};
 	return internalEmployeeMileStoneContext;
+}
+function attachCursorPointerClassToElement(element){
+	if(element.html()=="Click here to pay"){
+		element.addClass("cursor-pointer");
+	}
 }
 
 function showAppFee (itemToAppendTo,workItem)
