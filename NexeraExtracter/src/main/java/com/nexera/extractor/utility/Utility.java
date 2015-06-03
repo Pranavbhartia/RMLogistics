@@ -1051,6 +1051,8 @@ public class Utility {
 		HSSFRow row = null;
 		HSSFCell cell = null;
 		String currentDate  = getCurrentDate();
+		int indedxForTZ = currentDate.indexOf("+");
+		currentDate = currentDate.substring(0,indedxForTZ)+ "GMT " + currentDate.substring(indedxForTZ,currentDate.length());
 		StringBuilder sb = new StringBuilder("Lending Rates as of: ");
 		sb.append(currentDate);
 		String timeZone = getCurrentTimeZone();
@@ -1078,7 +1080,7 @@ public class Utility {
 	 */
 	private String getCurrentDate(){
 		
-		DateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy, HH:mm:SS Z");
+		DateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy, HH:mm:ss Z");
 		Date date = new Date();
 		String textDate = dateFormat.format(date);
 		return textDate;		
