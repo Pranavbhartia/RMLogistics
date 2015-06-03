@@ -4790,6 +4790,7 @@ var questions = [
 
 
 function checkLqbFileId(){
+    buttonText = "Save & continue";
 	var LQBFileIdPresent = false;
 	var LQBFileId=appUserDetails.loan.lqbFileId;
     if(LQBFileId){
