@@ -1501,6 +1501,8 @@ function paintCustomerApplicationPageStep2() {
 	    		    		
 	    		    		isSpouseOnLoan = quesContxts[0].childContexts.Yes[0].value;
 	    		    		coBorrowerName = quesContxts[0].childContexts.Yes[0].childContexts[isSpouseOnLoan][0].value;
+	    		    		
+	    		    		
 	    		    		if( isSpouseOnLoan =="Yes" && coBorrowerName!="" && coBorrowerName){ 
 	    		    			appUserDetails.isSpouseOnLoan =true;
 	    		    		}else if(isSpouseOnLoan =="No" && coBorrowerName!="" && coBorrowerName){
@@ -2098,6 +2100,12 @@ if($('.ce-option-checkbox').hasClass('myassets')){
     	    }
     		if($(otherContainer).find('.app-option-checked').hasClass('app-option-checked')){
     			appUserDetails.customerOtherAccountDetails=getAccountValues(otherContainer,"customerOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
+    		}
+    		
+    		/*this is the condition when all Assestes are not selected*/
+    		if(!appUserDetails.skipMyAssets && !($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(otherContainer).find('.app-option-checked').hasClass('app-option-checked'))){
+    			showErrorToastMessage("Please select any option for my assets");
+    			return false;
     		}
     		
         }
@@ -5664,3 +5672,4 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
 $(document).on('click',function(){
 	$('.app-dropdown-cont').hide();
 });
+
