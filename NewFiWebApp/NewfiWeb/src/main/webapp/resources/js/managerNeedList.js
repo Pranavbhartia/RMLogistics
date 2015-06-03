@@ -257,6 +257,7 @@ function getLoanNeedsManagerContext(loanId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage(savesuccessfull);
+					window.location.reload();
 					if(callback){
 						callback(ob);
 					}
