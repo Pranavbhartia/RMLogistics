@@ -124,6 +124,7 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanNeedsList.class);
+			criteria.add(Restrictions.eq("loan", loan));
 			criteria.add(Restrictions.eq("needsListMaster", needsListMaster));
 			List<LoanNeedsList> list = criteria.list();
 			if (list.size() > 0)
