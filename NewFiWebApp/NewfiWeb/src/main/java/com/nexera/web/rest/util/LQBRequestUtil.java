@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -12,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
+import com.nexera.common.entity.CustomerEmploymentIncome;
+import com.nexera.common.vo.CustomerEmploymentIncomeVO;
+import com.nexera.common.vo.CustomerSpouseEmploymentIncomeVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 
@@ -187,11 +191,7 @@ public class LQBRequestUtil {
 			hashmap.put("userSSNnumber", loanAppFormVO.getUser()
 			        .getCustomerDetail().getSsn());
 			hashmap.put(
-			        "baseIncome",
-			        Utils.unformatCurrencyField(loanAppFormVO
-			                .getCustomerEmploymentIncome().get(0)
-			                .getCustomerEmploymentIncome()
-			                .getEmployedIncomePreTax()));
+			        "baseIncome",CalculateBaseIncome(loanAppFormVO));
 			hashmap.put("ProdLckdDays", "30");
 
 			if (null == loanAppFormVO.getUser().getCustomerDetail().getSsn()
@@ -366,7 +366,7 @@ public class LQBRequestUtil {
 			hashmap.put("dateOfCoborrowerBirth", new SimpleDateFormat(
 			        "yyyy-MM-dd").format(new Date(loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseDateOfBirth())));
-			hashmap.put("baseCoborrowerIncome", "100000");
+			hashmap.put("baseCoborrowerIncome", CalculateCoborrowerBaseIncome(loanAppFormVO));
 			hashmap.put("applicantCoborrowerAddress", loanAppFormVO
 			        .getCustomerSpouseDetail().getStreetAddress());
 			hashmap.put("userCoborrowerSSNnumber", loanAppFormVO
@@ -435,7 +435,7 @@ public class LQBRequestUtil {
 			hashmap.put("dateOfCoborrowerBirth", new SimpleDateFormat(
 			        "yyyy-MM-dd").format(new Date(loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseDateOfBirth())));
-			hashmap.put("baseCoborrowerIncome", "100000");
+			hashmap.put("baseCoborrowerIncome", CalculateCoborrowerBaseIncome(loanAppFormVO));
 			hashmap.put("applicantCoborrowerAddress", loanAppFormVO
 			        .getCustomerSpouseDetail().getStreetAddress());
 			hashmap.put("userCoborrowerSSNnumber", loanAppFormVO
@@ -799,5 +799,105 @@ public class LQBRequestUtil {
 
 		return hashmap;
 	}
+	
+	private String CalculateBaseIncome(LoanAppFormVO loanAppFormVO){
+		
+		String baseIncome = null;
+		int w2Icome = 0;
+		int selfEmployedIncome = 0;
+		int chileSupport = 0;
+		int socialSecurityIncome = 0;
+		int disabilityIncome = 0;
+		int pensionIncome = 0;
+		int retirementIncome = 0;
+		
+		if(null!= loanAppFormVO.getCustomerEmploymentIncome() && loanAppFormVO.getCustomerEmploymentIncome().size() > 0/*.get(0).getCustomerEmploymentIncome() && null!= loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax()*/){
+			
+			Iterator<CustomerEmploymentIncomeVO> it = loanAppFormVO.getCustomerEmploymentIncome().iterator();
+			while(it.hasNext()){
+				
+				w2Icome = w2Icome + Integer.parseInt(Utils.unformatCurrencyField((it.next()).getCustomerEmploymentIncome().getEmployedIncomePreTax()));
+			}
+				
+		}
+		if(null != loanAppFormVO.getSelfEmployedMonthlyIncome() && !loanAppFormVO.getSelfEmployedMonthlyIncome().equalsIgnoreCase("")){
+			selfEmployedIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getSelfEmployedMonthlyIncome()));
+		}
+		
+		if(null !=loanAppFormVO.getChildSupportAlimony() && !loanAppFormVO.getChildSupportAlimony().equalsIgnoreCase("") ){
+			chileSupport = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getChildSupportAlimony()));
+		}
+		
+		if(null !=loanAppFormVO.getSocialSecurityIncome() && !loanAppFormVO.getSocialSecurityIncome().equalsIgnoreCase("") ){
+			socialSecurityIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getSocialSecurityIncome()));
+		}
+		
+		if(null !=loanAppFormVO.getSsDisabilityIncome() && !loanAppFormVO.getSsDisabilityIncome().equalsIgnoreCase("") ){
+			disabilityIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getSsDisabilityIncome()));
+		}
+		if(null !=loanAppFormVO.getMonthlyPension() && !loanAppFormVO.getMonthlyPension().equalsIgnoreCase("") ){
+			pensionIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getMonthlyPension()));
+		}
+		
+		if(null !=loanAppFormVO.getRetirementIncome() && !loanAppFormVO.getRetirementIncome().equalsIgnoreCase("") ){
+			retirementIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getRetirementIncome()));
+		}
+		
+		baseIncome = (w2Icome+selfEmployedIncome +chileSupport+socialSecurityIncome+disabilityIncome+pensionIncome+retirementIncome)+"";
+		return baseIncome;
+	}
+	
+	private String CalculateCoborrowerBaseIncome(LoanAppFormVO loanAppFormVO) {
+	  
+		String coBorrowerBaseIncome = null;
+		int w2Icome = 0;
+		int selfEmployedIncome = 0;
+		int chileSupport = 0;
+		int socialSecurityIncome = 0;
+		int disabilityIncome = 0;
+		int pensionIncome = 0;
+		int retirementIncome = 0;
+		
+		
+		if(null!= loanAppFormVO.getCustomerSpouseEmploymentIncome() && loanAppFormVO.getCustomerSpouseEmploymentIncome().size() > 0/*.get(0).getCustomerEmploymentIncome() && null!= loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax()*/){
+			
+			Iterator<CustomerSpouseEmploymentIncomeVO> it = loanAppFormVO.getCustomerSpouseEmploymentIncome().iterator();
+			while(it.hasNext()){
+				
+				w2Icome = w2Icome + Integer.parseInt(Utils.unformatCurrencyField((it.next()).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax()));
+			}
+				
+		}
+		if(null!= loanAppFormVO.getCustomerSpouseDetail() && null != loanAppFormVO.getCustomerSpouseDetail().getSelfEmployedIncome() && !loanAppFormVO.getCustomerSpouseDetail().getSelfEmployedIncome().equalsIgnoreCase("")){
+			selfEmployedIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseDetail().getSelfEmployedIncome()));
+		}
+		
+		if(null!= loanAppFormVO.getCustomerSpouseDetail() && null !=loanAppFormVO.getCustomerSpouseDetail().getChildSupportAlimony() && !loanAppFormVO.getCustomerSpouseDetail().getChildSupportAlimony().equalsIgnoreCase("") ){
+			chileSupport = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseDetail().getChildSupportAlimony()));
+		}
+		
+		if(null!= loanAppFormVO.getCustomerSpouseDetail() && null !=loanAppFormVO.getCustomerSpouseDetail().getSocialSecurityIncome() && !loanAppFormVO.getCustomerSpouseDetail().getSocialSecurityIncome().equalsIgnoreCase("") ){
+			socialSecurityIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseDetail().getSocialSecurityIncome()));
+		}
+		
+		if(null!= loanAppFormVO.getCustomerSpouseDetail() && null !=loanAppFormVO.getCustomerSpouseDetail().getDisabilityIncome() && !loanAppFormVO.getCustomerSpouseDetail().getDisabilityIncome().equalsIgnoreCase("") ){
+			disabilityIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseDetail().getDisabilityIncome()));
+		}
+		if(null!= loanAppFormVO.getCustomerSpouseDetail() && null !=loanAppFormVO.getCustomerSpouseDetail().getMonthlyPension() && !loanAppFormVO.getCustomerSpouseDetail().getMonthlyPension().equalsIgnoreCase("") ){
+			pensionIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseDetail().getMonthlyPension()));
+		}
+		
+		if(null!= loanAppFormVO.getCustomerSpouseDetail() && null !=loanAppFormVO.getCustomerSpouseDetail().getRetirementIncome() && !loanAppFormVO.getCustomerSpouseDetail().getRetirementIncome().equalsIgnoreCase("") ){
+			retirementIncome = Integer.parseInt(Utils.unformatCurrencyField(loanAppFormVO.getCustomerSpouseDetail().getRetirementIncome()));
+		}
+		
+		
+		coBorrowerBaseIncome = (w2Icome+selfEmployedIncome +chileSupport+socialSecurityIncome+disabilityIncome+pensionIncome+retirementIncome)+"";
+		
+		
+	    return coBorrowerBaseIncome;
+    }
 
+	
+	
 }
