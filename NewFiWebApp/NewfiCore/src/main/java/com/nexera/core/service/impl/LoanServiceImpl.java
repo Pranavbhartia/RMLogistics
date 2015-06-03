@@ -781,41 +781,46 @@ public class LoanServiceImpl implements LoanService {
 		List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
 		updateLoanTeamList(loanTeam, user, loanId);
 		// Check if realtor email is valid
-		LOG.debug("Realtor email id from registration path: "
-		        + loanVO.getRealtorEmail());
-		User realtor = userProfileService.findUserByMail(loanVO
-		        .getRealtorEmail());
 
-		if (realtor != null && realtor.getId() != 0) {
-			LOG.debug("Adding realtor to loan: " + loanId + "realtor id: "
-			        + realtor.getId());
-			// User is valid. Update the loan team
-			updateLoanTeamList(loanTeam, realtor, loanId);
-			if (realtor.getRealtorDetail() != null
-			        && realtor.getRealtorDetail().getDefaultLoanManager() != null) {
-				// If the realtor has a defaul loan manager, assign him as well
-				updateLoanTeamList(loanTeam, realtor.getRealtorDetail()
-				        .getDefaultLoanManager(), loanId);
+		if (loanVO.getRealtorEmail() != null) {
+			LOG.debug("User is from realtor referal path");
+			User realtor = userProfileService.findUserByMail(loanVO
+			        .getRealtorEmail());
+
+			if (realtor != null && realtor.getId() != 0) {
+				LOG.debug("Adding realtor to loan: " + loanId + "realtor id: "
+				        + realtor.getId());
+				// User is valid. Update the loan team
+				updateLoanTeamList(loanTeam, realtor, loanId);
+				if (realtor.getRealtorDetail() != null
+				        && realtor.getRealtorDetail().getDefaultLoanManager() != null) {
+					// If the realtor has a defaul loan manager, assign him as
+					// well
+					updateLoanTeamList(loanTeam, realtor.getRealtorDetail()
+					        .getDefaultLoanManager(), loanId);
+				}
+
+			}
+		}
+		boolean defaultManagerAdded = Boolean.FALSE;
+		if (loanVO.getLmEmail() != null) {
+			LOG.debug("LM email id from registration path: "
+			        + loanVO.getLmEmail());
+			// Check if loanmanageremail is valid
+			userProfileService.findUserByMail(loanVO.getLmEmail());
+			User loanManager = userProfileService.findUserByMail(loanVO
+			        .getLmEmail());
+
+			if (loanManager != null && loanManager.getId() != 0) {
+				LOG.debug("Adding LM to loan: " + loanId + "LM id: "
+				        + loanManager.getId());
+				// User is valid. Update the loan team
+				updateLoanTeamList(loanTeam, loanManager, loanId);
+				defaultManagerAdded = Boolean.TRUE;
 			}
 
 		}
-		LOG.debug("LM email id from registration path: " + loanVO.getLmEmail());
-		// Check if loanmanageremail is valid
-		userProfileService.findUserByMail(loanVO.getLmEmail());
-		User loanManager = userProfileService.findUserByMail(loanVO
-		        .getLmEmail());
-		boolean defaultManagerAdded = Boolean.FALSE;
-		if (loanManager != null && loanManager.getId() != 0) {
-			LOG.debug("Adding LM to loan: " + loanId + "LM id: "
-			        + loanManager.getId());
-			// User is valid. Update the loan team
-			updateLoanTeamList(loanTeam, loanManager, loanId);
-			defaultManagerAdded = Boolean.TRUE;
-		}
-		/*
-		 * TODO: Get the state from the loan app form and pass it to the method
-		 * below
-		 */
+
 		LOG.debug("Was a loan manager added for loan: " + loanId + " : "
 		        + defaultManagerAdded);
 		if (!defaultManagerAdded) {
