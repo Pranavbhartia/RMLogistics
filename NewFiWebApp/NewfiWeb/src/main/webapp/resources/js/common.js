@@ -908,8 +908,17 @@ function hideCompleteYourProfile(){
 
 
 
-function getCurrentDate() {
-    var d = new Date();
+function getCurrentDate(longVal) {
+    var d 
+    if(longVal){
+    	var val=parseInt(longVal);
+    	if(isNaN(val))
+    		return longVal;
+    	d = new Date(val);
+    }else{
+		d = new Date();
+    }
+    
     var month = d.getMonth() + 1;
     var day = d.getDate();
     var hours = d.getHours();
@@ -920,12 +929,11 @@ function getCurrentDate() {
     hours = hours % 12;
     hours = hours ? hours : 12;
 
-    min = (min < 10 ? '0' + min : '' + min);
+    //min = (min < 10 ? '0' + min : '' + min);
 
-    var time = hours + ":" + min;
+    var time = (hours<10?"0"+hours:hours) + ":" + (min<10?"0"+min:min);
 
-
-    var output = (('' + month).length < 2 ? '0' : '') + month + '/' + (('' + day).length < 2 ? '0' : '') + day + '/' + d.getFullYear() + '   ' + time + ' ' + ampm;
+    var output = (month<10?'0'+month:month) + '/' + (day<10?'0'+day:day) + '/' + d.getFullYear() + '   ' + time + ' ' + ampm;
 
     return output;
 }
