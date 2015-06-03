@@ -4791,7 +4791,7 @@ var questions = [
 
 function checkLqbFileId(){
 	var LQBFileIdPresent = false;
-	var LQBFileId=appUserDetails.loan.lqbFileId;
+	var LQBFileId=selectedUserDetail.lqbFileId;
     if(LQBFileId){
     	LQBFileIdPresent = true;
     }
