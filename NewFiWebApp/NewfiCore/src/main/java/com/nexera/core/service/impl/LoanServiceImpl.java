@@ -781,11 +781,14 @@ public class LoanServiceImpl implements LoanService {
 		List<LoanTeam> loanTeam = new ArrayList<LoanTeam>();
 		updateLoanTeamList(loanTeam, user, loanId);
 		// Check if realtor email is valid
-
+		LOG.debug("Realtor email id from registration path: "
+		        + loanVO.getRealtorEmail());
 		User realtor = userProfileService.findUserByMail(loanVO
 		        .getRealtorEmail());
 
 		if (realtor != null && realtor.getId() != 0) {
+			LOG.debug("Adding realtor to loan: " + loanId + "realtor id: "
+			        + realtor.getId());
 			// User is valid. Update the loan team
 			updateLoanTeamList(loanTeam, realtor, loanId);
 			if (realtor.getRealtorDetail() != null
@@ -796,12 +799,15 @@ public class LoanServiceImpl implements LoanService {
 			}
 
 		}
+		LOG.debug("LM email id from registration path: " + loanVO.getLmEmail());
 		// Check if loanmanageremail is valid
 		userProfileService.findUserByMail(loanVO.getLmEmail());
 		User loanManager = userProfileService.findUserByMail(loanVO
 		        .getLmEmail());
 		boolean defaultManagerAdded = Boolean.FALSE;
 		if (loanManager != null && loanManager.getId() != 0) {
+			LOG.debug("Adding LM to loan: " + loanId + "LM id: "
+			        + loanManager.getId());
 			// User is valid. Update the loan team
 			updateLoanTeamList(loanTeam, loanManager, loanId);
 			defaultManagerAdded = Boolean.TRUE;
@@ -810,18 +816,40 @@ public class LoanServiceImpl implements LoanService {
 		 * TODO: Get the state from the loan app form and pass it to the method
 		 * below
 		 */
-
+		LOG.debug("Was a loan manager added for loan: " + loanId + " : "
+		        + defaultManagerAdded);
 		if (!defaultManagerAdded) {
+			LOG.debug("USer has come from customer engagement path, assigning loan managr based on zip code entered: "
+			        + loanVO.getUserZipCode() + " for loan " + loanId);
 			String stateName = stateLookupService.getStateCodeByZip(loanVO
 			        .getUserZipCode());
+			LOG.debug("State name returned from lookup: " + stateName
+			        + " for loan " + loanId);
 			UserVO defaultUser = assignmentHelper
 			        .getDefaultLoanManager(stateName);
 
 			if (defaultUser != null) {
+				LOG.debug("This user will be assigned to team: "
+				        + defaultUser.getId() + " for loan " + loanId);
 				updateLoanTeamList(loanTeam,
 				        User.convertFromVOToEntity(defaultUser), loanId);
+			} else {
+				LOG.error("No Loan manager was assigned to team with loan object: "
+				        + loanVO);
 			}
 
+		}
+		if (LOG.isDebugEnabled()) {
+			if (loanTeam != null) {
+				for (LoanTeam loanTeam2 : loanTeam) {
+					if (loanTeam2.getUser() != null) {
+						LOG.debug("This user will be added in the loan: "
+						        + loanTeam2.getUser().getId()
+						        + " for the loan " + loanId);
+					}
+
+				}
+			}
 		}
 		loanDao.saveAll(loanTeam);
 	}
