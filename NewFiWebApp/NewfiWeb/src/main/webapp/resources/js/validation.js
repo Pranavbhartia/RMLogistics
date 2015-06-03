@@ -22,7 +22,8 @@ function validateInput(element,inputVal,message){
 	var width=$(element).css('width');
 	//$('input[name="currentMortgageBalance"]')
 
-	if(inputVal == undefined || inputVal == "" ){
+	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""
+		){
 	
 			$('input[name="' + name + '"]').next('.err-msg').html(message).show();
 			$('input[name="' + name + '"]').addClass('ce-err-input').show();
@@ -49,7 +50,11 @@ function validateInput(element,inputVal,message){
 	
 	
 }
-
+function validateDropDown(){
+	if($(".soft-menu-wrapper").css('display')=="block"){
+			$(".soft-menu-wrapper").hide();
+		}
+}
 function validateCheckbox(isStatus){
 
         for(var i=1;i<$('.ce-option-checkbox').length;i++){
