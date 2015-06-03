@@ -130,18 +130,20 @@ public class WorkflowConstants {
 	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Click here to learn more about using the newfi portal";
 	public static final String VERIFY_EMAIL_NOTIFICATION_CONTENT = "Your email is not verified. Click <a href='#' onclick='forgetPassword()' 'style=color: blue;'> here </a> to resend your verification email.";
 	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your loan profile.";
-	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have an real estate agent? Click here to add them to your newfi loan team.";
+	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have a real estate agent? Click here to add them to your newfi loan team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION = "The purchase documents are about to expire within {\"24\":\"elapsed\"} hours ";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION_STATIC = "The purchase documents are about to expire.";
 	public static final String NEEDED_ITEMS_NOTIFICATION_CONTENT = "Initial needs list has not been created";
 	public static final String LOCK_RATE__NOTIFICATION_CONTENT = "Rates not locked";
-	public static final String APP_FEE__NOTIFICATION_CONTENT = "Fee pending";
-	public static final String APP_FEE_OVERDUE_NOTIFICATION_CONTENT = "Fee pending";
+	public static final String APP_FEE__NOTIFICATION_CONTENT = "Fee pending.";
+	public static final String APP_FEE_OVERDUE_NOTIFICATION_CONTENT = "Fee overdue.";
 	public static final String APPRAISAL_NOTIFICATION__NOTIFICATION_CONTENT = "Appraisals not available";
 	public static final String UW_NOTIFICATION__NOTIFICATION_CONTENT = "Underwriting pending";
 	public static final String LOCK_RATE_CUST_NOTIFICATION_CONTENT = "Request Rate Lock";
 	public static final String NEEDS_LIST_SET_TYPE_CONTENT = "Your needs list has been set. Click to upload.";
+	public static final String APP_FEE_CHANGED_CONTENT = "Application fee has been changed to ";
+	
 	static {
 
 		MILESTONE_WF_ITEM_LOOKUP.put(
