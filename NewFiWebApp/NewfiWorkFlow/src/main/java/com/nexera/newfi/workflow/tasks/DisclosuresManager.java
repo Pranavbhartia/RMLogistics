@@ -122,19 +122,13 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		String[] ary = new String[1];
 		ary[0] = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO).toString();
-		if (objectMap
-		        .get(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
-		        .toString()
-		        .equalsIgnoreCase(
-		                CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE)) {
-			int loanId = Integer.parseInt(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-			String disclosureFileUUId = iWorkflowService.getDisclosureURL(
-			        loanId, MasterNeedsEnum.Disclsoure_Available);
-			objectMap.put("url", baseUrl);
-			objectMap.put("disclousreslink",
-			        utils.getFileUrl(baseUrl, disclosureFileUUId));
-		}
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String disclosureFileUUId = iWorkflowService.getDisclosureURL(loanId,
+		        MasterNeedsEnum.Disclsoure_Available);
+		objectMap.put("url", baseUrl);
+		objectMap.put("disclousreslink",
+		        utils.getFileUrl(baseUrl, disclosureFileUUId));
 		substitutions.put("-message-", ary);
 		for (String key : objectMap.keySet()) {
 			ary = new String[1];
