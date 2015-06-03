@@ -33,9 +33,6 @@ function paintRatesTablePage(data) {
 	 */
 }
 
-function downloadExcel(){
-	location.href = "http://www.blustream.com/ratesheet/downloadXLS";
-}
 
 
 // function to append FNMA Fixed Rate tables

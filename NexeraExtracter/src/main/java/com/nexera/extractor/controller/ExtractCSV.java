@@ -14,8 +14,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFFormulaEvaluator;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.nexera.extractor.constants.CommonConstant;
 import com.nexera.extractor.entity.FileProductPointRate;
-import com.nexera.extractor.entity.RestResponse;
 import com.nexera.extractor.utility.Utility;
 
 @Controller
@@ -40,13 +37,14 @@ public class ExtractCSV {
 	@RequestMapping("/")
 	public ModelAndView rates() {
 		ModelAndView mav = new ModelAndView();
+		mav.addObject("baseURL", CommonConstant.BASE_URL);
 		mav.setViewName("rates");
 		return mav;
 	}
 
 	@RequestMapping(value = "/downloadXLS")
 	public void downloadXLSFile(HttpServletRequest request,
-			HttpServletResponse response) {
+	        HttpServletResponse response) {
 		File file = createXLSFile();
 		OutputStream outStream = null;
 		InputStream is = null;
@@ -55,7 +53,7 @@ public class ExtractCSV {
 			in = new BufferedInputStream(new FileInputStream(file));
 			response.setContentType("application/xlsx");
 			response.setHeader("Content-Disposition", "attachment; filename="
-					+ file.getName());
+			        + file.getName());
 
 			ServletOutputStream out = response.getOutputStream();
 			IOUtils.copy(in, out);
@@ -79,7 +77,7 @@ public class ExtractCSV {
 					e.printStackTrace();
 				}
 			}
-			
+
 			if (in != null) {
 				try {
 					in.close();
@@ -92,13 +90,14 @@ public class ExtractCSV {
 			if (file.exists()) {
 				file.delete();
 			}
-			
+
 			File tempfile = new File(CommonConstant.COPIED_TEMPELATE);
-			if(tempfile.exists()){
+			if (tempfile.exists()) {
 				tempfile.delete();
 			}
-			File tempDir = new File(CommonConstant.TEMP_PATH_FOR_COPIED_TEMPELATE);
-			if(tempDir.exists()){
+			File tempDir = new File(
+			        CommonConstant.TEMP_PATH_FOR_COPIED_TEMPELATE);
+			if (tempDir.exists()) {
 				tempDir.delete();
 			}
 		}
@@ -115,24 +114,25 @@ public class ExtractCSV {
 		// final File folder = new File("/apps/tmp/RateSheet Files/Price/");
 		List<FileProductPointRate> list = utility.getFileProductlist(folder);
 		Long folderLastModfied = folder.lastModified();
-		
 
-		//utility.writeResponseDataSetToSheet(sheet, restResponse);
+		// utility.writeResponseDataSetToSheet(sheet, restResponse);
 		workbook = utility.buildUIComponent(list, folderLastModfied, workbook);
 		try {
-			/*file = new File(tomcatDirectoryPath()
-					+ commonConstant.DEFAULT_FILE_NAME);*/
+			/*
+			 * file = new File(tomcatDirectoryPath() +
+			 * commonConstant.DEFAULT_FILE_NAME);
+			 */
 			file = new File(CommonConstant.COPIED_TEMPELATE);
 			out = new FileOutputStream(file);
-			if(null != workbook){
-			workbook.write(out);
-			
-			}			
-			if(null != out){
-			out.flush();
-			out.close();
+			if (null != workbook) {
+				workbook.write(out);
+
 			}
-			
+			if (null != out) {
+				out.flush();
+				out.close();
+			}
+
 			System.out.println("Excel written successfully..");
 
 		} catch (FileNotFoundException e) {
@@ -147,7 +147,7 @@ public class ExtractCSV {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		
+
 			}
 		}
 		return file;
