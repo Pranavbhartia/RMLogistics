@@ -719,6 +719,7 @@ function paintRefinanceStepCEP() {
            if(refinanceTeaserRate.isIncludeTaxes=="Yes"|| refinanceTeaserRate.isIncludeTaxes=="No"){
       			
       		}else{
+      			validateDropDown();
       			showErrorToastMessage(answerQuestionOne);
       			return false;
       		}		  
@@ -813,6 +814,7 @@ function paintNewResidenceTypeQues(){
             	removeToastMessage();
             	paintRefinanceHomeZipCode();	
             }else{
+            	validateDropDown();
             	showErrorToastMessage(yesyNoErrorMessage);
             }
             
@@ -824,6 +826,7 @@ function paintNewResidenceTypeQues(){
             	removeToastMessage();
             	paintHomeZipCode();	
             }else{
+            	validateDropDown();
             	showErrorToastMessage(yesyNoErrorMessage);
             }
            // paintHomeZipCode();
@@ -985,6 +988,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                  
             },
             error: function(data) {
+            	validateDropDown();
                 showErrorToastMessage(errorInrefinanceRates+data);
                 
                 hideOverlay();
@@ -1278,6 +1282,7 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
         },
         error: function(data) {
            // alert(data);
+        	validateDropDown();
             $('#ce-main-container').html(data.toString());
             // $('#overlay-loader').hide();
             showErrorToastMessage(data);
@@ -1300,6 +1305,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
                 window.location.href = data;
             },
             error: function(erro) {
+            	validateDropDown();
                 showErrorToastMessage(erro);
             }
         });
