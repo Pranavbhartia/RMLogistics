@@ -96,7 +96,7 @@ public interface CommonConstants {
 	        + "Newfi Team";
 
 	public static final String SENDER_DOMAIN = "@loan.newfi.com";
-	public static final String FORGET_PASSWORD_SUCCESS_MESSAGE = "Please Check your mail for reset password";
+	public static final String FORGET_PASSWORD_SUCCESS_MESSAGE = "Please check your mail for reset password";
 
 	/*
 	 * Constants for email subjects
