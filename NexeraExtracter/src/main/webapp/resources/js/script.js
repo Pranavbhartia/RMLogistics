@@ -34,7 +34,7 @@ function paintRatesTablePage(data) {
 }
 
 function downloadExcel(){
-	location.href = "downloadXLS";
+	location.href = "http://www.blustream.com/ratesheet/downloadXLS";
 }
 
 

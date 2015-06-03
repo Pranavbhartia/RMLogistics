@@ -2,9 +2,9 @@
 <html>
 <head>
 <title>Blustream Lending Rate Sheet</title>
-<link rel="stylesheet" href="resources/css/bootstrap.min.css">
-<link rel="stylesheet" href="resources/css/styles.css">
-<link rel="stylesheet" href="resources/css/styles-print.css">
+<link rel="stylesheet" href="http://www.blustream.com/ratesheet/resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://www.blustream.com/ratesheet/resources/css/styles.css">
+<link rel="stylesheet" href="http://www.blustream.com/ratesheet/resources/css/styles-print.css">
 </head>
 <body>
 	<div class="">
@@ -50,13 +50,13 @@
 
 
 
-	<script type="text/javascript" src="resources/js/jquery-2.1.3.min.js"></script>
-	<script type="text/javascript" src="resources/js/script.js"></script>
-	<script type="text/javascript" src="resources/js/masonry.pkgd.min.js"></script>
+	<script type="text/javascript" src="http://www.blustream.com/ratesheet/resources/js/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="http://www.blustream.com/ratesheet/resources/js/script.js"></script>
+	<script type="text/javascript" src="http://www.blustream.com/ratesheet/resources/js/masonry.pkgd.min.js"></script>
 	<script>
 		$(document).ready(function() {
 			$.ajax({
-				url : "rest/rates"
+				url : "http://www.blustream.com/ratesheet/rest/rates"
 			}).then(function(data) {
 				paintRatesTablePage(JSON.parse(data));
 			});
