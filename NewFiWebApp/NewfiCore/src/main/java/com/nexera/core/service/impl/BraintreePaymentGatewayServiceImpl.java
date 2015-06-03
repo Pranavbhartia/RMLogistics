@@ -2,6 +2,7 @@ package com.nexera.core.service.impl;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -168,6 +169,9 @@ public class BraintreePaymentGatewayServiceImpl implements
 		emailVO.setSubject(subject);
 		emailVO.setTemplateId(template.getValue());
 		emailVO.setTokenMap(substitutions);
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailVO.setCCList(ccList);
 		try {
 			sendEmailService.sendEmailForCustomer(emailVO, user, template);
 		} catch (InvalidInputException e) {
