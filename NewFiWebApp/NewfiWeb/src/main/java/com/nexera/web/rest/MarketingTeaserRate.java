@@ -25,6 +25,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.MarketingPageRateVo;
@@ -44,11 +45,11 @@ public class MarketingTeaserRate {
 
 	@RequestMapping(value = "/marketingTeaserRate", method = RequestMethod.POST)
 	public List<MarketingPageRateVo> findMarkeingTeaseRates(
-	        @RequestBody String teaserRate) {
+	       String teaserRate) {
 		LOG.info(" Inside findMarkeingTeaseRates method");
 		Gson gson = new Gson();
 		String lockRateData = null;
-
+       
 		List<MarketingPageRateVo> marketingPageRateVo = null;
 
 		HashMap<String, String> map = lqbCacheInvoker.invokeRest(teaserRate);
