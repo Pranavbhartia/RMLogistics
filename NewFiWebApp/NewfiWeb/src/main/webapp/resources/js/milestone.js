@@ -647,9 +647,14 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 			"mileNotificationId" : workItem.id,
 			"data-text" : workItem.workflowItemType
 		});
-		txtRow1.html("Click here to upload more items");
-		$(txtRow1).addClass("cursor-pointer");
-		txtRow1.bind("click", function(e) {
+		var spanHolder = $('<span>').attr({
+			"class" : "cursor-pointer",
+			"mileNotificationId" : workItem.id,
+			"data-text" : workItem.workflowItemType
+		}).html("Click here to upload more items");
+		txtRow1.append(spanHolder);
+		
+		spanHolder.bind("click", function(e) {
 			milestoneChildEventHandler(e)
 		});
 		itemToAppendTo.append(txtRow1);	
@@ -827,12 +832,18 @@ function getAppFeeEdit(workItem)
 	}
 	var appFeeEditItem = $('<div>').attr({
 		"id" : "SM_FEE_EDIT",
-		"class" : clas+" showAnchor",
+		"class" : clas,
+		"data-text" : workItem.workflowItemType,
+		"mileNotificationId":workItem.id
+	});
+	var spanContainer=$('<span>').attr({
+		"class" : "showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
 	}).html("Click here to change fee").bind("click", function(e) {
 		milestoneChildEventHandler(e);
 	});
+	appFeeEditItem.append(spanContainer);
 	return appFeeEditItem;
 }
 function getMilestoneTeamMembeTable(input,workItem) {
@@ -851,7 +862,7 @@ function getMilestoneTeamMembeTable(input,workItem) {
 	if(!userList ||  userList.length==0)
 		return;
 	
-	var addNewMember = $('<div>').attr({
+	var addNewMember = $('<span>').attr({
 		"class" : clas+" showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
@@ -1402,16 +1413,22 @@ function appendMilestoneItem(workflowItem, childList) {
 				"mileNotificationId" : childList[index].id,
 				"data-text" : childList[index].workflowItemType,
 				"id":"WF"+childList[index].id
+			});
+			var childSpan = $('<span>').attr({
+				"mileNotificationId" : childList[index].id,
+				"data-text" : childList[index].workflowItemType
 			}).html(childList[index].displayContent);
+			childRow.append(childSpan);
 			if(childList[index].workflowItemType == "QC_STATUS"  && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == LOAN_MANAGER)
 			{
 				continue;
 			}
 			childRow.attr("WFchild",true);
-			childRow.bind("click", function(e) {
+			childSpan.attr("WFchild",true);
+			childSpan.bind("click", function(e) {
 				milestoneChildEventHandler(e)
 			});
-			addClicableClassToElement(childRow,childList[index])
+			addClicableClassToElement(childSpan,childList[index])
 			if(childList[index].status!=COMPLETED)
 				workFlowContext.itemsStatesToBeFetched.push(childList[index].id);
 
