@@ -131,6 +131,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 			String disclosureFileUUId = iWorkflowService.getDisclosureURL(
 			        loanId, MasterNeedsEnum.Disclsoure_Available);
+			objectMap.put("url", baseUrl);
 			objectMap.put("disclousreslink",
 			        utils.getFileUrl(baseUrl, disclosureFileUUId));
 		}
