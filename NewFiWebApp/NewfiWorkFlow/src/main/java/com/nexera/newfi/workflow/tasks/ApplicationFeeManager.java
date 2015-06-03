@@ -245,7 +245,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		User user = new User();
 		user.setId(userId);
-		makeANote(loanId, newAppFee.toString(), user);
+		String message= WorkflowConstants.APP_FEE_CHANGED_CONTENT + newAppFee.toString();
+		makeANote(loanId, message, user);
 		return newAppFee.toString();
 	}
 
