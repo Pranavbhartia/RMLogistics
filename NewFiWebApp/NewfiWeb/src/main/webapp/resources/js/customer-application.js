@@ -4792,7 +4792,7 @@ var questions = [
 function checkLqbFileId(){
     buttonText = "Save & continue";
 	var LQBFileIdPresent = false;
-	var LQBFileId=selectedUserDetail.lqbFileId;
+	var LQBFileId=appUserDetails.loan.lqbFileId;
     if(LQBFileId){
     	LQBFileIdPresent = true;
     }
