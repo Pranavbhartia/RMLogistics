@@ -56,42 +56,48 @@ public abstract class NexeraWorkflowTask {
 				String emailTemplateKey = objectMap.get(
 				        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
 				        .toString();
-				String emailTemplate = WorkflowDisplayConstants.EMAIL_TEMPLATE_DEFAULT_ID;
-				Template template = templateService
-				        .getTemplateByKey(emailTemplateKey);
-				if (template != null) {
-					LOG.info("Send Email Template Found " + template.getValue());
-					emailTemplate = template.getValue();
-				}
-				EmailVO emailEntity = new EmailVO();
-				String[] names = new String[1];
-				names[0] = loanVO.getUser().getFirstName();
+				if (emailTemplateKey != null) {
+					String emailTemplate = null;
+					Template template = templateService
+					        .getTemplateByKey(emailTemplateKey);
+					if (template != null) {
+						LOG.info("Send Email Template Found "
+						        + template.getValue());
+						emailTemplate = template.getValue();
 
-				Map<String, String[]> substitutions = new HashMap<String, String[]>();
-				substitutions.put("-name-", names);
-				substitutions = doTemplateSubstitutions(substitutions,
-				        objectMap);
-				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
-				        + CommonConstants.SENDER_EMAIL_ID);
-				emailEntity.setSenderName("Newfi System");
-				if (subject == null) {
-					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
-				} else {
-					emailEntity.setSubject(subject);
-				}
-				emailEntity.setTokenMap(substitutions);
-				emailEntity.setTemplateId(emailTemplate);
-				List<String> ccList = new ArrayList<String>();
-				ccList.add(loanVO.getUser().getUsername()
-				        + CommonConstants.SENDER_EMAIL_ID);
-				emailEntity.setCCList(ccList);
-				try {
-					sendEmailService.sendEmailForTeam(emailEntity,
-					        loanVO.getId(), template);
-				} catch (InvalidInputException e) {
-					LOG.error("Exception Caught " + e.getMessage());
-				} catch (UndeliveredEmailException e) {
-					LOG.error("Exception Caught " + e.getMessage());
+						EmailVO emailEntity = new EmailVO();
+						String[] names = new String[1];
+						names[0] = loanVO.getUser().getFirstName();
+
+						Map<String, String[]> substitutions = new HashMap<String, String[]>();
+						substitutions.put("-name-", names);
+						substitutions = doTemplateSubstitutions(substitutions,
+						        objectMap);
+						emailEntity.setSenderEmailId(loanVO.getUser()
+						        .getUsername()
+						        + CommonConstants.SENDER_EMAIL_ID);
+						emailEntity.setSenderName("Newfi System");
+						if (subject == null) {
+							emailEntity
+							        .setSubject(CommonConstants.SUBJECT_DEFAULT);
+						} else {
+							emailEntity.setSubject(subject);
+						}
+						emailEntity.setTokenMap(substitutions);
+						emailEntity.setTemplateId(emailTemplate);
+						List<String> ccList = new ArrayList<String>();
+						ccList.add(loanVO.getUser().getUsername()
+						        + CommonConstants.SENDER_EMAIL_ID);
+						emailEntity.setCCList(ccList);
+						try {
+							sendEmailService.sendEmailForTeam(emailEntity,
+							        loanVO.getId(), template);
+						} catch (InvalidInputException e) {
+							LOG.error("Exception Caught " + e.getMessage());
+						} catch (UndeliveredEmailException e) {
+							LOG.error("Exception Caught " + e.getMessage());
+						}
+					}
 				}
 			}
 		}
