@@ -657,7 +657,7 @@ function paintCustomerApplicationPageStep1a() {
 	    	var city = $('input[name="city"]').val();
 	    	var zipCode = $('input[name="zipCode"]').val();	    	
 	    	var addressStreet =   $('input[name="streetAddress"]').val();	    	
-	        var selectedProperty = $('.ce-option-checkbox').hasClass('ce-option-checked');
+	        var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
 	    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
 	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
@@ -683,7 +683,7 @@ function paintCustomerApplicationPageStep1a() {
 	    	if(!isSuccess){
 				return false;
 			}
-	       if($('.ce-option-checkbox').hasClass('ce-option-checked')){
+	       if($('.ce-option-checkbox').hasClass('app-option-checked')){
 	    		
 	    	}else{
 	    		var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
@@ -730,8 +730,8 @@ function paintCheckBox(){
 	var checkbox=$('<div>').attr({
 		"class":"ce-option-checkbox"
 	}).html("I have not yet selected a  property").bind('click',function(event){
-		if($(this).hasClass('ce-option-checked')){
-    		$(this).removeClass('ce-option-checked');
+		if($(this).hasClass('app-option-checked')){
+    		$(this).removeClass('app-option-checked');
     		$('input[name=streetAddress]').val('');
     		$('input[name=streetAddress]').parent().parent().show();
     		$('input[name=addressStreet]').parent().parent().show();
@@ -745,7 +745,7 @@ function paintCheckBox(){
     	
     		
     	}else{
-        	$(this).addClass('ce-option-checked');
+        	$(this).addClass('app-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
         	$('input[name="propStreetAddress"]').parent().parent().hide();
          	$('input[name="propState"]').parent().parent().hide();
