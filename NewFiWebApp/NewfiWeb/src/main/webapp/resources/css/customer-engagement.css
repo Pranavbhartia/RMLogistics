@@ -205,7 +205,9 @@
 	overflow: hidden;
 	word-break: break-word;
 }
-
+.app-option-checked {
+	background: url(../images/check_box_checked.png) no-repeat left 14px;
+}
 .ce-option-checked{
 	background: url(../images/check_box_checked.png) no-repeat left 14px;
 }
