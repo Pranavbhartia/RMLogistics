@@ -24,9 +24,9 @@
     text-transform: capitalize;
     cursor: pointer;
 }
-.app-option-checked {
+/* .app-option-checked {
 	background: url(../images/check_box_checked.png) no-repeat left center !important;
-}
+} */
 .app-ques-wrapper {
     margin-bottom: 10px;
 	padding-top: 5px;
