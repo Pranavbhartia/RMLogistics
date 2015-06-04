@@ -52,7 +52,7 @@
 			<div id="ce-main-container"></div>			
 		</div>
 	</div>
-	<jsp:include page="customer-engagement-footer.jsp"></jsp:include>
+	<jsp:include page="login-inline-footer.jsp"></jsp:include>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>

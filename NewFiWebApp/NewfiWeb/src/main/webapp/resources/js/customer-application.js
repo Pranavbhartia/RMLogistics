@@ -4223,6 +4223,8 @@ function saveUserAndLockRate(appUserDetails) {
  
 
 function appProgressBaar(num){
+	adjustCustomerApplicationPageOnResize();
+	adjustCustomerEngagementPageOnResize();
 	$('#step-no').text(num);
 	var count = 6;
 	$("#appProgressBaarId_" + num).removeClass('ce-lp-in-progress')

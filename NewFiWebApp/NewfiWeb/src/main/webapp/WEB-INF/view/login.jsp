@@ -146,7 +146,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			
 			<!-- Footer -->
 			 <!-- <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div> -->
-    <jsp:include page="inlineFooter.jsp"></jsp:include>
+    <jsp:include page="login-inline-footer.jsp"></jsp:include>
 			
 		
 	</div>

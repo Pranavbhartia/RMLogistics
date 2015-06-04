@@ -436,6 +436,10 @@
 	.add-member-input-cont{
 		padding-right: 10px;
 	}
+	#ms-add-member-popup {
+		right: 0px;
+		width: 440px;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
@@ -721,6 +725,9 @@
 	}
 	.ce-cp{
 		margin-left: 40px;
+	}
+	.ce-option-ques-wrapper{
+		width: 360px;
 	}
 }
 
@@ -1188,8 +1195,8 @@
 		margin-bottom: 0;
 	}
 	#ms-add-member-popup{
-		right: 0;
-		width:300px;
+		left: -60px;
+		width:310px;
 	}
 	#ms-add-member-popup .add-member-sel,#ms-add-member-popup .add-member-sel-search
 		{
@@ -1274,6 +1281,26 @@
 	}
 	.ce-cp{
 		padding: 0 10px;
+	}
+	.ce-option-ques-wrapper {
+		margin: 0 0 15px 0;
+		padding: 0;
+		width: 95%;
+	}
+	.ce-sub-option-wrapper .ce-option-text {
+		font-size: 15px;
+	}
+	.ce-option-ques-wrapper .ce-rp-ques-text{
+		font-size: 13px;
+	}
+	.ce-input{
+		font-size: 15px;
+	}
+	.add-account-btn {
+	    margin: -5px 0 20px 0px;
+	}
+	.ce-option-checkbox{
+		font-size: 15px;
 	}
 }
 
