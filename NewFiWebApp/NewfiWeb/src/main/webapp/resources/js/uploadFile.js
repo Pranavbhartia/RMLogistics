@@ -522,7 +522,13 @@ function createDropZone(needID) {
 			appCreated = true;
 		}
 	} else {
-		var appDetails = JSON.parse(newfiObject.appUserDetails);
+		var appDetails;
+		if(typeof(newfiObject.appUserDetails)!="object"){
+			appDetails = JSON.parse(newfiObject.appUserDetails);	
+		}else{
+			appDetails = newfiObject.appUserDetails;
+		}
+		
 		if (appDetails.loan && appDetails.loan.lqbFileId
 				&& appDetails.loan.lqbFileId != "") {
 			appCreated = true;
