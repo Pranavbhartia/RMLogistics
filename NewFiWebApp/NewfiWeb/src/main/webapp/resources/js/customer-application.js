@@ -45,18 +45,13 @@ appUserDetails.spouseGovernmentQuestions = spouseGovernmentQuestions;
 $(document).on('click',function(){
 	
 	if($('#state-dropdown-wrapper').css("display") == "block"){
-		toggleStateDropDown();
+		$('#state-dropdown-wrapper').hide();
 	}
 	if($('#carrier-dropdown-wrapper').css("display")=="block"){
 		toggleCarrierDropDown();
 	}
 	if($('#state-dropdown-wrapper-property').css("display") == "block"){
-		$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
-			$('#state-dropdown-wrapper-property').perfectScrollbar({
-				suppressScrollX : true
-			});
-			$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
-		});
+		$('#state-dropdown-wrapper-property').hide();
 	}
 	
 	
@@ -660,18 +655,11 @@ function paintCustomerApplicationPageStep1a() {
 	    	var address= $('input[name="streetAddress"]').val();
 	    	var inputState = $('input[name="state"]').val();
 	    	var city = $('input[name="city"]').val();
-	    	var zipCode = $('input[name="zipCode"]').val();
-	    	
-	    	
-	    	
-	    	var addressStreet =   $('input[name="streetAddress"]').val();
-	    	
+	    	var zipCode = $('input[name="zipCode"]').val();	    	
+	    	var addressStreet =   $('input[name="streetAddress"]').val();	    	
 	        var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
-	    	
-	
-	   
 	    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
-	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
+	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
 	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
 			
 	   
@@ -684,7 +672,14 @@ function paintCustomerApplicationPageStep1a() {
 	    	}
 	    	if(!zipcodeStatus){
 	    		return false;
-	    	}  
+	    	} else{
+	    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+
+	    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+	    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+           		    return false;
+           	 }
+	    	} 
 	    	if(!isSuccess){
 				return false;
 			}
@@ -1502,71 +1497,29 @@ function paintCustomerApplicationPageStep2() {
 	    		    		isSpouseOnLoan = quesContxts[0].childContexts.Yes[0].value;
 	    		    		coBorrowerName = quesContxts[0].childContexts.Yes[0].childContexts[isSpouseOnLoan][0].value;
 	    		    		
-	    		    		
+	    		    		var response=validateCoBorowerInformation();
+	    		    		if(!response){
+	    		    			return false;
+	    		    		}
 	    		    		if( isSpouseOnLoan =="Yes" && coBorrowerName!="" && coBorrowerName){ 
 	    		    			appUserDetails.isSpouseOnLoan =true;
 	    		    		}else if(isSpouseOnLoan =="No" && coBorrowerName!="" && coBorrowerName){
 	    		    			
 	    		    			appUserDetails.isSpouseOnLoan =false;
 	    		    			appUserDetails.spouseName  = "";
-	    		    		}else{
-	    		    			
-	    		    			var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
-	    		    			var question1=validateInput($('input[name="coBorrowerLastName"]'),$('input[name="coBorrowerLastName"]').val(),message);
-	    		    			var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);
-	    		    			var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
-	    		    			var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
-	    		    			var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('coBorrowerZipCode').val(),message);
-	    		    	    	if(!question){
-	    		    	    		return false;
-	    		    	    	}else if(!question1){
-	    		    	    		return false;
-	    		    	    	
-	    		    	    	}else if(!question2){
-	    		    	    		return false;
-	    		    	    		
-	    		    	    	}else if(!question3){
-	    		    	    		return false;
-	    		    	    		
-	    		    	    	}else if(!question4){
-	    		    	    		return false;
-	    		    	    		
-	    		    	    	}else if(!question5){
-	    		    	    		return false;
-	    		    	    		
-	    		    	    	}else{}
-	    		    	    	
-	    		    			 showErrorToastMessage(yesyNoErrorMessage);
-	    	    		    	 return false;
 	    		    		}
+	    		    		if(isSpouseOnLoan =="Yes" || isSpouseOnLoan =="No"){
+	    		    		    	  
+	    		    		}else{
+	    		    		   showErrorToastMessage(yesyNoErrorMessage);
+	 	    	    		   return false;
+	    		    		}	
 	    		     }else{
 	
-	    		    	 var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
-	    		    	 var question1=validateInput($('input[name="coBorrowerLastName"]'),$('input[name="coBorrowerLastName"]').val(),message);
-			    			var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);
-			    			var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
-			    			var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
-			    			var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('input[name="coBorrowerZipCode"]').val(),message);
-			    			
-			    			
-	    		    	 if(!question){
-			    	    		return false;
-			    	    	}else if(!question1){
-			    	    		return false;
-			    	    	
-			    	    	}else if(!question2){
-			    	    		return false;
-			    	    		
-			    	    	}else if(!question3){
-			    	    		return false;
-			    	    		
-			    	    	}else if(!question4){
-			    	    		return false;
-			    	    		
-			    	    	}else if(!question5){
-			    	    		return false;
-			    	    		
-			    	    	}else{}
+	    		    	 var response=validateCoBorowerInformation();
+	    		    		if(!response){
+	    		    			return false;
+	    		    		}
 	
 	    		     }
 	    			 
@@ -5677,3 +5630,42 @@ $(document).on('click',function(){
 	$('.app-dropdown-cont').hide();
 });
 
+function validateCoBorowerInformation(){
+	var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
+	var question1=validateInput($('input[name="coBorrowerLastName"]'),$('input[name="coBorrowerLastName"]').val(),message);
+	var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);
+	var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
+	var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
+	var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('input[name="coBorrowerZipCode"]').val(),message);
+	if(!question){
+		return false;
+	}
+	if(!question1){
+		return false;
+	
+	}
+    if(!question2){
+		return false;
+		
+	}
+    if(!question3){
+		return false;
+		
+	}
+    if(!question4){
+		return false;
+		
+	}
+    if(!question5){
+		return false;
+		
+	}
+    else{
+		if($('input[name="coBorrowerZipCode"]').val().length>5||$('input[name="coBorrowerZipCode"]').val().length<5){
+			$('input[name="coBorrowerZipCode"]').next('.err-msg').html(zipCodeMessage).show();
+			$('input[name="coBorrowerZipCode"]').addClass('ce-err-input').show();
+    		 return false;
+		}
+	}
+    return true;
+}

@@ -125,7 +125,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 		substitutions.put("-name-", new String[] { user.getFirstName() });
 		if (loanApplicationFee != null) {
 			substitutions.put("-date-", new String[] { loanApplicationFee
-			        .getModifiedDate().toString() });
+			        .getPaymentDate().toString() });
 			if (user.getCustomerDetail() != null) {
 				if (user.getCustomerDetail().getAddressStreet() != null) {
 					substitutions.put("-address-", new String[] { user
