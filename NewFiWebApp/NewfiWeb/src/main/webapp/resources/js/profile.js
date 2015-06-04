@@ -2215,11 +2215,11 @@ $(document).on('blur','#secEmailId',function(){
 	}
 });
 
-$(document).on('blur','#zipcodeId',function(){
+/*$(document).on('blur','#zipcodeId',function(){
 	if(!validateFormField("zipcodeId", false, "", invalidZipCodeMessage, zipcodeRegex)){
 		isProfileFormValid = false;
 	}
-});
+});*/
 
 $(document).on('blur','#priPhoneNumberId',function(){
 	if(!validateFormField("priPhoneNumberId", false, "", invalidPhoneNumberMessage, phoneRegex)){
