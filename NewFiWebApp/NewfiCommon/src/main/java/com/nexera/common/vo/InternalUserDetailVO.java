@@ -1,6 +1,7 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.nexera.common.enums.ActiveInternalEnum;
 
@@ -14,6 +15,9 @@ public class InternalUserDetailVO implements Serializable {
 	private String lqbUsername;
 	private String lqbPassword;
 	private String nmlsID;
+	private String lqbAuthToken;
+
+	private Date lqbExpiryTime;
 
 	public int getId() {
 		return id;
@@ -78,6 +82,22 @@ public class InternalUserDetailVO implements Serializable {
 
 	public void setNmlsID(String nmlsID) {
 		this.nmlsID = nmlsID;
+	}
+
+	public String getLqbAuthToken() {
+		return lqbAuthToken;
+	}
+
+	public void setLqbAuthToken(String lqbAuthToken) {
+		this.lqbAuthToken = lqbAuthToken;
+	}
+
+	public Date getLqbExpiryTime() {
+		return lqbExpiryTime;
+	}
+
+	public void setLqbExpiryTime(Date lqbExpiryTime) {
+		this.lqbExpiryTime = lqbExpiryTime;
 	}
 
 }
