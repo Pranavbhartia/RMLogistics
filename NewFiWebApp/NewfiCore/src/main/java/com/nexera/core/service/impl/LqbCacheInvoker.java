@@ -23,11 +23,10 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.nexera.common.entity.User;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LqbInterface;
@@ -43,6 +42,8 @@ public class LqbCacheInvoker implements LqbInterface {
 	@Autowired
 	NexeraUtility nexeraUtility;
 
+	@Autowired
+	Utils utils;
 	@Autowired
 	NexeraCacheableMethodInterface cacheableMethodInterface;
 
@@ -69,8 +70,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			JSONObject jsonObject = new JSONObject(returnedUser);
 			map.put("responseMessage", jsonObject.get("responseMessage")
 			        .toString());
-			map.put("responseTime", jsonObject.get("responseTime")
-			        .toString());
+			map.put("responseTime", jsonObject.get("responseTime").toString());
 			return map;
 
 		} catch (Exception e) {
@@ -90,74 +90,83 @@ public class LqbCacheInvoker implements LqbInterface {
 		String sTicket = null;
 		String lqbUsername = null;
 		String lqbPassword = null;
+		String authToken = null;
+		Date tokenExpiration = null;
 		UserVO internalUser = null;
 
-		//User logedInUser = getUserObject();
-
-		/* this is the case when LM or SM will fill the user's form */
-		/*if (logedInUser.getId() != loaAppFormVO.getUser().getId()) {
-
-			lqbUsername = logedInUser.getInternalUserDetail().getLqbUsername();
-			lqbPassword = logedInUser.getInternalUserDetail().getLqbPassword();
-		} else {*/
-			/*
-			 * this is the case when user submits the loan form : at the last
-			 * step of while filling the form
-			 */
-			boolean loanMangerFound = false;
-			List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
-			if (null != loanTeam && loanTeam.size() > 0) {
-				for (UserVO user : loanTeam) {
-					if (null != user.getInternalUserDetail()
-					        && user.getInternalUserDetail()
-					                .getInternalUserRoleMasterVO()
-					                .getRoleName().equalsIgnoreCase("LM")) {
-						/* this user would be either realtor or LM */
-						internalUser = user;
-						lqbUsername = internalUser.getInternalUserDetail()
-						        .getLqbUsername();
-						lqbPassword = internalUser.getInternalUserDetail()
-						        .getLqbPassword();
-						loanMangerFound = true;
-						break;
-					}
+		boolean loanMangerFound = false;
+		List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
+		if (null != loanTeam && loanTeam.size() > 0) {
+			for (UserVO user : loanTeam) {
+				if (null != user.getInternalUserDetail()
+				        && user.getInternalUserDetail()
+				                .getInternalUserRoleMasterVO().getRoleName()
+				                .equalsIgnoreCase("LM")) {
+					/* this user would be either realtor or LM */
+					internalUser = user;
+					lqbUsername = internalUser.getInternalUserDetail()
+					        .getLqbUsername();
+					lqbPassword = internalUser.getInternalUserDetail()
+					        .getLqbPassword();
+					authToken = internalUser.getInternalUserDetail()
+					        .getLqbAuthToken();
+					tokenExpiration = internalUser.getInternalUserDetail()
+					        .getLqbExpiryTime();
+					loanMangerFound = true;
+					break;
 				}
 			}
-			/* This is the case when LM is not found */
-			if (!loanMangerFound) {
-				for (UserVO user : loanTeam) {
-					if (null != user.getInternalUserDetail()
-					        && user.getInternalUserDetail()
-					                .getInternalUserRoleMasterVO()
-					                .getRoleName().equalsIgnoreCase("SM")) {
-						internalUser = user;
-						lqbUsername = internalUser.getInternalUserDetail()
-						        .getLqbUsername();
-						lqbPassword = internalUser.getInternalUserDetail()
-						        .getLqbPassword();
-						break;
-					}
+		}
+		/* This is the case when LM is not found */
+		if (!loanMangerFound) {
+			for (UserVO user : loanTeam) {
+				if (null != user.getInternalUserDetail()
+				        && user.getInternalUserDetail()
+				                .getInternalUserRoleMasterVO().getRoleName()
+				                .equalsIgnoreCase("SM")) {
+					internalUser = user;
+					lqbUsername = internalUser.getInternalUserDetail()
+					        .getLqbUsername();
+					lqbPassword = internalUser.getInternalUserDetail()
+					        .getLqbPassword();
+					authToken = internalUser.getInternalUserDetail()
+					        .getLqbAuthToken();
+					tokenExpiration = internalUser.getInternalUserDetail()
+					        .getLqbExpiryTime();
+					break;
 				}
 			}
+		}
 
-		//}
+		// }
+		// Here check for Token and Expiration.
+		boolean requestForNewToken = false;
+		if (authToken == null) {
+			requestForNewToken = true;
+		} else if (utils.hasLinkExpired(tokenExpiration, 0)) {
+			// To Do : Test if this method works
+			requestForNewToken = true;
+		}
+		if (requestForNewToken) {
+			// This method can be moved out of cachable interface
+			sTicket = cacheableMethodInterface.findSticket(lqbUsername,
+			        lqbPassword);
+		} else {
+			// generate use existing from table
+			sTicket = authToken; // return the one from the table
 
-		sTicket = cacheableMethodInterface
-		        .findSticket(lqbUsername, lqbPassword);
-
+		}
 		return sTicket;
 	}
 
-	/*private User getUserObject() {
-		final Object principal = SecurityContextHolder.getContext()
-		        .getAuthentication().getPrincipal();
-		if (principal instanceof User) {
-			return (User) principal;
-		} else {
-			return null;
-		}
-
-	}*/
+	/*
+	 * private User getUserObject() { final Object principal =
+	 * SecurityContextHolder.getContext() .getAuthentication().getPrincipal();
+	 * if (principal instanceof User) { return (User) principal; } else { return
+	 * null; }
+	 * 
+	 * }
+	 */
 
 	@Override
 	@CacheEvict(value = "teaserRate")

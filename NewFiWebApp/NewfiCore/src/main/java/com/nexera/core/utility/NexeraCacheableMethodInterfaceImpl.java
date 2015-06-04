@@ -49,7 +49,7 @@ public class NexeraCacheableMethodInterfaceImpl implements
 	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
 
 	@Override
-	@Cacheable(value = "sTicket")
+	
 	public String findSticket(String lqbUsername, String lqbPassword) {
 		LOGGER.debug("findSticket of cacheMethod called");
 		String sTicket = null;
