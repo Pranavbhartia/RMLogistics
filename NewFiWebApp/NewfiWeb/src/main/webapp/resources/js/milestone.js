@@ -528,6 +528,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
 											window.open(generateDownloadURL(tempOb.url),"_blank")
 										});
+										txtRow1.addClass("cursor-pointer");
 									}
 									if(tempOb.status)
 									{
@@ -540,6 +541,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 								txtRow1.bind("click", function(e) {
 									milestoneChildEventHandler(e)
 								});
+								txtRow1.addClass("cursor-pointer");
 								if(ob.workItem.stateInfo!="null"){
 									ob.stateInfoContainer.html(ob.workItem.stateInfo);
 								}else
@@ -562,6 +564,8 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
+											if($(event.target).hasClass("creditScoreClickableClass"))
+												return;
 											window.open(generateDownloadURL(tempOb.url),"_blank")
 										})
 										$(ob.stateInfoContainer).addClass("cursor-pointer");
@@ -1481,6 +1485,8 @@ function appendInfoAction (rightLeftClass, itemToAppendTo, workflowItem)
 }
 function milestoneChildEventHandler(event) {
 	// condition need to be finalized for identifying each element
+	if($(event.target).hasClass("creditScoreClickableClass"))
+		return;
 	removeAllPopups();
 	if ($(event.target).attr("data-text") == "INITIAL_CONTACT") {
 		event.stopPropagation();
