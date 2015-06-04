@@ -200,6 +200,19 @@ public class Utils {
 
 	}
 
+	public boolean hasTokenExpired(long tokenExpirationTime) {
+
+		long currentExpirationTime = System.currentTimeMillis();
+		long diffInMilliseconds = currentExpirationTime - tokenExpirationTime;
+		long differenceInHours = diffInMilliseconds / (60 * 60 * 1000);
+		if (differenceInHours >= 4) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
 	// To be used by all modules to fetch the currently logged in user
 	public User getLoggedInUser() {
 
@@ -289,8 +302,7 @@ public class Utils {
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		} else {
 			creditScore = "<span class='creditScoreClickableClass' loanId='"
-			        + loanId + "'>"
-			        + CommonConstants.EQ
+			        + loanId + "'>" + CommonConstants.EQ
 			        + CommonConstants.UNKNOWN_SCORE + "</span>"
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		}
@@ -301,9 +313,8 @@ public class Utils {
 		} else {
 			creditScore = creditScore
 			        + "<span class='creditScoreClickableClass' loanId='"
-			        + loanId + "'>"
-			        + CommonConstants.TU
-			        + CommonConstants.UNKNOWN_SCORE+"</span>"
+			        + loanId + "'>" + CommonConstants.TU
+			        + CommonConstants.UNKNOWN_SCORE + "</span>"
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		}
 
@@ -314,9 +325,8 @@ public class Utils {
 		} else {
 			creditScore = creditScore
 			        + "<span class='creditScoreClickableClass' loanId='"
-			        + loanId + "'>"
-			        + CommonConstants.EX
-			        + CommonConstants.UNKNOWN_SCORE+"</span>"
+			        + loanId + "'>" + CommonConstants.EX
+			        + CommonConstants.UNKNOWN_SCORE + "</span>"
 			        + CommonConstants.CREDIT_SCORE_SEPARATOR;
 		}
 
@@ -391,14 +401,15 @@ public class Utils {
 		final String dateTimeString = df.format(new Date());
 		return dateTimeString;
 	}
-	public String getTimeInUTC(long milliSeconds)
-	{
+
+	public String getTimeInUTC(long milliSeconds) {
 		DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL,
 		        DateFormat.FULL);
 		df.setTimeZone(TimeZone.getTimeZone("GMT"));
 		final String dateTimeString = df.format(new Date(milliSeconds));
 		return dateTimeString;
 	}
+
 	public Date convertCurrentDateToUtc() {
 		Date date = new Date();
 		TimeZone timeZone = TimeZone.getDefault();

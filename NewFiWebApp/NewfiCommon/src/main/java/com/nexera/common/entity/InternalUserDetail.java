@@ -1,7 +1,6 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,11 +41,10 @@ public class InternalUserDetail implements Serializable {
 
 	private String nmlsID;
 
-	
 	private String lqbAuthToken;
-	
-	private Date lqbExpiryTime;
-	
+
+	private long lqbExpiryTime;
+
 	public InternalUserDetail() {
 	}
 
@@ -179,7 +177,7 @@ public class InternalUserDetail implements Serializable {
 	public void setLqbPassword(String lqbPassword) {
 		this.lqbPassword = lqbPassword;
 	}
-	
+
 	@Column(name = "nmls_id")
 	public String getNmlsID() {
 		return nmlsID;
@@ -188,7 +186,7 @@ public class InternalUserDetail implements Serializable {
 	public void setNmlsID(String nmlsID) {
 		this.nmlsID = nmlsID;
 	}
-	
+
 	@Column(name = "lqb_auth_token")
 	public String getLqbAuthToken() {
 		return lqbAuthToken;
@@ -197,15 +195,14 @@ public class InternalUserDetail implements Serializable {
 	public void setLqbAuthToken(String lqbAuthToken) {
 		this.lqbAuthToken = lqbAuthToken;
 	}
-	
+
 	@Column(name = "lqb_expiry_time")
-	public Date getLqbExpiryTime() {
+	public long getLqbExpiryTime() {
 		return lqbExpiryTime;
 	}
 
-	public void setLqbExpiryTime(Date lqbExpiryTime) {
+	public void setLqbExpiryTime(long lqbExpiryTime) {
 		this.lqbExpiryTime = lqbExpiryTime;
 	}
-
 
 }

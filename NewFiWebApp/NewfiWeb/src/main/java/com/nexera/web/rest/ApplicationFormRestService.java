@@ -241,8 +241,28 @@ public class ApplicationFormRestService {
 								String response = "error";
 								HashMap<String, String> map = invokeRest(requestObject
 								        .toString());
-								if (map != null) {
+								if (map.get("responseMessage") != null) {
 									response = map.get("responseMessage");
+								} else if (map
+								        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+									String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+									if (errorDescription
+									        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+										LOG.error("Issue occured again, hence generating fresh token");
+										try {
+											sTicket = lqbCacheInvoker
+											        .findSticket(loaAppFormVO);
+											String errorMessage = "Your token has expired, please try again ";
+											CommonResponseVO responseVO = RestUtil
+											        .wrapObjectForFailure(null,
+											                "500", errorMessage);
+											return responseVO;
+										} catch (Exception e) {
+											LOG.error("Unable to generate ticket "
+											        + e.getMessage());
+										}
+
+									}
 								}
 								LOG.debug("Response for pulltrimergescore is "
 								        + response);
@@ -314,71 +334,96 @@ public class ApplicationFormRestService {
 			LOG.debug("Getting token for loan manager");
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 			LOG.debug("Token retrieved for loan manager" + sTicket);
+			if (sTicket != null) {
+				String loanNumber = null;
+				HashMap<String, String> map = invokeRest((lQBRequestUtil
+				        .prepareCreateLoanJson(
+				                (CommonConstants.CREATET_LOAN_TEMPLATE),
+				                sTicket)).toString());
+				if (map.get("responseMessage") != null) {
+					loanNumber = map.get("responseMessage");
+				} else if (map
+				        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+					String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+					if (errorDescription
+					        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+						LOG.error("Issue occured again, hence generating fresh token");
+						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+						return "Your token has expired, please try again ";
 
-			String loanNumber = "error";
-			HashMap<String, String> map = invokeRest((lQBRequestUtil
-			        .prepareCreateLoanJson(
-			                (CommonConstants.CREATET_LOAN_TEMPLATE), sTicket))
-			        .toString());
-			if (map != null) {
-				loanNumber = map.get("responseMessage");
-			}
-
-			LOG.debug("createLoanResponse is" + loanNumber);
-
-			if (!"".equalsIgnoreCase(loanNumber)) {
-
-				String response = "error";
-				map = invokeRest((lQBRequestUtil.saveLoan(loanNumber,
-				        loaAppFormVO, sTicket)).toString());
-				if (map != null) {
-					response = map.get("responseMessage");
-				} else {
-					return "error";
-				}
-				LOG.debug("Save Loan Response is " + response);
-				if (null != loaAppFormVO.getLoan()
-				        && !loanNumber.equals("error")) {
-					LoanVO loan = loaAppFormVO.getLoan();
-					loan.setLqbFileId(loanNumber);
-					String loanAppFrm = gson.toJson(loaAppFormVO);
-					createApplication(loanAppFrm, httpServletRequest);
-				}
-
-				// Code for automating Needs List creation
-
-				if (response != null && !response.equalsIgnoreCase("error")) {
-					try {
-						lockRateData = null;
-						Integer loanId = loaAppFormVO.getLoan().getId();
-						// needsListService.createInitilaNeedsList(loanId);
-						userProfileService
-						        .dismissAlert(
-						                MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
-						                loanId,
-						                WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
-
-						lockRateData = loadLoanRateData(loanNumber, sTicket);
-						LOG.debug("lockRateData" + lockRateData);
-
-						// in case of Purchase send a mail with PDF attachement
-
-						if (null != loaAppFormVO.getLoanType()
-						        && loaAppFormVO.getLoanType().getLoanTypeCd()
-						                .equalsIgnoreCase("PUR")) {
-
-							String thirtyYearRateVoDataSet = preQualificationletter
-							        .thirtyYearRateVoDataSet(lockRateData);
-							preQualificationletter.sendPreQualificationletter(
-							        loaAppFormVO, thirtyYearRateVoDataSet,
-							        httpServletRequest);
-
-						}
-					} catch (Exception e) {
-						LOG.debug("Load rate data failed ", e);
-						lockRateData = "";
 					}
 				}
+
+				LOG.debug("createLoanResponse is" + loanNumber);
+
+				if (loanNumber != null && !"".equalsIgnoreCase(loanNumber)) {
+
+					String response = null;
+					map = invokeRest((lQBRequestUtil.saveLoan(loanNumber,
+					        loaAppFormVO, sTicket)).toString());
+					if (map.get("responseMessage") != null) {
+						response = map.get("responseMessage");
+					} else if (map
+					        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+						String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+						if (errorDescription
+						        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+							LOG.error("Issue occured again, hence generating fresh token");
+							sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+							return "Your token has expired, please try again ";
+
+						}
+					}
+					LOG.debug("Save Loan Response is " + response);
+					if (null != loaAppFormVO.getLoan()
+					        && !loanNumber.equals("error")) {
+						LoanVO loan = loaAppFormVO.getLoan();
+						loan.setLqbFileId(loanNumber);
+						String loanAppFrm = gson.toJson(loaAppFormVO);
+						createApplication(loanAppFrm, httpServletRequest);
+					}
+
+					// Code for automating Needs List creation
+
+					if (response != null && !response.equalsIgnoreCase("error")) {
+						try {
+							lockRateData = null;
+							Integer loanId = loaAppFormVO.getLoan().getId();
+							// needsListService.createInitilaNeedsList(loanId);
+							userProfileService
+							        .dismissAlert(
+							                MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
+							                loanId,
+							                WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+
+							lockRateData = loadLoanRateData(loanNumber, sTicket);
+							LOG.debug("lockRateData" + lockRateData);
+
+							// in case of Purchase send a mail with PDF
+							// attachement
+
+							if (null != loaAppFormVO.getLoanType()
+							        && loaAppFormVO.getLoanType()
+							                .getLoanTypeCd()
+							                .equalsIgnoreCase("PUR")) {
+
+								String thirtyYearRateVoDataSet = preQualificationletter
+								        .thirtyYearRateVoDataSet(lockRateData);
+								preQualificationletter
+								        .sendPreQualificationletter(
+								                loaAppFormVO,
+								                thirtyYearRateVoDataSet,
+								                httpServletRequest);
+
+							}
+						} catch (Exception e) {
+							LOG.debug("Load rate data failed ", e);
+							lockRateData = "";
+						}
+					}
+				}
+			} else {
+				LOG.error("Unable to generate authentication token, please try after sometime");
 			}
 		} catch (Exception e) {
 			LOG.debug("lockRateData failed ", e);
@@ -426,28 +471,48 @@ public class ApplicationFormRestService {
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-
+			String response = null;
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-			String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
-			LOG.debug("createLoanResponse is" + loanNumber);
-			if (!"".equalsIgnoreCase(loanNumber)) {
+			if (sTicket != null) {
+				String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
+				LOG.debug("createLoanResponse is" + loanNumber);
+				if (loanNumber != null && !"".equalsIgnoreCase(loanNumber)) {
 
-				String response = "error";
-				HashMap<String, String> map = invokeRest((lQBRequestUtil
-				        .saveLoan(loanNumber, loaAppFormVO, sTicket))
-				        .toString());
-				if (map != null) {
-					response = map.get("responseMessage");
+					HashMap<String, String> map = invokeRest((lQBRequestUtil
+					        .saveLoan(loanNumber, loaAppFormVO, sTicket))
+					        .toString());
+					if (map.get("responseMessage") != null) {
+						response = map.get("responseMessage");
+					} else if (map
+					        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+						String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+						if (errorDescription
+						        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+							LOG.error("Issue occured again, hence generating fresh token");
+							sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+							return "Your token has expired, please try again ";
+
+						}
+					}
+
+					LOG.debug("Save Loan Response is " + response);
+					String loanAppFrm = gson.toJson(loaAppFormVO);
+					createApplication(loanAppFrm, httpServletRequest);
+
+					if (response != null) {
+						lockRateData = loadLoanRateData(loanNumber, sTicket);
+						LOG.debug("lockRateData" + lockRateData);
+					} else {
+						LOG.error("Unable to receive a valid response from LQB");
+						response = "Unable to receive a valid response from LQB";
+					}
+				} else {
+					response = "Unable to find lqbfileid for this loan";
+					LOG.error("Unable to find lqbfileid for this loan");
 				}
-
-				LOG.debug("Save Loan Response is " + response);
-				String loanAppFrm = gson.toJson(loaAppFormVO);
-				createApplication(loanAppFrm, httpServletRequest);
-
-				if (response != null) {
-					lockRateData = loadLoanRateData(loanNumber, sTicket);
-					LOG.debug("lockRateData" + lockRateData);
-				}
+			} else {
+				LOG.error("Unable to generate authentication ticket, please try after some time");
+				response = "Unable to generate authentication ticket, please try after some time";
 			}
 		} catch (Exception e) {
 			LOG.error(" changeLoanAmount failed", e);
@@ -481,12 +546,17 @@ public class ApplicationFormRestService {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
 			        LoanAppFormVO.class);
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-			lockRateData = loadLoanRateData(loanNumber, sTicket);
-			LOG.debug("lockRateData" + lockRateData);
+			if (sTicket != null) {
+				lockRateData = loadLoanRateData(loanNumber, sTicket);
+				LOG.debug("lockRateData" + lockRateData);
+			} else {
+				LOG.error("Unable to generate authentication token, please try after some time");
+				return "Unable to generate authentication toke, please try after some time";
+			}
 
 		} catch (Exception e) {
 			LOG.error(" fetchLockRatedata failed; " + loanNumber, e);
-			return "error";
+			return "error while fetching locked rate, please try after some time";
 		}
 		return lockRateData;
 
@@ -673,11 +743,23 @@ public class ApplicationFormRestService {
 			JSONObject jsonObject = new JSONObject(returnedResponse);
 			LOG.info("Response Returned from Rest Service is"
 			        + jsonObject.get("responseMessage").toString());
-			// teaserRateList =
-			// parseLqbResponse(jsonObject.get("responseMessage").toString());
-			map.put("responseMessage", jsonObject.get("responseMessage")
-			        .toString());
-			map.put("responseTime", jsonObject.get("responseTime").toString());
+
+			if (jsonObject.get(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE) != null) {
+				map.put("responseMessage",
+				        jsonObject.get(
+				                CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)
+				                .toString());
+				map.put("responseTime",
+				        jsonObject.get(
+				                CoreCommonConstants.SOAP_XML_RESPONSE_TIME)
+				                .toString());
+			} else {
+				String errorDescription = jsonObject.get(
+				        CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION)
+				        .toString();
+				map.put("errorDescription", errorDescription);
+
+			}
 			return map;
 		} catch (Exception e) {
 			LOG.error("invokeRest failed", e);

@@ -27,9 +27,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WebServiceOperations;
+import com.nexera.common.entity.InternalUserDetail;
+import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.LqbInterface;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 
@@ -41,6 +46,18 @@ public class LqbCacheInvoker implements LqbInterface {
 
 	@Autowired
 	NexeraUtility nexeraUtility;
+
+	@Autowired
+	UserProfileService userProfileService;
+
+	@Value("${cryptic.key}")
+	private String crypticKey;
+
+	@Autowired
+	LqbInvoker lqbInvoker;
+
+	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
+	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
 
 	@Autowired
 	Utils utils;
@@ -91,7 +108,7 @@ public class LqbCacheInvoker implements LqbInterface {
 		String lqbUsername = null;
 		String lqbPassword = null;
 		String authToken = null;
-		Date tokenExpiration = null;
+		long tokenExpiration = 0;
 		UserVO internalUser = null;
 
 		boolean loanMangerFound = false;
@@ -143,18 +160,95 @@ public class LqbCacheInvoker implements LqbInterface {
 		boolean requestForNewToken = false;
 		if (authToken == null) {
 			requestForNewToken = true;
-		} else if (utils.hasLinkExpired(tokenExpiration, 0)) {
-			// To Do : Test if this method works
+		} else if (utils.hasTokenExpired(tokenExpiration)) {
+
 			requestForNewToken = true;
 		}
 		if (requestForNewToken) {
 			// This method can be moved out of cachable interface
-			sTicket = cacheableMethodInterface.findSticket(lqbUsername,
-			        lqbPassword);
+			sTicket = findSticket(lqbUsername, lqbPassword);
+			if (sTicket != null) {
+				saveTokenDetails(internalUser, sTicket,
+				        System.currentTimeMillis());
+			} else {
+				LOGGER.debug("Was not able to generate ticket in first attempt, trying once again");
+				sTicket = findSticket(lqbUsername, lqbPassword);
+				if (sTicket != null) {
+					saveTokenDetails(internalUser, sTicket,
+					        System.currentTimeMillis());
+				}
+			}
+
 		} else {
 			// generate use existing from table
 			sTicket = authToken; // return the one from the table
 
+		}
+		return sTicket;
+	}
+
+	private void saveTokenDetails(UserVO internalUser, String sTicket,
+	        long expirationTime) {
+		InternalUserDetailVO internalUserDetailVO = internalUser
+		        .getInternalUserDetail();
+		if (internalUserDetailVO != null) {
+			InternalUserDetail internalUserDetail = InternalUserDetail
+			        .convertFromVOToEntity(internalUserDetailVO);
+			internalUserDetail.setLqbAuthToken(sTicket);
+			internalUserDetail.setLqbExpiryTime(System.currentTimeMillis());
+			userProfileService.updateInternalUserDetails(internalUserDetail);
+		}
+	}
+
+	public String findSticket(String lqbUsername, String lqbPassword) {
+		LOGGER.debug("findSticket of cacheMethod called");
+		String sTicket = null;
+		if (null != lqbUsername && null != lqbPassword) {
+			lqbUsername = lqbUsername.replaceAll("[^\\x00-\\x7F]", "");
+			try {
+				lqbUsername = nexeraUtility.decrypt(salt, crypticKey,
+				        lqbUsername);
+			} catch (InvalidKeyException | NoSuchAlgorithmException
+			        | InvalidKeySpecException | NoSuchPaddingException
+			        | InvalidAlgorithmParameterException
+			        | IllegalBlockSizeException | BadPaddingException
+			        | IOException e) {
+
+				LOGGER.error("Error in decryption : " + lqbUsername, e);
+			}
+
+			lqbPassword = lqbPassword.replaceAll("[^\\x00-\\x7F]", "");
+			try {
+				lqbPassword = nexeraUtility.decrypt(salt, crypticKey,
+				        lqbPassword);
+			} catch (InvalidKeyException | NoSuchAlgorithmException
+			        | InvalidKeySpecException | NoSuchPaddingException
+			        | InvalidAlgorithmParameterException
+			        | IllegalBlockSizeException | BadPaddingException
+			        | IOException e) {
+
+				LOGGER.error("Error in decryption : " + lqbPassword, e);
+			}
+
+			org.json.JSONObject authOperationObject = NexeraUtility
+			        .createAuthObject(
+			                WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+			                lqbUsername, lqbPassword);
+			LOGGER.debug("Invoking LQB service to fetch user authentication ticket ");
+			String authTicketJson = lqbInvoker
+			        .invokeRestSpringParseObjForAuth(authOperationObject
+			                .toString());
+			if (!authTicketJson.contains("EncryptedTicket")) {
+				sTicket = authTicketJson;
+
+			} else {
+				LOGGER.error("Ticket Not Generated For This User ");
+				sTicket = null;
+			}
+
+		} else {
+			LOGGER.error("LQBUsername or Password are not valid ");
+			sTicket = null;
 		}
 		return sTicket;
 	}
