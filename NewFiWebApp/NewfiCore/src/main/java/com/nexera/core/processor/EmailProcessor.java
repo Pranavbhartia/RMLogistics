@@ -574,51 +574,56 @@ public class EmailProcessor implements Runnable {
 				for (int i = 0; i < multipart.getCount(); i++) {
 					BodyPart bodyPart = multipart.getBodyPart(i);
 					String disposition = bodyPart.getDisposition();
-
 					if (disposition != null
 					        && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-						LOGGER.debug("This mail contains attachment ");
-						DataHandler dataHandler = bodyPart.getDataHandler();
-						String content = dataHandler.getContentType();
-						InputStream inputStream = dataHandler.getInputStream();
+						if (!bodyPart.getFileName().equalsIgnoreCase(
+						        CommonConstants.FILE_NAME_PREQUAL_LETTER)) {
+							LOGGER.debug("This mail contains attachment ");
+							DataHandler dataHandler = bodyPart.getDataHandler();
+							String content = dataHandler.getContentType();
+							InputStream inputStream = dataHandler
+							        .getInputStream();
 
-						LOGGER.debug("Uploading the file in the system ");
+							LOGGER.debug("Uploading the file in the system ");
 
-						CheckUploadVO checkUploadVO = null;
-						try {
-							if (loanVO.getLqbFileId() != null) {
-								checkUploadVO = uploadedFileListService
-								        .uploadFileByEmail(inputStream,
-								                content, actualUser.getId(),
-								                loanVO.getId(),
-								                uploadedByUser.getId(),
-								                bodyPart.getFileName());
-								if (checkUploadVO != null) {
-									if (checkUploadVO.getIsUploadSuccess()) {
-										FileVO fileVO = new FileVO();
-										fileVO.setFileName(bodyPart
-										        .getFileName());
-										fileVO.setUrl(checkUploadVO.getUuid());
-										fileVOList.add(fileVO);
-										checkUploadSuccessList
-										        .add(checkUploadVO);
+							CheckUploadVO checkUploadVO = null;
+							try {
+								if (loanVO.getLqbFileId() != null) {
+									checkUploadVO = uploadedFileListService
+									        .uploadFileByEmail(inputStream,
+									                content,
+									                actualUser.getId(),
+									                loanVO.getId(),
+									                uploadedByUser.getId(),
+									                bodyPart.getFileName());
+									if (checkUploadVO != null) {
+										if (checkUploadVO.getIsUploadSuccess()) {
+											FileVO fileVO = new FileVO();
+											fileVO.setFileName(bodyPart
+											        .getFileName());
+											fileVO.setUrl(checkUploadVO
+											        .getUuid());
+											fileVOList.add(fileVO);
+											checkUploadSuccessList
+											        .add(checkUploadVO);
+										}
+
+										else {
+											checkUploadFailureList
+											        .add(checkUploadVO);
+										}
 									}
-
-									else {
-										checkUploadFailureList
-										        .add(checkUploadVO);
-									}
+								} else {
+									lqbFieldFound = false;
 								}
-							} else {
-								lqbFieldFound = false;
+
+							} catch (Exception e) {
+								nexeraUtility.putExceptionMasterIntoExecution(
+								        exceptionMaster, e.getMessage());
+								nexeraUtility
+								        .sendExceptionEmail(e.getMessage());
 							}
-
-						} catch (Exception e) {
-							nexeraUtility.putExceptionMasterIntoExecution(
-							        exceptionMaster, e.getMessage());
-							nexeraUtility.sendExceptionEmail(e.getMessage());
 						}
-
 					}
 
 				}
