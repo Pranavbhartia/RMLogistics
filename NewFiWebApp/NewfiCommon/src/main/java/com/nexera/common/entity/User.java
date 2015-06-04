@@ -466,7 +466,11 @@ public class User implements Serializable, UserDetails {
 				userVO.setCarrierInfo(mobileCarrier.getCarrierEmail());
 
 			}
-
+			try {
+				userVO.setDefaultLoanId(user.getLoans().get(0).getId());
+			} catch (Exception e) {
+				// DO nothing
+			}
 		}
 		return userVO;
 	}
