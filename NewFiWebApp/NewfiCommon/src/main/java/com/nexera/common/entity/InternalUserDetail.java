@@ -1,6 +1,7 @@
 package com.nexera.common.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,11 @@ public class InternalUserDetail implements Serializable {
 
 	private String nmlsID;
 
+	
+	private String lqbAuthToken;
+	
+	private Date lqbExpiryTime;
+	
 	public InternalUserDetail() {
 	}
 
@@ -101,6 +107,8 @@ public class InternalUserDetail implements Serializable {
 		detailVO.setLqbUsername(internalUserDetail.getLqbUsername());
 		detailVO.setLqbPassword(internalUserDetail.getLqbPassword());
 		detailVO.setNmlsID(internalUserDetail.getNmlsID());
+		detailVO.setLqbAuthToken(internalUserDetail.getLqbAuthToken());
+		detailVO.setLqbExpiryTime(internalUserDetail.getLqbExpiryTime());
 		detailVO.setInternalUserRoleMasterVO(buildInternalUserRoleMasterVO(internalUserDetail
 		        .getInternaUserRoleMaster()));
 
@@ -124,6 +132,8 @@ public class InternalUserDetail implements Serializable {
 		detail.setLqbPassword(internalUserDetailVO.getLqbPassword());
 		detail.setLqbUsername(internalUserDetailVO.getLqbUsername());
 		detail.setNmlsID(internalUserDetailVO.getNmlsID());
+		detail.setLqbAuthToken(internalUserDetailVO.getLqbAuthToken());
+		detail.setLqbExpiryTime(internalUserDetailVO.getLqbExpiryTime());
 		return detail;
 	}
 
@@ -177,6 +187,24 @@ public class InternalUserDetail implements Serializable {
 
 	public void setNmlsID(String nmlsID) {
 		this.nmlsID = nmlsID;
+	}
+	
+	@Column(name = "lqb_auth_token")
+	public String getLqbAuthToken() {
+		return lqbAuthToken;
+	}
+
+	public void setLqbAuthToken(String lqbAuthToken) {
+		this.lqbAuthToken = lqbAuthToken;
+	}
+	
+	@Column(name = "lqb_expiry_time")
+	public Date getLqbExpiryTime() {
+		return lqbExpiryTime;
+	}
+
+	public void setLqbExpiryTime(Date lqbExpiryTime) {
+		this.lqbExpiryTime = lqbExpiryTime;
 	}
 
 
