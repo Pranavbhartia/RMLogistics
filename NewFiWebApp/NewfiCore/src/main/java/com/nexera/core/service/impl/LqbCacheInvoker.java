@@ -108,7 +108,7 @@ public class LqbCacheInvoker implements LqbInterface {
 		String lqbUsername = null;
 		String lqbPassword = null;
 		String authToken = null;
-		long tokenExpiration = 0;
+		Long tokenExpiration = null;
 		UserVO internalUser = null;
 
 		boolean loanMangerFound = false;
@@ -238,7 +238,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			String authTicketJson = lqbInvoker
 			        .invokeRestSpringParseObjForAuth(authOperationObject
 			                .toString());
-			if (!authTicketJson.contains("EncryptedTicket")) {
+			if (authTicketJson.contains("EncryptedTicket")) {
 				sTicket = authTicketJson;
 
 			} else {
