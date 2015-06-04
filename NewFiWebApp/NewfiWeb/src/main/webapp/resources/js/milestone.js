@@ -1737,7 +1737,13 @@ function appendLoanStatusPopup(element,milestoneId) {
 	var note = $('<textarea>').attr({
 		"class" : "popup-textbox",
 		"placeholder" : "Add a comment"
-	});
+	}).keypress(function(event){
+	    if (event.keyCode == 13) {
+	    	 event.preventDefault();
+	 	     return false;
+	    }
+	       
+	  });
 	
 	var submitBtn = $('<div>').attr({
 		"class" : "popup-save-btn float-left"

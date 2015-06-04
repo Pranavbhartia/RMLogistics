@@ -730,8 +730,8 @@ function paintCheckBox(){
 	var checkbox=$('<div>').attr({
 		"class":"ce-option-checkbox"
 	}).html("I have not yet selected a  property").bind('click',function(event){
-		if($(this).hasClass('app-option-checked')){
-    		$(this).removeClass('app-option-checked');
+		if($(this).hasClass('ce-option-checked')){
+    		$(this).removeClass('ce-option-checked');
     		$('input[name=streetAddress]').val('');
     		$('input[name=streetAddress]').parent().parent().show();
     		$('input[name=addressStreet]').parent().parent().show();
@@ -745,7 +745,7 @@ function paintCheckBox(){
     	
     		
     	}else{
-        	$(this).addClass('app-option-checked');
+        	$(this).addClass('ce-option-checked');
         	$('input[name=streetAddress]').parent().parent().hide();
         	$('input[name="propStreetAddress"]').parent().parent().hide();
          	$('input[name="propState"]').parent().parent().hide();
