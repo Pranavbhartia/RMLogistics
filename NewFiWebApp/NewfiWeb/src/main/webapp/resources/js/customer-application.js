@@ -657,7 +657,7 @@ function paintCustomerApplicationPageStep1a() {
 	    	var city = $('input[name="city"]').val();
 	    	var zipCode = $('input[name="zipCode"]').val();	    	
 	    	var addressStreet =   $('input[name="streetAddress"]').val();	    	
-	        var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
+	        var selectedProperty = $('.ce-option-checkbox').hasClass('ce-option-checked');
 	    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
 	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);

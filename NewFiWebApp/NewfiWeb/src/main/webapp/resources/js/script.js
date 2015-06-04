@@ -2510,9 +2510,11 @@ function sendPreQualificationLetter(){
 		},
 		error:function(data){
 			if(data.status != 200)
-			showErrorToastMessage("Error");
+			{
+				showErrorToastMessage("Error");
+			}
 			else{
-				showToastMessage(preQualificationLetterSentToEmail);
+				showDialogPopup("Pre-Qual Letter sent",preQualificationLetterSent,callBackpopupFunction);
 			}
 		}
 		
