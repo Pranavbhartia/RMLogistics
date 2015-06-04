@@ -457,7 +457,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		} catch (Exception e) {
 
 			nexeraUtility.deleteFileFolderFromLocalDirectory(file);
-			LOG.info(" Exception uploading s3 :  " + e.getMessage());
+			LOG.error(" Exception uploading s3 :  ", e);
 			checkVo.setIsUploadSuccess(false);
 			return checkVo;
 		} finally {
