@@ -429,13 +429,7 @@ public class NexeraUtility {
 
 	public void deleteFileFolderFromLocalDirectory(File file) {
 		if (file.exists()) {
-			File dir = new File(file.getAbsolutePath().replaceAll(
-			        file.getName(), ""));
 			file.delete();
-			if (dir.isDirectory()) {
-				dir.delete();
-			}
-
 		}
 	}
 
