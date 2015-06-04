@@ -314,16 +314,12 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	var livingSince = $('input[name="startLivingTime"]').val();
 		    	var monthlyRent =  $('input[name="rentPerMonth"]').val();
 		    	var isSellYourhome = quesContxts[5].value;
-		    	
-		    	
+		    			    	
 		    	var propAddress= $('input[name="propStreetAddress"]').val();
 		    	var propState = $('input[name="propState"]').val();
 		    	var propCity = $('input[name="propCity"]').val();
 		    	var propZipCode = $('input[name="propZipCode"]').val();
-		    	
-		
-		    	
-		    	
+
 		    	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 		    	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
 		    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
@@ -332,24 +328,31 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	if(inputState=="" || inputState==undefined){
 		    		showErrorToastMessage(yesyNoErrorMessage);
 		    		return false;
-		    	}else if(!questionOne){
+		    	}
+		    	if(!questionOne){
 		    		return false;
-		    	}else if(!questionTwo){
+		    	}
+		    	if(!questionTwo){
 		    		return false;
-		    	}        	
+		    	}else{
+		    		
+			     if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){			
+			    	$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+			    	$('input[name="zipCode"]').addClass('ce-err-input').show();
+			       	return false;
+			       
+		    	  }  
+		    	}
 		    	if(!propertQuestionTwo){
 		    		return false;
 		    	}else{
-		    		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){
-		
-		    			$('input[name="propZipCode"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+		    		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){		
+		    			$('input[name="propZipCode"]').next('.err-msg').html(zipCodeMessage).show();
 		    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
 		       		 return false;
 		       	 }
 		    		
-		    	}/*else if(!questionfour){
-		    		return false;
-		    	}*/
+		    	}
 		    	if($('.ce-option-checkbox').hasClass('app-option-checked')){
 		    		
 		    	}else{
@@ -369,12 +372,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		        		return false;
 		        	}
 		    	}
-		    	//alert(isSellYourhome);
-		    	
-		        /*	var question=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
-		        	if(!question){
-		        		return false;
-		        	}*/
+
 		            customerDetail.addressStreet=addressStreet;
 		    		customerDetail.addressCity = city;
 		    		customerDetail.addressState = inputState;
