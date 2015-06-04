@@ -200,7 +200,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                 paintCustomerApplicationPage();
             }else{
             	hideCompleteYourProfile();
-            	paintApplicationAlreadySubmittedPage();
+            	paintApplicationAlreadySubmittedPage(appUserDetailsTemp.loanType.loanTypeCd);
             }
         });
         //paintSelecedOption();
@@ -252,23 +252,30 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
 }
 
 //Function to paint the application page once the application is submitted
-function paintApplicationAlreadySubmittedPage() {
+function paintApplicationAlreadySubmittedPage(loanType) {
 	$('#center-panel-cont').html("<div class='complete-application-header'>Application already submitted.</div>");
 	
 	var descText = $('<div>').attr({
 		"class" : "app-completed-text"
 	}).html("Congratulations! Based on the information you provided, you have been pre-qualified for a newfi loan. Here's what next:");
-	
-	var btn1 = $('<div>').attr({
-		"class" : "getting-to-know-btn margin-0-auto"
-	}).html("View my pre-qualification letter");
-	
+	var container = $('#center-panel-cont').append(descText);
+	if (loanType == "PUR")
+	{
+			var btn1 = $('<div>').attr({
+				"class" : "getting-to-know-btn margin-0-auto"
+			}).html("View my pre-qualification letter").on('click',function(){				
+				showDialogPopup("Pre-Qual Letter sent",preQualificationLetterAlreadySentToEmail,callBackpopupFunction);
+				return false;
+			});
+			container.append(btn1);
+	}
 	var btn2 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
 	}).html("View my rate options").on('click',function(){
 		
 		window.location.href =newfiObject.baseUrl+"home.do#myLoan/lock-my-rate";
 	});
+	container.append(btn2);
 	
 	var btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
@@ -276,8 +283,8 @@ function paintApplicationAlreadySubmittedPage() {
 		
 		window.location.href =newfiObject.baseUrl+"home.do#myTeam";
 	});
-	
-	$('#center-panel-cont').append(descText).append(btn1).append(btn2).append(btn3);
+	container.append(btn3);
+
 }
 
 /*
@@ -2333,6 +2340,7 @@ function showDialogPopup(title, content, okButtonEvent) {
                 }
             }]
         });
+        $("#dialog").parent().bind("click",function(e){e.stopImmediatePropagation();})
     }
     /*
 
@@ -2345,6 +2353,9 @@ $(document).on('click', '#alert-popup-wrapper', function(e) {
 $(document).on('click', function(e) {
     if ($('#alert-popup-wrapper').css("display") == "block") {
         hideAlertNotificationPopup();
+    }
+    if ($("#dialog").css("display") == "block") {
+    	$("#dialog").dialog("close");
     }
 });
 $(document).on('click', '#alert-notification-btn', function(e) {
@@ -2493,22 +2504,15 @@ function sendPreQualificationLetter(){
 		dataType:"application/json",
 		cache:false,
 		success:function(data){
-
-			
-
-			showToastMessage(preQualificationLetterSent);
+			showDialogPopup("Pre-Qual Letter sent",preQualificationLetterSent,callBackpopupFunction);
+			return false;
 
 		},
 		error:function(data){
 			if(data.status != 200)
 			showErrorToastMessage("Error");
 			else{
-
-			
-
 				showToastMessage(preQualificationLetterSentToEmail);
-
-
 			}
 		}
 		
