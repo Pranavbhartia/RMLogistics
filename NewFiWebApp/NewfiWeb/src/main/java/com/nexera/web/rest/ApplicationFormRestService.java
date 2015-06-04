@@ -314,71 +314,79 @@ public class ApplicationFormRestService {
 			LOG.debug("Getting token for loan manager");
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 			LOG.debug("Token retrieved for loan manager" + sTicket);
-
-			String loanNumber = "error";
-			HashMap<String, String> map = invokeRest((lQBRequestUtil
-			        .prepareCreateLoanJson(
-			                (CommonConstants.CREATET_LOAN_TEMPLATE), sTicket))
-			        .toString());
-			if (map != null) {
-				loanNumber = map.get("responseMessage");
-			}
-
-			LOG.debug("createLoanResponse is" + loanNumber);
-
-			if (!"".equalsIgnoreCase(loanNumber)) {
-
-				String response = "error";
-				map = invokeRest((lQBRequestUtil.saveLoan(loanNumber,
-				        loaAppFormVO, sTicket)).toString());
+			if (sTicket != null) {
+				String loanNumber = null;
+				HashMap<String, String> map = invokeRest((lQBRequestUtil
+				        .prepareCreateLoanJson(
+				                (CommonConstants.CREATET_LOAN_TEMPLATE),
+				                sTicket)).toString());
 				if (map != null) {
-					response = map.get("responseMessage");
-				} else {
-					return "error";
-				}
-				LOG.debug("Save Loan Response is " + response);
-				if (null != loaAppFormVO.getLoan()
-				        && !loanNumber.equals("error")) {
-					LoanVO loan = loaAppFormVO.getLoan();
-					loan.setLqbFileId(loanNumber);
-					String loanAppFrm = gson.toJson(loaAppFormVO);
-					createApplication(loanAppFrm, httpServletRequest);
+					loanNumber = map.get("responseMessage");
 				}
 
-				// Code for automating Needs List creation
+				LOG.debug("createLoanResponse is" + loanNumber);
 
-				if (response != null && !response.equalsIgnoreCase("error")) {
-					try {
-						lockRateData = null;
-						Integer loanId = loaAppFormVO.getLoan().getId();
-						// needsListService.createInitilaNeedsList(loanId);
-						userProfileService
-						        .dismissAlert(
-						                MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
-						                loanId,
-						                WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
+				if (loanNumber != null && !"".equalsIgnoreCase(loanNumber)) {
 
-						lockRateData = loadLoanRateData(loanNumber, sTicket);
-						LOG.debug("lockRateData" + lockRateData);
+					String response = null;
+					map = invokeRest((lQBRequestUtil.saveLoan(loanNumber,
+					        loaAppFormVO, sTicket)).toString());
+					if (map != null) {
+						response = map.get("responseMessage");
+					} else {
+						LOG.error("Unable to save information in lqb, please try after some time");
+						return "Unable to save information, please try after some time";
+					}
+					LOG.debug("Save Loan Response is " + response);
+					if (null != loaAppFormVO.getLoan()
+					        && !loanNumber.equals("error")) {
+						LoanVO loan = loaAppFormVO.getLoan();
+						loan.setLqbFileId(loanNumber);
+						String loanAppFrm = gson.toJson(loaAppFormVO);
+						createApplication(loanAppFrm, httpServletRequest);
+					}
 
-						// in case of Purchase send a mail with PDF attachement
+					// Code for automating Needs List creation
 
-						if (null != loaAppFormVO.getLoanType()
-						        && loaAppFormVO.getLoanType().getLoanTypeCd()
-						                .equalsIgnoreCase("PUR")) {
+					if (response != null && !response.equalsIgnoreCase("error")) {
+						try {
+							lockRateData = null;
+							Integer loanId = loaAppFormVO.getLoan().getId();
+							// needsListService.createInitilaNeedsList(loanId);
+							userProfileService
+							        .dismissAlert(
+							                MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
+							                loanId,
+							                WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
 
-							String thirtyYearRateVoDataSet = preQualificationletter
-							        .thirtyYearRateVoDataSet(lockRateData);
-							preQualificationletter.sendPreQualificationletter(
-							        loaAppFormVO, thirtyYearRateVoDataSet,
-							        httpServletRequest);
+							lockRateData = loadLoanRateData(loanNumber, sTicket);
+							LOG.debug("lockRateData" + lockRateData);
 
+							// in case of Purchase send a mail with PDF
+							// attachement
+
+							if (null != loaAppFormVO.getLoanType()
+							        && loaAppFormVO.getLoanType()
+							                .getLoanTypeCd()
+							                .equalsIgnoreCase("PUR")) {
+
+								String thirtyYearRateVoDataSet = preQualificationletter
+								        .thirtyYearRateVoDataSet(lockRateData);
+								preQualificationletter
+								        .sendPreQualificationletter(
+								                loaAppFormVO,
+								                thirtyYearRateVoDataSet,
+								                httpServletRequest);
+
+							}
+						} catch (Exception e) {
+							LOG.debug("Load rate data failed ", e);
+							lockRateData = "";
 						}
-					} catch (Exception e) {
-						LOG.debug("Load rate data failed ", e);
-						lockRateData = "";
 					}
 				}
+			} else {
+				LOG.error("Unable to generate authentication token, please try after sometime");
 			}
 		} catch (Exception e) {
 			LOG.debug("lockRateData failed ", e);
@@ -426,28 +434,38 @@ public class ApplicationFormRestService {
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-
+			String response = "success";
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-			String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
-			LOG.debug("createLoanResponse is" + loanNumber);
-			if (!"".equalsIgnoreCase(loanNumber)) {
+			if (sTicket != null) {
+				String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
+				LOG.debug("createLoanResponse is" + loanNumber);
+				if (!"".equalsIgnoreCase(loanNumber)) {
 
-				String response = "error";
-				HashMap<String, String> map = invokeRest((lQBRequestUtil
-				        .saveLoan(loanNumber, loaAppFormVO, sTicket))
-				        .toString());
-				if (map != null) {
-					response = map.get("responseMessage");
+					HashMap<String, String> map = invokeRest((lQBRequestUtil
+					        .saveLoan(loanNumber, loaAppFormVO, sTicket))
+					        .toString());
+					if (map != null) {
+						response = map.get("responseMessage");
+					}
+
+					LOG.debug("Save Loan Response is " + response);
+					String loanAppFrm = gson.toJson(loaAppFormVO);
+					createApplication(loanAppFrm, httpServletRequest);
+
+					if (response != null) {
+						lockRateData = loadLoanRateData(loanNumber, sTicket);
+						LOG.debug("lockRateData" + lockRateData);
+					} else {
+						LOG.error("Unable to receive a valid response from LQB");
+						response = "Unable to receive a valid response from LQB";
+					}
+				} else {
+					response = "Unable to find lqbfileid for this loan";
+					LOG.error("Unable to find lqbfileid for this loan");
 				}
-
-				LOG.debug("Save Loan Response is " + response);
-				String loanAppFrm = gson.toJson(loaAppFormVO);
-				createApplication(loanAppFrm, httpServletRequest);
-
-				if (response != null) {
-					lockRateData = loadLoanRateData(loanNumber, sTicket);
-					LOG.debug("lockRateData" + lockRateData);
-				}
+			} else {
+				LOG.error("Unable to generate authentication ticket, please try after some time");
+				response = "Unable to generate authentication ticket, please try after some time";
 			}
 		} catch (Exception e) {
 			LOG.error(" changeLoanAmount failed", e);
@@ -481,12 +499,17 @@ public class ApplicationFormRestService {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
 			        LoanAppFormVO.class);
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-			lockRateData = loadLoanRateData(loanNumber, sTicket);
-			LOG.debug("lockRateData" + lockRateData);
+			if (sTicket != null) {
+				lockRateData = loadLoanRateData(loanNumber, sTicket);
+				LOG.debug("lockRateData" + lockRateData);
+			} else {
+				LOG.error("Unable to generate authentication token, please try after some time");
+				return "Unable to generate authentication toke, please try after some time";
+			}
 
 		} catch (Exception e) {
 			LOG.error(" fetchLockRatedata failed; " + loanNumber, e);
-			return "error";
+			return "error while fetching locked rate, please try after some time";
 		}
 		return lockRateData;
 

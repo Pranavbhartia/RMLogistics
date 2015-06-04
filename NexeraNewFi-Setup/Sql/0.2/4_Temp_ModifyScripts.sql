@@ -502,3 +502,16 @@ UPDATE `newfi_schema`.`template` SET `sms_text`='There wasn\'t any loan product 
 UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi.' WHERE `id`='40';
 UPDATE `newfi_schema`.`template` SET `sms_text`='Welcome to newfi.' WHERE `id`='41';
 UPDATE `newfi_schema`.`template` SET `sms_text`='Your PreQualification letter has been sent to your email.' WHERE `id`='42';
+
+
+
+#Rajeswari 5th June - For LQB Ticket
+
+ALTER TABLE `newfi_schema`.`internaluserdetails` 
+ADD COLUMN `lqb_auth_token` TINYTEXT NULL AFTER `nmls_id`,
+ADD COLUMN `lqb_expiry_time` DATETIME NULL AFTER `lqb_auth_token`;
+
+#Utsav 5th June
+
+ALTER TABLE `newfi_schema`.`internaluserdetails` 
+   change `lqb_expiry_time` `lqb_expiry_time` BIGINT NULL;

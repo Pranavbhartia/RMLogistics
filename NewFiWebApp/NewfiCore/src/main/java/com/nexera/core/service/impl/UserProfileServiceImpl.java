@@ -1706,4 +1706,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
+	@Override
+	@Transactional
+	public void updateInternalUserDetails(InternalUserDetail internalUserDetail) {
+		userProfileDao.update(internalUserDetail);
+	}
+
 }

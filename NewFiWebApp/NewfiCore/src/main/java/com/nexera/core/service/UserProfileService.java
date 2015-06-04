@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.JsonObject;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
+import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.exception.DatabaseException;
@@ -136,8 +137,12 @@ public interface UserProfileService {
 	public List<User> geAllSalesManagers();
 
 	public List<User> findBySecondaryEmail(String fromAddressString);
-	
-	public void sendEmailPreQualification(LoanAppFormVO loaAppFormVO,ByteArrayOutputStream byteArrayOutputStream) throws InvalidInputException,UndeliveredEmailException;
+
+	public void sendEmailPreQualification(LoanAppFormVO loaAppFormVO,
+	        ByteArrayOutputStream byteArrayOutputStream)
+	        throws InvalidInputException, UndeliveredEmailException;
 
 	public Integer updateNMLSId(UserVO userVO);
+
+	public void updateInternalUserDetails(InternalUserDetail internalUserDetail);
 }
