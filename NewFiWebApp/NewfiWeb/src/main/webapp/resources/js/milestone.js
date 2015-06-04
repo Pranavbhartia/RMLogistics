@@ -714,6 +714,11 @@ function getCustomerMilestoneLoanProgressHeaderBar() {
 }
 function showProgressHeaderSteps(){
 	var container=$("#WFProgressHeaderBar");
+	
+	if($('#WFProgressHeaderBar >div').length!=0){
+		//Avoid duplicate eppend issue
+		return;
+	}
 	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
 	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 1, "Application");
 	container.append(stepElement);	

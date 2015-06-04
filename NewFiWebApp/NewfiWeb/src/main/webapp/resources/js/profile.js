@@ -809,6 +809,10 @@ function paintCutomerProfileContainer() {
 
 function customerPersonalInfoWrapper(user) {
 
+	if($('#profile-main-container >div').length!=0){
+		//If the container contains personal info already, dont repeat
+		return;
+	}
 	var wrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
 	});

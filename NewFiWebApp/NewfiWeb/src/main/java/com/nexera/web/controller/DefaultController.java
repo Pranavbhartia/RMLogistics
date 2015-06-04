@@ -28,7 +28,7 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.User;
-import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
@@ -159,7 +159,7 @@ public class DefaultController implements InitializingBean {
 						intialsList.add(" ");
 					}
 					if (loanTeamVO.getUser().getInternalUserDetail() != null) {
-						if (InternalUserRolesEum.LM.equals(loanTeamVO.getUser()
+						if (UserRolesEnum.LM.equals(loanTeamVO.getUser()
 						        .getInternalUserDetail()
 						        .getInternalUserRoleMasterVO().getRoleName())) {
 							imageList.add(loanTeamVO.getUser()
