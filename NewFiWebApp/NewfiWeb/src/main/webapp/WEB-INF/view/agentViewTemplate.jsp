@@ -50,6 +50,7 @@
 			initialize(newfi,baseUrl);
 			if(newfiObject.user.internalUserDetail!= undefined &&!newfiObject.user.internalUserDetail.lqbUsername){
 				window.location.hash="#myProfile";
+				setTimeout(function(){showToastMessage("Please Provide LQB Credentials")},2000)
 			}
 			isAgentTypeDashboard = true;
 			paintAgentDashboard('myloans');
