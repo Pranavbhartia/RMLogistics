@@ -53,8 +53,8 @@ public class EmailProcessor implements Runnable {
 
 	private ExceptionMaster exceptionMaster;
 
-	@Value("${regex.pattern.1}")
-	private String regexPattern1;
+	/*@Value("${regex.pattern.1}")
+	private String regexPattern1;*/
 
 	@Value("${regex.pattern.2}")
 	private String regexPattern2;
@@ -75,8 +75,8 @@ public class EmailProcessor implements Runnable {
 	@Value("${regex.pattern.7}")
 	private String regexPattern7;
 
-	@Value("${regex.pattern.8}")
-	private String regexPattern8;
+	/*@Value("${regex.pattern.8}")
+	private String regexPattern8;*/
 
 	@Value("${regex.pattern.9}")
 	private String regexPattern9;
@@ -412,14 +412,14 @@ public class EmailProcessor implements Runnable {
 						}
 						LOGGER.debug("Applying Regex On Email ");
 						List<String> regexPatternStrings = new ArrayList<String>();
-						regexPatternStrings.add(regexPattern1);
+						/*regexPatternStrings.add(regexPattern1);*/
 						regexPatternStrings.add(regexPattern2);
 						regexPatternStrings.add(regexPattern3);
 						/* regexPatternStrings.add(regexPattern4); */
 						regexPatternStrings.add(regexPattern5);
 						regexPatternStrings.add(regexPattern6);
 						regexPatternStrings.add(regexPattern7);
-						regexPatternStrings.add(regexPattern8);
+						/*regexPatternStrings.add(regexPattern8);*/
 						regexPatternStrings.add(regexPattern9);
 						regexPatternStrings.add(regexPattern10);
 						emailBody = extractMessage(emailBody,
