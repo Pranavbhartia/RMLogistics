@@ -2340,7 +2340,7 @@ function showDialogPopup(title, content, okButtonEvent) {
                 }
             }]
         });
-       // $("#dialog").parent().bind("click",function(e){e.stopImmediatePropagation();})
+       $("#dialog").parent().bind("click",function(e){e.stopImmediatePropagation();})
     }
     /*
 
@@ -2354,9 +2354,11 @@ $(document).on('click', function(e) {
     if ($('#alert-popup-wrapper').css("display") == "block") {
         hideAlertNotificationPopup();
     }
-   /* if ($("#dialog").css("display") == "block") {
-    	$("#dialog").dialog("close");
-    }*/
+    try{
+        if ($("#dialog").dialog( "isOpen" )) {
+            $("#dialog").dialog("close");
+        }
+    }catch(e){}
 });
 $(document).on('click', '#alert-notification-btn', function(e) {
     e.stopImmediatePropagation();
