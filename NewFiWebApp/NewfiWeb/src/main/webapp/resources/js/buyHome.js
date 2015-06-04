@@ -756,6 +756,8 @@ function paintBuyHomeOwner() {
 }
 
 function homeProgressBaar(num) {
+	adjustCustomerApplicationPageOnResize();
+	adjustCustomerEngagementPageOnResize();
     var count = 5;
     $('#step-no').text(num);
     $("#homeProgressBaarId_" + num).removeClass('ce-lp-in-progress')

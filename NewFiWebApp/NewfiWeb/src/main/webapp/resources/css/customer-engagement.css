@@ -97,6 +97,7 @@
 	border-radius: 3px;
 	background: #fafafa;
 	font-size: 18px;
+	font-family: opensans;
 }
 
 .ce-options-cont {
@@ -220,7 +221,7 @@
 }
 
 .ce-option-ques-wrapper .ce-input {
-	margin-top: 5px;
+	margin-top: 2px;
 	background: #fff;
 	display: block;
 	width: 100%;
@@ -257,11 +258,12 @@
 .ce-option-ques-wrapper .ce-rp-ques-text{
 	font-size: 16px;
 	line-height: 20px;
+	margin: 10px 0;
 }
 
 .ce-option-text {
 	line-height: 20px;
-	height: 20px;
+	min-height: 20px;
 	margin-bottom: 20px;
 	font-size: 20px;
 	font-family: 'opensanssemibold';

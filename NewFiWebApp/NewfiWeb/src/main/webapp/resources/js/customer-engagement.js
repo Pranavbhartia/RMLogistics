@@ -999,6 +999,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
  
 var refreshSupport=true;
 function progressBaar(num) {
+		adjustCustomerApplicationPageOnResize();
 		adjustCustomerEngagementPageOnResize();
         var count = 7;
         $('#step-no').text(num);

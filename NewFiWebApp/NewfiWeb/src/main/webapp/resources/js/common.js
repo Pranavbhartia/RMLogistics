@@ -126,6 +126,7 @@ function synchronousAjaxRequest(url, type, dataType, data, successCallBack,
 			adjustRightPanelOnResize();
 			adjustCustomerApplicationPageOnResize();
 			adjustAgentDashboardOnResize();
+			adjustCustomerEngagementPageOnResize();
 		},
 		error : function() {
 

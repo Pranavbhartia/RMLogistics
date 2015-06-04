@@ -57,7 +57,7 @@
 			<!--End-Cotent------>
 		</div>
 		<!--End-wrap--->
-		 <jsp:include page="inlineFooter.jsp"></jsp:include> 
+		 <jsp:include page="login-inline-footer.jsp"></jsp:include> 
 
 </body>
 <script>
