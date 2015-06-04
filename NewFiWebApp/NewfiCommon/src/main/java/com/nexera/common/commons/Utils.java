@@ -204,8 +204,7 @@ public class Utils {
 
 		long currentExpirationTime = System.currentTimeMillis();
 		long diffInMilliseconds = currentExpirationTime - tokenExpirationTime;
-		long differenceInHours = diffInMilliseconds / (60 * 60 * 1000);
-		if (differenceInHours >= 4) {
+		if (diffInMilliseconds >= 14400000) {
 			return true;
 		} else {
 			return false;
