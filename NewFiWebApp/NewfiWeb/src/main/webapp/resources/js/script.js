@@ -431,6 +431,7 @@ function paintGettingToKnowPage() {
     	pgwSlideshow.previousSlide();
     });
     
+    adjustCenterPanelWidth();
 }
 
 function redirectToGettingToKnowLastPage() {
