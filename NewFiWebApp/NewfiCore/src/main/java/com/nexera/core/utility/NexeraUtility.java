@@ -662,8 +662,13 @@ public class NexeraUtility {
 		OutputStream outputStream = null;
 		File file = null;
 		try {
-			file = new File(tomcatDirectoryPath() + File.separator
-			        + randomStringOfLength() + ".pdf");
+			String filePath = tomcatDirectoryPath();
+			File directory = new File(filePath);
+			if (!directory.exists()) {
+				directory.mkdir();
+			}
+			file = new File(filePath + File.separator + randomStringOfLength()
+			        + ".pdf");
 			if (file.createNewFile()) {
 				outputStream = new FileOutputStream(file);
 				byte[] bytes = convertInputStreamToByteArray(inputStream);
