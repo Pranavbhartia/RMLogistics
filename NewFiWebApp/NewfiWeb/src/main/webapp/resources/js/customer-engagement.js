@@ -1208,7 +1208,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
             propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
             propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
             propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
-
+            propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
             appUserInput.propertyTypeMaster = propertyTypeMaster;
         }
         appUserInput.user = user; 
