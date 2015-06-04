@@ -241,8 +241,28 @@ public class ApplicationFormRestService {
 								String response = "error";
 								HashMap<String, String> map = invokeRest(requestObject
 								        .toString());
-								if (map != null) {
+								if (map.get("responseMessage") != null) {
 									response = map.get("responseMessage");
+								} else if (map
+								        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+									String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+									if (errorDescription
+									        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+										LOG.error("Issue occured again, hence generating fresh token");
+										try {
+											sTicket = lqbCacheInvoker
+											        .findSticket(loaAppFormVO);
+											String errorMessage = "Your token has expired, please try again ";
+											CommonResponseVO responseVO = RestUtil
+											        .wrapObjectForFailure(null,
+											                "500", errorMessage);
+											return responseVO;
+										} catch (Exception e) {
+											LOG.error("Unable to generate ticket "
+											        + e.getMessage());
+										}
+
+									}
 								}
 								LOG.debug("Response for pulltrimergescore is "
 								        + response);
@@ -320,8 +340,18 @@ public class ApplicationFormRestService {
 				        .prepareCreateLoanJson(
 				                (CommonConstants.CREATET_LOAN_TEMPLATE),
 				                sTicket)).toString());
-				if (map != null) {
+				if (map.get("responseMessage") != null) {
 					loanNumber = map.get("responseMessage");
+				} else if (map
+				        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+					String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+					if (errorDescription
+					        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+						LOG.error("Issue occured again, hence generating fresh token");
+						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+						return "Your token has expired, please try again ";
+
+					}
 				}
 
 				LOG.debug("createLoanResponse is" + loanNumber);
@@ -331,11 +361,18 @@ public class ApplicationFormRestService {
 					String response = null;
 					map = invokeRest((lQBRequestUtil.saveLoan(loanNumber,
 					        loaAppFormVO, sTicket)).toString());
-					if (map != null) {
+					if (map.get("responseMessage") != null) {
 						response = map.get("responseMessage");
-					} else {
-						LOG.error("Unable to save information in lqb, please try after some time");
-						return "Unable to save information, please try after some time";
+					} else if (map
+					        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+						String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+						if (errorDescription
+						        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+							LOG.error("Issue occured again, hence generating fresh token");
+							sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+							return "Your token has expired, please try again ";
+
+						}
 					}
 					LOG.debug("Save Loan Response is " + response);
 					if (null != loaAppFormVO.getLoan()
@@ -434,18 +471,28 @@ public class ApplicationFormRestService {
 		LoanAppFormVO loaAppFormVO = null;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
-			String response = "success";
+			String response = null;
 			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 			if (sTicket != null) {
 				String loanNumber = loaAppFormVO.getLoan().getLqbFileId();
 				LOG.debug("createLoanResponse is" + loanNumber);
-				if (!"".equalsIgnoreCase(loanNumber)) {
+				if (loanNumber != null && !"".equalsIgnoreCase(loanNumber)) {
 
 					HashMap<String, String> map = invokeRest((lQBRequestUtil
 					        .saveLoan(loanNumber, loaAppFormVO, sTicket))
 					        .toString());
-					if (map != null) {
+					if (map.get("responseMessage") != null) {
 						response = map.get("responseMessage");
+					} else if (map
+					        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
+						String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
+						if (errorDescription
+						        .equalsIgnoreCase("Incoming portion of HTML stream")) {
+							LOG.error("Issue occured again, hence generating fresh token");
+							sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+							return "Your token has expired, please try again ";
+
+						}
 					}
 
 					LOG.debug("Save Loan Response is " + response);
@@ -696,11 +743,23 @@ public class ApplicationFormRestService {
 			JSONObject jsonObject = new JSONObject(returnedResponse);
 			LOG.info("Response Returned from Rest Service is"
 			        + jsonObject.get("responseMessage").toString());
-			// teaserRateList =
-			// parseLqbResponse(jsonObject.get("responseMessage").toString());
-			map.put("responseMessage", jsonObject.get("responseMessage")
-			        .toString());
-			map.put("responseTime", jsonObject.get("responseTime").toString());
+
+			if (jsonObject.get(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE) != null) {
+				map.put("responseMessage",
+				        jsonObject.get(
+				                CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)
+				                .toString());
+				map.put("responseTime",
+				        jsonObject.get(
+				                CoreCommonConstants.SOAP_XML_RESPONSE_TIME)
+				                .toString());
+			} else {
+				String errorDescription = jsonObject.get(
+				        CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION)
+				        .toString();
+				map.put("errorDescription", errorDescription);
+
+			}
 			return map;
 		} catch (Exception e) {
 			LOG.error("invokeRest failed", e);

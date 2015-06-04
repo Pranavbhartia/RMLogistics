@@ -32,6 +32,10 @@ public interface CoreCommonConstants {
 
 	public static String SOAP_XML_RESPONSE_MESSAGE = "responseMessage";
 
+	public static String SOAP_XML_RESPONSE_TIME = "responseTime";
+
+	public static String SOAP_XML_ERROR_DESCRIPTION = "errorDescription";
+
 	public static String SOAP_XML_UNDERWRITING_CONDITION_DESCRIPTION = "CondDesc";
 
 	public static String SOAP_XML_LOAD_LOAN_STATUS = "sStatusT";
