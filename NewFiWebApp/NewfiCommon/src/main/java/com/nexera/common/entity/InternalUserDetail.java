@@ -43,7 +43,7 @@ public class InternalUserDetail implements Serializable {
 
 	private String lqbAuthToken;
 
-	private long lqbExpiryTime;
+	private Long lqbExpiryTime;
 
 	public InternalUserDetail() {
 	}
@@ -197,11 +197,11 @@ public class InternalUserDetail implements Serializable {
 	}
 
 	@Column(name = "lqb_expiry_time")
-	public long getLqbExpiryTime() {
+	public Long getLqbExpiryTime() {
 		return lqbExpiryTime;
 	}
 
-	public void setLqbExpiryTime(long lqbExpiryTime) {
+	public void setLqbExpiryTime(Long lqbExpiryTime) {
 		this.lqbExpiryTime = lqbExpiryTime;
 	}
 

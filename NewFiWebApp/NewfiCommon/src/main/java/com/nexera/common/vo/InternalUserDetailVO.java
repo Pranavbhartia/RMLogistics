@@ -16,7 +16,7 @@ public class InternalUserDetailVO implements Serializable {
 	private String nmlsID;
 	private String lqbAuthToken;
 
-	private long lqbExpiryTime;
+	private Long lqbExpiryTime;
 
 	public int getId() {
 		return id;
@@ -91,11 +91,11 @@ public class InternalUserDetailVO implements Serializable {
 		this.lqbAuthToken = lqbAuthToken;
 	}
 
-	public long getLqbExpiryTime() {
+	public Long getLqbExpiryTime() {
 		return lqbExpiryTime;
 	}
 
-	public void setLqbExpiryTime(long lqbExpiryTime) {
+	public void setLqbExpiryTime(Long lqbExpiryTime) {
 		this.lqbExpiryTime = lqbExpiryTime;
 	}
 
