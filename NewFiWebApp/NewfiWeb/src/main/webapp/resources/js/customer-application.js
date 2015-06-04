@@ -657,7 +657,7 @@ function paintCustomerApplicationPageStep1a() {
 	    	var city = $('input[name="city"]').val();
 	    	var zipCode = $('input[name="zipCode"]').val();	    	
 	    	var addressStreet =   $('input[name="streetAddress"]').val();	    	
-	        var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
+	        var selectedProperty = $('.ce-option-checkbox').hasClass('ce-option-checked');
 	    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
 	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
@@ -683,7 +683,7 @@ function paintCustomerApplicationPageStep1a() {
 	    	if(!isSuccess){
 				return false;
 			}
-	       if($('.ce-option-checkbox').hasClass('app-option-checked')){
+	       if($('.ce-option-checkbox').hasClass('ce-option-checked')){
 	    		
 	    	}else{
 	    		var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
@@ -779,14 +779,14 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 				});
 				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
 			});
-		}else{
+		}/*else{
 			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
 				$('#state-dropdown-wrapper-property').perfectScrollbar({
 					suppressScrollX : true
 				});
 				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
 			});
-		}
+		}*/
 	}).bind('keyup',function(e){
 		var searchTerm = "";
 		if(!$(this).val()){
@@ -844,14 +844,15 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
     $('input[name="state"]').after(stateDropDownWrapper);
     $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
  
-    $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
-		e.stopPropagation();
+    $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind(' click keypress',function(e){
+		e.stopImmediatePropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
 			appendStateDropDown('state-dropdown-wrapper',stateList);
 			toggleStateDropDown();
-		}else{
+		}/*else{
 			toggleStateDropDown();
 		}
+		$*/
 	}).bind('keyup',function(e){
 		var searchTerm = "";
 		if(!$(this).val()){
@@ -863,14 +864,14 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 	});
     
     
-    $('input[name="coBorrowerState"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click',function(e){
-		e.stopPropagation();
+    $('input[name="coBorrowerState"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click keypress',function(e){
+		e.stopImmediatePropagation();
 		if($('#state-dropdown-wrapper').css("display") == "none"){
 			appendStateDropDown('state-dropdown-wrapper',stateList);
 			toggleStateDropDown();
-		}else{
+		}/*else{
 			toggleStateDropDown();
-		}
+		}*/
 	}).bind('keyup',function(e){
 		var searchTerm = "";
 		if(!$(this).val()){
