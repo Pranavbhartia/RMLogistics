@@ -756,6 +756,7 @@ function paintBuyHomeOwner() {
 }
 
 function homeProgressBaar(num) {
+	scrollToTop();
 	adjustCustomerApplicationPageOnResize();
 	adjustCustomerEngagementPageOnResize();
     var count = 5;

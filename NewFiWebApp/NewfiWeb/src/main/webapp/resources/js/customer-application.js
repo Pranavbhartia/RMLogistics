@@ -4224,6 +4224,7 @@ function saveUserAndLockRate(appUserDetails) {
  
 
 function appProgressBaar(num){
+	scrollToTop();
 	adjustCustomerApplicationPageOnResize();
 	adjustCustomerEngagementPageOnResize();
 	$('#step-no').text(num);
