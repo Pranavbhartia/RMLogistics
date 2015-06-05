@@ -1,6 +1,7 @@
 package com.nexera.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,11 +10,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.Loan;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.WorkflowCoreService;
+import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.engine.EngineTrigger;
+import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.vo.WorkflowItemExecVO;
 import com.nexera.workflow.vo.WorkflowVO;
 
@@ -25,6 +32,8 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 
 	@Autowired
 	private ApplicationContext applicationContext;
+	@Autowired
+	private WorkflowService workflowService;
 
 	@Override
 	@Transactional
@@ -60,6 +69,28 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 			volist.add(workflowItemVO.convertToVO(workflowItem));
 		}
 		return volist;
+
+	}
+
+	public void completeWorkflowItem(Loan loan, Map<String, Object> map,
+	        String workflowName) {
+		int wfExecID = loan.getLoanManagerWorkflow();
+		WorkflowExec workflowExec = new WorkflowExec();
+		workflowExec.setId(wfExecID);
+		WorkflowItemMaster workflowItemMaster = workflowService
+		        .getWorkflowByType(workflowName);
+		WorkflowItemExec workItemRef = workflowService
+		        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
+		// Create Map here.
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		map.put(WorkflowDisplayConstants.LOAN_ID_KEY_NAME, loan.getId());
+		String params = Utils.convertMapToJson(map);
+		workflowService.saveParamsInExecTable(workItemRef.getId(), params);
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
+		engineTrigger.startWorkFlowItemExecution(workItemRef.getId());
 
 	}
 

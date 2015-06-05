@@ -48,7 +48,7 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_DISCLOSURE_STATUS = "DISCLOSURE_STATUS";
 	public static final String WORKFLOW_ITEM_DISCLOSURE_DISPLAY = "DISCLOSURE_DISPLAY";
 	public static final String WORKFLOW_ITEM_CREDIT_SCORE = "CREDIT_SCORE";
-	public static final String WORKFLOW_ITEM_CREDIT_BUREAU = "CREDIT_BUREAU";
+	
 	public static final String WORKFLOW_ITEM_COMM_EDU = "COMM_EDU";
 	public static final String WORKFLOW_ITEM_CLOSURE_STATUS = "CLOSURE_STATUS";
 	public static final String WORKFLOW_ITEM_CLOSURE_DISPLAY = "VIEW_CLOSING";
