@@ -666,7 +666,7 @@ function getCalculationFunctionForItem(key) {
 				if (closingCostHolder.loanType
 						&& closingCostHolder.loanType == "PUR") {
 					var purchaseValue = getFloatValue(closingCostHolder.housePrice);
-					var result = Math.round(.0035 * purchaseValue * 2)
+					var result = Math.round((.0035 * purchaseValue) / 6)//.0035 is yearly value 
 					return result;
 				} else {
 					var taxVal = closingCostHolder != undefined ? closingCostHolder.annualHomeownersInsurance
@@ -1066,5 +1066,21 @@ function restrictChar(name){
 
 	});
 }
-
+function updateNotifications(loanid){
+	var contxt;
+	if(loanid){
+		contxt = getContext(loanid+"-notification");
+		if(!contxt){
+			contxt = getNotificationContext(loanid, 0)
+			addContext(loanid + "-notification", contxt);
+		}
+	}else{
+	    contxt = getContext("notification");
+		if(!contxt){
+			contxt = getNotificationContext(loanid, 0)
+			addContext(loanid + "-notification", contxt);
+		}
+	}
+	contxt.initContext(true);
+}
 

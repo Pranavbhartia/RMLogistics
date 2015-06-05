@@ -1029,8 +1029,8 @@ function getCustomerUploadPhotoRow(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function uploadeImage() {
-
+function uploadeImage(e) {
+	e.stopImmediatePropagation();
 	$("#prof-image").trigger('click');
 	$(".overlay-container").css("display","block");
 
