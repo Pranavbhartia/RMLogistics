@@ -103,7 +103,8 @@ public class LqbCacheInvoker implements LqbInterface {
 	        InvalidKeySpecException, NoSuchPaddingException,
 	        InvalidAlgorithmParameterException, UnsupportedEncodingException,
 	        IllegalBlockSizeException, BadPaddingException, IOException {
-		LOGGER.debug("findSticket is called.");
+		LOGGER.debug("findSticket is called for loan app form for: "
+		        + loaAppFormVO.getId());
 		String sTicket = null;
 		String lqbUsername = null;
 		String lqbPassword = null;
@@ -131,6 +132,10 @@ public class LqbCacheInvoker implements LqbInterface {
 					        .getLqbExpiryTime();
 					if (lqbUsername != null && lqbPassword != null) {
 						loanMangerFound = true;
+						LOGGER.debug("Loan manager found for this loan, hence using that for generating ticket: "
+						        + lqbUsername
+						        + " loan: "
+						        + loaAppFormVO.getId());
 						break;
 					}
 
@@ -139,6 +144,8 @@ public class LqbCacheInvoker implements LqbInterface {
 		}
 		/* This is the case when LM is not found */
 		if (!loanMangerFound) {
+			LOGGER.debug("loan manager not found for loan: "
+			        + loaAppFormVO.getId());
 			for (UserVO user : loanTeam) {
 				if (null != user.getInternalUserDetail()
 				        && user.getInternalUserDetail()
@@ -166,7 +173,8 @@ public class LqbCacheInvoker implements LqbInterface {
 		} else if (utils.hasTokenExpired(tokenExpiration)) {
 			requestForNewToken = true;
 		}
-
+		LOGGER.debug("Token for user: " + lqbUsername + " has expired? "
+		        + requestForNewToken);
 		if (requestForNewToken) {
 			// This method can be moved out of cachable interface
 			sTicket = findSticket(lqbUsername, lqbPassword);
@@ -187,6 +195,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			sTicket = authToken; // return the one from the table
 
 		}
+		LOGGER.debug("Token that will be used is: " + sTicket);
 		return sTicket;
 	}
 
