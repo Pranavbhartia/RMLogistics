@@ -870,9 +870,13 @@ function addClickHandlerToNotification(element,notification){
 	if (typeof(hashLocation) == "function")
 	{
 		$(element).bind("click",function(e){hashLocation()});
+		if(!$(element).hasClass("cursor-pointer"))
+			$(element).addClass("cursor-pointer");
 	}
 	else if(hashLocation!=""){
 		$(element).bind("click",{"target":hashLocation},navigateToHash);
+		if(!$(element).hasClass("cursor-pointer"))
+			$(element).addClass("cursor-pointer");
 	}
 }
 function navigateToHash(e){
