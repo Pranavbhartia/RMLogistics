@@ -613,7 +613,7 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 				                .getLqbUsername() != null
 				        && internalUser.getUser().getInternalUserDetail()
 				                .getInternaUserRoleMaster().getRoleName()
-				                .equals(UserRolesEnum.LM)) {
+				                .equals(UserRolesEnum.LM.getName())) {
 					addIfUserIsEligible(internalUser.getUser(), availableUsers);
 				}
 
