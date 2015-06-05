@@ -21,6 +21,7 @@ import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.LoanMilestoneDao;
 import com.nexera.common.dao.LoanMilestoneMasterDao;
@@ -88,10 +89,12 @@ import com.nexera.core.service.StateLookupService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.workflow.bean.WorkflowExec;
 import com.nexera.workflow.bean.WorkflowItemExec;
+import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 
@@ -112,7 +115,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private WorkflowService workflowService;
-
+	@Autowired
+	WorkflowCoreService workflowCoreService;
 	@Autowired
 	private TemplateService templateService;
 
@@ -2040,7 +2044,20 @@ public class LoanServiceImpl implements LoanService {
 				customerDetail.setTransunionScore(borrowerTransunionScore);
 
 				LOG.debug("Updating customer details ");
+				// If all these scores were avialble then invooke concrete class
+
 				userProfileService.updateCustomerScore(customerDetail);
+				if (borrowerEquifaxScore != null
+				        && borrowerExperianScore != null
+				        && borrowerTransunionScore != null) {
+					// Then invoke Concreate class to mark all As GREEn
+					Map<String, Object> objectMap = new HashMap<String, Object>();					
+					objectMap.put(
+					        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+					        CommonConstants.TEMPLATE_KEY_NAME_CREDIT_INFO);
+					workflowCoreService.completeWorkflowItem(loan, objectMap,
+					        WorkflowConstants.WORKFLOW_ITEM_CREDIT_SCORE);
+				}
 
 			} else {
 				LOG.error("Credit Scores Not Found For This Loan ");
@@ -2068,5 +2085,4 @@ public class LoanServiceImpl implements LoanService {
 
 		}
 	}
-
 }
