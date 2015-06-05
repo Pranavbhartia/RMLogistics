@@ -638,6 +638,7 @@ function appendRecentAlertContainer(alerts, contxt, existingWrapper) {
 			var alertTxt = $('<div>').attr({
 				"class" : "alert-txt"
 			}).html(alertData);
+			addClickHandlerToNotification(alertTxt,alerts[i]);
 			var alertBtnRow = $('<div>').attr({
 				"class" : "alert-btn-row clearfix"
 			});

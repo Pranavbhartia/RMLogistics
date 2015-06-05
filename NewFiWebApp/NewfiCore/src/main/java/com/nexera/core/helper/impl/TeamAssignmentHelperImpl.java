@@ -41,7 +41,6 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 				return pickTheChosenOne(userList);
 			}
 
-
 		}
 
 		/*
@@ -49,8 +48,8 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		 */
 		// This logic is changed to not assign anyone. Sales manager will be
 		// assigned neverthless
-		 return userProfileDao.getDefaultSalesManager();
-		//return null;
+		return userProfileDao.getDefaultSalesManager();
+		// return null;
 		// userList = userProfileDao.getLoanManagerWithLeastWork();
 		// if (!userList.isEmpty()) {
 		// return pickTheChosenOne(userList);
@@ -60,6 +59,11 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 
 	private UserVO pickTheChosenOne(List<User> userList) {
 		LOG.debug("So many users are eligible: " + userList.size());
+		if (LOG.isDebugEnabled()) {
+			for (User user : userList) {
+				LOG.debug("This user is eligible: " + user.getId());
+			}
+		}
 		LOG.debug("Sorting by assending order of loan size and returning the one with least work");
 		Collections.sort(userList, new Comparator<User>() {
 			public int compare(User o1, User o2) {
@@ -71,7 +75,7 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		// Now we have a sorted list return the
 		// first element
 		UserVO chosenUser = User.convertFromEntityToVO(userList.get(0));
-		LOG.debug("The chosen one is: " + chosenUser);
+		LOG.debug("The chosen one is: " + chosenUser.getId());
 		return chosenUser;
 	}
 
