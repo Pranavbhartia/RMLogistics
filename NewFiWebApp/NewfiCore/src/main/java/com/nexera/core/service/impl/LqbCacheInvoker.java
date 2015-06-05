@@ -129,8 +129,12 @@ public class LqbCacheInvoker implements LqbInterface {
 					        .getLqbAuthToken();
 					tokenExpiration = internalUser.getInternalUserDetail()
 					        .getLqbExpiryTime();
-					loanMangerFound = true;
-					break;
+					if (lqbUsername != null && lqbPassword!= null)
+					{
+						loanMangerFound = true;
+						break;
+					}
+					
 				}
 			}
 		}
@@ -161,9 +165,9 @@ public class LqbCacheInvoker implements LqbInterface {
 		if (authToken == null) {
 			requestForNewToken = true;
 		} else if (utils.hasTokenExpired(tokenExpiration)) {
-
 			requestForNewToken = true;
 		}
+		
 		if (requestForNewToken) {
 			// This method can be moved out of cachable interface
 			sTicket = findSticket(lqbUsername, lqbPassword);
