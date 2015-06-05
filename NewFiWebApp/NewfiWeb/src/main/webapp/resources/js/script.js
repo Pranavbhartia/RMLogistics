@@ -7,7 +7,7 @@ var  removedKnwoNewFi = false;
 var flagKnowNewFi=true;
 var flagToShowCompletPro = true;
 var rateLockRequestedFlag = false;
-
+var closedialog;
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);
@@ -66,7 +66,7 @@ function getCustomerSecondaryLeftNav() {
 
         	var tutorialStatus = undefined;
         	if(newfiObject.appUserDetails.user == undefined){
-        		itutorialStatus = JSON.parse(newfiObject.appUserDetails).user.customerDetail.tutorialStatus;
+        		tutorialStatus = JSON.parse(newfiObject.appUserDetails).user.customerDetail.tutorialStatus;
         		
         	}
         	else{
@@ -265,7 +265,7 @@ function paintApplicationAlreadySubmittedPage(loanType) {
 				"class" : "getting-to-know-btn margin-0-auto"
 			}).html("View my pre-qualification letter").on('click',function(){				
 				showDialogPopup("Pre-Qual Letter sent",preQualificationLetterAlreadySentToEmail,callBackpopupFunction);
-				return false;
+				return;
 			});
 			container.append(btn1);
 	}
@@ -2328,21 +2328,45 @@ function mapCategories(category) {
     }
 }
 
+function overlayclickclose() {
+	alert("hifunc");
+    if (closedialog) {
+        $("#dialog").dialog("close");
+    }
+
+    //set to one because click on dialog box sets to zero 
+    closedialog = 1;
+}
 function showDialogPopup(title, content, okButtonEvent) {
+	    closedialog = 0;
         $("#dialog").empty();
         $("#dialog").html(content);
         $("#dialog").attr("title", title);
         $("#dialog").dialog({
-            buttons: [{
-                text: "Ok",
-                click: function() {
-                    okButtonEvent();
-                    $(this).dialog("close");
-                }
-            }]
+/*        	    open: function() {
+        	    	alert("hiopen"+closedialog);
+        	        closedialog = 0;        	 
+        	        $(document).bind("click", overlayclickclose);
+        	    },*/
+        	    focus: function() {
+        	    	alert("hifocus");
+        	        closedialog = 0;
+        	    },
+        	    close: function() {
+        	    	alert("hiclose");
+        	    	$(this).dialog("close");
+        	    },
+        	    buttons: [{
+        	    	 text: "Ok",
+        	    	 click: function() {
+        	    		 alert("hi");
+        	    		   okButtonEvent();
+        	            $(this).dialog("close");
+        	        }
+        	    }]
         });
-       $("#dialog").parent().bind("click",function(e){e.stopImmediatePropagation();})
     }
+
     /*
 
      * Function for notification popup
@@ -2352,14 +2376,15 @@ $(document).on('click', '#alert-popup-wrapper', function(e) {
     e.stopImmediatePropagation();
 });
 $(document).on('click', function(e) {
+	//closedialog = 0;  
     if ($('#alert-popup-wrapper').css("display") == "block") {
         hideAlertNotificationPopup();
     }
-    try{
-        if ($("#dialog").dialog( "isOpen" )) {
-            $("#dialog").dialog("close");
-        }
-    }catch(e){}
+    
+    overlayclickclose();
+    
+   
+
 });
 $(document).on('click', '#alert-notification-btn', function(e) {
     e.stopImmediatePropagation();
