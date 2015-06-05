@@ -129,12 +129,11 @@ public class LqbCacheInvoker implements LqbInterface {
 					        .getLqbAuthToken();
 					tokenExpiration = internalUser.getInternalUserDetail()
 					        .getLqbExpiryTime();
-					if (lqbUsername != null && lqbPassword!= null)
-					{
+					if (lqbUsername != null && lqbPassword != null) {
 						loanMangerFound = true;
 						break;
 					}
-					
+
 				}
 			}
 		}
@@ -167,7 +166,7 @@ public class LqbCacheInvoker implements LqbInterface {
 		} else if (utils.hasTokenExpired(tokenExpiration)) {
 			requestForNewToken = true;
 		}
-		
+
 		if (requestForNewToken) {
 			// This method can be moved out of cachable interface
 			sTicket = findSticket(lqbUsername, lqbPassword);
@@ -205,7 +204,7 @@ public class LqbCacheInvoker implements LqbInterface {
 	}
 
 	public String findSticket(String lqbUsername, String lqbPassword) {
-		LOGGER.debug("findSticket of cacheMethod called");
+		LOGGER.debug("findSticket called for: " + lqbUsername);
 		String sTicket = null;
 		if (null != lqbUsername && null != lqbPassword) {
 			lqbUsername = lqbUsername.replaceAll("[^\\x00-\\x7F]", "");
@@ -246,7 +245,8 @@ public class LqbCacheInvoker implements LqbInterface {
 				sTicket = authTicketJson;
 
 			} else {
-				LOGGER.error("Ticket Not Generated For This User ");
+				LOGGER.error("Ticket Not Generated For This User "
+				        + lqbUsername);
 				sTicket = null;
 			}
 
