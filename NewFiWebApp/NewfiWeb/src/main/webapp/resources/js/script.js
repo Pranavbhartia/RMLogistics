@@ -2329,16 +2329,17 @@ function mapCategories(category) {
 }
 
 function overlayclickclose() {
-	
-    if (closedialog) {
-        $("#dialog").dialog("close");
-    }
-
+	try{
+        if (closedialog) {
+            $("#dialog").dialog("close");
+            closedialog = 0;
+        }
+    }catch(e){}
     //set to one because click on dialog box sets to zero 
-    closedialog = 1;
+    
 }
 function showDialogPopup(title, content, okButtonEvent) {
-	    closedialog = 0;
+	    //closedialog = 0;
         $("#dialog").empty();
         $("#dialog").html(content);
         $("#dialog").attr("title", title);
@@ -2350,11 +2351,12 @@ function showDialogPopup(title, content, okButtonEvent) {
         	    },*/
         	    focus: function() {
         	    	
-        	        closedialog = 0;
+        	        closedialog = 1;
         	    },
         	    close: function() {
         	    	
         	    	$(this).dialog("close");
+                    closedialog = 0;
         	    },
         	    buttons: [{
         	    	 text: "Ok",
