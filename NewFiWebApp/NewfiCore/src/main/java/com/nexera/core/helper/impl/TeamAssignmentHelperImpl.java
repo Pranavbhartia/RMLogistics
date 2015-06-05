@@ -75,7 +75,7 @@ public class TeamAssignmentHelperImpl implements TeamAssignmentHelper {
 		// Now we have a sorted list return the
 		// first element
 		UserVO chosenUser = User.convertFromEntityToVO(userList.get(0));
-		LOG.debug("The chosen one is: " + chosenUser);
+		LOG.debug("The chosen one is: " + chosenUser.getId());
 		return chosenUser;
 	}
 
