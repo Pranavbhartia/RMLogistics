@@ -2329,7 +2329,7 @@ function mapCategories(category) {
 }
 
 function overlayclickclose() {
-	alert("hifunc");
+	
     if (closedialog) {
         $("#dialog").dialog("close");
     }
@@ -2349,17 +2349,17 @@ function showDialogPopup(title, content, okButtonEvent) {
         	        $(document).bind("click", overlayclickclose);
         	    },*/
         	    focus: function() {
-        	    	alert("hifocus");
+        	    	
         	        closedialog = 0;
         	    },
         	    close: function() {
-        	    	alert("hiclose");
+        	    	
         	    	$(this).dialog("close");
         	    },
         	    buttons: [{
         	    	 text: "Ok",
         	    	 click: function() {
-        	    		 alert("hi");
+        	    		
         	    		   okButtonEvent();
         	            $(this).dialog("close");
         	        }
