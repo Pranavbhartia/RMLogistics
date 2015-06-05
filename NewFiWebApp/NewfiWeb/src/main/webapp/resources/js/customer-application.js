@@ -58,6 +58,10 @@ $(document).on('click',function(){
 	
 });
 
+$(document).on('click','.app-save-btn, .ce-save-btn',function(){
+	scrollToTop();
+});
+
 if (sessionStorage.loanAppFormData) {
 	appUserDetails = JSON.parse(sessionStorage.loanAppFormData);
 }
