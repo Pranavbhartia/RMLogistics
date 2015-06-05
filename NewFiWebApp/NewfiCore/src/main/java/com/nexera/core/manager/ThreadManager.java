@@ -652,8 +652,7 @@ public class ThreadManager implements Runnable {
 					Map<String, String> creditScoreMap = nexeraUtility
 					        .fillCreditScoresInMap(creditScoreResponseList);
 					LOGGER.debug("Save Credit Score For This Borrower ");
-					loanService.saveCreditScoresForBorrower(creditScoreMap,
-					        loan, exceptionMaster);
+					saveCreditScoresForBorrower(creditScoreMap);
 					saveCreditScoresForCoBorrower(creditScoreMap);
 					creditScoreMap.clear();
 				}
@@ -741,8 +740,8 @@ public class ThreadManager implements Runnable {
 				updateCustomerDetails(customerDetail);
 
 				if (borrowerEquifaxScore != null
-				        || borrowerExperianScore != null
-				        || borrowerTransunionScore != null)
+				        && borrowerExperianScore != null
+				        && borrowerTransunionScore != null)
 					invokeCreditScoreMilestone();
 
 			} else {
