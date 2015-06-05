@@ -603,14 +603,17 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 
 			List<User> availableUsers = new ArrayList<User>();
 
+			/*
+			 * From the list available, consider only Loan advisors who have
+			 * entered LQB credentials
+			 */
 			for (InternalUserStateMapping internalUser : internalUsers) {
 				if (internalUser.getUser().getInternalUserDetail() != null
 				        && internalUser.getUser().getInternalUserDetail()
-				                .getLqbUsername() != null) // Doing
-				// only
-				// for
-				// LM and with valid LQB username
-				{
+				                .getLqbUsername() != null
+				        && internalUser.getUser().getInternalUserDetail()
+				                .getInternaUserRoleMaster().getRoleName()
+				                .equals(UserRolesEnum.LM)) {
 					addIfUserIsEligible(internalUser.getUser(), availableUsers);
 				}
 
