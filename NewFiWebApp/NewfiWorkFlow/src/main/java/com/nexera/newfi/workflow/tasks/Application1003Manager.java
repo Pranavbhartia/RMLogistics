@@ -76,7 +76,8 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			/* makeANote(loanID, LoanStatus.submittedMessage) */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        Milestones.App1003.getMilestoneKey());
-			sendEmail(objectMap, CommonConstants.SUBJECT_APPLICATION_SUBMITTED);
+			//Rajeswari : Removing this call to send an email when 1003 is submitted - till a etmplate is given by nexera
+			//sendEmail(objectMap, CommonConstants.SUBJECT_APPLICATION_SUBMITTED);
 			createAlertForDisclosureDue(objectMap);
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			LOG.info("Saving Loan as INprogres");

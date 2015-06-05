@@ -40,8 +40,9 @@ public class AlertManager extends NexeraWorkflowTask implements
 		 * LoanStatus.initialContactMadeMessage)
 		 */;
 		objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
-		        LoanStatus.initialContactMadeMessage);
-		sendEmail(objectMap, null);
+		        LoanStatus.initialContactMadeMessage);		
+		//Removing the Send Email call from here - Since no email should be sent out in this case
+		//sendEmail(objectMap, null);
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 
