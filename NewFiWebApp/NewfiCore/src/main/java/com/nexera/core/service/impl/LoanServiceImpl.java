@@ -2027,62 +2027,77 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional
 	public void saveCreditScoresForBorrower(Map<String, String> creditScoreMap,
 	        Loan loan, ExceptionMaster exceptionMaster) {
 		LOG.debug("Inside method saveCreditScores ");
-		CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
-		if (customerDetail != null) {
-			if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
-				String borrowerEquifaxScore = creditScoreMap
-				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE);
-				customerDetail.setEquifaxScore(borrowerEquifaxScore);
-				String borrowerExperianScore = creditScoreMap
-				        .get(CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE);
-				customerDetail.setExperianScore(borrowerExperianScore);
-				String borrowerTransunionScore = creditScoreMap
-				        .get(CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE);
-				customerDetail.setTransunionScore(borrowerTransunionScore);
+		LoanVO loanVO = getLoanByID(loan.getId());
+		if (loanVO != null) {
+			UserVO user = loanVO.getUser();
+			if (user != null) {
+				CustomerDetailVO customerDetailVO = user.getCustomerDetail();
+				if (customerDetailVO != null) {
+					if (creditScoreMap != null && !creditScoreMap.isEmpty()) {
+						String borrowerEquifaxScore = creditScoreMap
+						        .get(CoreCommonConstants.SOAP_XML_BORROWER_EQUIFAX_SCORE);
+						customerDetailVO.setEquifaxScore(borrowerEquifaxScore);
+						String borrowerExperianScore = creditScoreMap
+						        .get(CoreCommonConstants.SOAP_XML_BORROWER_EXPERIAN_SCORE);
+						customerDetailVO
+						        .setExperianScore(borrowerExperianScore);
+						String borrowerTransunionScore = creditScoreMap
+						        .get(CoreCommonConstants.SOAP_XML_BORROWER_TRANSUNION_SCORE);
+						customerDetailVO
+						        .setTransunionScore(borrowerTransunionScore);
 
-				LOG.debug("Updating customer details ");
-				// If all these scores were avialble then invooke concrete class
+						LOG.debug("Updating customer details ");
+						// If all these scores were avialble then invooke
+						// concrete class
+						CustomerDetail customerDetail = CustomerDetail
+						        .convertFromVOToEntity(customerDetailVO);
+						userProfileService.updateCustomerScore(customerDetail);
+						if (borrowerEquifaxScore != null
+						        && borrowerExperianScore != null
+						        && borrowerTransunionScore != null) {
+							// Then invoke Concreate class to mark all As GREEn
+							Map<String, Object> objectMap = new HashMap<String, Object>();
+							objectMap
+							        .put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
+							                CommonConstants.TEMPLATE_KEY_NAME_CREDIT_INFO);
+							workflowCoreService
+							        .completeWorkflowItem(
+							                loan,
+							                objectMap,
+							                WorkflowConstants.WORKFLOW_ITEM_CREDIT_SCORE);
+						}
 
-				userProfileService.updateCustomerScore(customerDetail);
-				if (borrowerEquifaxScore != null
-				        && borrowerExperianScore != null
-				        && borrowerTransunionScore != null) {
-					// Then invoke Concreate class to mark all As GREEn
-					Map<String, Object> objectMap = new HashMap<String, Object>();					
-					objectMap.put(
-					        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-					        CommonConstants.TEMPLATE_KEY_NAME_CREDIT_INFO);
-					workflowCoreService.completeWorkflowItem(loan, objectMap,
-					        WorkflowConstants.WORKFLOW_ITEM_CREDIT_SCORE);
-				}
+					} else {
+						LOG.error("Credit Scores Not Found For This Loan ");
+						if (exceptionMaster != null) {
+							nexeraUtility.putExceptionMasterIntoExecution(
+							        exceptionMaster,
+							        "Credit Score Not Found for this loan ");
+							nexeraUtility
+							        .sendExceptionEmail("Credit score not found for this loan "
+							                + loan.getId());
+						}
+					}
+				} else {
+					LOG.error("Customer Details Not Found With this user id ");
+					if (exceptionMaster != null) {
+						nexeraUtility.putExceptionMasterIntoExecution(
+						        exceptionMaster,
+						        "Customer details not found for this user id "
+						                + loan.getUser().getId());
+						nexeraUtility
+						        .sendExceptionEmail("Customer Details Not Found for this user "
+						                + loan.getUser().getFirstName()
+						                + " "
+						                + loan.getUser().getLastName());
+					}
 
-			} else {
-				LOG.error("Credit Scores Not Found For This Loan ");
-				if (exceptionMaster != null) {
-					nexeraUtility.putExceptionMasterIntoExecution(
-					        exceptionMaster,
-					        "Credit Score Not Found for this loan ");
-					nexeraUtility
-					        .sendExceptionEmail("Credit score not found for this loan "
-					                + loan.getId());
 				}
 			}
-		} else {
-			LOG.error("Customer Details Not Found With this user id ");
-			if (exceptionMaster != null) {
-				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-				        "Customer details not found for this user id "
-				                + loan.getUser().getId());
-				nexeraUtility
-				        .sendExceptionEmail("Customer Details Not Found for this user "
-				                + loan.getUser().getFirstName()
-				                + " "
-				                + loan.getUser().getLastName());
-			}
-
 		}
 	}
 }
