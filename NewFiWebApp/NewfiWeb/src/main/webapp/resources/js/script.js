@@ -2329,39 +2329,41 @@ function mapCategories(category) {
 }
 
 function overlayclickclose() {
-	try{
-        if (closedialog) {
-            $("#dialog").dialog("close");
-            closedialog = 0;
-        }
-    }catch(e){}
+
+        	if(closedialog!=undefined){
+        		if (closedialog) {
+                    $("#dialog").dialog("close");
+                    closedialog = 0;
+                    return;
+                }
+                closedialog = 1;
+        	}
+
+        
+    
     //set to one because click on dialog box sets to zero 
     
 }
-function showDialogPopup(title, content, okButtonEvent) {
-	    //closedialog = 0;
+function showDialogPopup(title, content, okButtonEvent) {	   
         $("#dialog").empty();
         $("#dialog").html(content);
         $("#dialog").attr("title", title);
         $("#dialog").dialog({
-/*        	    open: function() {
-        	    	alert("hiopen"+closedialog);
+       	    open: function() {
+        	    	//alert("hiopen"+closedialog);
         	        closedialog = 0;        	 
-        	        $(document).bind("click", overlayclickclose);
-        	    },*/
-        	    focus: function() {
-        	    	
-        	        closedialog = 1;
+        	      //  $(document).bind("click", overlayclickclose);
         	    },
-        	    close: function() {
-        	    	
+        	    focus: function() {        	    	
+        	        closedialog = 0;
+        	    },
+        	    close: function() {       	    	
         	    	$(this).dialog("close");
-                    closedialog = 0;
+                  
         	    },
         	    buttons: [{
         	    	 text: "Ok",
-        	    	 click: function() {
-        	    		
+        	    	 click: function() {        	    		
         	    		   okButtonEvent();
         	            $(this).dialog("close");
         	        }

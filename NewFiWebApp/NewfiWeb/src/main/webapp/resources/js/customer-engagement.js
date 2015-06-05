@@ -742,7 +742,7 @@ function validateMortage()
 	var homeWorthToday =getFloatValue( $('input[name="homeWorthToday"]').val());
 	if (homeWorthToday < getFloatValue(refinanceTeaserRate.currentMortgageBalance))
 	{				
-		$('.ce-input').next('.err-msg').html("Property value can not be less than requested loan amount " + refinanceTeaserRate.currentMortgageBalance).show();
+		$('.ce-input').next('.err-msg').html(propertyValueErrorMessage + refinanceTeaserRate.currentMortgageBalance).show();
 		$('.ce-input').addClass('ce-err-input').show();
 	}
 	else
