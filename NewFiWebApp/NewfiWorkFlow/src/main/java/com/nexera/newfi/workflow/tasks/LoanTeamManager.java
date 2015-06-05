@@ -96,6 +96,8 @@ public class LoanTeamManager extends NexeraWorkflowTask implements
 			        WorkItemStatus.PENDING.getStatus());
 			return WorkItemStatus.PENDING.getStatus();
 		}
+		//Also check here if agentt is in the team..
+		
 		return null;
 	}
 

@@ -209,7 +209,12 @@ public class LoanServiceImpl implements LoanService {
 
 		Loan loanModel = this.parseLoanModel(loan);
 		User userModel = this.parseUserModel(user);
-
+		if (user.getUserRole() != null
+		        && user.getUserRole().getRoleCd()
+		                .equals(UserRolesEnum.REALTOR.getName())) {
+			notificationService.dismissReadNotifications(loan.getId(),
+			        MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE);
+		}
 		return loanDao.addToLoanTeam(loanModel, userModel,
 		        utils.getLoggedInUser());
 	}
@@ -2051,7 +2056,7 @@ public class LoanServiceImpl implements LoanService {
 				        && borrowerExperianScore != null
 				        && borrowerTransunionScore != null) {
 					// Then invoke Concreate class to mark all As GREEn
-					Map<String, Object> objectMap = new HashMap<String, Object>();					
+					Map<String, Object> objectMap = new HashMap<String, Object>();
 					objectMap.put(
 					        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 					        CommonConstants.TEMPLATE_KEY_NAME_CREDIT_INFO);
