@@ -84,10 +84,10 @@ function ajaxRequest(url,type,dataType,data,successCallBack, isPagination , div,
 
 		},
 		error : function() {
-			if (isPagination) {
-				removePaginationScrollIcon(div);
-			} else {
+			if(isPagination===undefined){
 				hideOverlay();
+			} else if (isPagination == true) {
+				removePaginationScrollIcon(div);
 			}
 		}
 	});
