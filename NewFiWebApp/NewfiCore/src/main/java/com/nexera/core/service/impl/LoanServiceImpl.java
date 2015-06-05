@@ -209,6 +209,7 @@ public class LoanServiceImpl implements LoanService {
 
 		Loan loanModel = this.parseLoanModel(loan);
 		User userModel = this.parseUserModel(user);
+		user = userProfileService.loadInternalUser(user.getId());
 		if (user.getUserRole() != null
 		        && user.getUserRole().getRoleCd()
 		                .equals(UserRolesEnum.REALTOR.getName())) {
