@@ -29,10 +29,14 @@ import org.springframework.web.client.RestTemplate;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.InternalUserDetail;
+import com.nexera.common.entity.User;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.LoanTeamListVO;
+import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.lqb.broker.LqbInvoker;
+import com.nexera.core.service.LoanService;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
@@ -55,6 +59,9 @@ public class LqbCacheInvoker implements LqbInterface {
 
 	@Autowired
 	LqbInvoker lqbInvoker;
+
+	@Autowired
+	LoanService loanService;
 
 	byte[] salt = { (byte) 0xA9, (byte) 0x9B, (byte) 0xC8, (byte) 0x32,
 	        (byte) 0x56, (byte) 0x35, (byte) 0xE3, (byte) 0x03 };
@@ -98,13 +105,13 @@ public class LqbCacheInvoker implements LqbInterface {
 	}
 
 	@Override
-	public String findSticket(LoanAppFormVO loaAppFormVO)
+	public String findSticket(LoanAppFormVO loanAppFormVo)
 	        throws InvalidKeyException, NoSuchAlgorithmException,
 	        InvalidKeySpecException, NoSuchPaddingException,
 	        InvalidAlgorithmParameterException, UnsupportedEncodingException,
 	        IllegalBlockSizeException, BadPaddingException, IOException {
 		LOGGER.debug("findSticket is called for loan app form for: "
-		        + loaAppFormVO.getId());
+		        + loanAppFormVo.getId());
 		String sTicket = null;
 		String lqbUsername = null;
 		String lqbPassword = null;
@@ -113,9 +120,13 @@ public class LqbCacheInvoker implements LqbInterface {
 		UserVO internalUser = null;
 
 		boolean loanMangerFound = false;
-		List<UserVO> loanTeam = loaAppFormVO.getLoan().getLoanTeam();
+		LoanTeamListVO loanTeamListVo = loanService
+		        .getLoanTeamListForLoan(loanAppFormVo.getLoan());
+
+		List<LoanTeamVO> loanTeam = loanTeamListVo.getLoanTeamList();
 		if (null != loanTeam && loanTeam.size() > 0) {
-			for (UserVO user : loanTeam) {
+			for (LoanTeamVO loanTeamVo : loanTeam) {
+				UserVO user = loanTeamVo.getUser();
 				if (null != user.getInternalUserDetail()
 				        && user.getInternalUserDetail()
 				                .getInternalUserRoleMasterVO().getRoleName()
@@ -135,7 +146,7 @@ public class LqbCacheInvoker implements LqbInterface {
 						LOGGER.debug("Loan manager found for this loan, hence using that for generating ticket: "
 						        + lqbUsername
 						        + " loan: "
-						        + loaAppFormVO.getId());
+						        + loanAppFormVo.getId());
 						break;
 					}
 
@@ -144,25 +155,24 @@ public class LqbCacheInvoker implements LqbInterface {
 		}
 		/* This is the case when LM is not found */
 		if (!loanMangerFound) {
-			LOGGER.debug("loan manager not found for loan: "
-			        + loaAppFormVO.getId());
-			for (UserVO user : loanTeam) {
-				if (null != user.getInternalUserDetail()
-				        && user.getInternalUserDetail()
-				                .getInternalUserRoleMasterVO().getRoleName()
-				                .equalsIgnoreCase("SM")) {
-					internalUser = user;
-					lqbUsername = internalUser.getInternalUserDetail()
-					        .getLqbUsername();
-					lqbPassword = internalUser.getInternalUserDetail()
-					        .getLqbPassword();
-					authToken = internalUser.getInternalUserDetail()
-					        .getLqbAuthToken();
-					tokenExpiration = internalUser.getInternalUserDetail()
-					        .getLqbExpiryTime();
-					break;
-				}
+
+			LOGGER.debug("loan manager not found for loan with appform: "
+			        + loanAppFormVo.getId());
+			/*
+			 * Get Sales manager's information
+			 */
+
+			List<User> salesManagers = userProfileService.geAllSalesManagers();
+			if (salesManagers.size() > 0) {
+				LOGGER.warn("Code does not handle multiple sales managers. Need to be fixed");
 			}
+			User salesManager = salesManagers.get(0);
+			lqbUsername = salesManager.getInternalUserDetail().getLqbUsername();
+			lqbPassword = salesManager.getInternalUserDetail().getLqbPassword();
+			authToken = salesManager.getInternalUserDetail().getLqbAuthToken();
+			tokenExpiration = salesManager.getInternalUserDetail()
+			        .getLqbExpiryTime();
+
 		}
 
 		// }
@@ -251,6 +261,8 @@ public class LqbCacheInvoker implements LqbInterface {
 			        .invokeRestSpringParseObjForAuth(authOperationObject
 			                .toString());
 			if (authTicketJson.contains("EncryptedTicket")) {
+				LOGGER.debug("Ticket is valid for user: " + lqbUsername
+				        + " token:" + authTicketJson);
 				sTicket = authTicketJson;
 
 			} else {

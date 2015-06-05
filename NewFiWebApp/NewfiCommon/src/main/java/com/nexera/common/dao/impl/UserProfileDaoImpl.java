@@ -966,11 +966,15 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		criteria.add(Restrictions.eq("role.id",
 		        InternalUserRolesEum.SM.getRoleId()));
 		List<User> users = criteria.list();
+
 		if (users == null || users.isEmpty()) {
 			LOG.error("This cannot happen, there has to be a sales manager in the system ");
 			// TODO: Write to error table and email
 			return null;
 
+		}
+		for (User user : users) {
+			Hibernate.initialize(user.getInternalUserDetail());
 		}
 		return users;
 

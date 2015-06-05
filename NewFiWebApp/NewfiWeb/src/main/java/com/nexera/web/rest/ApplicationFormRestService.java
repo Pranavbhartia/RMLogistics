@@ -426,7 +426,7 @@ public class ApplicationFormRestService {
 				LOG.error("Unable to generate authentication token, please try after sometime");
 			}
 		} catch (Exception e) {
-			LOG.debug("lockRateData failed ", e);
+			LOG.error("lockRateData failed ", e);
 			lockRateData = "error";
 		}
 		if (lockRateData == null || lockRateData.equals("error")
