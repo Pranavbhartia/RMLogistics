@@ -260,7 +260,7 @@ public class LqbCacheInvoker implements LqbInterface {
 			}
 
 		} else {
-			LOGGER.error("LQBUsername or Password are not valid ");
+			LOGGER.error("LQBUsername or Password are not set ");
 			sTicket = null;
 		}
 		return sTicket;
