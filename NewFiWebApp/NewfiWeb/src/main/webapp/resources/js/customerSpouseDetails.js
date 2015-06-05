@@ -104,10 +104,30 @@ function paintMySpouseIncome() {
 	
 	var saveBtn = $('<div>').attr({
 		"class" : "cep-button-color ce-save-btn"
-	}).html(buttonText).bind('click',function() {
-	  	
+	}).html(buttonText).bind('click',function(e) {
+	  	e.stopImmediatePropagation();
+	  	var isStatus=[];
 		if(this.innerHTML!=next){
 				var  customerSpouseEmploymentIncome = [];
+				//validation
+				isStatus  = validateCheckbox(isStatus);
+    	        if(isStatus.length>0){	
+    	      	 
+    	        	for(var i=0;i<isStatus.length;i++){
+    	        		var status=validateInputOfChecked(isStatus[i]);
+        	        	if(status==false){
+        	        		return false;
+        	        	}
+    	        		
+    	        			
+    	        	}
+    	        	
+    	        	
+    	        }else{
+    	        	showErrorToastMessage(selectAnyOne);
+    	        	return false;
+    	        }
+    	        //End
 			  	 if($("#ce-option_0").prev().hasClass('app-option-checked')){
 				  	
 			  		 $("#ce-option_0").find('.ce-option-ques-wrapper').each(function(){
