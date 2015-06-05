@@ -53,36 +53,8 @@ public class EmailProcessor implements Runnable {
 
 	private ExceptionMaster exceptionMaster;
 
-	/*@Value("${regex.pattern.1}")
-	private String regexPattern1;*/
-
-	@Value("${regex.pattern.2}")
-	private String regexPattern2;
-
-	@Value("${regex.pattern.3}")
-	private String regexPattern3;
-
-	/*
-	 * @Value("${regex.pattern.4}") private String regexPattern4;
-	 */
-
-	@Value("${regex.pattern.5}")
-	private String regexPattern5;
-
-	@Value("${regex.pattern.6}")
-	private String regexPattern6;
-
-	@Value("${regex.pattern.7}")
-	private String regexPattern7;
-
-	/*@Value("${regex.pattern.8}")
-	private String regexPattern8;*/
-
-	@Value("${regex.pattern.9}")
-	private String regexPattern9;
-
-	@Value("${regex.pattern.10}")
-	private String regexPattern10;
+	@Value("${regex.pattern.1}")
+	private String regexPattern1;
 
 	@Autowired
 	NexeraUtility nexeraUtility;
@@ -412,20 +384,12 @@ public class EmailProcessor implements Runnable {
 						}
 						LOGGER.debug("Applying Regex On Email ");
 						List<String> regexPatternStrings = new ArrayList<String>();
-						/*regexPatternStrings.add(regexPattern1);*/
-						regexPatternStrings.add(regexPattern2);
-						regexPatternStrings.add(regexPattern3);
-						/* regexPatternStrings.add(regexPattern4); */
-						regexPatternStrings.add(regexPattern5);
-						regexPatternStrings.add(regexPattern6);
-						regexPatternStrings.add(regexPattern7);
-						/*regexPatternStrings.add(regexPattern8);*/
-						regexPatternStrings.add(regexPattern9);
-						regexPatternStrings.add(regexPattern10);
+						regexPatternStrings.add(regexPattern1);
+
 						emailBody = extractMessage(emailBody,
 						        regexPatternStrings);
 
-						LOGGER.debug("Body of the email is " + emailBody);
+						LOGGER.debug("Body  of the email is " + emailBody);
 						if (loanVO != null) {
 							if (loanFound) {
 
@@ -489,6 +453,7 @@ public class EmailProcessor implements Runnable {
 			} else {
 				LOGGER.debug("Normal Plain Text Email ");
 				body = mimeMessage.getContent().toString();
+				body = removeUnprintableCharacter(body);
 			}
 		} catch (MessagingException me) {
 			LOGGER.error("Exception caught " + me.getMessage());
@@ -539,12 +504,11 @@ public class EmailProcessor implements Runnable {
 		String cleanedMessage = originalMessage;
 		for (String regexPatternString : regexPatternStrings) {
 			Pattern PATTERN = Pattern.compile(regexPatternString,
-			        Pattern.MULTILINE | Pattern.DOTALL
-			                | Pattern.CASE_INSENSITIVE);
+			        Pattern.CASE_INSENSITIVE | Pattern.DOTALL
+			                | Pattern.MULTILINE);
 			Matcher m = PATTERN.matcher(cleanedMessage);
 			if (m.find()) {
 				cleanedMessage = m.replaceAll("");
-
 			}
 		}
 		if (cleanedMessage == null) {
@@ -712,6 +676,11 @@ public class EmailProcessor implements Runnable {
 		}
 		m.appendTail(buf);
 		return buf.toString();
+	}
+
+	public static String removeUnprintableCharacter(String data) {
+		data = data.replaceAll("[^\\x20-\\x7e]", "");
+		return data;
 	}
 
 	private String getText(Part p) throws MessagingException, IOException {
