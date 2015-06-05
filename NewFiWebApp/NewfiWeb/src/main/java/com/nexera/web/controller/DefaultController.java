@@ -159,9 +159,10 @@ public class DefaultController implements InitializingBean {
 						intialsList.add(" ");
 					}
 					if (loanTeamVO.getUser().getInternalUserDetail() != null) {
-						if (UserRolesEnum.LM.equals(loanTeamVO.getUser()
-						        .getInternalUserDetail()
-						        .getInternalUserRoleMasterVO().getRoleName())) {
+						if (UserRolesEnum.LM.getName().equals(
+						        loanTeamVO.getUser().getInternalUserDetail()
+						                .getInternalUserRoleMasterVO()
+						                .getRoleName())) {
 							imageList.add(loanTeamVO.getUser()
 							        .getPhotoImageUrl());
 

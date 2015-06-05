@@ -209,7 +209,12 @@ public class LoanServiceImpl implements LoanService {
 
 		Loan loanModel = this.parseLoanModel(loan);
 		User userModel = this.parseUserModel(user);
-
+		if (user.getUserRole() != null
+		        && user.getUserRole().getRoleCd()
+		                .equals(UserRolesEnum.REALTOR.getName())) {
+			notificationService.dismissReadNotifications(loan.getId(),
+			        MilestoneNotificationTypes.TEAM_ADD_NOTIFICATION_TYPE);
+		}
 		return loanDao.addToLoanTeam(loanModel, userModel,
 		        utils.getLoggedInUser());
 	}
