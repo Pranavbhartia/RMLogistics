@@ -111,7 +111,7 @@ public class LqbCacheInvoker implements LqbInterface {
 	        InvalidAlgorithmParameterException, UnsupportedEncodingException,
 	        IllegalBlockSizeException, BadPaddingException, IOException {
 		LOGGER.debug("findSticket is called for loan app form for: "
-		        + loanAppFormVo.getId());
+		        + loanAppFormVo.getLoan().getId());
 		String sTicket = null;
 		String lqbUsername = null;
 		String lqbPassword = null;
@@ -133,6 +133,9 @@ public class LqbCacheInvoker implements LqbInterface {
 				                .equalsIgnoreCase("LM")) {
 					/* this user would be either realtor or LM */
 					internalUser = user;
+					LOGGER.debug("Found a LM: " + user.getId()
+					        + " on the team for loan: "
+					        + loanAppFormVo.getLoan().getId());
 					lqbUsername = internalUser.getInternalUserDetail()
 					        .getLqbUsername();
 					lqbPassword = internalUser.getInternalUserDetail()
@@ -157,7 +160,7 @@ public class LqbCacheInvoker implements LqbInterface {
 		if (!loanMangerFound) {
 
 			LOGGER.debug("loan manager not found for loan with appform: "
-			        + loanAppFormVo.getId());
+			        + loanAppFormVo.getLoan().getId());
 			/*
 			 * Get Sales manager's information
 			 */
@@ -197,6 +200,9 @@ public class LqbCacheInvoker implements LqbInterface {
 				if (sTicket != null) {
 					saveTokenDetails(internalUser, sTicket,
 					        System.currentTimeMillis());
+				} else {
+					LOGGER.error("Failed generating token for LQB user: "
+					        + lqbUsername);
 				}
 			}
 
