@@ -53,13 +53,14 @@ public class UWStatusManager extends NexeraWorkflowTask implements
 		// TODO add alert code here
 		if (!message.equals("")) {
 			LOG.debug("Taking a Note for UW Status " + objectMap);
-			makeANote(Integer.parseInt(objectMap.get(
+			//Rajeswari : Removing this since - we are calling makeANote explicitly from now on
+			/*makeANote(Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
-			        message);
+			        message);*/
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        message);
-
-			sendEmail(objectMap, null);
+			//Rajeswari : removing this call to send Email till a template is available
+			//sendEmail(objectMap, null);
 		}
 		LOG.debug("UW Status is " + milestoneStatus);
 		return milestoneStatus;
