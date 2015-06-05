@@ -55,13 +55,14 @@ function setCurrentUserObject() {
 }
 
 function saveParentMessage() {
-	if (otherUsers.length == 0) {
+	/*if (otherUsers.length == 0) {
+		openDialog(callBackpopupFunction);
 		showDialogPopup("Select A Person",
 				"You need to select a person before replying!",
 				callBackpopupFunction);
 		return;
 	}
-
+*/
 	parentId = null;
 	var messageText = $("#textareaParent").val();
 
@@ -324,9 +325,18 @@ function getMessageDashboardWrapper() {
 	bottomContainer.append(messageRecipients);
 
 	var messageBtn = $('<div>').attr({
-		"class" : "message-btn float-right",
-		"onclick" : "saveParentMessage()"
-	}).html("Send Message");
+		"class" : "message-btn float-right"
+		/*"onclick" : "saveParentMessage()"*/
+	}).html("Send Message").on('click',function(){
+		if (otherUsers.length == 0) {
+			showDialogPopup("Select A Person",
+					"You need to select a person before replying!",
+					callBackpopupFunction);
+			return;
+		}else{
+			saveParentMessage();
+		}
+	});
 
 	bottomContainer.append(messageBtn);
 	textContainer.append(bottomContainer);
