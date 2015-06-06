@@ -43,74 +43,83 @@ public class RestInterceptor implements Callable {
 	@Override
 	public Object onCall(MuleEventContext eventContext) throws Exception {
 
-		LOG.debug("Inside method onCall ");
+		LOG.info("Inside method onCall ");
 		MuleMessage message = eventContext.getMessage();
-		String payload = message.getPayloadAsString();
-		Gson gson = new Gson();
-		RestParameters restParameters = gson.fromJson(payload,
-		        RestParameters.class);
+		try {
+			String payload = message.getPayloadAsString();
+			Gson gson = new Gson();
+			RestParameters restParameters = gson.fromJson(payload,
+			        RestParameters.class);
 
-		if (restParameters.getOpName().equalsIgnoreCase(
-		        WebServiceOperations.OP_NAME_GET_CREDIT_SCORE)
-		        || restParameters
-		                .getOpName()
-		                .equalsIgnoreCase(
-		                        WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION)
-		        || restParameters.getOpName().equalsIgnoreCase(
-		                WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD)) {
-			message.setOutboundProperty(NewFiConstants.CONSTANT_OP_NAME,
-			        WebServiceOperations.OP_NAME_LOAN_LOAD);
-		} else if (restParameters.getOpName().equalsIgnoreCase(
-		        WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE)) {
-			message.setOutboundProperty(NewFiConstants.CONSTANT_OP_NAME,
-			        WebServiceOperations.OP_NAME_LOAN_SAVE);
-		} else {
-			message.setOutboundProperty(NewFiConstants.CONSTANT_OP_NAME,
-			        restParameters.getOpName());
-		}
-		if (restParameters.getLoanVO().getsTicket() == null
-		        || restParameters.getLoanVO().getsTicket().equalsIgnoreCase("")) {
-
-			if (NewFiManager.userTicket == null) {
-				LOG.debug("Getting the user ticket based on the username and password ");
-				NewFiManager.userTicket = Utils.getUserTicket(
-				        "Nexera_RareMile", "Portal0262");
-				if (NewFiManager.userTicket == null) {
-					LOG.debug("Valid ticket was not generated hence trying again ");
-					NewFiManager.userTicket = Utils.getUserTicket(
-					        "Nexera_RareMile", "Portal0262");
-				}
-				NewFiManager.generationTime = System.currentTimeMillis();
+			if (restParameters.getOpName().equalsIgnoreCase(
+			        WebServiceOperations.OP_NAME_GET_CREDIT_SCORE)
+			        || restParameters
+			                .getOpName()
+			                .equalsIgnoreCase(
+			                        WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION)
+			        || restParameters.getOpName().equalsIgnoreCase(
+			                WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD)) {
+				message.setOutboundProperty(NewFiConstants.CONSTANT_OP_NAME,
+				        WebServiceOperations.OP_NAME_LOAN_LOAD);
+			} else if (restParameters.getOpName().equalsIgnoreCase(
+			        WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE)) {
+				message.setOutboundProperty(NewFiConstants.CONSTANT_OP_NAME,
+				        WebServiceOperations.OP_NAME_LOAN_SAVE);
 			} else {
-				long generationTime = NewFiManager.generationTime;
-				long currentTime = System.currentTimeMillis();
-				long differenceInMilliSeconds = currentTime - generationTime;
-				long differenceInHours = differenceInMilliSeconds
-				        / (60 * 60 * 1000);
-				if (differenceInHours >= 3) {
-					LOG.debug("Ticket would have expired as time difference has gone beyond 4 hours ");
+				message.setOutboundProperty(NewFiConstants.CONSTANT_OP_NAME,
+				        restParameters.getOpName());
+			}
+			if (restParameters.getLoanVO().getsTicket() == null
+			        || restParameters.getLoanVO().getsTicket()
+			                .equalsIgnoreCase("")) {
+
+				if (NewFiManager.userTicket == null) {
+					LOG.info("Getting the user ticket based on the username and password ");
 					NewFiManager.userTicket = Utils.getUserTicket(
 					        "Nexera_RareMile", "Portal0262");
 					if (NewFiManager.userTicket == null) {
-						LOG.debug("Valid ticket was not generated hence trying again ");
+						LOG.info("Valid ticket was not generated hence trying again ");
 						NewFiManager.userTicket = Utils.getUserTicket(
 						        "Nexera_RareMile", "Portal0262");
+						LOG.info("Ticket generated " + NewFiManager.userTicket);
 					}
+					NewFiManager.generationTime = System.currentTimeMillis();
+				} else {
+					long generationTime = NewFiManager.generationTime;
+					long currentTime = System.currentTimeMillis();
+					long differenceInMilliSeconds = currentTime
+					        - generationTime;
+					long differenceInHours = differenceInMilliSeconds
+					        / (60 * 60 * 1000);
+					if (differenceInHours >= 3) {
+						LOG.info("Ticket would have expired as time difference has gone beyond 4 hours ");
+						NewFiManager.userTicket = Utils.getUserTicket(
+						        "Nexera_RareMile", "Portal0262");
+						if (NewFiManager.userTicket == null) {
+							LOG.info("Valid ticket was not generated hence trying again ");
+							NewFiManager.userTicket = Utils.getUserTicket(
+							        "Nexera_RareMile", "Portal0262");
+							LOG.info("Ticket generated "
+							        + NewFiManager.userTicket);
+						}
 
+					}
 				}
+
+			} else {
+				LOG.info(" This ticket is specific to a loan manager "
+				        + restParameters.getLoanVO().getsTicket());
 			}
-			LOG.info("Ticket generated " + NewFiManager.userTicket);
-		} else {
-			LOG.info(" This ticket is specific to a loan manager "
-			        + restParameters.getLoanVO().getsTicket());
+
+			LOG.info("Operation chosen by user " + restParameters.getOpName());
+
+			LOG.info("Parameters passed by user " + restParameters.getLoanVO());
+
+			Object[] inputParameters = getAllParameters(restParameters);
+			message.setPayload(inputParameters);
+		} catch (Exception e) {
+			LOG.error("Runtime error in method call", e);
 		}
-
-		LOG.info("Operation chosen by user " + restParameters.getOpName());
-
-		LOG.info("Parameters passed by user " + restParameters.getLoanVO());
-
-		Object[] inputParameters = getAllParameters(restParameters);
-		message.setPayload(inputParameters);
 		return message;
 	}
 
@@ -118,11 +127,11 @@ public class RestInterceptor implements Callable {
 	        throws Exception {
 		File file = null;
 		try {
-			LOG.debug("Inside method getAllParameters");
+			LOG.info("Inside method getAllParameters");
 			Object[] inputParams = null;
 			if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_CREATE)) {
-				LOG.debug("Operation Chosen Was Create ");
+				LOG.info("Operation Chosen Was Create ");
 				inputParams = new String[2];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -134,7 +143,7 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsTemplateName();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_CREATE_LEAD)) {
-				LOG.debug("Operation Chosen Was CreateLead ");
+				LOG.info("Operation Chosen Was CreateLead ");
 				inputParams = new String[2];
 
 				if (restParameters.getLoanVO().getsTicket() != null
@@ -147,7 +156,7 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsTemplateName();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_LOAD)) {
-				LOG.debug("Operation Chosen Was Load ");
+				LOG.info("Operation Chosen Was Load ");
 				inputParams = new Object[4];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -168,7 +177,7 @@ public class RestInterceptor implements Callable {
 				inputParams[3] = restParameters.getLoanVO().getFormat();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD)) {
-				LOG.debug("Operation Chosen Was Load ");
+				LOG.info("Operation Chosen Was Load ");
 				inputParams = new Object[4];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -180,7 +189,7 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
 				String sXmlQueryDefault = Utils
 				        .readFileAsString("batchload.xml");
-				LOG.debug("Load called from Loan Batch Process "
+				LOG.info("Load called from Loan Batch Process "
 				        + sXmlQueryDefault);
 				if (restParameters.getLoanVO().getsXmlQueryMap() != null) {
 					sXmlQueryDefault = Utils.applyMapOnString(restParameters
@@ -190,7 +199,7 @@ public class RestInterceptor implements Callable {
 				inputParams[3] = restParameters.getLoanVO().getFormat();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_GET_CREDIT_SCORE)) {
-				LOG.debug("Operation Chosen Was CreditScore ");
+				LOG.info("Operation Chosen Was CreditScore ");
 				inputParams = new Object[4];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -209,7 +218,7 @@ public class RestInterceptor implements Callable {
 
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE)) {
-				LOG.debug("Operation Chosen Was SaveCreditScore ");
+				LOG.info("Operation Chosen Was SaveCreditScore ");
 				inputParams = new Object[4];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -235,7 +244,7 @@ public class RestInterceptor implements Callable {
 
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION)) {
-				LOG.debug("Operation Chosen Was UnderwritingCondition ");
+				LOG.info("Operation Chosen Was UnderwritingCondition ");
 				inputParams = new Object[4];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -254,7 +263,7 @@ public class RestInterceptor implements Callable {
 
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_LOCK_LOAN_PROGRAM)) {
-				LOG.debug("Operation Chosen Was LockLoanProgram ");
+				LOG.info("Operation Chosen Was LockLoanProgram ");
 				inputParams = new Object[5];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -269,7 +278,7 @@ public class RestInterceptor implements Callable {
 				inputParams[4] = restParameters.getLoanVO().getRequestedFee();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_RUN_QUICK_PRICER)) {
-				LOG.debug("Operation Chosen Was RunQuickPricer ");
+				LOG.info("Operation Chosen Was RunQuickPricer ");
 				inputParams = new String[2];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -291,7 +300,7 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = teaserRateDefault;
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_SAVE)) {
-				LOG.debug("Operation Chosen Was Save ");
+				LOG.info("Operation Chosen Was Save ");
 				inputParams = new Object[4];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -303,7 +312,7 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
 
 				InputStream inputStream = getResource("save.xml");
-				LOG.debug("InputStream of save.xml received "
+				LOG.info("InputStream of save.xml received "
 				        + inputParams.toString());
 				String condition = restParameters.getLoanVO().getCondition();
 				LOG.info("Condition passed by user for Save call " + condition);
@@ -342,7 +351,7 @@ public class RestInterceptor implements Callable {
 				inputParams[3] = restParameters.getLoanVO().getFormat();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER)) {
-				LOG.debug("Operation Chosen Was ListEDocsByLoanNumber ");
+				LOG.info("Operation Chosen Was ListEDocsByLoanNumber ");
 				inputParams = new Object[2];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -355,7 +364,7 @@ public class RestInterceptor implements Callable {
 			} else if (restParameters
 			        .getOpName()
 			        .equals(WebServiceOperations.OP_NAME_LIST_MODIFIED_LOANS_BY_APP_CODE)) {
-				LOG.debug("Operation Chosen Was ListModifiedLoansByAppCode ");
+				LOG.info("Operation Chosen Was ListModifiedLoansByAppCode ");
 				inputParams = new Object[2];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -368,7 +377,7 @@ public class RestInterceptor implements Callable {
 			} else if (restParameters
 			        .getOpName()
 			        .equals(WebServiceOperations.OP_NAME_CLEARED_MODIFIED_LOAN_BY_NAME_BY_APP_CODE)) {
-				LOG.debug("Operation Chosen Was ListModifiedLoansByAppCode ");
+				LOG.info("Operation Chosen Was ListModifiedLoansByAppCode ");
 				inputParams = new Object[3];
 				if (restParameters.getLoanVO().getsTicket() != null
 				        && !restParameters.getLoanVO().getsTicket()
@@ -381,7 +390,7 @@ public class RestInterceptor implements Callable {
 				inputParams[2] = restParameters.getLoanVO().getAppCode();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT)) {
-				LOG.debug("Operation Chosen Was UploadPDFDocument ");
+				LOG.info("Operation Chosen Was UploadPDFDocument ");
 
 				inputParams = new String[5];
 				if (restParameters.getLoanVO().getsTicket() != null
@@ -397,7 +406,7 @@ public class RestInterceptor implements Callable {
 				inputParams[4] = restParameters.getLoanVO().getsDataContent();
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID)) {
-				LOG.debug("Operation Chosen Was OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID ");
+				LOG.info("Operation Chosen Was OP_NAME_DOWNLOAD_EDCOS_PDF_BY_ID ");
 
 				inputParams = new String[2];
 				if (restParameters.getLoanVO().getsTicket() != null

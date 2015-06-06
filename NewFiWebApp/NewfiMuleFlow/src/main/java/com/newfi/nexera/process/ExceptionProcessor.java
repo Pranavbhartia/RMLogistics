@@ -29,7 +29,7 @@ public class ExceptionProcessor implements Callable {
 	@Override
 	public Object onCall(MuleEventContext eventContext) throws Exception {
 		Gson gson = new Gson();
-		LOG.debug("Inside method onCall ");
+		LOG.info("Inside method onCall ");
 		MuleMessage message = eventContext.getMessage();
 		ResponseVO responseVO = new ResponseVO();
 		responseVO.setErrorCode("500");

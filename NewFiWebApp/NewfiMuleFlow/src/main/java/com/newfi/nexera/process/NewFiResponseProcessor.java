@@ -33,7 +33,7 @@ public class NewFiResponseProcessor implements Callable {
 	 */
 	@Override
 	public Object onCall(MuleEventContext eventContext) throws Exception {
-		LOG.debug("Inside method onCall");
+		LOG.info("Inside method onCall");
 		Gson gson = new Gson();
 		MuleMessage message = eventContext.getMessage();
 		String payload = message.getPayloadAsString();

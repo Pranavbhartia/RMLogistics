@@ -44,17 +44,17 @@ public class AuthenticationRestInterceptor implements Callable {
 	}
 
 	private String[] getArrayForOperation(AuthenticateVO authenticateVO) {
-		LOG.debug("Inside method getAllParameters");
+		LOG.info("Inside method getAllParameters");
 		String[] inputParams = null;
 		if (authenticateVO.getOpName().equals(
 		        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET)) {
-			LOG.debug("Operation Chosen Was GetUserAuthTicket ");
+			LOG.info("Operation Chosen Was GetUserAuthTicket ");
 			inputParams = new String[2];
 			inputParams[0] = authenticateVO.getUserName();
 			inputParams[1] = authenticateVO.getPassWord();
 		} else if (authenticateVO.getOpName().equals(
 		        WebServiceOperations.OP_NAME_AUTH_GET_PML_USER_AUTH_TICET)) {
-			LOG.debug("Operation Chosen Was GetUserAuthTicket ");
+			LOG.info("Operation Chosen Was GetUserAuthTicket ");
 			inputParams = new String[3];
 			inputParams[0] = authenticateVO.getUserName();
 			inputParams[1] = authenticateVO.getPassWord();
