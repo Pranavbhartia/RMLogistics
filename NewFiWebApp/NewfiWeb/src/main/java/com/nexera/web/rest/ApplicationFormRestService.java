@@ -329,6 +329,7 @@ public class ApplicationFormRestService {
 		Gson gson = new Gson();
 		String lockRateData = "error";
 		LoanAppFormVO loaAppFormVO = null;
+		boolean loanCreatedNSaved = false;
 		try {
 			loaAppFormVO = gson.fromJson(appFormData, LoanAppFormVO.class);
 			LOG.debug("Getting token for loan manager");
@@ -349,7 +350,7 @@ public class ApplicationFormRestService {
 					        .equalsIgnoreCase("Incoming portion of HTML stream")) {
 						LOG.error("Issue occured again, hence generating fresh token");
 						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-						return "Your token has expired, please try again ";
+						return "error";// "Your token has expired, please try again ";
 
 					}
 				}
@@ -370,7 +371,7 @@ public class ApplicationFormRestService {
 						        .equalsIgnoreCase("Incoming portion of HTML stream")) {
 							LOG.error("Issue occured again, hence generating fresh token");
 							sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-							return "Your token has expired, please try again ";
+							return "error";// "Your token has expired, please try again ";
 
 						}
 					}
@@ -381,6 +382,7 @@ public class ApplicationFormRestService {
 						loan.setLqbFileId(loanNumber);
 						String loanAppFrm = gson.toJson(loaAppFormVO);
 						createApplication(loanAppFrm, httpServletRequest);
+						loanCreatedNSaved = true;
 					}
 
 					// Code for automating Needs List creation
@@ -429,8 +431,8 @@ public class ApplicationFormRestService {
 			LOG.error("lockRateData failed ", e);
 			lockRateData = "error";
 		}
-		if (lockRateData == null || lockRateData.equals("error")
-		        || lockRateData.equals("")) {
+		if ((lockRateData == null || lockRateData.equals("error") || lockRateData
+		        .equals("")) && loanCreatedNSaved) {
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
 				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
