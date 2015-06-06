@@ -44,7 +44,6 @@ public class NewFiResponseProcessor implements Callable {
 		responseVO.setResponseMessage(payload);
 		String jsonString = gson.toJson(responseVO);
 		jsonString = removeUTFCharacters(jsonString);
-		LOG.info("Response Received " + responseVO);
 		message.setPayload(jsonString);
 		return message;
 	}
