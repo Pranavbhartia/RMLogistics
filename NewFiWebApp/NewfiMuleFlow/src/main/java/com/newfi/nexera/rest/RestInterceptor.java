@@ -158,9 +158,11 @@ public class RestInterceptor implements Callable {
 				}
 				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
 				String sXmlQueryDefault = Utils.readFileAsString("load.xml");
+				LOG.info("Default load file " + sXmlQueryDefault);
 				if (restParameters.getLoanVO().getsXmlQueryMap() != null) {
 					sXmlQueryDefault = Utils.applyMapOnString(restParameters
 					        .getLoanVO().getsXmlQueryMap(), sXmlQueryDefault);
+					LOG.info("Load file after applying map " + sXmlQueryDefault);
 				}
 				inputParams[2] = sXmlQueryDefault;
 				inputParams[3] = restParameters.getLoanVO().getFormat();
@@ -178,6 +180,8 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
 				String sXmlQueryDefault = Utils
 				        .readFileAsString("batchload.xml");
+				LOG.debug("Load called from Loan Batch Process "
+				        + sXmlQueryDefault);
 				if (restParameters.getLoanVO().getsXmlQueryMap() != null) {
 					sXmlQueryDefault = Utils.applyMapOnString(restParameters
 					        .getLoanVO().getsXmlQueryMap(), sXmlQueryDefault);
@@ -198,6 +202,8 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
 				String sDataContentQueryDefault = Utils
 				        .readFileAsString("loadCreditinfo.xml");
+				LOG.info("Credit Score request object passed "
+				        + sDataContentQueryDefault);
 				inputParams[2] = sDataContentQueryDefault;
 				inputParams[3] = restParameters.getLoanVO().getFormat();
 
@@ -215,10 +221,14 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
 				String sDataContentQueryDefault = Utils
 				        .readFileAsString("saveCreditScore.xml");
+				LOG.info("Saving credit score default string "
+				        + sDataContentQueryDefault);
 				if (restParameters.getLoanVO().getsDataContentMap() != null) {
 					sDataContentQueryDefault = Utils.applyMapOnString(
 					        restParameters.getLoanVO().getsDataContentMap(),
 					        sDataContentQueryDefault);
+					LOG.info("Saving Credit Score String passed to lqb after applying map "
+					        + sDataContentQueryDefault);
 				}
 				inputParams[2] = sDataContentQueryDefault;
 				inputParams[3] = restParameters.getLoanVO().getFormat();
@@ -237,6 +247,8 @@ public class RestInterceptor implements Callable {
 				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
 				String sDataContentQueryDefault = Utils
 				        .readFileAsString("underwritingCondition.xml");
+				LOG.info("Underwriting Condition request string passed "
+				        + sDataContentQueryDefault);
 				inputParams[2] = sDataContentQueryDefault;
 				inputParams[3] = restParameters.getLoanVO().getFormat();
 
@@ -268,10 +280,14 @@ public class RestInterceptor implements Callable {
 				}
 				String teaserRateDefault = Utils
 				        .readFileAsString("teaserRate.xml");
+				LOG.info("Default teaser rate string " + teaserRateDefault);
 
-				if (restParameters.getLoanVO().getsXmlDataMap() != null)
+				if (restParameters.getLoanVO().getsXmlDataMap() != null) {
 					teaserRateDefault = Utils.applyMapOnString(restParameters
 					        .getLoanVO().getsXmlDataMap(), teaserRateDefault);
+					LOG.info("Teaser Rate String after applying map "
+					        + teaserRateDefault);
+				}
 				inputParams[1] = teaserRateDefault;
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LOAN_SAVE)) {
@@ -290,6 +306,7 @@ public class RestInterceptor implements Callable {
 				LOG.debug("InputStream of save.xml received "
 				        + inputParams.toString());
 				String condition = restParameters.getLoanVO().getCondition();
+				LOG.info("Condition passed by user for Save call " + condition);
 				if (condition == null || condition.equals("")) {
 				} else {
 					try {
@@ -314,14 +331,15 @@ public class RestInterceptor implements Callable {
 				}
 				String saveDefault = Utils.readFileAsStringFromPath(file
 				        .getAbsolutePath());
+				LOG.info("Default save file created from condition passed by user "
+				        + saveDefault);
 				if (restParameters.getLoanVO().getsDataContentMap() != null) {
 					saveDefault = Utils.applyMapOnString(restParameters
 					        .getLoanVO().getsDataContentMap(), saveDefault);
+					LOG.info("Save request object passed to lqb " + saveDefault);
 				}
 				inputParams[2] = saveDefault;
 				inputParams[3] = restParameters.getLoanVO().getFormat();
-
-				LOG.info("saveDefault xmls is" + saveDefault);
 			} else if (restParameters.getOpName().equals(
 			        WebServiceOperations.OP_NAME_LIST_EDCOS_BY_LOAN_NUMBER)) {
 				LOG.debug("Operation Chosen Was ListEDocsByLoanNumber ");
