@@ -44,27 +44,27 @@ public class AppViewRestInterceptor implements Callable {
 	}
 
 	private String[] getArrayForOperation(AppViewVO appViewVO) {
-		LOG.debug("Inside method getArrayForOperation");
+		LOG.info("Inside method getArrayForOperation");
 		String[] inputParams = null;
 		if (appViewVO.getOpName().equals(
 		        WebServiceOperations.OP_NAME_APP_VIEW_GET_PML_LOAN_URL)) {
-			LOG.debug("Operation Chosen Was GetPmlLoanUrl ");
+			LOG.info("Operation Chosen Was GetPmlLoanUrl ");
 			inputParams = new String[2];
 			inputParams[0] = appViewVO.getsTicket();
 			inputParams[1] = appViewVO.getsLoanName();
 		} else if (appViewVO.getOpName().equals(
 		        WebServiceOperations.OP_NAME_APP_VIEW_GET_PML_PIPELINE_URL)) {
-			LOG.debug("Operation Chosen Was GetPmlPipelineUrl ");
+			LOG.info("Operation Chosen Was GetPmlPipelineUrl ");
 			inputParams = new String[1];
 			inputParams[0] = appViewVO.getsTicket();
 		} else if (appViewVO.getOpName().equals(
 		        WebServiceOperations.OP_NAME_APP_VIEW_GET_VIEW_DESKTOP_URL)) {
-			LOG.debug("Operation Chosen Was GetViewDesktopUrl ");
+			LOG.info("Operation Chosen Was GetViewDesktopUrl ");
 			inputParams = new String[1];
 			inputParams[0] = appViewVO.getsTicket();
 		} else if (appViewVO.getOpName().equals(
 		        WebServiceOperations.OP_NAME_APP_VIEW_GET_VIEW_LOAN_URL)) {
-			LOG.debug("Operation Chosen Was GetViewLoanUrl ");
+			LOG.info("Operation Chosen Was GetViewLoanUrl ");
 			inputParams = new String[2];
 			inputParams[0] = appViewVO.getsTicket();
 			inputParams[1] = appViewVO.getsLoanName();

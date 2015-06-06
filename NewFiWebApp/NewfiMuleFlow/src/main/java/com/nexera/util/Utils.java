@@ -31,7 +31,7 @@ public class Utils {
 
 	public static String getUserTicket(String userName, String passWord) {
 		String url = "http://localhost:8181/authCall";
-		LOG.debug("Inside method getUserTicket ");
+		LOG.info("Inside method getUserTicket ");
 		AuthenticateVO authenticate = new AuthenticateVO();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
@@ -47,7 +47,7 @@ public class Utils {
 		response = restTemplate.postForEntity(url, jsonString, String.class);
 		String ticket = response.getBody();
 		if (!ticket.contains("EncryptedTicket")) {
-			LOG.debug("Valid ticket not generated ");
+			LOG.info("Valid ticket not generated ");
 			ticket = null;
 		}
 		return ticket;
