@@ -113,9 +113,15 @@ public class RestInterceptor implements Callable {
 
 			LOG.info("Operation chosen by user " + restParameters.getOpName());
 
-			LOG.info("Parameters passed by user " + restParameters.getLoanVO());
-
 			Object[] inputParameters = getAllParameters(restParameters);
+
+			if (inputParameters != null) {
+				LOG.info("PARAMETERS PASSED TO LQB FROM MULE ");
+				int count = 0;
+				for (Object param : inputParameters) {
+					LOG.info(++count + "  " + param);
+				}
+			}
 			message.setPayload(inputParameters);
 		} catch (Exception e) {
 			LOG.error("Runtime error in method call", e);

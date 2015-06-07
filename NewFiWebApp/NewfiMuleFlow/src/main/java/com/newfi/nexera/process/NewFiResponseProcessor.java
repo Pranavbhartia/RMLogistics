@@ -41,6 +41,7 @@ public class NewFiResponseProcessor implements Callable {
 		responseVO.setResponseCode("200");
 		responseVO.setStatus("0");
 		responseVO.setResponseTime(System.currentTimeMillis() + "");
+		LOG.info("VALID RESPONSE RECEIVED FROM LQB ");
 		responseVO.setResponseMessage(payload);
 		String jsonString = gson.toJson(responseVO);
 		jsonString = removeUTFCharacters(jsonString);
