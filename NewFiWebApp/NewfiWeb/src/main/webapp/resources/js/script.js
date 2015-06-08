@@ -2370,12 +2370,15 @@ function showDialogPopup(title, content, okButtonEvent) {
         	    }]
         });
     }
+/*
+ * Function for notification popup
+ */
+var isPopupScrolled = false;
+$(document).on('mousemove',function(){
+	if($('#alert-popup-wrapper').hasClass('ps-in-scrolling'))
+		isPopupScrolled = true;
+});
 
-    /*
-
-     * Function for notification popup
-
-     */
 $(document).on('click', '#alert-popup-wrapper', function(e) {
     e.stopImmediatePropagation();
 });
@@ -2398,7 +2401,9 @@ $(document).on('click', '#alert-notification-btn', function(e) {
 	}
     if ($(this).has('#alert-popup-cont-wrapper').length == 1) {
         if ($('#alert-popup-cont-wrapper').css("display") == "block") {
-            hideAlertNotificationPopup();
+        	if(!isPopupScrolled)
+        		hideAlertNotificationPopup();
+        	isPopupScrolled = false;
         } else {
             showAlertNotificationPopup();
         }
