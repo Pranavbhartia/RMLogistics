@@ -2027,11 +2027,18 @@ function appendLoanManagerPopup(element,loanManagerArray){
 		});
 		
 		var profilePic = $('<div>').attr({
-			"class" : "lp-pic float-left"
+			"class" : "float-left"
 		});
 		
 		if(loanManagerObj.photoImageUrl != undefined && loanManagerObj.photoImageUrl != ""){
 			profilePic.attr("style","background-image:url('"+loanManagerObj.photoImageUrl+"')");
+			profilePic.addClass("lp-pic");
+		}
+		else
+		{
+			profilePic.addClass("lp-initial-pic-large");
+			var initialsText = getInitialsFromFullName(loanManagerObj.displayName);
+			profilePic.text(initialsText);	
 		}
 		
 		var profileDetails = $('<div>').attr({

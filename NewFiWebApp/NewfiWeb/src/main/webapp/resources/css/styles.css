@@ -203,13 +203,9 @@ input[type="button"]:focus, button:focus {
 	width: 211px;
 }
 .lp-initial-pic
-{
- 
+{ 
   border: 1px solid;
   border-radius: 50%;
-  
-
-  
  font-size: 12px;
   border: 1px solid;
   border-radius: 50%;
@@ -227,6 +223,18 @@ input[type="button"]:focus, button:focus {
   border: 1px solid;
   margin:0 4px;
   padding: 4px;
+}
+.lp-initial-pic-large {
+  font-size: 12px; 
+  float: left;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border: 1px solid;
+  line-height: 60px;
+  margin:0 1px;
+  padding: 1px;
+  text-align: center;
 }
 
 .lp-pic {
