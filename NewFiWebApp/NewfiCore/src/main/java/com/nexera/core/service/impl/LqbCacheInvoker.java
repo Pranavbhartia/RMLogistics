@@ -228,7 +228,8 @@ public class LqbCacheInvoker implements LqbInterface {
 		}
 	}
 
-	public String findSticket(String lqbUsername, String lqbPassword) {
+	public synchronized String findSticket(String lqbUsername,
+	        String lqbPassword) {
 		LOGGER.debug("findSticket called for: " + lqbUsername);
 		String sTicket = null;
 		if (null != lqbUsername && null != lqbPassword) {
