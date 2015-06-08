@@ -40,7 +40,8 @@
 		var newfi = ${newfi};
 		var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
-			$('#right-panel').css('min-height',window.innerHeight - 98 + 'px');
+ $('#right-panel').css('min-height',window.innerHeight - 98 + 'px');
+			
 /* 			var height=$('.home-container').height();
 			var footerHeight=$('.footer-wrapper').height();
 			height=footerHeight-height;
@@ -60,7 +61,7 @@
 				adjustCenterPanelWidth();
 				adjustRightPanelOnResize();
 				adjustCustomerApplicationPageOnResize();
-				adjustFooter();
+				
 			});
 			
 			//TODO added for loan profile page		
@@ -102,16 +103,21 @@
 			});
 			
 			$('[data-toggle="tooltip"]').tooltip();   
-			
+			 $(document).on('keypress','input[name="coBorrowerZipCode"]',function(e){
+					
+					if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+				        //display error message
+				        //showToastMessage("Enter correct zipcode");
+				          return false;
+				    }				if($(this).val().length >= 5){
+				    	
+				    	// showToastMessage("Enter correct zipcode");
+				         return false;
+				    }
+				}); 
 			
 		});
-		function adjustFooter(){
-			var height=window.innerHeight;
-			var footerHeight=$('.footer-wrapper').height();
-			var headerHeight=$('.header-wrapper').height();
-			height=height-headerHeight;
-			$('.content').css("height",height+ "px");
-		}
+		
 	</script>
 </body>
 </html>
