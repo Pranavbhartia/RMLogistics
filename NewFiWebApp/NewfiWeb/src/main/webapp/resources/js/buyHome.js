@@ -274,7 +274,12 @@ function validateDownPaymentOrPurchasePrice (purchasePriceElement, downPaymentEl
 	 var downPayment = downPaymentElement.val();
 	if((getFloatValue(downPayment) < (0.03* getFloatValue(purchasePrice)))){
 		console.log("Eror");
-		downPaymentElement.next('.err-msg').html("Down payment must be greater than 3% of purchase price.").show();
+		downPaymentElement.next('.err-msg').html(downpaymentThreePerLessThanPurchase).show();
+		downPaymentElement.addClass('ce-err-input').show();		
+		return false;
+	}
+	if((getFloatValue(downPayment))>(getFloatValue(purchasePrice))){
+		downPaymentElement.next('.err-msg').html(downpaymentGreaterThanPurchase).show();
 		downPaymentElement.addClass('ce-err-input').show();		
 		return false;
 	}
@@ -623,7 +628,7 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
        
             if (isSuccess) {
                 if ($('input[name="zipCode"]').val().length > 5 || $('input[name="zipCode"]').val().length < 5) {
-                	 $('input[name="' + key + '"]').next('.err-msg').html("Please enter a valid 5-digit zipcode").show();
+                	 $('input[name="' + key + '"]').next('.err-msg').html(zipCodeMessage).show();
             		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
                     return false;
                 } else {

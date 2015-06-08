@@ -319,7 +319,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	var propState = $('input[name="propState"]').val();
 		    	var propCity = $('input[name="propCity"]').val();
 		    	var propZipCode = $('input[name="propZipCode"]').val();
-
+                /*Validation*/
 		    	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 		    	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
 		    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
@@ -342,6 +342,12 @@ function paintCustomerApplicationPurchasePageStep1a() {
 			       	return false;
 			       
 		    	  }  
+		    	}
+		    	if(!questionThree){
+		    		return false;
+		    	}
+		    	if(!questionfour){
+		    		return false;
 		    	}
 		    	if(!propertQuestionTwo){
 		    		return false;
@@ -372,7 +378,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		        		return false;
 		        	}
 		    	}
-
+		    	/*End of validation*/
 		            customerDetail.addressStreet=addressStreet;
 		    		customerDetail.addressCity = city;
 		    		customerDetail.addressState = inputState;
@@ -468,7 +474,10 @@ function paintloanamountBuyApp() {
 		     }else if(!questionTwo){
 		    	 return false;
 		     }
-       
+             var result=validateDownPaymentOrPurchasePrice($('input[name="housePrice"]'),$('input[name="dwnPayment"]'));
+             if(!result){
+            	 return false;
+             }
              appUserDetails.propertyTypeMaster.propStreetAddress=appUserDetails.propertyTypeMaster.propStreetAddress;
 		     appUserDetails.propertyTypeMaster.propState=appUserDetails.propertyTypeMaster.propState;
 		     appUserDetails.propertyTypeMaster.propCity=appUserDetails.propertyTypeMaster.propCity;

@@ -60,10 +60,17 @@ var W2EmplayeeMandatoryErrorMesssage="W2 Employment Details are Mandatory";
 var maxIncomeNeeded="Maximum 2 income needed";
 var selectAnyOne="Please select an income type";
 
-
+var propertyValueErrorMessage="Property value can not be less than requested loan amount ";
 var changePasswordErrorMessage="Error while changing your password. Please try again later.";
 var messageToEnterValidEmail="Please enter valid email ID";
 var feildShouldNotBeZero="The answers of the questions should not be zero.";
+
+//Messages in buyAHome.js
+var downpaymentGreaterThanPurchase="Down payment should be less than purchase price.";
+var downpaymentThreePerLessThanPurchase="Down payment must be greater than 3% of purchase price.";
+
+
+
 
 //Messages in script.js
 var errorInCreateLoan="Error inside createLoan";
