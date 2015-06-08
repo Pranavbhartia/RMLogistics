@@ -712,7 +712,7 @@ function paintRefinanceStepCEP() {
 
           // alert(questionOne+""+questionThree+""+questionFour);
             
-           if(!questionOne && !questionThree && !questionFour){
+           if(!questionOne || !questionThree || !questionFour){
         	   return false;
            }
            

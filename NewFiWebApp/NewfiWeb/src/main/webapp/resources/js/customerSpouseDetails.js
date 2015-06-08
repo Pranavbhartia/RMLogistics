@@ -127,6 +127,49 @@ function paintMySpouseIncome() {
     	        	showErrorToastMessage(selectAnyOne);
     	        	return false;
     	        }
+    	        
+    	        var isChecked=[];
+				if($('.ce-option-checkbox').hasClass('myassets')){
+					if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
+				
+				    }else{ 
+				    	
+				    	var checkboxes=$('.asset-ques-wrapper').find('.app-account-wrapper');
+				    	for(var count=0;count<checkboxes.length;count++){
+				    		if($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').hasClass('app-option-checked')){
+				    			isChecked.push($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']'));
+				    		}
+				    }
+				    	if(isChecked==""){
+				    		$('.ce-option-checkbox.myassets').addClass('text-color');
+							showErrorToastMessage(selectAssestErrorMessage);
+							return false; 
+				    	}else{
+				    		for(count=0;count<isChecked.length;count++){
+				    			var list=$('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-option-selected').html();
+				    			if(list=="Select One"){
+				    				showErrorToastMessage(selectAccountType);
+				    				return false;
+				    			}
+				    		    var newCount=0;
+				    			var currentBalance=$('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount].value;
+				    			var newHomeAdvance=$('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount+1].value;
+				    			var questionOne=validateInputsOfAssests($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount],currentBalance,message,count);
+								var questionTwo=validateInputsOfAssests($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount+1],newHomeAdvance,message,count);
+									if(!questionOne){
+										return false;
+									}
+									if(!questionTwo){
+										return false;
+									} 
+				    		}
+							
+				    	}
+				}
+				    	        	
+				
+				}
+               
     	        //End
 			  	 if($("#ce-option_0").prev().hasClass('app-option-checked')){
 				  	

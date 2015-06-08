@@ -81,6 +81,7 @@ function getBredCrumContext(element,item,indx){
             if(ob.item.onselect){
                 ob.item.onselect();
             }
+            removeToastMessage();
         }
     };
 
