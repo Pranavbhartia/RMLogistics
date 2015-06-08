@@ -408,6 +408,13 @@ table.adjuster-table {
 	text-align: center;
 }
 
+.th1Bold {
+	color: #000000;
+	font-family: 'opensansbold';
+	text-align: center;
+	font-size: 14px!important;
+}
+
 .cascade-adjustment-table4 {
 	margin-left: 55px;
 }

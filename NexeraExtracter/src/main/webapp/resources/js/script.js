@@ -92,7 +92,7 @@ function getPriceAdjustmentWrapper() {
 		"class" : "price-table-cont-wrapper"
 	});
 
-	container.append(getLTVTable());
+	container.append(getLTVTable(false));
 
 	return wrapper.append(header).append(container);
 
@@ -147,6 +147,19 @@ function getLTVTable(addHighBalArm) {
 
 	var otherAdjustmentsTable = getLTVTable6();
 	row2.append(otherAdjustmentsTable);
+	
+	if(!addHighBalArm){
+	var row3 = $('<div>').attr({
+		"class" : "clearfix"
+	});
+	
+	
+	var table1 = $('<div>').attr({
+		"class" : "adjuster-table-wrapper float-left"
+	}).html(getLTVTable7());
+	
+	row3.append(table1);
+	}
 
 	var note = "All loan level price adjustments are cumulative\n"
 			+ "Prices are indicative and subject to change without notice. Please log into Blustream Lending portal to obtain live lock pricing\n"
@@ -157,7 +170,7 @@ function getLTVTable(addHighBalArm) {
 		"class" : "note-txt"
 	}).html(note);
 
-	return tableWrapper.append(header).append(row1).append(row2).append(
+	return tableWrapper.append(header).append(row1).append(row2).append(row3).append(
 			noteCont);
 }
 
@@ -432,6 +445,52 @@ function getLTVTable6() {
 	return tableCont;
 }
 
+function getLTVTable7(){
+	
+	var table = "<table class='adjuster-table' align='center'>";
+	var row1 = "<tr><th colspan=8 class : 'price-table-header'>"
+			+ "LPMI >20 Year Fixed Rate Purchase, Primary Residence" + "</th></tr>";
+	
+		var row2 = "<tr  class='th1Bold'>"
+		 + "<th><b>LTV</b></th><th><b>760+</b></th><th><b>740-759</b></th><th><b>720-739</b></th><th><b>700-719</b></th><th><b>680-699</b></th><th><b>660-679</b></th><th><b>640-659</b></th>";
+		var tableValuesArray1 = [
+	                         ["97% to 95.01%", "1.70", "2.45", "3.10", "3.75", "4.70", "6.25", "7.00"],
+	                         ["95% to 90.01%","1.40", "1.95", "2.45", "2.90", "3.60", "4.80", "5.35"],
+	                         ["90% to 85.01%","1.00", "1.35", "1.65", "1.95", "2.40", "3.25", "3.609"],
+	                         ["85% and below%","0.52", "0.62", "0.70", "0.81", "0.95", "1.25", "1.40"]];
+							 
+		var dataRows = getCascadeTableDataRows(tableValuesArray1);
+			table += row1 + row2 + dataRows;
+			
+			row1 = "<tr><th colspan=8 class : 'price-table-header'>"
+				+ "LPMI >LPMI <= 20 Year Fixed Rate Purchase, Primary Residence" + "</th></tr>";
+			
+			 tableValuesArray1 =  [
+				                         ["97% to 95.01%", "1.15", "1.60", "2.00", "2.45", "3.15", "4.25", "5.00"],
+				                         ["95% to 90.01%","0.95", "1.30", "1.60", "1.90", "2.40", "3.15", "3.70"],
+				                         ["90% to 85.01%","0.70", "0.90", "1.10", "1.35", "1.60", "2.10", "2.55"],
+				                         ["85% and below%","0.45", "0.53", "0.60", "0.65", "0.80", "1.00", "1.15"]];
+			 
+			 
+			dataRows = getCascadeTableDataRows(tableValuesArray1);
+			
+			table += row1 + row2 + dataRows;
+			
+			row2 = "<tr class='th1Bold'>" + "<th><b>Adjustments</b></th><th><b>760+</b></th><th><b>740-759</b></th><th><b>720-739</b></th><th><b>700-719</b></th><th><b>680-699</b></th><th><b>660-679</b></th><th><b>640-659</b></th>";
+			
+			tableValuesArray1 =  [
+				                         ["Rate / Term Refinance", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"],
+				                         ["Loan Size > $417,000", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00", "0.00"],
+				                         ["Second Home","0.25", "0.25", "0.49", "0.70", "0.70", "1.23", "1.23"]];
+			
+			var dataRows = getCascadeTableDataRows(tableValuesArray1);
+			table += row2 + dataRows + "</table>";
+			
+			return table;
+	
+}
+
+
 function getLTVTableHeaderRow(tableHeaderArray) {
 	var row = $('<div>').attr({
 		"class" : "price-table-row price-table-header-row"
@@ -559,8 +618,8 @@ function getMammothAdjusters() {
 	var table1 = getMammothFixedAdjustersTable1();
 	var table2 = getMammothFixedAdjustersTable2();
 
-	fixedAdjusterRow.append(table1).append(table2);
-
+	fixedAdjusterRow.append(table1);
+	fixedAdjusterRow.append(table2);
 	fixedAdjusterCont.append(fixedAdjusterHeader).append(fixedAdjusterRow);
 
 	var armAdjusterCont = $('<div>').attr({
@@ -636,7 +695,6 @@ function getMammothFixedAdjustersTable2() {
 	        [ "Purchase", "(.375)" ],
 			[ "Refinance - Non-Cashout", "0.00" ],
 			[ "Refinance - Cash-out", ".500" ], 
-			[ "Investor", "2.500" ],
 			[ "2 Unit", ".500" ], 
 			[ "Second Home", ".500" ],
 			[ "Non-CA State Adjuster", "(.250)" ] 
