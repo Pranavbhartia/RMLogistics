@@ -6,6 +6,9 @@
                         http://www.springframework.org/schema/context 
                         http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<bean id="utils" class="com.nexera.util.Utils">
+	</bean>
+
 	<bean id="newFiTicketProcessor" class="com.newfi.nexera.process.NewFiTicketProcessor">
 	</bean>
 	<bean id="xmlProcessor" class="com.newfi.nexera.process.XMLProcessor">
@@ -16,8 +19,10 @@
 	</bean>
 	<bean id="restInterceptor" class="com.newfi.nexera.rest.RestInterceptor">
 		<property name="xmlProcessor" ref="xmlProcessor"></property>
+		<property name="utils" ref="utils"></property>
 	</bean>
 	<bean id="docsRestInterceptor" class="com.newfi.nexera.rest.DocsRestInterceptor">
+		<property name="utils" ref="utils"></property>
 	</bean>
 	<bean id="appViewRestInterceptor" class="com.newfi.nexera.rest.AppViewRestInterceptor">
 	</bean>

@@ -27,9 +27,14 @@ public class DocsRestInterceptor implements Callable
 
     private static final Logger LOG = Logger.getLogger( DocsRestInterceptor.class );
 
+    private Utils utils;
 
-    /* (non-Javadoc)
-     * @see org.mule.api.lifecycle.Callable#onCall(org.mule.api.MuleEventContext)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.mule.api.lifecycle.Callable#onCall(org.mule.api.MuleEventContext)
      */
     @Override
     public Object onCall( MuleEventContext eventContext ) throws Exception
@@ -45,7 +50,7 @@ public class DocsRestInterceptor implements Callable
 
         if ( NewFiManager.userTicket == null ) {
             LOG.debug( "Getting the user ticket based on the username and password " );
-            NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+            NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             NewFiManager.generationTime = System.currentTimeMillis();
         } else {
             long generationTime = NewFiManager.generationTime;
@@ -54,7 +59,7 @@ public class DocsRestInterceptor implements Callable
             long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
             if ( differenceInHours >= 3 ) {
                 LOG.debug( "Ticket would have expired as time difference has gone beyond 4 hours " );
-                NewFiManager.userTicket = Utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             }
         }
         Object[] inputParameters = getAllParameters( restParameters );
@@ -76,5 +81,17 @@ public class DocsRestInterceptor implements Callable
 
         }
         return inputParams;
+    }
+
+
+    public Utils getUtils()
+    {
+        return utils;
+    }
+
+
+    public void setUtils( Utils utils )
+    {
+        this.utils = utils;
     }
 }
