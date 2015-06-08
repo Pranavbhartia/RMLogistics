@@ -59,6 +59,12 @@ var errorInCreateLoan="error inside createLoan ";
 var W2EmplayeeMandatoryErrorMesssage="W2 Employment Details are Mandatory";
 var maxIncomeNeeded="Maximum 2 income needed";
 var selectAnyOne="Please select an income type";
+var ssnLengthErrorMessage="Please enter a valid ssn of 9-digit";
+var phoneNumberLegthErrorMessage="Please enter a valid phone number";
+var selectAccountType="Please select an account type";
+var selectAssestErrorMessage='If the assest information are not to be provided.Please select the above checkbox';
+
+
 
 var propertyValueErrorMessage="Property value can not be less than requested loan amount ";
 var changePasswordErrorMessage="Error while changing your password. Please try again later.";

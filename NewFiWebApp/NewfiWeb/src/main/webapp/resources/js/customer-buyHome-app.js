@@ -324,9 +324,13 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
 		    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
 		    	var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
-		    	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),"Please enter a valid 5-digit zipcode");
+		    	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
+		    	var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);
 		    	if(inputState=="" || inputState==undefined){
 		    		showErrorToastMessage(yesyNoErrorMessage);
+		    		return false;
+		    	}
+		    	if(!addressValidation){
 		    		return false;
 		    	}
 		    	if(!questionOne){
@@ -711,11 +715,11 @@ function paintSpouseSaleOfCurrentHome() {
     });
     questionsContainer.append(skipQuestions).append(assetQuestionsWrapper);
 
-    var bankAccountDiv = bankAccount(assetQuestionsWrapper,true);
+    var bankAccountDiv = bankAccount(assetQuestionsWrapper,true,0);
 
-    var retirementAccountsDiv = retirementAccounts(assetQuestionsWrapper,true);
+    var retirementAccountsDiv = retirementAccounts(assetQuestionsWrapper,true,1);
      
-    var otherAccountDiv = otherAccount(assetQuestionsWrapper,true);
+    var otherAccountDiv = otherAccount(assetQuestionsWrapper,true,2);
      
     return questionsContainer;
 }
@@ -803,7 +807,7 @@ function saleYourCurrentHome(){
 
 
 
-function bankAccount(parentContainer,isSpouse){
+function bankAccount(parentContainer,isSpouse,value){
 	
 	var quesHeaderTxt = "Bank Accounts";
 
@@ -821,7 +825,8 @@ function bankAccount(parentContainer,isSpouse){
         selectedClass="app-option-checked";
     }
     var quesHeaderTextCont = $('<div>').attr({
-    	"class" : "ce-option-checkbox "+selectedClass
+    	"class" : "ce-option-checkbox "+selectedClass,
+    	"value":value
     }).html(quesHeaderTxt);
     quesHeaderWrapper.append(quesHeaderTextCont);
 
@@ -902,7 +907,7 @@ function addBankAccountComponent(element,value){
     $(parentWrapper).show();
 }
 
-function retirementAccounts(parentContainer,isSpouse){
+function retirementAccounts(parentContainer,isSpouse,value){
 	
 	var quesRetirementAc = "Retirement Accounts";
 
@@ -920,7 +925,8 @@ function retirementAccounts(parentContainer,isSpouse){
         selectedClass="app-option-checked";
     }
     var quesHeaderText = $('<div>').attr({
-    	"class" : "ce-option-checkbox "+selectedClass
+    	"class" : "ce-option-checkbox "+selectedClass,
+    	"value":value
     }).html(quesRetirementAc);
     quesHeaderWrapper.append(quesHeaderText);
 
@@ -1000,7 +1006,7 @@ function addRetirementQuestion(element,value){
     $(parentWrapper).show();
 }
 
-function otherAccount(parentContainer,isSpouse){
+function otherAccount(parentContainer,isSpouse,value){
     var quesHeader = "Other Accounts & Securities";
 
     var quesHeaderWrapper = $('<div>').attr({
@@ -1017,7 +1023,8 @@ function otherAccount(parentContainer,isSpouse){
         selectedClass="app-option-checked";
     }
     var quesHeaderTextCont = $('<div>').attr({
-    	"class" : "ce-option-checkbox "+selectedClass
+    	"class" : "ce-option-checkbox "+selectedClass,
+    	"value":value
     }).html(quesHeader);
     quesHeaderWrapper.append(quesHeaderTextCont);
 
@@ -1142,15 +1149,15 @@ function paintSaleOfCurrentHome() {
      });
      
      /*  bank details*/
-     var bankAccountDiv = bankAccount(assetQuestionsWrapper);
+     var bankAccountDiv = bankAccount(assetQuestionsWrapper,"",0);
      //assetQuestionsWrapper.append(bankAccountDiv);
 
      /*  Retirement bank details*/
-     var retirementAccountsDiv = retirementAccounts(assetQuestionsWrapper);
+     var retirementAccountsDiv = retirementAccounts(assetQuestionsWrapper,"",1);
      //assetQuestionsWrapper.append(retirementAccountsDiv);
      
      /* other bank details*/
-     var otherAccountDiv = otherAccount(assetQuestionsWrapper);
+     var otherAccountDiv = otherAccount(assetQuestionsWrapper,"",2);
      //assetQuestionsWrapper.append(otherAccountDiv);
         
      return questionsContainer.append(skipQuestions).append(assetQuestionsWrapper);

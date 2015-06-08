@@ -95,7 +95,34 @@ function validateInputOfChecked(isStatus){
 				   
 
 }
+function validateInputsOfAssests(element,inputVal,message){
+	var name=$(element).attr('name');
+	var width=$(element).css('width');
+	//$('input[name="currentMortgageBalance"]')
 
+	if(inputVal == undefined || inputVal == ""
+		){
+	
+			$(element).next('.err-msg').html(message).show();
+			$(element).addClass('ce-err-input').show();
+			$(".err-msg").css('width',width);
+			return false;
+		
+		
+
+	}else{
+		if(inputVal == "$0" || inputVal == 0){
+			$(element).next('.err-msg').html(feildShouldNotBeZero).show();
+			$(element).addClass('ce-err-input').show();
+			$(".err-msg").css('width',width);
+			return false;
+		}else{
+			$(element).next('.err-msg').hide();
+			$(element).removeClass('ce-err-input');
+			return true;
+		}
+}
+}
 function validateFormFeild(inputElement,divErrElement,message){
 	var inputVal=$(inputElement).val();
 	if(inputVal == undefined || inputVal == ""){

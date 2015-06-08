@@ -665,9 +665,9 @@ function paintCustomerApplicationPageStep1a() {
 	    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
 	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
-			
+			var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),stateErrorMessage);
 	   
-	    	if(inputState==""||inputState==undefined){
+	    	if(!stateValidation){
 	    		showErrorToastMessage(stateErrorMessage);
 	    		return false;
 	    	}
@@ -1897,39 +1897,48 @@ function paintMyIncome() {
     	        	showErrorToastMessage(selectAnyOne);
     	        	return false;
     	        }
-    	       /* var isChecked=0;
-if($('.ce-option-checkbox').hasClass('myassets')){
-	if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
-
-    }else{ 
-    	
-    	var checkboxes=$('.asset-ques-wrapper').find('.app-account-wrapper');
-    	for(var count=0;count<checkboxes.length;count++){
-    		var currentCheckBox=$('.ce-option-checkbox.myassets').next().find('.app-account-wrapper').find('.ce-option-checkbox')[count];
-
-    		if($('.'+currentCheckBox.className).hasClass('app-option-checked')){
-    			isChecked=isChecked+1;
-    		}
-    }
-    	if(isChecked==0){
-    		$('.ce-option-checkbox.myassets').addClass('text-color');
-			showErrorToastMessage('If the assest information are not to be provided.Please select the above checkbox');
-			return false; 
-    	}else{
-			 var questionOne=validateInput($('input[name="currentAccountBalance"]'),$('input[name="currentAccountBalance"]').val(),message);
-				var questionTwo=validateInput($('input[name="amountForNewHome"]'),$('input[name="amountForNewHome"]').val(),message);
-				if(!questionOne){
-					return false;
+    	       var isChecked=[];
+				if($('.ce-option-checkbox').hasClass('myassets')){
+					if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
+				
+				    }else{ 
+				    	
+				    	var checkboxes=$('.asset-ques-wrapper').find('.app-account-wrapper');
+				    	for(var count=0;count<checkboxes.length;count++){
+				    		if($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').hasClass('app-option-checked')){
+				    			isChecked.push($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']'));
+				    		}
+				    }
+				    	if(isChecked==""){
+				    		$('.ce-option-checkbox.myassets').addClass('text-color');
+							showErrorToastMessage(selectAssestErrorMessage);
+							return false; 
+				    	}else{
+				    		for(count=0;count<isChecked.length;count++){
+				    			var list=$('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-option-selected').html();
+				    			if(list=="Select One"){
+				    				showErrorToastMessage(selectAccountType);
+				    				return false;
+				    			}
+				    		    var newCount=0;
+				    			var currentBalance=$('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount].value;
+				    			var newHomeAdvance=$('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount+1].value;
+				    			var questionOne=validateInputsOfAssests($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount],currentBalance,message,count);
+								var questionTwo=validateInputsOfAssests($('.asset-ques-wrapper').find('.app-account-wrapper').find('.ce-option-checkbox[value='+count+']').next().find('.app-input')[newCount+1],newHomeAdvance,message,count);
+									if(!questionOne){
+										return false;
+									}
+									if(!questionTwo){
+										return false;
+									} 
+				    		}
+							
+				    	}
 				}
-				if(!questionTwo){
-					return false;
-				} 
-    	}
-}
-    	        	
-
-}
-                  */
+				    	        	
+				
+				}
+               
     	       
     	      //End of validation
     
@@ -2064,10 +2073,10 @@ if($('.ce-option-checkbox').hasClass('myassets')){
     		}
     		
     		/*this is the condition when all Assestes are not selected*/
-    		if(!appUserDetails.skipMyAssets && !($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(otherContainer).find('.app-option-checked').hasClass('app-option-checked'))){
+    		/*if(!appUserDetails.skipMyAssets && !($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(otherContainer).find('.app-option-checked').hasClass('app-option-checked'))){
     			showErrorToastMessage("Please select any option for my assets");
     			return false;
-    		}
+    		}*/
     		
         }
                 
@@ -3110,12 +3119,15 @@ function paintCustomerApplicationPageStep4a() {
     	
     	
     	if(this.innerHTML!=next){
+    		//Validation
 	    	for(var i=0;i<quesDeclarationContxts.length;i++){
 	    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
 	    			showErrorToastMessage(gonernamentQuestionErrorMessage);
-	    			return;
+	    			return false;
 	    		}
 	    	}
+
+	    	//End of validation
 	    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
 	    	isBankrupt =  quesDeclarationContxts[1].value;
 	    	isPropertyForeclosed =  quesDeclarationContxts[2].value;
@@ -3134,12 +3146,28 @@ function paintCustomerApplicationPageStep4a() {
 	    	 isOwnershipInterestInProperty =  quesDeclarationContxts[11].value;
 	    	
 	    	 typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data();
-	     	if(typeOfPropertyOwned != undefined)
+	     	if(typeOfPropertyOwned != undefined){
 	     		typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
+	     		//validation
+	     		if(typeOfPropertyOwned==""||typeOfPropertyOwned==undefined){
+	     			showErrorToastMessage(gonernamentQuestionErrorMessage);
+	     			return false;
+	     		}
+	     		//End of validation
+	     	}
+	     		
 	     	
 	     	 propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data();
-	     	if(propertyTitleStatus != undefined)
+	     	if(propertyTitleStatus != undefined){
 	     		propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
+	     		//End of validation
+	     		if(propertyTitleStatus==""||propertyTitleStatus==undefined){
+	     			showErrorToastMessage(gonernamentQuestionErrorMessage);
+	     			return false;
+	     		}
+	     		//End of validation
+	     	}
+	     		
 	 	    	
 	 	    
 	    	 governmentquestion = appUserDetails.governmentquestion;
@@ -3620,8 +3648,15 @@ function paintCustomerApplicationPageStep5() {
 		    	var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
 		    	if(!questionOne){
 		    		return false;
-		    	}else if(!questionTwo){
+		    	}
+		    	if(!questionTwo){
 		    		return false;
+		    	}else{
+		    		if($('input[name="phoneNumber"]').val().length<10){
+		    			$('input[name="phoneNumber"]').next('.err-msg').html(phoneNumberLegthErrorMessage).show();
+		    			$('input[name="phoneNumber"]').addClass('ce-err-input').show();
+	    				return false;
+	    			}
 		    	}
 		    	var ssnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
 		    	if( $('.ce-option-checkbox').hasClass("ce-option-checked")){
@@ -3631,6 +3666,12 @@ function paintCustomerApplicationPageStep5() {
 		    		if(!isSuccess){
 		    			
 		    			return false;
+		    		}else{
+		    			if($('input[name="ssn"]').val().length<9){
+		    				$('input[name="ssn"]').next('.err-msg').html(ssnLengthErrorMessage).show();
+		    				$('input[name="ssn"]').addClass('ce-err-input').show();
+		    				return false;
+		    			}
 		    		}
 		    	}else{
 		    		if(!questionOne){
@@ -5657,6 +5698,7 @@ function validateCoBorowerInformation(){
 		
 	}
     if(!question3){
+    	showErrorToastMessage(stateErrorMessage);
 		return false;
 		
 	}
