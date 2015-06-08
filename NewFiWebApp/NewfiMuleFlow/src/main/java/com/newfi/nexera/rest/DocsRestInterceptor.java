@@ -51,18 +51,25 @@ public class DocsRestInterceptor implements Callable
         if ( NewFiManager.userTicket == null ) {
             LOG.debug( "Getting the user ticket based on the username and password " );
             NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
-            NewFiManager.generationTime = System.currentTimeMillis();
         } else {
             long generationTime = NewFiManager.generationTime;
             long currentTime = System.currentTimeMillis();
             long differenceInMilliSeconds = currentTime - generationTime;
             long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
             if ( differenceInHours >= 3 ) {
+                NewFiManager.userTicket = null;
                 LOG.debug( "Ticket would have expired as time difference has gone beyond 4 hours " );
                 NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
             }
         }
         Object[] inputParameters = getAllParameters( restParameters );
+        if ( inputParameters != null ) {
+            LOG.info( "PARAMETERS PASSED TO LQB FROM MULE " );
+            int count = 0;
+            for ( Object param : inputParameters ) {
+                LOG.info( ++count + "  " + param );
+            }
+        }
         message.setPayload( inputParameters );
         return message;
     }

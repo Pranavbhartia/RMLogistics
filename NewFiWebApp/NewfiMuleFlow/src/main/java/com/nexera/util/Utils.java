@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
+import com.newfi.nexera.manager.NewFiManager;
 import com.newfi.nexera.vo.AuthenticateVO;
 
 
@@ -35,25 +36,30 @@ public class Utils
     public synchronized String getUserTicket( String userName, String passWord )
     {
         String ticket = null;
-
-        String url = "http://localhost:8181/authCall";
-        LOG.info( "Inside method getUserTicket " );
-        AuthenticateVO authenticate = new AuthenticateVO();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType( MediaType.APPLICATION_JSON );
-        headers.setAccept( Arrays.asList( MediaType.APPLICATION_JSON ) );
-        ResponseEntity<String> response = new ResponseEntity<String>( headers, HttpStatus.OK );
-        authenticate.setOpName( "GetUserAuthTicket" );
-        authenticate.setUserName( userName );
-        authenticate.setPassWord( passWord );
-        Gson gson = new Gson();
-        String jsonString = gson.toJson( authenticate );
-        RestTemplate restTemplate = new RestTemplate();
-        response = restTemplate.postForEntity( url, jsonString, String.class );
-        ticket = response.getBody();
-        if ( !ticket.contains( "EncryptedTicket" ) ) {
-            LOG.info( "Valid ticket not generated " );
-            ticket = null;
+        if ( NewFiManager.userTicket == null ) {
+            String url = "http://localhost:8181/authCall";
+            LOG.info( "Inside method getUserTicket " );
+            AuthenticateVO authenticate = new AuthenticateVO();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType( MediaType.APPLICATION_JSON );
+            headers.setAccept( Arrays.asList( MediaType.APPLICATION_JSON ) );
+            ResponseEntity<String> response = new ResponseEntity<String>( headers, HttpStatus.OK );
+            authenticate.setOpName( "GetUserAuthTicket" );
+            authenticate.setUserName( userName );
+            authenticate.setPassWord( passWord );
+            Gson gson = new Gson();
+            String jsonString = gson.toJson( authenticate );
+            RestTemplate restTemplate = new RestTemplate();
+            response = restTemplate.postForEntity( url, jsonString, String.class );
+            ticket = response.getBody();
+            if ( !ticket.contains( "EncryptedTicket" ) ) {
+                LOG.info( "Valid ticket not generated " );
+                ticket = null;
+            } else {
+                NewFiManager.generationTime = System.currentTimeMillis();
+            }
+        } else {
+            ticket = NewFiManager.userTicket;
         }
         return ticket;
     }
