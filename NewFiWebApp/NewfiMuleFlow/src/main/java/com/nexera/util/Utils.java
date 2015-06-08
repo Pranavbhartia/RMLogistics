@@ -55,8 +55,9 @@ public class Utils
             if ( !ticket.contains( "EncryptedTicket" ) ) {
                 LOG.info( "Valid ticket not generated " );
                 ticket = null;
+            } else {
+                NewFiManager.generationTime = System.currentTimeMillis();
             }
-            NewFiManager.generationTime = System.currentTimeMillis();
         } else {
             ticket = NewFiManager.userTicket;
         }
