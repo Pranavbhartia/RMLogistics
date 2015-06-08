@@ -43,11 +43,21 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		LOG.debug("Inside method renderStateInfo");
-		String status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
+		String status = "";
 		try {
 			Loan loan = new Loan();
 			loan.setId(Integer.parseInt(inputMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			LoanMilestone disclosureMS = loanService.findLoanMileStoneByLoan(
+			        loan, Milestones.DISCLOSURE.getMilestoneKey());
+
+			if (disclosureMS != null
+			        && disclosureMS.getComments() != null
+			        && disclosureMS.getComments().equals(
+			                LoanStatus.disclosureSigned)) {
+				// Show Click To pay only if Disclosures are signed
+				status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
+			}
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 			        Milestones.APP_FEE.getMilestoneKey());
 			if (mileStone != null && mileStone.getComments() != null) {

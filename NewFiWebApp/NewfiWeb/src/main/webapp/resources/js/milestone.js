@@ -359,8 +359,9 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			else if (ob.workItem.workflowItemType=="CONTACT_YOUR_LA")
 			{
 				ajaxURL = "";
-				ob.workItem.stateInfo = "";
+				ob.workItem.stateInfo = "";				
 				$(ob.stateInfoContainer).addClass("cursor-pointer");
+				txtRow1.addClass("cursor-pointer");
 				txtRow1.bind("click", function(e) {
 					milestoneChildEventHandler(e)
 				});
@@ -416,20 +417,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			{
 				data.userID=workFlowContext.customer.id;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-			}
-			else if (ob.workItem.workflowItemType=="LOCK_YOUR_RATE")
-			{
-				ajaxURL = "";
-				if (ob.workItem.status == COMPLETED)
-				{
-					ob.workItem.stateInfo = "Click here to view your rates";
-				}
-				else
-				{
-					ob.workItem.stateInfo = "Click here to lock your rates";
-				}
-				$(ob.stateInfoContainer).addClass("cursor-pointer");
-			}
+			}			
 			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
@@ -542,7 +530,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									milestoneChildEventHandler(e)
 								});
 								txtRow1.addClass("cursor-pointer");
-								if(ob.workItem.stateInfo!="null"){
+								if(ob.workItem.stateInfo!=null){
 									ob.stateInfoContainer.html(ob.workItem.stateInfo);
 								}else
 								{
@@ -601,10 +589,10 @@ function getInternalEmployeeMileStoneContext( workItem) {
 	};
 	return internalEmployeeMileStoneContext;
 }
-function attachCursorPointerClassToElement(element){
+function attachCursorPointerClassToElement(element){	
 	if(element.html()=="Click here to pay"){
 		element.addClass("cursor-pointer");
-	}
+	}	
 }
 
 function showAppFee (itemToAppendTo,workItem)
@@ -1339,6 +1327,9 @@ function addClicableClassToElement(element,workflowItem){
 		case "CONNECT_ONLINE_APP":
 			$(element).addClass("cursor-pointer");
 			break;
+		case "CONTACT_YOUR_LA":
+			$(element).addClass("cursor-pointer");
+			break;
 		case "MANAGE_ACCOUNT":
 			$(element).addClass("cursor-pointer");
 			break;
@@ -2036,11 +2027,18 @@ function appendLoanManagerPopup(element,loanManagerArray){
 		});
 		
 		var profilePic = $('<div>').attr({
-			"class" : "lp-pic float-left"
+			"class" : "float-left"
 		});
 		
 		if(loanManagerObj.photoImageUrl != undefined && loanManagerObj.photoImageUrl != ""){
 			profilePic.attr("style","background-image:url('"+loanManagerObj.photoImageUrl+"')");
+			profilePic.addClass("lp-pic");
+		}
+		else
+		{
+			profilePic.addClass("lp-initial-pic-large");
+			var initialsText = getInitialsFromFullName(loanManagerObj.displayName);
+			profilePic.text(initialsText);	
 		}
 		
 		var profileDetails = $('<div>').attr({
