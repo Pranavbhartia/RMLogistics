@@ -33,5 +33,5 @@ public class NewFiConstants
 
     public static String CONSTANT_CONDITION_CO_BORROWER_WITHOUT_SSN = "coborrowerWithoutSSN";
 
-    public static String CONSTANT_CONDITION_BORROWER_WITHOUT_SSN= "borrowerWithoutSSN";
+    public static String CONSTANT_CONDITION_BORROWER_WITHOUT_SSN = "borrowerWithoutSSN";
 }
