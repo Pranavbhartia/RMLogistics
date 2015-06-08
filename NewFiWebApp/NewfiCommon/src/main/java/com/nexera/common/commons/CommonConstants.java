@@ -317,6 +317,4 @@ public interface CommonConstants {
 
 	public static final String FILE_NAME_PREQUAL_LETTER = "prequal-letter.pdf";
 
-	public static final String DEFAULT_CREDIT_SCORE = "800";
-
 }

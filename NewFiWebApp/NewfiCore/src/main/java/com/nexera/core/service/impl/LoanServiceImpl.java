@@ -2062,7 +2062,9 @@ public class LoanServiceImpl implements LoanService {
 						CustomerDetail customerDetail = CustomerDetail
 						        .convertFromVOToEntity(customerDetailVO);
 						userProfileService.updateCustomerScore(customerDetail);
-						if (isCreditScoreValid(customerDetail)) {
+						if (borrowerEquifaxScore != null
+						        && borrowerExperianScore != null
+						        && borrowerTransunionScore != null) {
 							// Then invoke Concreate class to mark all As GREEn
 							Map<String, Object> objectMap = new HashMap<String, Object>();
 							objectMap
@@ -2103,30 +2105,5 @@ public class LoanServiceImpl implements LoanService {
 				}
 			}
 		}
-	}
-
-	// Checks if Credit Score is available for all 3 bureaus and all are NOT 800
-	private boolean isCreditScoreValid(CustomerDetail customerDetail) {
-		boolean creditScoreValid = false;
-		//All 3 are available but all are 800
-		if (customerDetail.getEquifaxScore() != null
-		        && customerDetail.getExperianScore() != null
-		        && customerDetail.getTransunionScore() != null
-		        && customerDetail.getEquifaxScore().equalsIgnoreCase(
-		                CommonConstants.DEFAULT_CREDIT_SCORE)
-		        && customerDetail.getExperianScore().equalsIgnoreCase(
-		                CommonConstants.DEFAULT_CREDIT_SCORE)
-		        && customerDetail.getTransunionScore().equalsIgnoreCase(
-		                CommonConstants.DEFAULT_CREDIT_SCORE)) {
-			creditScoreValid = false;
-		}
-		//All 3 are available and have values
-		else if (customerDetail.getEquifaxScore() != null
-		        && customerDetail.getExperianScore() != null
-		        && customerDetail.getTransunionScore() != null
-		        ) {
-			creditScoreValid = true;
-		}
-		return creditScoreValid;
 	}
 }
