@@ -76,7 +76,6 @@ public class RestInterceptor implements Callable
                         NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
                         LOG.info( "Ticket generated " + NewFiManager.userTicket );
                     }
-                    NewFiManager.generationTime = System.currentTimeMillis();
                 } else {
                     long generationTime = NewFiManager.generationTime;
                     long currentTime = System.currentTimeMillis();
@@ -84,6 +83,7 @@ public class RestInterceptor implements Callable
                     long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
                     if ( differenceInHours >= 3 ) {
                         LOG.info( "Ticket would have expired as time difference has gone beyond 4 hours " );
+                        NewFiManager.userTicket = null;
                         NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
                         if ( NewFiManager.userTicket == null ) {
                             LOG.info( "Valid ticket was not generated hence trying again " );
