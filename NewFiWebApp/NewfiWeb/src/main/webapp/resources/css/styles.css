@@ -34,7 +34,7 @@ body {
 	-webkit-user-select: none;
 	/* prevent copy paste, to allow, change 'none' to 'text' */
 	color: #606060;
-	position: relative;
+	/* position: relative; */
 }
 
 footer{
@@ -1911,11 +1911,11 @@ input[type="button"]:focus, button:focus {
 }
 
 .note-message {
-	height: 20px;
+	/* height: 20px; */
 	line-height: 20px;
-	overflow: hidden;
+	/* overflow: hidden;
 	text-overflow: ellipsis;
-	white-space: nowrap;
+	white-space: nowrap; */
 }
 
 .note-conatiner {
@@ -3966,7 +3966,7 @@ input.calc-input {
 	position: relative;
 	background: #fff;
 	width: 325px;
-	height: 300px;
+	max-height: 300px;
 	color: #777;
 	padding: 5px 0;
 	border-radius: 3px;
@@ -4392,7 +4392,7 @@ input.calc-input {
     border: 1px solid #dcdcdc;
     border-radius: 3px;
     border-top: 3px solid #428bca;
-    z-index: 999;
+    z-index: 9999;
 }
 .overlay-popup-btn-wrapper {
 	  width: 210px;
@@ -4582,12 +4582,13 @@ input.calc-input {
 }
 
 .loan-manager-popup {
-  position: absolute;
-  width: 250px;
-  padding: 10px;
-  background: #fff;
-  border: 1px solid #cecece;
-  border-top: 3px solid #428bca;
+	position: absolute;
+	width: 250px;
+	padding: 10px;
+	background: #fff;
+	border: 1px solid #cecece;
+	border-top: 3px solid #428bca;
+	z-index: 999;
 }
 
 .lm-details-txt-col{

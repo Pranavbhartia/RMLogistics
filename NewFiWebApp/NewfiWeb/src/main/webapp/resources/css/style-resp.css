@@ -1302,6 +1302,15 @@
 	.ce-option-checkbox{
 		font-size: 15px;
 	}
+	.loan-manager-popup {
+		margin-left: -50px;
+	}
+	.month-cont {
+	    width: 90px !important;
+	}
+	.per {
+		margin: 0 5px;
+	}
 }
 
 
