@@ -562,12 +562,11 @@ function createDropZone(needID) {
 						console.info(response);
 						if (response.error != undefined) {
 							showDialogPopup("User Session ",
-									"Session logged out! Click ok to continue",
+									"Sorry, we were unable to upload the file. Please try later.",
 									function() {
-										location.reload();
+										window.location.reload();
 										return false;
 									});
-
 							return false;
 						}
 						if (response[0] != undefined) {
