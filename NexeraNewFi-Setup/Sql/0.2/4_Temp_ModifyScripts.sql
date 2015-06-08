@@ -15,3 +15,6 @@ ALTER TABLE `newfi_schema`.`internaluserdetails`
    
 ALTER TABLE `newfi_schema`.`uploadedfileslist` 
    change `assigned_by` `assigned_by` int(11) NULL;
+
+   #Rajeswari : 8 June for QC check box not clicable
+   UPDATE `newfi_schema`.`workflowitemmaster` SET `clickable`='0' WHERE `id`='13';
