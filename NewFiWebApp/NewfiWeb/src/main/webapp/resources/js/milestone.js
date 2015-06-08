@@ -1919,6 +1919,11 @@ function appendAppFeeEditPopup(element,milestoneId) {
 		    precision:0,
 		    allowNegative:false
 		});		
+    }).keypress(function(event) {
+
+        if (event.keyCode == 13) {
+            event.preventDefault();
+        }
     });
 	
 	var submitBtn = $('<div>').attr({
