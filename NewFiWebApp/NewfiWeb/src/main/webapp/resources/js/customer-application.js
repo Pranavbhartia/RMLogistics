@@ -665,10 +665,10 @@ function paintCustomerApplicationPageStep1a() {
 	    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
 	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
-			var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),stateErrorMessage);
+			var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),yesyNoErrorMessage);
 	   
 	    	if(!stateValidation){
-	    		showErrorToastMessage(stateErrorMessage);
+	    		showErrorToastMessage(yesyNoErrorMessage);
 	    		return false;
 	    	}
 	    	if(!cityStatus){
@@ -5698,7 +5698,7 @@ function validateCoBorowerInformation(){
 		
 	}
     if(!question3){
-    	showErrorToastMessage(stateErrorMessage);
+    	showErrorToastMessage(yesyNoErrorMessage);
 		return false;
 		
 	}
