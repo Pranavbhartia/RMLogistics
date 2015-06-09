@@ -484,7 +484,9 @@ function getLTVTable7(){
 				                         ["Second Home","0.25", "0.25", "0.49", "0.70", "0.70", "1.23", "1.23"]];
 			
 			var dataRows = getCascadeTableDataRows(tableValuesArray1);
-			table += row2 + dataRows + "</table>";
+			var row3 = "<tr><td colspan=8  class : 'note-txt'>"
+				+ "*LPMI PRICING ABOVE IS NOT AVAILABLE ON YOSEMITE PRODUCT" + "</td></tr>";
+			table += row2 + dataRows + row3 + "</table>";
 			
 			return table;
 	
