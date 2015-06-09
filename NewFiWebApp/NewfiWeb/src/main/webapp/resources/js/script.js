@@ -1014,6 +1014,12 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
             lockratedata.sLoanNumber=loanNumber;
         }catch(exception){
             console.log("caught Exception : "+exception);
+            var userId;
+            if(selectedUserDetail)
+                userId=selectedUserDetail.userID
+            else
+                userId=newfiObject.user.id;
+            getAppDetailsForUser(userId)
         }
     //alert('final appUserDetails'+JSON.stringify(appUserDetails));
         //saveAndUpdateLoanAppForm(appUserDetails);
