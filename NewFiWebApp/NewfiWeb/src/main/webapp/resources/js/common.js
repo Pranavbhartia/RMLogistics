@@ -156,6 +156,9 @@ $(document).on('click', '.small-screen-menu-icon', function(e) {
 	} else {
 		$(this).addClass('small-screen-menu-icon-clicked');
 	}
+	if($('#alert-popup-wrapper-settings').css("display") == "block"){
+		hideSettingsPopup();
+	}
 });
 $(document).click(
 		function() {
@@ -165,6 +168,7 @@ $(document).click(
 					$('.small-screen-menu-icon').removeClass(
 							'small-screen-menu-icon-clicked');
 				}
+
 			}
 		});
 

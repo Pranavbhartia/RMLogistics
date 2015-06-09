@@ -7,12 +7,13 @@ var loanManagerID=1;
 var statusActive="ACTIVE";
 var statusInActive="INACTIVE";
 var flagKnowNewFi=true;
+var searchUser=0;
 
 $(document).on('click',function(e){
 	if($('#admin-add-usertype-dropdown-cont').css("display") == "block"){
 		$('#admin-add-usertype-dropdown-cont').hide();
 	}
-
+	
 	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
@@ -34,7 +35,13 @@ $('#alert-settings-btn').click(function(e){
 	if($('#alert-popup-cont-wrapper').css('display')=="block"){
 		$('#alert-popup-cont-wrapper').hide();
 	}
-	
+	if ($(window).width() <= 768) {
+		if ($('.left-panel').css("display") == "block") {
+			$('.left-panel').toggle('slide', 'left');
+			$('.small-screen-menu-icon').removeClass(
+					'small-screen-menu-icon-clicked');
+		}
+	}
 	if(newfiObject.user.userRole.id==3){
 		if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==2){
 			salesManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
@@ -233,7 +240,7 @@ $('.lp-right-arrow').remove();
 	agentDashboardErrorWrraper.append(agentDashboardErrorContainer);
 	agentDashboardMainContainer.append(agentDashboardErrorWrraper);
 	$('#right-panel').append(agentDashboardMainContainer);
-    getAdminDashboardRightPanel();
+	getAdminDashboardRightPanel();
 
 
 }
@@ -241,11 +248,14 @@ $('.lp-right-arrow').remove();
 function getAdminDashboardRightPanel() {
 
 	ajaxRequest("rest/userprofile/getUsersList", "GET", "json", {},
-			adminDashboardRightPanel);
+			paintAdminUserPage);
 }
 
 function adminDashboardRightPanel(data){
-paintAdminUserPage(data);
+    
+	$('.admin-newfi-team-container').html('');
+	searchUser=1;
+	appendNewfiTeamWrapperForAdmin(data.resultObject,searchUser); 
 }
 /*paint method for userManagement page*/
 function paintAdminUserPage(data) {
@@ -709,7 +719,7 @@ function appendAdminCreateUserPopupEmail(){
 
 }
 
-function appendNewfiTeamWrapperForAdmin(userDetails) {
+function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 	var users = userDetails;	
 	var wrapper = $('<div>').attr({
 		"class" : "admin-newfi-team-wrapper"
@@ -727,33 +737,27 @@ function appendNewfiTeamWrapperForAdmin(userDetails) {
 	$(this).parent().find('.admin-search-input').show().focus();
      if($('#search-id').val()!="" && $('#search-id').val()!=undefined){
 	 var searchValue=$('#search-id').val();
-	 getSearchResultForAdmin(searchValue);
-	 
-	$('#search-id').val('');
-	 	$(this).parent().find('.admin-search-input').hide();
+	 getSearchResultDataForAdmin(searchValue);
+	 $(this).show();
 	 }     	
 	});
-	var delay = (function(){
-  var timer = 0;
-  return function(callback, ms){
-    clearTimeout (timer);
-    timer = setTimeout(callback, ms);
-  };
-})();
+
 	var searchInputBox = $('<input>').attr({
 		"class" : "admin-search-input float-right",
 		"id":"search-id",
 		"placeholder":"Search User",
 		"name":"search User"
 	})
-	.bind('keyup',function(e){
-		 delay(function(){
-			 e.preventDefault();
-			 
-     var searchValue=$('#search-id').val();
-	 getSearchResultForAdmin(searchValue);
-    }, 1000 );
-		
+	.bind('keyup',function(e){	
+		if (e.which == 13) {
+			if ($(this).val() == "") {
+				$(this).hide();
+			}
+			var searchValue=$('#search-id').val();
+			getSearchResultDataForAdmin(searchValue);
+			$(this).parent().find('.admin-search-icn').show();
+		}
+	
 	});
 	header.append(searchDiv).append(searchInputBox);
 	var container = $('<div>').attr({
@@ -761,16 +765,21 @@ function appendNewfiTeamWrapperForAdmin(userDetails) {
 		"id":"admin-newfi-team-container-id"
 	});
 
-	var tableHeader = getAdminTeamListTableHeader();
+	var tableHeader = gestAdminTeamListTableHeader();
 	container.append(tableHeader);
 
 for(var i=0;i<users.length;i++){
-	if(users[i].userRole.roleDescription!=userDescription){
+	if(users[i].userRole.roleDescription!=newfiObject.user.userRole.roleDescription){
      var tableRow = getAdminTeamListTableRow(users[i]);
       container.append(tableRow);
       }
 	}
-	wrapper.append(header).append(container);
+    if(searchUser){
+    	wrapper.append(container);
+    }else{
+    	wrapper.append(header).append(container);
+    }
+	
 	$('#admin-dashboard-container').append(wrapper);
 
 }
