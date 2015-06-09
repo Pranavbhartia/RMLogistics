@@ -13,7 +13,7 @@ $(document).on('click',function(e){
 	if($('#admin-add-usertype-dropdown-cont').css("display") == "block"){
 		$('#admin-add-usertype-dropdown-cont').hide();
 	}
-
+	
 	
 	if($('#alert-popup-wrapper-settings').css("display") == "block"){
 		hideSettingsPopup();
@@ -35,7 +35,13 @@ $('#alert-settings-btn').click(function(e){
 	if($('#alert-popup-cont-wrapper').css('display')=="block"){
 		$('#alert-popup-cont-wrapper').hide();
 	}
-	
+	if ($(window).width() <= 768) {
+		if ($('.left-panel').css("display") == "block") {
+			$('.left-panel').toggle('slide', 'left');
+			$('.small-screen-menu-icon').removeClass(
+					'small-screen-menu-icon-clicked');
+		}
+	}
 	if(newfiObject.user.userRole.id==3){
 		if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==2){
 			salesManager=newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription;
