@@ -19,7 +19,7 @@ function getLoanNeedsManagerContext(loanId){
 						if(component&&component.length==0){
 							component=$(document.body)
 						}
-						var content="<div class='float-right'>"+response.message+"</div>"
+						var content="<div class='rp-agent-dashboard float-left'><div class='center-text-session-expire'>"+response.message+"</div></div>"
 						$(component).html(content);
 					}else{
 						successCallBack(response);
