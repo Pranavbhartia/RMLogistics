@@ -1837,11 +1837,13 @@ input[type="button"]:focus, button:focus {
 .date-picker-input {
 	background: url(../images/calendar.png) no-repeat 96% center;
 	background-color: #fff;
+	cursor:pointer;
 }
 
 .time-picker-input {
 	background: url(../images/clock.png) no-repeat 98% center;
 	background-color: #fff;
+	cursor:pointer;
 }
 
 .scheduled-msg-textbox {
