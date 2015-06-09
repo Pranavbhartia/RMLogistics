@@ -4500,12 +4500,20 @@ function saveAndUpdateLoanAppForm(appUserDetailsParam,callBack){
     		datatype : "application/json",
     		cache:false,
     		success:function(data){
-    			
-    			appUserDetails=JSON.parse(data);
-                newfi.appUserDetails=data;
-    			console.log('appUserDetails'+appUserDetails);
-    			if(callBack)
-    			callBack();
+    			if(data.status&&data.status==="Session Expired"){
+                    var component=$("#right-panel");
+                    if(component&&component.length==0){
+                        component=$(document.body)
+                    }
+                    var content="<div class='rp-agent-dashboard float-left'><div class='center-text-session-expire'>"+data.message+"</div></div>"
+                    $(component).html(content);
+                }else{
+        			appUserDetails=JSON.parse(data);
+                    newfi.appUserDetails=data;
+        			console.log('appUserDetails'+appUserDetails);
+        			if(callBack)
+        			callBack();
+                }
     		},
     		error:function(erro){
     			showErrorToastMessage("error");
