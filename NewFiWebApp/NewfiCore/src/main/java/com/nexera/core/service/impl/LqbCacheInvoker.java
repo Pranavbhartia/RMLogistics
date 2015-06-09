@@ -26,6 +26,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import ch.qos.logback.classic.joran.action.LoggerAction;
+
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.entity.InternalUserDetail;
@@ -169,12 +171,15 @@ public class LqbCacheInvoker implements LqbInterface {
 			if (salesManagers.size() > 0) {
 				LOGGER.warn("Code does not handle multiple sales managers. Need to be fixed");
 			}
+
 			User salesManager = salesManagers.get(0);
 			lqbUsername = salesManager.getInternalUserDetail().getLqbUsername();
 			lqbPassword = salesManager.getInternalUserDetail().getLqbPassword();
 			authToken = salesManager.getInternalUserDetail().getLqbAuthToken();
 			tokenExpiration = salesManager.getInternalUserDetail()
 			        .getLqbExpiryTime();
+
+			internalUser = User.convertFromEntityToVO(salesManager);
 
 		}
 
