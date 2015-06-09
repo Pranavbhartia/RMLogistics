@@ -46,7 +46,7 @@ display: block;
 .admin-search-icn {
 	width: 18px;
 	height: 18px;
-	margin: 10px 40px;
+	margin: 10px 22px 0 0px;
 	background: url(../images/search_icon.png) no-repeat center;
 	cursor: pointer;
 }
@@ -55,7 +55,7 @@ display: block;
 	line-height: 32px;
 	border: none;
 	background: transparent;
-	padding-right: 20px;
+	padding-right: 10px;
 	/* cursor: pointer; */
 }
 .admin-add-member-dropdown-cont{
