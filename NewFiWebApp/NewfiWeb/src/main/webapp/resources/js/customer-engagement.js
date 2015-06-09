@@ -1588,14 +1588,16 @@ function teaseCalculation(inputCustomerDetails){
     
     var investment = (InsuranceTemp + taxesTemp);
 	
-    if(inputCustomerDetails.isIncludeTaxes =="Yes"){
-    	monthlyPayment = monthlyPayment -investment ;
-    }
     
+    var totalEstMonthlyPaymentId=principalInterest;
+    if(inputCustomerDetails.isIncludeTaxes =="Yes"||inputCustomerDetails.isIncludeTaxes ==true){
+        monthlyPayment = monthlyPayment -investment ;
+        totalEstMonthlyPaymentId = (principalInterest + investment);
+    }
 	
 	
 	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment));
-	var totalEstMonthlyPaymentId = (principalInterest + investment);
+	
     
     var textDiv=$('#monthlyPaymentDifferenceId').prev();
     var hgLow="";
