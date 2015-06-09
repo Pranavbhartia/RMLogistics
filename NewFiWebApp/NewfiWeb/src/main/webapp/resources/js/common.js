@@ -1084,3 +1084,21 @@ function updateNotifications(loanid){
 	contxt.initContext(true);
 }
 
+function getLoanAmount(){
+	if(typeof(newfiObject)!="undefined"){
+		if(appUserDetails.loanType.loanTypeCd=="REF"){
+			return appUserDetails.refinancedetails.currentMortgageBalance;
+		}else if(appUserDetails.loanType.loanTypeCd == "PUR"){
+			var loanAmount =  getFloatValue(appUserDetails.purchaseDetails.loanAmount) ;
+			return loanAmount;
+		}
+	}else{
+		if(refinanceTeaserRate.loanType&&refinanceTeaserRate.loanType=="REF"){
+			return refinanceTeaserRate.currentMortgageBalance;
+		}else{
+			var housePrice = parseFloat(removedDoller(removedComma(buyHomeTeaserRate.purchaseDetails.housePrice)));   
+		    var downPayment =  parseFloat(removedDoller(removedComma(buyHomeTeaserRate.currentMortgageBalance))) ;    
+		    return (housePrice-downPayment);
+		}
+	}
+}
