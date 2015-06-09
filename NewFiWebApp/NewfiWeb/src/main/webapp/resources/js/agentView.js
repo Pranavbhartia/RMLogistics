@@ -168,9 +168,16 @@ function paintAgentDashboardRightPanel(data) {
 	var searchIcon = $('<div>').attr({
 		"class" : "search-icn float-left",
 
-	}).on('click', function() {
-
+	}).on('click', function(e) {
+		
 		$(this).parent().find('.search-input').show().focus();
+	    if($('#customerSearch').val()!="" && $('#customerSearch').val()!=undefined){
+	    	searchByTermAndLoanType(customerData.customers);
+			$(this).show();
+			$(this).val('');
+			$(this).parent().find('#customerSearch').hide();
+	    }
+
 	});
 
 	var searchInputBox = $('<input>').attr({
@@ -178,11 +185,13 @@ function paintAgentDashboardRightPanel(data) {
 		"id" : "customerSearch"
 	}).on('keyup', function(e) {
 		if (e.which == 13) {
-			if ($(this).val() == "") {
+/*			if ($(this).val() == "") {
 				$(this).hide();
-			}
+			}*/
 			searchByTermAndLoanType(customerData.customers);
 			$(this).parent().find('.search-icn').show();
+			$(this).val('');
+			$(this).hide();
 		}
 	}).on('blur', function() {
 		if ($(this).val() == "") {
