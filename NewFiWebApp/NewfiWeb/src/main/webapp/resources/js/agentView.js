@@ -174,8 +174,6 @@ function paintAgentDashboardRightPanel(data) {
 	    if($('#customerSearch').val()!="" && $('#customerSearch').val()!=undefined){
 	    	searchByTermAndLoanType(customerData.customers);
 			$(this).show();
-			$(this).val('');
-			$(this).parent().find('#customerSearch').hide();
 	    }
 
 	});
@@ -185,13 +183,12 @@ function paintAgentDashboardRightPanel(data) {
 		"id" : "customerSearch"
 	}).on('keyup', function(e) {
 		if (e.which == 13) {
-/*			if ($(this).val() == "") {
+			if ($(this).val() == "") {
 				$(this).hide();
-			}*/
+			}
 			searchByTermAndLoanType(customerData.customers);
 			$(this).parent().find('.search-icn').show();
-			$(this).val('');
-			$(this).hide();
+
 		}
 	}).on('blur', function() {
 		if ($(this).val() == "") {
