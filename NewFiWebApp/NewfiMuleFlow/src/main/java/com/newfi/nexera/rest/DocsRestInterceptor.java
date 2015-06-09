@@ -51,15 +51,25 @@ public class DocsRestInterceptor implements Callable
         if ( NewFiManager.userTicket == null ) {
             LOG.debug( "Getting the user ticket based on the username and password " );
             NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+            if ( NewFiManager.userTicket == null ) {
+                LOG.info( "Valid ticket was not generated hence retrying  " );
+                NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                LOG.info( "Ticket generated " + NewFiManager.userTicket );
+            }
         } else {
             long generationTime = NewFiManager.generationTime;
             long currentTime = System.currentTimeMillis();
             long differenceInMilliSeconds = currentTime - generationTime;
-            long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
-            if ( differenceInHours >= 3 ) {
+
+            if ( differenceInMilliSeconds >= 14340000 ) {
                 NewFiManager.userTicket = null;
-                LOG.debug( "Ticket would have expired as time difference has gone beyond 4 hours " );
+                LOG.debug( "Ticket would have expired as time difference has gone beyond 3 hours and 59 minutes " );
                 NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                if ( NewFiManager.userTicket == null ) {
+                    LOG.info( "Valid ticket was not generated hence retrying  " );
+                    NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                    LOG.info( "Ticket generated " + NewFiManager.userTicket );
+                }
             }
         }
         Object[] inputParameters = getAllParameters( restParameters );
