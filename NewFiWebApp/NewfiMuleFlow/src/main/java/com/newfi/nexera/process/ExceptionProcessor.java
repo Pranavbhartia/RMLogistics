@@ -36,7 +36,7 @@ public class ExceptionProcessor implements Callable
         MuleMessage message = eventContext.getMessage();
         ResponseVO responseVO = new ResponseVO();
         responseVO.setErrorCode( "500" );
-        responseVO.setErrorDescription( message.getExceptionPayload().getMessage() );
+        responseVO.setErrorDescription( message.getExceptionPayload().getException().getLocalizedMessage() );
         responseVO.setStatus( "1" );
         LOG.error( "Exception Response Received " + message.getExceptionPayload().getMessage() );
         String jsonString = gson.toJson( responseVO );

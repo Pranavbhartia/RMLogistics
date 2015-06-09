@@ -27,6 +27,7 @@ public class NewFiTicketProcessor implements Callable
     {
         LOG.debug( "Inside method onCall " );
         MuleMessage message = eventContext.getMessage();
+        LOG.info( "TOKEN RETURNED BY LQB " + message.getPayloadAsString() );
         return message;
     }
 

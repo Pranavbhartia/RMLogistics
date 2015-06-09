@@ -51,68 +51,73 @@ public class RestInterceptor implements Callable
 
         LOG.info( "Inside method onCall " );
         MuleMessage message = eventContext.getMessage();
-        try {
-            String payload = message.getPayloadAsString();
-            Gson gson = new Gson();
-            RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
 
-            if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE )
-                || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION )
-                || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
-                message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
-            } else if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE ) ) {
-                message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_SAVE );
-            } else {
-                message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
-            }
-            if ( restParameters.getLoanVO().getsTicket() == null
-                || restParameters.getLoanVO().getsTicket().equalsIgnoreCase( "" ) ) {
+        String payload = message.getPayloadAsString();
+        Gson gson = new Gson();
+        RestParameters restParameters = gson.fromJson( payload, RestParameters.class );
 
+        if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE )
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION )
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
+        } else if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE ) ) {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_SAVE );
+        } else {
+            message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
+        }
+        if ( restParameters.getLoanVO().getsTicket() == null || restParameters.getLoanVO().getsTicket().equalsIgnoreCase( "" ) ) {
+
+            if ( NewFiManager.userTicket == null ) {
+                LOG.info( "Getting the user ticket based on the username and password " );
+                NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
                 if ( NewFiManager.userTicket == null ) {
-                    LOG.info( "Getting the user ticket based on the username and password " );
+                    LOG.info( "Valid ticket was not generated hence trying again " );
                     NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                    LOG.info( "Ticket generated " + NewFiManager.userTicket );
                     if ( NewFiManager.userTicket == null ) {
-                        LOG.info( "Valid ticket was not generated hence trying again " );
+                        LOG.info( "Valid ticket was not generated hence retrying  " );
                         NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
                         LOG.info( "Ticket generated " + NewFiManager.userTicket );
                     }
-                } else {
-                    long generationTime = NewFiManager.generationTime;
-                    long currentTime = System.currentTimeMillis();
-                    long differenceInMilliSeconds = currentTime - generationTime;
-                    long differenceInHours = differenceInMilliSeconds / ( 60 * 60 * 1000 );
-                    if ( differenceInHours >= 3 ) {
-                        LOG.info( "Ticket would have expired as time difference has gone beyond 4 hours " );
-                        NewFiManager.userTicket = null;
-                        NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
-                        if ( NewFiManager.userTicket == null ) {
-                            LOG.info( "Valid ticket was not generated hence trying again " );
-                            NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
-                            LOG.info( "Ticket generated " + NewFiManager.userTicket );
-                        }
-
-                    }
                 }
-
             } else {
-                LOG.info( " This ticket is specific to a loan manager " + restParameters.getLoanVO().getsTicket() );
-            }
+                long generationTime = NewFiManager.generationTime;
+                long currentTime = System.currentTimeMillis();
+                long differenceInMilliSeconds = currentTime - generationTime;
+                if ( differenceInMilliSeconds >= 14340000 ) {
+                    LOG.info( "Ticket would have expired as time difference has gone beyond 3 hours and 59 minutes" );
+                    NewFiManager.userTicket = null;
+                    NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                    if ( NewFiManager.userTicket == null ) {
+                        LOG.info( "Valid ticket was not generated hence retrying  " );
+                        NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                        LOG.info( "Ticket generated " + NewFiManager.userTicket );
+                    }
 
-            LOG.info( "Operation chosen by user " + restParameters.getOpName() );
-
-            Object[] inputParameters = getAllParameters( restParameters );
-
-            if ( inputParameters != null ) {
-                LOG.info( "PARAMETERS PASSED TO LQB FROM MULE " );
-                int count = 0;
-                for ( Object param : inputParameters ) {
-                    LOG.info( ++count + "  " + param );
                 }
             }
-            message.setPayload( inputParameters );
-        } catch ( Exception e ) {
-            LOG.error( "Runtime error in method call", e );
+
+        } else {
+            LOG.info( " This ticket is specific to a loan manager " + restParameters.getLoanVO().getsTicket() );
         }
+
+        LOG.info( "Operation chosen by user " + restParameters.getOpName() );
+        if ( NewFiManager.userTicket == null
+            && ( restParameters.getLoanVO().getsTicket() == null || restParameters.getLoanVO().getsTicket()
+                .equalsIgnoreCase( "" ) ) ) {
+            throw new Exception( "Token Not Found, Hence breaking the flow " );
+        }
+        Object[] inputParameters = getAllParameters( restParameters );
+
+        if ( inputParameters != null ) {
+            LOG.info( "PARAMETERS PASSED TO LQB FROM MULE " );
+            int count = 0;
+            for ( Object param : inputParameters ) {
+                LOG.info( ++count + "  " + param );
+            }
+        }
+        message.setPayload( inputParameters );
+
         return message;
     }
 
