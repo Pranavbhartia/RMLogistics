@@ -12,4 +12,6 @@ public interface LqbInterface {
 
 	public String findSticket(LoanAppFormVO loaAppFormVO) throws Exception;
 
+	public String findSticket(String lqbUsername, String lqbPassword);
+
 }

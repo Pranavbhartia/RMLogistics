@@ -552,7 +552,12 @@ function updateLqbLMDetails(){
 			dataType : "json",
 			success : function(data) {
 				$('#overlay-loader').hide();
-				showToastMessage(updateSuccessMessage);
+				if(data.error!=null){
+					showErrorToastMessage(data.error.message);
+				}else{
+					showToastMessage(updateSuccessMessage);	
+				}
+				
 			},
 			error : function(error) {
 				$('#overlay-loader').hide();

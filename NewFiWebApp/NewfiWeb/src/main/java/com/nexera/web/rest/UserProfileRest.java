@@ -614,8 +614,10 @@ public class UserProfileRest {
 			userProfileService.updateLQBUsercred(userVO);
 
 		} catch (Exception e) {
-			LOG.error("Error while updataing the user datails ::",
-			        e.getMessage());
+			LOG.error("Error while updataing the user datails ::", e);
+			return RestUtil.wrapObjectForFailure(null,
+			        ErrorConstants.LQB_SAVE_FAILED,
+			        ErrorConstants.LQB_SAVE_FAILED);
 		}
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
 		commonResponseVO.setResultObject("success");
