@@ -765,7 +765,7 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 		"id":"admin-newfi-team-container-id"
 	});
 
-	var tableHeader = gestAdminTeamListTableHeader();
+	var tableHeader = getAdminTeamListTableHeader();
 	container.append(tableHeader);
 
 for(var i=0;i<users.length;i++){

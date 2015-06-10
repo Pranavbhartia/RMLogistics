@@ -209,10 +209,10 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 		if (emailEntity.getBody() == null || emailEntity.getBody().isEmpty()) {
 
 			email.setText(CommonConstants.EMAIL_EMPTY_FOOTER);
-			// email.setHtml(CommonConstants.EMAIL_EMPTY_FOOTER);
+			email.setHtml(CommonConstants.EMAIL_EMPTY_FOOTER);
 		} else {
 			email.setText(emailEntity.getBody());
-			// email.setHtml(emailEntity.getBody());
+			email.setHtml(emailEntity.getBody());
 		}
 		if (emailEntity.getAttachmentStream() != null) {
 			try {

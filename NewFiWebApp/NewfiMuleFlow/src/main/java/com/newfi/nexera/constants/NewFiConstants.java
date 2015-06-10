@@ -34,4 +34,19 @@ public class NewFiConstants
     public static String CONSTANT_CONDITION_CO_BORROWER_WITHOUT_SSN = "coborrowerWithoutSSN";
 
     public static String CONSTANT_CONDITION_BORROWER_WITHOUT_SSN = "borrowerWithoutSSN";
+
+    public static final String PROPERTY_FILE_NAME = "newfi";
+
+    public static final String NEWFI_USERNAME = "newfi.username";
+
+    public static final String NEWFI_PASSWORD = "newfi.password";
+
+    public static final String NEWFI_USERNAME_BACKUP = "newfi.username.backup";
+
+    public static final String NEWFI_PASSWORD_BACKUP = "newfi.password.backup";
+
+    public static final String VALID_TICKET_CHECK = "EncryptedTicket";
+
+    public static final String AUTHENTICATION_URL = "authentication.url";
+
 }

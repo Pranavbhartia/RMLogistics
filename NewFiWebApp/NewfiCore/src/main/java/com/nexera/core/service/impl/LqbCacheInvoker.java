@@ -231,56 +231,57 @@ public class LqbCacheInvoker implements LqbInterface {
 		}
 	}
 
-	public synchronized String findSticket(String lqbUsername,
-	        String lqbPassword) {
+	public String findSticket(String lqbUsername, String lqbPassword) {
 		LOGGER.debug("findSticket called for: " + lqbUsername);
 		String sTicket = null;
 		if (null != lqbUsername && null != lqbPassword) {
-			lqbUsername = lqbUsername.replaceAll("[^\\x00-\\x7F]", "");
-			try {
-				lqbUsername = nexeraUtility.decrypt(salt, crypticKey,
-				        lqbUsername);
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-			        | InvalidKeySpecException | NoSuchPaddingException
-			        | InvalidAlgorithmParameterException
-			        | IllegalBlockSizeException | BadPaddingException
-			        | IOException e) {
+			synchronized (lqbUsername) {
 
-				LOGGER.error("Error in decryption : " + lqbUsername, e);
+				lqbUsername = lqbUsername.replaceAll("[^\\x00-\\x7F]", "");
+				try {
+					lqbUsername = nexeraUtility.decrypt(salt, crypticKey,
+					        lqbUsername);
+				} catch (InvalidKeyException | NoSuchAlgorithmException
+				        | InvalidKeySpecException | NoSuchPaddingException
+				        | InvalidAlgorithmParameterException
+				        | IllegalBlockSizeException | BadPaddingException
+				        | IOException e) {
+
+					LOGGER.error("Error in decryption : " + lqbUsername, e);
+				}
+
+				lqbPassword = lqbPassword.replaceAll("[^\\x00-\\x7F]", "");
+				try {
+					lqbPassword = nexeraUtility.decrypt(salt, crypticKey,
+					        lqbPassword);
+				} catch (InvalidKeyException | NoSuchAlgorithmException
+				        | InvalidKeySpecException | NoSuchPaddingException
+				        | InvalidAlgorithmParameterException
+				        | IllegalBlockSizeException | BadPaddingException
+				        | IOException e) {
+
+					LOGGER.error("Error in decryption : " + lqbPassword, e);
+				}
+
+				org.json.JSONObject authOperationObject = NexeraUtility
+				        .createAuthObject(
+				                WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+				                lqbUsername, lqbPassword);
+				LOGGER.debug("Invoking LQB service to fetch user authentication ticket ");
+				String authTicketJson = lqbInvoker
+				        .invokeRestSpringParseObjForAuth(authOperationObject
+				                .toString());
+				if (authTicketJson.contains("EncryptedTicket")) {
+					LOGGER.debug("Ticket is valid for user: " + lqbUsername
+					        + " token:" + authTicketJson);
+					sTicket = authTicketJson;
+
+				} else {
+					LOGGER.error("Ticket Not Generated For This User "
+					        + lqbUsername);
+					sTicket = null;
+				}
 			}
-
-			lqbPassword = lqbPassword.replaceAll("[^\\x00-\\x7F]", "");
-			try {
-				lqbPassword = nexeraUtility.decrypt(salt, crypticKey,
-				        lqbPassword);
-			} catch (InvalidKeyException | NoSuchAlgorithmException
-			        | InvalidKeySpecException | NoSuchPaddingException
-			        | InvalidAlgorithmParameterException
-			        | IllegalBlockSizeException | BadPaddingException
-			        | IOException e) {
-
-				LOGGER.error("Error in decryption : " + lqbPassword, e);
-			}
-
-			org.json.JSONObject authOperationObject = NexeraUtility
-			        .createAuthObject(
-			                WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
-			                lqbUsername, lqbPassword);
-			LOGGER.debug("Invoking LQB service to fetch user authentication ticket ");
-			String authTicketJson = lqbInvoker
-			        .invokeRestSpringParseObjForAuth(authOperationObject
-			                .toString());
-			if (authTicketJson.contains("EncryptedTicket")) {
-				LOGGER.debug("Ticket is valid for user: " + lqbUsername
-				        + " token:" + authTicketJson);
-				sTicket = authTicketJson;
-
-			} else {
-				LOGGER.error("Ticket Not Generated For This User "
-				        + lqbUsername);
-				sTicket = null;
-			}
-
 		} else {
 			LOGGER.error("LQBUsername or Password are not set ");
 			sTicket = null;
