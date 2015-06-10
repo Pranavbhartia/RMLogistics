@@ -662,9 +662,10 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-last-row .loan-summary-red-col-detail{
-	width: auto;
+	width: 120px;
 	color:#fff;
 	font-size: 15px;
+	text-align: center;
 	background: #AB1010;
 	padding: 5px 10px;
   	border-radius: 3px;
@@ -673,6 +674,7 @@ input[type="button"]:focus, button:focus {
 	width: 120px;
 	color:#fff;
 	font-size: 15px;
+	text-align: center;
 	background: #2DB018;
 	padding: 5px 10px;
   	border-radius: 3px;
