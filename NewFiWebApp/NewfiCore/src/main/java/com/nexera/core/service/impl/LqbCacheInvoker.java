@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -51,9 +52,6 @@ public class LqbCacheInvoker implements LqbInterface {
 	@Autowired
 	NexeraUtility nexeraUtility;
 
-	@Autowired
-	UserProfileService userProfileService;
-
 	@Value("${cryptic.key}")
 	private String crypticKey;
 
@@ -70,6 +68,9 @@ public class LqbCacheInvoker implements LqbInterface {
 	Utils utils;
 	@Autowired
 	NexeraCacheableMethodInterface cacheableMethodInterface;
+
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	private static final Logger LOGGER = LoggerFactory
 	        .getLogger(LqbCacheInvoker.class);
@@ -165,6 +166,8 @@ public class LqbCacheInvoker implements LqbInterface {
 			 * Get Sales manager's information
 			 */
 
+			UserProfileService userProfileService = applicationContext
+			        .getBean(UserProfileService.class);
 			List<User> salesManagers = userProfileService.geAllSalesManagers();
 			if (salesManagers.size() > 0) {
 				LOGGER.warn("Code does not handle multiple sales managers. Need to be fixed");
@@ -227,6 +230,8 @@ public class LqbCacheInvoker implements LqbInterface {
 			        .convertFromVOToEntity(internalUserDetailVO);
 			internalUserDetail.setLqbAuthToken(sTicket);
 			internalUserDetail.setLqbExpiryTime(System.currentTimeMillis());
+			UserProfileService userProfileService = applicationContext
+			        .getBean(UserProfileService.class);
 			userProfileService.updateInternalUserDetails(internalUserDetail);
 		}
 	}
