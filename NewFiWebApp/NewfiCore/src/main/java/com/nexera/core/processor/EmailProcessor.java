@@ -18,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -447,13 +448,11 @@ public class EmailProcessor implements Runnable {
 					if (body == null) {
 						body = getText(bodyPart);
 						body = removeTags(body);
-						body = removeUTFCharacters(body);
 					}
 				}
 			} else {
 				LOGGER.debug("Normal Plain Text Email ");
 				body = mimeMessage.getContent().toString();
-				body = removeUnprintableCharacter(body);
 			}
 		} catch (MessagingException me) {
 			LOGGER.error("Exception caught " + me.getMessage());
@@ -662,8 +661,17 @@ public class EmailProcessor implements Runnable {
 
 	public static String removeTags(String string) {
 
+		if (string == null)
+			return string;
 		Document document = Jsoup.parse(string);
-		return document.text();
+		document.outputSettings(new Document.OutputSettings()
+		        .prettyPrint(false));// makes html() preserve linebreaks and
+									 // spacing
+		document.select("br").append("\\n");
+		document.select("p").prepend("\\n\\n");
+		String s = document.html().replaceAll("\\\\n", "\n");
+		return Jsoup.clean(s, "", Whitelist.none(),
+		        new Document.OutputSettings().prettyPrint(false));
 	}
 
 	public static String removeUTFCharacters(String data) {
