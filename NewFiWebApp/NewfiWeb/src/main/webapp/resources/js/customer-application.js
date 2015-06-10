@@ -2573,7 +2573,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     		});
     		var quesTextCont1 = $('<div>').attr({
     			"class" : "ce-option-text"
-    		}).html("Number of years");
+    		}).html("Years self-employed");
     		var optionContainer1 = $('<div>').attr({
     			"class" : "ce-options-cont"
     		});
