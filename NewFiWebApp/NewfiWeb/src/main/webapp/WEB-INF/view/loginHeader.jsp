@@ -4,7 +4,8 @@
 <div class="header-wrapper">
 	<div class="header-container container">
 		<div class="header-row row clearfix">
-			<div class="header-logo float-left"></div>
+			<!-- <div class="header-logo float-left"></div> -->
+			<div class="header-logo float-left" onclick="window.location='https://www.newfi.com/'"></div>
 			<div class="reg-header-btns-wrapper float-right clearfix">
 				<!--  <div class="float-left login-hdr hdr-signup-btn" onclick="window.location='customerEngagement.do'">Check Rates</div>-->
                 <div class="float-left login-hdr hdr-login-btn" onclick="window.location='${baseUrl}'">Login</div>
