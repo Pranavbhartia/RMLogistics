@@ -1518,7 +1518,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var bottomLeftCol = $('<div>').attr({
     	"class" : "loan-summary-lp float-left"
     });
-    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVoObj.closingCost), "closingCostId");
+    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVoObj.closingCost), "lockClosingCost");
     
     bottomLeftCol.append(bottomLcRow);
     
