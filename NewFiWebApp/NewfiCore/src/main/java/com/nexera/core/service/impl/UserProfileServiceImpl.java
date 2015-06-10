@@ -1433,11 +1433,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 						        encryptedLqbPassword);
 						updateCount = userProfileDao.updateLqbProfile(user);
 					}
+				} else if (sTicket == null) {
+					updateCount = 0;
+					throw new InvalidInputException(
+					        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
 				}
-			} else if (sTicket == null) {
-				updateCount = 0;
-				throw new InvalidInputException(
-				        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
 			}
 		} catch (InvalidKeyException e) {
 			throw new InvalidInputException(
