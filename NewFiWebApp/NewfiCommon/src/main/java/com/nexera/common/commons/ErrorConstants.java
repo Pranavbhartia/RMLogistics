@@ -24,6 +24,7 @@ public interface ErrorConstants {
 	public static final String ADMIN_CREATE_USER_ERROR = "User with email ID already exists";
 
 	public static final String LQB_ENCRYPTION_MESSAGE = "Error occured while saving the LQB Credentials";
+	public static final String LQB_CRED_ALREADY_SAVED = "Details already exist in the system.";
 	public static final String LQB_TOKEN_GENERATION_ERR_MESSAGE = "LQB Credentials was not found valid";
 
 	public static final String LQB_SAVE_FAILED = "LQB Credentials are incorrect, please try later";
