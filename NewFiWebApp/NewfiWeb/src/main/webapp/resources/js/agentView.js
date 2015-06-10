@@ -1902,7 +1902,7 @@ function appendUserTypeDropDown() {
 		"code" : "TITLE_COMPANY",
 		"userRoleBased" : "false"
 	}, {
-		"label" : "Home Owner's Insurance",
+		"label" : "Insurance Agent",
 		"roleDescription" : "Home own ins",
 		"code" : "HOME_OWN_INS",
 		"userRoleBased" : "false"
