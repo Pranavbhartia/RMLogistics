@@ -172,15 +172,25 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_CREDIT_INFO = "CREDIT_INFO_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_RATE_LOCK_REQUESTED = "RATE_LOCK_REQUESTED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_RATES_LOCKED = "RATES_LOCKED_TEMPLATE_ID";
-	public static final String TEMPLATE_KEY_NAME_APPRAISAL_ORDERED = "APPRAISAL_ORDERED_TEMPLATE_ID";
+	// NEXNF-424 : Dont send Appriasl ordered email when app fee is paid in
+	// newfi
+	// public static final String TEMPLATE_KEY_NAME_APPRAISAL_ORDERED =
+	// "APPRAISAL_ORDERED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_FEE_PAID = "APPLICATION_FEE_PAID_TEMPLATE_ID";
-	//NEXNF-415 : Removing Appraisal email calls
-	//public static final String TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_PURCHASE = "APPRAISAL_ORDERED_PURCHASE_TEMPLATE_ID";
-	//public static final String TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_REFINANCE = "APPRAISAL_ORDERED_REFINANCE_TEMPLATE_ID";
-	public static final String TEMPLATE_KEY_NAME_APPRAISAL_RECEIVED = "APPRAISAL_RECEIVED_TEMPLATE_ID";
+	// NEXNF-415 : Removing Appraisal email calls
+	// public static final String TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_PURCHASE =
+	// "APPRAISAL_ORDERED_PURCHASE_TEMPLATE_ID";
+	// public static final String TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_REFINANCE
+	// = "APPRAISAL_ORDERED_REFINANCE_TEMPLATE_ID";
+	// public static final String TEMPLATE_KEY_NAME_APPRAISAL_RECEIVED =
+	// "APPRAISAL_RECEIVED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_PRUCHASE_AND_REFINANCE_REQUEST = "PRUCHASE_AND_REFINANCE_REQUEST_TEMPLATE_ID";
-	/*public static final String TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE = "DISCLOSURES_AVAILABLE_TEMPLATE_ID";
-	public static final String TEMPLATE_KEY_NAME_DISCLOSURES_ARE_COMPLETE = "DISCLOSURES_ARE_COMPLETE_TEMPLATE_ID";*/
+	/*
+	 * public static final String TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE =
+	 * "DISCLOSURES_AVAILABLE_TEMPLATE_ID"; public static final String
+	 * TEMPLATE_KEY_NAME_DISCLOSURES_ARE_COMPLETE =
+	 * "DISCLOSURES_ARE_COMPLETE_TEMPLATE_ID";
+	 */
 	public static final String TEMPLATE_KEY_NAME_INITIAL_NEEDS_LIST_SET = "INITIAL_NEEDS_LIST_SET_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_NEEDS_LIST_UPDATED = "NEEDS_LIST_UPDATED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_7_DAYS_AGED_DOCUMENT = "7_DAYS_AGED_DOCUMENT_TEMPLATE_ID";
@@ -276,7 +286,7 @@ public interface CommonConstants {
 	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
 	public static final String SUBJECT_TITLE_COMPANY = "Welcome to newfi as a Title Company";
 	public static final String SUBJECT_HOME_INSUR_COMPANY = "Welcome to newfi as a Home Insurance Company";
-	
+
 	public static final String SUBJECT_RESET_PASSWORD = "Reset newfi Password";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
@@ -318,8 +328,7 @@ public interface CommonConstants {
 	public static final String SUBPROPTYPE = "0";
 	public static final String LOANPURPOSE = "2";
 
-	public static final String FILE_NAME_PREQUAL_LETTER = "prequal-letter.pdf";
+	public static final String FILE_NAME_PREQUAL_LETTER = "newfi pre-qualification.pdf";
 	public static final String DEFAULT_CREDIT_SCORE = "800";
-
 
 }
