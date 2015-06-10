@@ -115,16 +115,18 @@ function LoanPersonalInfoWrapper(user) {
 		"class" : "cust-personal-info-header-url loan-detail-link",
 		"id" : "profileUrlId",
 		"readonly":"readonly",
-		"title":"Double click to copy",
+		"title":"click to copy",
 		"value":user.userProfileBaseUrl+user.username
 	}).on("click",function(e){
+	   
 		$(this).zclip({
 			path: "resources/js/ZeroClipboard.swf",
 			copy: function(e){
-				e.preventDefault();
-				showToastMessage(copiedToClipBoard);
-			    return $(this).val();
-			    }
+
+					showToastMessage(copiedToClipBoard);
+				    return  $(this).prev().val();
+			    },
+		    clickAfter: false
 			});
 	});
 	if(user.internalUserDetail!=null){

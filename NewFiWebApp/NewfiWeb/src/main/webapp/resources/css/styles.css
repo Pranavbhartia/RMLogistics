@@ -2670,11 +2670,13 @@ input.calc-input {
   font-family: 'OpenSans';
   font-size: 11px;
   height: 100%;
+  line-height:100%;
   border: none;
-  background-color: inherit;
+  background-color: #f5f9fc;
   width: 325px;
   padding-left: 5px;
   padding-right: 10px;
+  
 }
 
 .cust-profile-url {
