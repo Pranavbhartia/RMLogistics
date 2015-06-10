@@ -1639,6 +1639,9 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 					'click',
 					function(e) {
 						e.stopPropagation();
+						if ($('#add-usertype-dropdown-cont').css("display") == "block") {
+							hideUserTypeDropDown();
+						}
 						if ($('#add-username-dropdown-cont').css("display") == "block") {
 							hideUserNameDropDown();
 						} else {
@@ -1647,7 +1650,7 @@ function appendAddTeamMemberWrapper(parentElement, clearParent, data) {
 							var code = $('#add-memeber-user-type').attr("code");
 							var roleID = $('#add-memeber-user-type').attr(
 									"roleID");
-							if (roleID == undefined) {
+							if ($('#add-memeber-user-type').html()=="") {
 								/*showToastMessage("Please select a user type");*/
 								showErrorToastMessage(selectUserType);
 								return false;
@@ -1728,6 +1731,9 @@ function paintUserNameDropDown(values, hideAddUser) {
 			function(event) {
 
 				event.stopPropagation();
+				if ($('#add-username-dropdown-cont').css("display") == "block") {
+					hideUserNameDropDown();
+				}
 				var callback = showAddUserPopUp;
 
 				var memberType = $('#add-memeber-user-type');
