@@ -40,9 +40,9 @@
 		var newfi = ${newfi};
 		var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
- $('#right-panel').css('min-height',window.innerHeight - 98 + 'px');
-			
-/* 			var height=$('.home-container').height();
+       // $('#right-panel').css('min-height',window.innerHeight - 98 + 'px');
+        $('#right-panel').css('min-height','100%');	
+			/*var height=$('.home-container').height();
 			var footerHeight=$('.footer-wrapper').height();
 			height=footerHeight-height;
 			$('.footer-wrapper').css("bottom",height+ "px"); */

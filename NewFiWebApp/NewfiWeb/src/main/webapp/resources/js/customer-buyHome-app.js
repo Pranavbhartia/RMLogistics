@@ -690,7 +690,7 @@ function paintSpouseSaleOfCurrentHome() {
 	}
 	
     
-	var quesHeaderTxt2 = "My Assets";
+	/*var quesHeaderTxt2 = "My Assets";
 
     var quesHeaderTextCont2 = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -719,7 +719,7 @@ function paintSpouseSaleOfCurrentHome() {
 
     var retirementAccountsDiv = retirementAccounts(assetQuestionsWrapper,true,1);
      
-    var otherAccountDiv = otherAccount(assetQuestionsWrapper,true,2);
+    var otherAccountDiv = otherAccount(assetQuestionsWrapper,true,2);*/
      
     return questionsContainer;
 }
@@ -1122,7 +1122,7 @@ function paintSaleOfCurrentHome() {
 	    questionsContainer.append(saleYourCurrentHomeDIV);
      }
 
-     var quesHeaderAssets = "My Assets";
+     /*var quesHeaderAssets = "My Assets";
      var quesMyAssetsCont = $('<div>').attr({
         "class": "app-ques-header-txt"
      }).html(quesHeaderAssets);
@@ -1148,19 +1148,20 @@ function paintSaleOfCurrentHome() {
     	"class" : "asset-ques-wrapper" 
      });
      
-     /*  bank details*/
+       bank details
      var bankAccountDiv = bankAccount(assetQuestionsWrapper,"",0);
      //assetQuestionsWrapper.append(bankAccountDiv);
 
-     /*  Retirement bank details*/
+       Retirement bank details
      var retirementAccountsDiv = retirementAccounts(assetQuestionsWrapper,"",1);
      //assetQuestionsWrapper.append(retirementAccountsDiv);
      
-     /* other bank details*/
+      other bank details
      var otherAccountDiv = otherAccount(assetQuestionsWrapper,"",2);
      //assetQuestionsWrapper.append(otherAccountDiv);
-        
-     return questionsContainer.append(skipQuestions).append(assetQuestionsWrapper);
+       
+     return questionsContainer.append(skipQuestions).append(assetQuestionsWrapper);*/ 
+     return questionsContainer;
 }
 
 
