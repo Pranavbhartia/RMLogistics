@@ -326,7 +326,9 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
 		    	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 		    	var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);
-		    	if(inputState=="" || inputState==undefined){
+		    	var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),yesyNoErrorMessage);
+		 	   
+		    	if(!stateValidation){
 		    		showErrorToastMessage(yesyNoErrorMessage);
 		    		return false;
 		    	}
