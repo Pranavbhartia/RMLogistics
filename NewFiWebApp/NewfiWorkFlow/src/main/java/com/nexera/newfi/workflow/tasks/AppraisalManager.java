@@ -47,6 +47,7 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String returnStatus = "";
 		String mileStoneStatus = null;
+		//NEXNF-415 : Removing Appraisal email calls
 		if (status.equals(LoanStatus.appraisalAvailable)) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.appraisalAvailable;
@@ -57,26 +58,6 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 			 */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        LoanStatus.appraisalReceivedMessage);
-			LoanVO loanVO = loanService.getLoanByID(loanId);
-			if (loanVO != null) {
-				LoanTypeMasterVO loanTypeMasterVO = loanVO.getLoanType();
-				if (loanTypeMasterVO != null) {
-					if (loanTypeMasterVO.getLoanTypeCd().equalsIgnoreCase(
-					        LoanTypeMasterEnum.PUR.name())) {
-						objectMap
-						        .put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-						                CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_PURCHASE);
-						subject = CommonConstants.SUBJECT_APPRAISAL_ORDERED_PURCHASE;
-					} else if (loanTypeMasterVO.getLoanTypeCd()
-					        .equalsIgnoreCase(LoanTypeMasterEnum.REF.name())) {
-						objectMap
-						        .put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-						                CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED_REFINANCE);
-						subject = CommonConstants.SUBJECT_APPRAISAL_ORDERED_REFINANCE;
-					}
-				}
-			}
-			sendEmail(objectMap, subject);
 		}
 		if (mileStoneStatus != null) {
 			LOG.debug("Updating Milestone for Appraisal As  " + mileStoneStatus);
