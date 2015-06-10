@@ -613,7 +613,14 @@ public class UserProfileRest {
 			userVO = gson.fromJson(updateUserInfo, UserVO.class);
 			userProfileService.updateLQBUsercred(userVO);
 
-		} catch (Exception e) {
+		}
+		catch (InvalidInputException e) {
+			LOG.error("Error while updataing the user datails ::", e);
+			return RestUtil.wrapObjectForFailure(null,
+			       e.getMessage(),
+			       e.getMessage());
+		}
+		catch (Exception e) {
 			LOG.error("Error while updataing the user datails ::", e);
 			return RestUtil.wrapObjectForFailure(null,
 			        ErrorConstants.LQB_SAVE_FAILED,

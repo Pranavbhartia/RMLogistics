@@ -791,7 +791,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer updateLqbProfile(User user) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword "
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword, "+
+		"internalusr.lqbAuthToken = :lqbAuthToken, internalusr.lqbExpiryTime= :lqbExpiryTime "
 		        + "WHERE internalusr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", user.getInternalUserDetail().getId());
@@ -799,6 +800,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        .getLqbUsername());
 		query.setParameter("lqbPassword", user.getInternalUserDetail()
 		        .getLqbPassword());
+		query.setParameter("lqbAuthToken", user.getInternalUserDetail()
+		        .getLqbAuthToken());
+		query.setParameter("lqbExpiryTime", user.getInternalUserDetail()
+		        .getLqbExpiryTime());
 		int result = query.executeUpdate();
 		LOG.info("updated Successfully");
 		return result;
