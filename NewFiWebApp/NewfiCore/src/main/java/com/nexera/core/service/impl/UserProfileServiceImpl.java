@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -162,6 +163,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private InternalUserStateMappingService internalUserStateMappingService;
+
+	@Autowired
+	private LqbCacheInvoker lqbCacheInvoker;
 
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
@@ -1389,27 +1393,74 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Transactional
 	// @CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
 	// @CacheEvict(allEntries = true)
-	public Integer updateLQBUsercred(UserVO userVO) throws Exception {
-
+	public Integer updateLQBUsercred(UserVO userVO)
+	        throws InvalidInputException {
+		String sTicket = null;
+		Integer updateCount = 0;
 		User user = User.convertFromVOToEntity(userVO);
-		if (user.getInternalUserDetail() != null) {
-			String lqbUsername = user.getInternalUserDetail().getLqbUsername();
-			if (lqbUsername != null) {
-				String encryptedlqbUserName = nexeraUtility.encrypt(salt,
-				        crypticKey, lqbUsername);
-				user.getInternalUserDetail().setLqbUsername(
-				        encryptedlqbUserName);
-			}
-			String lqbPassword = user.getInternalUserDetail().getLqbPassword();
-			if (lqbPassword != null) {
-				String encryptedLqbPassword = nexeraUtility.encrypt(salt,
-				        crypticKey, lqbPassword);
-				user.getInternalUserDetail().setLqbPassword(
-				        encryptedLqbPassword);
-			}
-		}
+		try {
+			if (user.getInternalUserDetail() != null) {
+				sTicket = lqbCacheInvoker.findSticket(user
+				        .getInternalUserDetail().getLqbUsername(), user
+				        .getInternalUserDetail().getLqbPassword());
 
-		return userProfileDao.updateLqbProfile(user);
+				InternalUserDetailVO internalUserDetailVO = userVO
+				        .getInternalUserDetail();
+				// Only if sTciket is valid
+				if (sTicket != null && internalUserDetailVO != null) {
+					InternalUserDetail internalUserDetail = InternalUserDetail
+					        .convertFromVOToEntity(internalUserDetailVO);
+					internalUserDetail.setLqbAuthToken(sTicket);
+					internalUserDetail.setLqbExpiryTime(System
+					        .currentTimeMillis());
+					updateInternalUserDetails(internalUserDetail);
+					String lqbUsername = user.getInternalUserDetail()
+					        .getLqbUsername();
+					String lqbPassword = user.getInternalUserDetail()
+					        .getLqbPassword();
+					if (lqbUsername != null && lqbPassword != null) {
+						String encryptedlqbUserName = nexeraUtility.encrypt(
+						        salt, crypticKey, lqbUsername);
+						user.getInternalUserDetail().setLqbUsername(
+						        encryptedlqbUserName);
+						String encryptedLqbPassword = nexeraUtility.encrypt(
+						        salt, crypticKey, lqbPassword);
+						user.getInternalUserDetail().setLqbPassword(
+						        encryptedLqbPassword);
+						updateCount = userProfileDao.updateLqbProfile(user);
+					}
+				}
+			} else if (sTicket == null) {
+				updateCount = 0;
+				throw new InvalidInputException(
+				        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+			}
+		} catch (InvalidKeyException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		} catch (NoSuchAlgorithmException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		} catch (InvalidKeySpecException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		} catch (NoSuchPaddingException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		} catch (UnsupportedEncodingException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		} catch (IllegalBlockSizeException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		} catch (BadPaddingException e) {
+			throw new InvalidInputException(
+			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
+		}
+		return updateCount;
 
 	}
 

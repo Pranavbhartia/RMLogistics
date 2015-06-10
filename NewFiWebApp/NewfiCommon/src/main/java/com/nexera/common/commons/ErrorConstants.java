@@ -22,4 +22,7 @@ public interface ErrorConstants {
     public static final String LINK_EXPIRED_ERROR ="Your link has expired. Enter your email ID to request a password reset link be sent again";
     
     public static final String ADMIN_CREATE_USER_ERROR="User with email ID already exists";
+    
+    public static final String LQB_ENCRYPTION_MESSAGE = "Error occured while saving the LQB Credentials";
+    public static final String LQB_TOKEN_GENERATION_ERR_MESSAGE = "LQB Credentials was not found valid";
 }
