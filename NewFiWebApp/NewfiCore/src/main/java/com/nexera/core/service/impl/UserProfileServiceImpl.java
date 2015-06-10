@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -165,7 +166,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	private InternalUserStateMappingService internalUserStateMappingService;
 
 	@Autowired
-	private LqbCacheInvoker lqbCacheInvoker;
+	private ApplicationContext applicationContext;
 
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
@@ -1400,6 +1401,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = User.convertFromVOToEntity(userVO);
 		try {
 			if (user.getInternalUserDetail() != null) {
+				LqbCacheInvoker lqbCacheInvoker = applicationContext
+				        .getBean(LqbCacheInvoker.class);
 				sTicket = lqbCacheInvoker.findSticket(user
 				        .getInternalUserDetail().getLqbUsername(), user
 				        .getInternalUserDetail().getLqbPassword());
