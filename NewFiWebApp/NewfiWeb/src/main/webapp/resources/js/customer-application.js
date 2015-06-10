@@ -2155,7 +2155,7 @@ function paintRefinanceEmployed(divId,value) {
             var incomes=value.data;
             for(var i=incomes.length-1;i>=0;i--){
                 var income=incomes[i].customerEmploymentIncome;
-                    var quesTxt = "About how much do you make a year";
+                    var quesTxt;// = "About how much do you make a year";
                     quesCont = getMultiTextQuestion(quesTxt,income);
                     $('#ce-option_' + divId).prepend(quesCont);
             }
@@ -2168,7 +2168,7 @@ function paintRefinanceEmployed(divId,value) {
 	//appUserDetails.employed ="true";
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
-    		var quesTxt = "About how much do you make a year";
+    		var quesTxt;// = "About how much do you make a year";
     		var quesCont = getMultiTextQuestion(quesTxt);
     		$('#ce-option_' + divId).prepend(quesCont);	
     	}
@@ -2189,9 +2189,13 @@ function getMultiTextQuestion(quesText, value) {
         "class": "ce-ques-wrapper",
     });
 
-    var quesTextCont = $('<div>').attr({
-        "class": "ce-option-text",
-    }).html(quesText);
+    var quesTextCont 
+
+    if(quesText){
+        quesTextCont= $('<div>').attr({
+            "class": "ce-option-text",
+        }).html(quesText);
+    }
 
     var optionContainer = $('<div>').attr({
         "class": "ce-options-cont",
@@ -2240,7 +2244,7 @@ function getMultiTextQuestion(quesText, value) {
     // Monthly income
     var quesTextCont1 = $('<div>').attr({
         "class": "ce-rp-ques-text",
-    }).html("Monthly Income before taxes");
+    }).html("Monthly income before taxes");
 
     var val = "";
 
@@ -2282,7 +2286,7 @@ function getMultiTextQuestion(quesText, value) {
     
     var quesTextCont3 = $('<div>').attr({
         "class": "ce-rp-ques-text"
-    }).html("When did you start working ?");
+    }).html("Start date");
     
     val = "";
     
@@ -2301,7 +2305,10 @@ function getMultiTextQuestion(quesText, value) {
 
     optionContainer.append(quesTextCont0).append(quesTextCont4).append(quesTextCont1).append(quesTextCont2).append(quesTextCont3);
 
-    container.append(quesTextCont).append(optionContainer);
+    if(quesTextCont)
+        container.append(quesTextCont)
+
+    container.append(optionContainer);
 
     return wrapper.append(container);
 }
@@ -2843,7 +2850,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		if(i==0){
 			var addAccountBtn = $('<div>').attr({
 				"class" : "cep-button-color add-btn add-account-btn"
-			}).html("Add additional source of income").bind('click',function(){
+			}).html("Add another source of W2 income").bind('click',function(){
 				
 				var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 				
@@ -2851,7 +2858,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 					showErrorToastMessage(maxIncomeNeeded);
 				     return false;
 				}
-				var quesTxt = "About how much do you make a year";
+				var quesTxt;// = "About how much do you make a year";
 	    		var quesCont = getMultiTextQuestion(quesTxt);
 				/*var containerToAppend = $(this).parent().find('.ce-option-ques-wrapper').wrap('<p/>').parent().html();
 				$(this).parent().find('.ce-option-ques-wrapper').unwrap();*/

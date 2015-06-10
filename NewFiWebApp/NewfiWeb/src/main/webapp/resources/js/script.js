@@ -1010,9 +1010,16 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
             
      //  alert('loan Number'+loanNumber);
             appUserDetails.loan.lqbFileId = loanNumber;
+            newfiObject.appUserDetails=JSON.stringify(appUserDetails);
             lockratedata.sLoanNumber=loanNumber;
         }catch(exception){
             console.log("caught Exception : "+exception);
+            var userId;
+            if(selectedUserDetail)
+                userId=selectedUserDetail.userID
+            else
+                userId=newfiObject.user.id;
+            getAppDetailsForUser(userId)
         }
     //alert('final appUserDetails'+JSON.stringify(appUserDetails));
         //saveAndUpdateLoanAppForm(appUserDetails);
@@ -1511,7 +1518,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var bottomLeftCol = $('<div>').attr({
     	"class" : "loan-summary-lp float-left"
     });
-    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVoObj.closingCost), "closingCostId");
+    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVoObj.closingCost), "lockClosingCost");
     
     bottomLeftCol.append(bottomLcRow);
     
