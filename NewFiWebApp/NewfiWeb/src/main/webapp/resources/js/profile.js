@@ -124,7 +124,7 @@ function LoanPersonalInfoWrapper(user) {
 			copy: function(e){
 
 					showToastMessage(copiedToClipBoard);
-				    return  $(this).prev().val();
+				    return  $(this).val();
 			    },
 		    clickAfter: false
 			});
