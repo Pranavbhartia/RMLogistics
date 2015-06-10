@@ -100,7 +100,8 @@ public class DocsRestInterceptor implements Callable
                         LOG.info( "Ticket generated " + NewFiManager.userTicket );
                     }
                 } else {
-                    LOG.info( "The ticket has not yet expired, hence picking the ticket which was cached before " );
+                    LOG.info( "The ticket has not yet expired, hence picking the ticket which was cached before "
+                        + NewFiManager.userTicket );
                 }
             }
         }

@@ -159,6 +159,12 @@ public class EmailProcessor implements Runnable {
 							        CommonConstants.SENDER_DOMAIN_REGEX, "");
 							userName = userName.replace(
 							        CommonConstants.SENDER_NAME_REGEX, "");
+							if (userName.contains("<")) {
+								LOGGER.debug("This contain an alias name before the email id other than Newfi Team, hence removing that as well ");
+								userName = userName.substring(
+								        userName.indexOf("<") + 1,
+								        userName.length());
+							}
 							if (userName.contains("@")) {
 								userName = userName.substring(0,
 								        userName.indexOf("@"));
@@ -182,6 +188,12 @@ public class EmailProcessor implements Runnable {
 							}
 							messageId = messageId.replace(
 							        CommonConstants.SENDER_NAME_REGEX, "");
+							if (messageId.contains("<")) {
+								LOGGER.debug("This contain an alias name before the email id other than Newfi Team, hence removing that as well ");
+								messageId = messageId.substring(
+								        messageId.indexOf("<") + 1,
+								        messageId.length());
+							}
 						} else if (toAddressArray.length == 3) {
 							String loanManagerUsername = null;
 							if (toAddressArray[0]
@@ -666,7 +678,7 @@ public class EmailProcessor implements Runnable {
 		Document document = Jsoup.parse(string);
 		document.outputSettings(new Document.OutputSettings()
 		        .prettyPrint(false));// makes html() preserve linebreaks and
-									 // spacing
+		                             // spacing
 		document.select("br").append("\\n");
 		document.select("p").prepend("\\n\\n");
 		String s = document.html().replaceAll("\\\\n", "\n");
