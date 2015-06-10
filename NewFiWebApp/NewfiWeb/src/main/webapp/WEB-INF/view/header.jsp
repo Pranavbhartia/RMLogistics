@@ -5,7 +5,8 @@
 	<div class="header-container container">
 		<div class="header-row row clearfix">
 			<div class="small-screen-menu-icon float-left"></div>
-			<div class="header-logo float-left"></div>
+			<!-- <div class="header-logo float-left"></div> -->
+				<div class="header-logo float-left" onclick="window.location='https://www.newfi.com/'"></div>
 			<div class="header-btns-wrapper float-right clearfix">
 				<div id="alert-notification-btn" class="float-left btn-alarm hdr-btn-item"></div>
 				<div id="alert-settings-btn" class="float-left btn-settings hdr-btn-item"></div>
