@@ -148,6 +148,7 @@ public class LQBRequestUtil {
 			        .getCustomerDetail().getSsn());
 			hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
 			        .getFirstName());
+			hashmap.put("middleName", "");
 			hashmap.put("lastName", loanAppFormVO.getLoan().getUser()
 			        .getLastName());
 			hashmap.put("borrowersEmailAddress", loanAppFormVO.getLoan()
