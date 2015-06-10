@@ -403,21 +403,22 @@ public class ApplicationFormRestService {
 
 							// in case of Purchase send a mail with PDF
 							// attachement
-
-							if (null != loaAppFormVO.getLoanType()
-							        && loaAppFormVO.getLoanType()
-							                .getLoanTypeCd()
-							                .equalsIgnoreCase("PUR")) {
-
-								String thirtyYearRateVoDataSet = preQualificationletter
-								        .thirtyYearRateVoDataSet(lockRateData);
-								preQualificationletter
-								        .sendPreQualificationletter(
-								                loaAppFormVO,
-								                thirtyYearRateVoDataSet,
-								                httpServletRequest);
-
-							}
+							// Comment Reason : NEXNF-407
+							// if (null != loaAppFormVO.getLoanType()
+							// && loaAppFormVO.getLoanType()
+							// .getLoanTypeCd()
+							// .equalsIgnoreCase("PUR")) {
+							//
+							// String thirtyYearRateVoDataSet =
+							// preQualificationletter
+							// .thirtyYearRateVoDataSet(lockRateData);
+							// preQualificationletter
+							// .sendPreQualificationletter(
+							// loaAppFormVO,
+							// thirtyYearRateVoDataSet,
+							// httpServletRequest);
+							//
+							// }
 						} catch (Exception e) {
 							LOG.debug("Load rate data failed ", e);
 							lockRateData = "";
