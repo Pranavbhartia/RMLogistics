@@ -1518,7 +1518,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     var bottomLeftCol = $('<div>').attr({
     	"class" : "loan-summary-lp float-left"
     });
-    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost",  showValue(rateVoObj.closingCost), "lockClosingCost");
+    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs",  showValue(rateVoObj.closingCost), "lockClosingCost");
     
     bottomLeftCol.append(bottomLcRow);
     
@@ -1526,7 +1526,7 @@ function getLoanSummaryContainerPurchase(lqbData, appUserDetails) {
     	"class" : "loan-summary-rp float-left"
     });
     
-    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
+    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payments", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
     
     bottomRow.append(bottomLeftCol).append(bottomRightCol);
@@ -1631,7 +1631,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     var bottomLeftCol = $('<div>').attr({
     	"class" : "loan-summary-lp float-left"
     });
-    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVoObj.closingCost), "lockClosingCost");
+    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVoObj.closingCost), "lockClosingCost");
     
     bottomLeftCol.append(bottomLcRow);
     
@@ -1639,7 +1639,7 @@ function getLoanSummaryContainerRefinance(lqbData, appUserDetails) {
     	"class" : "loan-summary-rp float-left"
     });
     
-    var bottomRcRow = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment", showValue(totalEstMonthlyPayment), "totalEstMonthlyPaymentId");
+    var bottomRcRow = getLoanSummaryLastRow("Total Est.<br/>Monthly Payments", showValue(totalEstMonthlyPayment), "totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
     var hgLow="";
     if(totalEstMonthlyPayment<monthlyPayment){

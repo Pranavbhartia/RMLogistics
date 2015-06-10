@@ -18,3 +18,10 @@ ALTER TABLE `newfi_schema`.`uploadedfileslist`
 
    #Rajeswari : 8 June for QC check box not clicable
    UPDATE `newfi_schema`.`workflowitemmaster` SET `clickable`='0' WHERE `id`='13';
+
+
+
+
+   #Rajeswari : 10 June for Milestone page display text.
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Contact My Loan Advisor' WHERE `id`='42';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete My Loan Profile' WHERE `id`='27';

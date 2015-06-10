@@ -407,7 +407,6 @@ function paintSelectLoanTypeQuestion() {
     wrapper.append(optionsContainer);
     $('#ce-main-container').append(wrapper);
 }
-
 function paintRefinanceMainContainer() {
     
 	buyHomeTeaserRate = {};
@@ -1756,7 +1755,7 @@ function getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData) {
     	"class" : "loan-summary-rp float-left"
     });
     
-    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
+    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payments ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
 
     var hgLow="";
@@ -1847,7 +1846,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     var bottomLeftCol = $('<div>').attr({
     	"class" : "loan-summary-lp float-left"
     });
-    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Cost", showValue(rateVO.closingCost), "closingCostId");
+    var bottomLcRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
     
     bottomLeftCol.append(bottomLcRow);
     
@@ -1855,7 +1854,7 @@ function getLoanSummaryContainerPurchaseCEP(teaserRate, customerInputData) {
     	"class" : "loan-summary-rp float-left"
     });
     
-    var bottomRcRow = getLoanSummaryLastRow("Total Est.<br/>Monthly Payment ", showValue(rateVO.payment) ,"totalEstMonthlyPaymentId");
+    var bottomRcRow = getLoanSummaryLastRow("Total Est.<br/>Monthly Payments ", showValue(rateVO.payment) ,"totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
     
     bottomRow.append(bottomLeftCol).append(bottomRightCol);
