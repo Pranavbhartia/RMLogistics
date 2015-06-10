@@ -6,6 +6,7 @@ package com.newfi.nexera.rest;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.NoSuchFileException;
+import java.util.ResourceBundle;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -34,9 +35,17 @@ public class RestInterceptor implements Callable
 
     private static final Logger LOG = Logger.getLogger( RestInterceptor.class );
 
+    private ResourceBundle bundle = null;
+
     private XMLProcessor xmlProcessor;
 
     private Utils utils;
+
+
+    public RestInterceptor()
+    {
+        bundle = ResourceBundle.getBundle( NewFiConstants.PROPERTY_FILE_NAME );
+    }
 
 
     /*
@@ -51,6 +60,10 @@ public class RestInterceptor implements Callable
 
         LOG.info( "Inside method onCall " );
         MuleMessage message = eventContext.getMessage();
+        String newfiUsername = bundle.getString( NewFiConstants.NEWFI_USERNAME );
+        String newfiPassword = bundle.getString( NewFiConstants.NEWFI_PASSWORD );
+        String newfiUsernameBackup = bundle.getString( NewFiConstants.NEWFI_USERNAME_BACKUP );
+        String newfiPasswordBackup = bundle.getString( NewFiConstants.NEWFI_PASSWORD_BACKUP );
 
         String payload = message.getPayloadAsString();
         Gson gson = new Gson();
@@ -68,17 +81,20 @@ public class RestInterceptor implements Callable
         if ( restParameters.getLoanVO().getsTicket() == null || restParameters.getLoanVO().getsTicket().equalsIgnoreCase( "" ) ) {
 
             if ( NewFiManager.userTicket == null ) {
-                LOG.info( "Getting the user ticket based on the username and password " );
-                NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                LOG.info( "Generating the user ticket for the user " + newfiUsername );
+                utils.getUserTicket( newfiUsername, newfiPassword );
                 if ( NewFiManager.userTicket == null ) {
-                    LOG.info( "Valid ticket was not generated hence trying again " );
-                    NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
-                    LOG.info( "Ticket generated " + NewFiManager.userTicket );
-                    if ( NewFiManager.userTicket == null ) {
-                        LOG.info( "Valid ticket was not generated hence retrying  " );
-                        NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
-                        LOG.info( "Ticket generated " + NewFiManager.userTicket );
+                    LOG.info( "Valid ticket was not generated hence trying again with backup account " );
+                    LOG.info( "Generating the user ticket for the user " + newfiUsernameBackup );
+                    utils.getUserTicket( newfiUsernameBackup, newfiPasswordBackup );
+                    if ( NewFiManager.userTicket != null ) {
+                        LOG.info( "Ticket generated With Back Up Account " + NewFiManager.userTicket );
+                    } else {
+                        LOG.error( "Not able to generate ticket even after 2 attempts " );
+                        //TODO Send Email to everyone
                     }
+                } else {
+                    LOG.info( "Ticket generated " + NewFiManager.userTicket );
                 }
             } else {
                 long generationTime = NewFiManager.generationTime;
@@ -87,13 +103,22 @@ public class RestInterceptor implements Callable
                 if ( differenceInMilliSeconds >= 14340000 ) {
                     LOG.info( "Ticket would have expired as time difference has gone beyond 3 hours and 59 minutes" );
                     NewFiManager.userTicket = null;
-                    NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                    utils.getUserTicket( newfiUsername, newfiPassword );
                     if ( NewFiManager.userTicket == null ) {
                         LOG.info( "Valid ticket was not generated hence retrying  " );
-                        NewFiManager.userTicket = utils.getUserTicket( "Nexera_RareMile", "Portal0262" );
+                        utils.getUserTicket( newfiUsernameBackup, newfiPasswordBackup );
+                        if ( NewFiManager.userTicket != null ) {
+                            LOG.info( "Ticket generated " + NewFiManager.userTicket );
+                        } else {
+                            LOG.error( "Not able to generate ticket even after 2 attempts " );
+                            //TODO Send Email to everyone
+                        }
+                    } else {
                         LOG.info( "Ticket generated " + NewFiManager.userTicket );
                     }
 
+                } else {
+                    LOG.info( "The ticket has not yet expired, hence picking the ticket which was cached before " );
                 }
             }
 
@@ -105,7 +130,7 @@ public class RestInterceptor implements Callable
         if ( NewFiManager.userTicket == null
             && ( restParameters.getLoanVO().getsTicket() == null || restParameters.getLoanVO().getsTicket()
                 .equalsIgnoreCase( "" ) ) ) {
-            throw new Exception( "Token Not Found, Hence breaking the flow " );
+            throw new Exception( "Ticket Not Found, Hence breaking the flow " );
         }
         Object[] inputParameters = getAllParameters( restParameters );
 
