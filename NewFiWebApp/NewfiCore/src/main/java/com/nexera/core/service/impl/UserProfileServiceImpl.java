@@ -1400,6 +1400,23 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = User.convertFromVOToEntity(userVO);
 		try {
 			if (user.getInternalUserDetail() != null) {
+				
+				//Chck if any change in cred.
+				User existingUserinDB = userProfileDao.findByUserId(userVO.getId());
+				if (existingUserinDB.getInternalUserDetail()!= null && existingUserinDB.getInternalUserDetail().getLqbUsername()!=null
+					&& existingUserinDB.getInternalUserDetail().getLqbPassword()!=null 
+				        && nexeraUtility.decrypt(
+				                salt,
+				                crypticKey,
+				                existingUserinDB.getInternalUserDetail()
+				                        .getLqbUsername()).equalsIgnoreCase( user.getInternalUserDetail()
+					        .getLqbUsername() )
+					 && nexeraUtility.decrypt(salt, crypticKey, existingUserinDB.getInternalUserDetail().getLqbPassword()).equalsIgnoreCase( user.getInternalUserDetail()
+							        .getLqbPassword()))
+					{
+						throw new InvalidInputException(
+					        ErrorConstants.LQB_CRED_ALREADY_SAVED);
+					}
 				LqbInterface lqbCacheInvoker = (LqbInterface) applicationContext
 				        .getBean("lqbCacheInvoker");
 				sTicket = lqbCacheInvoker.findSticket(nexeraUtility.encrypt(
@@ -1412,12 +1429,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 				        .getInternalUserDetail();
 				// Only if sTciket is valid
 				if (sTicket != null && internalUserDetailVO != null) {
-					InternalUserDetail internalUserDetail = InternalUserDetail
-					        .convertFromVOToEntity(internalUserDetailVO);
-					internalUserDetail.setLqbAuthToken(sTicket);
-					internalUserDetail.setLqbExpiryTime(System
-					        .currentTimeMillis());
-					updateInternalUserDetails(internalUserDetail);
+
+					user.getInternalUserDetail().setLqbAuthToken(sTicket);
+					user.getInternalUserDetail().setLqbExpiryTime(
+					        System.currentTimeMillis());
 					String lqbUsername = user.getInternalUserDetail()
 					        .getLqbUsername();
 					String lqbPassword = user.getInternalUserDetail()
@@ -1463,7 +1478,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		} catch (BadPaddingException e) {
 			throw new InvalidInputException(
 			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
-		}
+		} catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+        }
 		return updateCount;
 
 	}
