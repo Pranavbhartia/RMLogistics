@@ -102,6 +102,7 @@ import com.nexera.core.lqb.broker.LqbInvoker;
 import com.nexera.core.service.InternalUserStateMappingService;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NotificationService;
 import com.nexera.core.service.SendEmailService;
 import com.nexera.core.service.TemplateService;
@@ -111,7 +112,7 @@ import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.workflow.vo.WorkflowVO;
 
-@Component
+@Component("userProfileServiceImpl")
 public class UserProfileServiceImpl implements UserProfileService,
         InitializingBean {
 
@@ -1392,8 +1393,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	// @CacheEvict(cacheManager = "ehCacheManager", allEntries = true)
-	// @CacheEvict(allEntries = true)
 	public Integer updateLQBUsercred(UserVO userVO)
 	        throws InvalidInputException {
 		String sTicket = null;
@@ -1401,11 +1400,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = User.convertFromVOToEntity(userVO);
 		try {
 			if (user.getInternalUserDetail() != null) {
-				LqbCacheInvoker lqbCacheInvoker = applicationContext
-				        .getBean(LqbCacheInvoker.class);
-				sTicket = lqbCacheInvoker.findSticket(user
-				        .getInternalUserDetail().getLqbUsername(), user
-				        .getInternalUserDetail().getLqbPassword());
+				LqbInterface lqbCacheInvoker = (LqbInterface) applicationContext
+				        .getBean("lqbCacheInvoker");
+				sTicket = lqbCacheInvoker.findSticket(nexeraUtility.encrypt(
+				        salt, crypticKey, user.getInternalUserDetail()
+				                .getLqbUsername()), nexeraUtility.encrypt(salt,
+				        crypticKey, user.getInternalUserDetail()
+				                .getLqbPassword()));
 
 				InternalUserDetailVO internalUserDetailVO = userVO
 				        .getInternalUserDetail();

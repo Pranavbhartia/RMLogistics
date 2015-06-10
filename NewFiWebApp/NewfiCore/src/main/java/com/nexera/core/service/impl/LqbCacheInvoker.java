@@ -43,7 +43,7 @@ import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 
-@Component
+@Component("lqbCacheInvoker")
 public class LqbCacheInvoker implements LqbInterface {
 
 	@Value("${muleUrlForLoan}")
@@ -166,8 +166,8 @@ public class LqbCacheInvoker implements LqbInterface {
 			 * Get Sales manager's information
 			 */
 
-			UserProfileService userProfileService = applicationContext
-			        .getBean(UserProfileService.class);
+			UserProfileService userProfileService = (UserProfileService) applicationContext
+			        .getBean("userProfileServiceImpl");
 			List<User> salesManagers = userProfileService.geAllSalesManagers();
 			if (salesManagers.size() > 0) {
 				LOGGER.warn("Code does not handle multiple sales managers. Need to be fixed");
@@ -230,12 +230,13 @@ public class LqbCacheInvoker implements LqbInterface {
 			        .convertFromVOToEntity(internalUserDetailVO);
 			internalUserDetail.setLqbAuthToken(sTicket);
 			internalUserDetail.setLqbExpiryTime(System.currentTimeMillis());
-			UserProfileService userProfileService = applicationContext
-			        .getBean(UserProfileService.class);
+			UserProfileService userProfileService = (UserProfileService) applicationContext
+			        .getBean("userProfileServiceImpl");
 			userProfileService.updateInternalUserDetails(internalUserDetail);
 		}
 	}
 
+	@Override
 	public String findSticket(String lqbUsername, String lqbPassword) {
 		LOGGER.debug("findSticket called for: " + lqbUsername);
 		String sTicket = null;

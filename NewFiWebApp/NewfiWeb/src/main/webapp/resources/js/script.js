@@ -2175,7 +2175,7 @@ function getFileDragAndDropContainer(loanEmailID) {
     }).html("Select Files to Upload");
     var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
-    }).html("or, E-Mail Attachment To : "+loanEmailID);
+    }).html("or e-mail attachment to : "+loanEmailID);
     return container.append(fileUploadIcn).append(textCont1).append(textCont1Mobile).append(textCont2);
 }
 
