@@ -549,13 +549,13 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 		optionContainer.append(option);
 		var addAccountBtn = $('<div>').attr({
 			"class" : "cep-button-color add-btn add-account-btn"
-		}).html("Add additional source of income").bind('click',function(){
+		}).html("Add another source of W2 income").bind('click',function(){
 			var mainContainerId = $(this).closest('.ce-sub-option-wrapper').attr("id");
 			if($('#'+mainContainerId).children('.ce-option-ques-wrapper').length >= 2){
 				showToastMessage(max2Needed);
 				return false;
 			}
-			var quesTxt = "About how much do you make a year";
+			var quesTxt;// = "About how much do you make a year";
 			var quesCont = getMultiTextQuestion(quesTxt);
 			$(this).before(quesCont);
 			
