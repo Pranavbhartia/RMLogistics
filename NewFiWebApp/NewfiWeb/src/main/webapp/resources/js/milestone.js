@@ -900,7 +900,7 @@ function getMilestoneTeamMembeTable(input,workItem) {
 		homwOwnInsurance.firstName=homwOwnInsurance.name;
 		homwOwnInsurance.emailId=homwOwnInsurance.emailID;
 		homwOwnInsurance.userRole={
-				label : "Home Owners Insurance"
+				label : "Insurance Agent"
 		};
 		var tableRow = getMilestoneTeamMembeTableRow(homwOwnInsurance,floatCls);
 		tableContainer.append(tableRow);
@@ -991,7 +991,7 @@ function getMilestoneTeamMemberRow(name, title,userID,floatCls,custFlag,userDeta
 	var userid=undefined;
 	var homeOwnInsID=undefined;
 	var titleCompanyID=undefined;
-	if(userDetails.userRole.label=="Home Owners Insurance"){
+	if(userDetails.userRole.label=="Insurance Agent"){
 		homeOwnInsID=userDetails.id;
 	}else if(userDetails.userRole.label=="Title Company"){
 		titleCompanyID=userDetails.id;
