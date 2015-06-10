@@ -2523,7 +2523,7 @@ function getLoanSliderWrapper(lqbData,appUserDetails) {
     getRequestRateLockStatus(rateBtn);
     
     var sendPreQualification = $('<div>').attr({
-        "class": "rate-btn pre-qualification"
+        "class": "rate-btn pre-qualification "
     }).html("Send Pre-Qualification Letter").on('click',function(){
     	
     	sendPreQualificationLetter();
