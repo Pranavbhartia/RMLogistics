@@ -666,7 +666,7 @@ function getMultiTextQuestionSpouse(quesText,value) {
 
 		var quesTextCont3 = $('<div>').attr({
 			"class" : "ce-rp-ques-text"
-		}).html("When did you start working ?");
+		}).html("Start date");
 
 		 val="";
 	    if(value&&value.employedSince)
