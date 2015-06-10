@@ -25,3 +25,6 @@ ALTER TABLE `newfi_schema`.`uploadedfileslist`
    #Rajeswari : 10 June for Milestone page display text.
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Contact My Loan Advisor' WHERE `id`='42';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete My Loan Profile' WHERE `id`='27';
+
+
+##Anoop: Moved all of the above
