@@ -63,10 +63,10 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		String subject = null;
 		String returnStatus = "";
 		String mileStoneStatus = null;
+		//Rajeswari: As per JIRA : NEXNF-414 not sending emails on Disclosures
 		if (status.equals(LoanStatus.disclosureAvail)) {
 			message = LoanStatus.disclosureAvailMessage;
-			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-			        CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_AVAILABLE);
+			
 			subject = CommonConstants.SUBJECT_DISCLOSURE_AVAILABLE;
 			flag = true;
 			returnStatus = WorkItemStatus.STARTED.getStatus();
@@ -77,8 +77,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.disclosureSigned;
 			subject = CommonConstants.SUBJECT_DISCLOSURE_ARE_COMPLETE;
-			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-			        CommonConstants.TEMPLATE_KEY_NAME_DISCLOSURES_ARE_COMPLETE);
+			
 			// Have to add need for appraisal
 			NeedsListMaster appraisalMasterNeed = needsListService
 			        .fetchNeedListMasterByType(MasterNeedsEnum.Appraisal_Report
@@ -104,7 +103,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 			/* makeANote(loanId, message) */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        message);
-			sendEmail(objectMap, subject);
+			
 			// Dismiss any DISCLOSURE_AVAIL_NOTIFICATION_TYPE alerts
 			dismissDisclosureDueAlerts(objectMap);
 			return returnStatus;
