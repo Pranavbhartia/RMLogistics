@@ -146,6 +146,7 @@ div.footeremail:hover{
 	  border-top: 1px solid #E5E5E5;
 	  font-family:'OpenSans';
 	  bottom:0;
+	  position:relative;
 }
 .footer-newfi-image {
 	background: url(../images/newfi_logo_big.png) no-repeat left center;

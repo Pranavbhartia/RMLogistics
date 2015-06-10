@@ -767,12 +767,17 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 
 	var tableHeader = getAdminTeamListTableHeader();
 	container.append(tableHeader);
-
-for(var i=0;i<users.length;i++){
-	if(users[i].userRole.roleDescription!=newfiObject.user.userRole.roleDescription){
-     var tableRow = getAdminTeamListTableRow(users[i]);
-      container.append(tableRow);
-      }
+    
+    for(var i=0;i<users.length;i++){
+    	 	var tableRow = getAdminTeamListTableRow(users[i]);
+		    if(users[i].internalUserDetail!=undefined){
+		    	if(users[i].internalUserDetail.internalUserRoleMasterVO.roleDescription!=newfi.user.internalUserDetail.internalUserRoleMasterVO.roleDescription){   	    
+		    	      container.append(tableRow);
+		    	}
+			    }else{
+			    	  container.append(tableRow);
+			    }	 
+	
 	}
     if(searchUser){
     	wrapper.append(container);
