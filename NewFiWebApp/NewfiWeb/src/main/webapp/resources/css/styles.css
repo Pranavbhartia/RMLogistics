@@ -4457,6 +4457,9 @@ input.calc-input {
     text-transform: capitalize;
     line-height: 30px;
 }
+.rate-btn:hover{
+	background-color:#F37521;
+}
 
 .rate-btn {
     height: 40px;
@@ -4470,9 +4473,7 @@ input.calc-input {
     margin: 0 auto;
     cursor:pointer;
 }
-.rate-btn :hover{
-	background-color:#F37521;
-}
+
 .lock-rate-slider-container {
     margin: 10px 0;
     padding: 10px 60px;
