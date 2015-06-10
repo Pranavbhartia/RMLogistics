@@ -100,8 +100,12 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				return WorkItemStatus.NOT_STARTED.getStatus();
 			} else if (status.equals(LoanStatus.APP_PAYMENT_PENDING)) {
 				returnStatus = WorkItemStatus.STARTED.getStatus();
-				objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-				        CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED);
+				// NEXNF-424 : Dont send Appriasl ordered email when app fee is
+				// paid in newfi
+				/*
+				 * objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME
+				 * , CommonConstants.TEMPLATE_KEY_NAME_APPRAISAL_ORDERED);
+				 */
 				subject = CommonConstants.SUBJECT_APPLICATION_FEE_PENDING;
 				messageForNote = LoanStatus.paymentPendingStatusMessage;
 
@@ -245,7 +249,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.USER_ID_KEY_NAME).toString());
 		User user = new User();
 		user.setId(userId);
-		String message= WorkflowConstants.APP_FEE_CHANGED_CONTENT + newAppFee.toString();
+		String message = WorkflowConstants.APP_FEE_CHANGED_CONTENT
+		        + newAppFee.toString();
 		makeANote(loanId, message, user);
 		return newAppFee.toString();
 	}
