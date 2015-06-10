@@ -1987,7 +1987,7 @@ function appendNewfiTeamWrapper(loanDetails) {
 		homwOwnInsurance.firstName = homwOwnInsurance.name;
 		homwOwnInsurance.emailId = homwOwnInsurance.emailID;
 		homwOwnInsurance.userRole = {
-			label : "Home Owners Insurance"
+			label : "Insurance Agent"
 		};
 		var tableRow = getTeamListTableRow(homwOwnInsurance, loanID);
 		container.append(tableRow);
@@ -2879,7 +2879,7 @@ function getCreateHomeOwnInsCompanyContext(loanID) {
 
 		var header = $('<div>').attr({
 			"class" : "pop-up-header"
-		}).html("Create Home Owners Insurance Company");
+		}).html("Create Insurance Agent");
 
 		var container = $('<div>').attr({
 			"id" : "create-hoi-company-container",
@@ -3918,7 +3918,7 @@ function onReturnOfAddUserToLoanTeam(data, callback) {
 		userToAdd.emailId = userToAdd.emailID;
 		userToAdd.homeOwnInsID = editLoanTeamVO.homeOwnInsCompanyID;
 		userToAdd.userRole = {
-			label : "Home Owners Insurance"
+			label : "Insurance Agent"
 		};
 
 	} else if (titleCompanyID && titleCompanyID > 0) {
