@@ -222,7 +222,7 @@ public interface CommonConstants {
 
 	public static final String SUBJECT_NO_PRODUCTS_AVAILABLE = "No Products Available";
 
-	public static final String SUBJECT_NO_ACTION_FILE_INACTIVITY = "NO Action - File Inactivity";
+	public static final String SUBJECT_NO_ACTION_FILE_INACTIVITY = "No Action - File Inactivity";
 
 	public static final String SUBJECT_YOUR_CREDIT = "Your Credit";
 
@@ -275,6 +275,8 @@ public interface CommonConstants {
 	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
 	public static final String SUBJECT_TITLE_COMPANY = "Welcome to newfi as a Title Company";
 	public static final String SUBJECT_HOME_INSUR_COMPANY = "Welcome to newfi as a Home Insurance Company";
+	
+	public static final String SUBJECT_RESET_PASSWORD = "Reset newfi Password";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
 

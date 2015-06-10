@@ -1526,7 +1526,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setSenderEmailId(user.getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-		emailEntity.setSubject("Please reset your password");
+		emailEntity.setSubject(CommonConstants.SUBJECT_RESET_PASSWORD);
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
