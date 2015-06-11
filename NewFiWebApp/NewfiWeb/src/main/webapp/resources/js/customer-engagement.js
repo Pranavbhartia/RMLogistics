@@ -1328,7 +1328,7 @@ function paintFixYourRatePageCEP(teaserRate, inputCustomerDetails,parentContaine
 function getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
     
 	
-	var loanSummaryWrapper = getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails);
+	var loanSummaryWrapper = getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     
     var parentWrapper = $('<div>').attr({
         "class": "loan-summary-wrapper"
@@ -1383,11 +1383,12 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
     
     container.append(header).append(tenureSlider).append(rateSlider);
     var rateBtn1="";
-    var rateBtn2="";
+    //NEXNF-434
+    //var rateBtn2="";
     if(!hideCreateAccountBtn){
         rateBtn1= $('<div>').attr({
             "class": "rate-btn"
-        }).html("Create Newfi Account").on('click', function() {
+        }).html("Get Pre-Qualified Now!").on('click', function() {
             
         	
         	//inputCustomerDetails.propertyTaxesPaid = $('#calTaxID2').val();
@@ -1397,13 +1398,13 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
         	var mainContainer = paintApplyNow(inputCustomerDetails);
             $('#ce-main-container').html(mainContainer);
         });
-        rateBtn2 = $('<div>').attr({
+        /*rateBtn2 = $('<div>').attr({
             "class": "rate-btn-alertRate"
         }).html("Email This Quote").on('click', function() {
         	var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
             $('#ce-main-container').html(mainContainer);
-        });
+        });*/
     }else{
         rateBtn1= $('<div>').attr({
             "class": "rate-btn"
@@ -1417,7 +1418,7 @@ function getLoanSliderWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAcco
             }
         });
     }
-    return wrapper.append(container).append(rateBtn1).append(rateBtn2);;
+    return wrapper.append(container).append(rateBtn1)/*.append(rateBtn2);*/;
 }
 
 
@@ -1621,7 +1622,7 @@ function teaseCalculation(inputCustomerDetails){
 	
 }
 
-function getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails) {
+function getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
     
 	
 	var customerInputData = inputCustomerDetails;
@@ -1629,7 +1630,7 @@ function getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails) {
     var parentWrapper = $('<div>').attr({
         "class": "loan-summary-wrapper"
     });
-    var header = getLoanSummaryHeaderCEP();
+    var header = getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn);
     var container;
     if (loanTypeText == "REF") {
         container = getLoanSummaryContainerRefinanceCEP(teaserRate, customerInputData);
@@ -1641,7 +1642,7 @@ function getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails) {
     return parentWrapper;
 }
 
-function getLoanSummaryHeaderCEP() {
+function getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn) {
     var headerCont = $('<div>').attr({
         "class": "loan-summary-header clearfix"
     });
@@ -1651,7 +1652,18 @@ function getLoanSummaryHeaderCEP() {
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate(responseTime));
-    headerCont.append(col1).append(col2);
+    
+    var rateBtn2="";
+    if(!hideCreateAccountBtn){
+        rateBtn2 = $('<div>').attr({
+            "class": "rate-btn-alertRate float-right"
+        }).html("Email This Quote").on('click', function() {
+            var emailQuote = true;
+            var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
+            $('#ce-main-container').html(mainContainer);
+        });
+    }
+    headerCont.append(col1).append(col2).append(rateBtn2);
     return headerCont;
 }
 
