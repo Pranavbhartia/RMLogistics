@@ -146,6 +146,7 @@
 				}
 				var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',"First name cannot be empty");
 				if(!firstName){
+					$('.reg-input-row').css('margin-bottom','38px');
 					return false;
 				}
 				var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',"Last name cannot be empty");
@@ -166,6 +167,7 @@
 				}
 				var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
 				if(!phone){
+					$('.reg-input-row').css('margin-bottom','38px');
 					return false;
 				}
 				//End of validation
