@@ -550,7 +550,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										milestoneChildEventHandler(e)
 									});
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
-									if(tempOb.url){
+									if(tempOb.url && !userIsRealtor()){
 										ob.stateInfoContainer.bind("click",{"tempOb":tempOb},function(event){
 											if($(event.target).hasClass("creditScoreClickableClass"))
 												return;
@@ -558,7 +558,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										})
 										$(ob.stateInfoContainer).addClass("cursor-pointer");
 									}
-									if(tempOb.status)
+									if(tempOb.status && !userIsRealtor())
 									{
 										tempOb.status=checkCreditScore(tempOb.status);
 										
