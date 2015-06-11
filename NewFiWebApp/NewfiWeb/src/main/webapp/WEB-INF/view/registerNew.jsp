@@ -302,7 +302,7 @@
 				}
 				var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',"First name cannot be empty");
 				if(!firstName){
-					$('.reg-input-row').css('margin-bottom','35px');
+					$('.reg-input-row').css('margin-bottom','38px');
 					return false;
 				}
 				var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',"Last name cannot be empty");
