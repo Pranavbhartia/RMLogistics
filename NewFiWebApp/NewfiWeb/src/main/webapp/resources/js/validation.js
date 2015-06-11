@@ -131,7 +131,11 @@ function validateInputsOfAssests(element,inputVal,message,offset){
 			$(element).next('.err-msg').html(feildShouldNotBeZero).show();
 			$(element).addClass('ce-err-input').show();
 			$(".err-msg").css('width',width);
-			$(window).scrollTop(offset-height-50);
+			if(name=="jobTitle"||name=="beforeTax"||name=="workPlace"||name=="startWorking"){
+				$(window).scrollTop(offset+50);
+			}else{
+				$(window).scrollTop(offset-height-50);
+			}
 			//$(element).scrollTop(offset);
 			return false;
 		}else{
