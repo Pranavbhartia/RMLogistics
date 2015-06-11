@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +24,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.MarketingPageRateVo;
@@ -161,17 +159,40 @@ public class MarketingTeaserRate {
 			if (loanDuration.indexOf("30") == 0
 			        || loanDuration.indexOf("15") == 0) {
 				JSONArray rateVOArray = item.getJSONArray("rateVO");
-				thirtyYearRateVoDataSet = rateVOArray.getJSONObject(rateVOArray
-				        .length() / 2);
-				LqbTeaserRateVo LqbTeaserRateVo = gson.fromJson(
-				        thirtyYearRateVoDataSet.toString(),
-				        LqbTeaserRateVo.class);
-
-				MarketingPageRateVo marketingPageRateVo = new MarketingPageRateVo();
-				marketingPageRateVo.setLoanDuration(loanDuration.split(" ")[0]
-				        + "Year Fixed");
-				marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
-				marketingPageRatelist.add(marketingPageRateVo);
+				boolean found = false;
+				for (int j = 0; j < rateVOArray.length(); j++) {
+					thirtyYearRateVoDataSet = rateVOArray.getJSONObject(j);
+					LqbTeaserRateVo LqbTeaserRateVo = gson.fromJson(
+					        thirtyYearRateVoDataSet.toString(),
+					        LqbTeaserRateVo.class);
+					if (LqbTeaserRateVo.getClosingCost().equals("$0.00")&&(j+1)<rateVOArray.length()) {
+						thirtyYearRateVoDataSet = rateVOArray
+						        .getJSONObject(j + 1);
+						LqbTeaserRateVo = gson.fromJson(
+						        thirtyYearRateVoDataSet.toString(),
+						        LqbTeaserRateVo.class);
+						MarketingPageRateVo marketingPageRateVo = new MarketingPageRateVo();
+						marketingPageRateVo.setLoanDuration(loanDuration
+						        .split(" ")[0] + "Year Fixed");
+						marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
+						marketingPageRatelist.add(marketingPageRateVo);
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					thirtyYearRateVoDataSet = rateVOArray
+					        .getJSONObject(rateVOArray.length() / 2);
+					LqbTeaserRateVo LqbTeaserRateVo = gson.fromJson(
+					        thirtyYearRateVoDataSet.toString(),
+					        LqbTeaserRateVo.class);
+					MarketingPageRateVo marketingPageRateVo = new MarketingPageRateVo();
+					marketingPageRateVo
+					        .setLoanDuration(loanDuration.split(" ")[0]
+					                + "Year Fixed");
+					marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
+					marketingPageRatelist.add(marketingPageRateVo);
+				}
 			}
 
 		}
