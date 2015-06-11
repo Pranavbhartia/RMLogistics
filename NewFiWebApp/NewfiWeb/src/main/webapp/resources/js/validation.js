@@ -18,6 +18,7 @@ function appendErrorMessage(){
 }
 
 function validateInput(element,inputVal,message){
+		
 	var name=$(element).attr('name');
 	var width=$(element).css('width');
 	//$('input[name="currentMortgageBalance"]')
@@ -40,7 +41,7 @@ function validateInput(element,inputVal,message){
 			return false;
 		}else{
 			$('input[name="' + name + '"]').next('.err-msg').hide();
-			$('input[name="' + name + '"]').removeClass('ce-err-input');
+			$('input[name="' + name + '"]').removeClass('ce-err-input');			
 			return true;
 		}
 		
@@ -68,22 +69,28 @@ function validateCheckbox(isStatus){
 }
 
 function validateInputOfChecked(isStatus){
-
+	
 		if(isStatus.attr('value')==0){
-     	   var inputs = $("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input');
-            for(var count=0;count<inputs.length;count++){
-            	if(inputs[count].name!="customerEmploymentIncomeId"){
-            		 var isStatus=validateInput(inputs[count],inputs[count].value,message);
-                	 if(isStatus==false){
-                		 return false;
-                	 }
-            	}
-        	
+			//validation done for single ce-option-ques-wrapper class
+			var elements=$("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper');
+			for(var size=0;size<elements.length;size++){
+				 var inputs = $(elements[size]).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input');
+		     	 var offset=$(elements[size]).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input').height();
+		     	 //validating the inputs inside the ce-option-ques-wrapper class
+		         for(var count=0;count<inputs.length;count++){
+		            	if(inputs[count].name!="customerEmploymentIncomeId"){          		
+		            		 var isStatus=validateInputsOfAssests(inputs[count],inputs[count].value,message,offset);
+		                	 if(isStatus==false){
+		                		 return false;
+		                	 }
+		            	}
+			}      	
            }
         }else{
-     	   var inputs = $("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('input');
+        	 var offset=$("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('input').offset().top;
+     	     var inputs = $("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('input');
 	            for(var count=0;count<inputs.length;count++){
-	        	 var isStatus=validateInput(inputs[count],inputs[count].value,message);
+	        	 var isStatus=validateInputsOfAssests(inputs[count],inputs[count].value,message,offset);
 	        	 if(isStatus==false){
 	        		 return false;
 	        	 }
@@ -95,9 +102,11 @@ function validateInputOfChecked(isStatus){
 				   
 
 }
-function validateInputsOfAssests(element,inputVal,message){
+function validateInputsOfAssests(element,inputVal,message,offset){
+	console.log(inputVal+"::::::"+offset);
 	var name=$(element).attr('name');
 	var width=$(element).css('width');
+	var height=$('.header-wrapper').height();
 	//$('input[name="currentMortgageBalance"]')
 
 	if(inputVal == undefined || inputVal == ""
@@ -106,6 +115,13 @@ function validateInputsOfAssests(element,inputVal,message){
 			$(element).next('.err-msg').html(message).show();
 			$(element).addClass('ce-err-input').show();
 			$(".err-msg").css('width',width);
+			if(name=="jobTitle"||name=="beforeTax"||name=="workPlace"||name=="startWorking"){
+				$(window).scrollTop(offset+50);
+			}else{
+				$(window).scrollTop(offset-height-50);
+			}
+			
+			//$(element).scrollTop(offset);
 			return false;
 		
 		
@@ -115,6 +131,12 @@ function validateInputsOfAssests(element,inputVal,message){
 			$(element).next('.err-msg').html(feildShouldNotBeZero).show();
 			$(element).addClass('ce-err-input').show();
 			$(".err-msg").css('width',width);
+			if(name=="jobTitle"||name=="beforeTax"||name=="workPlace"||name=="startWorking"){
+				$(window).scrollTop(offset+50);
+			}else{
+				$(window).scrollTop(offset-height-50);
+			}
+			//$(element).scrollTop(offset);
 			return false;
 		}else{
 			$(element).next('.err-msg').hide();
