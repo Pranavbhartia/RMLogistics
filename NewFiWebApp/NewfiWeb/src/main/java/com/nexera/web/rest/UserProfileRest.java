@@ -410,7 +410,9 @@ public class UserProfileRest {
 		try {
 			if (userVO.getUsername() == null)
 				userVO.setUsername(userVO.getEmailId());
-			userVO = userProfileService.createNewUserAndSendMail(userVO);
+
+			User newUser = userProfileService.createNewUser(userVO);
+			userProfileService.sendEmailToCustomer(newUser);
 			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
 			        .getRoleId()) {
 				/*
@@ -464,7 +466,8 @@ public class UserProfileRest {
 
 			}
 			LOG.debug("Creating the new user");
-			userVO = userProfileService.createNewUserAndSendMail(userVO);
+			User newUser = userProfileService.createNewUser(userVO);
+			userProfileService.sendEmailToCustomer(newUser);
 			LOG.debug("Created new user and email sent!");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

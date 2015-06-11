@@ -168,9 +168,10 @@ public class ShopperRegistrationController {
 				}
 
 			}
-
-			UserVO userVO = userProfileService
-			        .createNewUserAndSendMail(loanAppFormVO.getUser());
+			UserVO userVO = loanAppFormVO.getUser();
+			User newUser = userProfileService
+			        .createNewUser(loanAppFormVO.getUser());
+			userProfileService.sendEmailToCustomer(newUser);
 			authenticateUserAndSetSession(emailId, userVO.getPassword(),
 			        request);
 		} catch (Exception e) {

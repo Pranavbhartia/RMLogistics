@@ -612,7 +612,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public UserVO createNewUserAndSendMail(UserVO userVO)
+	public User createNewUser(UserVO userVO)
 	        throws InvalidInputException, UndeliveredEmailException,
 	        FatalException {
 		LOG.info("createNewUserAndSendMail called!");
@@ -654,7 +654,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.error("database exception");
 			throw new DatabaseException("Email Already present in database");
 		}
+		userVO.setPassword(newUser.getPassword());
+		userVO.setUsername(newUser.getUsername());
+		// reset this value so that two objects are not created
+		userVO.setCustomerDetail(null);
+		userVO.setId(userID);
+		userVO.setEmailId(newUser.getEmailId());
+		userVO.setEmailEncryptionToken(newUser.getEmailEncryptionToken());
+		return newUser;
 
+	}
+
+	@Override
+	public void sendEmailToCustomer(User newUser) {
 		LOG.debug("Saved, sending the email");
 		try {
 			sendNewUserEmail(newUser);
@@ -664,18 +676,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			// not be stored
 			LOG.error("Error sending email, proceeding with the email flow");
 		}
-
 		LOG.debug("sendNewUserEmail : sending the email done");
-
-		userVO.setPassword(newUser.getPassword());
-		userVO.setUsername(newUser.getUsername());
-		// reset this value so that two objects are not created
-		userVO.setCustomerDetail(null);
-		userVO.setId(userID);
-		userVO.setEmailId(newUser.getEmailId());
-		userVO.setEmailEncryptionToken(newUser.getEmailEncryptionToken());
-		return userVO;
-
 	}
 
 	@Override
@@ -1059,8 +1060,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        .setProfileUrl(rowData[CommonConstants.PROFILE_LINK_COLUMN]);
 			userVO.setRealtorDetail(realtorDetailVO);
 		}
-
-		UserVO createdUserVo = createNewUserAndSendMail(userVO);
+		UserVO createdUserVo = userVO;
+		User newUser = createNewUser(userVO);
+		sendEmailToCustomer(newUser);
 		return createdUserVo;
 	}
 
@@ -1149,7 +1151,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LoanVO loanVO = null;
 
 			LOG.info("calling createNewUserAndSendMail" + userVO.getEmailId());
-			userVOObj = this.createNewUserAndSendMail(userVO);
+			userVOObj = userVO;
+			User newUser = this.createNewUser(userVO);
 
 			if (null != loaAppFormVO.getEmailQuote()
 			        && loaAppFormVO.getEmailQuote()) {
@@ -1344,6 +1347,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			LOG.info("User registration complete, iniating workflow"
 			        + userVOObj.getUsername());
 			this.crateWorkflowItems(userVOObj.getDefaultLoanId());
+			sendEmailToCustomer(newUser);
 			return userVOObj;
 		} catch (Exception e) {
 
