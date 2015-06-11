@@ -1,9 +1,9 @@
 <LOXmlFormat version="1.0">
 	<loan>
-	<applicant id="applicantId">
-			<credit craid="creditCardId" requestType="NEW" loginName="LOGIN_NAME"
+		<applicant id="applicantId">
+			<credit craid="creditCardId" requestType="UPGRADE" loginName="LOGIN_NAME"
 				password="PASSWORD" equifax="equifaxStatus" experian="experianStatus"
-				transunion="transunionStatus" />
+				transunion="transunionStatus" reportId="report_id" />
 			<field id="aBFirstNm">firstName</field>
 			<field id="aBLastNm">lastName</field>
 			<field id="aBAddr">applicantAddress</field>

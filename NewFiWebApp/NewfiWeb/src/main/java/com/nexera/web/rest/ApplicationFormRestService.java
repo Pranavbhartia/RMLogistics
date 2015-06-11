@@ -198,6 +198,8 @@ public class ApplicationFormRestService {
 						LOG.debug("Token retrieved for loan manager" + sTicket);
 						Map<String, String> hashmap = new HashMap<String, String>();
 						String userSSN = null;
+						String reportId = null;
+						String digitRegex = "\\d+";
 						org.json.JSONObject loadOperationObject = nexeraUtility
 						        .createLoadJsonObject(
 						                hashmap,
@@ -214,6 +216,20 @@ public class ApplicationFormRestService {
 									        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
 									loadResponse = nexeraUtility
 									        .removeBackSlashDelimiter(loadResponse);
+									if (loadResponse
+									        .contains(CoreCommonConstants.SOAP_XML_RAW_CREDIT_REPORT_FIELD)) {
+										reportId = loadResponse;
+										reportId = reportId
+										        .substring(reportId
+										                .indexOf(CoreCommonConstants.SOAP_XML_REPORT_ID_FIELD)
+										                + CoreCommonConstants.SOAP_XML_REPORT_ID_FIELD
+										                        .length() + 2);
+										reportId = reportId.substring(0,
+										        reportId.indexOf(" ") - 1);
+										if (!reportId.matches(digitRegex)) {
+											reportId = null;
+										}
+									}
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 									if (loadResponseList != null) {
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
@@ -232,11 +248,12 @@ public class ApplicationFormRestService {
 								}
 							}
 						}
-						if (userSSN != null) {
+						if (userSSN != null && reportId != null) {
 							JSONObject requestObject = lQBRequestUtil
 							        .pullTrimergeCreditScore(
 							                loanVO.getLqbFileId(),
-							                loaAppFormVO, sTicket, userSSN);
+							                loaAppFormVO, sTicket, userSSN,
+							                reportId);
 							if (requestObject != null) {
 								String response = "error";
 								HashMap<String, String> map = invokeRest(requestObject
@@ -303,7 +320,11 @@ public class ApplicationFormRestService {
 								}
 							}
 						} else {
-							status = "Unable to fetch user  ssn number from lqb ";
+							if (userSSN == null) {
+								status = "Unable to fetch user  ssn number from lqb ";
+							} else {
+								status = "Unable to find credit report for this user, hence cannot upgrade. Please contact you System Admin ";
+							}
 						}
 					}
 				} else {
