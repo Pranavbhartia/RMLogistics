@@ -482,10 +482,14 @@ function appendCustomers(elementId, customers) {
 		var col4 = $('<div>').attr({
 			"class" : "leads-container-tc4 float-left"
 		}).html(customer.processor);
-
+		var creditScore = customer.credit_score;
+		if (userIsRealtor())
+		{
+			creditScore = "-";
+		}
 		var col5 = $('<div>').attr({
 			"class" : "leads-container-tc5 float-left"
-		}).html(customer.credit_score);
+		}).html(creditScore);
 
 		var col6 = $('<div>').attr({
 			"class" : "leads-container-tc6 float-left"
