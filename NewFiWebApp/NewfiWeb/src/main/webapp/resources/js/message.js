@@ -60,7 +60,7 @@ var W2EmplayeeMandatoryErrorMesssage="W2 Employment Details are Mandatory";
 var maxIncomeNeeded="Maximum 2 income needed";
 var selectAnyOne="Please select an income type";
 var ssnLengthErrorMessage="Please enter a valid ssn of 9-digit";
-var phoneNumberLegthErrorMessage="Please enter a valid phone number";
+var phoneNumberLegthErrorMessage="Please enter a valid phone number of 10-digit";
 var selectAccountType="Please select an account type";
 var selectAssestErrorMessage='If the assest information are not to be provided.Please select the above checkbox';
 
@@ -91,6 +91,7 @@ var answerQuestionOne="Please answer the question";
 var zipCodeMessage="Please enter a valid 5-digit zipcode";
 var errorInrefinanceRates="error inside paintRefinanceSeeRates :";
 var incorrectEmailID="Incorrect Email ID";
+
 
 
 //Messages in common.js

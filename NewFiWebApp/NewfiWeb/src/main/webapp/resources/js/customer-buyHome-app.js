@@ -322,12 +322,19 @@ function paintCustomerApplicationPurchasePageStep1a() {
                 /*Validation*/
 		    	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 		    	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
-		    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
-		    	var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+		    	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);		    	
 		    	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 		    	var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);
 		    	var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),yesyNoErrorMessage);
-		 	   
+		    	if($('input[name="rentPerMonth"]').length>0){
+		    		var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+		    		if(!questionfour){
+			    		return false;
+			    	}
+		    	}
+		    	if(!questionOne){
+		    		return false;
+		    	}
 		    	if(!stateValidation){
 		    		showErrorToastMessage(yesyNoErrorMessage);
 		    		return false;
@@ -335,9 +342,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	if(!addressValidation){
 		    		return false;
 		    	}
-		    	if(!questionOne){
-		    		return false;
-		    	}
+		    	
 		    	if(!questionTwo){
 		    		return false;
 		    	}else{
@@ -352,9 +357,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	if(!questionThree){
 		    		return false;
 		    	}
-		    	if(!questionfour){
-		    		return false;
-		    	}
+
 		    	if(!propertQuestionTwo){
 		    		return false;
 		    	}else{

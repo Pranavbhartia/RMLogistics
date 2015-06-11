@@ -67,6 +67,16 @@
 					</div>
 				</div>
 				
+					<div class="reg-input-row clearfix">
+					<div class="reg-row-lc float-left">Your Phone Number</div>
+					<div class="reg-row-rc float-left">
+						<div class="reg-input-cont reg-phone">
+					          <input class="reg-input" placeholder="Phone number" name="phone" >
+					          <div class="err-msg hide"></div>
+					    </div>
+					</div>
+				</div>
+				
 				 <div class="reg-input-error hide errorMsg">
            		<span class ="reg-registration-error">
            		We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLoginPage()' style="color: #2F6BF7">click here</a>
@@ -147,6 +157,10 @@
 	        			$('.reg-input-cont.reg-email').addClass('ce-err-input').show();
 					return false;
 	                }
+				}
+				var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
+				if(!phone){
+					return false;
 				}
 				//End of validation
 				validateUser(LoanAppFormVO);
