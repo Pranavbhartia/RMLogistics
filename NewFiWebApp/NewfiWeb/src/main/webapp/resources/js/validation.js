@@ -154,11 +154,25 @@ function validateFormFeild(inputElement,divErrElement,message){
 
 	}
 	else{
-		$(inputElement).next('.err-msg').hide();
-		$(divErrElement).removeClass('ce-err-input');
-		return true;
+		if(inputElement=="#phoneID"){
+			if(inputVal.length<10){
+				$(inputElement).next('.err-msg').html(phoneNumberLegthErrorMessage).show();
+				$(divErrElement).addClass('ce-err-input').show();
+				return false;
+			}else{
+				$(inputElement).next('.err-msg').hide();
+				$(divErrElement).removeClass('ce-err-input');
+				
+			}
+			
+		}else{
+			$(inputElement).next('.err-msg').hide();
+			$(divErrElement).removeClass('ce-err-input');
+			
+		}
+		
 	}
-	
+	return true;
 }
 
 function validateCustomerRegistration(phoneNumber){

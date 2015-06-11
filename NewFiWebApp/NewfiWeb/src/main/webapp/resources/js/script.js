@@ -279,7 +279,7 @@ function paintApplicationAlreadySubmittedPage(loanType) {
 	
 	var btn3 = $('<div>').attr({
 		"class" : "getting-to-know-btn margin-0-auto"
-	}).html("Talk to a loan advisor").on('click',function(){
+	}).html("Talk to my loan advisor").on('click',function(){
 		
 		window.location.href =newfiObject.baseUrl+"home.do#myTeam";
 	});
@@ -461,7 +461,7 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Enter my loan information").on('click',function(){
+	}).html("Get started").on('click',function(){
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
@@ -489,7 +489,7 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Talk to a loan advisor").on('click',function(){
+	}).html("Talk to my loan advisor").on('click',function(){
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");

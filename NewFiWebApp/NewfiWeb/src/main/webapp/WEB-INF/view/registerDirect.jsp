@@ -13,6 +13,7 @@
 <link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
 <script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/jquery.mask.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/common.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/customer-engagement.js"></script>
@@ -71,7 +72,7 @@
 					<div class="reg-row-lc float-left">Your Phone Number</div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-phone">
-					          <input class="reg-input" placeholder="Phone number" name="phone" >
+					          <input class="reg-input" placeholder="Phone number" name="phone" id="phoneID">
 					          <div class="err-msg hide"></div>
 					    </div>
 					</div>
@@ -97,6 +98,9 @@
 		});
 	</script>
 	<script>
+	$('body').on('focus',"#phoneID",function(){
+	    $(this).mask("(999) 999-9999");
+	});
 		$(document).ready(function() {
 			globalBinder();
 			$(document).on('click','.reg-option-selected',function(e){
@@ -124,10 +128,12 @@
 				var timezone = dateVar.getTimezoneOffset();
 				user.emailId = $("#emailID").val() + ":" + timezone;
 				user.lastName = $("#lastName").val();
+				var phoneNumber =$("#phoneID").val();
+				user.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
 				user.userRole={
 							roleDescription :$("#userTypeID").val()
 						}
-			
+			    
 				LoanAppFormVO.user=user;
 				LoanAppFormVO.loanMangerEmail=$("#loanManagerEmailId").val();
 				LoanAppFormVO.realtorEmail=$("#realtorEmailId").val();

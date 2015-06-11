@@ -14,6 +14,7 @@
 <link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
 <script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/jquery.mask.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/common.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/customer-engagement.js"></script>
@@ -181,7 +182,7 @@
             </div>
             <div class="reg-row-rc-new reg-row-rc float-left">
 	          <div class="reg-input-cont reg-phone">
-	          <input class="reg-input" placeholder="Phone number" name="phone" id="phoneID">
+	          <input class="reg-input" placeholder="Phone number" name="phone" id="phoneID" >
 	          <div class="err-msg hide"></div>
 	          </div>
            </div>
@@ -230,6 +231,9 @@
 	var photo = "${userObject.photoImageUrl}";
 	var name = "${userObject.displayName}";
 	var email = "${userObject.emailId}";
+	$('body').on('focus',"#phoneID",function(){
+	    $(this).mask("(999) 999-9999");
+	});
 		$(document).ready(function() {
 			
 			
@@ -282,6 +286,8 @@
 				var timezone = dateVar.getTimezoneOffset();
 				user.emailId = $("#emailID").val() + ":" + timezone;
 				user.lastName = $("#lastName").val();
+				var phoneNumber =$("#phoneID").val();
+				user.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
 				user.userRole={
 							roleDescription :$("#userTypeID").val()
 						}
