@@ -1106,3 +1106,19 @@ function getLoanAmount(){
 		}
 	}
 }
+
+$(document).on('keydown', '#stateId' ,function(e){
+	$(this).attr('autocomplete','off');
+	if(e.which == 9){
+		$('#state-dropdown-wrapper').hide();
+		currentZipcodeLookUp = [];
+		$('#cityId').val('');
+		$('#zipcodeId').val('');
+		var stateCode = $(this).val();
+		
+		var stateId = findStateIdForStateCode(stateCode);
+		if(stateId && stateId > 0){
+			synchronousAjaxRequest("rest/states/"+stateId+"/zipCode", "GET", "json", "", zipCodeLookUpListCallBack);			
+		}
+	}
+});

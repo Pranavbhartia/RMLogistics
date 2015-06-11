@@ -925,6 +925,10 @@ function appendRecentNotesContainer(loanId, notes) {
 
 		$('#cust-detail-wrapper').append(wrapper);
 	}
+	recentNoteWrapper.perfectScrollbar({
+		suppressScrollX : true
+	})
+	recentNoteWrapper.perfectScrollbar('update');
 
 }
 
