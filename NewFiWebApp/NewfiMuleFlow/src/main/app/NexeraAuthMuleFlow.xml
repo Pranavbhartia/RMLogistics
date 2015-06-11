@@ -59,7 +59,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
-					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
+					address="https://edocs.lendingqb.com/los/webservice/authservice.asmx"
 					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
 			</when>
 			<when
