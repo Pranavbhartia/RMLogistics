@@ -31,7 +31,9 @@
 				<div class="reg-input-cont reg-email">
 					<input type="email" class="reg-input" placeholder="Email">	
 				</div>
-				
+				<div class="reg-input-cont reg-phone">
+					<input class="reg-input" placeholder="Phone number" name="phone" autocomplete="off">
+				</div>
 				<div class="reg-btn-wrapper clearfix">
 					<div class="reg-btn float-left">Get Rate Alerts</div>
 					<div class="reg-btn float-right">Get Started</div>

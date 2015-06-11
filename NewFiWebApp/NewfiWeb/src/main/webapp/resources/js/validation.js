@@ -160,3 +160,64 @@ function validateFormFeild(inputElement,divErrElement,message){
 	}
 	
 }
+
+function validateCustomerRegistration(phoneNumber){
+	
+    if($('input[name="fname"]').val()==""){
+	    	$('input[name="fname"]').next('.err-msg').html(firstNameEmptyMessage).show();
+			$(".reg-input-cont.reg-fname").addClass('err-input').focus();
+			//showErrorToastMessage("Firstname cannot be empty");
+			return false;
+	}else{
+			$('input[name="fname"]').next('.err-msg').hide();
+			$(".reg-input-cont.reg-fname").removeClass('err-input');
+	}
+    if($('input[name="lname"]').val()==""){
+	    	$('input[name="lname"]').next('.err-msg').html(lastNameEmptyMessage).show();
+	    	$(".reg-input-cont.reg-lname").addClass('err-input').focus();
+	    		//showErrorToastMessage("LastName cannot be empty");
+	    	return false;
+    }else{
+	    	$('input[name="lname"]').next('.err-msg').hide();
+	    	$(".reg-input-cont.reg-lname").removeClass('err-input');
+    }
+    if($('input[name="email"]').val()==""){
+	    	$('input[name="email"]').next('.err-msg').html(emailEmptyMessage).show();
+	    	$(".reg-input-cont.reg-email").addClass('err-input').focus();
+	    	//showErrorToastMessage("Email cannot be empty");
+	    	return false;
+    }else{
+	    	$('input[name="email"]').next('.err-msg').hide();
+	    	$(".reg-input-cont.reg-email").removeClass('err-input');
+    }
+    if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
+	    	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	        if (!regex.test($('input[name="email"]').val())) {
+	        	$('input[name="email"]').next('.err-msg').html(incorrectEmailID).show();
+	    		$(".reg-input-cont.reg-email").addClass('err-input').focus();
+	        //showErrorToastMessage("Incorrect Email");
+	    	return false;
+        }else{
+        	$('input[name="email"]').next('.err-msg').hide();
+    		$(".reg-input-cont.reg-email").removeClass('err-input');
+        }
+    }
+    if(phoneNumber==""){
+    	$('input[name="phone"]').next('.err-msg').html(phoneEmptyMessage).show();
+		$(".reg-input-cont.reg-phone").addClass('err-input').focus();
+		//showErrorToastMessage("Firstname cannot be empty");
+		return false;
+    }else{
+    	if(phoneNumber.length<10){
+    		$('input[name="phone"]').next('.err-msg').html(phoneNumberLegthErrorMessage).show();
+    		$(".reg-input-cont.reg-phone").addClass('err-input').focus();
+			//showErrorToastMessage("Firstname cannot be empty");
+			return false;
+    	}else{
+    		$('input[name="phone"]').next('.err-msg').hide();
+    		$(".reg-input-cont.reg-phone").removeClass('err-input');
+    	}
+    }
+    
+    return true;
+}

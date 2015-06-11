@@ -111,7 +111,7 @@ function getCustomerSecondaryLeftNav() {
     }
     var step2 = "";
     if(flag){
-        step2 = getCustomerSecondaryLeftNavStep(2, "complete your loan profile");
+        step2 = getCustomerSecondaryLeftNavStep(2, "complete my loan profile");
         newfiObject.applicationNavTab=step2;
     } 
     var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");
@@ -604,7 +604,7 @@ function getCompletYourApplicationHeader() {
     });
     var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete Your Loan Profile");
+    }).html("Complete My Loan Profile");
     return parent.append(header);
 }
 

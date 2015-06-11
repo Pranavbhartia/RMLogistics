@@ -1066,8 +1066,18 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         "name": "email"
     });
     regInputContainerEmail.append(regInputEmail).append(appendErrorMessage());
-    
-    
+    //TODO added phone feild
+    var regInputContainerPhone = $('<div>').attr({
+        "class": "reg-input-cont reg-phone"
+    });
+    var regInputPhone = $('<input>').attr({
+        "class": "reg-input",
+        "placeholder": "Phone number",
+        "name": "phone"
+    });
+    regInputPhone.mask("(999) 999-9999");
+    regInputContainerPhone.append(regInputPhone).append(appendErrorMessage());
+    //End
     var errorMsg = $('<div>').attr({
         "class": "reg-input-error hide errorMsg"
     });
@@ -1092,47 +1102,14 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         
     	registration.firstName = $('input[name="fname"]').val();
         registration.lastName = $('input[name="lname"]').val();
+        var phoneNumber = $('input[name="phone"]').val();
+        registration.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
         var dateVar = new Date();
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
-        if($('input[name="fname"]').val()==""){
-        	$('input[name="fname"]').next('.err-msg').html(firstNameEmptyMessage).show();
-    		$(".reg-input-cont.reg-fname").addClass('err-input').focus();
-			//showErrorToastMessage("Firstname cannot be empty");
-			return;
-    	}else{
-    		$('input[name="fname"]').next('.err-msg').hide();
-    		$(".reg-input-cont.reg-fname").removeClass('err-input');
-    	}
-        if($('input[name="lname"]').val()==""){
-        	$('input[name="lname"]').next('.err-msg').html(lastNameEmptyMessage).show();
-        	$(".reg-input-cont.reg-lname").addClass('err-input').focus();
-        		//showErrorToastMessage("LastName cannot be empty");
-        		return;
-        }else{
-        	$('input[name="lname"]').next('.err-msg').hide();
-        	$(".reg-input-cont.reg-lname").removeClass('err-input');
-        }
-        if($('input[name="email"]').val()==""){
-        	$('input[name="email"]').next('.err-msg').html(emailEmptyMessage).show();
-        	$(".reg-input-cont.reg-email").addClass('err-input').focus();
-        	//showErrorToastMessage("Email cannot be empty");
-        	return;
-        }else{
-        	$('input[name="email"]').next('.err-msg').hide();
-        	$(".reg-input-cont.reg-email").removeClass('err-input');
-        }
-        if($('input[name="email"]').val()!=null||$('input[name="email"]').val()!=""){
-        	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            if (!regex.test($('input[name="email"]').val())) {
-            	$('input[name="email"]').next('.err-msg').html(incorrectEmailID).show();
-        		$(".reg-input-cont.reg-email").addClass('err-input').focus();
-            //showErrorToastMessage("Incorrect Email");
-        	return;
-            }else{
-            	$('input[name="email"]').next('.err-msg').hide();
-        		$(".reg-input-cont.reg-email").removeClass('err-input');
-            }
+        var status=validateCustomerRegistration(registration.phoneNumber);
+        if(!status){
+        	return false;
         }
         var appUserInput = new Object();
         var refinancedetails = new Object();
@@ -1154,6 +1131,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         user.firstName = registration.firstName;
         user.lastName = registration.lastName;
         user.emailId = registration.emailId;
+        user.phoneNumber=registration.phoneNumber;
         appUserInput.emailQuote = emailQuote;
 
         loanType = {};
@@ -1227,6 +1205,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     regMainContainer.append(regInputContainerFname);
     regMainContainer.append(regInputContainerlname);
     regMainContainer.append(regInputContainerEmail);
+    regMainContainer.append(regInputContainerPhone);
     regMainContainer.append(errorMsg);
     regMainContainer.append(regContainerGetStarted);
    

@@ -72,7 +72,9 @@
 .reg-email{
 	background-image:url(../images/email.png); 
 }
-
+.reg-phone{
+	background-image:url(../images/phone-15-10.png); 
+}
 .reg-btn-cont {
 	width: 300px;
 	margin: 0 auto;
