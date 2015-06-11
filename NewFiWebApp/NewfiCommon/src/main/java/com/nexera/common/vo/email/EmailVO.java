@@ -19,6 +19,7 @@ public class EmailVO {
 	private List<EmailRecipientVO> recipients;
 	private String subject;
 	private String body;
+	private boolean disableHtml;
 	private String senderEmailId;
 	private String senderName;
 	private boolean isTemplateBased;
@@ -133,6 +134,14 @@ public class EmailVO {
 		        + ", senderName=" + senderName + ", isTemplateBased="
 		        + isTemplateBased + ", templateName=" + templateId
 		        + ", tokenMap=" + substitutionsMap + "]";
+	}
+
+	public boolean isDisableHtml() {
+		return disableHtml;
+	}
+
+	public void setDisableHtml(boolean disableHtml) {
+		this.disableHtml = disableHtml;
 	}
 
 }
