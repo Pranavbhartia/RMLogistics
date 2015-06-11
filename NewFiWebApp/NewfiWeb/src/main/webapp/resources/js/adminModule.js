@@ -182,11 +182,11 @@ function paintSettingsDropDown(elementID,label,method,href){
 }
 function completeTutorials(){
 	
-	window.location.href="#myLoan/myTeam";
+	window.location.href=newfiObject.baseUrl+"home.do#myLoan/myTeam";
 }
 function myProfile(){
 	
-	 window.location.href = "#myProfile";
+	 window.location.href = newfiObject.baseUrl+"home.do#myProfile";
 }
 /* Search for user list*/
 function getSearchResultForAdmin(searchValue)
