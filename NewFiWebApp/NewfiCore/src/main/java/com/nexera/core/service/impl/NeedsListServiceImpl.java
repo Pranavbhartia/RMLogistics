@@ -740,7 +740,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 				List<String> ccList = new ArrayList<String>();
 				ccList.add(loanVO.getUser().getUsername()
 				        + CommonConstants.SENDER_EMAIL_ID);
-
+				emailEntity.setDisableHtml(true);
 				emailEntity.setCCList(ccList);
 				try {
 					sendEmailService.sendEmailForCustomer(emailEntity,
@@ -806,6 +806,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
 			                + CommonConstants.SENDER_EMAIL_ID);
 		}
+		emailEntity.setDisableHtml(true);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject(CommonConstants.SUBJECT_UPDATE_NEEDS_LIST);
 		emailEntity.setTokenMap(substitutions);
