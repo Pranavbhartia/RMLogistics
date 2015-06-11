@@ -490,7 +490,7 @@ public class LoanServiceImpl implements LoanService {
 					} else if (checkIfUserIsSalesManager()) {
 						if (loanUser.getInternalUserDetail()
 						        .getInternaUserRoleMaster().getId() == InternalUserRolesEum.LM
-						        .getRoleId()) {
+						        .getRoleId() && loanTeam.getActive()!=null && loanTeam.getActive()) {
 							loanManagerList = loanManagerList
 							        + loanUser.getFirstName() + " "
 							        + loanUser.getLastName() + ",";
