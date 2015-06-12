@@ -962,12 +962,16 @@ function displayResponseData(data){
   // var tableRow = getAdminTeamListTableRow(data.resultObject);  
    var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + data.resultObject.id + "]");
    teamMemberRow.remove();
-   if(data.resultObject.userRole.id==1){
-       showToastMessage(customerDeleteSuccessMessage);
-   }else{
-	   showToastMessage(loanMangerDeleteSuccessMessage);  
-   }
 
+	   if(data.resultObject.userRole.id==1){
+		   showToastMessage(customerDeleteSuccessMessage);
+	   }
+	   else if(data.resultObject.userRole.id==2){
+		   showToastMessage(realtorDeleteSuccessMessage);
+	   }       
+       else{
+    	   showToastMessage(loanMangerDeleteSuccessMessage);  
+       }
   // tableRow.empty(teamMemberRow); 
 	}else{
 		showErrorToastMessage(data.error.message);
