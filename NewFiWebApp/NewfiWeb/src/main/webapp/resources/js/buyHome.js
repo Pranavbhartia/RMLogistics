@@ -388,19 +388,17 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
         success: function(data) {
         	hideOverlay();
             if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
-                var quesTxt = "Let us Contact You";
+               // var quesTxt = "Let us Contact You";
                 var container = $('<div>').attr({
                     "class": "ce-rate-main-container"
                 });
-                var quesTextCont = $('<div>').attr({
+               /* var quesTextCont = $('<div>').attr({
                     "class": "ce-rp-ques-text letUsContactCenter"
-                }).html(quesTxt);
+                }).html(quesTxt);*/
                 // alert(JSON.stringify(refinanceTeaserRate));
-                container.append(quesTextCont);
+                //container.append(quesTextCont);
                 $(parentContainer).html(container);
-                var errorText="<div class='contactInfoText'>Well, it looks like the we were unable to find a program based on the "
-                +"information you provided. <br/>But don't worry, one of our Loan Advisors will contact you shortly <br/> "
-                +"to review your options.</div>"
+                var errorText="<div class='contactInfoText'>We were unable to match you with the right program based on the information you provided. <br/>But don’t worry, if you call us at 888-316-3934 someone from the newfi team will review your options.";
 
                 var createAccBtn= $('<div>').attr({
                     "class": "rate-btn createAccButton"
