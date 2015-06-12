@@ -1293,15 +1293,17 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
 
 
 function paintFixYourRatePageCEP(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn) {
-
-	var teaserRate =  modifiedLQBJsonRes(teaserRate);
+    //set teaser rate flag
+    teaserRateValHolder.teaserRate=true;
+    paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn)
+	/*var teaserRate =  modifiedLQBJsonRes(teaserRate);
     var loanSummaryWrapper = getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     
     var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
   //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
     if(!parentContainer)
         parentContainer=$('#ce-refinance-cp');
-    $(parentContainer).append(loanSummaryWrapper).append(closingCostWrapper);
+    $(parentContainer).append(loanSummaryWrapper).append(closingCostWrapper);*/
 }
 
 function getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
@@ -1563,13 +1565,24 @@ function teaseCalculation(inputCustomerDetails){
     
 	if($('#CalInsuranceID2').val() != "") 
 	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
-    var  monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment)));  	
     
+    var  monthlyPayment;
+    var isIncludeTaxes;
+    if(teaserRateValHolder.teaserRate){
+        monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment))); 
+        isIncludeTaxes=inputCustomerDetails.isIncludeTaxes;
+    }else{
+        if(appUserDetails.loanType.loanTypeCd =="REF")
+            monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));    
+        else
+            monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
+        isIncludeTaxes=inputCustomerDetails.refinancedetails.includeTaxes;
+    }
     var investment = (InsuranceTemp + taxesTemp);
 	
     
     var totalEstMonthlyPaymentId=principalInterest;
-    if(inputCustomerDetails.isIncludeTaxes =="Yes"||inputCustomerDetails.isIncludeTaxes ==true){
+    if(isIncludeTaxes =="Yes"||isIncludeTaxes ==true){
         monthlyPayment = monthlyPayment -investment ;
         totalEstMonthlyPaymentId = (principalInterest + investment);
     }
@@ -1897,7 +1910,11 @@ function getLoanAmountRowCEP(desc, detail, id) {
     
     	if(flag){
     		amt = $('#loanAmount').val();
-    		modifiyTeaserRate(amt);
+            if(teaserRateValHolder.teaserRate){
+                modifiyTeaserRate(amt);
+            }else{
+                modifiyLockRateLoanAmt(amt);
+            }
     	}
     });
     
