@@ -547,7 +547,8 @@ public class UserProfileRest {
 		try {
 			UserVO userVO = userProfileService.findUser(userId);
 			if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER
-			        .getRoleId()) {
+			        .getRoleId()||userVO.getUserRole().getId() == UserRolesEnum.REALTOR
+					        .getRoleId()) {
 
 				userVO.setStatus(-1);
 				Integer result = userProfileService.updateUserStatus(userVO);

@@ -962,7 +962,7 @@ function displayResponseData(data){
   // var tableRow = getAdminTeamListTableRow(data.resultObject);  
    var teamMemberRow = $(".admin-newfi-team-list-tr[userID=" + data.resultObject.id + "]");
    teamMemberRow.remove();
-   if(data.resultObject.userRole.id==1){
+   if(data.resultObject.userRole.id==1||data.resultObject.userRole.id==2){
        showToastMessage(customerDeleteSuccessMessage);
    }else{
 	   showToastMessage(loanMangerDeleteSuccessMessage);  
