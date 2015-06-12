@@ -437,7 +437,9 @@ function getPurchaseClosingCostComponent(teaserRate, customerInputData){
             tax="";
      if(isNaN(getFloatValue(Insurance)))
             Insurance="";
-    
+    var bottomRow = $('<div>').attr({
+        "class" : "clearfix"
+    });
     
     var bottomLeftCol = $('<div>').attr({
         "class" : "loan-summary-lp float-left"
