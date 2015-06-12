@@ -28,6 +28,7 @@ var errorMessageForZipcode="ZipCode cannot be empty";
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
 var customerDeleteSuccessMessage="Customer deleted successfully";
+var realtorDeleteSuccessMessage="Realtor deleted successfully";
 var loanMangerDeleteSuccessMessage="Loan manger deleted successfully";
 var uploadCsvErrorMessage="Problem while uploading csv.Please try again later";
 var invalidEmailErrorMessage="Email ID is not valid";
@@ -131,4 +132,4 @@ var overlayMessage="This can take a minute,<br/> we are uploading your documents
 
 
 var noSutableProductFoundMessage="Sorry, We could not find suitable products for you!";
-var noProductMessage="We were unable to match you with the right program based on the information you provided.But don’t worry, your newfi Loan Advisor will contact you shortly to review your options.";
+var noProductMessage="We were unable to match you with the right program based on the information you provided.But donot worry, your newfi Loan Advisor will contact you shortly to review your options.";
