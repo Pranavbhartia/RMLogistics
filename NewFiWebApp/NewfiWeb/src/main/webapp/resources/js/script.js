@@ -236,7 +236,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
                 	}
                 }
             
-            } , "This can take a minute,<br/> we are looking for the best rate options available.");
+            } , overlayMessage);
            
          //showToastMessage("Please Complete Your Application first");
         }else{
