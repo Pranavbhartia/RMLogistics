@@ -5272,7 +5272,7 @@ function createLoan(appUserDetails, flag)
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
 	
 $('#overlay-loader').show();
-showOverleyMessage("This can take a minute,<br/> we are looking for the best rate options available.");
+showOverleyMessage(overlayMessage);
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",
