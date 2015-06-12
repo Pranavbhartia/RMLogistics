@@ -41,6 +41,7 @@
 <script src="${initParam.resourcesPath}/resources/js/numericInput.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/validation.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/message.js"></script>
+<script src="${initParam.resourcesPath}/resources/js/ratePage.js"></script>
 <!-- <script src="${initParam.resourcesPath}/resources/js/include/masked-input.js"></script> -->
 <div id="dialog" >
 </div>

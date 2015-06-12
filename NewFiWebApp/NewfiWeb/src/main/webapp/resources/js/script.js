@@ -1023,12 +1023,16 @@ function fixAndLoakYourRatePage(lqbData, appUserDetails) {
         }
     //alert('final appUserDetails'+JSON.stringify(appUserDetails));
         //saveAndUpdateLoanAppForm(appUserDetails);
+
+        teaserRateValHolder.teaserRate=false;
+
+        paintRatePage(lqbData, appUserDetails,$('#center-panel-cont'))
         
-        var lqbData =  modifiedLQBJsonResponse(lqbData);
+       /* var lqbData =  modifiedLQBJsonResponse(lqbData);
         //alert('script lqbdata'+JSON.stringify(lqbData));
         var loanSummaryWrapper = getLoanSummaryWrapper(lqbData, appUserDetails);
         var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(lqbData));
-        $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
+        $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);*/
        //$('#center-panel-cont').append(loanSummaryWrapper);
     }
     /*
@@ -1715,7 +1719,11 @@ function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
     	
     	if(flag){
 	    	amt = $('#loanAmount').val();
-	    	modifiyLockRateLoanAmt(amt);
+            if(teaserRateValHolder.teaserRate){
+                modifiyTeaserRate(amt);
+            }else{
+                modifiyLockRateLoanAmt(amt);
+            }
     	}
     });
     
@@ -1776,7 +1784,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     	"class" : "loan-summary-sub-col-detail",
     	"id":id2
     }).bind('keyup',{"appUserDetails":appUserDetails},function(e){
-    	
+    	appUserDetails=e.data.appUserDetails;
     	$(this).maskMoney({
 			thousands:',',
 			decimal:'.',
@@ -1807,16 +1815,37 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     	 InsuranceTemp = parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
     	
     	var  monthlyPayment = 0;
-    	if(appUserDetails.loanType.loanTypeCd =="REF")
-          monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));  	
-    	else
-          monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
+        var loanType;
+        var includeTaxes;
+        if(teaserRateValHolder.teaserRate){
+            loanType=appUserDetails.loanType;
+            includeTaxes=appUserDetails.isIncludeTaxes
+        }else{
+            loanType=appUserDetails.loanType.loanTypeCd;
+            includeTaxes=appUserDetails.refinancedetails.includeTaxes
+        }
+
+        
+    	if(loanType =="REF"){
+            if(teaserRateValHolder.teaserRate){
+                monthlyPayment = parseFloat(removedDoller(removedComma(appUserDetails.currentMortgagePayment)));
+            }else{
+                monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));      
+            }
+          
+    	}else{
+            if(teaserRateValHolder.teaserRate){
+                monthlyPayment  = 0;
+            }else{
+                monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
+            }
+        }
         
     	
     	var investment = (InsuranceTemp + taxesTemp);
     	
     	
-    	if(appUserDetails.refinancedetails.includeTaxes ==true){
+    	if(includeTaxes ==true || includeTaxes == "Yes"){
     		
     		monthlyPayment = monthlyPayment - investment ;  	
         
@@ -1870,8 +1899,8 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
     
     col2.append(inputBox);
     
-    if(desc =="Insurance")
-    container.append(col1).append(col2.append(saveBtn));
+    if(desc =="Insurance" && !teaserRateValHolder.teaserRate)
+        container.append(col1).append(col2.append(saveBtn));
     else
     	container.append(col1).append(col2);
     
@@ -2880,10 +2909,10 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 	    	amt = $('#firstInput').val();
 	    	amt1 = $('#secondInput').val();
 	      
-	    	if(path==="CEP")
-	    	modifiyTeaserRate(amt,amt1);
+	    	if(teaserRateValHolder.teaserRate)
+	    	  modifiyTeaserRate(amt,amt1);
 	    	else
-	    	modifiyLockRateLoanAmt(amt,amt1);
+	    	  modifiyLockRateLoanAmt(amt,amt1);
     	}
     	
     });
