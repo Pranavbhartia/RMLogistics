@@ -848,7 +848,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		EmailVO emailEntity = new EmailVO();
 		emailEntity.setSenderEmailId(loan.getUser().getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
-		emailEntity.setSenderName("Newfi System");
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 		emailEntity.setSubject("Needs list has been updated");
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-",

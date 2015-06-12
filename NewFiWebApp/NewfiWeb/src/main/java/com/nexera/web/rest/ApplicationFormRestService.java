@@ -170,6 +170,116 @@ public class ApplicationFormRestService {
 		return new Gson().toJson(responseVO);
 	}
 
+	@RequestMapping(value = "/fetchLockRateData/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getLockRateData(
+	        @PathVariable int loanID) {
+		LOG.debug("Inside method getLockRateData for loan " + loanID);
+		String status = null;
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		if (loanVO != null) {
+			Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
+			LoanAppFormVO loaAppFormVO = loanAppFormService
+			        .getLoanAppFormByLoan(loan);
+			if (loaAppFormVO != null) {
+				if (loanVO.getLqbFileId() != null) {
+					LOG.debug("Getting token for loan manager");
+					String sTicket = null;
+					try {
+
+						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+					} catch (Exception e) {
+						LOG.error("Exception caught while generating ticket "
+						        + e.getMessage());
+						status = "Unable to fetch authentication ticket, please try after sometime";
+						sTicket = null;
+					}
+					if (sTicket != null) {
+						LOG.debug("Token retrieved for loan manager" + sTicket);
+						Map<String, String> hashmap = new HashMap<String, String>();
+						org.json.JSONObject loadOperationObject = nexeraUtility
+						        .createLoadJsonObject(hashmap,
+						                WebServiceOperations.OP_NAME_LOAN_LOAD,
+						                loan.getLqbFileId(), 0, null);
+						if (loadOperationObject != null) {
+							org.json.JSONObject loadJSONResponse = lqbInvoker
+							        .invokeLqbService(loadOperationObject
+							                .toString());
+							if (loadJSONResponse != null) {
+								if (!loadJSONResponse
+								        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+									String loadResponse = loadJSONResponse
+									        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+									loadResponse = nexeraUtility
+									        .removeBackSlashDelimiter(loadResponse);
+									boolean rateLocked = false;
+									String rateLockData = null;
+									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
+									if (loadResponseList != null) {
+										for (LoadResponseVO loadResponseVO : loadResponseList) {
+											String fieldId = loadResponseVO
+											        .getFieldId();
+											if (fieldId
+											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_STATUS)) {
+												String rateLockStatus = loadResponseVO
+												        .getFieldValue();
+												if (rateLockStatus
+												        .equalsIgnoreCase(CoreCommonConstants.RATE_LOCKED)) {
+													rateLocked = true;
+												}
+											}
+
+											if (fieldId
+											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_DATA)) {
+												rateLockData = loadResponseVO
+												        .getFieldValue();
+											}
+
+										}
+
+										if (rateLocked) {
+											if (rateLockData != null) {
+												// TODO SAX Parsing to retrieve
+												// the locked rate and show it
+												// on UI
+											} else {
+												LOG.error("Unable to find rate lock data for this lqb id "
+												        + loanVO.getLqbFileId());
+												status = "Unable to fetch the lock rate data, please try after sometime";
+											}
+										} else {
+											LOG.debug("Rate not locked in LQB yet, hence not fetching the lock data ");
+											status = "Rates not yet locked in LQB";
+										}
+									}
+								}
+							}
+						} else {
+							LOG.error("Unable to create request object ");
+							status = "Unable to connect to lqb, please try after some time";
+						}
+
+					} else {
+						LOG.error("Unable to get token for this loan " + loanID);
+						status = "Unable to authenticate the user right now, please try again after sometime";
+					}
+				} else {
+					LOG.error("This loan doesnt have an LQB ID");
+					status = "Please complete your application first ";
+				}
+			} else {
+				LOG.error("Loan Application info not found for this loanID "
+				        + loanID);
+				status = "Unable to fetch loan information";
+			}
+
+		} else {
+			LOG.error("Loan not found for this loanID " + loanID);
+			status = "Unable to fetch loan information";
+		}
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(status);
+		return responseVO;
+	}
+
 	@RequestMapping(value = "/pullTrimergeScore/{loanID}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getTrimergeScore(
 	        @PathVariable int loanID) {
@@ -216,20 +326,7 @@ public class ApplicationFormRestService {
 									        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
 									loadResponse = nexeraUtility
 									        .removeBackSlashDelimiter(loadResponse);
-									if (loadResponse
-									        .contains(CoreCommonConstants.SOAP_XML_RAW_CREDIT_REPORT_FIELD)) {
-										reportId = loadResponse;
-										reportId = reportId
-										        .substring(reportId
-										                .indexOf(CoreCommonConstants.SOAP_XML_REPORT_ID_FIELD)
-										                + CoreCommonConstants.SOAP_XML_REPORT_ID_FIELD
-										                        .length() + 2);
-										reportId = reportId.substring(0,
-										        reportId.indexOf(" ") - 1);
-										if (!reportId.matches(digitRegex)) {
-											reportId = null;
-										}
-									}
+
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 									if (loadResponseList != null) {
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
@@ -237,11 +334,17 @@ public class ApplicationFormRestService {
 											        .getFieldId();
 											if (fieldId
 											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_USER_SSN_NUMBER)) {
-												userSSN = loadResponseVO
-												        .getFieldValue();
-												if (userSSN.contains("-")) {
-													break;
+												if (loadResponseVO
+												        .getFieldValue()
+												        .contains("-")) {
+													userSSN = loadResponseVO
+													        .getFieldValue();
 												}
+											}
+											if (fieldId
+											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_CREDIT_REPORT_FIELD)) {
+												reportId = loadResponseVO
+												        .getFieldValue();
 											}
 										}
 									}

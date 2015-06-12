@@ -82,7 +82,7 @@ public interface CommonConstants {
 	/*
 	 * SendGrid constants
 	 */
-	public static final String SENDER_NAME = "NewFi Team";
+	public static final String SENDER_NAME = "Team newfi";
 
 	public static final String SENDER_EMAIL_ID = "@loan.newfi.com";
 

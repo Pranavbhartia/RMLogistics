@@ -42,11 +42,11 @@ public interface CoreCommonConstants {
 
 	public static String SOAP_XML_USER_SSN_NUMBER = "aBSsn";
 
-	public static String SOAP_XML_RAW_CREDIT_REPORT_FIELD = "aCreditReportRawXml";
-
-	public static String SOAP_XML_REPORT_ID_FIELD = "report_id";
+	public static String SOAP_XML_CREDIT_REPORT_FIELD = "aCreditReportId";
 
 	public static String SOAP_XML_RATE_LOCK_STATUS = "sRateLockStatusT";
+
+	public static String SOAP_XML_RATE_LOCK_DATA = "sPmlCertXmlContent";
 
 	public static String SOAP_XML_RATE_LOCK_EXPIRED_DATE = "sRLckdExpiredD";
 

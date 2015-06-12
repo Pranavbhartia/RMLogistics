@@ -5219,6 +5219,8 @@ input.calc-input {
 .getting-to-know-hdr-txt {
     font-size: 16px;
     font-family: 'opensanssemibold';
+    padding: 0 0 0 79px;
+    white-space: nowrap;
 }
 
 .getting-to-know-btn {

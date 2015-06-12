@@ -1348,6 +1348,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        + userVOObj.getUsername());
 			this.crateWorkflowItems(userVOObj.getDefaultLoanId());
 			sendEmailToCustomer(newUser);
+			//
 			return userVOObj;
 		} catch (Exception e) {
 

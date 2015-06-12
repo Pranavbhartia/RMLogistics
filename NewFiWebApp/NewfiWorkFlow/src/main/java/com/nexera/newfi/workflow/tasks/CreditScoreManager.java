@@ -108,7 +108,7 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 
 				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
 				        + CommonConstants.SENDER_EMAIL_ID);
-				emailEntity.setSenderName("Newfi System");
+				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 				if (subject == null) {
 					emailEntity.setSubject("Nexera Newfi Portal");
 				} else {
