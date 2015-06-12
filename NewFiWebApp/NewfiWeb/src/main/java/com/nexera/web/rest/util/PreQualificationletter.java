@@ -23,9 +23,16 @@ import org.springframework.stereotype.Component;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -104,7 +111,7 @@ public class PreQualificationletter {
 			        + "newfi_logo_big.png";
 			File file = new File(absoluteFilePath);
 
-			PdfWriter.getInstance(document, outputStream);
+			PdfWriter writer = PdfWriter.getInstance(document, outputStream);
 
 			// Inserting Image in PDF
 			Image image = Image.getInstance(file.getAbsolutePath());
@@ -112,7 +119,10 @@ public class PreQualificationletter {
 			// Open Declaration void com.itextpdf.text.Image.scaleAbsolute(float
 			// newWidth, float newHeight)
 			image.scaleAbsolute(120f, 37f);// image width,height
-
+			Rectangle rect = new Rectangle(30, 30, 550, 800);
+			writer.setBoxSize("art", rect);
+			HeaderFooterPageEvent event = new PreQualificationletter.HeaderFooterPageEvent();
+			writer.setPageEvent(event);
 			// Now Insert Every Thing Into PDF Document
 			document.open();// PDF document opened........
 
@@ -285,6 +295,37 @@ public class PreQualificationletter {
 
 		}
 
+	}
+
+	static class HeaderFooterPageEvent extends PdfPageEventHelper {
+		public void onStartPage(PdfWriter writer, Document document) {
+
+		}
+
+		public void onEndPage(PdfWriter writer, Document document) {
+			Rectangle page = document.getPageSize();
+			PdfPTable foot = new PdfPTable(1);
+			PdfPCell footCell = new PdfPCell(
+			        new Phrase(
+			                "2200 Powell Street, Suite 340 | Emeryville, CA 94608 | 888-316-3934",
+			                FontFactory.getFont(FontFactory.HELVETICA, 6,
+			                        Font.BOLDITALIC)));
+			footCell.setBorder(0);
+			footCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			foot.addCell(footCell);
+			footCell = new PdfPCell(new Phrase(
+			        "newfi is a dba of Nexera Holding LLC | NMLS ID 1231237",
+			        FontFactory.getFont(FontFactory.HELVETICA, 6,
+			                Font.BOLDITALIC)));
+
+			footCell.setBorder(0);
+			footCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			foot.addCell(footCell);
+			foot.setTotalWidth(page.getWidth());
+			foot.writeSelectedRows(0, -1, document.leftMargin() - 30,
+			        document.bottomMargin(), writer.getDirectContent());
+
+		}
 	}
 
 	public static String dollerFormatedAmount(String amount) {
