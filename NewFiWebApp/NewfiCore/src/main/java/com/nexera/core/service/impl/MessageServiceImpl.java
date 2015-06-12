@@ -194,6 +194,9 @@ public class MessageServiceImpl implements MessageService {
 
 				emailVO.setSubject(CommonConstants.NOTE_SUBJECT + " "
 				        + user.getFirstName());
+
+				//UTSAV :Disabling html for needs list
+				emailVO.setDisableHtml(true);
 			}
 		}
 		// Set reply to as the messageId of mongomessageId
