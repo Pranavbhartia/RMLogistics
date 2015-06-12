@@ -770,16 +770,10 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
     
     for(var i=0;i<users.length;i++){
     	 	var tableRow = getAdminTeamListTableRow(users[i]);
-    	 	
-		    if(users[i].internalUserDetail){	    	
-		    		//check for the current user if the user is a sales manager admin
-		    		if(!newfiObject.user.internalUserDetail){			    		
-			    			container.append(tableRow);
-		    		}		    				    		    	
-			    }else{
-			    	  container.append(tableRow);
-			    }	 
-	
+            if(users[i].id!=newfiObject.user.id){
+            	container.append(tableRow);
+            }
+		    
 	}
     if(searchUser){
     	wrapper.append(container);
