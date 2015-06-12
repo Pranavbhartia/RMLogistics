@@ -770,10 +770,12 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
     
     for(var i=0;i<users.length;i++){
     	 	var tableRow = getAdminTeamListTableRow(users[i]);
-		    if(users[i].internalUserDetail!=undefined){
-		    	if(users[i].internalUserDetail.internalUserRoleMasterVO.roleDescription!=newfi.user.internalUserDetail.internalUserRoleMasterVO.roleDescription){   	    
-		    	      container.append(tableRow);
-		    	}
+    	 	
+		    if(users[i].internalUserDetail){	    	
+		    		//check for the current user if the user is a sales manager admin
+		    		if(!newfiObject.user.internalUserDetail){			    		
+			    			container.append(tableRow);
+		    		}		    				    		    	
 			    }else{
 			    	  container.append(tableRow);
 			    }	 
@@ -918,15 +920,18 @@ function getAdminTeamListTableRow(user) {
 			e.stopImmediatePropagation();
 	    	RemoveUserFromUserListAdmin(messageToDeleteUser,userID);
 		});
-		if(user.userRole.id==3){
-			if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
-			trCol5.append(userDelIcn);}
-		}
-		if(user.userRole.id==1){
-			if(user.status==1){
+		//TODO providing access for delete to sm apart from himself 12 06 2015
+/*		if(user.userRole.id==3||user.userRole.id==1||user.userRole.id==2){
+				if(loanManagerID==user.internalUserDetail.internalUserRoleMasterVO.id){
 				trCol5.append(userDelIcn);
+			}else{
+				if(user.status==1){
+					trCol5.append(userDelIcn);
+				}
 			}
-			
+		}*/
+		if(user.userRole.id!=4){
+			trCol5.append(userDelIcn);
 		}
 		
 		return tableRow.append(trCol1).append(trCol2).append(trCol3).append(trCol4)
