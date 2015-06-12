@@ -915,7 +915,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         delete sessionStorage.refinaceData;
        
         
-        showOverleyMessage("This can take a minute,<br/> we are looking for the best rate options available.");
+        showOverleyMessage(overlayMessage);
         showOverlay();
         $.ajax({
             url: "rest/calculator/findteaseratevalue",

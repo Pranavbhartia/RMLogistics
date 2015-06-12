@@ -601,7 +601,7 @@ function createDropZone(needID) {
 						$('#overlay-loader').hide();
 					},
 					addedfile : function() {
-						showOverleyMessage(overlayMessage);
+						showOverleyMessage(overlayWaitMessage);
 						$('#file-upload-icn').addClass('file-upload-loading');
 						$('#overlay-loader').show();
 					}
