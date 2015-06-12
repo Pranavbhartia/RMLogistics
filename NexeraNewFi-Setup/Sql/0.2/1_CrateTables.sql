@@ -657,7 +657,7 @@ CREATE TABLE `internaluserdetails` (
 
 LOCK TABLES `internaluserdetails` WRITE;
 /*!40000 ALTER TABLE `internaluserdetails` DISABLE KEYS */;
-INSERT INTO `internaluserdetails` VALUES (1,2,1,2,'fsJV304Ey6cT6NOn4BuByg==','ycmeuaJoQyt7BgnalnWhsg==',NULL,NULL,NULL);
+INSERT INTO `internaluserdetails` VALUES (1,2,1,2,'rPwDZvt2/LHBtvTpSYSboA==','MCqlxTs3aNvwaaB1ScaU0Q==',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `internaluserdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1913,7 +1913,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'System','Admin','support@loan.newfi.com','support+1','1234',1,4,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,NULL,1,'2015-04-03 10:37:03',NULL,NULL,NULL,NULL,NULL,NULL,1),(2,'Pat','McCauley','pat@raremile.com','pat+2','1234',1,3,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,1,NULL,'2015-04-03 10:41:41',NULL,NULL,NULL,NULL,NULL,NULL,1);
+INSERT INTO `user` VALUES (1,'System','Admin','support@loan.newfi.com','support+1','1234',1,4,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfi/User/complete7b1ef03f90.jpg',NULL,NULL,NULL,1,'2015-04-03 10:37:03',NULL,NULL,NULL,NULL,NULL,NULL,1),(2,'Pat','McCauley','pat@newfi.com','pat','newfi2015X',1,3,NULL,'https://s3.amazonaws.com/akiajy6bugae34432eea-newfiprod/User/complete84e48998-a7e9-4164-8bb0-c4550b.jpg',NULL,NULL,1,NULL,'2015-04-03 10:41:41',NULL,NULL,NULL,NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
