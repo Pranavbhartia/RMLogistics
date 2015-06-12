@@ -10,6 +10,7 @@
 <link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/styles-common.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/customer-application.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
 <script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
@@ -29,10 +30,10 @@
 		<div class="container-row row clearfix">
 			<div id="reg-main-container" class="reg-main-container">
 				
-				<div class="reg-display-title">Get Started Now</div>
+				<div class="reg-display-title">Get Started</div>
 				<div class="reg-display-title-subtxt">Create a Newfi account now to access our powerful lending tool and take control on your terms.</div>
 				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Register as</div>
+					<div class="reg-row-lc float-left"></div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-select reg-input-cont">
 							<input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
@@ -45,21 +46,29 @@
 				</div>
 				
 				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Your Name</div>
+					<div class="reg-row-lc float-left"></div>
 					<div class="reg-row-rc float-left clearfix">
 						<div class="reg-input-cont reg-fname float-left">
 							<input class="reg-input" placeholder="First Name" id="firstName">
 							<div class="err-msg hide"></div>
 						</div>
+						<!-- <div class="reg-input-cont reg-lname float-left">
+							<input class="reg-input" placeholder="Last Name" id="lastName">
+							<div class="err-msg hide"></div>
+						</div> -->
+					</div>
+				</div>
+				<div class="reg-input-row clearfix">
+					<div class="reg-row-lc float-left"></div>
+					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-lname float-left">
 							<input class="reg-input" placeholder="Last Name" id="lastName">
 							<div class="err-msg hide"></div>
 						</div>
 					</div>
 				</div>
-				
 				<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Your email id</div>
+					<div class="reg-row-lc float-left"></div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-email">
 							<input type="email" class="reg-input" placeholder="Email" id="emailID">
@@ -69,7 +78,7 @@
 				</div>
 				
 					<div class="reg-input-row clearfix">
-					<div class="reg-row-lc float-left">Your Phone Number</div>
+					<div class="reg-row-lc float-left"></div>
 					<div class="reg-row-rc float-left">
 						<div class="reg-input-cont reg-phone">
 					          <input class="reg-input" placeholder="Phone number" name="phone" id="phoneID">
@@ -85,7 +94,7 @@
           </div>
 				
 				<div class="reg-btn-wrapper clearfix">
-					<div class="reg-btn float-left" id="submitID">Submit</div>
+					<div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">Submit</div>
 				</div>
 							
 			</div>			

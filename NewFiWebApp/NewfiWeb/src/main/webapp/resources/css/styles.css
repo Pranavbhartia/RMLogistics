@@ -5019,16 +5019,17 @@ input.calc-input {
 
 .left-user-container {
 	width: 25%;
-	height: 300px;
+	height: 446px;
 	border-right: 1px solid #d3d3d3;
 	background: #428bca;
 	color: #fff;
 	text-align: center;
-	padding-top: 25px;
+	padding-top: 90px;
 }
 
 .new-user-container{
-	width: 75%;
+	width: 55%;
+	margin: 0 auto;
 	padding-top: 20px;
 }
 .photo-img-url{
