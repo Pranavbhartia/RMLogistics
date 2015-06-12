@@ -1988,9 +1988,9 @@ function getClosingCostSummaryContainer(valueSet) {
     });
     if(valueSet.dummyData){
         if(typeof(newfiObject)!=='undefined')
-            parentWrapper.html(getHeaderText("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you"));
+            parentWrapper.html(getHeaderText(noProductMessage));
         else{
-            parentWrapper.html(getHeaderText("Sorry, We could not find suitable products for you!"));
+            parentWrapper.html(getHeaderText(noSutableProductFoundMessage));
         }
     }else{
         var header = getClosingCostHeader("Closing Cost Summary");
