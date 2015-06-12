@@ -1569,13 +1569,16 @@ function teaseCalculation(inputCustomerDetails){
     var  monthlyPayment;
     var isIncludeTaxes;
     if(teaserRateValHolder.teaserRate){
-        monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment))); 
+        if(inputCustomerDetails.loanType=="REF")
+            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment))); 
+        else
+            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.rentPerMonth))); 
         isIncludeTaxes=inputCustomerDetails.isIncludeTaxes;
     }else{
-        if(appUserDetails.loanType.loanTypeCd =="REF")
-            monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.refinancedetails.currentMortgagePayment)));    
+        if(inputCustomerDetails.loanType.loanTypeCd =="REF")
+            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.refinancedetails.currentMortgagePayment)));    
         else
-            monthlyPayment  = parseFloat(removedDoller(removedComma(appUserDetails.monthlyRent)));
+            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.monthlyRent)));
         isIncludeTaxes=inputCustomerDetails.refinancedetails.includeTaxes;
     }
     var investment = (InsuranceTemp + taxesTemp);
