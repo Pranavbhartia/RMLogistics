@@ -118,7 +118,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 				        objectMap);
 				emailEntity.setSenderEmailId(loanVO.getUser().getUsername()
 				        + CommonConstants.SENDER_EMAIL_ID);
-				emailEntity.setSenderName("Newfi System");
+				emailEntity.setSenderName(CommonConstants.SENDER_NAME);
 				if (subject == null) {
 					emailEntity.setSubject(CommonConstants.SUBJECT_DEFAULT);
 				} else {
