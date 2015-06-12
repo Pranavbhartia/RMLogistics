@@ -411,20 +411,28 @@ function paintGettingToKnowPage() {
     
     var pgwSlideshow = $('.pgwSlideshow').pgwSlideshow();
     
-    pgwSlideshow.reload({
-    	beforeSlide : function() {
-			var currentSlide = pgwSlideshow.getCurrentSlide();
-			var totalSlide = pgwSlideshow.getSlideCount();
-			if(currentSlide >= totalSlide){
-				console.log("Last Slide");
-				redirectToGettingToKnowLastPage();
-			}
-			console.log("currentSlide : " +currentSlide + ",totalSlide : "+totalSlide);
+    /*pgwSlideshow.reload({
+	beforeSlide : function() {
+		var currentSlide = pgwSlideshow.getCurrentSlide();
+		var totalSlide = pgwSlideshow.getSlideCount();
+		if(currentSlide >= totalSlide){
+			console.log("Last Slide");
+			redirectToGettingToKnowLastPage();
 		}
-    });
+		console.log("currentSlide : " +currentSlide + ",totalSlide : "+totalSlide);
+	}
+   });*/
     
     nextBtn.click(function(){
-    	pgwSlideshow.nextSlide();
+    	
+    	var currentSlide = pgwSlideshow.getCurrentSlide();
+		var totalSlide = pgwSlideshow.getSlideCount();
+		if(currentSlide == totalSlide){
+			console.log("Last Slide");
+			redirectToGettingToKnowLastPage();
+		}
+		pgwSlideshow.nextSlide();
+    	
     });
     
     prevBtn.click(function(){
@@ -446,7 +454,7 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont1btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("I need to view the tutorial again")
+	}).html("Next Steps")
 	.click(function(){
 		paintGettingToKnowPage();
 	});
@@ -461,15 +469,15 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Get started").on('click',function(){
-		
-		removedKnwoNewFi = true;
-		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
-        newfiObject.applicationKnowNewfi=undefined;
-		
+	}).html("Finish Loan Profile").on('click',function(){
+
+			removedKnwoNewFi = true;
+			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
+	        newfiObject.applicationKnowNewfi=undefined;
+
 	});
 	
-	var cont2btn2 = $('<div>').attr({
+/*	var cont2btn2 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
 	}).html("View more rate options").on('click',function(){
 		
@@ -485,7 +493,7 @@ function redirectToGettingToKnowLastPage() {
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-loan-progress");
 		newfiObject.applicationKnowNewfi=undefined;
-	});
+	});*/
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
@@ -495,14 +503,19 @@ function redirectToGettingToKnowLastPage() {
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
 		newfiObject.applicationKnowNewfi=undefined;
 	});
-	
+/*	
 	if(flagToShowCompletPro){
 	cont2.append(cont2btn1).append(cont2btn2).append(cont2btn3).append(cont2btn4);
 	}else{
 		cont2.append(cont2btn2).append(cont2btn3).append(cont2btn4);
-	}
-	
+	}*/
+	if(flagToShowCompletPro){
+		cont2.append(cont2btn1).append(cont2btn4);
+		}else{
+			cont2.append(cont2btn4);
+		}
 	parentContainer.append(cont1).append(cont2);
+	
 }
 
 /*
