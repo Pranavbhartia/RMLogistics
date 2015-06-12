@@ -130,4 +130,5 @@ var completeYourLoanProfile="Please complete your Loan Profile";
 var overlayMessage="This can take a minute,<br/> we are uploading your documents to our secure storage folder.";
 
 
+noSutableProductFoundMessage="Sorry, We could not find suitable products for you!";
 var noProductMessage="We were unable to match you with the right program based on the information you provided.But don’t worry, your newfi Loan Advisor will contact you shortly to review your options.";
