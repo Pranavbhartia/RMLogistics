@@ -127,7 +127,7 @@
 			<field id="aCCity" />
 			<field id="aCState" />
 			<field id="aCZip" />
-			<field id="aCreditReportRawXml" />
+			<field id="aCreditReportId" />
 			<collection id="aLiaCollection" />
 		</applicant>
 		<collection id="sCondDataSet" />
