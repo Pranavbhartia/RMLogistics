@@ -46,6 +46,8 @@ public interface CoreCommonConstants {
 
 	public static String SOAP_XML_RATE_LOCK_STATUS = "sRateLockStatusT";
 
+	public static String SOAP_XML_RATE_LOCK_DATA = "sPmlCertXmlContent";
+
 	public static String SOAP_XML_RATE_LOCK_EXPIRED_DATE = "sRLckdExpiredD";
 
 	public static String SOAP_XML_LOCKED_RATE = "sBrokerLockOriginatorPriceNoteIR";

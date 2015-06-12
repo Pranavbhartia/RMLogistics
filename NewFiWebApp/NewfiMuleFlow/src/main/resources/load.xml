@@ -105,6 +105,9 @@
 		<field id="sArchivedDTime" />
 		<field id="sStatusD" />
 		<field id="sStatusD" />
+		<field id="sRLckdExpiredD" />
+		<field id="sRateLockStatusT" />
+		<field id="sPmlCertXmlContent" />
 		<applicant>
 			<field id="aBFirstNm" />
 			<field id="aBLastNm" />
