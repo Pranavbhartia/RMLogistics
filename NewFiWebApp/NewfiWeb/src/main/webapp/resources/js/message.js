@@ -128,7 +128,8 @@ var notificationSceduled="Notification Scheduled";
 
 //Message in uploadFile.js
 var completeYourLoanProfile="Please complete your Loan Profile";
-var overlayMessage="Hang in there for just a quick minute,we want to give you the best options available";
+//var overlayMessage="Hang in there for just a quick minute,we want to give you the best options available";
+var overlayMessage="newfi is working on it";
 var overlayWaitMessage="This can take a minute,<br/> we are uploading your documents to our secure storage folder.";
 
 var noSutableProductFoundMessage="Sorry, We could not find suitable products for you!";
