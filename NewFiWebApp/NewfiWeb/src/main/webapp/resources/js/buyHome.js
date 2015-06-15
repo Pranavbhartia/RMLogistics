@@ -5,7 +5,7 @@ var purchaseDetails = new Object();
 buyHomeTeaserRate.purchaseDetails = purchaseDetails;
 //buyHomeTeaserRate.purchaseDetails=purchaseDetails;
 var buyHomeitemsList = ["Loan Purpose", "Loan Amount", "Home Information",
-    "Zip Code", "Your Rates"
+    "Zip Code", "Programs and Rates", "Create Account"
 ];
 
 function getBuyHomeLeftPanel() {
@@ -778,7 +778,7 @@ function homeProgressBaar(num) {
         $('#homeStepNoId_' + i).html(i);
     }
     if(typeof(newfiObject)==='undefined')
-            window.location.hash="#CE-"+(num-1);
+        saveState(undefined, undefined, undefined,(num-1));
     sessionStorage.refinaceData = JSON.stringify(buyHomeTeaserRate);
 }
 

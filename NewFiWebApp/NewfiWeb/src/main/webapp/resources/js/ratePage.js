@@ -44,9 +44,12 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails){
         //NEXNF-434
         //var rateBtn2="";
         if(!hideCreateAccountBtn){
+            var createAccBtnTxt="Get Pre-Qualified Now!";
+            if(inputCustomerDetails.loanType=="REF")
+                createAccBtnTxt="Start My Loan Now!";
             rateBtn1= $('<div>').attr({
                 "class": "rate-btn"
-            }).html("Get Pre-Qualified Now!").on('click', function() {
+            }).html(createAccBtnTxt).on('click', function() {
                 
                 
                 //inputCustomerDetails.propertyTaxesPaid = $('#calTaxID2').val();
@@ -190,7 +193,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
         lcRow4 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Current Loan Amout",showValue(currentMortgageBalance), "Cashout",showValue(cashTakeOut),true,path);   
     
     var lcRow5 = getLoanSummaryRow("APR", rateVO.APR +" %", "aprid");
-    leftCol.append(lcRow1).append(lcRow2).append(lcRow3).append(lcRow4).append(lcRow5);
+    leftCol.append(lcRow1).append(lcRow2).append(lcRow4).append(lcRow3).append(lcRow5);
     
     var rightCol = $('<div>').attr({
         "class": "loan-summary-rp float-right"
@@ -294,7 +297,7 @@ function getRefinanceClosingCostComponent(teaserRate, customerInputData){
         "class" : "loan-summary-rp float-left"
     });
     
-    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payments ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
+    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payment ", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
 
     var hgLow="";
@@ -452,7 +455,7 @@ function getPurchaseClosingCostComponent(teaserRate, customerInputData){
         "class" : "loan-summary-rp float-left"
     });
     
-    var bottomRcRow = getLoanSummaryLastRow("Total Est.<br/>Monthly Payments ", showValue(rateVO.payment) ,"totalEstMonthlyPaymentId");
+    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Monthly Payment", showValue(rateVO.payment) ,"totalEstMonthlyPaymentId");
     bottomRightCol.append(bottomRcRow);
     
     return bottomRow.append(bottomLeftCol).append(bottomRightCol);
