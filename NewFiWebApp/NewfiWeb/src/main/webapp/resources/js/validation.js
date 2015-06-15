@@ -216,7 +216,7 @@ function validateCustomerRegistration(phoneNumber){
     		$(".reg-input-cont.reg-email").removeClass('err-input');
         }
     }
-    if(phoneNumber==""){
+   /* if(phoneNumber==""){
     	$('input[name="phone"]').next('.err-msg').html(phoneEmptyMessage).show();
 		$(".reg-input-cont.reg-phone").addClass('err-input').focus();
 		//showErrorToastMessage("Firstname cannot be empty");
@@ -231,7 +231,7 @@ function validateCustomerRegistration(phoneNumber){
     		$('input[name="phone"]').next('.err-msg').hide();
     		$(".reg-input-cont.reg-phone").removeClass('err-input');
     	}
-    }
+    }*/
     
     return true;
 }

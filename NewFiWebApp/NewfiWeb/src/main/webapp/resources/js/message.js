@@ -51,7 +51,7 @@ var passwordEmptyMessage="Password field cannot be empty";
 //Messages in customer-application.js
 var yesyNoErrorMessage="Please answer all questions";
 var stateErrorMessage="Please select your state";
-var gonernamentQuestionErrorMessage="Please answer all questions";
+//var gonernamentQuestionErrorMessage="Please answer all questions";
 var selectQuestionErrorMessage="Please select any one that applies";
 var ageErrorMessage="You must be at least 18 years of age.";
 var applicationFormnotEditable="Application form not editable";
@@ -134,3 +134,4 @@ var overlayWaitMessage="This can take a minute,<br/> we are uploading your docum
 
 var noSutableProductFoundMessage="Sorry, We could not find suitable products for you!";
 var noProductMessage="We were unable to match you with the right program based on the information you provided.But donot worry, your newfi Loan Advisor will contact you shortly to review your options.";
+var emailIDErrorMessageFromServer="We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLogin()' style='color: #2F6BF7'>click here</a>";
