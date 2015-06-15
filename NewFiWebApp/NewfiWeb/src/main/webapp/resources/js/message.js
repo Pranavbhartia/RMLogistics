@@ -49,9 +49,9 @@ var zipCodeEmptyMessage="Zipcode can not be empty";
 var passwordEmptyMessage="Password field cannot be empty";
 
 //Messages in customer-application.js
-var yesyNoErrorMessage="Please give answers of the questions";
+var yesyNoErrorMessage="Please answer all questions";
 var stateErrorMessage="Please select your state";
-var gonernamentQuestionErrorMessage="Please give answers of all the questions";
+var gonernamentQuestionErrorMessage="Please answer all questions";
 var selectQuestionErrorMessage="Please select any one that applies";
 var ageErrorMessage="You must be at least 18 years of age.";
 var applicationFormnotEditable="Application form not editable";
