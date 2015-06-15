@@ -947,10 +947,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
 	                // alert(JSON.stringify(refinanceTeaserRate));
 	               // container.append(quesTextCont);
 	                $(parentContainer).html(container);
-	                var errorText="<div class='contactInfoText'>We were unable to match you with the right program based on the information you provided. <br/>But donot worry, if you call us at 888-316-3934 someone from the newfi team will review your options.";
-                    if(typeof(newfiObject)==='undefined'){
-                        errorText="<div class='contactInfoText'>We were unable to match you with the right program based on the information you provided. <br/>But don't worry, you can call us during normal business hours at 888-316-3934 or complete </br>the form below and someone from the newfi team will contact you to review your options.";
-                    }
+	                var errorText=getNoProductMessageInLockRatePage();
 	                var mainContainer = paintApplyNow(teaserRateData,undefined,true);
 	                //6.12 Portal testing and Updates
                     /* var createAccBtn= $('<div>').attr({

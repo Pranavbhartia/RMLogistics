@@ -399,8 +399,8 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
                 // alert(JSON.stringify(refinanceTeaserRate));
                 //container.append(quesTextCont);
                 $(parentContainer).html(container);
-                var errorText=noProductMessageInLockRatePage;
-
+                var errorText=getNoProductMessageInLockRatePage();
+                var mainContainer = paintApplyNow(teaserRateData,undefined,true);
                 var createAccBtn= $('<div>').attr({
                     "class": "rate-btn createAccButton"
                 }).html("Provide your contact information").on('click', function() {
@@ -409,7 +409,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
                 });
                 $(parentContainer).append(errorText);
                 if(typeof(newfiObject)==='undefined')
-                    $(parentContainer).append(createAccBtn);
+                    $(parentContainer).append(mainContainer);
                 return
             }
             // var teaserRate = data;
