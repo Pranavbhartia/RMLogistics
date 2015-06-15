@@ -70,6 +70,7 @@ public class Loan implements Serializable {
 	private Long purchaseDocumentExpiryDate;
 	private String lockedRateData;
 	private Date lockExpirationDate;
+	private Boolean rateLockRequested;
 
 	@Column(name = "bank_connected", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -468,6 +469,7 @@ public class Loan implements Serializable {
 		loanVo.setAppFee(loan.getAppFee());
 		loanVo.setName(loan.getName());
 		loanVo.setLockExpirationDate(loan.getLockExpirationDate());
+		loanVo.setRateLockRequested(loan.getRateLockRequested());
 		loanVo.setLockedRateData(loan.getLockedRateData());
 		loanVo.setPurchaseDocumentExpiryDate(loan
 		        .getPurchaseDocumentExpiryDate());
@@ -573,5 +575,14 @@ public class Loan implements Serializable {
 	public void setLockStatus(String lockStatus) {
 		this.lockStatus = lockStatus;
 	}
+
+	@Column(name = "rate_lock_requested")
+	public Boolean getRateLockRequested() {
+	    return rateLockRequested;
+    }
+
+	public void setRateLockRequested(Boolean rateLockRequested) {
+	    this.rateLockRequested = rateLockRequested;
+    }
 
 }

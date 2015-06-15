@@ -28,3 +28,8 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete My Loan P
 
 
 ##Anoop: Moved all of the above
+
+# Charu : loan recording lockraterequested flag
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `rate_lock_requested` TINYINT NULL DEFAULT 0 AFTER `lock_expiration_date`;
+

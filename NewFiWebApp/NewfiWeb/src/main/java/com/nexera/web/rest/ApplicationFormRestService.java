@@ -703,8 +703,8 @@ public class ApplicationFormRestService {
 			// .toString());
 			LOG.debug("lockLoanRate is" + lockRateData);
 			if (!lockRateData.contains("status=\"Error\"")) {
-				// loanService.updateLoan(loanLockRateVO.getLoanId(), true,
-				// loanLockRateVO.getRateVo());
+				loanService.updateLoan(loanLockRateVO.getLoanId(), true,
+				        loanLockRateVO.getRateVo());
 				loanService.sendRateLockRequested(loanLockRateVO.getLoanId(),
 				        loanLockRateVO);
 			}

@@ -766,7 +766,7 @@ function getLoanDetailsWrapper() {
 
 
 
-function lockLoanRate(lockratedata){
+function lockLoanRate(lockratedata,element){
 
 //alert('final lockratedata'+JSON.stringify(lockratedata));
     lockratedata.IlpTemplateId =closingCostHolder.valueSet.lLpTemplateId;
@@ -808,11 +808,11 @@ function lockLoanRate(lockratedata){
                 }
                 showToastMessage(message);
             }else{
-            	//rateLockRequestedFlag = true;
+            	rateLockRequestedFlag = true;
         	    $('input').attr("readonly","true");
                 showToastMessage(RateLockRequested);
-                /*element.html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
-                alert('loan is locked');*/
+                $(element).html( "Rate Lock Requested" ).unbind( "click").addClass("rateLockRequested");
+                /*alert('loan is locked');*/
             }
                 
             //TO:DO pass the data (json)which is coming from the controller
@@ -2623,12 +2623,13 @@ function getRequestRateLockStatus(element){
                 showToastMessage(response.error.message)
             }else{
                 var status=response.resultObject;
+                rateLockRequestedFlag=appUserDetails.loan.rateLockRequested;
                 if(status&&newfiObject.user.userRole.roleCd!="REALTOR"){
                     element.addClass("rate-btn");
                     if(!rateLockRequestedFlag){
 	                    element.html("Request Rate Lock").on('click', function(event) {
-	                    	    
-	                            lockLoanRate(lockratedata);
+	                    	    if(!rateLockRequestedFlag)
+	                               lockLoanRate(lockratedata,event.target);
 	                    });
                     }else{
                     	element.html( "Rate Lock Requested").unbind( "click").addClass("rateLockRequested");
