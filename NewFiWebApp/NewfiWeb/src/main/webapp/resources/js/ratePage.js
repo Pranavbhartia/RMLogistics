@@ -8,8 +8,6 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate(responseTime));
-    
-    //Code to show Rate locked Status comes here....
     var rateBtn2="";
     if(!hideCreateAccountBtn && teaserRateValHolder.teaserRate){
         rateBtn2 = $('<div>').attr({
@@ -19,6 +17,9 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
             $('#ce-main-container').html(mainContainer);
         });
+    }
+    if(!teaserRateValHolder.teaserRate){
+        //Code to show Rate locked Status comes here....
     }
     headerCont.append(col1).append(col2).append(rateBtn2);
     return headerCont;
@@ -54,10 +55,18 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails){
                 
                 //inputCustomerDetails.propertyTaxesPaid = $('#calTaxID2').val();
                 //inputCustomerDetails.propertyInsuranceCost = $('#CalInsuranceID2').val();
-                
-                
+                //if create option is required with progress crumb
+                if(teaserRateValHolder.teaserRate){
+                    if(refinanceTeaserRate.loanType)
+                        progressBaar(8)
+                    else
+                        homeProgressBaar(6)
+                }
                 var mainContainer = paintApplyNow(inputCustomerDetails);
-                $('#ce-main-container').html(mainContainer);
+                $('#ce-refinance-cp').html(mainContainer);
+                
+                /*var mainContainer = paintApplyNow(inputCustomerDetails);
+                $('#ce-main-container').html(mainContainer);*/
             });
             /*rateBtn2 = $('<div>').attr({
                 "class": "rate-btn-alertRate"
