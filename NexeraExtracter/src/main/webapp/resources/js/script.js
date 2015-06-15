@@ -183,12 +183,12 @@ function getLTVTable8(){
 	var tableCont = $('<div>').attr({
 		"class" : "ltv-table-container-red-border"
 	});
-	var row1 = "<tr  class='price-table-header'>" + "<th colspan=8><b>Bluestream Advantage</b></th>" + "<td></td>";
+	var row1 = "<tr  class='price-table-header'>" + "<th colspan=8><b>Blustream Advantage</b></th>" + "<td></td>";
 	var row2 = "<tr  class='th1Bold'>" + "<th colspan=8><= 75% LTV & Credit Score >= 700</th>";
 	tableCont.append(row1).append(row2);
 	var tableArray = 
 	
-	[ [ "Conforming", "(0.500)" ] , 
+	[ [ "Conforming", "(0.500)" ], 
       [ "High Balance", "(0.250)" ]
       ];
 	
