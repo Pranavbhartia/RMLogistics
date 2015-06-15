@@ -149,16 +149,20 @@ function getLTVTable(addHighBalArm) {
 	row2.append(otherAdjustmentsTable);
 	
 	if(!addHighBalArm){
-	var row3 = $('<div>').attr({
-		"class" : "clearfix"
-	});
+		var row3 = $('<div>').attr({
+			"class" : "clearfix price-table-wrap-row"
+		});
 	
 	
 	var table1 = $('<div>').attr({
 		"class" : "adjuster-table-wrapper float-left"
 	}).html(getLTVTable7());
 	
-	row3.append(table1);
+	var blueStreamAdv = $('<div>').attr({
+		"class" : "adjuster-table-wrapper float-left ltv-table8"
+	}).html(getLTVTable8());
+	
+	row3.append(table1).append(blueStreamAdv);
 	}
 
 	var note = "All loan level price adjustments are cumulative\n"
@@ -172,6 +176,28 @@ function getLTVTable(addHighBalArm) {
 
 	return tableWrapper.append(header).append(row1).append(row2).append(row3).append(
 			noteCont);
+}
+
+function getLTVTable8(){
+
+	var tableCont = $('<div>').attr({
+		"class" : "ltv-table-container-red-border"
+	});
+	var row1 = "<tr  class='price-table-header'>" + "<th colspan=8><b>Bluestream Advantage</b></th>" + "<td></td>";
+	var row2 = "<tr  class='th1Bold'>" + "<th colspan=8><= 75% LTV & Credit Score >= 700</th>";
+	tableCont.append(row1).append(row2);
+	var tableArray = 
+	
+	[ [ "Conforming", "(0.500)" ] , 
+      [ "High Balance", "(0.250)" ]
+      ];
+	
+
+	var dataRows = getCascadeTableDataRows(tableArray);
+	tableCont.append(dataRows);
+	
+	return tableCont;
+	
 }
 
 function getLTVTable1() {

@@ -57,6 +57,11 @@ table,.rate-table-wrapper-cont,.ltv-table-container {
 	page-break-inside: avoid;
 }
 
+.ltv-table-container-red-border{
+	page-break-inside: avoid;
+	border: 2px solid red;
+}
+
 @page{
     size:A4 portrait;
 }
