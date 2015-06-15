@@ -446,30 +446,35 @@ function redirectToGettingToKnowLastPage() {
 	var parentContainer = $('.getting-to-know-container');
 	parentContainer.html('');
 	
-	var cont1 = $('<div>').attr({
+/*	var cont1 = $('<div>').attr({
 		"class" : "getting-to-know-row clearfix"
 	});
 	
-	cont1.append("<div class='getting-to-know-hdr-txt'>I'm not finished with the tutorial</div>");
+	cont1.append("<div class='getting-to-know-hdr-txt'>I'm not finished with the tutorial</div>");*/
 	
-	var cont1btn1 = $('<div>').attr({
+/*	var cont1btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
 	}).html("Next Steps")
 	.click(function(){
 		paintGettingToKnowPage();
 	});
 	
-	cont1.append(cont1btn1);
-	
+	cont1.append(cont1btn1);*/
+
+/*	
 	var cont2 = $('<div>').attr({
 		"class" : "getting-to-know-row clearfix"
 	});
 	
-	cont2.append("<div class='getting-to-know-hdr-txt'>I'm finished with the tutorial, take me to</div>");
+	cont2.append("<div class='getting-to-know-hdr-txt'>I'm finished with the tutorial, take me to</div>");*/
+	var cont2 = $('<div>').attr({
+		"class" : "getting-to-know-row clearfix"
+	});
 	
+	cont2.append("<div class='getting-to-know-hdr-txt'>Next Steps</div>");
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Finish Loan Profile").on('click',function(){
+	}).html("Complete My Loan Profile").on('click',function(){
 
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
@@ -497,7 +502,7 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Talk to my loan advisor").on('click',function(){
+	}).html("Talk to My Loan Advisor").on('click',function(){
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
@@ -514,7 +519,8 @@ function redirectToGettingToKnowLastPage() {
 		}else{
 			cont2.append(cont2btn4);
 		}
-	parentContainer.append(cont1).append(cont2);
+	//parentContainer.append(cont1).append(cont2);
+	parentContainer.append(cont2);
 	
 }
 
