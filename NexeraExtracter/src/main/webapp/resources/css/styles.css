@@ -113,7 +113,7 @@ a,a:hover,a:visited {
 .rate-table-wrapper-cont {
 	float: left;
 	width: 33.33%;
-	height: 270px;
+	height: 255px;
 	padding: 0 10px;
 }
 
@@ -200,7 +200,7 @@ a,a:hover,a:visited {
 }
 
 .rate-table-container {
-	height: 240px;
+	height: 230px;
 	border: 1px solid #004F6E;
 }
 
@@ -331,7 +331,7 @@ a,a:hover,a:visited {
 
 .price-table-wrap-row {
 	position: relative;
-	margin-bottom: 35px;
+	margin-bottom: 30px;
 }
 
 .ltv-table4 {
@@ -340,6 +340,11 @@ a,a:hover,a:visited {
 
 .ltv-table5 {
 	margin-left: 30px;
+}
+
+.ltv-table8 {
+	margin-left: 65px;
+	margin-top: 40px
 }
 
 .note-txt {
