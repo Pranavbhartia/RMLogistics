@@ -141,6 +141,13 @@
 					paintRefinanceHomeZipCode();
 				}
 			});
+			$(document).on('click','#progressBaarId_7',function(){
+				removeToastMessage();
+				if(stages>6){
+					progressBaar(7);
+					paintRatesPageFromCrumb();
+				}
+			});
 			
 			//--- Buy home progress baar button 
 			
@@ -169,13 +176,13 @@
 					paintHomeZipCode();
 				}
 			});
-			/*
+			
 			$(document).on('click','#homeProgressBaarId_5',function(){
 				if(active>4){
 					homeProgressBaar(5);
-					paintBuyHomeSSN();
+					paintRatesPageFromCrumb();
 				}
-			}); */
+			}); 
 			
 			$(document).on('keypress','input[name="yearLeftOnMortgage"]',function(e){
 				

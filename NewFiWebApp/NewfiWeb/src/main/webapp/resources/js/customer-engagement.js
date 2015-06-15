@@ -427,7 +427,7 @@ function paintRefinanceMainContainer() {
     $('#ce-main-container').append(wrapper);
     paintRefinanceQuest1();
 }
-var itemsList = ["Loan Purpose", "Your Mortgage", "Monthly Payment", "Home Value","Home Information", "Zip Code", "Your Rates"];
+var itemsList = ["Loan Purpose", "Mortgage Balance", "Monthly Payment", "Home Value","Home Information", "Zip Code", "Programs and Rates", "Create Account"];
 
 function getRefinanceLeftPanel() {
     var container = $('<div>').attr({
@@ -449,6 +449,13 @@ function switchBasedOnStage(stage){
     }
     if(element){
         $(element).trigger( "click" );
+    }
+}
+function paintRatesPageFromCrumb(){
+    if(refinanceTeaserRate&&refinanceTeaserRate.loanType){
+        paintRefinanceSeeRates();
+    }else{
+        paintBuyHomeSeeTeaserRate();
     }
 }
 
@@ -928,7 +935,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
             success: function(data) {
             	
                hideOverlay();
-               
+               clearOverlayMessage();
 	            if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
 	               // var quesTxt = "Let us Contact You";
 	                var container = $('<div>').attr({
@@ -941,16 +948,21 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
 	               // container.append(quesTextCont);
 	                $(parentContainer).html(container);
 	                var errorText="<div class='contactInfoText'>We were unable to match you with the right program based on the information you provided. <br/>But donot worry, if you call us at 888-316-3934 someone from the newfi team will review your options.";
-	
-	                var createAccBtn= $('<div>').attr({
+                    if(typeof(newfiObject)==='undefined'){
+                        errorText="<div class='contactInfoText'>We were unable to match you with the right program based on the information you provided. <br/>But don't worry, you can call us during normal business hours at 888-316-3934 or complete </br>the form below and someone from the newfi team will contact you to review your options.";
+                    }
+	                var mainContainer = paintApplyNow(teaserRateData,undefined,true);
+	                //6.12 Portal testing and Updates
+                    /* var createAccBtn= $('<div>').attr({
 	                    "class": "rate-btn createAccButton"
 	                }).html("Provide your contact information").on('click', function() {
 	                    var mainContainer = paintApplyNow(teaserRateData);
 	                    $('#ce-main-container').html(mainContainer);
-	                });
+	                });*/
 	                $(parentContainer).append(errorText);
 	                if(typeof(newfiObject)==='undefined')
-	                    $(parentContainer).append(createAccBtn);
+                        /*$(parentContainer).append(createAccBtn);*/
+	                    $(parentContainer).append(mainContainer);
 	                return
 	            }
 
@@ -966,7 +978,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                     responseTime="";
                     console.log("Invalid Data");
                 }
-                var quesTxt = "Loan Rates and Fees";
+                var quesTxt = "Loan Programs and Rates";
                 var container = $('<div>').attr({
                     "class": "ce-rate-main-container"
                 });
@@ -1021,7 +1033,7 @@ function progressBaar(num) {
     }
    
 
-function paintApplyNow(inputCustomerDetails,emailQuote) {
+function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
 
     
     var registration = new Object();
@@ -1198,8 +1210,10 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         // saveUserAndRedirect(registration);
     });
     regContainerGetStarted.append(regGetStarted);
-    regMainContainer.append(regDisplayTitle);
-    regMainContainer.append(regDisplaySubTitle);
+    if(!appendedFlag){
+        regMainContainer.append(regDisplayTitle);
+        regMainContainer.append(regDisplaySubTitle);
+    }
     regMainContainer.append(regInputContainerFname);
     regMainContainer.append(regInputContainerlname);
     regMainContainer.append(regInputContainerEmail);
