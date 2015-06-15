@@ -3129,7 +3129,7 @@ function paintCustomerApplicationPageStep4a() {
     		//Validation
 	    	for(var i=0;i<quesDeclarationContxts.length;i++){
 	    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
-	    			showErrorToastMessage(gonernamentQuestionErrorMessage);
+	    			showErrorToastMessage(yesyNoErrorMessage);
 	    			return false;
 	    		}
 	    	}
@@ -3157,7 +3157,7 @@ function paintCustomerApplicationPageStep4a() {
 	     		typeOfPropertyOwned =  $('.app-options-cont[name="typeOfPropertyOwned"]').find('.app-option-selected').data().value;
 	     		//validation
 	     		if(typeOfPropertyOwned==""||typeOfPropertyOwned==undefined){
-	     			showErrorToastMessage(gonernamentQuestionErrorMessage);
+	     			showErrorToastMessage(yesyNoErrorMessage);
 	     			return false;
 	     		}
 	     		//End of validation
@@ -3169,7 +3169,7 @@ function paintCustomerApplicationPageStep4a() {
 	     		propertyTitleStatus =  $('.app-options-cont[name="propertyTitleStatus"]').find('.app-option-selected').data().value;
 	     		//End of validation
 	     		if(propertyTitleStatus==""||propertyTitleStatus==undefined){
-	     			showErrorToastMessage(gonernamentQuestionErrorMessage);
+	     			showErrorToastMessage(yesyNoErrorMessage);
 	     			return false;
 	     		}
 	     		//End of validation
@@ -5272,7 +5272,7 @@ function createLoan(appUserDetails, flag)
 	//fixAndLoakYourRatePage(lqbData, appUserDetails);
 	
 $('#overlay-loader').show();
-showOverleyMessage("This can take a minute,<br/> we are looking for the best rate options available.");
+showOverleyMessage(overlayMessage);
 $.ajax({
 		url:"rest/application/createLoan",
 		type:"POST",

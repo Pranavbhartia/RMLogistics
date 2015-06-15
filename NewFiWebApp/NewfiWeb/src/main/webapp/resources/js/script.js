@@ -446,30 +446,35 @@ function redirectToGettingToKnowLastPage() {
 	var parentContainer = $('.getting-to-know-container');
 	parentContainer.html('');
 	
-	var cont1 = $('<div>').attr({
+/*	var cont1 = $('<div>').attr({
 		"class" : "getting-to-know-row clearfix"
 	});
 	
-	cont1.append("<div class='getting-to-know-hdr-txt'>I'm not finished with the tutorial</div>");
+	cont1.append("<div class='getting-to-know-hdr-txt'>I'm not finished with the tutorial</div>");*/
 	
-	var cont1btn1 = $('<div>').attr({
+/*	var cont1btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
 	}).html("Next Steps")
 	.click(function(){
 		paintGettingToKnowPage();
 	});
 	
-	cont1.append(cont1btn1);
-	
+	cont1.append(cont1btn1);*/
+
+/*	
 	var cont2 = $('<div>').attr({
 		"class" : "getting-to-know-row clearfix"
 	});
 	
-	cont2.append("<div class='getting-to-know-hdr-txt'>I'm finished with the tutorial, take me to</div>");
+	cont2.append("<div class='getting-to-know-hdr-txt'>I'm finished with the tutorial, take me to</div>");*/
+	var cont2 = $('<div>').attr({
+		"class" : "getting-to-know-row clearfix"
+	});
 	
+	cont2.append("<div class='getting-to-know-hdr-txt'>Next Steps</div>");
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Finish Loan Profile").on('click',function(){
+	}).html("Complete My Loan Profile").on('click',function(){
 
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
@@ -497,7 +502,7 @@ function redirectToGettingToKnowLastPage() {
 	
 	var cont2btn4 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Talk to my loan advisor").on('click',function(){
+	}).html("Talk to My Loan Advisor").on('click',function(){
 		
 		removedKnwoNewFi = true;
 		finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myTeam");
@@ -514,7 +519,8 @@ function redirectToGettingToKnowLastPage() {
 		}else{
 			cont2.append(cont2btn4);
 		}
-	parentContainer.append(cont1).append(cont2);
+	//parentContainer.append(cont1).append(cont2);
+	parentContainer.append(cont2);
 	
 }
 
@@ -2022,7 +2028,7 @@ function getClosingCostSummaryContainer(valueSet) {
             parentWrapper.html(getHeaderText(noSutableProductFoundMessage));
         }
     }else{
-        var header = getClosingCostHeader("Closing Cost Summary");
+        var header = getClosingCostHeader("Estimated Closing Cost Summary");
         var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
         var closingDate = $('<span>').attr({
             "class": "semibold"
@@ -2039,7 +2045,7 @@ function getClosingCostSummaryContainer(valueSet) {
 
 function getClosingCostHeader(text) {
     var header = $('<div>').attr({
-        "class": "closing-cost-header capitalize"
+        "class": "closing-cost-header cus-eng-font capitalize"
     }).html(text);
     return header;
 }
@@ -2048,7 +2054,7 @@ function getClosingCostTopConatiner() {
     var wrapper = $('<div>').attr({
         "class": "closing-cost-cont-wrapper-top"
     });
-    var heading = getClosingCostHeadingCont("Estimated Closing Costs");
+    //var heading = getClosingCostHeadingCont("Estimated Closing Costs");
     var container1 = $('<div>').attr({
         "class": "closing-cost-container"
     });
@@ -2060,7 +2066,7 @@ function getClosingCostTopConatiner() {
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon2 = getClosingCostConatinerHeader("Estimated Third Party Cost");
+    var headerCon2 = getClosingCostConatinerHeader("Estimated Third Party Costs");
     var row1Con2 = getClosingCostContainerRow(1, getClosingCostLabel("Appraisal Fee"), "$ 455.00");
     var row2Con2 = getClosingCostContainerRow(2, getClosingCostLabel("Credit Report"), "$ 455.00");
     var row3Con2 = getClosingCostContainerRow(3, getClosingCostLabel("Flood Certification"), "$ 455.00");
@@ -2088,7 +2094,8 @@ function getClosingCostTopConatiner() {
     
     container3.append(headerCon3).append(row1Con3).append(row2Con3).append(row3Con3).append(row10Con3);
     
-    return wrapper.append(heading).append(container1).append(container2).append(container3);
+    //return wrapper.append(heading).append(container1).append(container2).append(container3);
+    return wrapper.append(container1).append(container2).append(container3);
 }
 
 function getClosingCostBottomConatiner() {

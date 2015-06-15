@@ -493,7 +493,10 @@ input[type="button"]:focus, button:focus {
 	padding-left: 15px;
 	border-left: 1px solid #dcdcdc;
 }
-
+.cus-eng-font{
+	font-size: 14px;
+	font-family: openSanssemiBold;
+}
 .rate-program-header,.loan-summary-header,.closing-cost-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
@@ -715,7 +718,7 @@ input[type="button"]:focus, button:focus {
 
 .closing-cost-desc {
 	font-family: 'opensanssemibold';
-	padding: 5px 0 5px 5px;
+	padding: 10px 0 10px 5px;
 	width: 75%;
 }
 
@@ -5081,7 +5084,7 @@ input.calc-input {
   top: 0;
   text-align: center;
   margin: auto;
-  font-size: 24px;
+  font-size: 40px;
   height: 0;
   line-height: normal;
   padding-top: 100px;
@@ -5214,14 +5217,14 @@ input.calc-input {
     max-width: 100%;
     margin: 0 auto;
     padding-bottom: 20px;
-    padding-left: 20px;
+    padding-left: 79px;
 }
 
 .getting-to-know-hdr-txt {
-    font-size: 16px;
+    font-size: 32px;
     font-family: 'opensanssemibold';
-    padding: 0 0 0 79px;
     white-space: nowrap;
+    text-align: center;
 }
 
 .getting-to-know-btn {
