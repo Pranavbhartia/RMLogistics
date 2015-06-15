@@ -1011,7 +1011,7 @@ function progressBaar(num) {
 		scrollToTop();
 		adjustCustomerApplicationPageOnResize();
 		adjustCustomerEngagementPageOnResize();
-        var count = 7;
+        var count = itemsList.length;
         $('#step-no').text(num);
         $("#progressBaarId_" + num).removeClass('ce-lp-in-progress').removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
         $('#stepNoId_' + num).html(num);
@@ -1217,7 +1217,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
     regMainContainer.append(regInputContainerFname);
     regMainContainer.append(regInputContainerlname);
     regMainContainer.append(regInputContainerEmail);
-    regMainContainer.append(regInputContainerPhone);
+    /*regMainContainer.append(regInputContainerPhone);*/
     regMainContainer.append(errorMsg);
     regMainContainer.append(regContainerGetStarted);
    
