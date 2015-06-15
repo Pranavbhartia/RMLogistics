@@ -387,6 +387,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
         cache:false,
         success: function(data) {
         	hideOverlay();
+            clearOverlayMessage();
             if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
                // var quesTxt = "Let us Contact You";
                 var container = $('<div>').attr({
@@ -762,7 +763,7 @@ function homeProgressBaar(num) {
 	scrollToTop();
 	adjustCustomerApplicationPageOnResize();
 	adjustCustomerEngagementPageOnResize();
-    var count = 5;
+    var count = buyHomeitemsList.length;
     $('#step-no').text(num);
     $("#homeProgressBaarId_" + num).removeClass('ce-lp-in-progress')
         .removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
@@ -779,6 +780,7 @@ function homeProgressBaar(num) {
     }
     if(typeof(newfiObject)==='undefined')
         saveState(undefined, undefined, undefined,(num-1));
+    active=num;
     sessionStorage.refinaceData = JSON.stringify(buyHomeTeaserRate);
 }
 
