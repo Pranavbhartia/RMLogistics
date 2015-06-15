@@ -57,6 +57,7 @@ public class LoanVO implements Serializable {
 	private String lqbUrl;
 	private String lockedRateData;
 	private Date lockExpirationDate;
+	private Boolean rateLockRequested;
 
 	private String userZipCode;
 
@@ -448,4 +449,12 @@ public class LoanVO implements Serializable {
 	public void setLockStatus(String lockStatus) {
 		this.lockStatus = lockStatus;
 	}
+
+	public Boolean getRateLockRequested() {
+	    return rateLockRequested;
+    }
+
+	public void setRateLockRequested(Boolean rateLockRequested) {
+	    this.rateLockRequested = rateLockRequested;
+    }
 }
