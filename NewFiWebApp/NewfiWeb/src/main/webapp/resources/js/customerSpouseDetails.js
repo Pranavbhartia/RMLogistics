@@ -938,7 +938,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
     	if(this.innerHTML!=next){
 		    	for(var i=0;i<quesDeclarationContxts.length;i++){
 		    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
-		    			showErrorToastMessage(gonernamentQuestionErrorMessage);
+		    			showErrorToastMessage(yesyNoErrorMessage);
 		    			return;
 		    		}
 		    	}

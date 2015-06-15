@@ -1065,7 +1065,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     });
     regInputContainerEmail.append(regInputEmail).append(appendErrorMessage());
     //TODO added phone feild
-    var regInputContainerPhone = $('<div>').attr({
+/*    var regInputContainerPhone = $('<div>').attr({
         "class": "reg-input-cont reg-phone"
     });
     var regInputPhone = $('<input>').attr({
@@ -1074,7 +1074,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         "name": "phone"
     });
     regInputPhone.mask("(999) 999-9999");
-    regInputContainerPhone.append(regInputPhone).append(appendErrorMessage());
+    regInputContainerPhone.append(regInputPhone).append(appendErrorMessage());*/
     //End
     var errorMsg = $('<div>').attr({
         "class": "reg-input-error hide errorMsg"
@@ -1082,7 +1082,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
     var errorMsgSpan = $('<span>').attr({
         "class": "registration-error",
         
-    }).html("We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLogin()' style='color: #2F6BF7'>click here</a>").on('click',function(){
+    }).html(emailIDErrorMessageFromServer).on('click',function(){
     	
     	$('.errorMsg').hide();
     });
@@ -1100,8 +1100,8 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         
     	registration.firstName = $('input[name="fname"]').val();
         registration.lastName = $('input[name="lname"]').val();
-        var phoneNumber = $('input[name="phone"]').val();
-        registration.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+       /* var phoneNumber = $('input[name="phone"]').val();
+        registration.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');*/
         var dateVar = new Date();
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
@@ -1129,7 +1129,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote) {
         user.firstName = registration.firstName;
         user.lastName = registration.lastName;
         user.emailId = registration.emailId;
-        user.phoneNumber=registration.phoneNumber;
+        //user.phoneNumber=registration.phoneNumber;
         appUserInput.emailQuote = emailQuote;
 
         loanType = {};
