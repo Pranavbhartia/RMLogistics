@@ -5214,14 +5214,14 @@ input.calc-input {
     max-width: 100%;
     margin: 0 auto;
     padding-bottom: 20px;
-    padding-left: 20px;
+    padding-left: 79px;
 }
 
 .getting-to-know-hdr-txt {
-    font-size: 16px;
+    font-size: 32px;
     font-family: 'opensanssemibold';
-    padding: 0 0 0 79px;
     white-space: nowrap;
+    text-align: center;
 }
 
 .getting-to-know-btn {
