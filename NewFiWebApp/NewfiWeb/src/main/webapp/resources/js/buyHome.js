@@ -341,7 +341,7 @@ function saleYourCurrentHome() {
 function paintHomeZipCode() {
     active = 4;
     homeProgressBaar(4);
-    var quesTxt = "Zip code";
+    var quesTxt = "Zip Code";
     var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeSeeTeaserRate, "zipCode");
     $('#ce-refinance-cp').html(quesCont);
 }
