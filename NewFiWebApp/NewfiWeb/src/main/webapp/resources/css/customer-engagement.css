@@ -177,7 +177,7 @@
     line-height: 44px;
     font-size: 18px;
     font-family: 'opensanssemibold';
-    text-transform: capitalize;
+   /*  text-transform: capitalize; */
 }
 
 .ce-lp-not-started .ce-lp-item-text{
