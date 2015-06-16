@@ -183,7 +183,7 @@ function getLTVTable8(){
 	var tableCont = $('<div>').attr({
 		"class" : "ltv-table-container-red-border"
 	});
-	var row1 = "<tr  class='price-table-header'>" + "<th colspan=8><b>Blustream Advantage</b></th>" + "<td></td>";
+	var row1 = "<tr  class='th1Bold'>" + "<th colspan=8><b>Blustream Advantage</b></th>" + "<td></td>";
 	var row2 = "<tr  class='th1Bold'>" + "<th colspan=8><= 75% LTV & Credit Score >= 700</th>";
 	tableCont.append(row1).append(row2);
 	var tableArray = 
@@ -195,7 +195,12 @@ function getLTVTable8(){
 
 	var dataRows = getCascadeTableDataRows(tableArray);
 	tableCont.append(dataRows);
-	
+	var row3 = "<tr  class='th1Bold'>" + "<th colspan=8><b>2 Years Transcripts Required</b></th>" + "<td></td>";
+	var row4 = "<tr  class='th1Bold'>" + "<th colspan=8><b>High Balance Max DTI 43%</b></th>" + "<td></td>";
+	var row5 = "<tr  class='th1Bold'>" + "<th colspan=8><b>High Balance SFR O/O & 2nd Home Only</b></th>" + "<td></td>";
+	var row6 = "<tr  class='th1Bold'>" + "<th colspan=8><b>High Balance Tradeline Requirement:</b></th>" + "<td></td>";
+	var row7 = "<tr  class='th1Bold'>" + "<th colspan=8><b>3 Tradelines for 24 Months</b></th>" + "<td></td>";
+	tableCont.append(row3).append(row4).append(row5).append(row6).append(row7);
 	return tableCont;
 	
 }
