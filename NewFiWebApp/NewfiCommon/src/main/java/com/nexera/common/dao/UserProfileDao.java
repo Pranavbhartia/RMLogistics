@@ -123,4 +123,7 @@ public interface UserProfileDao extends GenericDao {
 
 	public Integer updateNMLS(User user);
 
+	public void updateTokenDetails(int internalUserId, String token,
+	        long currentTimeMillis);
+
 }

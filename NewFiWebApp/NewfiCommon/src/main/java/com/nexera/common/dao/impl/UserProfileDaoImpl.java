@@ -791,8 +791,8 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 	@Override
 	public Integer updateLqbProfile(User user) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword, "+
-		"internalusr.lqbAuthToken = :lqbAuthToken, internalusr.lqbExpiryTime= :lqbExpiryTime "
+		String hql = "UPDATE InternalUserDetail internalusr set internalusr.lqbUsername = :lqbUserName, internalusr.lqbPassword = :lqbPassword, "
+		        + "internalusr.lqbAuthToken = :lqbAuthToken, internalusr.lqbExpiryTime= :lqbExpiryTime "
 		        + "WHERE internalusr.id = :id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", user.getInternalUserDetail().getId());
@@ -807,6 +807,22 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		int result = query.executeUpdate();
 		LOG.info("updated Successfully");
 		return result;
+	}
+
+	@Override
+	public void updateTokenDetails(int internalUserId, String token,
+	        long currentTimeMillis) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE InternalUserDetail internalusr set "
+		        + "internalusr.lqbAuthToken = :lqbAuthToken, internalusr.lqbExpiryTime= :lqbExpiryTime "
+		        + "WHERE internalusr.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("id", internalUserId);
+		query.setParameter("lqbAuthToken", token);
+		query.setParameter("lqbExpiryTime", currentTimeMillis);
+		int result = query.executeUpdate();
+		LOG.info("updated Successfully");
+
 	}
 
 	@Override

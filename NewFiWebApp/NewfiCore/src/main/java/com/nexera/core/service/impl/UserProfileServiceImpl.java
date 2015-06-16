@@ -612,9 +612,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public User createNewUser(UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException,
-	        FatalException {
+	public User createNewUser(UserVO userVO) throws InvalidInputException,
+	        UndeliveredEmailException, FatalException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
 
@@ -1405,23 +1404,30 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = User.convertFromVOToEntity(userVO);
 		try {
 			if (user.getInternalUserDetail() != null) {
-				
-				//Chck if any change in cred.
-				User existingUserinDB = userProfileDao.findByUserId(userVO.getId());
-				if (existingUserinDB.getInternalUserDetail()!= null && existingUserinDB.getInternalUserDetail().getLqbUsername()!=null
-					&& existingUserinDB.getInternalUserDetail().getLqbPassword()!=null 
+
+				// Chck if any change in cred.
+				User existingUserinDB = userProfileDao.findByUserId(userVO
+				        .getId());
+				if (existingUserinDB.getInternalUserDetail() != null
+				        && existingUserinDB.getInternalUserDetail()
+				                .getLqbUsername() != null
+				        && existingUserinDB.getInternalUserDetail()
+				                .getLqbPassword() != null
 				        && nexeraUtility.decrypt(
 				                salt,
 				                crypticKey,
 				                existingUserinDB.getInternalUserDetail()
-				                        .getLqbUsername()).equalsIgnoreCase( user.getInternalUserDetail()
-					        .getLqbUsername() )
-					 && nexeraUtility.decrypt(salt, crypticKey, existingUserinDB.getInternalUserDetail().getLqbPassword()).equalsIgnoreCase( user.getInternalUserDetail()
-							        .getLqbPassword()))
-					{
-						throw new InvalidInputException(
+				                        .getLqbUsername()).equalsIgnoreCase(
+				                user.getInternalUserDetail().getLqbUsername())
+				        && nexeraUtility.decrypt(
+				                salt,
+				                crypticKey,
+				                existingUserinDB.getInternalUserDetail()
+				                        .getLqbPassword()).equalsIgnoreCase(
+				                user.getInternalUserDetail().getLqbPassword())) {
+					throw new InvalidInputException(
 					        ErrorConstants.LQB_CRED_ALREADY_SAVED);
-					}
+				}
 				LqbInterface lqbCacheInvoker = (LqbInterface) applicationContext
 				        .getBean("lqbCacheInvoker");
 				sTicket = lqbCacheInvoker.findSticket(nexeraUtility.encrypt(
@@ -1484,9 +1490,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			throw new InvalidInputException(
 			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
 		} catch (IOException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-        }
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return updateCount;
 
 	}
@@ -1576,53 +1582,112 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("user id of this user is : " + userId);
 		// By default the URL will be the landing page of LQB, if the user has
 		// provided the details, it will take the user to the loan specific page
+
+		/*
+		 * Get the token from DB for this user. If token is valid, use it. Else
+		 * get it from LQB
+		 */
 		String url = lqbDefaultUrl;
 		try {
 			UserVO userVO = findUser(userId);
-			if (userVO != null) {
+			if (userVO != null && userVO.getInternalUserDetail() != null) {
 				String lqbUsername = userVO.getInternalUserDetail()
-				        .getLqbUsername().replaceAll("[^\\x00-\\x7F]", "");
+				        .getLqbUsername();
 
 				String lqbPassword = userVO.getInternalUserDetail()
-				        .getLqbPassword().replaceAll("[^\\x00-\\x7F]", "");
+				        .getLqbPassword();
 
 				if (lqbUsername != null && lqbPassword != null) {
-					JSONObject authOperationObject = NexeraUtility
-					        .createAuthObject(
-					                WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
-					                lqbUsername, lqbPassword);
-					LOG.debug("Invoking LQB service to fetch user authentication ticket ");
-					String authTicketJson = lqbInvoker
-					        .invokeRestSpringParseObjForAuth(authOperationObject
-					                .toString());
-					if (!authTicketJson.contains("Access Denied")) {
-						String sTicket = authTicketJson;
-						LoanVO loanVO = getLoanById(loanId);
-						if (loanVO != null) {
-							url = getUrlByTicket(sTicket, loanVO.getLqbFileId());
-							LOG.debug("Url received for this user/loan " + url);
+					lqbUsername = lqbUsername.replaceAll("[^\\x00-\\x7F]", "");
+					lqbPassword = lqbPassword.replaceAll("[^\\x00-\\x7F]", "");
 
-						} else {
-							LOG.error("Loan Id Entered is invalid ");
+					String token = userVO.getInternalUserDetail()
+					        .getLqbAuthToken();
+					Long expiryTime = userVO.getInternalUserDetail()
+					        .getLqbExpiryTime();
+					if (token != null && expiryTime != null) {
+						// This means that we have a token stored in the system
+						// with an expiry time.
+
+						/*
+						 * Check if the token has expired. All tokens expire
+						 * after 4 hours
+						 */
+						if (utils.hasTokenExpired(expiryTime)) {
+							// Token has expired, hence generate a new one.
+							token = getNewToken(lqbUsername, lqbPassword,
+							        userVO.getInternalUserDetail().getId());
 						}
+						// Now, we have a token, either from DB or from LQB if
+						// it had expired
+						if (token != null) {
+							url = getLQBUrlWithToken(token, loanId);
+							return url;
+						} else {
+							LOG.error("Ticket Not Generated For This User ");
+							return lqbDefaultUrl;
+						}
+
 					} else {
-						LOG.error("Ticket Not Generated For This User ");
+						// We have valid LQB credentials, but no token in the
+						// system.
+						token = getNewToken(lqbUsername, lqbPassword, userVO
+						        .getInternalUserDetail().getId());
+						if (token != null) {
+							url = getLQBUrlWithToken(token, loanId);
+							return url;
+						} else {
+							LOG.error("Ticket Not Generated For This User ");
+							return lqbDefaultUrl;
+						}
+
 					}
 				} else {
-					LOG.error("LQBUsername or Password are not valid ");
+					LOG.info("User has not set LQB credentials. Send back defaul loan url for loan: "
+					        + loanId);
+					return lqbDefaultUrl;
 				}
 			} else {
-				LOG.error("User not found with this user id");
-
+				LOG.warn("This cannot happen, since internal user should exist for userId: "
+				        + userId);
 			}
-
-		} catch (InputValidationException e) {
-			LOG.error("error and message is : " + e.getMessage());
-
 		} catch (Exception e) {
-			LOG.error("error and message is : " + e.getMessage());
+			LOG.error("Error retrieving loan URL for loan " + loanId, e);
 		}
-		return url == null ? lqbDefaultUrl : url;
+		return lqbDefaultUrl;
+	}
+
+	private String getLQBUrlWithToken(String token, int loanId) {
+		String sTicket = token;
+		LoanVO loanVO = getLoanById(loanId);
+		if (loanVO != null) {
+			return getUrlByTicket(sTicket, loanVO.getLqbFileId());
+
+		}
+		LOG.error("Loan Id Entered is invalid ");
+
+		return null;
+
+	}
+
+	private String getNewToken(String lqbUsername, String lqbPassword,
+	        int internalUserId) {
+		JSONObject authOperationObject = NexeraUtility.createAuthObject(
+		        WebServiceOperations.OP_NAME_AUTH_GET_USER_AUTH_TICET,
+		        lqbUsername, lqbPassword);
+		LOG.debug("Invoking LQB service to fetch user authentication ticket ");
+		String token = lqbInvoker
+		        .invokeRestSpringParseObjForAuth(authOperationObject.toString());
+		// Got back a token. Save it in DB, if token is valid
+		if (token != null && token.contains("EncryptedTicket")) {
+			userProfileDao.updateTokenDetails(internalUserId, token,
+			        System.currentTimeMillis());
+		} else {
+			// If token is invalid return null
+			return null;
+		}
+
+		return token;
 
 	}
 
