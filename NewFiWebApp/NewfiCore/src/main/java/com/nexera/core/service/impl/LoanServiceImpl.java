@@ -451,8 +451,9 @@ public class LoanServiceImpl implements LoanService {
 		List<LoanTeam> loanTeamList = loan.getLoanTeam();
 		LoanCustomerVO loanCustomerVO = new LoanCustomerVO();
 
-		loanCustomerVO.setTime(utils.getDateInUserLocaleFormatted(loan
+		loanCustomerVO.setTime(utils.getDateAndTimeForUserDashboard(loan
 		        .getModifiedDate()));
+		
 		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
 		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());

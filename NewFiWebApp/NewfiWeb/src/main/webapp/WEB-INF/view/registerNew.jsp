@@ -120,30 +120,28 @@
               </div>
             </div>
           </div>
-          <div class="reg-input-row clearfix">
-           <!--  <div class="reg-row-lc-new reg-row-lc float-left">
+         <!--  <div class="reg-input-row clearfix">
+            <div class="reg-row-lc-new reg-row-lc float-left">
               Your Phone Number
-            </div> -->
+            </div>
             <div class="reg-row-rc-new reg-row-rc float-left">
 	          <div class="reg-input-cont reg-phone">
 	          <input class="reg-input" placeholder="Phone number" name="phone" id="phoneID">
 	          <div class="err-msg hide"></div>
 	          </div>
            </div>
+          </div> -->
+            <div class="reg-btn-wrapper clearfix">
+            <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
+              Submit
+            </div>
           </div>
           <div class="reg-input-error hide errorMsg">
            		<span class ="reg-registration-error">
            		We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLoginPage()' style="color: #2F6BF7">click here</a>
            		</span>
           </div>
-          
-          
-          <div class="reg-btn-wrapper clearfix">
-            <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
-              Submit
-            </div>
-          </div> 
-                  </c:when>
+            </c:when>
                   <c:otherwise>
                             <div class="reg-input-row clearfix">
           <!--   <div class="reg-row-lc-new reg-row-lc float-left">
@@ -197,28 +195,26 @@
               </div>
             </div>
           </div>
-          <div class="reg-input-row clearfix">
-          <!--   <div class="reg-row-lc-new reg-row-lc float-left">
+          <!-- <div class="reg-input-row clearfix">
+            <div class="reg-row-lc-new reg-row-lc float-left">
               Your Phone Number
-            </div> -->
+            </div>
             <div class="reg-row-rc-new reg-row-rc float-left">
 	          <div class="reg-input-cont reg-phone">
 	          <input class="reg-input" placeholder="Phone number" name="phone" id="phoneID" >
 	          <div class="err-msg hide"></div>
 	          </div>
            </div>
+          </div> -->
+          <div class="reg-btn-wrapper clearfix">
+            <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
+              Submit
+            </div>
           </div>
           <div class="reg-input-error hide errorMsg">
            		<span class ="reg-registration-error">
            		We are sorry, this email address already has a newfi account.To login <a href='javascript:goToLoginPage();' style="color: #2F6BF7">click here</a>
            		</span>
-          </div>
-          
-          
-          <div class="reg-btn-wrapper clearfix">
-            <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
-              Submit
-            </div>
           </div>
                   </c:otherwise>
                 </c:choose>
@@ -307,8 +303,8 @@
 				var timezone = dateVar.getTimezoneOffset();
 				user.emailId = $("#emailID").val() + ":" + timezone;
 				user.lastName = $("#lastName").val();
-				var phoneNumber =$("#phoneID").val();
-				user.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
+				/* var phoneNumber =$("#phoneID").val();
+				user.phoneNumber = phoneNumber.replace(/[^0-9]/g, ''); */
 				user.userRole={
 							roleDescription :$("#userTypeID").val()
 						}
@@ -342,11 +338,11 @@
 					return false;
 	                }
 				}
-				var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
+				/* var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
 				if(!phone){
 					$('.reg-input-row').css('margin-bottom','38px');
 					return false;
-				}
+				} */
 				//End of validation
 				validateUser(LoanAppFormVO);
 				
