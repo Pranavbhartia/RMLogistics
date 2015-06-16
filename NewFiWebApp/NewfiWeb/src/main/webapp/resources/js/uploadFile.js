@@ -4,6 +4,7 @@
 var SPLIT_DOC = "Split Document";
 var needIdtoAssign = null;
 var needIdDirectEvent = false;
+var needIdFinal;
 var loanIdAssigned = new Array();
 
 function uploadNeededItemsPage() {
@@ -462,6 +463,8 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 }
 
 function uploadDocument(event) {
+	needIdFinal = $(event.target).data("needId");
+	console.log('Final needId: '+needIdFinal);
 	var appCreated = false;
 	if (selectedUserDetail) {
 		if (selectedUserDetail.lqbFileId && selectedUserDetail.lqbFileId != "") {
@@ -475,18 +478,22 @@ function uploadDocument(event) {
 		}
 	}
 	if (appCreated) {
-		var needIdData = $(event.target).data("needId");
+		
 		var myDropzone = Dropzone.forElement("div#drop-zone");
 		// myDropzone.params("needId" ,needIdData );
 		needIdDirectEvent = true;
 		$("#file-upload-icn").click();
 		needIdDirectEvent = false;
+		
 		myDropzone.on("sending", function(file, xhr, formData) {
 			// add headers with xhr.setRequestHeader() or
 			// form data with formData.append(name, value);
 			if(needIdtoAssign==null){
-				formData.append("needId", needIdData);	
+				formData.append("needId", needIdFinal);	
+				
 			}
+			
+			
 			
 		});
 		myDropzone.on("processing", function(file) {
