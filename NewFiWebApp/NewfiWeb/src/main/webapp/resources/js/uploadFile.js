@@ -3,6 +3,7 @@
  */
 var SPLIT_DOC = "Split Document";
 var needIdtoAssign = null;
+var needIdDirectEvent = false;
 var loanIdAssigned = new Array();
 
 function uploadNeededItemsPage() {
@@ -19,12 +20,27 @@ function getRequiredDocuments() {
 			+ "/" + currentUserAndLoanOnj.activeLoanId, "GET", "json", "",
 			getRequiredDocumentData);
 }
-
+function resetDragDrop(){
+	if(!needIdDirectEvent){
+		needIdtoAssign = 'reset';	
+		var myDropzone = Dropzone.forElement("div#drop-zone");
+		myDropzone.on("processing", function(file) {
+			this.options.url = "rest/fileupload/documentUpload";
+			
+		});
+		
+	}
+}
 function getRequiredDocumentData(neededItemList) {
 	neededItemListObject = neededItemList;
+	needIdtoAssign = null;
 	$('#uploadedNeedContainer').remove();
 	paintUploadNeededItemsPage(neededItemListObject);
 
+	$('#drop-zone').click(function(e){
+		resetDragDrop();
+		
+	});
 	$("#knobUpload").knob({
 		"data-width" : "50",
 		"data-displayInput" : false,
@@ -462,11 +478,16 @@ function uploadDocument(event) {
 		var needIdData = $(event.target).data("needId");
 		var myDropzone = Dropzone.forElement("div#drop-zone");
 		// myDropzone.params("needId" ,needIdData );
+		needIdDirectEvent = true;
 		$("#file-upload-icn").click();
+		needIdDirectEvent = false;
 		myDropzone.on("sending", function(file, xhr, formData) {
 			// add headers with xhr.setRequestHeader() or
 			// form data with formData.append(name, value);
-			formData.append("needId", needIdData);
+			if(needIdtoAssign==null){
+				formData.append("needId", needIdData);	
+			}
+			
 		});
 		myDropzone.on("processing", function(file) {
 			this.options.url = "rest/fileupload/documentUploadWithNeed";
@@ -548,7 +569,7 @@ function createDropZone(needID) {
 
 					},
 					drop : function() {
-
+						resetDragDrop();
 					},
 					complete : function(file, response) {
 						clearOverlayMessage();
@@ -580,6 +601,7 @@ function createDropZone(needID) {
 					dragleave : function() {
 						$('#file-upload-icn').removeClass(
 								'file-upload-hover-icn');
+						resetDragDrop();
 					},
 					dragover : function() {
 						$('#file-upload-icn').addClass('file-upload-hover-icn');

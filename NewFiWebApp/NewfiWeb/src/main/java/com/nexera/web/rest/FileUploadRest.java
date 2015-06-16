@@ -328,7 +328,11 @@ public class FileUploadRest {
 		        + loanId + " and assignedBy : " + assignedBy
 		        + " and need id : " + needId);
 		List<String> unsupportedFile = new ArrayList<String>();
-		Boolean isAssignedToNeed = (needId != null) ? true : false;
+		Boolean isAssignedToNeed = true;
+		if (needId == null || needId.equals(0)) {
+			isAssignedToNeed = false;
+		}
+
 		for (MultipartFile multipartFile : file) {
 			CheckUploadVO checkFileUploaded = null;
 
