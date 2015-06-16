@@ -1103,7 +1103,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
     });
     var regGetStarted = $('<div>').attr({
         "class": "cep-button-color reg-btn float-left",
-    }).html("Create Account").bind('click', {
+    }).html("Submit").bind('click', {
         "userDetails": registration
     }, function(event) {
         
