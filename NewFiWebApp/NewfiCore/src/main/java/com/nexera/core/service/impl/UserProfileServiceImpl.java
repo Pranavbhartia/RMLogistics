@@ -566,6 +566,34 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
+	private void sendNewUserAlertEmail(User user, Integer loanID)
+	        throws InvalidInputException, UndeliveredEmailException {
+		String subject = CommonConstants.SUBJECT_NEW_LOAN_ALERT;
+		EmailVO emailEntity = new EmailVO();
+
+		Template template = null;
+
+		template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_CUSTOMER_ALERT);
+
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-custname-", new String[] { user.getFirstName()
+		        + " " + user.getLastName() });
+		substitutions.put("-url-", new String[] { baseUrl });
+		emailEntity.setSenderEmailId(user.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject(subject);
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
+		sendEmailService.sendEmailForInternalUsersAndSM(emailEntity, loanID,
+		        template);
+	}
+
 	private void sendEmailWithQuotes(UserVO user,
 	        List<LqbTeaserRateVo> teaseRateDataList)
 	        throws InvalidInputException, UndeliveredEmailException {
@@ -1347,6 +1375,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        + userVOObj.getUsername());
 			this.crateWorkflowItems(userVOObj.getDefaultLoanId());
 			sendEmailToCustomer(newUser);
+			sendNewUserAlertEmail(newUser, userVOObj.getDefaultLoanId());
 			//
 			return userVOObj;
 		} catch (Exception e) {

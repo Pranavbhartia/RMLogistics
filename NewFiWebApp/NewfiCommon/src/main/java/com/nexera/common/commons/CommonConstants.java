@@ -202,7 +202,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_FINAL_DOCS_SENT = "FINAL_DOCS_SENT_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_DOCS_ASSIGNED_TO_FUNDER = "DOCS_ASSIGNED_TO_FUNDER_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_PRE_QUAL_LETTER = "PRE_QUAL_LETTER_TEMPLATE_ID";
-
+	public static final String TEMPLATE_KEY_NAME_NEW_CUSTOMER_ALERT = "NEW_CUSTOMER_ALERT";
 	public static final String PURCHASE_CONTRACT = "Purchase Contract Including Addendums and Counter-offers";
 
 	// Document type credit report.
@@ -310,11 +310,13 @@ public interface CommonConstants {
 	public static final String SEND_EMAIL_TO_SALES_MANGERS = "salesManagersOnly";
 
 	public static final String SEND_EMAIL_TO_INTERNAL_USERS = "internalUsers";
+	
+	public static final String SEND_EMAIL_TO_LM_AND_SM = "LM_SM_Users";
 
 	public static final String STICKET = "sTicket";
 
 	public static final String PRE_QUALIFICATION_LETTER = "Pre-Qualification letter";
-
+	public static final String SUBJECT_NEW_LOAN_ALERT = "newfi.com ALERT: You Have a New Lead ";
 	public static final String EXTRA_DOCUMENT = "Extra";
 
 	// Marking page rate

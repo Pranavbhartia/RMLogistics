@@ -29,7 +29,10 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     var container = $('<div>').attr({
         "class": "lock-rate-slider-container"
     });
-    
+    for(var i=0;i<teaserRate.length;i++){
+    	var rateArray = teaserRate[i].rateVO;
+    	rateArray=rateArray.reverse();
+    }
     var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
     var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
     
@@ -376,10 +379,11 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var leftCol = $('<div>').attr({
         "class": "loan-summary-lp float-left"
     });
-
-    var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
+    //NEXNF-483
+   // var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);   
+    var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase");
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVO.yearData +" Year Fixed","loanprogramId");
-    var lcRow3 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false);
+    var lcRow3 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Price",showValue(housePrice), "Down Payment",showValue(downPayment),false);
     var val="";
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
@@ -482,8 +486,8 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     var ratePageSlider="";
     var bottomText="";
     if(!rateVO.dummyData){
-        ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
+        ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
     }
     
     var loanSummaryWrapper = getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn);

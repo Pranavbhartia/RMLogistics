@@ -415,7 +415,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             // var teaserRate = data;
             // paintteaserRate(data);
             //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
-            var quesTxt = "Loan Rates and Fees";
+            var quesTxt = "Programs and Rates";
             var container = $('<div>').attr({
                 "class": "ce-rate-main-container"
             });
