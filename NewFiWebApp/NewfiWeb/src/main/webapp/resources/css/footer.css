@@ -244,15 +244,18 @@ div#footeHomeImage {
 .footer-wrapper-container {
     padding-left: 312px;
 }
-
+.login-footer{
+	width: 80%;
+	padding-right: 130px; 
+	
+}
 .footer-text1{
-    width: 80%;
+    width: 57%;
     text-align: center;
-    padding: 0 20px;
 }
 
 .footer-text2{
-    padding-right: 15px;
+    padding-right: 0;
     width: 20%;
 }
 .footer-container-text2 {
