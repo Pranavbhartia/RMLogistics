@@ -24,7 +24,7 @@
 	width: 205px;
 	height: 40px;
 	line-height: 40px;
-	margin: 20px auto;
+	margin: 0 auto;
 }
 .reg-btn:hover{
 	background-color:#F37521;
@@ -43,7 +43,7 @@
     cursor: pointer;
 }
 .reg-chg-width{
-	  margin: 16px 0 20px -84px;
+	  margin: 0 0 0 -84px;
 	
 }
 .reg-display-title {
@@ -156,7 +156,10 @@ input.reg-radio {
 	  width: 100%;
 	  font-size:14px;
 }
-
+.reg-form-content{
+	  width: 300px;
+      margin: 0 auto;
+}
 .reg-input-row {
     height: 45px;
     line-height: 45px;
@@ -276,7 +279,7 @@ k}
 	  border: 1px solid #dd4b39;
 }
 .realtor-row {
-  	  margin: 36px auto;
+  	  margin: 25px auto;
 }
 
 .color-change{
