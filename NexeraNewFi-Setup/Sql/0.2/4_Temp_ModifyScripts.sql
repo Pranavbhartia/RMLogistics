@@ -33,3 +33,5 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete My Loan P
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `rate_lock_requested` TINYINT NULL DEFAULT 0 AFTER `lock_expiration_date`;
 
+#Rajeswari: 16 June : For New Template
+INSERT INTO `newfi_schema`.`template` (`id`, `key`, `description`, `modified_date`, `value`, `sms_text`) VALUES ('43', 'NEW_CUSTOMER_ALERT', 'Template for new customer Alert', '2015-06-16 12:53:34', 'd4971245-c871-4b26-831c-08a8c91b3029', 'New customer registered in newfi.com');

@@ -566,6 +566,34 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	}
 
+	private void sendNewUserAlertEmail(User user, Integer loanID)
+	        throws InvalidInputException, UndeliveredEmailException {
+		String subject = CommonConstants.SUBJECT_NEW_LOAN_ALERT;
+		EmailVO emailEntity = new EmailVO();
+
+		Template template = null;
+
+		template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_CUSTOMER_ALERT);
+
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-custname-", new String[] { user.getFirstName()
+		        + " " + user.getLastName() });
+		substitutions.put("-url-", new String[] { baseUrl });
+		emailEntity.setSenderEmailId(user.getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject(subject);
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
+		sendEmailService.sendEmailForInternalUsersAndSM(emailEntity, loanID,
+		        template);
+	}
+
 	private void sendEmailWithQuotes(UserVO user,
 	        List<LqbTeaserRateVo> teaseRateDataList)
 	        throws InvalidInputException, UndeliveredEmailException {
@@ -612,9 +640,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	public User createNewUser(UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException,
-	        FatalException {
+	public User createNewUser(UserVO userVO) throws InvalidInputException,
+	        UndeliveredEmailException, FatalException {
 		LOG.info("createNewUserAndSendMail called!");
 		LOG.debug("Parsing the VO");
 
@@ -1348,6 +1375,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        + userVOObj.getUsername());
 			this.crateWorkflowItems(userVOObj.getDefaultLoanId());
 			sendEmailToCustomer(newUser);
+			sendNewUserAlertEmail(newUser, userVOObj.getDefaultLoanId());
 			//
 			return userVOObj;
 		} catch (Exception e) {
@@ -1405,23 +1433,30 @@ public class UserProfileServiceImpl implements UserProfileService,
 		User user = User.convertFromVOToEntity(userVO);
 		try {
 			if (user.getInternalUserDetail() != null) {
-				
-				//Chck if any change in cred.
-				User existingUserinDB = userProfileDao.findByUserId(userVO.getId());
-				if (existingUserinDB.getInternalUserDetail()!= null && existingUserinDB.getInternalUserDetail().getLqbUsername()!=null
-					&& existingUserinDB.getInternalUserDetail().getLqbPassword()!=null 
+
+				// Chck if any change in cred.
+				User existingUserinDB = userProfileDao.findByUserId(userVO
+				        .getId());
+				if (existingUserinDB.getInternalUserDetail() != null
+				        && existingUserinDB.getInternalUserDetail()
+				                .getLqbUsername() != null
+				        && existingUserinDB.getInternalUserDetail()
+				                .getLqbPassword() != null
 				        && nexeraUtility.decrypt(
 				                salt,
 				                crypticKey,
 				                existingUserinDB.getInternalUserDetail()
-				                        .getLqbUsername()).equalsIgnoreCase( user.getInternalUserDetail()
-					        .getLqbUsername() )
-					 && nexeraUtility.decrypt(salt, crypticKey, existingUserinDB.getInternalUserDetail().getLqbPassword()).equalsIgnoreCase( user.getInternalUserDetail()
-							        .getLqbPassword()))
-					{
-						throw new InvalidInputException(
+				                        .getLqbUsername()).equalsIgnoreCase(
+				                user.getInternalUserDetail().getLqbUsername())
+				        && nexeraUtility.decrypt(
+				                salt,
+				                crypticKey,
+				                existingUserinDB.getInternalUserDetail()
+				                        .getLqbPassword()).equalsIgnoreCase(
+				                user.getInternalUserDetail().getLqbPassword())) {
+					throw new InvalidInputException(
 					        ErrorConstants.LQB_CRED_ALREADY_SAVED);
-					}
+				}
 				LqbInterface lqbCacheInvoker = (LqbInterface) applicationContext
 				        .getBean("lqbCacheInvoker");
 				sTicket = lqbCacheInvoker.findSticket(nexeraUtility.encrypt(
@@ -1484,9 +1519,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 			throw new InvalidInputException(
 			        ErrorConstants.LQB_ENCRYPTION_MESSAGE);
 		} catch (IOException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-        }
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return updateCount;
 
 	}

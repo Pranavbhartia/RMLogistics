@@ -23,7 +23,7 @@ public interface SendEmailService {
 	boolean sendEmailForTeam(EmailVO emailEntity, int loanId, Template template)
 	        throws InvalidInputException, UndeliveredEmailException;
 
-	boolean sendEmailForInternalUsers(EmailVO emailEntity, int loanId,
+	boolean sendEmailForInternalUsersAndSM(EmailVO emailEntity, int loanId,
 	        Template template) throws InvalidInputException,
 	        UndeliveredEmailException;
 
