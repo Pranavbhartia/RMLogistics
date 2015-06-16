@@ -1509,6 +1509,7 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
     var yearValues = LQBResponse;
     
     var rateArray = yearValues[yearValues.length-1].rateVO;
+//    rateArray=rateArray.reverse();
     index = parseInt(rateArray.length / 2);
     var silderCont = getRatSliderCEP(rateArray,inputCustomerDetails,yearValues[yearValues.length-1].value);
     
@@ -1551,6 +1552,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
     var gridItemCont = $('<div>').attr({
         "class": "rt-grid-cont"
     });
+    //gridArray=gridArray.reverse();
     for (var i = 0; i < gridArray.length; i++) {
         var leftOffset = i / (gridArray.length - 1) * 100;
         var gridItem = $('<div>').attr({

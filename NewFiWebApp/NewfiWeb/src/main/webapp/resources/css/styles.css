@@ -696,7 +696,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .closing-cost-cont-wrapper-top,.closing-cost-cont-wrapper-bottom {
-	margin-left: 35px;
+	margin-left: 0px;
 	border-bottom: 1px #E9E9E9 solid;
 }
 
@@ -715,13 +715,20 @@ input[type="button"]:focus, button:focus {
 	font-family: 'opensanssemibold';
 	padding: 10px 0 10px 5px;
 }
-
+/* NEXNF-483*/
+.eng-header-indent {
+  padding: 10px 0 10px 39px;
+}
 .closing-cost-desc {
 	font-family: 'opensanssemibold';
 	padding: 10px 0 10px 5px;
 	width: 75%;
 }
 
+/* NEXNF-483*/
+.eng-indent {
+  padding: 10px 0 10px 39px;
+}
 .closing-cost-detail {
 	width: 25%;
 	padding: 5px 0;
