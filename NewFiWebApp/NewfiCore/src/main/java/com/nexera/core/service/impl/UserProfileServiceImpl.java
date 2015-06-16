@@ -1642,14 +1642,18 @@ public class UserProfileServiceImpl implements UserProfileService,
 						 * Check if the token has expired. All tokens expire
 						 * after 4 hours
 						 */
+						LOG.info("User has entered the credentials."
+						        + lqbUsername);
 						if (utils.hasTokenExpired(expiryTime)) {
 							// Token has expired, hence generate a new one.
+							LOG.info("Token expired for user: " + lqbUsername);
 							token = getNewToken(lqbUsername, lqbPassword,
 							        userVO.getInternalUserDetail().getId());
 						}
 						// Now, we have a token, either from DB or from LQB if
 						// it had expired
 						if (token != null) {
+							LOG.info("Token that will be used." + token);
 							url = getLQBUrlWithToken(token, loanId);
 							return url;
 						} else {
@@ -1660,11 +1664,13 @@ public class UserProfileServiceImpl implements UserProfileService,
 					} else {
 						// We have valid LQB credentials, but no token in the
 						// system.
+						LOG.info("No token in system for user: " + lqbUsername);
 						token = getNewToken(lqbUsername, lqbPassword, userVO
 						        .getInternalUserDetail().getId());
 						if (token != null) {
+							LOG.info("Token that will be used." + token);
 							url = getLQBUrlWithToken(token, loanId);
-							return url;
+							return url == null ? lqbDefaultUrl : url;
 						} else {
 							LOG.error("Ticket Not Generated For This User ");
 							return lqbDefaultUrl;

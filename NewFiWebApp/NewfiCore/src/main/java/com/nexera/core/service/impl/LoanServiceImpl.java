@@ -453,7 +453,7 @@ public class LoanServiceImpl implements LoanService {
 
 		loanCustomerVO.setTime(utils.getDateAndTimeForUserDashboard(loan
 		        .getModifiedDate()));
-		
+
 		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
 		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
 		loanCustomerVO.setPhone_no(user.getPhoneNumber());
@@ -491,7 +491,9 @@ public class LoanServiceImpl implements LoanService {
 					} else if (checkIfUserIsSalesManager()) {
 						if (loanUser.getInternalUserDetail()
 						        .getInternaUserRoleMaster().getId() == InternalUserRolesEum.LM
-						        .getRoleId() && loanTeam.getActive()!=null && loanTeam.getActive()) {
+						        .getRoleId()
+						        && loanTeam.getActive() != null
+						        && loanTeam.getActive()) {
 							loanManagerList = loanManagerList
 							        + loanUser.getFirstName() + " "
 							        + loanUser.getLastName() + ",";
@@ -1427,7 +1429,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public LoanVO wrapperCallForDashboard(Integer loanID) {
 		Loan loan = this.fetchLoanById(loanID);
 		String lqbLoanId = loan.getLqbFileId();
