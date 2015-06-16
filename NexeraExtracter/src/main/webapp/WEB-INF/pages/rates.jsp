@@ -47,6 +47,10 @@
 			<div id="main-container" class="main-container container"></div>
 		</div>
 	</div>
+	
+	<div class="error-message">
+		<tr>"Thank you for visiting us. We are facing some technical issue and will be back soon"</tr>
+	</div>
 
 
 
