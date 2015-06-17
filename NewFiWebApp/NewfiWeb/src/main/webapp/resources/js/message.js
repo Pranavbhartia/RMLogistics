@@ -90,6 +90,8 @@ var RateLockRequested="Rate Lock Requested";
 //Message in customerEngagement.js
 var answerQuestionOne="Please answer the question";
 var zipCodeMessage="Please enter a valid 5-digit zipcode";
+
+var invalidStateZipCode="Zip code does not belong to any of our approved states";
 var errorInrefinanceRates="error inside paintRefinanceSeeRates :";
 var incorrectEmailID="Incorrect Email ID";
 
