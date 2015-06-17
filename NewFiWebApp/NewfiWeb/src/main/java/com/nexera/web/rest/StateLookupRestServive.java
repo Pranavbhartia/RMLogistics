@@ -56,4 +56,19 @@ public class StateLookupRestServive {
 
 		return responseVO;
 	}
+
+	@RequestMapping(value = "/zipCode", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO validateZipCode(String zipCode) {
+
+		LOG.info("Rest service getStatesList() called to fetch the states list");
+		if (zipCode == null || zipCode.length() < 1)
+			throw new BaseRestException();
+
+		Boolean status = stateLookupService.validateZipCode(zipCode);
+
+		CommonResponseVO responseVO = null;
+		responseVO = RestUtil.wrapObjectForSuccess(status);
+
+		return responseVO;
+	}
 }

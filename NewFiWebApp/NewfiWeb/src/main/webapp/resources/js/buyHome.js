@@ -631,8 +631,19 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
             		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
                     return false;
                 } else {
-                	
-                    event.data.clickEvent();
+                	var callback=event.data.clickEvent;
+                    ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":$('input[name="zipCode"]').val()}, function(response) {
+                        if (response.error) {
+                            showToastMessage(response.error.message)
+                        } else {
+                            if(response.resultObject==true){
+                                callback();    
+                            }else{
+                                 $('input[name="' + key + '"]').next('.err-msg').html(invalidStateZipCode).show();
+                                 $('input[name="' + key + '"]').addClass('ce-err-input').show();
+                            }
+                        }
+                    });
                 }
             } else {
                 return false;

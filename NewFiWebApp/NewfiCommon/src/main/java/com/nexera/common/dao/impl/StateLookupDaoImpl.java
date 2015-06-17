@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.entity.StateLookup;
 import com.nexera.common.entity.ZipCodeLookup;
@@ -24,7 +25,6 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(StateLookupDaoImpl.class);
-
 	@Override
 	@Transactional(readOnly = true)
 	public StateLookup findStateLookupByStateCode(String stateCode)
@@ -79,5 +79,16 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 		}
 		Hibernate.initialize(lookup.getStateLookup());
 		return lookup.getStateLookup().getStatecode();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public boolean validateZip(String zipCode) {
+		String stateCode=getStateCodeByZip(zipCode);
+		for(String allowedStateCode : CommonConstants.allowedStates){
+			if (allowedStateCode.equalsIgnoreCase(stateCode))
+				return true;
+		}
+		return false;
 	}
 }
