@@ -158,7 +158,7 @@
 		margin-left:0;
 	}
 	.container-row{
-		margin-right: 0;
+		margin-right: -10px;
 	}
 	.agent-customer-list-header{
 		margin-left: 10px;
@@ -440,6 +440,26 @@
 		right: 0px;
 		width: 440px;
 	}
+	.add-licence-popup {
+		right: -220px;
+		width: 300px;
+	}
+	.add-licence-popup:after{
+		right: 75%;
+	}
+	.add-licence-popup .add-member-label {
+		width: 81px;
+	}
+	.add-licence-popup .create-user-popup-input {
+	    width: 175px;
+	}
+	.add-licence-popup .add-member-input-cont {
+		width: 100%;
+	}
+	.cust-profile-url{
+		float: none;
+		margin-top: 10px;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
@@ -463,7 +483,8 @@
 /* ============== ONLY TABLETS ==============*/
 @media (min-width: 768px) and (max-width: 991px) {
 	.home-container,
-	.header-container{
+	.header-container,
+	.footer-wrapper-container{
 		width: 100%;
 	}
 	.loan-summary-lp,
@@ -653,13 +674,21 @@
 		padding: 0;
 		text-align: center;
 	}
+	.cust-personal-info-header-url{
+		width: 195px;
+		font-size: 10px;
+	}
+	.cust-personal-info-header {
+		padding: 11px 10px;
+	}
 }
 
 
 /* ============== MEDIUM SIZED SCREENS ==============*/
 @media (min-width: 992px) and (max-width: 1199px) {
 	.home-container,
-	.header-container{
+	.header-container,
+	.footer-wrapper-container{
 		width: 100%;
 	}
 	.rate-program-container-col1{
@@ -1020,7 +1049,8 @@
 		padding: 10px;
 	}
 	.agent-customer-list-header{
-		padding-left: 10px;
+		padding-left: 5px;
+		padding-right: 5px;
 	}
 	.filter-text{
 		display: none;
@@ -1042,9 +1072,12 @@
 		background-size:25px auto;
 	}
 	.filer-dropdown{
-		width:85px;
+		width:95px;
 		margin-left: 5px;
 		padding-left: 10px;
+	}
+	.filter-selected, .filter-dropdown-item{
+		font-size: 10px;
 	}
 	.search-input{
 		width: 70px;
@@ -1257,7 +1290,8 @@
 		width: 100%;
 	}
 	.footer-text1{
-		padding: 0 5px;
+		width : 80%;
+		padding: 0 5px 5px;
 	}
 	.footer-wrapper-container{
 		padding-right: 5px;
@@ -1310,6 +1344,24 @@
 	}
 	.per {
 		margin: 0 5px;
+	}
+	.cust-personal-info-header {
+		padding: 10px;
+	}
+	.ce-title-firstPage {
+		font-size: 26px;
+	}
+	.ce-get-started {
+		font-size: 26px;
+	}
+	.ce-ques-wrapper_firstPage{
+		padding: 0;
+	}
+	.reg-display-title {
+		margin-top: 10px;
+	}
+	.reg-input-cont {
+		width: 280px;
 	}
 }
 

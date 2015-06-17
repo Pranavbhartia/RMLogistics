@@ -442,11 +442,12 @@ function getLoanManager(user){
 		});
 
 		var inputCont = $('<div>').attr({
-			"class" : "prof-form-input-cont clearfix"
+			"class" : "prof-form-input-cont clearfix",
+			"style" : "position:relative;"
 		});
 		
 		var emailInput = $('<input>').attr({
-			"class" : "prof-form-input float-left add-member-input prof-form-input-lg",
+			"class" : "prof-form-input float-left add-member-input",
 			"value" : user.loanManagerEmail,
 			"id" : "managerID",
 			"roleID" : user.userRole.id,
@@ -477,8 +478,7 @@ function getLoanManager(user){
 		
 		var downArrow = $('<div>')
 		.attr({
-			"class" : "add-member-down-arrow float-right",
-			"style" : "right:17px"
+			"class" : "add-member-down-arrow float-right"
 		}).on(
 				'click',
 				function(e) {

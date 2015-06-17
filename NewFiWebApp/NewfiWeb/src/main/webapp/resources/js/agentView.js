@@ -77,6 +77,7 @@ function getAgentSecondaryLeftNavStep(step, text) {
 }
 
 function paintAgentDashboard(loanType) {
+	scrollToTop();
 	selectedUserDetail = undefined;
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
