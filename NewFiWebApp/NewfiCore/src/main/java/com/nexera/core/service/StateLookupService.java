@@ -13,4 +13,10 @@ public interface StateLookupService {
 
 	public String getStateCodeByZip(String addressZipCode);
 
+	/**
+	 * @param zipCode
+	 * @return
+	 */
+	Boolean validateZipCode(String zipCode);
+
 }

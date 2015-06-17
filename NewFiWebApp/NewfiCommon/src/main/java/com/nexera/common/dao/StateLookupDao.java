@@ -18,4 +18,10 @@ public interface StateLookupDao extends GenericDao {
 
 	public String getStateCodeByZip(String addressZipCode);
 
+	/**
+	 * @param zipCode
+	 * @return
+	 */
+	boolean validateZip(String zipCode);
+
 }
