@@ -2079,7 +2079,9 @@ function getClosingCostTopConatiner() {
     var row7Con2 = getClosingCostContainerRow(7, getClosingCostLabel("Recording Fee"), "$ 107.00");
     var row8Con2;
     if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
-        row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
+    	//NEXNF-483
+        //row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
+    row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Transfer Taxes"), "$ 107.00");
     var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "$ 1,562.00");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
     
@@ -2118,9 +2120,24 @@ function getClosingCostBottomConatiner() {
 }
 
 function getClosingCostConatinerHeader(text) {
-    var header = $('<div>').attr({
+	//NEXNF-483
+	var indentHeaderFeildFlag=false;
+	var header="";
+	if(text=="Estimated Third Party Costs"||text=="Estimated Prepaids"){
+		indentHeaderFeildFlag=true;
+	}
+	if(indentHeaderFeildFlag){
+		  header = $('<div>').attr({
+		        "class": "closing-cost-cont-desc-header eng-header-indent"
+		    }).html(text);
+	}else{
+		  header = $('<div>').attr({
+		        "class": "closing-cost-cont-desc-header"
+		    }).html(text);
+	}
+    /*var header = $('<div>').attr({
         "class": "closing-cost-cont-desc-header"
-    }).html(text);
+    }).html(text);*/
     return header;
 }
 
@@ -2149,6 +2166,7 @@ function getClosingCostContainerLastRow(rowNum, desc, detail) {
 
 function getClosingCostContainerRow(rowNum, desc, detail) {
     var key=objectKeyMakerFunction(desc);
+    var indentTextFlag=false;
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
     }
@@ -2158,9 +2176,24 @@ function getClosingCostContainerRow(rowNum, desc, detail) {
     if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
     }
-    var rowDesc = $('<div>').attr({
+    //NEXNF-483
+    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"){
+    	indentTextFlag=true;
+    }
+    var rowDesc="";
+    if(indentTextFlag){
+    	 rowDesc = $('<div>').attr({
+            "class": "closing-cost-desc eng-indent float-left"
+        }).html(desc);
+    }else{
+    	 rowDesc = $('<div>').attr({
+            "class": "closing-cost-desc float-left"
+        }).html(desc);
+    }
+    //end
+   /* var rowDesc = $('<div>').attr({
         "class": "closing-cost-desc float-left"
-    }).html(desc);
+    }).html(desc);*/
     var rowDetail = $('<div>').attr({
         "class": "closing-cost-detail float-left"
     }).html(detail);
@@ -2181,13 +2214,25 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
     }
-    var rowDesc = $('<div>').attr({
-        "class": "closing-cost-desc float-left"
-    });
+
+    //NEXNF-483
+    if(desc=="Interest"){
+
+    	   var rowDesc = $('<div>').attr({
+    	        "class": "closing-cost-desc eng-indent float-left"
+    	    });
+    }else{
+    	   var rowDesc = $('<div>').attr({
+    	        "class": "closing-cost-desc float-left"
+    	    });
+    }
+/*    var rowDesc = $('<div>').attr({
+        "class": "closing-cost-desc eng-indentfloat-left"
+    });*/
     var descText = $('<div>').attr({
         "class": "semi-bold"
     }).html(desc);
-    var subTextDiv = $('<div>').attr({
+   var subTextDiv = $('<div>').attr({
         "class": "subtext"
     }).html(subtext);
     rowDesc.append(descText).append(subTextDiv);
@@ -2805,6 +2850,7 @@ function getRatSlider(gridArray,appUserDetails,yearValue) {
     var gridItemCont = $('<div>').attr({
         "class": "rt-grid-cont"
     });
+    //gridArray=gridArray.reverse();
     for (var i = 0; i < gridArray.length; i++) {
         var leftOffset = i / (gridArray.length - 1) * 100;
         var gridItem = $('<div>').attr({
@@ -2924,7 +2970,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     
     var saveBtn = $('<div>').attr({
     	"class" : "cep-button-color sm-save-btn float-right"
-    }).html("Save").on('click',{"path":path,"flag":flag},function(){
+    }).html("Update").on('click',{"path":path,"flag":flag},function(){
     	
     	if(flag){
 	    	amt = $('#firstInput').val();

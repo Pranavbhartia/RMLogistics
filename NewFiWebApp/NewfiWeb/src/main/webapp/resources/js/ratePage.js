@@ -30,14 +30,17 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     var container = $('<div>').attr({
         "class": "lock-rate-slider-container"
     });
-    
+    for(var i=0;i<teaserRate.length;i++){
+    	var rateArray = teaserRate[i].rateVO;
+    	rateArray=rateArray.reverse();
+    }
     var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
     var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
     
     container.append(tenureSlider).append(rateSlider);
     return container
 }
-function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails){
+function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate){
     var wrapper = $('<div>').attr({
         "class": "lock-rate-slider-wrapper"
     });
@@ -105,8 +108,8 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails){
             
             sendPreQualificationLetter();
         });
-        
-        if(appUserDetails.loanType.loanTypeCd == "PUR"){
+        var rateVO = getLQBObj(teaserRate);
+        if(appUserDetails.loanType.loanTypeCd == "PUR" && !rateVO.dummyData){
             return wrapper.append(rateBtn).append(sendPreQualification);
         }else{
             wrapper.append(rateBtn);
@@ -382,10 +385,11 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var leftCol = $('<div>').attr({
         "class": "loan-summary-lp float-left"
     });
-
-    var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);
+    //NEXNF-483
+   // var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);   
+    var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase");
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVO.yearData +" Year Fixed","loanprogramId");
-    var lcRow3 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Amount",showValue(housePrice), " Down Payment",showValue(downPayment),false);
+    var lcRow3 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Price",showValue(housePrice), "Down Payment",showValue(downPayment),false);
     var val="";
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
@@ -488,9 +492,11 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     var ratePageSlider="";
     var bottomText="";
     if(!rateVO.dummyData){
+
     	teaserRateValHolder.leadCustomer = undefined;
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
+        ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
     }
     else if (teaserRateValHolder.teaserRate)
     {
@@ -499,7 +505,7 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     
     var loanSummaryWrapper = getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
-    var buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails);
+    var buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
   //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
 
     parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper).append(bottomText);

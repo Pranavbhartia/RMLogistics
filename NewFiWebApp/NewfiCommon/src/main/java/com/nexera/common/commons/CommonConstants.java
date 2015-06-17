@@ -333,5 +333,5 @@ public interface CommonConstants {
 
 	public static final String FILE_NAME_PREQUAL_LETTER = "newfi pre-qualification.pdf";
 	public static final String DEFAULT_CREDIT_SCORE = "800";
-
+	public static final String[] allowedStates = { "CA", "OR", "WA" };
 }

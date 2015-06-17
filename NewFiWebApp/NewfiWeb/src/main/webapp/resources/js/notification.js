@@ -833,7 +833,7 @@ function getHashLocationForNotification(type,loanId){
 			case "VERIFY_EMAIL":				
 				return resendEmail;
 		}
-		return "#myLoan/my-loan-progress";
+		return "#myLoan/my-loan-progress:"+type;
 	}else{
 		var baseHash="#loan/"+loanId+"/"
 		switch(type){
@@ -856,7 +856,7 @@ function getHashLocationForNotification(type,loanId){
 			case "VERIFY_EMAIL":				
 				return baseHash+"detail";
 		}
-		return baseHash+"progress";
+		return baseHash+"progress:"+type;
 	}
 }
 function resendEmail()

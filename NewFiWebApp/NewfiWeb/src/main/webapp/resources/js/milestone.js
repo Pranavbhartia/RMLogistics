@@ -7,6 +7,7 @@ var COMPLETED = "3";
 var NOT_STARTED = "0";
 var RENDER_RIGHT = "RIGHT";
 var RENDER_LEFT = "LEFT";
+var milestoneAction=""
 var workFlowContext = {
 	init : function(loanId, customer) {
 		this.countOfTasks = 0;
@@ -196,7 +197,24 @@ var workFlowContext = {
 			if (callback) {
 				callback(ob);
 			}
+			ob.performAction();
 		});
+	},
+	performAction:function(){
+		if(hAction){
+			var notificationTyp=mapNotificationToMilestone(hAction);
+			var workFlowItem=workFlowContext.milestoneStepsLookup[mapNotificationToMilestone(hAction)];
+			if(workFlowItem){
+				var contxt=workFlowContext.mileStoneContextList[workFlowItem.id];
+				if(contxt){
+					var stateContainer=contxt.stateInfoContainer
+					if(stateContainer){
+						var topOffset= stateContainer.offset().top;
+						$(window).scrollTop(topOffset-100);
+					}
+				}
+			}
+		}
 	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
@@ -2075,4 +2093,62 @@ function appendLoanManagerPopup(element,loanManagerArray){
 	
 		
 	$('body').append(wrapper);
+}
+
+function mapNotificationToMilestone(notificationType){
+	switch(notificationType){
+		case "CREDIT_SCORE_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "MANAGE_CREDIT_STATUS";
+			else
+				return "CREDIT_SCORE";
+		case "SYS_EDU_NOTIFICATION":
+			return "SYSTEM_EDU";
+		case "DISCLOSURE_AVAIL_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "DISCLOSURE_DISPLAY";
+			else
+				return "DISCLOSURE_STATUS";
+		case "NEEDED_ITEMS_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "VIEW_NEEDS";
+			else
+				return "NEEDS_STATUS";
+		case "APP_FEE_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "MANAGE_APP_FEE";
+			else
+				return "APP_FEE";
+		case "APP_FEE_NOTIFICATION_OVERDUE":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "MANAGE_APP_FEE";
+			else
+				return "APP_FEE";
+		case "LOCK_RATE_CUST_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "LOCK_YOUR_RATE";
+			else
+				return "LOCK_RATE";
+		case "LOCK_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "LOCK_YOUR_RATE";
+			else
+				return "LOCK_RATE";
+		case "APPRAISAL_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "VIEW_APPRAISAL";
+			else
+				return "APPRAISAL_STATUS";
+		case "UW_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "VIEW_UW";
+			else
+				return "UW_STATUS";
+		case "TEAM_ADD_NOTIFICATION":
+			if(newfiObject.user.userRole.roleCd=="CUSTOMER")
+				return "MANAGE_TEAM";
+			else
+				return "TEAM_STATUS";
+		
+	}
 }

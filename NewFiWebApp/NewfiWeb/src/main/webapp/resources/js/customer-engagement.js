@@ -240,7 +240,7 @@ function getContextApplicationYearMonthCEP(contxt) {
 
 
 function optionClicked(element, ctx, option, value, skipCondition) {
-    $(element).parent().find('.app-option-choice').attr("isSelected", "false").mouseleave();
+    $(element).parent().find('.app-option-choice').attr("isSelected", "false").mouseover().mouseleave();
     $(element).attr("isSelected", "true");
     ctx.clickHandler(value);
     if (ctx.value != value || skipCondition) {
@@ -591,7 +591,19 @@ function getTextQuestion(quesText, clickEvent, name) {
                 		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
                 		 return false;
                 	 }else{
-                		 event.data.clickEvent();
+                        var callback=event.data.clickEvent;
+                        ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":inputValue}, function(response) {
+                            if (response.error) {
+                                showToastMessage(response.error.message)
+                            } else {
+                                if(response.resultObject==true){
+                                    callback();    
+                                }else{
+                                     $('input[name="' + key + '"]').next('.err-msg').html(invalidStateZipCode).show();
+                                     $('input[name="' + key + '"]').addClass('ce-err-input').show();
+                                }
+                            }
+                        });
                 	 }
                  	
                  }else{
@@ -1057,6 +1069,18 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "class": "reg-input",
         "placeholder": "First Name",
         "name": "fname"
+    }).bind('keypress', function(e) {
+ 
+        if($(this).val().length == 0){
+            var k = e.which;
+            var ok = k >= 65 && k <= 90 || // A-Z
+                k >= 97 && k <= 122 || // a-z
+                k >= 48 && k <= 57; // 0-9
+ 
+            if (!ok){
+                e.preventDefault();
+            }
+        }
     });
     regInputContainerFname.append(regInputfname).append(appendErrorMessage());
     var regInputContainerlname = $('<div>').attr({
@@ -1066,6 +1090,18 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "class": "reg-input",
         "placeholder": "Last Name",
         "name": "lname"
+    }).bind('keypress', function(e) {
+ 
+        if($(this).val().length == 0){
+            var k = e.which;
+            var ok = k >= 65 && k <= 90 || // A-Z
+                k >= 97 && k <= 122 || // a-z
+                k >= 48 && k <= 57; // 0-9
+ 
+            if (!ok){
+                e.preventDefault();
+            }
+        }
     });
     regInputContainerlname.append(regInputlname).append(appendErrorMessage());
     var regInputContainerEmail = $('<div>').attr({
@@ -1112,7 +1148,11 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
     	}
     var regGetStarted = $('<div>').attr({
         "class": "cep-button-color reg-btn float-left",
+
     }).html(buttonText).bind('click', {
+
+
+
         "userDetails": registration
     }, function(event) {
     	registration.firstName = $('input[name="fname"]').val();
@@ -1557,6 +1597,7 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
     var yearValues = LQBResponse;
     
     var rateArray = yearValues[yearValues.length-1].rateVO;
+//    rateArray=rateArray.reverse();
     index = parseInt(rateArray.length / 2);
     var silderCont = getRatSliderCEP(rateArray,inputCustomerDetails,yearValues[yearValues.length-1].value);
     
@@ -1599,6 +1640,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
     var gridItemCont = $('<div>').attr({
         "class": "rt-grid-cont"
     });
+    //gridArray=gridArray.reverse();
     for (var i = 0; i < gridArray.length; i++) {
         var leftOffset = i / (gridArray.length - 1) * 100;
         var gridItem = $('<div>').attr({

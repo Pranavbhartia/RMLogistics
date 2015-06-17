@@ -529,8 +529,11 @@ function getClosingCostLabel(item) {
 		return "Closing/Escrow Fee";
 	case "Recording Fee":
 		return "Recording Fee";
-	case "City/County Tax stamps":
-		return "City/County Tax stamps";
+		//NEXNF-483
+	/*case "City/County Tax stamps":
+		return "City/County Tax stamps";*/
+	case "City/County Transfer Taxes":
+		return "City/County Transfer Taxes";
 	case "Total Estimated Third Party Costs":
 		return "Total Estimated Third Party Costs";
 	case "Interest":

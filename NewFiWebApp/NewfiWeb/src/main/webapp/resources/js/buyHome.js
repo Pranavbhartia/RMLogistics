@@ -341,7 +341,7 @@ function saleYourCurrentHome() {
 function paintHomeZipCode() {
     active = 4;
     homeProgressBaar(4);
-    var quesTxt = "Zip code";
+    var quesTxt = "Zip Code";
     var quesCont = getBuyHomeTextQuestion(quesTxt, paintBuyHomeSeeTeaserRate, "zipCode");
     $('#ce-refinance-cp').html(quesCont);
 }
@@ -419,7 +419,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             // var teaserRate = data;
             // paintteaserRate(data);
             //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
-            var quesTxt = "Loan Rates and Fees";
+            var quesTxt = "Programs and Rates";
             var container = $('<div>').attr({
                 "class": "ce-rate-main-container"
             });
@@ -635,8 +635,19 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
             		 $('input[name="' + key + '"]').addClass('ce-err-input').show();
                     return false;
                 } else {
-                	
-                    event.data.clickEvent();
+                	var callback=event.data.clickEvent;
+                    ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":$('input[name="zipCode"]').val()}, function(response) {
+                        if (response.error) {
+                            showToastMessage(response.error.message)
+                        } else {
+                            if(response.resultObject==true){
+                                callback();    
+                            }else{
+                                 $('input[name="' + key + '"]').next('.err-msg').html(invalidStateZipCode).show();
+                                 $('input[name="' + key + '"]').addClass('ce-err-input').show();
+                            }
+                        }
+                    });
                 }
             } else {
                 return false;

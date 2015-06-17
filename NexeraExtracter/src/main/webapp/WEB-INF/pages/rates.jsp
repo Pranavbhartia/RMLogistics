@@ -48,7 +48,7 @@
 		</div>
 	</div>
 	
-	<div class="error-message">
+	<div id="error-message-display" class="error-message" style="display: none">
 		<tr>"Thank you for visiting us. We are facing some technical issue and will be back soon"</tr>
 	</div>
 
@@ -65,6 +65,11 @@
 			$.ajax({
 				url : "${baseURL}rest/rates"
 			}).then(function(data) {
+				var jsonData = JSON.parse(data);
+				if(!jsonData.fileDetailList || jQuery.isEmptyObject(jsonData.fileDetailList)){
+					$('#error-message-display').show();
+					return;
+				}
 				paintRatesTablePage(JSON.parse(data));
 			});
 
