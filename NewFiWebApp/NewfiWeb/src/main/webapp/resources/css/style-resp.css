@@ -1188,6 +1188,9 @@
 		width: 310px;
 		left: -65px;
 	}
+	#ms-add-member-popup .create-user-popup {
+		right: -20px;
+	}
 	.create-user-popup-cont{
 		width: 100%;
 	}
