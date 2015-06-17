@@ -24,7 +24,7 @@
 	width: 205px;
 	height: 40px;
 	line-height: 40px;
-	margin: 0 auto;
+	margin: 15px auto;
 }
 .reg-btn:hover{
 	background-color:#F37521;
@@ -32,7 +32,7 @@
 
 .reg-btn {
     width: 100%;
-    margin: 16px auto;
+    margin: 0px auto;
     background: #6c9f2e;
     color: #fff;
     text-align: center;
