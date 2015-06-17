@@ -39,7 +39,7 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     container.append(tenureSlider).append(rateSlider);
     return container
 }
-function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails){
+function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate){
     var wrapper = $('<div>').attr({
         "class": "lock-rate-slider-wrapper"
     });
@@ -102,8 +102,8 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails){
             
             sendPreQualificationLetter();
         });
-        
-        if(appUserDetails.loanType.loanTypeCd == "PUR"){
+        var rateVO = getLQBObj(teaserRate);
+        if(appUserDetails.loanType.loanTypeCd == "PUR" && !rateVO.dummyData){
             return wrapper.append(rateBtn).append(sendPreQualification);
         }else{
             wrapper.append(rateBtn);
@@ -492,7 +492,7 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     
     var loanSummaryWrapper = getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
-    var buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails);
+    var buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
   //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
 
     parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper).append(bottomText);
