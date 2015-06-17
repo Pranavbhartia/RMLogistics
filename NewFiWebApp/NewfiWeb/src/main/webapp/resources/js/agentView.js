@@ -2674,6 +2674,33 @@ function appendCustomerProfEditRow(labelTxt, value, id) {
 	 $('#cus-prof-container').append(row);
 }
 }
+
+$(document).on('keypress',"#firstName", function(e) {
+
+    if($(this).val().length == 0){
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 97 && k <= 122 || // a-z
+            k >= 48 && k <= 57; // 0-9
+
+        if (!ok){
+            e.preventDefault();
+        }
+    }
+}); 
+$(document).bind('keypress', "#lastName",function(e) {
+
+    if($(this).val().length == 0){
+        var k = e.which;
+        var ok = k >= 65 && k <= 90 || // A-Z
+            k >= 97 && k <= 122 || // a-z
+            k >= 48 && k <= 57; // 0-9
+
+        if (!ok){
+            e.preventDefault();
+        }
+    }
+});
 $(document).on('blur',"#carrierInfoID",function(){
 	if($("#carrierInfoID").val()!=""||$("#carrierInfoID").val()!=null){
 		$('#carrier-dropdown-wrapper').next('.err-msg').hide();
