@@ -58,9 +58,8 @@ public interface UserProfileService {
 
 	public void enableUser(int userId) throws NoRecordsFetchedException;
 
-	public User createNewUser(UserVO userVO)
-	        throws InvalidInputException, UndeliveredEmailException,
-	        FatalException;
+	public User createNewUser(UserVO userVO) throws InvalidInputException,
+	        UndeliveredEmailException, FatalException;
 
 	public void deleteUser(UserVO userVO) throws Exception;
 
@@ -150,4 +149,7 @@ public interface UserProfileService {
 	 * @param newUser
 	 */
 	void sendEmailToCustomer(User newUser);
+
+	public void sendContactAlert(UserVO user) throws InvalidInputException,
+	        UndeliveredEmailException;
 }

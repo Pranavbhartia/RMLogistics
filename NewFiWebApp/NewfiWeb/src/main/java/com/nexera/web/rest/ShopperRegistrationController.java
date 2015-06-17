@@ -112,6 +112,33 @@ public class ShopperRegistrationController {
 		return redirectUrl;
 	}
 
+	@RequestMapping(value = "/record", method = RequestMethod.POST)
+	public @ResponseBody String recordShopperInfo(String registrationDetails,
+	        HttpServletRequest request, HttpServletResponse response)
+	        throws IOException {
+
+		Gson gson = new Gson();
+		LOG.info("registrationDetails - inout xml is" + registrationDetails);
+		try {
+			UserVO userVO = gson.fromJson(registrationDetails, UserVO.class);
+
+			String emailId = userVO.getEmailId();
+			LOG.info("calling UserName : " + emailId);
+			LOG.info("User info to be emailed to info@newfi.com");
+			userProfileService.sendContactAlert(userVO);
+		} catch (FatalException e) {
+			LOG.error("error while creating user", e);
+			throw new FatalException("User could not be registered");
+		} catch (Exception e) {
+			LOG.error("error while creating user", e);
+			throw new FatalException("User could not be registered ");
+		}
+
+		LOG.info("Redirecting user to login page: " + "");
+
+		return "";
+	}
+
 	@RequestMapping(value = "/validate", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO validateUser(
 	        String registrationDetails) {
@@ -169,8 +196,8 @@ public class ShopperRegistrationController {
 
 			}
 			UserVO userVO = loanAppFormVO.getUser();
-			User newUser = userProfileService
-			        .createNewUser(loanAppFormVO.getUser());
+			User newUser = userProfileService.createNewUser(loanAppFormVO
+			        .getUser());
 			userProfileService.sendEmailToCustomer(newUser);
 			authenticateUserAndSetSession(emailId, userVO.getPassword(),
 			        request);
