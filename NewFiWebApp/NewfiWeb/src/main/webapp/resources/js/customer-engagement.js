@@ -240,7 +240,7 @@ function getContextApplicationYearMonthCEP(contxt) {
 
 
 function optionClicked(element, ctx, option, value, skipCondition) {
-    $(element).parent().find('.app-option-choice').attr("isSelected", "false").mouseleave();
+    $(element).parent().find('.app-option-choice').attr("isSelected", "false").mouseover().mouseleave();
     $(element).attr("isSelected", "true");
     ctx.clickHandler(value);
     if (ctx.value != value || skipCondition) {
