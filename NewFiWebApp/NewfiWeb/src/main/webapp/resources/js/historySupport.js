@@ -268,7 +268,7 @@ function saveState(primaryNav, secondaryNav, url,num) {
 function getUrlHashFunction(tag, key) {
 	return tag == null ? "" : key + tag;
 }
-
+var hAction;
 function retrieveState() {
 	if (!refreshSupport) {
 		console.log('refresh not supported');
@@ -309,10 +309,15 @@ function retrieveState() {
 
 		return;
 	}
+	var snAction=params.sn.split(":")
 	var primary = params.pn;
-	var secondary = params.sn;
+	var secondary = snAction[0];
 	var loanID = params.loanID;
 	var secondaryId;
+	if(snAction[1])
+		hAction=snAction[1];
+	else
+		hAction=undefined;
 
 	// If Agent/internal user is logged in
 
