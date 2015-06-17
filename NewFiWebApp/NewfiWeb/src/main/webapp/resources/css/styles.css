@@ -141,7 +141,8 @@ input[type="button"]:focus, button:focus {
 
 .header-logo {
 	height: 50px;
-	width: 88px;
+	width: 78px;
+	margin-left: 10px;
 	background: url(../images/logo.png) no-repeat;
 	background-position: center;
 	cursor:pointer;
@@ -905,7 +906,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .small-screen-menu-icon {
-	width: 15px;
+	width: 20px;
 	height: 50px;
 	background: url("../images/menu.png") no-repeat center;
 	background-color: #428bca;
