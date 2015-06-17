@@ -400,6 +400,10 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
                 //container.append(quesTextCont);
                 $(parentContainer).html(container);
                 var errorText=getNoProductMessageInLockRatePage();
+                if(typeof(newfiObject)==='undefined')
+                {
+                	teaserRateValHolder.leadCustomer=true;
+                }
                 var mainContainer = paintApplyNow(teaserRateData,undefined,true);
                 var createAccBtn= $('<div>').attr({
                     "class": "rate-btn createAccButton"

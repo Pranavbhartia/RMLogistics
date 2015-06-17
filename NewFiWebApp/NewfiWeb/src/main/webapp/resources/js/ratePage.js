@@ -1,3 +1,4 @@
+
 function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     var headerCont = $('<div>').attr({
         "class": "loan-summary-header clearfix"
@@ -51,6 +52,10 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
             var createAccBtnTxt="Get Pre-Qualified Now!";
             if(inputCustomerDetails.loanType=="REF")
                 createAccBtnTxt="Start My Loan Now!";
+            if (teaserRateValHolder.leadCustomer)
+            {
+            	createAccBtnTxt="Submit this info";
+            }
             rateBtn1= $('<div>').attr({
                 "class": "rate-btn"
             }).html(createAccBtnTxt).on('click', function() {
@@ -65,6 +70,7 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                     else
                         homeProgressBaar(6)
                 }
+               
                 var mainContainer = paintApplyNow(inputCustomerDetails);
                 $('#ce-refinance-cp').html(mainContainer);
                 
@@ -486,8 +492,15 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     var ratePageSlider="";
     var bottomText="";
     if(!rateVO.dummyData){
+
+    	teaserRateValHolder.leadCustomer = undefined;
+        ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
+    }
+    else if (teaserRateValHolder.teaserRate)
+    {
+    	teaserRateValHolder.leadCustomer=true;
     }
     
     var loanSummaryWrapper = getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
