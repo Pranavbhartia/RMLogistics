@@ -52,6 +52,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			$("#errorMessage").text("Session expired.Please Login");
 			$("#errorMessage").show();
 		}
+		 $('#footer-wrapper').show();
 	});
 </script>
 </head>
@@ -173,6 +174,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			height=height-headerHeight-209;
 			$('.login-container').css("min-height",height+ "px");
 		}
+		 $('#footer-wrapper').show();
 	});
 </script>
 </html>

@@ -3194,6 +3194,7 @@ input.calc-input {
 /*Loan progress styles*/
 .loan-progress-milestone-wrapper {
 	position: relative;
+	margin-bottom: 10%;
 }
 
 .loan-progress-header {

@@ -1,4 +1,4 @@
-<footer class="footer-wrapper" id="footer-wrapper">
+<footer class="footer-wrapper hide" id="footer-wrapper">
    <div class="footer-wrapper-container container">
       <div class="footer-text1 float-left">
          <div style="float:left;margin-left: -252px;padding-top: 5px;">

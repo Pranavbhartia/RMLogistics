@@ -1,4 +1,4 @@
-<footer class="footer-wrapper ce-footer-wrapper" id="footer-wrapper">
+<footer class="footer-wrapper ce-footer-wrapper hide" id="footer-wrapper">
    <div class="ce-footer-container container">
       <div class="footer-text1 float-left">
          <div style="float:left;padding-top: 5px;">
