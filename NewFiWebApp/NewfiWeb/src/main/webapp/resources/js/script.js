@@ -2114,7 +2114,7 @@ function getClosingCostBottomConatiner() {
     var row4Con2 = getClosingCostContainerLastRow(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "$ 3,216.00");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
     var bottomSubText = $('<div>').attr({
-        "class": "closing-cost-bot-row"
+        "class": "closing-cost-bot-row eng-closing-cost-note"
     }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
     return wrapper.append(container2).append(bottomSubText);
 }
@@ -2123,12 +2123,12 @@ function getClosingCostConatinerHeader(text) {
 	//NEXNF-483
 	var indentHeaderFeildFlag=false;
 	var header="";
-	if(text=="Estimated Third Party Costs"||text=="Estimated Prepaids"){
+	if(text=="Estimated Third Party Costs"){
 		indentHeaderFeildFlag=true;
 	}
 	if(indentHeaderFeildFlag){
 		  header = $('<div>').attr({
-		        "class": "closing-cost-cont-desc-header eng-header-indent"
+		        "class": "closing-cost-cont-desc-header eng-indent"
 		    }).html(text);
 	}else{
 		  header = $('<div>').attr({
@@ -2176,8 +2176,8 @@ function getClosingCostContainerRow(rowNum, desc, detail) {
     if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
     }
-    //NEXNF-483
-    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"){
+    //NEXNF-483 and updated for 6.17 updates
+    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance"){
     	indentTextFlag=true;
     }
     var rowDesc="";
@@ -2216,7 +2216,7 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     }
 
     //NEXNF-483
-    if(desc=="Interest"){
+    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Month(s)"||desc=="Homeowners Insurance Reserve - Estimated 2 Month(s)"){
 
     	   var rowDesc = $('<div>').attr({
     	        "class": "closing-cost-desc eng-indent float-left"
