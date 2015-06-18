@@ -32,7 +32,12 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     });
     for(var i=0;i<teaserRate.length;i++){
     	var rateArray = teaserRate[i].rateVO;
-    	rateArray=rateArray.reverse();
+        rateArray.sort(function(a, b){
+            var val1=getFloatValue(a.teaserRate);
+            var val2=getFloatValue(b.teaserRate);
+            return val1-val2;
+        });
+    	/*rateArray=rateArray.reverse();*/
     }
     var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
     var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);

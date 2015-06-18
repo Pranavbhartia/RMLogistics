@@ -141,7 +141,8 @@ $(document).ready(function() {
     currentUser.firstName="${userVO.firstName}";
     currentUser.lastName="${userVO.lastName}";
     currentUser.userId= "${userVO.id}";
-    verifyEmail = "${verifyEmailPath}"
+    verifyEmail = "${verifyEmailPath}";
+    	 $('#footer-wrapper').show();
 
 });
 </script>

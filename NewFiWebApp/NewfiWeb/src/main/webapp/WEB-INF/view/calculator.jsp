@@ -476,7 +476,7 @@
 			       alert(JSON.stringify(teaseRate));
 			    });
 			
-			
+			 $('#footer-wrapper').show();
 		});
 	</script>
 

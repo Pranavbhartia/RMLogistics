@@ -220,6 +220,8 @@
 	            retrieveState();
 	        }
 
+			 $('#footer-wrapper').show();
+			
 		});
 		function adjustInlineFooter(){
 			var height=window.innerHeight;

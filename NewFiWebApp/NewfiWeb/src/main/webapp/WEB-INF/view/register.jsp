@@ -61,6 +61,7 @@
 	<script>
 		$(document).ready(function() {
 			globalBinder();
+			
 		});
 	</script>
 </body>

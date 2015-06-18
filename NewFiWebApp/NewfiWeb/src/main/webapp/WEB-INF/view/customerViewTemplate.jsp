@@ -63,22 +63,29 @@
 	<jsp:include page="footer.jsp"></jsp:include>
 	<input type="hidden" value="${user.photoImageUrl}" id="photoImageUrlID">
 	<script>
-	
+	var newfi = ${newfi};
+	var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
-
+			
+			
 	/* 		$('#right-panel').css('min-height',window.innerHeight - 98 + 'px'); */
 			$('#right-panel').css('min-height','100%');
 			
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
-			if(window.location.hash=="")
+			if(window.location.hash==""){
 				changeLeftPanel(2,callBackFun);
-			else
+				$('#footer-wrapper').show();
+			}
+				
+			else{
 				callBackFun();
+				
+			}
+				
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
-			
-			 
+
 		});
 		function callBackFun(){
 			$(window).resize(function() {
@@ -157,16 +164,9 @@
 
 			
 			$('[data-toggle="tooltip"]').tooltip();  
+			$('#footer-wrapper').show();
 		}
-		function adjustFooter(){
-			var height=window.innerHeight;
-			var footerHeight=$('.footer-wrapper').height();
-			var headerHeight=$('.header-wrapper').height();
-			height=height-headerHeight;
-			$('.content').css("min-height",height+ "px");
-		}
-		var newfi = ${newfi};
-		var baseUrl = "${baseUrl}";
+
 	</script>
 </body>
 </html>

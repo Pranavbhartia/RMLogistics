@@ -115,6 +115,7 @@
 				         return false;
 				    }
 				}); 
+			 $('#footer-wrapper').show();
 			
 		});
 		

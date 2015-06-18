@@ -92,7 +92,7 @@ $(document).ready(function(e){
 	}
 	$('#reg-display-title').text(title);
 	$('#reg-display-header-text').text(headerText);	
-		
+	 $('#footer-wrapper').show();	
 });
 var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]\.[0-9]\.[0-9]\.[0-9]\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]+))$/;
 

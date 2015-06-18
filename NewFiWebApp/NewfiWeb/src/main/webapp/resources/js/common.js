@@ -174,6 +174,7 @@ $(document).click(
 
 // function to show overlay
 function showOverlay() {
+	$('#footer-wrapper').hide();
 	if (overlayCount == 0) {
 		$('#overlay-loader').show();
 	}
@@ -202,6 +203,7 @@ function removePaginationScrollIcon(div) {
 
 // function to hide overlay
 function hideOverlay() {
+	$('#footer-wrapper').show();
 	overlayCount--;
 	if (overlayCount == 0) {
 		$('#overlay-loader').hide();
