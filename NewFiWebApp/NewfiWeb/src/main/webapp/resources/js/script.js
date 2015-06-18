@@ -2081,7 +2081,7 @@ function getClosingCostTopConatiner() {
     if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
     	//NEXNF-483
         //row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
-    row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Transfer Taxes"), "$ 107.00");
+    row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
     var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "$ 1,562.00");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
     
