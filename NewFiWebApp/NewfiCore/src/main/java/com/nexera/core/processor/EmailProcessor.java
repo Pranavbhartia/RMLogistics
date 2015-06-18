@@ -16,6 +16,7 @@ import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
@@ -403,6 +404,7 @@ public class EmailProcessor implements Runnable {
 
 						emailBody = extractMessage(emailBody,
 						        regexPatternStrings);
+						emailBody = StringEscapeUtils.unescapeHtml(emailBody);
 
 						LOGGER.debug("Body  of the email is " + emailBody);
 						if (loanVO != null) {
