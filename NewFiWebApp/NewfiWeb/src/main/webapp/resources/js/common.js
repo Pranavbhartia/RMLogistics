@@ -1025,8 +1025,8 @@ function finishedTutorial(element, url){
 }
 
 function goToLogin(){
-	if(newfiObject==undefined || newfiObject.baseUrl==undefined){
-		window.location="${pageContext.request.contextPath}";
+	if(typeof(newfiObject)=='undefined' || newfiObject.baseUrl==undefined){
+		window.location="/NewfiWeb";//Temporary Fix
 	}
 	window.location=newfiObject.baseUrl;
 }
