@@ -309,7 +309,11 @@ function retrieveState() {
 
 		return;
 	}
-	var snAction=params.sn.split(":")
+	var snAction
+	if(params.sn)
+		snAction=params.sn.split(":")
+	else
+		snAction=[];
 	var primary = params.pn;
 	var secondary = snAction[0];
 	var loanID = params.loanID;
