@@ -1,6 +1,8 @@
 var updateErrorMessage="Something went wrong while update . Please try again later";
 var updateSuccessMessage="Succesfully updated";
 var errorMessage="Something went wrong";
+var message = "Invalid Entry";
+
 //Messages in agenView.js
 var messageSaved="Message saved succesfully";//line 955
 var cannotSelectOldMessage="Cannot select old value";//line 1393
@@ -90,8 +92,9 @@ var RateLockRequested="Rate Lock Requested";
 //Message in customerEngagement.js
 var answerQuestionOne="Please answer the question";
 var zipCodeMessage="Please enter a valid 5-digit zipcode";
-
-var invalidStateZipCode="Zip code does not belong to any of our approved states";
+//NEXNF-516
+/*var invalidStateZipCode="Zip code does not belong to any of our approved states";*/
+var invalidStateZipCode="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
 var errorInrefinanceRates="error inside paintRefinanceSeeRates :";
 var incorrectEmailID="Incorrect Email ID";
 
