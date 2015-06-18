@@ -12,6 +12,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.ModifiedLoanListXMLHandler;
 import com.nexera.core.utility.NexeraUtility;
 
+@DisallowConcurrentExecution
 public class LoanBatchProcessor extends QuartzJobBean {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger("batchJobs");
