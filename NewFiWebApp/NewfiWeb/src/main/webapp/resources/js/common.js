@@ -512,7 +512,7 @@ function getClosingCostLabel(item) {
 	case "This is your cost or credit based on rate selected":
 		return "This is your cost or credit based on rate selected";
 	case "Estimated Lender Costs":
-		return "Estimated Lender Costs";
+		return "Total Estimated Lender Costs";//Changed for 6.17 portal updates
 	case "Appraisal Fee":
 		return "Appraisal Fee";
 	case "Credit Report":
@@ -539,7 +539,7 @@ function getClosingCostLabel(item) {
 	case "Homeowners Insurance":
 		return "Homeowners Insurance";
 	case "Total Prepaids":
-		return "Total Prepaids";
+		return "Total Estimated Prepaids";//changed for portal updates 6.17
 	case "Tax Reserve - Estimated 2 Month(s)":
 		return "Tax Reserve - Estimated 2 Month(s)";
 	case "Homeowners Insurance Reserve - Estimated 2 Month(s)":
@@ -547,7 +547,7 @@ function getClosingCostLabel(item) {
 	case "Total Estimated Reserves Deposited in Escrow Account":
 		return "Total Estimated Reserves Deposited in Escrow Account";
 	case "Total Estimated Closing Cost":
-		return "Total Estimated Closing Cost";
+		return "Total Estimated Closing Costs";//changed for portal updates 6.17 addition of s
 	}
 }
 

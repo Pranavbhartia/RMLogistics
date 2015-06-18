@@ -389,7 +389,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
    // var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);   
     var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase");
     var lcRow2 = getLoanSummaryRow("Loan Program", rateVO.yearData +" Year Fixed","loanprogramId");
-    var lcRow3 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Price",showValue(housePrice), "Down Payment",showValue(downPayment),false);
+    var lcRow3 = getLoanAmountRowPurchase("Loan Amount", showValue(loanAmount), "loanAmount","Purchase Price",showValue(housePrice),"Down Payment",showValue(downPayment),false);
     var val="";
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
