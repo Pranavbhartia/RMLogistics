@@ -63,6 +63,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					address="https://edocs.lendingqb.com/los/webservice/authservice.asmx"
 					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
 					connector-ref="NoSessionConnector">
+					<logger level="INFO" doc:name="Logger" message="#[message]" />
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
 					</message-properties-transformer>

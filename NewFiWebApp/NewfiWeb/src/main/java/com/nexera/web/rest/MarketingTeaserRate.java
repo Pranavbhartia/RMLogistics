@@ -42,33 +42,37 @@ public class MarketingTeaserRate {
 	LqbInterface lqbCacheInvoker;
 
 	@RequestMapping(value = "/marketingTeaserRate", method = RequestMethod.POST)
-	public List<MarketingPageRateVo> findMarkeingTeaseRates(
-	       String teaserRate) {
+	public List<MarketingPageRateVo> findMarkeingTeaseRates(String teaserRate) {
 		LOG.info(" Inside findMarkeingTeaseRates method");
 		Gson gson = new Gson();
 		String lockRateData = null;
-       
+
 		List<MarketingPageRateVo> marketingPageRateVo = null;
+		try {
+			HashMap<String, String> map = lqbCacheInvoker
+			        .invokeRest(teaserRate);
+			String responseTime = map.get("responseTime");
+			String lqbResponse = map.get("responseMessage");
 
-		HashMap<String, String> map = lqbCacheInvoker.invokeRest(teaserRate);
-		String responseTime = map.get("responseTime");
-		String lqbResponse = map.get("responseMessage");
+			if (null != lqbResponse) {
+				List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
+				for (TeaserRateResponseVO responseVo : teaserRateList) {
+					responseVo.setResponseTime(responseTime);
+				}
+				lockRateData = gson.toJson(teaserRateList);
 
-		if (null != lqbResponse) {
-			List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
-			for (TeaserRateResponseVO responseVo : teaserRateList) {
-				responseVo.setResponseTime(responseTime);
+				marketingPageRateVo = thirtyYearRateVoDataSet(lockRateData);
+			} else {
+				LOG.info("lqbResponse is not correct");
+				lqbCacheInvoker.invalidateTeaserRateCache(teaserRate);
+				lockRateData = "error";
 			}
-			lockRateData = gson.toJson(teaserRateList);
-
-			marketingPageRateVo = thirtyYearRateVoDataSet(lockRateData);
-		} else {
-			LOG.info("lqbResponse is not correct");
-
-			lockRateData = "error";
+			return marketingPageRateVo;
+		} catch (Exception e) {
+			LOG.error("Error in retrieving market date", e);
+			lqbCacheInvoker.invalidateTeaserRateCache(teaserRate);
 		}
-		return marketingPageRateVo;
-
+		return null;
 	}
 
 	private static JSONObject createRequestPayload() {
@@ -165,7 +169,8 @@ public class MarketingTeaserRate {
 					LqbTeaserRateVo LqbTeaserRateVo = gson.fromJson(
 					        thirtyYearRateVoDataSet.toString(),
 					        LqbTeaserRateVo.class);
-					if (LqbTeaserRateVo.getClosingCost().equals("$0.00")&&(j+1)<rateVOArray.length()) {
+					if (LqbTeaserRateVo.getClosingCost().equals("$0.00")
+					        && (j + 1) < rateVOArray.length()) {
 						thirtyYearRateVoDataSet = rateVOArray
 						        .getJSONObject(j + 1);
 						LqbTeaserRateVo = gson.fromJson(
