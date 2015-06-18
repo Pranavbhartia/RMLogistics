@@ -960,6 +960,10 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
 	               // container.append(quesTextCont);
 	                $(parentContainer).html(container);
 	                var errorText=getNoProductMessageInLockRatePage();
+	                if(typeof(newfiObject)==='undefined')
+	                {
+	                	teaserRateValHolder.leadCustomer=true;
+	                }
 	                var mainContainer = paintApplyNow(teaserRateData,undefined,true);
 	                //6.12 Portal testing and Updates
                     /* var createAccBtn= $('<div>').attr({
@@ -1137,110 +1141,127 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
     var regContainerGetStarted = $('<div>').attr({
         "class": "reg-btn-wrapper clearfix"
     });
+    var buttonText = "Create Account";
+    if (teaserRateValHolder.leadCustomer)
+    	{
+    	buttonText = "Submit";
+    	}
     var regGetStarted = $('<div>').attr({
         "class": "cep-button-color reg-btn float-left",
-    }).html("Submit").bind('click', {
+
+    }).html(buttonText).bind('click', {
+
+
+
         "userDetails": registration
     }, function(event) {
-        
     	registration.firstName = $('input[name="fname"]').val();
         registration.lastName = $('input[name="lname"]').val();
-       /* var phoneNumber = $('input[name="phone"]').val();
-        registration.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');*/
         var dateVar = new Date();
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
-        var status=validateCustomerRegistration(registration.phoneNumber);
-        if(!status){
-        	return false;
-        }
-        var appUserInput = new Object();
-        var refinancedetails = new Object();
-        var propertyTypeMaster = new Object();
-        var purchaseDetails = new Object();
-        var user = new Object();
-
-        var selectedLqbData =undefined;
-        var initValueSet =undefined;
-        if(closingCostHolder){
-            selectedLqbData = closingCostHolder.valueSet;
-            initValueSet = closingCostHolder.initValueSet;
-        }
-
-        var teaseRateDataList=[];
-        teaseRateDataList.push(initValueSet);
-        teaseRateDataList.push(selectedLqbData);
-
-        user.firstName = registration.firstName;
-        user.lastName = registration.lastName;
-        user.emailId = registration.emailId;
-        //user.phoneNumber=registration.phoneNumber;
-        appUserInput.emailQuote = emailQuote;
-
-        loanType = {};
-        loanType.loanTypeCd = inputCustomerDetails.loanType;
-        appUserInput.loanType = loanType;
-            
-            
-    	if(inputCustomerDetails.isIncludeTaxes=="Yes"||inputCustomerDetails.isIncludeTaxes==true){
-        	inputCustomerDetails.isIncludeTaxes = true;
-        }else if(inputCustomerDetails.isIncludeTaxes=="No"||inputCustomerDetails.isIncludeTaxes==false){
-        	inputCustomerDetails.isIncludeTaxes = false;
-        }
-            
-            
-        if(appUserInput.loanType.loanTypeCd === 'REF'){
-        	
-        	refinancedetails.refinanceOption = inputCustomerDetails.refinanceOption;
-            refinancedetails.mortgageyearsleft=inputCustomerDetails.yearLeftOnMortgage;
-            refinancedetails.cashTakeOut=inputCustomerDetails.cashTakeOut;
-            refinancedetails.currentMortgageBalance = inputCustomerDetails.currentMortgageBalance;
-            refinancedetails.currentMortgagePayment = inputCustomerDetails.currentMortgagePayment;
-            refinancedetails.includeTaxes = inputCustomerDetails.isIncludeTaxes;
-            
-
-            propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
-            propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
-            propertyTypeMaster.homeWorthToday = inputCustomerDetails.homeWorthToday;
-            propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
-            
-            propertyTypeMaster.propTaxMonthlyOryearly = refinanceTeaserRate.propTaxMonthlyOryearly; 
-            propertyTypeMaster.propInsMonthlyOryearly = refinanceTeaserRate.propInsMonthlyOryearly;
-            propertyTypeMaster.propertyTypeCd = refinanceTeaserRate.propertyType;
-            propertyTypeMaster.residenceTypeCd = refinanceTeaserRate.residenceType;
-
-            appUserInput.refinancedetails = refinancedetails;
-            appUserInput.propertyTypeMaster = propertyTypeMaster;
-            
-        }else{
-        	
-            //purchaseDetails
-            purchaseDetails.livingSituation =inputCustomerDetails.livingSituation;
-            purchaseDetails.housePrice =inputCustomerDetails.purchaseDetails.housePrice;
-            var loanAmount = getFloatValue(inputCustomerDetails.purchaseDetails.housePrice) -getFloatValue(inputCustomerDetails.currentMortgageBalance);
-            purchaseDetails.loanAmount = loanAmount;
-            purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.purchaseDetails.isTaxAndInsuranceInLoanAmt; 
-            purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
-            purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
-
-            appUserInput.monthlyRent = inputCustomerDetails.rentPerMonth;
-            appUserInput.purchaseDetails =purchaseDetails;
-
-            propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
-            propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
-            propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
-            propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
-            propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
-            appUserInput.propertyTypeMaster = propertyTypeMaster;
-        }
-        appUserInput.user = user; 
-        console.log(appUserInput);
-       // Where livingSituation should goes 
-        //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
-        validateUsersBeforeRegistration(appUserInput, teaseRateDataList);
-        // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
-        //saveUserAndRedirect(appUserDetails);
-        // saveUserAndRedirect(registration);
+    	if (teaserRateValHolder.leadCustomer)
+    	{
+    		sendInfoToNewfi(registration);
+    	}
+    	else
+    	{
+	    	
+	       /* var phoneNumber = $('input[name="phone"]').val();
+	        registration.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');*/
+	       
+	        var status=validateCustomerRegistration(registration.phoneNumber);
+	        if(!status){
+	        	return false;
+	        }
+	        var appUserInput = new Object();
+	        var refinancedetails = new Object();
+	        var propertyTypeMaster = new Object();
+	        var purchaseDetails = new Object();
+	        var user = new Object();
+	
+	        var selectedLqbData =undefined;
+	        var initValueSet =undefined;
+	        if(closingCostHolder){
+	            selectedLqbData = closingCostHolder.valueSet;
+	            initValueSet = closingCostHolder.initValueSet;
+	        }
+	
+	        var teaseRateDataList=[];
+	        teaseRateDataList.push(initValueSet);
+	        teaseRateDataList.push(selectedLqbData);
+	
+	        user.firstName = registration.firstName;
+	        user.lastName = registration.lastName;
+	        user.emailId = registration.emailId;
+	        //user.phoneNumber=registration.phoneNumber;
+	        appUserInput.emailQuote = emailQuote;
+	
+	        loanType = {};
+	        loanType.loanTypeCd = inputCustomerDetails.loanType;
+	        appUserInput.loanType = loanType;
+	            
+	            
+	    	if(inputCustomerDetails.isIncludeTaxes=="Yes"||inputCustomerDetails.isIncludeTaxes==true){
+	        	inputCustomerDetails.isIncludeTaxes = true;
+	        }else if(inputCustomerDetails.isIncludeTaxes=="No"||inputCustomerDetails.isIncludeTaxes==false){
+	        	inputCustomerDetails.isIncludeTaxes = false;
+	        }
+	            
+	            
+	        if(appUserInput.loanType.loanTypeCd === 'REF'){
+	        	
+	        	refinancedetails.refinanceOption = inputCustomerDetails.refinanceOption;
+	            refinancedetails.mortgageyearsleft=inputCustomerDetails.yearLeftOnMortgage;
+	            refinancedetails.cashTakeOut=inputCustomerDetails.cashTakeOut;
+	            refinancedetails.currentMortgageBalance = inputCustomerDetails.currentMortgageBalance;
+	            refinancedetails.currentMortgagePayment = inputCustomerDetails.currentMortgagePayment;
+	            refinancedetails.includeTaxes = inputCustomerDetails.isIncludeTaxes;
+	            
+	
+	            propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
+	            propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
+	            propertyTypeMaster.homeWorthToday = inputCustomerDetails.homeWorthToday;
+	            propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
+	            
+	            propertyTypeMaster.propTaxMonthlyOryearly = refinanceTeaserRate.propTaxMonthlyOryearly; 
+	            propertyTypeMaster.propInsMonthlyOryearly = refinanceTeaserRate.propInsMonthlyOryearly;
+	            propertyTypeMaster.propertyTypeCd = refinanceTeaserRate.propertyType;
+	            propertyTypeMaster.residenceTypeCd = refinanceTeaserRate.residenceType;
+	
+	            appUserInput.refinancedetails = refinancedetails;
+	            appUserInput.propertyTypeMaster = propertyTypeMaster;
+	            
+	        }else{
+	        	
+	            //purchaseDetails
+	            purchaseDetails.livingSituation =inputCustomerDetails.livingSituation;
+	            purchaseDetails.housePrice =inputCustomerDetails.purchaseDetails.housePrice;
+	            var loanAmount = getFloatValue(inputCustomerDetails.purchaseDetails.housePrice) -getFloatValue(inputCustomerDetails.currentMortgageBalance);
+	            purchaseDetails.loanAmount = loanAmount;
+	            purchaseDetails.isTaxAndInsuranceInLoanAmt =inputCustomerDetails.purchaseDetails.isTaxAndInsuranceInLoanAmt; 
+	            purchaseDetails.estimatedPrice = inputCustomerDetails.estimatedPurchasePrice;
+	            purchaseDetails.buyhomeZipPri = inputCustomerDetails.zipCode;
+	
+	            appUserInput.monthlyRent = inputCustomerDetails.rentPerMonth;
+	            appUserInput.purchaseDetails =purchaseDetails;
+	
+	            propertyTypeMaster.propertyTypeCd=buyHomeTeaserRate.propertyType;
+	            propertyTypeMaster.residenceTypeCd=buyHomeTeaserRate.residenceType;
+	            propertyTypeMaster.propertyTaxesPaid = inputCustomerDetails.propertyTaxesPaid;
+	            propertyTypeMaster.propertyInsuranceCost = inputCustomerDetails.annualHomeownersInsurance;
+	            propertyTypeMaster.homeZipCode = inputCustomerDetails.zipCode;
+	            appUserInput.propertyTypeMaster = propertyTypeMaster;
+	        }
+	        appUserInput.user = user; 
+	        console.log(appUserInput);
+	       // Where livingSituation should goes 
+	        //appUserDetails.purchaseDetails.livingSituation = refinancedetails.livingSituation;
+	        validateUsersBeforeRegistration(appUserInput, teaseRateDataList);
+	        // saveUserAndRedirect(appUserDetails,saveAndUpdateLoanAppForm(appUserDetails));
+	        //saveUserAndRedirect(appUserDetails);
+	        // saveUserAndRedirect(registration);
+    	}
     });
     regContainerGetStarted.append(regGetStarted);
     if(!appendedFlag){
@@ -1274,6 +1295,37 @@ function validateUsersBeforeRegistration(registration,teaseRateDataList){
             	 saveUserAndRedirect(registration,teaseRateDataList);
             }else{
             	//showErrorToastMessage(data.error.message);
+            	$('.errorMsg').show();
+            }
+           
+        },
+        error: function(data) {
+             //showErrorToastMessage(data);
+        	$('.errorMsg').show();
+             $('#overlay-loader').hide();
+        }
+    });
+}
+
+function sendInfoToNewfi(registration){
+	
+	$('#overlay-loader').show();
+    $.ajax({
+        url: "rest/shopper/record",
+        type: "POST",
+        data: {
+            "registrationDetails": JSON.stringify(registration)
+        },
+        datatype: "application/json",
+        cache:false,
+        success: function(data) {
+            $('#overlay-loader').hide();
+            if(data.error==null){
+            	$('.reg-main-container').hide();
+            	$('.contactInfoText').html('Your details have been submitted. Our team will contact you shortly.')
+            	
+            }else{
+            	showErrorToastMessage(data.error.message);
             	$('.errorMsg').show();
             }
            

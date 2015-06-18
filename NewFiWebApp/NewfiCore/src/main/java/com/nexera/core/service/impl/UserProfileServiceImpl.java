@@ -95,6 +95,7 @@ import com.nexera.common.vo.RefinanceVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
+import com.nexera.common.vo.email.EmailRecipientVO;
 import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.core.helper.MessageServiceHelper;
@@ -563,6 +564,43 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setCCList(ccList);
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
 		        template);
+
+	}
+
+	@Override
+	public void sendContactAlert(UserVO user) throws InvalidInputException,
+	        UndeliveredEmailException {
+		String subject = "New lead in newfi - No products found";
+		EmailVO emailEntity = new EmailVO();
+
+		Template template = null;
+
+		template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NEW_LEAD_NO_PRODUCTS);
+		String[] tokens = user.getEmailId().split(":");
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-", new String[] { user.getFirstName() + " "
+		        + user.getLastName() });
+		if (tokens != null) {
+			substitutions.put("-email-", new String[] { tokens[0] });
+		}
+		emailEntity.setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+		        + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject(subject);
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
+		EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+		emailRecipientVO.setEmailID("info@newfi.com");
+		EmailRecipientVO emailRecipientVO1 = new EmailRecipientVO();
+		emailRecipientVO1.setEmailID("pat@newfi.com");
+		recipients.add(emailRecipientVO);
+		recipients.add(emailRecipientVO1);
+		emailEntity.setRecipients(recipients);
+		emailEntity.setBody("---");
+		sendEmailService.sendMail(emailEntity, true);
 
 	}
 
