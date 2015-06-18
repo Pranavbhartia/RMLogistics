@@ -51,19 +51,19 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/Authservice.asmx?WSDL"
 					doc:name="CXF">
 					<cxf:inInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+						<spring:ref bean="loggingInInterceptor" />
 					</cxf:inInterceptors>
 					<cxf:outInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+						<spring:ref bean="loggingOutInterceptor"/>
 					</cxf:outInterceptors>
 				</cxf:jaxws-client>
-
+			
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://edocs.lendingqb.com/los/webservice/authservice.asmx"
 					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
 					connector-ref="NoSessionConnector">
-					<logger level="INFO" doc:name="Logger" message="#[message]" />
+					<logger message="Payload is #[message]" level="INFO" />
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
 					</message-properties-transformer>

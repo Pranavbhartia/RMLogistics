@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cxf="http://cxf.apache.org/core"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
-						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd
                         http://www.springframework.org/schema/context 
                         http://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -31,5 +32,27 @@
 	<bean id="authenticationRestInterceptor" class="com.newfi.nexera.rest.AuthenticationRestInterceptor">
 	</bean>
 
+	<bean id="abstractLoggingInterceptor" abstract="true">
+		<property name="prettyLogging" value="true" />
+	</bean>
+	<bean id="loggingInInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor"
+		parent="abstractLoggingInterceptor" />
+	<bean id="loggingOutInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor"
+		parent="abstractLoggingInterceptor" />
+
+	<cxf:bus>
+		<cxf:inInterceptors>
+			<ref bean="loggingInInterceptor" />
+		</cxf:inInterceptors>
+		<cxf:outInterceptors>
+			<ref bean="loggingOutInterceptor" />
+		</cxf:outInterceptors>
+		<cxf:outFaultInterceptors>
+			<ref bean="loggingOutInterceptor" />
+		</cxf:outFaultInterceptors>
+		<cxf:inFaultInterceptors>
+			<ref bean="loggingInInterceptor" />
+		</cxf:inFaultInterceptors>
+	</cxf:bus>
 
 </beans>
