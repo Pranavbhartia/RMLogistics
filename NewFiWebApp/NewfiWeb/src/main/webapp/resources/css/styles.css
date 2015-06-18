@@ -863,6 +863,7 @@ input[type="button"]:focus, button:focus {
 .closing-cost-wrapper {
 	border-bottom: 1px #E9E9E9 solid;
 	  border: 1px solid #fafafa;
+	    margin-bottom: 2%;
 }
 
 .arrow-right {
