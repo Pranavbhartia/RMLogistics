@@ -64,7 +64,7 @@
 				console.log("Validator loaded");
 			}
 		});
-
+		$('#footer-wrapper').show();
 	});
 </script>
 </html>

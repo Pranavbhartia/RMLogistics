@@ -68,7 +68,7 @@ $(document).ready(function(){
 		var headerHeight=$('.header-wrapper').height();
 		height=height-headerHeight;
 		$('.content').css("height",height+ "px");
-
+		$('#footer-wrapper').show();
 	
 	
 	
