@@ -16,11 +16,11 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<cxf:configuration name="CXF_AUTH_Configuration"
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
-	<http:connector name="HttpConnector" enableCookies="true"
-		clientSoTimeout="300000" cookieSpec="netscape" doc:name="HTTP-HTTPS"
-		receiveBacklog="0" receiveBufferSize="0" sendBufferSize="0"
-		serverSoTimeout="300000" socketSoLinger="0" validateConnections="true"
-		keepSendSocketOpen="true" keepAlive="true">
+	<http:connector name="HttpConnector" clientSoTimeout="300000"
+		cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
+		receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="300000"
+		socketSoLinger="0" validateConnections="true" keepSendSocketOpen="true"
+		keepAlive="true">
 		<reconnect />
 	</http:connector>
 	<spring:beans>
@@ -32,7 +32,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		</component>
 	</catch-exception-strategy>
 
-	<flow name="NexeraAuthMuleFlowFlow" doc:name="NexeraAuthMuleFlowFlow">
+	<flow name="NexeraAuthMuleFlowFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8181/authCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
 			responseTimeout="300000" keepAlive="true">
@@ -57,10 +57,16 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
 					</cxf:outInterceptors>
 				</cxf:jaxws-client>
+
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://edocs.lendingqb.com/los/webservice/authservice.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					connector-ref="NoSessionConnector">
+					<message-properties-transformer>
+						<delete-message-property key="cookies" />
+					</message-properties-transformer>
+				</https:outbound-endpoint>
 			</when>
 			<when
 				expression="#[message.outboundProperties.'opName'=='GetPmlUserAuthTicket']">
@@ -78,7 +84,12 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					connector-ref="NoSessionConnector">
+					<message-properties-transformer>
+						<delete-message-property key="cookies" />
+					</message-properties-transformer>
+				</https:outbound-endpoint>
 			</when>
 		</choice>
 		<object-to-string-transformer doc:name="Object to String" />
