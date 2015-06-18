@@ -46,9 +46,15 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
 					</cxf:outInterceptors>
 				</cxf:jaxws-client>
+
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://edocs.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					connector-ref="NoSessionConnector">
+					<message-properties-transformer>
+						<delete-message-property key="cookies" />
+					</message-properties-transformer>
+				</https:outbound-endpoint>
 			</when>
 
 		</choice>

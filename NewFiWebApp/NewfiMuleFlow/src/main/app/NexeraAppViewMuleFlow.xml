@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<cxf:configuration name="CXF_APPVIEW_Configuration"
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
-
+	
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
@@ -24,7 +24,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<flow name="NexeraAppViewMuleFlow" doc:name="NexeraAppViewMuleFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8383/appViewCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
-			responseTimeout="300000" keepAlive="true">
+			responseTimeout="300000" keepAlive="true" >
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="appViewRestInterceptor" />
@@ -48,7 +48,12 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					connector-ref="NoSessionConnector">
+					<message-properties-transformer>
+						<delete-message-property key="cookies" />
+					</message-properties-transformer>
+				</https:outbound-endpoint>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='GetPmlPipelineUrl']">
 				<cxf:jaxws-client operation="GetPmlPipelineUrl"
@@ -62,10 +67,16 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
 					</cxf:outInterceptors>
 				</cxf:jaxws-client>
+
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					connector-ref="NoSessionConnector">
+					<message-properties-transformer>
+						<delete-message-property key="cookies" />
+					</message-properties-transformer>
+				</https:outbound-endpoint>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='GetViewDesktopUrl']">
 				<cxf:jaxws-client operation="GetViewDesktopUrl"
@@ -79,10 +90,16 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
 					</cxf:outInterceptors>
 				</cxf:jaxws-client>
+
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					connector-ref="NoSessionConnector">
+					<message-properties-transformer>
+						<delete-message-property key="cookies" />
+					</message-properties-transformer>
+				</https:outbound-endpoint>
 			</when>
 			<when expression="#[message.outboundProperties.'opName'=='GetViewLoanUrl']">
 				<cxf:jaxws-client operation="GetViewLoanUrl"
@@ -96,10 +113,16 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
 					</cxf:outInterceptors>
 				</cxf:jaxws-client>
+
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true" />
+					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					connector-ref="NoSessionConnector">
+					<message-properties-transformer>
+						<delete-message-property key="cookies" />
+					</message-properties-transformer>
+				</https:outbound-endpoint>
 			</when>
 		</choice>
 		<object-to-string-transformer doc:name="Object to String" />
