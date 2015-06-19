@@ -17,11 +17,11 @@
 <link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/dropzone.css" rel="stylesheet">
-<link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
-<link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/styles-common.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/jquery.Jcrop.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/footer.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/style-resp.css" rel="stylesheet">
 <script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/common.js"></script>
 <script type="text/javascript">
@@ -148,10 +148,8 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 			
 			<!-- Footer -->
 			 <!-- <div class="footer container">© 2015 newfi dba of Nexera Holding LLC | All Rights Reserved | NMLS ID 1231327</div> -->
-    <jsp:include page="login-inline-footer.jsp"></jsp:include>
-			
-		
 	</div>
+	<jsp:include page="login-inline-footer.jsp"></jsp:include>
 </body>
 <script>
 	$(document).ready(function(){
@@ -159,6 +157,7 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 		
 		$(window).resize(function(){
 			adjustLoginContainer();
+			adjustInlineFooter();
 		});
 		adjustInlineFooter();
 		function adjustLoginContainer(){
@@ -168,11 +167,12 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 		}
 		function adjustInlineFooter(){
 
-			var height=window.innerHeight;
-			var footerHeight=$('.footer-wrapper').height();
+			var windowHeight=window.innerHeight;
+			//var footerHeight=$('.footer-wrapper').height();
 			var headerHeight=$('.header-wrapper').height();
-			height=height-headerHeight-209;
-			$('.login-container').css("min-height",height+ "px");
+			var minHeight = windowHeight- headerHeight;
+			$('.login-body-wrapper').css("min-height",minHeight+ "px");
+			//$('.login-container').css("min-height",minHeight+ "px");
 		}
 		 $('#footer-wrapper').show();
 	});
