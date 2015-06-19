@@ -368,6 +368,11 @@ function saveUserDocumentAssignments() {
 		cache : false,
 		contentType : "application/json; charset=utf-8",
 		success : function(data) {
+			if(data.error!=undefined && data.error!=null){
+				showErrorToastMessage(data.error.message);
+				hideOverlay();
+				return;
+			}
 			saveAssignmentonFile(data);
 			hideOverlay();
 		},

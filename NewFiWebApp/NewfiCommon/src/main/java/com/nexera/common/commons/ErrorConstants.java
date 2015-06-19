@@ -28,4 +28,8 @@ public interface ErrorConstants {
 	public static final String LQB_TOKEN_GENERATION_ERR_MESSAGE = "LQB Credentials was not found valid";
 
 	public static final String LQB_SAVE_FAILED = "LQB Credentials are incorrect, please try later";
+
+	public static final String UPLOADFILEFAILEDCODE = "501";
+
+	public static final String UPLOADFILEFAILEDMESSAGE = "Error while assigning document";
 }

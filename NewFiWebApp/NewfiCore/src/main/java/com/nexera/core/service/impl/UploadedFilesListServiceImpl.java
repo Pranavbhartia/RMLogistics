@@ -267,7 +267,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
 	        Integer userId, Integer assignedBy) throws IOException,
-	        COSVisitorException {
+	        COSVisitorException, FatalException {
 
 		List<File> filePaths = downloadFileFromService(fileIds);
 
@@ -276,7 +276,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
 		        userId, loanId, assignedBy, isAssignedToNeed, null);
-
+		if (!checkUploadVO.getIsUploadSuccess()) {
+			throw new FatalException("Upload to LQB failed");
+		}
 		if (newFile.exists()) {
 			newFile.delete();
 		}
@@ -1006,7 +1008,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		} catch (Exception e) {
 			LOG.error("exception in converting  : " + e.getMessage(), e);
-			LOG.error("Exception caught " + e.getMessage());
+
 			isSuccess = false;
 		}
 
