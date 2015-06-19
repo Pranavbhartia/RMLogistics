@@ -1817,15 +1817,17 @@ function findStateNameForStateId(stateId) {
 	return 0;
 }
 
-function searchInStateArray(searchTerm){
+function searchInStateArray(searchTerm,searchList){
 	//searchTerm = searchTerm.toUpperCase();
 	var regEx = new RegExp(searchTerm, 'i');
 	var searchedStateList = [];
+	if(!searchList)
+		searchList=stateList;
 	count = 0;
-	for(var i=0; i<stateList.length;i++){
-		var result = stateList[i].stateCode.match(regEx);
+	for(var i=0; i<searchList.length;i++){
+		var result = searchList[i].stateCode.match(regEx);
 		if(result){
-			searchedStateList[count++] = stateList[i];			
+			searchedStateList[count++] = searchList[i];			
 		}
 	}
 	
@@ -1859,6 +1861,16 @@ function stateListCallBack(response) {
 	if(response.error == null){
 		stateList = response.resultObject;
 	}
+}
+var allowedStateArray=["CA", "OR" , "WA"];
+function filterAllowedStates(){
+	var filteredList=[];
+	for(var i=0;i<stateList.length;i++){
+		if(allowedStateArray.indexOf(stateList[i].stateCode)>=0){
+			filteredList.push(stateList[i]);
+		}
+	}
+	return filteredList;
 }
 function mobileCarrierList(response){
 	if(response.error == null){

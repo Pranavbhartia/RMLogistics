@@ -388,40 +388,54 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		        	}
 		    	}
 		    	/*End of validation*/
-		            customerDetail.addressStreet=addressStreet;
-		    		customerDetail.addressCity = city;
-		    		customerDetail.addressState = inputState;
-		    		customerDetail.addressZipCode = zipCode;
-		    		
-		    		customerDetail.livingSince = livingSince;
-		    		appUserDetails.monthlyRent = monthlyRent;
-		    		//appUserDetails.isSellYourhome = isSellYourhome;
-		    		
-		    		//user.customerDetail = customerDetail;
-		    		
-		    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-		    		
-		    		appUserDetails.user.customerDetail = customerDetail;
-		    		
-		    		
-		    		if(isSellYourhome =='Yes')
-		    		appUserDetails.homeToSell = true;
-		    		else
-		    		appUserDetails.homeToSell = false;
-		    		
-		    		//appUserDetails.buyHome = buyHome;
-		    		//alert(JSON.stringify(appUserDetails));
-		    		
-		
-		    		
-		    		//if(appUserDetails.propertyTypeMaster){
-		    		appUserDetails.propertyTypeMaster.propStreetAddress=propAddress;
-		    		appUserDetails.propertyTypeMaster.propState=propState;
-		    		appUserDetails.propertyTypeMaster.propCity=propCity;
-		    		appUserDetails.propertyTypeMaster.homeZipCode=propZipCode;
-		    		//}
+
+		    	ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":propZipCode}, function(response) {
+	                if (response.error) {
+	                    showToastMessage(response.error.message)
+	                } else {
+	                    if(response.resultObject==true){
+	                        customerDetail.addressStreet=addressStreet;
+				    		customerDetail.addressCity = city;
+				    		customerDetail.addressState = inputState;
+				    		customerDetail.addressZipCode = zipCode;
+				    		
+				    		customerDetail.livingSince = livingSince;
+				    		appUserDetails.monthlyRent = monthlyRent;
+				    		//appUserDetails.isSellYourhome = isSellYourhome;
+				    		
+				    		//user.customerDetail = customerDetail;
+				    		
+				    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+				    		
+				    		appUserDetails.user.customerDetail = customerDetail;
+				    		
+				    		
+				    		if(isSellYourhome =='Yes')
+				    		appUserDetails.homeToSell = true;
+				    		else
+				    		appUserDetails.homeToSell = false;
+				    		
+				    		//appUserDetails.buyHome = buyHome;
+				    		//alert(JSON.stringify(appUserDetails));
+				    		
+				
+				    		
+				    		//if(appUserDetails.propertyTypeMaster){
+				    		appUserDetails.propertyTypeMaster.propStreetAddress=propAddress;
+				    		appUserDetails.propertyTypeMaster.propState=propState;
+				    		appUserDetails.propertyTypeMaster.propCity=propCity;
+				    		appUserDetails.propertyTypeMaster.homeZipCode=propZipCode;
+				    		//}
     		
-    		saveAndUpdateLoanAppForm(appUserDetails ,paintloanamountBuyApp());
+    						saveAndUpdateLoanAppForm(appUserDetails ,paintloanamountBuyApp());
+	                    }else{
+	                       	$('input[name="propZipCode"]').next('.err-msg').html(invalidStateZipCode).show();
+			    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
+				       		return false;
+	                    }
+	                }
+            	});
+		            
     	}else{
     		paintloanamountBuyApp();
     	}
