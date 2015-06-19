@@ -307,10 +307,12 @@
 
 .ce-refinance-wrapper .yr-slider{
 	width: 510px;
+	max-width: 90%;
 }
 
 .ce-refinance-wrapper .rt-slider{
 	width: 520px;
+	max-width: 95%;
 }
 
 .ce-get-started {

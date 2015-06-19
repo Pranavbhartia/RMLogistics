@@ -422,7 +422,7 @@
 		margin: 0 auto;
 	}
 	.footer-wrapper-container {
-		padding-left: 50px;
+		padding-left: 0px;
 	}
 	.center-text-session-expire {
 	 	margin: 100px auto;
@@ -1365,6 +1365,13 @@
 	}
 	.reg-input-cont {
 		width: 280px;
+	}
+	.rate-btn-alertRate {
+		padding-right: 10px;
+		width: 160px;
+	}
+	.loan-summary-header-col1 {
+		width: 125px;
 	}
 }
 

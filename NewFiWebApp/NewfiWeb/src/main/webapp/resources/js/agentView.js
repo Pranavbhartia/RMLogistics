@@ -2688,7 +2688,7 @@ $(document).on('keypress',"#firstName", function(e) {
         }
     }
 }); 
-$(document).bind('keypress', "#lastName",function(e) {
+$(document).on('keypress', "#lastName",function(e) {
 
     if($(this).val().length == 0){
         var k = e.which;

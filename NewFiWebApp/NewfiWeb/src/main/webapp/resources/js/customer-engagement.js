@@ -1,5 +1,5 @@
 //JavaScript functions for customer engagement pages
-
+var isNoProductFound=false;
 $(document).on('mouseover','.app-option-choice',function(){
 	$(this).parent().find('.app-option-choice').removeClass('choice-hover');
 	$(this).addClass('choice-hover');
@@ -1162,7 +1162,9 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
     	if (teaserRateValHolder.leadCustomer)
     	{
-    		sendInfoToNewfi(registration);
+    		isNoProductFound=true;
+    		validateUsersBeforeRegistration(registration,isNoProductFound);
+    		//sendInfoToNewfi(registration);
     	}
     	else
     	{
@@ -1292,7 +1294,12 @@ function validateUsersBeforeRegistration(registration,teaseRateDataList){
 
             $('#overlay-loader').hide();
             if(data.error==null){
-            	 saveUserAndRedirect(registration,teaseRateDataList);
+            	if(!isNoProductFound){
+            		 saveUserAndRedirect(registration,teaseRateDataList);
+            	}else{
+            		sendInfoToNewfi(registration);
+            	}
+            	
             }else{
             	//showErrorToastMessage(data.error.message);
             	$('.errorMsg').show();
