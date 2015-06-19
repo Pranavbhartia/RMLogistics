@@ -3705,7 +3705,7 @@ function paintCustomerApplicationPageStep5() {
 		    	if(!questionTwo){
 		    		return false;
 		    	}else{
-		    		if($('input[name="phoneNumber"]').val().length<10){
+		    		if(phoneNumber.length<10){
 		    			$('input[name="phoneNumber"]').next('.err-msg').html(phoneNumberLegthErrorMessage).show();
 		    			$('input[name="phoneNumber"]').addClass('ce-err-input').show();
 	    				return false;
