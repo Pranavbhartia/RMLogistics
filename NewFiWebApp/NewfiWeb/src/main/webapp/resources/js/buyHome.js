@@ -274,12 +274,12 @@ function validateDownPaymentOrPurchasePrice (purchasePriceElement, downPaymentEl
 	 var downPayment = downPaymentElement.val();
 	if((getFloatValue(downPayment) < (0.03* getFloatValue(purchasePrice)))){
 		console.log("Eror");
-		downPaymentElement.next('.err-msg').html(downpaymentThreePerLessThanPurchase).show();
+		downPaymentElement.parent().find('.err-msg').html(downpaymentThreePerLessThanPurchase).show();
 		downPaymentElement.addClass('ce-err-input').show();		
 		return false;
 	}
 	if((getFloatValue(downPayment))>(getFloatValue(purchasePrice))){
-		downPaymentElement.next('.err-msg').html(downpaymentGreaterThanPurchase).show();
+		downPaymentElement.parent().find('.err-msg').html(downpaymentGreaterThanPurchase).show();
 		downPaymentElement.addClass('ce-err-input').show();		
 		return false;
 	}
