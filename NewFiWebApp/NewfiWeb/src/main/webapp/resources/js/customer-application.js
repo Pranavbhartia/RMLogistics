@@ -1234,37 +1234,6 @@ $('#app-right-panel').html("");
 
 }
 
-function getpurchaseValue(){
-    if($("#secondInput")){
-        return $('#secondInput').val();
-    }else if($('input[name="homeWorthToday"]').length>0){
-        return $('input[name="homeWorthToday"]').val();
-    }
-}
-function percentageUpdateEventListener(e){
-    var valComp = e.data.valComp;
-    var percentComp = e.data.percentComp;
-    var purchaseVal=getpurchaseValue();
-    if(purchaseVal){
-        purchaseVal=getFloatValue(purchaseVal);
-        var val=e.data.val;
-        var percentage=e.data.percentage;
-        if(val){
-            var perVal=(val/purchaseVal)*100;
-            if(percentComp)
-                percentComp.val(parseFloat(perVal).toFixed(2)+"%");
-        }else if(percentage){
-            var valu=(purchaseVal*percentage)/100;
-            if(valComp)
-                valComp.val(showValue(valu,true));
-        }
-    }
-}
-function eventBinder(){
-    valComp.bind("change",{"valComp":valComp,"percentComp":percentComp,"val":val},percentageUpdateEventListener)
-    percentComp.bind("change",{"valComp":valComp,"percentComp":percentComp,"percentage":percentage},percentageUpdateEventListener)
-}
-
 function getQuestionContext(question,parentContainer,valueSet){
 //alert('getQuestionContext');
 
@@ -1293,7 +1262,7 @@ function getQuestionContext(question,parentContainer,valueSet){
                 } else if (question.type == "yearMonth") {
                     ob.container = getMonthYearTextQuestionContext(ob);
                 }else if (question.type == "dwnPayment") {
-                    ob.container = getMonthYearTextQuestionContext(ob);
+                    ob.container = getContextApplicationPercentageQues(ob);
                 }
 	        	
 	        },
@@ -5810,4 +5779,84 @@ function validateCoBorowerInformation(){
 		}
 	}
     return true;
+}
+
+function getContextApplicationPercentageQues(contxt) {
+    var container = $('<div>').attr({
+        "class": "app-ques-wrapper"
+    });
+    contxt.container=container;
+    contxt.parentContainer.append(contxt.container);
+    var quesTextCont = $('<div>').attr({
+        "class": "app-ques-text"
+    }).html(contxt.text);
+
+    var optionsContainer = $('<div>').attr({
+        "class": "app-options-cont"
+    });
+    var errFeild=appendErrorMessage();
+	var optionCont = $('<input>').attr({
+	    "class": "app-input dwn-val float-left",
+	    "name": contxt.name,
+	    "value":showValue(contxt.value)
+	}).on("load focus", function(e){
+		$('input[name='+contxt.name+']').maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});
+		/* this is the piece of code to retrict user put special charector*/
+		restrictSpecialChar(contxt.name);
+	});
+	var percentageComp = $('<input>').attr({
+	    "class": "app-input dwn-percentage"
+	}).attr('maxlength','2');;
+    if (contxt.value != undefined) {
+        optionCont.val(contxt.value);
+    }
+    optionCont.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"val":true,"contxt":contxt},percentageUpdateEventListener)
+    percentageComp.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"percentage":true,"contxt":contxt},
+    	function(e){
+    		this.value = this.value.replace(/[^0-9]/g,'')
+    		percentageUpdateEventListener(e);
+    	})
+
+    optionsContainer.append(optionCont).append(errFeild).append(percentageComp);
+    $(optionCont).trigger("keyup")
+    return container.append(quesTextCont).append(optionsContainer);
+}
+function getpurchaseValue(){
+    if($("#secondInput").length>0){
+        return $('#secondInput').val();
+    }else if($('input[name="homeWorthToday"]').length>0){
+        return $('input[name="homeWorthToday"]').val();
+    }else if($('input[name="housePrice"]').length>0){
+        return $('input[name="housePrice"]').val();
+    }
+}
+function percentageUpdateEventListener(e){
+    var valComp = e.data.valComp;
+    var percentComp = e.data.percentComp;
+    var purchaseVal=getpurchaseValue();
+    if(purchaseVal){
+        purchaseVal=getFloatValue(purchaseVal);
+        var val=e.data.val;
+        var percentage=e.data.percentage;
+        if(val){
+        	var amt=getFloatValue(valComp.val());
+            var perVal=(amt/purchaseVal)*100;
+            if(percentComp)
+                percentComp.val(parseFloat(perVal).toFixed(0));
+        }else if(percentage){
+        	var percent=getFloatValue(percentComp.val());
+            var valu=(purchaseVal*percent)/100;
+            if(valComp)
+                valComp.val(showValue(valu));
+        }
+    }
+    var ctx=e.data.contxt;
+	ctx.value=valComp.val();
 }

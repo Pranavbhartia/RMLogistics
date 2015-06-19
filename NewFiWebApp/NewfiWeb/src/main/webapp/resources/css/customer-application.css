@@ -40,7 +40,7 @@
 	margin-bottom: 15px;
 }
 .app-input {
-    width: 140px;
+    width: 150px;
     height: 35px;
     padding-left: 10px;
     line-height: 35px;
@@ -48,6 +48,13 @@
     border-radius: 3px;
     background: #fafafa;
     font-size: 14px;
+}
+.dwn-val{
+	width: 100px;
+}
+.dwn-percentage{
+	width: 50px;
+	padding-left: 2px;
 }
 .app-save-btn {
     width: 160px;

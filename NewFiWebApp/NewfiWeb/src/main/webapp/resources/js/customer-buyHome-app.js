@@ -463,7 +463,7 @@ function paintloanamountBuyApp() {
             "name": "housePrice",
             "value": ""
         }, {
-            "type": "desc",
+            "type": "dwnPayment",
             "text": "Down payment?",
             "name": "dwnPayment",
             "value": dwnPaymnt
