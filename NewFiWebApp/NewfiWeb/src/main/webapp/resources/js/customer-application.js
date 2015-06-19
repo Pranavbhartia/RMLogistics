@@ -5841,7 +5841,7 @@ function percentageUpdateEventListener(e){
     var valComp = e.data.valComp;
     var percentComp = e.data.percentComp;
     var purchaseVal=getpurchaseValue();
-    if(purchaseVal){
+    if(purchaseVal&&getFloatValue(purchaseVal)!=0){
         purchaseVal=getFloatValue(purchaseVal);
         var val=e.data.val;
         var percentage=e.data.percentage;
