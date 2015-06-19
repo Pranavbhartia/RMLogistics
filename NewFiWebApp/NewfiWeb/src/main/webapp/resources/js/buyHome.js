@@ -205,7 +205,7 @@ function paintloanamount() {
             "name": "homeWorthToday",
             "value": ""
         }, {
-            "type": "desc",
+            "type": "dwnPayment",
             "text": "Down payment?",
             "name": "currentMortgageBalance",
             "value": ""
