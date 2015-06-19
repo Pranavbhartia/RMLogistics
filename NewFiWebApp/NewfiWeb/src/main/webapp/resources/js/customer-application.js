@@ -483,7 +483,7 @@ function getApplicationTextQues(question) {
 	        "value":question.value
 	    }).on("focus", function(e){
 	          	
-	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
+	        if (checkForUnmaskedFields(question)) {
 				$('input[name='+question.name+']').maskMoney({
 					thousands:',',
 					decimal:'.',
@@ -521,7 +521,7 @@ function getApplicationTextQues(question) {
 	        "value":question.value
 	    }).on("focus", function(e){
 	          	
-	        if (question.name != 'zipCode' && question.name != 'mortgageyearsleft' && question.name != 'locationZipCode' && question.name != 'buyhomeZipPri' && question.name != 'city' && question.name != 'state' && question.name != 'startLivingTime' && question.name != 'spouseName' && question.name != 'phoneNumber' && question.name != 'ssn' && question.name != 'birthday' && question.name != 'streetAddress' && question.name!='purchaseTime') {
+	        if (checkForUnmaskedFields(question)) {
 				$('input[name='+question.name+']').maskMoney({
 					thousands:',',
 					decimal:'.',
@@ -558,6 +558,43 @@ function getApplicationTextQues(question) {
     return container.append(quesTextCont).append(optionsContainer);
 }
 
+function checkForUnmaskedFields(question){
+    switch(question.name){
+        case 'zipCode':
+            return false;
+        case 'mortgageyearsleft':
+            return false;
+        case 'locationZipCode':
+            return false;
+        case 'buyhomeZipPri':
+            return false;
+        case 'city':
+            return false;
+        case 'state':
+            return false;
+        case 'startLivingTime':
+            return false;
+        case 'spouseName':
+            return false;
+        case 'phoneNumber':
+            return false;
+        case 'ssn':
+            return false;
+        case 'birthday':
+            return false;
+        case 'streetAddress':
+            return false;
+        case 'purchaseTime':
+            return false;
+        case "propCity":
+            return false;
+        case "propState":
+            return false;
+        case "propZipCode":
+            return false;
+    }
+    return true;
+}
 
 function getApplicationMultipleChoiceQues(question,value) {
     var container = $('<div>').attr({
@@ -629,19 +666,20 @@ function paintCustomerApplicationPageStep1a() {
     }, {
         type: "desc",
         text: "State",
-        name: "state",
+        name: "propState",
         value: appUserDetails.user.customerDetail.addressState
     }, {
         type: "desc",
         text: "City",
-        name: "city",
+        name: "propCity",
         value: appUserDetails.user.customerDetail.addressCity
     }, {
         type: "desc",
         text: "Zip code",
-        name: "zipCode",
+        name: "propZipCode",
         value: appUserDetails.user.customerDetail.addressZipCode
     }];
+
 
 
     var questionsContainer = getQuestionsContainer(questions);
@@ -657,15 +695,15 @@ function paintCustomerApplicationPageStep1a() {
     	
     	if(this.innerText != next){
 	    	var address= $('input[name="streetAddress"]').val();
-	    	var inputState = $('input[name="state"]').val();
-	    	var city = $('input[name="city"]').val();
-	    	var zipCode = $('input[name="zipCode"]').val();	    	
+	    	var inputState = $('input[name="propState"]').val();
+	    	var city = $('input[name="propCity"]').val();
+	    	var zipCode = $('input[name="propZipCode"]').val();	    	
 	    	var addressStreet =   $('input[name="streetAddress"]').val();	    	
 	        var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
-	    	var cityStatus=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
-	    	var zipcodeStatus=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
+	    	var cityStatus=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
+	    	var zipcodeStatus=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
-			var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),yesyNoErrorMessage);
+			var stateValidation=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),yesyNoErrorMessage);
 	   
 	    	if(!stateValidation){
 	    		showErrorToastMessage(yesyNoErrorMessage);
@@ -677,10 +715,10 @@ function paintCustomerApplicationPageStep1a() {
 	    	if(!zipcodeStatus){
 	    		return false;
 	    	} else{
-	    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+	    		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){
 
-	    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
-	    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+	    			$('input[name="propZipCode"]').next('.err-msg').html(zipCodeMessage).show();
+	    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
            		    return false;
            	 }
 	    	} 
@@ -695,19 +733,26 @@ function paintCustomerApplicationPageStep1a() {
 	    			return false;
 	    		}
 	    	}
+            ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":zipCode}, function(response) {
+                if (response.error) {
+                    showToastMessage(response.error.message)
+                } else {
+                    if(response.resultObject==true){
+                        appUserDetails.user.customerDetail.addressCity = city;
+                        appUserDetails.user.customerDetail.addressState = inputState;
+                        appUserDetails.user.customerDetail.addressZipCode = zipCode;
+                        appUserDetails.user.customerDetail.addressStreet = addressStreet;
+                        appUserDetails.user.customerDetail.selectedProperty = selectedProperty;
+                        saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b);
+                    }else{
+                        $('input[name="propZipCode"]').next('.err-msg').html(invalidStateZipCode).show();
+                        $('input[name="propZipCode"]').addClass('ce-err-input').show();
+                        return false;
+                    }
+                }
+            });
 	
-	            appUserDetails.user.customerDetail.addressCity = city;
-	            appUserDetails.user.customerDetail.addressState = inputState;
-	            appUserDetails.user.customerDetail.addressZipCode = zipCode;
-	            appUserDetails.user.customerDetail.addressStreet = addressStreet;
-	            appUserDetails.user.customerDetail.selectedProperty = selectedProperty;
-	    		
-	    		//user.customerDetail = customerDetail;
-	    		
-	    		
-	    		//appUserDetails.user = user;
-	    		
-	    		saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b);
+	           
     	}else{
     		// when click on next 
     		paintCustomerApplicationPageStep1b();
@@ -719,6 +764,7 @@ function paintCustomerApplicationPageStep1a() {
    
     
     addStateCityZipLookUp();
+    addCityStateZipLookUpForProperty();
 }
 
 function paintCheckBox(){
@@ -776,7 +822,7 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 
 		e.stopPropagation();
 		if($('#state-dropdown-wrapper-property').css("display") == "none"){
-			appendStateDropDownForProperty('state-dropdown-wrapper-property',stateList);
+			appendStateDropDownForProperty('state-dropdown-wrapper-property',filterAllowedStates(stateList));
 			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
 				$('#state-dropdown-wrapper-property').perfectScrollbar({
 					suppressScrollX : true
@@ -797,8 +843,8 @@ synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
 			return false;
 		}
 		searchTerm = $(this).val().trim();
-		var searchList = searchInStateArray(searchTerm);
-		appendStateDropDownForProperty('state-dropdown-wrapper-property',searchList);
+		var searchedList = searchInStateArray(searchTerm,filterAllowedStates(stateList));
+		appendStateDropDownForProperty('state-dropdown-wrapper-property',searchedList);
 	});
 	
 $('input[name="propCity"]').attr("id","cityID").bind('click keydown',function(){
@@ -1188,7 +1234,36 @@ $('#app-right-panel').html("");
 
 }
 
-
+function getpurchaseValue(){
+    if($("#secondInput")){
+        return $('#secondInput').val();
+    }else if($('input[name="homeWorthToday"]').length>0){
+        return $('input[name="homeWorthToday"]').val();
+    }
+}
+function percentageUpdateEventListener(e){
+    var valComp = e.data.valComp;
+    var percentComp = e.data.percentComp;
+    var purchaseVal=getpurchaseValue();
+    if(purchaseVal){
+        purchaseVal=getFloatValue(purchaseVal);
+        var val=e.data.val;
+        var percentage=e.data.percentage;
+        if(val){
+            var perVal=(val/purchaseVal)*100;
+            if(percentComp)
+                percentComp.val(parseFloat(perVal).toFixed(2)+"%");
+        }else if(percentage){
+            var valu=(purchaseVal*percentage)/100;
+            if(valComp)
+                valComp.val(showValue(valu,true));
+        }
+    }
+}
+function eventBinder(){
+    valComp.bind("change",{"valComp":valComp,"percentComp":percentComp,"val":val},percentageUpdateEventListener)
+    percentComp.bind("change",{"valComp":valComp,"percentComp":percentComp,"percentage":percentage},percentageUpdateEventListener)
+}
 
 function getQuestionContext(question,parentContainer,valueSet){
 //alert('getQuestionContext');
@@ -1216,6 +1291,8 @@ function getQuestionContext(question,parentContainer,valueSet){
                 } else if (ob.type == "yesno") {
                     ob.container = getContextApplicationYesNoQues(ob);
                 } else if (question.type == "yearMonth") {
+                    ob.container = getMonthYearTextQuestionContext(ob);
+                }else if (question.type == "dwnPayment") {
                     ob.container = getMonthYearTextQuestionContext(ob);
                 }
 	        	
