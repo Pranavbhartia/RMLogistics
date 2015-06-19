@@ -5824,7 +5824,7 @@ function getContextApplicationPercentageQues(contxt) {
     		percentageUpdateEventListener(e);
     	})
 
-    optionsContainer.append(optionCont).append(errFeild).append(percentageComp);
+    optionsContainer.append(optionCont).append(percentageComp).append(errFeild);
     $(optionCont).trigger("keyup")
     return container.append(quesTextCont).append(optionsContainer);
 }
