@@ -2692,7 +2692,7 @@ function getRequestRateLockStatus(element){
 	                            window.location.hash="#myTeam";  
 	                        }
                     	}else{
-                    		showToastMessage("Please contact to customer");
+                    		showToastMessage("Please contact your customer");
                     	}
                     });
                 }

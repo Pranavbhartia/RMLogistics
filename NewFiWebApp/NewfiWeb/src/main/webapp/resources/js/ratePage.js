@@ -90,17 +90,26 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                 $('#ce-main-container').html(mainContainer);
             });*/
         }else{
-            rateBtn1= $('<div>').attr({
-                "class": "rate-btn"
-            }).html("Complete Your Loan Profile").on('click', function() {
-                if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
-                    window.location.hash="#myLoan/my-application";
-                    //changeSecondaryLeftPanel(2);//Commented since change in hash value does the job
-                }else{
-                    window.location.hash="#loan/"+selectedUserDetail.loanID+"/application";
-                    //changeAgentSecondaryLeftPanel("lp-step1");//Commented since change in hash value does the job
-                }
-            });
+            if(newfiObject.user.userRole.roleCd!="REALTOR"){
+                rateBtn1= $('<div>').attr({
+                    "class": "rate-btn"
+                }).html("Complete Your Loan Profile").on('click', function() {
+                    if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+                        window.location.hash="#myLoan/my-application";
+                        //changeSecondaryLeftPanel(2);//Commented since change in hash value does the job
+                    }else{
+                        window.location.hash="#loan/"+selectedUserDetail.loanID+"/application";
+                        //changeAgentSecondaryLeftPanel("lp-step1");//Commented since change in hash value does the job
+                    }
+                });
+            }else{
+                rateBtn1= $('<div>').attr({
+                    "class": "rate-btn"
+                }).html("Contact Your Loan Advisor").on('click', function() {
+                    showToastMessage("Please contact your customer");
+                });
+               
+            }
         }
         wrapper.append(rateBtn1);
     }else{
