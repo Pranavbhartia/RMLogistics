@@ -26,7 +26,7 @@ function validateInput(element,inputVal,message){
 	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""
 		){
 	
-			$('input[name="' + name + '"]').next('.err-msg').html(message).show();
+			$('input[name="' + name + '"]').parent().find('.err-msg').html(message).show();
 			$('input[name="' + name + '"]').addClass('ce-err-input').show();
 			$(".err-msg").css('width',width);
 			return false;
@@ -35,12 +35,12 @@ function validateInput(element,inputVal,message){
 
 	}else{
 		if(inputVal == "$0" || inputVal == 0){
-			$('input[name="' + name + '"]').next('.err-msg').html(feildShouldNotBeZero).show();
+			$('input[name="' + name + '"]').parent().find('.err-msg').html(feildShouldNotBeZero).show();
 			$('input[name="' + name + '"]').addClass('ce-err-input').show();
 			$(".err-msg").css('width',width);
 			return false;
 		}else{
-			$('input[name="' + name + '"]').next('.err-msg').hide();
+			$('input[name="' + name + '"]').parent().find('.err-msg').hide();
 			$('input[name="' + name + '"]').removeClass('ce-err-input');			
 			return true;
 		}
