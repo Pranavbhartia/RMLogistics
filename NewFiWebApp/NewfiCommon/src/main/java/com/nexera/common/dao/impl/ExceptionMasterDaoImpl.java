@@ -19,7 +19,7 @@ public class ExceptionMasterDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public ExceptionMaster getExceptionMasterByType(String exceptionType) {
-		LOG.debug("Inside method getExceptionMasterByType ");
+
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(ExceptionMaster.class);
 		criteria.add(Restrictions.eq("exceptionType", exceptionType));

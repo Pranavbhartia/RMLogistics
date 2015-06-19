@@ -212,7 +212,30 @@ function hideOverlay() {
    
 }
 
+//With timeout
+function showToastMessageWithTimeout(message){
 
+	$('#overlay-toast-txt').html(message).removeClass('overlay-toast-success');
+	if ($('#overlay-toast-error-txt').html() == ""
+			|| $('#overlay-toast-error-txt').html() == null
+			|| $('#overlay-toast-error-txt').html() == undefined) {
+		$('#overlay-toast-txt').show();
+
+	} else {
+		$('#overlay-toast-error-txt').show();
+		$('#overlay-toast-txt').show();
+	}
+	$('#overlay-toast-txt').click(function(e) {
+		$('#overlay-toast-txt').html('');
+		$('#overlay-toast-txt').hide();
+	});
+
+	$('#overlay-toast').fadeIn("slow",function(){
+		setTimeout(function(){
+			$('#overlay-toast').fadeOut("slow");
+		},3000);
+	});
+}
 
 //Function to show toast message
 function showToastMessage(message){

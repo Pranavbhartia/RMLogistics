@@ -336,13 +336,13 @@ function showFileLink(uploadedItems) {
 }
 
 function saveUserDocumentAssignments() {
-	showOverlay();
+	
 	console.info("user assignemnt");
 	var fileAssignMentVO = new Array();
 
 	$(".assign").each(function(index) {
 		console.info($(this).val());
-		if ($(this).val() != "Assign") {
+		if ($(this).val() != "Assign" && $(this).val() != SPLIT_DOC) {
 			var fileAssignMent = new Object();
 			fileAssignMent.fileId = $(this).attr('fileid');
 			fileAssignMent.isMiscellanous = $(this).attr('ismiscellaneous');
@@ -351,6 +351,11 @@ function saveUserDocumentAssignments() {
 		}
 
 	});
+	if(fileAssignMentVO.length==0){
+		showToastMessageWithTimeout("Please select a need and click on Save");
+		return;
+	}
+	showOverlay();
 	console.info(fileAssignMentVO);
 
 	$.ajax({

@@ -447,7 +447,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 				} else {
 
-					throw new FatalException("Error saving document");
+					throw new FatalException(
+					        "Error saving document. LQB result was not OK: "
+					                + lqbResponseVO.getResult());
 				}
 
 			} else {

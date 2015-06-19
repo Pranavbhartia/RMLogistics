@@ -820,7 +820,7 @@ public class NexeraUtility {
 	}
 
 	public ExceptionMaster getExceptionMasterByType(String exceptionType) {
-		LOGGER.debug("Inside method getExceptionMasterByType");
+
 		return exceptionService.getExceptionMasterByType(exceptionType);
 	}
 
