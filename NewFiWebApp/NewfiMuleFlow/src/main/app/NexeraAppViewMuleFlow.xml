@@ -38,12 +38,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					clientClass="com.lendersoffice.los.webservices.AppView" port="AppViewSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/AppView.asmx?WSDL"
 					doc:name="CXF">
-					<cxf:inInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
-					</cxf:inInterceptors>
-					<cxf:outInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
-					</cxf:outInterceptors>
+					
 				</cxf:jaxws-client>
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
@@ -60,12 +55,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					clientClass="com.lendersoffice.los.webservices.AppView" port="AppViewSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/AppView.asmx?WSDL"
 					doc:name="CXF">
-					<cxf:inInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
-					</cxf:inInterceptors>
-					<cxf:outInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
-					</cxf:outInterceptors>
+					
 				</cxf:jaxws-client>
 
 				<https:outbound-endpoint exchange-pattern="request-response"
@@ -83,12 +73,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					clientClass="com.lendersoffice.los.webservices.AppView" port="AppViewSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/AppView.asmx?WSDL"
 					doc:name="CXF">
-					<cxf:inInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
-					</cxf:inInterceptors>
-					<cxf:outInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
-					</cxf:outInterceptors>
+					
 				</cxf:jaxws-client>
 
 				<https:outbound-endpoint exchange-pattern="request-response"
@@ -106,12 +91,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 					clientClass="com.lendersoffice.los.webservices.AppView" port="AppViewSoap"
 					wsdlLocation="https://webservices.lendingqb.com/los/webservice/AppView.asmx?WSDL"
 					doc:name="CXF">
-					<cxf:inInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingInInterceptor" />
-					</cxf:inInterceptors>
-					<cxf:outInterceptors>
-						<spring:bean class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
-					</cxf:outInterceptors>
+					
 				</cxf:jaxws-client>
 
 				<https:outbound-endpoint exchange-pattern="request-response"
