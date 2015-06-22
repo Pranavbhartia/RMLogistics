@@ -693,12 +693,13 @@ function getAdminTeamListTableRow(user) {
 			"userid" : user.id
 		});
 		var trCol1="";
-		if(user.userRole.id!=1){
+		if(user.userRole.id!=1 && user.userRole.id!=4){
 		 trCol1 = $('<div>').attr({
 			"class" : "admin-newfi-team-list-tr-col1 float-left"
 		}).html(user.firstName + " " + user.lastName).on('click',function(e){			
 			e.stopImmediatePropagation();	
 			//Entry point for edit profile popup
+		
 			var status=appendInformationForUserProfilePage(user);	
 			if(status){
 				paintProfilePageOfUser(userDataList,tableRow);	

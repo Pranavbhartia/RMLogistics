@@ -2447,14 +2447,11 @@ function appendCarrierNameDropDown() {
 	});
 
 	
-	if(!isAdmin){
+
 		rowCol2.append(carrierinfo).append(dropDownWrapper).append(appendErrorMessage());
 		row.append(label).append(rowCol2);
 		$('#cus-prof-container').append(row);
-	}else{
-		rowCol2.append(carrierinfo).append(dropDownWrapper).append(appendErrorMessage());
-		return row.append(label).append(rowCol2);
-	}
+	
 	
 
 }
