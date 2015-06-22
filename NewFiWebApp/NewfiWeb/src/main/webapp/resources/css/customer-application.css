@@ -58,6 +58,8 @@
 	background: url(../images/percentagesy.png) no-repeat 32px #fafafa;
 	background-size: 12px;
 	margin-right: 10px;
+	text-align: right;
+	padding-right: 17px;
 }
 .app-save-btn {
     width: 160px;
