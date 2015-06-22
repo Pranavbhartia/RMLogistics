@@ -5412,3 +5412,9 @@ a.session-login-btn {
 	margin: 0 -15px;
 	padding: 0 15px;
 }
+
+
+.ccSummary{
+	text-align: center;
+	font-size : 12px;
+}

@@ -535,7 +535,7 @@ function getClosingCostLabel(item) {
 	case "Lender Fee":
 		return "Lender Fee";
 	case "This is your cost or credit based on rate selected":
-		return "This is your cost or credit based on rate selected";
+		return "Your cost or credit based on rate selected";
 	case "Estimated Lender Costs":
 		return "Total Estimated Lender Costs";//Changed for 6.17 portal updates
 	case "Appraisal Fee":
