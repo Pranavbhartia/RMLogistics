@@ -1943,7 +1943,7 @@ function paintMyIncome() {
     	        	showErrorToastMessage(selectAnyOne);
     	        	return false;
     	        }
-    	       var isChecked=[];
+    	       /*var isChecked=[];
 				if($('.ce-option-checkbox').hasClass('myassets')){
 					if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
 				
@@ -1984,7 +1984,7 @@ function paintMyIncome() {
 				    	        	
 				
 				}
-               
+               */
     	       
     	      //End of validation
     

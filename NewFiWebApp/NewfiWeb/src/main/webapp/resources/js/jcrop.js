@@ -193,7 +193,7 @@ function createUploadPhotoContent() {
 									showErrorToastMessage(uploadFailed);
 									return;
 								}
-								if (checkIfSafari) {
+								if (checkIfSafari()) {
 									window.location.reload(true);
 								}
 								if (newfiObject.user.id == userid) {
@@ -211,6 +211,7 @@ function createUploadPhotoContent() {
 														+ data + ")",
 												"background-size" : "cover"
 											});
+									showToastMessage(ProfileImageSuccessMessage);
 								} else {
 
 									$("#cusProfPicID").css(
@@ -226,7 +227,13 @@ function createUploadPhotoContent() {
 														+ data + ")",
 												"background-size" : "cover"
 											});
-
+									$("#userProfilePic").css(
+											{
+												"background-image" : "url("
+														+ data + ")",
+												"background-size" : "cover"
+											});
+									showToastMessage(ProfileImageSuccessMessage);
 								}
 								//
 							},

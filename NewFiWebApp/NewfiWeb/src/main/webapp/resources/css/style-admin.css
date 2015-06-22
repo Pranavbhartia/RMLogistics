@@ -140,7 +140,160 @@ display: block;
  -webkit-box-shadow: 0 1px px rgba(0, 0, 0, 0.1);
  -moz-box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);    
   color: #428bca;
+}
+.adminUM-user-edit-profile-wrapper{
+	width:100%;
+	margin-bottom:10px;
+	
+}
+
+.adminUM-user-edit-profile-container-new{
+	  height: 244px;
+	  padding: 10px 0;
+	  background-color: #E9F0F8;
+	  overflow: hidden;	
+	  margin-top: 10px;
+}
+
+.adminUM-user-edit-profile-header{
+	text-align: center;
+	font-family: openSanssemiBold;
+	font-size: 16px;
 } 
+
+.adminUM-state-dropdown-wrapper {
+    position: absolute;            
+    margin: 0px 480px;
+    margin-top: 1px;
+    width: 100px;    
+    max-height: 120px;    
+    background: #fafafa;    
+    z-index: 222;    
+    border: 1px solid #cecece;    
+    border-radius: 0 0 3px 3px;
+}
+.adminUM-user-edit-profile-left-wrapper{
+	padding-right: 11px;
+    width: 50%;
+}
+.adminUM-user-edit-profile-left-container{
+	background-color: #E9F0F8;
+	  /* width: 100%; */
+	height: auto;
+	padding: 10px 10px;
+}
+
+.adminUM-user-edit-profile-right-wrapper{
+	
+    width: 50%;
+}
+
+.adminUM-user-edit-profile-right-container{
+	  background-color: #E9F0F9;     
+	  height: 277px;
+	  padding: 10px 10px;
+}
+
+.adminUM-user-upload-profile-image{
+	  margin-top: 20px;
+	  
+}
+
+.adminUM-agent-assigned-img {
+	  width: 125px;
+	  height: 125px;
+	  margin: 0 auto;
+	  margin-bottom: 5px;
+	  background: url(../images/person-placeholder.png);
+	  background-color: #fff;
+	  border-radius: 138%;
+	  background-repeat: no-repeat;
+	  background-position: center;
+	  background-size: cover;
+	  cursor: pointer;
+}
+.adminUM-agent-default-img {
+	  margin: 0 auto;
+	  font-size: 35px;
+	  border: 1px solid;
+	  border-radius: 50%;
+	  height: 150px;
+	  width: 150px;
+	  line-height: 146px;
+	  text-align: center;
+	  margin-bottom: 5px;
+	  cursor: pointer;
+}
+.adminUM-user-upload-profile-image-row-text {
+	text-align: center;
+	margin: 10px auto;
+	font-family: openSanssemiBold;
+}
+
+.adminUM-user-edit-profile-row {
+    line-height: 40px;    
+    padding: 10px 0;
+}
+
+.adminUM-user-edit-profile-input{
+	  width: 100%;    
+	  height: 40px;    
+	  line-height: 40px;    
+	  padding-left: 15px;    
+	  background-color: #FAFAFA !important;    
+	  border: 1px #E2E2E2 solid;    
+	  border-radius: 3px;
+}
+.adminUM-form-input-sm {
+	width: 100px;
+}
+
+.adminUM-col-1 {            
+    padding-left: 12px;
+    white-space: nowrap;
+    width: 25%;    
+    height: 40px;    
+    min-width: 120px;    
+    text-align: right;    
+    padding-right: 20px;
+}
+
+.adminUM-col-2 {
+    position: relative;
+}
+
+.adminUM-col-two{
+	position: relative;
+}
+.adminUM-cont {
+    width: 265px;        
+    float: left;
+    margin-right: 15px;
+}
+
+.adminUM-user-edit-profile-row-yes,.adminUM-user-edit-profile-row-no{
+    padding-left: 5px;    
+    padding-right: 5px;
+}
+
+.adminUM-sumit-button {
+    width: 120px;    
+    height: 40px;    
+    line-height: 40px;    
+    font-size: 16px;    
+    color: #fff;    
+    /* background-color: #6c9f2e; */    
+    border-radius: 3px;    
+    text-align: center;    
+    text-transform: capitalize;    
+    cursor: pointer;    
+    font-family: 'opensanssemibold';
+    margin: 15px auto;
+}
+.cust-radio-btn-no,.cust-radio-btn-yes {
+    margin-top: 11px;
+}
+
 .add-user-mem-admin-wrapper {
 	padding-bottom: 20px;
 	margin-bottom: 10px;
@@ -327,8 +480,13 @@ display: block;
 .admin-newfi-team-list-tr-col1 {
 	width: 22%;
 	margin-left: 24px;
+	color:#428bca;
+	cursor:pointer;
 }
-
+.no-click-col{
+	cursor: initial;
+	color: rgb(47, 54, 61);
+}
 .admin-newfi-team-list-tr-col2 {
 	width: 20%;
 }
@@ -458,6 +616,21 @@ display: block;
 }
 .admin-save-btn {
   margin-top: 13px;
+}
+
+.admin-user-edit-profile-wrapper {
+    margin: 10px 0;
+    /* border-bottom: none; */
+}
+
+.admin-newfi-team-list-tr-sel {
+    background: rgba(245, 249, 245, 0.93);
+}
+.carrier-info-display{
+	margin: 10px 190px;
+}
+.err-input{
+	border: 1px solid #dd4b39;  
 }
 @media ( max-width : 1062px) {
 	.create-turn-around-label {

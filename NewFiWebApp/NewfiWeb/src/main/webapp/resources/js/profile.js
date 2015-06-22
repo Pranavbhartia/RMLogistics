@@ -688,7 +688,7 @@ function updateLMDetails() {
 	userProfileJson.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
 	
 	userProfileJson.emailId = $("#priEmailId").val();
-	if(newfiObject.user.userRole.id==2){
+	if($("#managerID").val()!=undefined){
 		userProfileJson.loanManagerEmail=$("#managerID").val();
 	 
 			if($("#managerID").val()!=""){
@@ -705,7 +705,7 @@ function updateLMDetails() {
 		userProfileJson.mobileAlertsPreference = true;	
 		userProfileJson.carrierInfo=$('#carrierInfoID').val();
 	    var phoneStatus=phoneNumberValidation(userProfileJson.phoneNumber,userProfileJson.mobileAlertsPreference ,"priPhoneNumberId");
-	    if(!phoneStatus){
+	    if(phoneStatus!=false){
 	    	if(userProfileJson.carrierInfo == ""){
 	    		$('#carrierInfoID').next('.err-msg').html(carrierSelectmessage).show();
 	    		$('#carrierInfoID').addClass('ce-err-input').show();
@@ -718,23 +718,10 @@ function updateLMDetails() {
 			
 			}
 	    	
-	    }else{
-	    	if(userProfileJson.carrierInfo == ""){
-	    		
-	    		$('#carrierInfoID').next('.err-msg').html(carrierSelectmessage).show();
-	    		$('#carrierInfoID').addClass('ce-err-input').show();
+	    }else{	    		
 	    		return false;
 				//showErrorToastMessage(carrierSelectmessage);
-				
-			}else{
-				$('#carrierInfoID').next('.err-msg').hide();
-				$('#carrierInfoID').removeClass('ce-err-input');
-				
-			}
-	    }
-
-		
-			
+	    }	
 		}else if($('.cust-radio-btn-no').hasClass('radio-btn-selected')){
 		   userProfileJson.mobileAlertsPreference = false;
     }
@@ -756,7 +743,7 @@ function updateLMDetails() {
 			internalUserState.push(internalUserStates[key]);
 	}
 	userProfileJson.internalUserStateMappingVOs = internalUserState; */
-    	 $('#overlay-loader').show(); 
+    	showOverlay();
 	    $.ajax({
 		url : "rest/userprofile/updateprofile",
 		type : "POST",
@@ -766,37 +753,42 @@ function updateLMDetails() {
 		},
 		dataType : "json",
 		success : function(data) {
-			
+			hideOverlay();
             if(data.error==null){
-            	$("#profileNameId").text($("#firstNameId").val());
-
-            	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
-            	$("#priPhoneNumberId").mask("(999) 999-9999");
-    			showToastMessage(updateSuccessMessage);
-    		  	$('#overlay-toast').fadeIn("fast",function(){
-    				setTimeout(function(){
-    					$('#overlay-toast').fadeOut("fast");
-    				},100);
-    			    });
-    			  	if($('#overlay-toast-error-txt').html()!=""){
-    			  	$('#overlay-toast-error-txt').fadeIn("fast",function(){
-    					setTimeout(function(){
-    						$('#overlay-toast-error-txt').fadeOut("fast");
-    					},100);
-    				});
-    			  	}
-    			  	$('#overlay-loader').hide();
-    			//showLoanManagerProfilePage();
-    			window.location.href = newfiObject.baseUrl+"home.do#loan";
-            }else{
-            	$('#overlay-loader').hide();
-            	$("#managerID").val('');
-            	showErrorToastMessage(data.error.message);
-            }
-			
+            	    if(newfiObject.user.id==userProfileJson.id){
+            	    	$("#profileNameId").text($("#firstNameId").val());
+                    	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+                    	$("#priPhoneNumberId").mask("(999) 999-9999");
+            			showToastMessage(updateSuccessMessage);
+            		  	$('#overlay-toast').fadeIn("fast",function(){
+            				setTimeout(function(){
+            					$('#overlay-toast').fadeOut("fast");
+            				},100);
+            			    });
+            			  	if($('#overlay-toast-error-txt').html()!=""){
+            			  	$('#overlay-toast-error-txt').fadeIn("fast",function(){
+            					setTimeout(function(){
+            						$('#overlay-toast-error-txt').fadeOut("fast");
+            					},100);
+            				});
+            			  	}
+            			  	hideOverlay();
+            			//showLoanManagerProfilePage();
+            			window.location.href = newfiObject.baseUrl+"home.do#loan";
+                    }else{
+                    	
+            	    	showToastMessage(updateSuccessMessage);
+            	    }
+            	    }else{
+            	    	
+                    	$("#managerID").val('');
+                    	showErrorToastMessage(data.error.message);
+                    }
+            	    
+            					
 		},
 		error : function(error) {
-			$('#overlay-loader').hide();
+			hideOverlay();
 			showErrorToastMessage(updateErrorMessage);
 		}
 	});
@@ -1484,6 +1476,13 @@ function getManagerStateRow() {
 		"class" : "link-pointer"
 	}).text("Add License")
 	.bind('click',function(e){
+		if(currentSelectedUserID!=newfiObject){
+			//$('.adminUM-user-edit-profile-container').css("height","762px");
+			$('.ms-add-member-popup.add-licence-popup ').css({
+				"right":"-497px",
+				"left":"auto"
+			});
+		}
 		e.stopImmediatePropagation();
 		if($('#add-licence-popup').length==1){
 			
@@ -1494,6 +1493,13 @@ function getManagerStateRow() {
 			}
 			}else{
 				appendAddLicencePopup(this);
+				if(currentSelectedUserID!=newfiObject){
+				//	$('.adminUM-user-edit-profile-container').css("height","762px");
+					$('.ms-add-member-popup.add-licence-popup ').css({
+						"right":"-497px",
+						"left":"auto"
+					});
+				}
 			}
 		
 	});
@@ -1595,6 +1601,7 @@ function appendAddLicencePopup(element) {
 	}).text("Save")
 	.bind('click',function(e){
 		e.stopPropagation();
+		showOverlay();
 		if ($(this).attr("state-id") == "NMLS")
 		{
 			saveNMLS($('#licenseId').val());
@@ -1624,6 +1631,7 @@ function appendAddLicencePopup(element) {
 		saveInternalUserStatesAndLicense(internalUserStateMappingVO);
 		
 		appendLicensedStates($('#licensedStateList'),loggedInUser);
+		hideOverlay();
 	});
 	
 	
@@ -2074,36 +2082,7 @@ function getPhone1RowLM(user) {
 	return row.append(rowCol1).append(rowCol2);
 }
 
-function phoneNumberValidation(phoneNo,customerStatus,elementId){
 
-var regex = /^\d{10}$/;   
-if(customerStatus!=false){
-	if(phoneNo==null || phoneNo==""){
-		$('#'+elementId).next('.err-msg').html(phoneFieldEmptyMessage).show();
-		$('#'+elementId).addClass('err-input');
-	//showErrorToastMessage("Phone field cannot be empty");
-	return false;
-	}else{
-		if(!regex.test(phoneNo)) {
-			$('#'+elementId).next('.err-msg').html(invalidPhoneNumberMessage).show();
-			$('#'+elementId).addClass('err-input');
-			//showErrorToastMessage("Invalid phone number");
-			
-			return false;
-		}
-			$('#'+elementId).next('.err-msg').html('');
-			$('#'+elementId).removeClass('err-input');
-			return true;
-	
-	}
-	
-}else{
-	$('#'+elementId).next('.err-msg').html('');
-	$('#'+elementId).removeClass('err-input');
-	return true;
-}
-
-}
 
 //END of changes
 function getPhone2Row(user) {
@@ -2505,7 +2484,7 @@ function updateUserDetails() {
 		}else if(userProfileJson.mobileAlertsPreference==false){
 			phoneStatus=true;	
 		}
-	    $('#overlay-loader').show();
+	    showOverlay();
 		$.ajax({
 			url : "rest/userprofile/updateprofile",
 			type : "POST",
@@ -2516,7 +2495,7 @@ function updateUserDetails() {
 			dataType : "json",
 			success : function(data) {
 				showToastMessage(updateSuccessMessage);
-				$('#overlay-loader').hide();			
+				hideOverlay();			
 				$("#profileNameId").text($("#firstNameId").val());
 			  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
 			  	$("#priPhoneNumberId").mask("(999) 999-9999");
@@ -2533,14 +2512,14 @@ function updateUserDetails() {
 				});
 			  	}
 			  //	removeToastMessage();
-			  	if(!isCustomer){
+			 
 			  		window.location.href = "#myLoan";
-			  	}
+			  	
 	            
 	 
 			},
 			error : function(data) {
-				$('#overlay-loader').hide();
+				hideOverlay();
 				if(data.error.message!=null){
 					showErrorToastMessage(data.error.message);
 				}else{
