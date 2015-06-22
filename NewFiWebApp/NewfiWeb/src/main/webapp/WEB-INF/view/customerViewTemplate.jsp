@@ -80,7 +80,7 @@
 				
 			else{
 				callBackFun();
-				
+				updateNotifications(0);
 			}
 				
 			//adjustCenterPanelWidth();
