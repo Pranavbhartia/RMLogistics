@@ -460,6 +460,16 @@
 		float: none;
 		margin-top: 10px;
 	}
+	.loan-summary-header-col1 {
+		width: 130px;
+	}
+	.rate-btn-alertRate {
+		width: 170px;
+		padding-right: 20px;
+	}
+	.ce-refinance-wrapper .rt-slider {
+		width: 95% !important;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
@@ -681,6 +691,14 @@
 	.cust-personal-info-header {
 		padding: 11px 10px;
 	}
+	.ce-refinance-wrapper .yr-slider {
+		width: 90%;
+		max-width: 100%;
+	}
+	.ce-refinance-wrapper .rt-slider {
+		width: 93%;
+		max-width: 100%;
+	}
 }
 
 
@@ -757,6 +775,12 @@
 	}
 	.ce-option-ques-wrapper{
 		width: 360px;
+	}
+	.ce-refinance-wrapper .yr-slider {
+		width: 80%;
+	}
+	.ce-refinance-wrapper .rt-slider {
+		width: 82%;
 	}
 }
 
@@ -1375,6 +1399,9 @@
 	}
 	.login-container {
 		margin-bottom: 35px;
+	}
+	.rt-grid-item {
+		font-size: 11px;
 	}
 }
 
