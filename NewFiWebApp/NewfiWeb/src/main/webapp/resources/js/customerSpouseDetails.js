@@ -127,8 +127,8 @@ function paintMySpouseIncome() {
     	        	showErrorToastMessage(selectAnyOne);
     	        	return false;
     	        }
-    	        
-    	        var isChecked=[];
+    	        //validation for my assests
+    	        /*var isChecked=[];
 				if($('.ce-option-checkbox').hasClass('myassets')){
 					if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
 				
@@ -168,7 +168,7 @@ function paintMySpouseIncome() {
 				}
 				    	        	
 				
-				}
+				}*/
                
     	        //End
 			  	 if($("#ce-option_0").prev().hasClass('app-option-checked')){
