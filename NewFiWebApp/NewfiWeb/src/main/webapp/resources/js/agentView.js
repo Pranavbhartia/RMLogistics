@@ -2446,9 +2446,13 @@ function appendCarrierNameDropDown() {
 		"class" : "carrier-dropdown-wrapper hide"
 	});
 
-	rowCol2.append(carrierinfo).append(dropDownWrapper).append(appendErrorMessage());
-	row.append(label).append(rowCol2);
-	$('#cus-prof-container').append(row);
+	
+
+		rowCol2.append(carrierinfo).append(dropDownWrapper).append(appendErrorMessage());
+		row.append(label).append(rowCol2);
+		$('#cus-prof-container').append(row);
+	
+	
 
 }
 function updateUserProfile() {

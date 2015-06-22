@@ -904,10 +904,10 @@ $(document).on('click', function(e) {
 	}
 });
 function checkIfSafari() {
-	if (navigator.userAgent.indexOf('Safari') != -1
+	/*if (navigator.userAgent.indexOf('Safari') != -1
 			&& navigator.userAgent.indexOf('Chrome') == -1) {
 		return true;
-	}
+	}*/
 	return false;
 }
 
@@ -1098,17 +1098,27 @@ function restrictChar(name){
 }
 function updateNotifications(loanid){
 	var contxt;
-	if(loanid){
-		contxt = getContext(loanid+"-notification");
-		if(!contxt){
-			contxt = getNotificationContext(loanid, 0)
-			addContext(loanid + "-notification", contxt);
-		}
-	}else{
-	    contxt = getContext("notification");
-		if(!contxt){
-			contxt = getNotificationContext(loanid, 0)
-			addContext(loanid + "-notification", contxt);
+	if(typeof(newfiObject)!=="undefined"){
+		if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+			contxt = getContext("notification");
+			if(!contxt){
+				contxt = getNotificationContext(newfiObject.user.defaultLoanId, newfiObject.user.id);
+				addContext("notification", contxt);
+			}
+		}else{
+			if(loanid){
+				contxt = getContext(loanid+"-notification");
+				if(!contxt){
+					contxt = getNotificationContext(loanid, 0)
+					addContext(loanid + "-notification", contxt);
+				}
+			}else{
+			    contxt = getContext("notification");
+				if(!contxt){
+					contxt = getNotificationContext(0, newfiObject.user.id);
+					addContext("notification", contxt);
+				}
+			}
 		}
 	}
 	contxt.initContext(true);

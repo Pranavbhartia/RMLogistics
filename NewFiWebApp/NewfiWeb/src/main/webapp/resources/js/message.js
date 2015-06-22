@@ -2,6 +2,7 @@ var updateErrorMessage="Something went wrong while update . Please try again lat
 var updateSuccessMessage="Succesfully updated";
 var errorMessage="Something went wrong";
 var message = "Invalid Entry";
+var ProfileImageSuccessMessage="Image uploaded succesfully";
 
 //Messages in agenView.js
 var messageSaved="Message saved succesfully";//line 955

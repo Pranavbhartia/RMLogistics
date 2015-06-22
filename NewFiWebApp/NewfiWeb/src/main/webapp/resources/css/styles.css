@@ -2771,7 +2771,11 @@ input.calc-input {
 
 
 .prof-form-input.date-picker{
-	width: 150px;
+	
+	/*NEXNF-534*/
+	/* width: 150px; */
+	width: 130px;
+	
 }
 
 .prof-form-input-select {

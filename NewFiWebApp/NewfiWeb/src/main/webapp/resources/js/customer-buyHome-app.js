@@ -698,7 +698,9 @@ function paintSpouseSaleOfCurrentHome() {
 	        value: appUserDetails.customerSpouseDetail.currentHomeMortgageBalance
 	    }, {
 	        type: "desc",
-	        text: "How much from this sale do you intend to purchase towards your new home ?",
+	        //NEXNF-538
+	       // text: "How much from this sale do you intend to purchase towards your new home ?",
+	        text: "How much of the sale proceeds do you plan to use towards your new home?",
 	        name: "spouseInvestmentInHome",
 	        value: appUserDetails.customerSpouseDetail.newHomeBudgetFromsale
 	    }];
@@ -813,7 +815,9 @@ function saleYourCurrentHome(){
 	        value: homemortgagebalance
 	    }, {
 	        type: "desc",
-	        text: "How much from this sale do you intend to purchase towards your new home ?",
+	        //NEXNF-538
+	       // text: "How much from this sale do you intend to purchase towards your new home ?",
+	        text: "How much of the sale proceeds do you plan to use towards your new home?",
 	        name: "inverstInPurchase",
 	        value: inverstInPurchase
 	    }];

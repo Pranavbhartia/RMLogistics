@@ -180,6 +180,43 @@ public class UserProfileRest {
 
 		return userprofile;
 	}
+	
+	@RequestMapping(value = "/getProfile/{userId}", method = RequestMethod.GET)
+	public @ResponseBody String getUserProfileWithUserIdAdminUserList(@PathVariable Integer userId) {
+
+		String userprofile = null;
+		try {
+			LOG.info("completeprofile profile get call : ");
+			Gson gson = new Gson();
+/*			User user = getUserObject();
+
+			Integer userid = user.getId();*/
+
+			UserVO userVO = null;
+			userVO = userProfileService.findUser(userId);
+			if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
+			        .getRoleId()) {
+				if (userVO.getRealtorDetail() != null) {
+					if (userVO.getRealtorDetail().getUser() != null) {
+						userVO.setLoanManagerEmail(userVO.getRealtorDetail()
+						        .getUser().getEmailId());
+					}
+
+				}
+
+			}
+			userVO.setUserProfileBaseUrl(referalUrl);
+
+			userprofile = gson.toJson(userVO);
+
+		} catch (Exception e) {
+			LOG.error("Error while getting the user datails ", e);
+
+		}
+
+		return userprofile;
+	}
+
 
 	@RequestMapping(value = "/getMobileCarriers", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getMobileCarriers() {
