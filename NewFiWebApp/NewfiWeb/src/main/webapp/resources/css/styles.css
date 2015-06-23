@@ -3267,7 +3267,7 @@ input.calc-input {
 
 .milestone-lc-header-txt,.milestone-rc-header-txt {
 	position: relative;
-	width:220px;
+	/* width:220px; */
 	height: 28px;
 	line-height: 28px;
 	border-radius: 3px;
