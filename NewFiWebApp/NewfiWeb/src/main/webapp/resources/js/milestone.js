@@ -693,19 +693,20 @@ function paintCustomerInfo ()
 		"class" : "loan-progress-wrapper"
 	});	
 	$('#WFProgressHeaderBar').remove();
+	var header = $('<div>').attr({
+		"class" : "loan-progress-header"
+	}).html("loan progress");
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
 	var subText = $('<div>').attr({
 		"class" : "loan-progress-sub-txt"
 	}).html("Below is a detailed list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, please reach out to the newfi team with questions.");
 	
-	var header = $('<div>').attr({
-		"class" : "loan-progress-header"
-	}).html("loan progress");
+	
 	var container = $('<div>').attr({
 		"id" : "cust-loan-progress",
 		"class" : "loan-progress-container"
 	});
-	wrapper.append(progressHeader).append(subText).append(header).append(container);
+	wrapper.append(header).append(progressHeader).append(subText).append(container);
 	$('#center-panel-cont').append(wrapper);
 	
 	paintCustomerLoanProgressContainer();
