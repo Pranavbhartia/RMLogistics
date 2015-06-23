@@ -189,10 +189,14 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
 function paintRentOfYourHouse() {
     active = 2;
     homeProgressBaar(2);
-    buyHomeTeaserRate.purchaseDetails.livingSituation = 'renting';
-    var quesTxt = "How much do you pay each month for rent?";
-    var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount, "rentPerMonth");
-    $('#ce-refinance-cp').html(quesCont);
+    if(buyHomeTeaserRate.livingSituation == 'renting'){
+	    var quesTxt = "How much do you pay each month for rent?";
+	    var quesCont = getBuyHomeTextQuestion(quesTxt, paintloanamount, "rentPerMonth");
+	    $('#ce-refinance-cp').html(quesCont);
+    }else{
+    	paintloanamount();
+    }
+  
 }
 
 function paintloanamount() {

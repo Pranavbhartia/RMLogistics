@@ -1481,7 +1481,7 @@ function getLoanSummaryHeaderCEP() {
         });
         var col1 = $('<div>').attr({
             "class": "loan-summary-header-col1 float-left capitalize"
-        }).html('My Loan Summary');
+        }).html('Programs and Rates');
         var col2 = $('<div>').attr({
             "class": "loan-summary-header-col2 float-left"
         }).html(currentDateTime);
@@ -1793,7 +1793,7 @@ function getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn) {
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 float-left capitalize"
-    }).html('My Loan Summary');
+    }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate(responseTime));
