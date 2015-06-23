@@ -227,8 +227,8 @@ function getMessageDashboardWrapper() {
 		"class" : "message-wrapper"
 	});
 	var header = $('<div>').attr({
-		"class" : "message-header uppercase"
-	}).html("talk to your newfi team");
+		"class" : "message-header"
+	}).html("Talk to Your Newfi Team");
 	wrapper.append(header);
 
 	var container = $('<div>').attr({
