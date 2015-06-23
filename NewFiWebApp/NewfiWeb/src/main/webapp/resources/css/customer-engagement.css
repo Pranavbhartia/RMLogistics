@@ -317,7 +317,7 @@
 .ce-get-started {
     text-align: center;
     font-size: 33px;
-    margin-top: 15px;
+    /* margin-top: 15px; */
     font-family: 'opensanssemibold';
 }
 
