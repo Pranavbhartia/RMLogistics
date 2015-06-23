@@ -1367,7 +1367,7 @@ function sendInfoToNewfi(registration){
             $('#overlay-loader').hide();
             if(data.error==null){
             	$('.reg-main-container').hide();
-            	$('.contactInfoText').html('Your details have been submitted. Our team will contact you shortly.')
+            	$('.contactInfoText').html('Your information has been submitted and someone from the newfi team will contact you shortly.')
             	
             }else{
             	showErrorToastMessage(data.error.message);
