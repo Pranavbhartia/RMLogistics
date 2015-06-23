@@ -693,7 +693,7 @@ function paintCustomerInfo ()
 	});	
 	$('#WFProgressHeaderBar').remove();
 	var header = $('<div>').attr({
-		"class" : "loan-progress-header"
+		"class" : "loan-progress-header message-header-customer"
 	}).html("loan progress");
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
 	var subText = $('<div>').attr({

@@ -621,9 +621,19 @@ function getCompletYourApplicationHeader() {
     var parent = $('<div>').attr({
         "class": "complete-application-wrapper"
     });
-    var header = $('<div>').attr({
+    var header="";
+    if(newfiObject.user.userRole.id!=1){
+    	  header = $('<div>').attr({
+    	        "class": "complete-application-header"
+    	    }).html("Complete My Loan Profile");
+    }else{
+    	  header = $('<div>').attr({
+    	        "class": "complete-application-header message-header-customer "
+    	    }).html("Complete My Loan Profile");
+    }
+   /* var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Loan Profile");
+    }).html("Complete My Loan Profile");*/
     return parent.append(header);
 }
 
