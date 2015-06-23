@@ -414,7 +414,7 @@ function adjustCustomerNameWidth() {
 
 // Function to adjust center panel in customer Engagement Page
 function adjustCustomerEngagementPageOnResize() {
-	if (window.innerWidth <= 1200 && window.innerWidth >= 993) {
+	if (window.innerWidth <= 1200 && window.innerWidth >= 992) {
 		var leftPanelWidth = $('.ce-lp').width();
 		var centerPanelWidth = $(window).width() - (leftPanelWidth) - 100;
 		$('#ce-refinance-cp').width(centerPanelWidth);
