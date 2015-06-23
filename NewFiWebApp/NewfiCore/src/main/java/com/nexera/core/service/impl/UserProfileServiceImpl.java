@@ -570,7 +570,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Override
 	public void sendContactAlert(UserVO user) throws InvalidInputException,
 	        UndeliveredEmailException {
-		String subject = "New lead in newfi - No products found";
+		String subject = "NEWFI ALERT: New Lead With No Products";
 		EmailVO emailEntity = new EmailVO();
 
 		Template template = null;
