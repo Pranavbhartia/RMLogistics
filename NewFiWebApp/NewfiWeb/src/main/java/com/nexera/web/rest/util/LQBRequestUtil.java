@@ -426,8 +426,7 @@ public class LQBRequestUtil {
 		if (loanAppFormVO.getCustomerSpouseDetail() != null) {
 			hashmap.put("firstCoborrowerName", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseName());
-			hashmap.put("middleCoborrowerName", loanAppFormVO
-			        .getCustomerSpouseDetail().getSpouseLastName());
+			hashmap.put("middleCoborrowerName", "");
 			hashmap.put("lastCoborrowerName", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseLastName());
 			hashmap.put("dateOfCoborrowerBirth", new SimpleDateFormat(
