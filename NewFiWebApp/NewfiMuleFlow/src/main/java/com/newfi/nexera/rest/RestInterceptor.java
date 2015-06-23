@@ -92,7 +92,14 @@ public class RestInterceptor implements Callable {
 				        + newfiUsername);
 				utils.getUserTicket(newfiUsername, newfiPassword);
 				if (NewFiManager.userTicket == null) {
-					LOG.info("Valid ticket was not generated hence trying again with backup account "
+					LOG.info("Valid ticket was not generated hence trying again with backup account sleeping for 2 sec before continuing "
+					        + newfiUsernameBackup);
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException ie) {
+						Thread.interrupted();
+					}
+					LOG.info("Woke up. Trying now for user: "
 					        + newfiUsernameBackup);
 					LOG.info("Generating the user ticket for the user "
 					        + newfiUsernameBackup);
@@ -117,7 +124,14 @@ public class RestInterceptor implements Callable {
 					NewFiManager.userTicket = null;
 					utils.getUserTicket(newfiUsername, newfiPassword);
 					if (NewFiManager.userTicket == null) {
-						LOG.info("Valid ticket was not generated hence trying again with backup account "
+						LOG.info("Valid ticket was not generated hence trying again with backup account, sleeping for 2 sec before continuing "
+						        + newfiUsernameBackup);
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException ie) {
+							Thread.interrupted();
+						}
+						LOG.info("Woke up. Trying now for user: "
 						        + newfiUsernameBackup);
 						utils.getUserTicket(newfiUsernameBackup,
 						        newfiPasswordBackup);

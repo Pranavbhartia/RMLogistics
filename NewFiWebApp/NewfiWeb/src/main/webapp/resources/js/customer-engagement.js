@@ -583,7 +583,7 @@ function getTextQuestion(quesText, clickEvent, name) {
             var classname=$('input[name="' + key + '"]');
            
             if($('input[name="zipCode"]').val()==inputValue){
-            	 var isSuccess=validateInput(classname,inputValue,errorMessageForZipcode);
+            	 var isSuccess=validateInput(classname,inputValue,zipCodeMessage);
                  if(isSuccess){
                 	 if(inputValue.length >5 ||inputValue.length < 5){
 

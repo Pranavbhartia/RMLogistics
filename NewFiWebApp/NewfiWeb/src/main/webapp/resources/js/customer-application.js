@@ -300,11 +300,23 @@ function getContextApplicationSelectQues(contxt) {
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(contxt.text);
-
-    var optionsContainer = $('<div>').attr({
+    //NEXNF-524
+    var optionsContainer="";
+    if(contxt.name=="propertyType"||contxt.name=="residenceType"){
+    	  optionsContainer = $('<div>').attr({
+    	        "class": "app-options-cont app-cont-new",
+    	        "name": contxt.name
+    	    });
+    }else{
+    	optionsContainer = $('<div>').attr({
+	        "class": "app-options-cont",
+	        "name": contxt.name
+	    });
+    }
+   /* var optionsContainer = $('<div>').attr({
         "class": "app-options-cont",
         "name": contxt.name
-    });
+    });*/
 
     var selectedOption = $('<div>').attr({
         "class": "app-option-selected"
@@ -350,7 +362,7 @@ function getContextApplicationSelectQues(contxt) {
                     selVal=optionCont;
         dropDownContainer.append(optionCont);
     }
- var val=contxt.value;
+    var val=contxt.value;
 
     if(val)
     	setDropDownData(selectedOption, contxt.options,val);
@@ -1943,7 +1955,7 @@ function paintMyIncome() {
     	        	showErrorToastMessage(selectAnyOne);
     	        	return false;
     	        }
-    	       var isChecked=[];
+    	       /*var isChecked=[];
 				if($('.ce-option-checkbox').hasClass('myassets')){
 					if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
 				
@@ -1984,7 +1996,7 @@ function paintMyIncome() {
 				    	        	
 				
 				}
-               
+               */
     	       
     	      //End of validation
     
@@ -4490,10 +4502,12 @@ function getMonthYearTextQuestionContext(contxt) {
     var optionsContainer = $('<div>').attr({
         "class": "ce-options-cont clearfix"
     });
-    var errFeild=appendErrorMessage();
+    var errFeild=$('<div>').attr({
+		"class" : "err-msg float-left hide"
+	});
 
     var optionCont = $('<input>').attr({
-        "class": "ce-input",
+        "class": "ce-input float-left",
         "name": contxt.name,
         "value": contxt.value
     }).bind("change", {
@@ -4536,8 +4550,10 @@ function getMonthYearTextQuestionContext(contxt) {
             optionCont.val(showValue(contxt.value));
         }
     }
-    newDiv.append(optionCont).append(errFeild);
-    optionsContainer.append(newDiv).append(requird).append(selectedOption);
+   /* newDiv.append(optionCont).append(errFeild);
+    optionsContainer.append(newDiv).append(requird).append(selectedOption);*/
+    newDiv.append(optionCont).append(requird).append(selectedOption).append(errFeild);
+    optionsContainer.append(newDiv);
     return container.append(quesTextCont).append(optionsContainer);
 }
 

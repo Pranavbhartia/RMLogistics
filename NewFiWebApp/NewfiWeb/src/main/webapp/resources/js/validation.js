@@ -1,5 +1,4 @@
 
-var message = "Invalid Entry";
 function appendMessage(data){
 	var errMessageDiv=$('<div>').attr({
 		"class":"cust-prof-err-mess"	
@@ -23,22 +22,31 @@ function validateInput(element,inputVal,message){
 	var width=$(element).css('width');
 	//$('input[name="currentMortgageBalance"]')
 
-	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""
-		){
+	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""){
 	
 			$('input[name="' + name + '"]').parent().find('.err-msg').html(message).show();
 			$('input[name="' + name + '"]').addClass('ce-err-input').show();
-			$(".err-msg").css('width',width);
+			 /* NEXNF-524 */
+/*			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+				$(".err-msg").css('width',width);
+			}*/
+			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+				$('input[name="' + name + '"]').parent().find('.err-msg').removeClass('float-left');
+			}
 			return false;
-		
-		
-
 	}else{
 		if(inputVal == "$0" || inputVal == 0){
-			$('input[name="' + name + '"]').parent().find('.err-msg').html(feildShouldNotBeZero).show();
-			$('input[name="' + name + '"]').addClass('ce-err-input').show();
-			$(".err-msg").css('width',width);
-			return false;
+			if(name!="zipCode"){
+				$('input[name="' + name + '"]').parent().find('.err-msg').html(feildShouldNotBeZero).show();
+				$('input[name="' + name + '"]').addClass('ce-err-input').show();
+				 /* NEXNF-524 */
+	/*			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+					$(".err-msg").css('width',width);
+				}*/if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+					$('input[name="' + name + '"]').parent().find('.err-msg').addClass('float-left');
+					return false;
+				}
+			}			
 		}else{
 			$('input[name="' + name + '"]').parent().find('.err-msg').hide();
 			$('input[name="' + name + '"]').removeClass('ce-err-input');			
@@ -79,7 +87,7 @@ function validateInputOfChecked(isStatus){
 		     	 //validating the inputs inside the ce-option-ques-wrapper class
 		         for(var count=0;count<inputs.length;count++){
 		            	if(inputs[count].name!="customerEmploymentIncomeId"){          		
-		            		 var isStatus=validateInputsOfAssests(inputs[count],inputs[count].value,message,offset);
+		            		 var isStatus=validateInputsOfMyIncomePage(inputs[count],inputs[count].value,message,offset);
 		                	 if(isStatus==false){
 		                		 return false;
 		                	 }
@@ -90,7 +98,7 @@ function validateInputOfChecked(isStatus){
         	 var offset=$("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('input').offset().top;
      	     var inputs = $("#ce-option_"+isStatus.attr('value')+"").find('.ce-option-ques-wrapper').find('.ce-ques-wrapper').find('.ce-options-cont').find('input');
 	            for(var count=0;count<inputs.length;count++){
-	        	 var isStatus=validateInputsOfAssests(inputs[count],inputs[count].value,message,offset);
+	        	 var isStatus=validateInputsOfMyIncomePage(inputs[count],inputs[count].value,message,offset);
 	        	 if(isStatus==false){
 	        		 return false;
 	        	 }
@@ -102,15 +110,15 @@ function validateInputOfChecked(isStatus){
 				   
 
 }
-function validateInputsOfAssests(element,inputVal,message,offset){
-	console.log(inputVal+"::::::"+offset);
+
+function validateInputsOfMyIncomePage(element,inputVal,message,offset){
+
 	var name=$(element).attr('name');
 	var width=$(element).css('width');
 	var height=$('.header-wrapper').height();
 	//$('input[name="currentMortgageBalance"]')
 
-	if(inputVal == undefined || inputVal == ""
-		){
+	if(inputVal == undefined || inputVal == ""){
 	
 			$(element).next('.err-msg').html(message).show();
 			$(element).addClass('ce-err-input').show();
@@ -120,12 +128,7 @@ function validateInputsOfAssests(element,inputVal,message,offset){
 			}else{
 				$(window).scrollTop(offset-height-50);
 			}
-			
-			//$(element).scrollTop(offset);
 			return false;
-		
-		
-
 	}else{
 		if(inputVal == "$0" || inputVal == 0){
 			$(element).next('.err-msg').html(feildShouldNotBeZero).show();
@@ -136,7 +139,6 @@ function validateInputsOfAssests(element,inputVal,message,offset){
 			}else{
 				$(window).scrollTop(offset-height-50);
 			}
-			//$(element).scrollTop(offset);
 			return false;
 		}else{
 			$(element).next('.err-msg').hide();
@@ -154,24 +156,9 @@ function validateFormFeild(inputElement,divErrElement,message){
 
 	}
 	else{
-		if(inputElement=="#phoneID"){
-			if(inputVal.length<10){
-				$(inputElement).next('.err-msg').html(phoneNumberLegthErrorMessage).show();
-				$(divErrElement).addClass('ce-err-input').show();
-				return false;
-			}else{
-				$(inputElement).next('.err-msg').hide();
-				$(divErrElement).removeClass('ce-err-input');
-				
-			}
-			
-		}else{
 			$(inputElement).next('.err-msg').hide();
-			$(divErrElement).removeClass('ce-err-input');
-			
-		}
-		
-	}
+			$(divErrElement).removeClass('ce-err-input');			
+    }
 	return true;
 }
 
@@ -180,7 +167,6 @@ function validateCustomerRegistration(phoneNumber){
     if($('input[name="fname"]').val()==""){
 	    	$('input[name="fname"]').next('.err-msg').html(firstNameEmptyMessage).show();
 			$(".reg-input-cont.reg-fname").addClass('err-input').focus();
-			//showErrorToastMessage("Firstname cannot be empty");
 			return false;
 	}else{
 			$('input[name="fname"]').next('.err-msg').hide();
@@ -189,7 +175,6 @@ function validateCustomerRegistration(phoneNumber){
     if($('input[name="lname"]').val()==""){
 	    	$('input[name="lname"]').next('.err-msg').html(lastNameEmptyMessage).show();
 	    	$(".reg-input-cont.reg-lname").addClass('err-input').focus();
-	    		//showErrorToastMessage("LastName cannot be empty");
 	    	return false;
     }else{
 	    	$('input[name="lname"]').next('.err-msg').hide();
@@ -198,7 +183,6 @@ function validateCustomerRegistration(phoneNumber){
     if($('input[name="email"]').val()==""){
 	    	$('input[name="email"]').next('.err-msg').html(emailEmptyMessage).show();
 	    	$(".reg-input-cont.reg-email").addClass('err-input').focus();
-	    	//showErrorToastMessage("Email cannot be empty");
 	    	return false;
     }else{
 	    	$('input[name="email"]').next('.err-msg').hide();
@@ -209,7 +193,6 @@ function validateCustomerRegistration(phoneNumber){
 	        if (!regex.test($('input[name="email"]').val())) {
 	        	$('input[name="email"]').next('.err-msg').html(incorrectEmailID).show();
 	    		$(".reg-input-cont.reg-email").addClass('err-input').focus();
-	        //showErrorToastMessage("Incorrect Email");
 	    	return false;
         }else{
         	$('input[name="email"]').next('.err-msg').hide();
@@ -235,3 +218,77 @@ function validateCustomerRegistration(phoneNumber){
     
     return true;
 }
+
+function validateAdminUserCreate(user){
+	
+	if (user.firstName == "") {
+		$('#admin-create-user-first-name').next('.admin-err-msg').html(firstNameEmptyMessage).show();
+		$('#admin-create-user-first-name').addClass('ce-err-input').show();
+		return false;
+	}else{
+		$('#admin-create-user-first-name').next('.admin-err-msg').hide();
+		$('#admin-create-user-first-name').removeClass('ce-err-input');
+	} 
+	if (user.lastName == "") {
+		$('#admin-create-user-last-name').next('.admin-err-msg').html(lastNameEmptyMessage).show();
+		$('#admin-create-user-last-name').addClass('ce-err-input').show();
+		return false;
+	} else {
+		$('#admin-create-user-last-name').next('.admin-err-msg').hide();
+		$('#admin-create-user-last-name').removeClass('ce-err-input');
+	}
+   if (user.emailId == "") {
+	   $('#admin-create-user-emailId').next('.admin-err-msg').html(emailEmptyMessage).show();
+	   $('#admin-create-user-emailId').addClass('ce-err-input').show();
+		return false;
+	}else{
+		$('#admin-create-user-emailId').next('.admin-err-msg').hide();
+		$('#admin-create-user-emailId').removeClass('ce-err-input');
+	}
+	if(user.emailId!="")
+	{var validationStatus=emailValidation(user.emailId);
+      if(validationStatus){
+		  $('#admin-create-user-emailId').val('');	
+		  $('#admin-create-user-emailId').next('.admin-err-msg').html(invalidEmailErrorMessage).show();
+	      $('#admin-create-user-emailId').addClass('ce-err-input').focus();
+	  
+	  return false;
+	  }else{
+		  $('#admin-create-user-emailId').next('.admin-err-msg').hide();
+		  $('#admin-create-user-emailId').removeClass('ce-err-input');
+	  }
+      
+     }
+	return true;
+}
+
+function phoneNumberValidation(phoneNo,customerStatus,elementId){
+
+	var regex = /^\d{10}$/;   
+	if(customerStatus!=false){
+		if(phoneNo==null || phoneNo==""){
+			$('#'+elementId).next('.err-msg').html(phoneFieldEmptyMessage).show();
+			$('#'+elementId).addClass('err-input');
+		//showErrorToastMessage("Phone field cannot be empty");
+		return false;
+		}else{
+			if(!regex.test(phoneNo)) {
+				$('#'+elementId).next('.err-msg').html(invalidPhoneNumberMessage).show();
+				$('#'+elementId).addClass('err-input');
+				//showErrorToastMessage("Invalid phone number");
+				
+				return false;
+			}
+				$('#'+elementId).next('.err-msg').html('');
+				$('#'+elementId).removeClass('err-input');
+				return true;
+		
+		}
+		
+	}else{
+		$('#'+elementId).next('.err-msg').html('');
+		$('#'+elementId).removeClass('err-input');
+		return true;
+	}
+
+	}
