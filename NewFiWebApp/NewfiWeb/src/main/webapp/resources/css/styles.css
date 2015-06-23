@@ -3208,6 +3208,7 @@ input.calc-input {
 	padding-left: 20px;
 	margin-bottom: 20px;
 	text-transform: uppercase;
+	font-family: "opensanssemibold";
 }
 
 .loan-progress-sub-txt {
