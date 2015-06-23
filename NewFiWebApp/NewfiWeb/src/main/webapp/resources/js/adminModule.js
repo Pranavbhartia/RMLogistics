@@ -157,7 +157,10 @@ function paintSettingsDropDown(elementID,label,method,href){
 	var anchortag=$('<a>').attr({
 	"id" : elementID+"-id",	
     "href":href,
-    "onclick":method	
+  /*  "onclick":method	*/
+	}).bind('click',function(e){
+		e.stopImmediatePropagation();
+		myProfile();
 	});
     var rowContent = $('<div>').attr({
 		"class" : "admin-module-row-content",
@@ -170,12 +173,29 @@ function paintSettingsDropDown(elementID,label,method,href){
 
 }
 function completeTutorials(){
+	if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+    {
+		changeSecondaryLeftPanel(1);
+		hideSettingsPopup();
+    }  else{
+    	window.location.href="#myLoan/myTeam";
+    	hideSettingsPopup();
+    	
+    }
 	
-	window.location.href=newfiObject.baseUrl+"home.do#myLoan/myTeam";
 }
 function myProfile(){
+	if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) //IF IE > 10
+    {
+		//window.open("#myProfile");
+		window.location=window.location + "#" + "myProfile";
+		//showCustomerProfilePage();
+		hideSettingsPopup();
+    } else{
+    	 window.location.href ="#myProfile";
+    	 hideSettingsPopup();
+    } 
 	
-	 window.location.href = newfiObject.baseUrl+"home.do#myProfile";
 }
 
 /*TODO to load user mangement page*/

@@ -249,14 +249,25 @@ div#footeHomeImage {
 	padding-right: 130px; 
 	
 }
-.footer-text1{
-    width: 57%;
+
+.column-one{
+    /* width: 70%; */
     text-align: center;
 }
 
-.footer-text2{
+.first-column{
+	padding-top: 5px;
+	padding-left: 85px;
+}
+
+.second-column{
+	width: 70%;
+    margin: 0 auto;
+}
+
+.third-column{
     padding-right: 0;
-    width: 20%;
+    width: 9%;
 }
 .footer-container-text2 {
     padding: 15px 0px 0px 0px;
