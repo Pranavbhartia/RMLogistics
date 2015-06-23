@@ -138,7 +138,7 @@
 				removeToastMessage();
 				if(stages>5){
 					progressBaar(6);
-					aintRatesPageFromCrumb();
+					paintRatesPageFromCrumb();
 				}
 			});
 			/*$(document).on('click','#progressBaarId_7',function(){

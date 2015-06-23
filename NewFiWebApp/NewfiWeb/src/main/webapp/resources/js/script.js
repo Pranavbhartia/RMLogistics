@@ -2107,10 +2107,10 @@ function getClosingCostBottomConatiner() {
     });
     var headerCon2 = getClosingCostConatinerHeader("Estimated Reserves Deposited in Escrow Account");
     //NEXNF-569
-    //var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");
-   // var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
-    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
-    var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
+    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");
+    var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
+    //var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
+    //var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
     var row4Con2 = getClosingCostContainerLastRow(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "$ 3,216.00");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
     var bottomSubText = $('<div>').attr({
