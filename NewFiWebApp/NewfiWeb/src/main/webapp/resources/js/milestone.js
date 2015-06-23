@@ -1,4 +1,3 @@
-
 //Function to paint to loan progress page
 var countOfTasks = 0;
 var LOAN_MANAGER="Loan Advisor";

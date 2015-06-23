@@ -927,7 +927,9 @@ input[type="button"]:focus, button:focus {
 	background-color: #f5f9fc;
 	padding-left: 10px;
 	border-radius: 3px;
-	font-size: 13px;
+	/* NEXNF-568 */
+	/* font-size: 13px; */
+	font-size: 16px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
 }
@@ -1256,7 +1258,10 @@ input[type="button"]:focus, button:focus {
 	line-height: 45px;
 	background-color: #f5f9fc;
 	padding-left: 10px;
-	font-size: 13px;
+	/*  NEXNF-568 */
+	/* font-size: 13px; */
+	font-size: 16px;
+	font-family: openSanssemiBold;
 }
 
 .conversation-header {
@@ -2520,8 +2525,11 @@ input.calc-input {
 	margin-bottom: 10px;
 	padding-left: 10px;
 	background-color: #f5f9fc;
-	font-size: 13px;
 	text-transform: capitalize;
+	/* NEXNF-568 */
+	/* font-size: 13px; */
+	font-size: 16px;
+	font-family: openSanssemiBold;
 }
 
 .initial-list-doc-wrapper {
@@ -3209,6 +3217,9 @@ input.calc-input {
 	margin-bottom: 20px;
 	text-transform: uppercase;
 	font-family: "opensanssemibold";
+	/*  NEXNF-568 */
+	font-size: 16px;
+
 }
 
 .loan-progress-sub-txt {

@@ -2220,7 +2220,7 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     }
 
     //NEXNF-483
-    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Month(s)"||desc=="Homeowners Insurance Reserve - Estimated 2 Month(s)"){
+    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Month"||desc=="Homeowners Insurance Reserve - Estimated 2 Month"){
 
     	   var rowDesc = $('<div>').attr({
     	        "class": "closing-cost-desc eng-indent float-left"
