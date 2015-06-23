@@ -183,7 +183,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     
     var questions = [{
         type: "desc",
-        text: "Street Address",
+        text: "Street address",
         name: "addressStreet",
         value: appUserDetails.user.customerDetail.addressStreet
     }, {
@@ -198,7 +198,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
         value: appUserDetails.user.customerDetail.addressCity
     }, {
         type: "desc",
-        text: "Zip code",
+        text: "ZIP code",
         name: "zipCode",
         value: appUserDetails.user.customerDetail.addressZipCode
     },{

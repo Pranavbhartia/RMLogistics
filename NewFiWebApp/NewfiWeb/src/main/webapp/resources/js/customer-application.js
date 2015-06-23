@@ -85,11 +85,11 @@ var applicationItemsList = [
 	                            "onselect" : paintRefinanceStep2
 	                        },
 	                        {
-								"text":"Who's on the Loan?",
+								"text":"Borrower(s) on the Loan?",
 		                        "onselect" : paintCustomerApplicationPageStep2
 		                    },
 	                        {
-								"text":"My Income",
+								"text":"Income",
 		                        "onselect" : paintMyIncome
 		                    },
 			                {
@@ -97,7 +97,7 @@ var applicationItemsList = [
 				                 "onselect" : paintCustomerApplicationPageStep4a
 				             },
 				             {
-				            	 "text":"My Credit",
+				            	 "text":"Credit",
 					             "onselect" : paintCustomerApplicationPageStep5
 					         },
 ];

@@ -1455,7 +1455,7 @@ function getLoanSummaryHeader() {
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 float-left capitalize"
-    }).html('My Loan Summary');
+    }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html("Rates as of "+getCurrentDate(responseTime));
@@ -2022,11 +2022,7 @@ function getClosingCostSummaryContainer(valueSet) {
         "class": "closing-cost-wrapper"
     });
     if(valueSet.dummyData){
-        if(typeof(newfiObject)!=='undefined')
-            parentWrapper.html(getHeaderText(noProductMessage));
-        else{
-            parentWrapper.html(getHeaderText(noSutableProductFoundMessage));
-        }
+        parentWrapper.html(getHeaderText(getNoProductMessageInLockRatePage()));
     }else{
         var header = getClosingCostHeader("Estimated Closing Cost Summary");
        /* var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");

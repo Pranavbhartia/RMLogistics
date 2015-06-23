@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>Blustream Lending Rate Sheet</title>
+<meta http-equiv="refresh" content="300">
 <link rel="stylesheet" href="${baseURL}resources/css/bootstrap.min.css">
 <link rel="stylesheet" href="${baseURL}resources/css/styles.css">
 <link rel="stylesheet" href="${baseURL}resources/css/styles-print.css">
