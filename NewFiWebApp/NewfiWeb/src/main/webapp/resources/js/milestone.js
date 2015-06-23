@@ -692,9 +692,18 @@ function paintCustomerInfo ()
 		"class" : "loan-progress-wrapper"
 	});	
 	$('#WFProgressHeaderBar').remove();
-	var header = $('<div>').attr({
-		"class" : "loan-progress-header message-header-customer"
-	}).html("loan progress");
+	
+	var header="";
+	if(newfiObject.user.userRole.id==1){
+		 header = $('<div>').attr({
+			"class" : "loan-progress-header message-header-customer"
+		}).html("loan progress");
+	}else{
+		 header = $('<div>').attr({
+			"class" : "loan-progress-header"
+		}).html("loan progress");
+	}
+	
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
 	var subText = $('<div>').attr({
 		"class" : "loan-progress-sub-txt"
