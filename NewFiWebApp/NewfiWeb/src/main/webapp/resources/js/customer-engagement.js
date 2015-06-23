@@ -2284,7 +2284,7 @@ function changeToState(num){
             break;
         case 6:
             if(refinanceTeaserRate.loanType == "REF")
-                paintRefinanceHomeZipCode();    
+                paintRefinanceSeeRates();    
             break;
         case 7:
             if(refinanceTeaserRate.loanType == "REF")

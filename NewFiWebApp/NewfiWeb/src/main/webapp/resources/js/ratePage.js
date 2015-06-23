@@ -16,7 +16,12 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
         }).html("Email This Quote").on('click', function() {
             var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
-            
+            if(teaserRateValHolder.teaserRate){
+                if(refinanceTeaserRate.loanType)
+                    progressBaar(7)
+                else
+                    homeProgressBaar(5)
+            }
             $('#ce-refinance-cp').html(mainContainer);
         });
     }
