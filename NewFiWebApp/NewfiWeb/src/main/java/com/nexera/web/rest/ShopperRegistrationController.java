@@ -160,7 +160,7 @@ public class ShopperRegistrationController {
 				        registrationDetails, LoanAppFormVO.class);
 				emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
 			} else {
-				emailId = val.get("emailId").toString();
+				emailId = val.get("emailId").toString().split(":")[0];
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
