@@ -111,12 +111,12 @@ public class LQBRequestUtil {
 					hashmap.put("propertyZip", loanAppFormVO
 					        .getPropertyTypeMaster().getHomeZipCode());
 				}
-				hashmap.put("borrowerAddrYrs", getYearsSpent(loanAppFormVO
+				hashmap.put("applicantAddrYrs", getYearsSpent(loanAppFormVO
 				        .getUser().getCustomerDetail().getLivingSince()));
 
 			} else {
 
-				hashmap.put("borrowerAddrYrs", getYearsSpent(loanAppFormVO
+				hashmap.put("applicantAddrYrs", getYearsSpent(loanAppFormVO
 				        .getPropertyTypeMaster().getPropertyPurchaseYear()));
 				hashmap.put("loanApprovedValue", Utils
 				        .unformatCurrencyField(loanAppFormVO
@@ -151,13 +151,13 @@ public class LQBRequestUtil {
 			hashmap.put("middleName", "");
 			hashmap.put("lastName", loanAppFormVO.getLoan().getUser()
 			        .getLastName());
-			hashmap.put("borrowersEmailAddress", loanAppFormVO.getLoan()
+			hashmap.put("applicantEmailAddress", loanAppFormVO.getLoan()
 			        .getUser().getEmailId());
 			hashmap.put("dateOfBirth", new SimpleDateFormat("yyyy-MM-dd")
 			        .format(new Date(loanAppFormVO.getUser()
 			                .getCustomerDetail().getDateOfBirth())));
 
-			hashmap.put("borrowerHomePhone", loanAppFormVO.getUser()
+			hashmap.put("applicantHomePhone", loanAppFormVO.getUser()
 			        .getPhoneNumber());
 
 			hashmap.put("alimonyName", "NONE");
@@ -238,14 +238,14 @@ public class LQBRequestUtil {
 
 			if (null != loanAppFormVO.getCustomerEmploymentIncome()
 			        && loanAppFormVO.getCustomerEmploymentIncome().size() > 0) {
-				hashmap.put("borrowerEmplrNm", loanAppFormVO
+				hashmap.put("applicantEmplrNm", loanAppFormVO
 				        .getCustomerEmploymentIncome().get(0)
 				        .getCustomerEmploymentIncome().getEmployedAt());
-				hashmap.put("borrowerEmplrJobTitle", loanAppFormVO
+				hashmap.put("applicantEmplrJobTitle", loanAppFormVO
 				        .getCustomerEmploymentIncome().get(0)
 				        .getCustomerEmploymentIncome().getJobTitle());
 				// hashmap.put("borrowerEmplrMonthlyIncome",loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax());
-				hashmap.put("borrowerEmplrStartDate", loanAppFormVO
+				hashmap.put("applicantEmplrStartDate", loanAppFormVO
 				        .getCustomerEmploymentIncome().get(0)
 				        .getCustomerEmploymentIncome().getEmployedSince());
 			}
@@ -357,8 +357,7 @@ public class LQBRequestUtil {
 		if (loanAppFormVO.getCustomerSpouseDetail() != null) {
 			hashmap.put("firstCoborrowerName", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseName());
-			hashmap.put("middleCoborrowerName", loanAppFormVO
-			        .getCustomerSpouseDetail().getSpouseLastName());
+			hashmap.put("middleCoborrowerName", "");
 			hashmap.put("lastCoborrowerName", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseLastName());
 			hashmap.put("dateOfCoborrowerBirth", new SimpleDateFormat(
@@ -399,9 +398,9 @@ public class LQBRequestUtil {
 	HashMap<String, String> appendBorrowerDefCredScore(
 	        HashMap<String, String> hashmap) {
 
-		hashmap.put("borrowerExperianScore", "800");
-		hashmap.put("borrowerEquifaxScore", "800");
-		hashmap.put("borrowerTransUnionScore", "800");
+		hashmap.put("applicantExperianScore", "800");
+		hashmap.put("applicantEquifaxScore", "800");
+		hashmap.put("applicantTransUnionScore", "800");
 		return hashmap;
 	}
 
@@ -537,50 +536,50 @@ public class LQBRequestUtil {
 
 		if (null != loanAppFormVO.getGovernmentquestion()) {
 
-			hashmap.put("borrowerDecJudgment", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecJudgment", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isOutstandingJudgments()));
-			hashmap.put("borrowerDecBankrupt", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecBankrupt", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isBankrupt()));
-			hashmap.put("borrowerDecForeclosure", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecForeclosure", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isPropertyForeclosed()));
-			hashmap.put("borrowerDecLawsuit", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecLawsuit", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isLawsuit()));
-			hashmap.put("borrowerDecObligated", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecObligated", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isObligatedLoan()));
-			hashmap.put("borrowerDecDelinquent", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecDelinquent", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isFederalDebt()));
-			hashmap.put("borrowerDecAlimony", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecAlimony", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isObligatedToPayAlimony()));
-			hashmap.put("borrowerDecBorrowing", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecBorrowing", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().getIsDownPaymentBorrowed()));
-			hashmap.put("borrowerDecEndorser", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecEndorser", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isEndorser()));
-			hashmap.put("borrowerDecCitizen", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecCitizen", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isUSCitizen()));
 			if (loanAppFormVO.getGovernmentquestion().isUSCitizen() == false) {
-				hashmap.put("borrowerDecResidency", returnYesNo(loanAppFormVO
+				hashmap.put("applicantDecResidency", returnYesNo(loanAppFormVO
 				        .getGovernmentquestion().getPermanentResidentAlien()));
 			} else {
 				hashmap.put("applicationCoborrowerDecResidency", "No");
 			}
-			hashmap.put("borrowerDecOcc", returnYesNo(loanAppFormVO
+			hashmap.put("applicantDecOcc", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isOccupyPrimaryResidence()));
-			hashmap.put("borrowerDecPastOwnedPropT",
+			hashmap.put("applicantDecPastOwnedPropT",
 			        getPropertyTypeEnum(loanAppFormVO.getGovernmentquestion()
 			                .getTypeOfPropertyOwned()));
-			hashmap.put("TitleTborrowerDecPastOwnedProperty",
+			hashmap.put("TitleTapplicantDecPastOwnedProperty",
 			        getPropertyTitleEnum(loanAppFormVO.getGovernmentquestion()
 			                .getPropertyTitleStatus()));
-			hashmap.put("borrowerNoFurnish", loanAppFormVO
+			hashmap.put("applicantNoFurnish", loanAppFormVO
 			        .getGovernmentquestion().getSkipOptionalQuestion() + "");
-			hashmap.put("borrowerHispanicT", getEthnicityEnum(loanAppFormVO
+			hashmap.put("applicantHispanicT", getEthnicityEnum(loanAppFormVO
 			        .getGovernmentquestion().getEthnicity()));
 			hashmap = getBorrowerRace(hashmap, loanAppFormVO);
 			if ("male".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()
 			        .getSex()))
-				hashmap.put("borrowerGender", "1");
+				hashmap.put("applicantGender", "1");
 			else
-				hashmap.put("borrowerGender", "2");
+				hashmap.put("applicantGender", "2");
 		}
 
 		return hashmap;
@@ -631,27 +630,27 @@ public class LQBRequestUtil {
 	HashMap<String, String> getBorrowerRace(HashMap<String, String> hashmap,
 	        LoanAppFormVO loanAppFormVO) {
 
-		hashmap.put("borrowerIsAmericanIndian", "false");
-		hashmap.put("borrowerIsAsian", "false");
-		hashmap.put("borrowerIsBlack", "false");
-		hashmap.put("borrowerIsPacificIslander", "false");
-		hashmap.put("borrowerIsWhite", "false");
+		hashmap.put("applicantIsAmericanIndian", "false");
+		hashmap.put("applicantIsAsian", "false");
+		hashmap.put("applicantIsBlack", "false");
+		hashmap.put("applicantIsPacificIslander", "false");
+		hashmap.put("applicantIsWhite", "false");
 
 		if ("americanIndian".equalsIgnoreCase(loanAppFormVO
 		        .getGovernmentquestion().getRace()))
-			hashmap.put("borrowerIsAmericanIndian", "true");
+			hashmap.put("applicantIsAmericanIndian", "true");
 		else if ("nativeHawaiian".equalsIgnoreCase(loanAppFormVO
 		        .getGovernmentquestion().getRace()))
-			hashmap.put("borrowerIsPacificIslander", "true");
+			hashmap.put("applicantIsPacificIslander", "true");
 		else if ("black".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()
 		        .getRace()))
-			hashmap.put("borrowerIsBlack", "true");
+			hashmap.put("applicantIsBlack", "true");
 		else if ("white".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()
 		        .getRace()))
-			hashmap.put("borrowerIsWhite", "true");
+			hashmap.put("applicantIsWhite", "true");
 		else if ("asian".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()
 		        .getRace()))
-			hashmap.put("borrowerIsAsian", "true");
+			hashmap.put("applicantIsAsian", "true");
 		else
 			return hashmap;
 
@@ -721,7 +720,7 @@ public class LQBRequestUtil {
 			hashmap.put("applicationCoborrowerNoFurnish", loanAppFormVO
 			        .getSpouseGovernmentQuestions().getSkipOptionalQuestion()
 			        + "");
-			hashmap.put("borrowerHispanicT", getEthnicityEnum(loanAppFormVO
+			hashmap.put("applicantHispanicT", getEthnicityEnum(loanAppFormVO
 			        .getSpouseGovernmentQuestions().getEthnicity()));
 			hashmap = getBorrowerRace(hashmap, loanAppFormVO);
 			if ("male".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()

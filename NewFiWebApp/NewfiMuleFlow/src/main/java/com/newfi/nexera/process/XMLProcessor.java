@@ -186,9 +186,9 @@ public class XMLProcessor
             NodeList newApplicantList = doc.getElementsByTagName( "applicant" );
             Node newApplicantB = newApplicantList.item( 0 );
 
-            Element aBExperianScore = createNewElement( doc, "field", "aBExperianScore", "borrowerExperianScore" );
-            Element aBEquifax = createNewElement( doc, "field", "aBEquifaxScore", "borrowerEquifaxScore" );
-            Element aBTransUnionScore = createNewElement( doc, "field", "aBTransUnionScore", "borrowerTransUnionScore" );
+            Element aBExperianScore = createNewElement( doc, "field", "aBExperianScore", "applicantExperianScore" );
+            Element aBEquifax = createNewElement( doc, "field", "aBEquifaxScore", "applicantEquifaxScore" );
+            Element aBTransUnionScore = createNewElement( doc, "field", "aBTransUnionScore", "applicantTransUnionScore" );
             newApplicantB.appendChild( aBExperianScore );
             newApplicantB.appendChild( aBEquifax );
             newApplicantB.appendChild( aBTransUnionScore );
