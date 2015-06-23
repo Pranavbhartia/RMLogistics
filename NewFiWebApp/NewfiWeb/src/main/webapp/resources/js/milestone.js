@@ -769,16 +769,13 @@ function getCustomerMilestoneLoanProgressHeaderBarStep(status, step, heading) {
 
 function paintCustomerLoanProgressContainer() {
 
-	var heading = $('<div>').attr({
-		"class" : "loan-progress-heading"
-	}).html("Know Where You Are");
-
+	
 	var loanProgressCont = $('<div>').attr({
 		"id" : "loan-progress-milestone-wrapper",
 		"class" : "loan-progress-milestone-wrapper"
 	});
 
-	$('#cust-loan-progress').append(heading).append(loanProgressCont);
+	$('#cust-loan-progress').append(loanProgressCont);
 
 	
 	
