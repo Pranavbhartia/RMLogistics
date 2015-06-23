@@ -1455,7 +1455,7 @@ function getLoanSummaryHeader() {
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 float-left capitalize"
-    }).html('My Loan Summary');
+    }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html("Rates as of "+getCurrentDate(responseTime));
@@ -2022,21 +2022,18 @@ function getClosingCostSummaryContainer(valueSet) {
         "class": "closing-cost-wrapper"
     });
     if(valueSet.dummyData){
-        if(typeof(newfiObject)!=='undefined')
-            parentWrapper.html(getHeaderText(noProductMessage));
-        else{
-            parentWrapper.html(getHeaderText(noSutableProductFoundMessage));
-        }
+        parentWrapper.html(getHeaderText(getNoProductMessageInLockRatePage()));
     }else{
         var header = getClosingCostHeader("Estimated Closing Cost Summary");
-        var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
+       /* var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
         var closingDate = $('<span>').attr({
             "class": "semibold"
         });
-        descText.append(closingDate);
+        descText.append(closingDate);*/
         var topContainer = getClosingCostTopConatiner();
         var bottomContainer = getClosingCostBottomConatiner();
-        parentWrapper.append(header).append(descText).append(topContainer).append(bottomContainer);
+        //parentWrapper.append(header).append(descText).append(topContainer).append(bottomContainer);
+        parentWrapper.append(header).append(topContainer).append(bottomContainer);
     }
     return parentWrapper;
 }
@@ -2045,7 +2042,7 @@ function getClosingCostSummaryContainer(valueSet) {
 
 function getClosingCostHeader(text) {
     var header = $('<div>').attr({
-        "class": "closing-cost-header cus-eng-font capitalize"
+        "class": "closing-cost-header cus-eng-font capitalize ccSummary"
     }).html(text);
     return header;
 }
@@ -2121,7 +2118,8 @@ function getClosingCostBottomConatiner() {
 
 function getClosingCostConatinerHeader(text) {
 	//NEXNF-483
-	var indentHeaderFeildFlag=false;
+	//NEXNF-537
+	/*var indentHeaderFeildFlag=false;
 	var header="";
 	if(text=="Estimated Third Party Costs"){
 		indentHeaderFeildFlag=true;
@@ -2134,10 +2132,12 @@ function getClosingCostConatinerHeader(text) {
 		  header = $('<div>').attr({
 		        "class": "closing-cost-cont-desc-header"
 		    }).html(text);
-	}
-    /*var header = $('<div>').attr({
+	}*/
+	
+	
+    var header = $('<div>').attr({
         "class": "closing-cost-cont-desc-header"
-    }).html(text);*/
+    }).html(text);
     return header;
 }
 
@@ -2177,7 +2177,8 @@ function getClosingCostContainerRow(rowNum, desc, detail) {
         row.addClass("closing-cost-cont-desc-row-even");
     }
     //NEXNF-483 and updated for 6.17 updates
-    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance"){
+    // NEXNF-537
+    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || desc =="Your cost or credit based on rate selected"){
     	indentTextFlag=true;
     }
     var rowDesc="";

@@ -188,7 +188,7 @@ input[type="button"]:focus, button:focus {
 
 .home-container {
 	margin-top: 50px;
-	/* padding-bottom: 120px; */
+	padding-bottom: 50px;
 }
 
 .home-container_CEP {
@@ -923,14 +923,13 @@ input[type="button"]:focus, button:focus {
 }
 
 .complete-application-header {
-	line-height: 55px;
+	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 20px;
+	padding-left: 10px;
 	border-radius: 3px;
-	font-size: 22px;
+	font-size: 13px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
-	text-align: center;
 }
 
 .application-form-header {
@@ -1256,7 +1255,8 @@ input[type="button"]:focus, button:focus {
 .message-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 20px;
+	padding-left: 10px;
+	font-size: 13px;
 }
 
 .conversation-header {
@@ -2048,9 +2048,9 @@ input[type="button"]:focus, button:focus {
 	height: 45px;
 	line-height: 45px;
 	margin-bottom: 20px;
-	padding-left: 30px;
+	padding-left: 20px;
 	background-color: #f5f9fc;
-	font-size: 14px;
+	font-size: 13px;
 	font-family: 'opensanssemibold';
 }
 
@@ -2083,9 +2083,9 @@ input[type="button"]:focus, button:focus {
 	height: 45px;
 	line-height: 45px;
 	margin-bottom: 20px;
-	padding-left: 20px;
+	padding-left: 10px;
 	background-color: #f5f9fc;
-	font-size: 14px;
+	font-size: 13px;
 	font-family: 'opensanssemibold';
 }
 
@@ -2395,7 +2395,7 @@ input[type="button"]:focus, button:focus {
 
 .create-user-popup-cont {
 	width: 50%;
-	height: 50px;
+	/* height: 50px; */
 	line-height: 40px;
 	margin: 10px 0;
 }
@@ -2518,10 +2518,10 @@ input.calc-input {
 	height: 45px;
 	line-height: 45px;
 	margin-bottom: 10px;
-	padding-left: 20px;
+	padding-left: 10px;
 	background-color: #f5f9fc;
-	font-size: 14px;
-	text-transform: uppercase;
+	font-size: 13px;
+	text-transform: capitalize;
 }
 
 .initial-list-doc-wrapper {
@@ -2771,7 +2771,11 @@ input.calc-input {
 
 
 .prof-form-input.date-picker{
-	width: 150px;
+	
+	/*NEXNF-534*/
+	/* width: 150px; */
+	width: 130px;
+	
 }
 
 .prof-form-input-select {
@@ -3263,6 +3267,7 @@ input.calc-input {
 
 .milestone-lc-header-txt,.milestone-rc-header-txt {
 	position: relative;
+	width:220px;
 	height: 28px;
 	line-height: 28px;
 	border-radius: 3px;
@@ -5407,4 +5412,10 @@ a.session-login-btn {
 	height: 230px;
 	margin: 0 -15px;
 	padding: 0 15px;
+}
+
+
+.ccSummary{
+	text-align: center;
+	font-size : 12px;
 }

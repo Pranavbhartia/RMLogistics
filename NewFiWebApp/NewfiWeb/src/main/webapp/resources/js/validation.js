@@ -22,22 +22,31 @@ function validateInput(element,inputVal,message){
 	var width=$(element).css('width');
 	//$('input[name="currentMortgageBalance"]')
 
-	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""
-		){
+	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""){
 	
 			$('input[name="' + name + '"]').parent().find('.err-msg').html(message).show();
 			$('input[name="' + name + '"]').addClass('ce-err-input').show();
-			$(".err-msg").css('width',width);
+			 /* NEXNF-524 */
+/*			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+				$(".err-msg").css('width',width);
+			}*/
+			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+				$('input[name="' + name + '"]').parent().find('.err-msg').removeClass('float-left');
+			}
 			return false;
-		
-		
-
 	}else{
 		if(inputVal == "$0" || inputVal == 0){
-			$('input[name="' + name + '"]').parent().find('.err-msg').html(feildShouldNotBeZero).show();
-			$('input[name="' + name + '"]').addClass('ce-err-input').show();
-			$(".err-msg").css('width',width);
-			return false;
+			if(name!="zipCode"){
+				$('input[name="' + name + '"]').parent().find('.err-msg').html(feildShouldNotBeZero).show();
+				$('input[name="' + name + '"]').addClass('ce-err-input').show();
+				 /* NEXNF-524 */
+	/*			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+					$(".err-msg").css('width',width);
+				}*/if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+					$('input[name="' + name + '"]').parent().find('.err-msg').addClass('float-left');
+					return false;
+				}
+			}			
 		}else{
 			$('input[name="' + name + '"]').parent().find('.err-msg').hide();
 			$('input[name="' + name + '"]').removeClass('ce-err-input');			

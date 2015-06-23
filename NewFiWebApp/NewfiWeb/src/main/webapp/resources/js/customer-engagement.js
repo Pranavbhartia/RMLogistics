@@ -583,7 +583,7 @@ function getTextQuestion(quesText, clickEvent, name) {
             var classname=$('input[name="' + key + '"]');
            
             if($('input[name="zipCode"]').val()==inputValue){
-            	 var isSuccess=validateInput(classname,inputValue,errorMessageForZipcode);
+            	 var isSuccess=validateInput(classname,inputValue,zipCodeMessage);
                  if(isSuccess){
                 	 if(inputValue.length >5 ||inputValue.length < 5){
 
@@ -1437,7 +1437,7 @@ function getLoanSummaryHeaderCEP() {
         });
         var col1 = $('<div>').attr({
             "class": "loan-summary-header-col1 float-left capitalize"
-        }).html('My Loan Summary');
+        }).html('Programs and Rates');
         var col2 = $('<div>').attr({
             "class": "loan-summary-header-col2 float-left"
         }).html(currentDateTime);
@@ -1749,7 +1749,7 @@ function getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn) {
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 float-left capitalize"
-    }).html('My Loan Summary');
+    }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate(responseTime));

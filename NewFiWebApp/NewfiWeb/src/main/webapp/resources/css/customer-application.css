@@ -8,7 +8,7 @@
 }
 .app-ques-text {
     font-family: 'opensanssemibold';
-    font-size: 16px;
+    font-size: 15px;
     line-height:normal;
     margin-bottom: 10px;
 }
@@ -35,12 +35,14 @@
 }
 .app-ques-header-txt {
     font-family: 'opensanssemibold';
-    font-size: 24px;
+    font-size: 18px;
 	line-height: 40px;
 	margin-bottom: 15px;
 }
 .app-input {
-    width: 150px;
+	/*NEXNF-534*/
+    /* width: 150px; */
+    width: 130px;
     height: 35px;
     padding-left: 10px;
     line-height: 35px;
@@ -77,8 +79,15 @@
 }
 .app-options-cont {
     position: relative;
-    width: 250px;
+    /* NEXNF-524 */
+    /* width: 250px; */
+    width: 300px;
 }
+
+.app-cont-new{
+	width: 250px;
+}
+
 .app-dropdown-cont {
     position: absolute;
     width: 100%;
