@@ -5,7 +5,7 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 float-left capitalize"
-    }).html('My Loan Summary');
+    }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate(responseTime));
@@ -16,7 +16,8 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
         }).html("Email This Quote").on('click', function() {
             var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
-            $('#ce-main-container').html(mainContainer);
+            
+            $('#ce-refinance-cp').html(mainContainer);
         });
     }
     if(!teaserRateValHolder.teaserRate){
