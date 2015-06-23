@@ -4,8 +4,7 @@ var buyHomeTeaserRate = new Object();
 var purchaseDetails = new Object();
 buyHomeTeaserRate.purchaseDetails = purchaseDetails;
 //buyHomeTeaserRate.purchaseDetails=purchaseDetails;
-var buyHomeitemsList = ["Loan Purpose", "Loan Amount", "Home Information",
-    "Zip Code", "Programs and Rates", "Create Account"
+var buyHomeitemsList = ["Loan Purpose", "Loan Amount", "Home Information", "Programs and Rates", "Create Account"
 ];
 
 function getBuyHomeLeftPanel() {
@@ -366,8 +365,8 @@ function paintHomeZipCode() {
 function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAccountBtn) {
     
 	//callRestAPi();
-	stages = 5;
-    homeProgressBaar(5);
+	stages = 4;
+    homeProgressBaar(4);
     if (!parentContainer) {
         parentContainer = $('#ce-refinance-cp');
     }

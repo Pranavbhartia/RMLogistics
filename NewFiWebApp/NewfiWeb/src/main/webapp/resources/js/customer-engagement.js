@@ -427,7 +427,7 @@ function paintRefinanceMainContainer() {
     $('#ce-main-container').append(wrapper);
     paintRefinanceQuest1();
 }
-var itemsList = ["Loan Purpose", "Mortgage Balance", "Monthly Payment", "Home Value","Home Information", "Zip Code", "Programs and Rates", "Create Account"];
+var itemsList = ["Loan Purpose", "Mortgage Balance", "Monthly Payment", "Home Value","Home Information", "Programs and Rates", "Create Account"];
 
 function getRefinanceLeftPanel() {
     var container = $('<div>').attr({
@@ -813,11 +813,21 @@ function paintNewResidenceTypeQues(){
             value: "2"
         }],
         selected: ""
+    },{
+        type: "desc",
+        text: "Zip Code",
+        name: "zipCode",
     }];
-
+    var valueSet;
+    if(typeof(newfiObject)==="undefined"){
+        if(refinanceTeaserRate.loanType)
+            valueSet=refinanceTeaserRate;
+        else
+            valueSet=buyHomeTeaserRate;
+    }
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i];
-        var contxt = getQuestionContext(question, $('#ce-refinance-cp'));
+        var contxt = getQuestionContext(question, $('#ce-refinance-cp'),valueSet);
         contxt.drawQuestion();
         quesContxts[question.name]=contxt;
     }
@@ -825,29 +835,63 @@ function paintNewResidenceTypeQues(){
         "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").on('click', function() {
     	removeToastMessage();
-        if(refinanceTeaserRate.loanType){
-            refinanceTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
-            refinanceTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
-            if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
-            	removeToastMessage();
-            	paintRefinanceHomeZipCode();	
-            }else{
-            	validateDropDown();
-            	showErrorToastMessage(yesyNoErrorMessage);
+        var zipCode=quesContxts["zipCode"].value
+        var propertyType=quesContxts["propertyType"].value;
+        var residenceType=quesContxts["residenceType"].value;
+        var className=$('input[name="zipCode"]');
+        if(propertyType!="" && residenceType!=""){
+            var isSuccess = validateInput(className,zipCode, zipCodeMessage);
+            if (isSuccess){
+                if (zipCode.length > 5 || zipCode.length < 5) {
+                     $('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+                     $('input[name="zipCode"]').addClass('ce-err-input').show();
+                    return false;
+                } else {
+                    ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":zipCode}, function(response) {
+                        if (response.error) {
+                            showToastMessage(response.error.message)
+                        } else {
+                            if(response.resultObject==true){
+                                removeToastMessage();
+                                if(refinanceTeaserRate.loanType){
+                                    refinanceTeaserRate.propertyType = propertyType;//$('input[name="currentMortgagePayment"]').val()
+                                    refinanceTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
+                                    refinanceTeaserRate.zipCode=zipCode;
+
+                                    paintRefinanceSeeRates();
+
+                                    /*if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+                                        removeToastMessage();
+                                        paintRefinanceHomeZipCode();    
+                                    }else{
+                                        validateDropDown();
+                                        showErrorToastMessage(yesyNoErrorMessage);
+                                    }*/
+                                    
+                                }
+                                if(buyHomeTeaserRate.loanType){
+                                    buyHomeTeaserRate.propertyType = propertyType;//$('input[name="currentMortgagePayment"]').val()
+                                    buyHomeTeaserRate.residenceType = residenceType;//quesContxts[1].value;
+                                    buyHomeTeaserRate.zipCode=zipCode
+
+                                    paintBuyHomeSeeTeaserRate();
+
+                                    /*if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
+                                        removeToastMessage();
+                                        paintHomeZipCode(); 
+                                    }else{
+                                        validateDropDown();
+                                        showErrorToastMessage(yesyNoErrorMessage);
+                                    }*/
+                                }
+                            }else{
+                                 $('input[name="zipCode"]').next('.err-msg').html(invalidStateZipCode).show();
+                                 $('input[name="zipCode"]').addClass('ce-err-input').show();
+                            }
+                        }
+                    });
+                }
             }
-            
-        }
-        if(buyHomeTeaserRate.loanType){
-            buyHomeTeaserRate.propertyType = quesContxts["propertyType"].value;//$('input[name="currentMortgagePayment"]').val()
-            buyHomeTeaserRate.residenceType = quesContxts["residenceType"].value;//quesContxts[1].value;
-            if(quesContxts["propertyType"].value!="" && quesContxts["residenceType"].value!=""){
-            	removeToastMessage();
-            	paintHomeZipCode();	
-            }else{
-            	validateDropDown();
-            	showErrorToastMessage(yesyNoErrorMessage);
-            }
-           // paintHomeZipCode();
         }
     });
     $('#ce-refinance-cp').append(saveAndContinueButton);
@@ -929,8 +973,8 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
         if(!teaserRateData){
             teaserRateData=refinanceTeaserRate;
         }
-        stages = 7;
-        progressBaar(7);
+        stages = 6;
+        progressBaar(6);
         delete sessionStorage.refinaceData;
        
         

@@ -72,9 +72,9 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                 //if create option is required with progress crumb
                 if(teaserRateValHolder.teaserRate){
                     if(refinanceTeaserRate.loanType)
-                        progressBaar(8)
+                        progressBaar(7)
                     else
-                        homeProgressBaar(6)
+                        homeProgressBaar(5)
                 }
                
                 var mainContainer = paintApplyNow(inputCustomerDetails);
