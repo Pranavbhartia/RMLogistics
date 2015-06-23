@@ -5,7 +5,7 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 float-left capitalize"
-    }).html('Programs and Rates');
+    }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate(responseTime));
@@ -497,6 +497,17 @@ function getPurchaseClosingCostComponent(teaserRate, customerInputData){
 
 
 function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn) {
+
+    var quesTxt = "Programs and Rates";
+    var container = $('<div>').attr({
+        "class": "ce-rate-main-container"
+    });
+    var quesTextCont = $('<div>').attr({
+        "class": "ce-rp-ques-text"
+    }).html(quesTxt);
+    // alert(JSON.stringify(refinanceTeaserRate));
+    container.append(quesTextCont);
+    $(parentContainer).html(container);
 
     var teaserRate =  modifiedLQBJsonResponse(teaserRate);
     var rateVO = getLQBObj(teaserRate);

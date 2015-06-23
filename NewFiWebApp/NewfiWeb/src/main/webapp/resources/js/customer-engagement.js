@@ -892,6 +892,9 @@ function paintNewResidenceTypeQues(){
                     });
                 }
             }
+        }else{
+            validateDropDown();
+            showErrorToastMessage(yesyNoErrorMessage);
         }
     });
     $('#ce-refinance-cp').append(saveAndContinueButton);
@@ -1035,16 +1038,7 @@ function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccount
                     responseTime="";
                     console.log("Invalid Data");
                 }
-                var quesTxt = "Loan Programs and Rates";
-                var container = $('<div>').attr({
-                    "class": "ce-rate-main-container"
-                });
-                var quesTextCont = $('<div>').attr({
-                    "class": "ce-rp-ques-text"
-                }).html(quesTxt);
-                // alert(JSON.stringify(refinanceTeaserRate));
-                container.append(quesTextCont);
-                $(parentContainer).html(container);
+                
 
                // alert('createLoan data is '+data)
                 paintFixYourRatePageCEP(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
