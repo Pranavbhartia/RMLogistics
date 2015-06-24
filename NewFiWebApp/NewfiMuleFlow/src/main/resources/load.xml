@@ -107,7 +107,22 @@
 		<field id="sStatusD" />
 		<field id="sRLckdExpiredD" />
 		<field id="sRateLockStatusT" />
-		<field id="sPmlCertXmlContent" />
+		<field id="s800U1F" />
+		<field id="sLDiscnt" />
+		<field id="sApprF" />
+		<field id="sCrF" />
+		<field id="sFloodCertificationF" />
+		<field id="sWireF" />
+		<field id="sTitleInsF" />
+		<field id="sEscrowF" />
+		<field id="sRecF" />
+		<field id="sRecDeed" />
+		<field id="sRecMortgage" />
+		<field id="sRecRelease" />
+		<field id="sCountyRtc" />
+		<field id="sHazInsRsrv" />
+		<field id="sOwnerTitleInsF " />
+
 		<applicant>
 			<field id="aBFirstNm" />
 			<field id="aBLastNm" />
