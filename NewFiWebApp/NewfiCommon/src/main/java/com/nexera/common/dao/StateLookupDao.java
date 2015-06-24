@@ -1,5 +1,6 @@
 package com.nexera.common.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -28,6 +29,6 @@ public interface StateLookupDao extends GenericDao {
 	 * @param zipCode
 	 * @return
 	 */
-	String getZipCodeData(String zipCode);
+	public HashMap<String, String> getZipCodeData(String zipCode);
 
 }

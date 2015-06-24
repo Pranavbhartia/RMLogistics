@@ -607,8 +607,6 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
                 allowNegative: false
             });
         }
-    }).bind("paste",function(e) {
-        e.preventDefault();
     });
     
     

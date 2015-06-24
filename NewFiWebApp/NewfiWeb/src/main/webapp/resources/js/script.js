@@ -1735,8 +1735,6 @@ function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
     	
     	flag = true;
     	
-    }).bind("paste",function(e) {
-        e.preventDefault();
     });
     
     
@@ -3041,9 +3039,8 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 		});	
     	
     	flag = true;
-    }).bind("paste",function(e) {
-        e.preventDefault();
     });
+    
     row1.append(col1row1).append(col2row1);
     var row2 = $('<div>').attr({
         "class": "loan-summary-sub-row clearfix"
@@ -3066,8 +3063,6 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 		});	
     	
     	flag = true;
-    }).bind("paste",function(e) {
-        e.preventDefault();
     });
     
     var col2 = $('<div>').attr({

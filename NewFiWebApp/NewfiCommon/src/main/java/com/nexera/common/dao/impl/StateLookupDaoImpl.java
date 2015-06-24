@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.entity.StateLookup;
@@ -71,7 +70,7 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	public String getStateCodeByZip(String addressZipCode) {
-		// TODO Auto-generated method stub
+		LOG.info("Find state by zip code of zipcode Value = "+addressZipCode);
 		ZipCodeLookup lookup = getStatelookupValues(addressZipCode);
 		return lookup.getStateLookup().getStatecode();
 	}
@@ -89,16 +88,19 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 	}
 
 	@Override
-	public String getZipCodeData(String zipCode) {
+	public HashMap<String, String> getZipCodeData(String zipCode) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		
 		ZipCodeLookup lookup=getStatelookupValues(zipCode);
 		if(lookup!=null){
-			HashMap<String, String> map=new HashMap<String, String>();
+			
 			map.put("stateName", lookup.getStateLookup().getStatename());
 			map.put("countyName", lookup.getCountyname());
 			map.put("cityName", lookup.getCityname());
-			return new Gson().toJson(map);
+			return map;
 		}
-		return "";
+		return map;
 	}
 
 	@Override
