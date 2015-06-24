@@ -2877,14 +2877,14 @@ function getPasswordRow(displayName,id,password) {
 			"type" : "password",
 			"name":"change-password"
 		});
-		 inputCont.append(input).append(appendErrorMessage);
+		/* inputCont.append(input).append(appendErrorMessage());*/
 	}else{
 		input = $('<input>').attr({
 			"class" : "prof-form-input prof-form-input-m",
 			"id" : id,
 			"type" : "password"
 		}).val(password);
-		inputCont.append(input);
+		/*inputCont.append(input);*/
 	}
 	
 	
