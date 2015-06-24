@@ -1,5 +1,6 @@
 package com.nexera.common.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.StateLookupDao;
 import com.nexera.common.entity.StateLookup;
@@ -70,15 +72,33 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 	@Override
 	public String getStateCodeByZip(String addressZipCode) {
 		// TODO Auto-generated method stub
+		ZipCodeLookup lookup = getStatelookupValues(addressZipCode);
+		return lookup.getStateLookup().getStatecode();
+	}
+
+	private ZipCodeLookup getStatelookupValues(String zipCode) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
 		        ZipCodeLookup.class);
-		criteria.add(Restrictions.eq("zipcode", addressZipCode));
+		criteria.add(Restrictions.eq("zipcode", zipCode));
 		ZipCodeLookup lookup = (ZipCodeLookup) criteria.uniqueResult();
 		if (lookup == null || lookup.getStateLookup() == null) {
 			return null;
 		}
 		Hibernate.initialize(lookup.getStateLookup());
-		return lookup.getStateLookup().getStatecode();
+		return lookup;
+	}
+
+	@Override
+	public String getZipCodeData(String zipCode) {
+		ZipCodeLookup lookup=getStatelookupValues(zipCode);
+		if(lookup!=null){
+			HashMap<String, String> map=new HashMap<String, String>();
+			map.put("stateName", lookup.getStateLookup().getStatename());
+			map.put("countyName", lookup.getCountyname());
+			map.put("cityName", lookup.getCityname());
+			return new Gson().toJson(map);
+		}
+		return "";
 	}
 
 	@Override
