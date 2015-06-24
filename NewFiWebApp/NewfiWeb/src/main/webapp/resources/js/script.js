@@ -621,19 +621,10 @@ function getCompletYourApplicationHeader() {
     var parent = $('<div>').attr({
         "class": "complete-application-wrapper"
     });
-    var header="";
-    if(newfiObject.user.userRole.id!=1){
-    	  header = $('<div>').attr({
-    	        "class": "complete-application-header"
-    	    }).html("Complete My Loan Profile");
-    }else{
-    	  header = $('<div>').attr({
-    	        "class": "complete-application-header message-header-customer "
-    	    }).html("Complete My Loan Profile");
-    }
-   /* var header = $('<div>').attr({
+
+    var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Loan Profile");*/
+    }).html("Complete My Loan Profile");
     return parent.append(header);
 }
 
@@ -1464,7 +1455,7 @@ function getLoanSummaryHeader() {
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
-        "class": "loan-summary-header-col1 float-left capitalize"
+        "class": "loan-summary-header-col1 page-header-loan float-left"
     }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"

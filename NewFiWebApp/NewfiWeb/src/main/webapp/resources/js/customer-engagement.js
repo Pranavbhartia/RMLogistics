@@ -1484,7 +1484,7 @@ function getLoanSummaryHeaderCEP() {
             "class": "loan-summary-header clearfix"
         });
         var col1 = $('<div>').attr({
-            "class": "loan-summary-header-col1 float-left capitalize"
+            "class": "loan-summary-header-col1 page-header-loan float-left"
         }).html('Programs and Rates');
         var col2 = $('<div>').attr({
             "class": "loan-summary-header-col2 float-left"
@@ -1796,7 +1796,7 @@ function getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn) {
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
-        "class": "loan-summary-header-col1 float-left capitalize"
+        "class": "loan-summary-header-col1 page-header-loan float-left"
     }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
@@ -1805,7 +1805,7 @@ function getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn) {
     var rateBtn2="";
     if(!hideCreateAccountBtn){
         rateBtn2 = $('<div>').attr({
-            "class": "rate-btn-alertRate float-right"
+            "class": "rate-btn-alertRate rate-btn-alertRate-header float-right"
         }).html("Email This Quote").on('click', function() {
             var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
