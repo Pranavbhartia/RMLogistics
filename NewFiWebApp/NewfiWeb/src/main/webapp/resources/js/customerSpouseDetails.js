@@ -1393,7 +1393,8 @@ function paintCustomerSpouseApplicationPageStep5() {
 		    		appUserDetails.customerSpouseDetail = customerDetailTemp;
 					saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));  
     	}else{
-    		applicationFormSumbit(appUserDetails);
+    		paintLockRatePage();
+    		//applicationFormSumbit(appUserDetails);
     	}
 					
     });
