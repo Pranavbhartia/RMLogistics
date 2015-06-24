@@ -434,9 +434,15 @@ public class XMLProcessor
             newApplicant.appendChild( address );
             Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
             newApplicant.appendChild( userSSN );
+            Element coborrowerCity = createNewElement( doc, "field", "aCCity ", "applicantCoborrowerCity" );
+            newApplicant.appendChild( coborrowerCity );
+            Element coborrowerState = createNewElement( doc, "field", "aCState ", "applicantCoborrowerState" );
+            newApplicant.appendChild( coborrowerState );
+            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZip" );
+            newApplicant.appendChild( coborrowerZip );
+
             Element coBorrowerHomePhone = createNewElement( doc, "field", "aCHPhone", "applicationCoborrowerHomePhone" );
             newApplicant.appendChild( coBorrowerHomePhone );
-
             Element applicationCoborrowerDecJudgment = createNewElement( doc, "field", "aCDecJudgment",
                 "applicationCoborrowerDecJudgment" );
             newApplicant.appendChild( applicationCoborrowerDecJudgment );
@@ -523,6 +529,12 @@ public class XMLProcessor
             newApplicant.appendChild( lastName );
             Element dateOfBirth = createNewElement( doc, "field", "aCDob", "dateOfCoborrowerBirth" );
             newApplicant.appendChild( dateOfBirth );
+            Element coborrowerCity = createNewElement( doc, "field", "aCCity ", "applicantCoborrowerCity" );
+            newApplicant.appendChild( coborrowerCity );
+            Element coborrowerState = createNewElement( doc, "field", "aCState ", "applicantCoborrowerState" );
+            newApplicant.appendChild( coborrowerState );
+            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZip" );
+            newApplicant.appendChild( coborrowerZip );
             Element baseIncome = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome );
             Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
