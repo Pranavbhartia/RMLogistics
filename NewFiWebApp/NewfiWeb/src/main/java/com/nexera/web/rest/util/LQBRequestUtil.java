@@ -367,6 +367,12 @@ public class LQBRequestUtil {
 			        CalculateCoborrowerBaseIncome(loanAppFormVO));
 			hashmap.put("applicantCoborrowerAddress", loanAppFormVO
 			        .getCustomerSpouseDetail().getStreetAddress());
+			hashmap.put("applicantCoborrowerCity", loanAppFormVO
+			        .getCustomerSpouseDetail().getCity());
+			hashmap.put("applicantCoborrowerState", loanAppFormVO
+			        .getCustomerSpouseDetail().getState());
+			hashmap.put("applicantCoborrowerZip", loanAppFormVO
+			        .getCustomerSpouseDetail().getZip());
 			hashmap.put("userCoborrowerSSNnumber", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseSsn());
 			hashmap.put("applicationCoborrowerHomePhone", loanAppFormVO
@@ -436,6 +442,12 @@ public class LQBRequestUtil {
 			        CalculateCoborrowerBaseIncome(loanAppFormVO));
 			hashmap.put("applicantCoborrowerAddress", loanAppFormVO
 			        .getCustomerSpouseDetail().getStreetAddress());
+			hashmap.put("applicantCoborrowerCity", loanAppFormVO
+			        .getCustomerSpouseDetail().getCity());
+			hashmap.put("applicantCoborrowerState", loanAppFormVO
+			        .getCustomerSpouseDetail().getState());
+			hashmap.put("applicantCoborrowerZipCode", loanAppFormVO
+			        .getCustomerSpouseDetail().getCity());
 			hashmap.put("userCoborrowerSSNnumber", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseSsn());
 			hashmap.put("ApplicantCoBorrowerId", loanAppFormVO
@@ -474,12 +486,6 @@ public class LQBRequestUtil {
 				hashmap.put("jobRelatedCoborrowerPayment", "10000");
 			}
 
-			hashmap.put("applicantCoborrowerCity", loanAppFormVO
-			        .getCustomerSpouseDetail().getCity());
-			hashmap.put("applicantCoborrowerState", loanAppFormVO
-			        .getCustomerSpouseDetail().getState());
-			hashmap.put("applicantCoborrowerZipCode", loanAppFormVO
-			        .getCustomerSpouseDetail().getCity());
 		}
 
 		hashmap.put("applicationCoborrowerHomePhone", loanAppFormVO
