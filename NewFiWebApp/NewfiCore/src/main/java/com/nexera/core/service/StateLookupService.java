@@ -19,4 +19,10 @@ public interface StateLookupService {
 	 */
 	Boolean validateZipCode(String zipCode);
 
+	/**
+	 * @param zipCode
+	 * @return
+	 */
+	String getZipCodeData(String zipCode);
+
 }
