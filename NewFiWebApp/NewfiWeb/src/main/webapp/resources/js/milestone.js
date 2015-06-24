@@ -737,8 +737,8 @@ function showProgressHeaderSteps(){
 	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
 	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 1, "Application");
 	container.append(stepElement);	
-	msStep = workFlowContext.milestoneStepsLookup["DISCLOSURE_DISPLAY"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Disclosures");
+	msStep = workFlowContext.milestoneStepsLookup["LOCK_YOUR_RATE"];
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Rate Locked");
 	container.append(stepElement);	
 	msStep = workFlowContext.milestoneStepsLookup["VIEW_NEEDS"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Needs List");
@@ -746,8 +746,8 @@ function showProgressHeaderSteps(){
 	msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 4, "Application Fee");
 	container.append(stepElement);	
-	msStep = workFlowContext.milestoneStepsLookup["LOCK_YOUR_RATE"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Lock Your Rates");
+	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
 	container.append(stepElement);	
 	
 	return container;
@@ -788,7 +788,7 @@ function paintCustomerLoanProgressContainer() {
 
 	
 	
-	paintMilestoneCustomerProfileDetails(workFlowContext.customer);
+	//paintMilestoneCustomerProfileDetails(workFlowContext.customer);
 	
 	
 	// Append milestones
