@@ -111,7 +111,7 @@ function getCustomerSecondaryLeftNav() {
     }
     var step2 = "";
     if(flag){
-        step2 = getCustomerSecondaryLeftNavStep(2, "complete my loan profile");
+        step2 = getCustomerSecondaryLeftNavStep(2, "complete my application");
         newfiObject.applicationNavTab=step2;
     } 
     var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");
@@ -474,8 +474,8 @@ function redirectToGettingToKnowLastPage() {
 	cont2.append("<div class='getting-to-know-hdr-txt'>Next Steps</div>");
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Complete My Loan Profile").on('click',function(){
-
+	}).html("Complete My Application").on('click',function(){
+		//NEXNF-577 changed the text Complete My Loan Profile to Complete My Application
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
 	        newfiObject.applicationKnowNewfi=undefined;
@@ -621,19 +621,10 @@ function getCompletYourApplicationHeader() {
     var parent = $('<div>').attr({
         "class": "complete-application-wrapper"
     });
-    var header="";
-    if(newfiObject.user.userRole.id!=1){
-    	  header = $('<div>').attr({
-    	        "class": "complete-application-header"
-    	    }).html("Complete My Loan Profile");
-    }else{
-    	  header = $('<div>').attr({
-    	        "class": "complete-application-header message-header-customer "
-    	    }).html("Complete My Loan Profile");
-    }
-   /* var header = $('<div>').attr({
+
+    var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Loan Profile");*/
+    }).html("Complete My Loan Profile");
     return parent.append(header);
 }
 
@@ -1464,7 +1455,7 @@ function getLoanSummaryHeader() {
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
-        "class": "loan-summary-header-col1 float-left capitalize"
+        "class": "loan-summary-header-col1 page-header-loan float-left"
     }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"

@@ -212,7 +212,7 @@ public class ApplicationFormRestService {
 									loadResponse = nexeraUtility
 									        .removeBackSlashDelimiter(loadResponse);
 									boolean rateLocked = false;
-									String rateLockData = null;
+
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 									if (loadResponseList != null) {
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
@@ -228,24 +228,10 @@ public class ApplicationFormRestService {
 												}
 											}
 
-											if (fieldId
-											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_DATA)) {
-												rateLockData = loadResponseVO
-												        .getFieldValue();
-											}
-
 										}
 
 										if (rateLocked) {
-											if (rateLockData != null) {
-												// TODO SAX Parsing to retrieve
-												// the locked rate and show it
-												// on UI
-											} else {
-												LOG.error("Unable to find rate lock data for this lqb id "
-												        + loanVO.getLqbFileId());
-												status = "Unable to fetch the lock rate data, please try after sometime";
-											}
+											// TODO fetch all related fields
 										} else {
 											LOG.debug("Rate not locked in LQB yet, hence not fetching the lock data ");
 											status = "Rates not yet locked in LQB";

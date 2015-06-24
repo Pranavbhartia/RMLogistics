@@ -42,38 +42,93 @@ public class Utils
     }
 
 
-    public String getUserTicket( String userName, String passWord )
+    public void getUserTicket()
     {
-        String ticket = null;
-        synchronized ( userName ) {
+        String newfiUsername = bundle.getString( NewFiConstants.NEWFI_USERNAME );
+        String newfiPassword = bundle.getString( NewFiConstants.NEWFI_PASSWORD );
+        String newfiUsernameBackup = bundle.getString( NewFiConstants.NEWFI_USERNAME_BACKUP );
+        String newfiPasswordBackup = bundle.getString( NewFiConstants.NEWFI_PASSWORD_BACKUP );
+
+        if ( NewFiManager.userTicket == null ) {
+            LOG.info( "Generating the user ticket for the user " + newfiUsername );
+            generateUserAuthenticationTicket( newfiUsername, newfiPassword );
             if ( NewFiManager.userTicket == null ) {
-                String url = bundle.getString( NewFiConstants.AUTHENTICATION_URL );
-                LOG.info( "Inside method getUserTicket " );
-                AuthenticateVO authenticate = new AuthenticateVO();
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType( MediaType.APPLICATION_JSON );
-                headers.setAccept( Arrays.asList( MediaType.APPLICATION_JSON ) );
-                ResponseEntity<String> response = new ResponseEntity<String>( headers, HttpStatus.OK );
-                authenticate.setOpName( "GetUserAuthTicket" );
-                authenticate.setUserName( userName );
-                authenticate.setPassWord( passWord );
-                Gson gson = new Gson();
-                String jsonString = gson.toJson( authenticate );
-                RestTemplate restTemplate = new RestTemplate();
-                response = restTemplate.postForEntity( url, jsonString, String.class );
-                ticket = response.getBody();
-                if ( !ticket.contains( NewFiConstants.VALID_TICKET_CHECK ) ) {
-                    LOG.info( "Valid ticket not generated " );
-                    ticket = null;
-                } else {
-                    NewFiManager.userTicket = ticket;
-                    NewFiManager.generationTime = System.currentTimeMillis();
+                LOG.info( "Valid ticket was not generated hence trying again with backup account sleeping for 2 sec before continuing "
+                    + newfiUsernameBackup );
+                try {
+                    Thread.sleep( 2000 );
+                } catch ( InterruptedException ie ) {
+                    Thread.interrupted();
                 }
+                LOG.info( "Woke up. Trying now for user: " + newfiUsernameBackup );
+                LOG.info( "Generating the user ticket for the user " + newfiUsernameBackup );
+                generateUserAuthenticationTicket( newfiUsernameBackup, newfiPasswordBackup );
+            }
+
+        } else {
+            long generationTime = NewFiManager.generationTime;
+            long currentTime = System.currentTimeMillis();
+            long differenceInMilliSeconds = currentTime - generationTime;
+            if ( differenceInMilliSeconds >= 14340000 ) {
+                LOG.info( "Ticket would have expired as time difference has gone beyond 3 hours and 59 minutes" );
+                NewFiManager.userTicket = null;
+                generateUserAuthenticationTicket( newfiUsername, newfiPassword );
+                if ( NewFiManager.userTicket == null ) {
+                    LOG.info( "Valid ticket was not generated hence trying again with backup account, sleeping for 2 sec before continuing "
+                        + newfiUsernameBackup );
+                    try {
+                        Thread.sleep( 2000 );
+                    } catch ( InterruptedException ie ) {
+                        Thread.interrupted();
+                    }
+                    LOG.info( "Woke up. Trying now for user: " + newfiUsernameBackup );
+                    generateUserAuthenticationTicket( newfiUsernameBackup, newfiPasswordBackup );
+                    if ( NewFiManager.userTicket != null ) {
+                        LOG.info( "Ticket generated " + NewFiManager.userTicket );
+                    } else {
+                        LOG.error( "Not able to generate ticket even after 2 attempts " );
+                        // TODO Send Email to everyone
+                    }
+                } else {
+                    LOG.info( "Ticket generated " + NewFiManager.userTicket );
+                }
+
             } else {
-                ticket = NewFiManager.userTicket;
+                LOG.info( "The ticket has not yet expired, hence picking the ticket which was cached before "
+                    + NewFiManager.userTicket );
             }
         }
-        return ticket;
+    }
+
+
+    public synchronized void generateUserAuthenticationTicket( String userName, String password )
+    {
+        String ticket = null;
+        if ( NewFiManager.userTicket == null ) {
+            String url = bundle.getString( NewFiConstants.AUTHENTICATION_URL );
+            LOG.info( "Inside method getUserTicket " );
+            AuthenticateVO authenticate = new AuthenticateVO();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType( MediaType.APPLICATION_JSON );
+            headers.setAccept( Arrays.asList( MediaType.APPLICATION_JSON ) );
+            ResponseEntity<String> response = new ResponseEntity<String>( headers, HttpStatus.OK );
+            authenticate.setOpName( "GetUserAuthTicket" );
+            authenticate.setUserName( userName );
+            authenticate.setPassWord( password );
+            Gson gson = new Gson();
+            String jsonString = gson.toJson( authenticate );
+            RestTemplate restTemplate = new RestTemplate();
+            response = restTemplate.postForEntity( url, jsonString, String.class );
+            ticket = response.getBody();
+            if ( !ticket.contains( NewFiConstants.VALID_TICKET_CHECK ) ) {
+                LOG.info( "Valid ticket not generated " );
+                ticket = null;
+            } else {
+                NewFiManager.userTicket = ticket;
+                NewFiManager.generationTime = System.currentTimeMillis();
+            }
+        }
+
     }
 
 

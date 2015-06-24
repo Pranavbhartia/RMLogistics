@@ -38,3 +38,29 @@ INSERT INTO `newfi_schema`.`template` (`id`, `key`, `description`, `modified_dat
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Loan Profile' WHERE `id`='26';
 
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='My Team' WHERE `id`='31';
+
+#Rajeswari 24 June for Milestone naming changes
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='My Account' WHERE `id`='22';
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Closing' WHERE `id`='36';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Credit' WHERE `id`='30';
+
+#Rajeswari 24 June for Milestone Order changes
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='6' WHERE `id`='31';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='7' WHERE `id`='26';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='8' WHERE `id`='27';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='9' WHERE `id`='42';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='10' WHERE `id`='30';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='11' WHERE `id`='41';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='13' WHERE `id`='40';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='14' WHERE `id`='32';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='16' WHERE `id`='35';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='17' WHERE `id`='36';
