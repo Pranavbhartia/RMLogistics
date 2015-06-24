@@ -1068,8 +1068,8 @@ function restrictSpecialChar(name){
 	    var k = e.which;
 	    var ok = k >= 65 && k <= 90 || // A-Z
 	    k >= 97 && k <= 122 || // a-z
-	    k >= 48 && k <= 57; // 0-9
-
+	    k >= 48 && k <= 57 ||// 0-9
+	    k==32;//to allow space
 	    if (!ok) {
 	        e.preventDefault();
 	        console.log("hii");

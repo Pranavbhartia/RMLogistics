@@ -1,6 +1,7 @@
 package com.nexera.web.rest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
@@ -146,9 +148,26 @@ public class ShopperRegistrationController {
 		LOG.info("TO validate users before registration");
 		CommonResponseVO response = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
-		LoanAppFormVO loanAppFormVO = gson.fromJson(registrationDetails,
-		        LoanAppFormVO.class);
-		String emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
+
+		ObjectMapper mapper=new ObjectMapper();
+		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
+		String emailId = "";
+		try {
+			HashMap<String, Object> val = mapper.readValue(registrationDetails,
+			        typeRef);
+			if (val.containsKey("user")) {
+				LoanAppFormVO loanAppFormVO = gson.fromJson(
+				        registrationDetails, LoanAppFormVO.class);
+				emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
+			} else {
+				emailId = val.get("emailId").toString().split(":")[0];
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// String emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
 		User user = userProfileService.findUserByMail(emailId);
 		if (user != null) {
 

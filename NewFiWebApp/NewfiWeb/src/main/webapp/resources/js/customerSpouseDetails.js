@@ -1356,6 +1356,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 		    	dateOfBirth = $('input[name="birthday"]').val();
 		    	ssn =  $('input[name="ssn"]').val();
 		    	secPhoneNumber =  $('input[name="phoneNumber"]').val();
+		    	secPhoneNumber = secPhoneNumber.replace(/[^0-9]/g, '');
 		    	var dat=new Date(dateOfBirth);
 		        var dateNow=new Date();
 		        dateNow.setFullYear(dateNow.getFullYear()-18);
@@ -1392,7 +1393,8 @@ function paintCustomerSpouseApplicationPageStep5() {
 		    		appUserDetails.customerSpouseDetail = customerDetailTemp;
 					saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));  
     	}else{
-    		applicationFormSumbit(appUserDetails);
+    		paintLockRatePage();
+    		//applicationFormSumbit(appUserDetails);
     	}
 					
     });

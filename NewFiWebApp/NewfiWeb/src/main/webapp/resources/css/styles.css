@@ -927,7 +927,7 @@ input[type="button"]:focus, button:focus {
 	background-color: #f5f9fc;
 	padding-left: 10px;
 	border-radius: 3px;
-	font-size: 13px;
+	font-size: 13px; 
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
 }
@@ -1255,9 +1255,12 @@ input[type="button"]:focus, button:focus {
 .message-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 10px;
-	font-size: 13px;
+	padding-left: 10px;	
+	font-size: 13px; 
+	font-family: 'opensanssemibold';
+	
 }
+
 
 .conversation-header {
 	line-height: 45px;
@@ -2520,8 +2523,15 @@ input.calc-input {
 	margin-bottom: 10px;
 	padding-left: 10px;
 	background-color: #f5f9fc;
-	font-size: 13px;
 	text-transform: capitalize;
+    font-size: 13px;
+    font-family: 'opensanssemiBold';
+}
+
+.message-header-customer {
+	/*  NEXNF-568 */
+	font-size: 16px;
+	font-family: 'opensanssemiBold';
 }
 
 .initial-list-doc-wrapper {
@@ -3208,6 +3218,9 @@ input.calc-input {
 	padding-left: 20px;
 	margin-bottom: 20px;
 	text-transform: uppercase;
+	font-family: "opensanssemibold";
+	font-size: 13px;
+
 }
 
 .loan-progress-sub-txt {
@@ -3267,7 +3280,7 @@ input.calc-input {
 
 .milestone-lc-header-txt,.milestone-rc-header-txt {
 	position: relative;
-	width:220px;
+	/* width:220px; */
 	height: 28px;
 	line-height: 28px;
 	border-radius: 3px;

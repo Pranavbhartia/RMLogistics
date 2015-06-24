@@ -5,7 +5,7 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 float-left capitalize"
-    }).html('Programs and Rates');
+    }).html('My Loan Summary');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
     }).html(getCurrentDate(responseTime));
@@ -16,7 +16,12 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
         }).html("Email This Quote").on('click', function() {
             var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
-            
+            if(teaserRateValHolder.teaserRate){
+                if(refinanceTeaserRate.loanType)
+                    progressBaar(7)
+                else
+                    homeProgressBaar(5)
+            }
             $('#ce-refinance-cp').html(mainContainer);
         });
     }
@@ -72,9 +77,9 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                 //if create option is required with progress crumb
                 if(teaserRateValHolder.teaserRate){
                     if(refinanceTeaserRate.loanType)
-                        progressBaar(8)
+                        progressBaar(7)
                     else
-                        homeProgressBaar(6)
+                        homeProgressBaar(5)
                 }
                
                 var mainContainer = paintApplyNow(inputCustomerDetails);
@@ -497,6 +502,17 @@ function getPurchaseClosingCostComponent(teaserRate, customerInputData){
 
 
 function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn) {
+
+    var quesTxt = "Programs and Rates";
+    var container = $('<div>').attr({
+        "class": "ce-rate-main-container"
+    });
+    var quesTextCont = $('<div>').attr({
+        "class": "ce-rp-ques-text"
+    }).html(quesTxt);
+    // alert(JSON.stringify(refinanceTeaserRate));
+    container.append(quesTextCont);
+    $(parentContainer).html(container);
 
     var teaserRate =  modifiedLQBJsonResponse(teaserRate);
     var rateVO = getLQBObj(teaserRate);

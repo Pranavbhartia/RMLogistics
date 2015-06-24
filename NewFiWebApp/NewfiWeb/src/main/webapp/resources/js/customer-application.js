@@ -3791,7 +3791,8 @@ function paintCustomerApplicationPageStep5() {
     		if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true){
 				paintCustomerSpouseApplicationPageStep5();
 			}else{
-				 applicationFormSumbit(appUserDetails);
+                paintLockRatePage();
+				// applicationFormSumbit(appUserDetails);
 			}
     	}
     	
@@ -3807,7 +3808,19 @@ $(".ce-option-checkbox").click();
 }
 }
 
-
+function paintLockRatePage(){
+    var userId=selectedUserDetail.userID;
+    getAppDetailsForUser(userId,function(appUserDetailsTemp){
+        $('#overlay-loader').show();
+        var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
+        if(LQBFileId){
+            paintFixYourRatePage();
+        }else{
+            //code to Paint teaser rate page
+            paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
+        }
+    });
+}
 
 function applicationFormSumbit(appUserDetails){
 	//paintLockRate(lqbData, appUserDetails);

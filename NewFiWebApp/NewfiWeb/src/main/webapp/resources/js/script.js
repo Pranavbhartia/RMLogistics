@@ -621,9 +621,19 @@ function getCompletYourApplicationHeader() {
     var parent = $('<div>').attr({
         "class": "complete-application-wrapper"
     });
-    var header = $('<div>').attr({
+    var header="";
+    if(newfiObject.user.userRole.id!=1){
+    	  header = $('<div>').attr({
+    	        "class": "complete-application-header"
+    	    }).html("Complete My Loan Profile");
+    }else{
+    	  header = $('<div>').attr({
+    	        "class": "complete-application-header message-header-customer "
+    	    }).html("Complete My Loan Profile");
+    }
+   /* var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Loan Profile");
+    }).html("Complete My Loan Profile");*/
     return parent.append(header);
 }
 
@@ -2113,8 +2123,11 @@ function getClosingCostBottomConatiner() {
         "class": "closing-cost-container"
     });
     var headerCon2 = getClosingCostConatinerHeader("Estimated Reserves Deposited in Escrow Account");
+    //NEXNF-569
     var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");
     var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
+    //var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
+    //var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
     var row4Con2 = getClosingCostContainerLastRow(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "$ 3,216.00");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
     var bottomSubText = $('<div>').attr({
@@ -2235,7 +2248,6 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     //NEXNF-483
     //NEXNF-578
     if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Months"||desc=="Homeowners Insurance Reserve - Estimated 2 Months"){
-
     	   var rowDesc = $('<div>').attr({
     	        "class": "closing-cost-desc eng-indent float-left"
     	    });

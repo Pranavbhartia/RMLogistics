@@ -4,8 +4,7 @@ var buyHomeTeaserRate = new Object();
 var purchaseDetails = new Object();
 buyHomeTeaserRate.purchaseDetails = purchaseDetails;
 //buyHomeTeaserRate.purchaseDetails=purchaseDetails;
-var buyHomeitemsList = ["Loan Purpose", "Loan Amount", "Home Information",
-    "Zip Code", "Programs and Rates", "Create Account"
+var buyHomeitemsList = ["Loan Purpose", "Loan Amount", "Home Information", "Programs and Rates", "Create Account"
 ];
 
 function getBuyHomeLeftPanel() {
@@ -370,8 +369,8 @@ function paintHomeZipCode() {
 function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAccountBtn) {
     
 	//callRestAPi();
-	stages = 5;
-    homeProgressBaar(5);
+	stages = 4;
+    homeProgressBaar(4);
     if (!parentContainer) {
         parentContainer = $('#ce-refinance-cp');
     }
@@ -423,16 +422,7 @@ function paintBuyHomeSeeTeaserRate(parentContainer, teaserRateData, hideCreateAc
             // var teaserRate = data;
             // paintteaserRate(data);
             //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
-            var quesTxt = "Programs and Rates";
-            var container = $('<div>').attr({
-                "class": "ce-rate-main-container"
-            });
-            var quesTextCont = $('<div>').attr({
-                "class": "ce-rp-ques-text"
-            }).html(quesTxt);
-            // alert(JSON.stringify(refinanceTeaserRate));
-            container.append(quesTextCont);
-            $(parentContainer).html(container);
+            
             var ob;
             try{
                 ob=JSON.parse(data);

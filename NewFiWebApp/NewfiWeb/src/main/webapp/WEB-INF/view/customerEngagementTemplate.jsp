@@ -138,16 +138,16 @@
 				removeToastMessage();
 				if(stages>5){
 					progressBaar(6);
-					paintRefinanceHomeZipCode();
+					paintRatesPageFromCrumb();
 				}
 			});
-			$(document).on('click','#progressBaarId_7',function(){
+			/*$(document).on('click','#progressBaarId_7',function(){
 				removeToastMessage();
 				if(stages>6){
 					progressBaar(7);
 					paintRatesPageFromCrumb();
 				}
-			});
+			});*/
 			
 			//--- Buy home progress baar button 
 			
@@ -173,16 +173,16 @@
 				 removeToastMessage();
 				if(active>3){
 					homeProgressBaar(4);
-					paintHomeZipCode();
+					paintRatesPageFromCrumb();
 				}
 			});
 			
-			$(document).on('click','#homeProgressBaarId_5',function(){
+			/*$(document).on('click','#homeProgressBaarId_5',function(){
 				if(active>4){
 					homeProgressBaar(5);
 					paintRatesPageFromCrumb();
 				}
-			}); 
+			}); */
 			
 			$(document).on('keypress','input[name="yearLeftOnMortgage"]',function(e){
 				

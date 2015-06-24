@@ -519,7 +519,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		"id" : "uploadedNeedContainer"
 	});
 	var header = $('<div>').attr({
-		"class" : "upload-item-header uppercase"
+		"class" : "upload-item-header message-header-customer uppercase"
 	}).html("Upload needed items");
 	var container = $('<div>').attr({
 		"class" : "upload-item-container"
