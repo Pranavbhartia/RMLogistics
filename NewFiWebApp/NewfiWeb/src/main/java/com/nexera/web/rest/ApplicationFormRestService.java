@@ -51,6 +51,7 @@ import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
+import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
@@ -65,6 +66,7 @@ import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
+import com.nexera.web.rest.util.LQBResponseMapping;
 import com.nexera.web.rest.util.PreQualificationletter;
 import com.nexera.web.rest.util.RestUtil;
 
@@ -106,6 +108,11 @@ public class ApplicationFormRestService {
 
 	@Autowired
 	NexeraUtility nexeraUtility;
+	
+	@Autowired
+	LQBResponseMapping lQBResponseMapping;
+	
+	
 
 	@Value("${cryptic.key}")
 	private String crypticKey;
@@ -175,6 +182,9 @@ public class ApplicationFormRestService {
 	        @PathVariable int loanID) {
 		LOG.debug("Inside method getLockRateData for loan " + loanID);
 		String status = null;
+		
+		LqbTeaserRateVo lqbTeaserRateVo = new LqbTeaserRateVo();
+		
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		if (loanVO != null) {
 			Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
@@ -216,6 +226,9 @@ public class ApplicationFormRestService {
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 									if (loadResponseList != null) {
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
+											
+											lQBResponseMapping.setLqbTeaserRateVo(lqbTeaserRateVo,loadResponseVO);
+											
 											String fieldId = loadResponseVO
 											        .getFieldId();
 											if (fieldId
