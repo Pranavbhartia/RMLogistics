@@ -12,7 +12,7 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     var rateBtn2="";
     if(!hideCreateAccountBtn && teaserRateValHolder.teaserRate){
         rateBtn2 = $('<div>').attr({
-            "class": "rate-btn-alertRate float-right"
+            "class": "rate-btn-alertRate rate-btn-alertRate-header float-right"
         }).html("Email This Quote").on('click', function() {
             var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
