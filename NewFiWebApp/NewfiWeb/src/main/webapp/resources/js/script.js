@@ -1725,7 +1725,13 @@ function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
     	
     	flag = true;
     	
-    });/*.on('keyup',function(e){
+    }).bind("paste",function(e) {
+        e.preventDefault();
+    });
+    
+    
+    
+    /*.on('keyup',function(e){
     	if(e.which == 27){
     		$(this).blur();
     	}
@@ -2049,7 +2055,7 @@ function getClosingCostHeader(text) {
 
 function getClosingCostTopConatiner() {
     var wrapper = $('<div>').attr({
-        "class": "closing-cost-cont-wrapper-top"
+        //"class": "closing-cost-cont-wrapper-top"
     });
     //var heading = getClosingCostHeadingCont("Estimated Closing Costs");
     var container1 = $('<div>').attr({
@@ -2098,8 +2104,9 @@ function getClosingCostTopConatiner() {
 }
 
 function getClosingCostBottomConatiner() {
-    var wrapper = $('<div>').attr({
-        "class": "closing-cost-cont-wrapper-bottom no-border-bottom"
+    // removed class to fixed : NEXNF-578
+	var wrapper = $('<div>').attr({
+        "class": ""
     });
     //var heading = getClosingCostHeadingCont("Total Estimated Closing Cost");
     var container2 = $('<div>').attr({
@@ -2146,9 +2153,18 @@ function getClosingCostContainerLastRow(rowNum, desc, detail) {
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
     }
-    var row = $('<div>').attr({
-        "class": "closing-cost-cont-desc-row no-border-bottom clearfix"
-    });
+    
+    if(desc != "Total Estimated Prepaids"){
+    
+    	var row = $('<div>').attr({
+            "class": "closing-cost-cont-desc-row clearfix light-solid-line"
+        });
+    }else{
+    	var row = $('<div>').attr({
+            "class": "closing-cost-cont-desc-row clearfix"
+        });
+    }
+    
     if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
     }
@@ -2217,7 +2233,8 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     }
 
     //NEXNF-483
-    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Month(s)"||desc=="Homeowners Insurance Reserve - Estimated 2 Month(s)"){
+    //NEXNF-578
+    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Months"||desc=="Homeowners Insurance Reserve - Estimated 2 Months"){
 
     	   var rowDesc = $('<div>').attr({
     	        "class": "closing-cost-desc eng-indent float-left"
@@ -3012,6 +3029,8 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 		});	
     	
     	flag = true;
+    }).bind("paste",function(e) {
+        e.preventDefault();
     });
     row1.append(col1row1).append(col2row1);
     var row2 = $('<div>').attr({
@@ -3035,6 +3054,8 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
 		});	
     	
     	flag = true;
+    }).bind("paste",function(e) {
+        e.preventDefault();
     });
     
     var col2 = $('<div>').attr({

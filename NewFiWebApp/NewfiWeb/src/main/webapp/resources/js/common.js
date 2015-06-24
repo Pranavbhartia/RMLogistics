@@ -566,9 +566,9 @@ function getClosingCostLabel(item) {
 	case "Total Prepaids":
 		return "Total Estimated Prepaids";//changed for portal updates 6.17
 	case "Tax Reserve - Estimated 2 Month(s)":
-		return "Tax Reserve - Estimated 2 Month(s)";
+		return "Tax Reserve - Estimated 2 Months";
 	case "Homeowners Insurance Reserve - Estimated 2 Month(s)":
-		return "Homeowners Insurance Reserve - Estimated 2 Month(s)";
+		return "Homeowners Insurance Reserve - Estimated 2 Months";
 	case "Total Estimated Reserves Deposited in Escrow Account":
 		return "Total Estimated Reserves Deposited in Escrow Account";
 	case "Total Estimated Closing Cost":

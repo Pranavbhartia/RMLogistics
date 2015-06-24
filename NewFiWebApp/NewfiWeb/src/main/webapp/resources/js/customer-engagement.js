@@ -127,7 +127,11 @@ function getContextApplicationTextQuesCEP(contxt) {
         }
         
         Math.abs($('input[name=' + contxt.name + ']').val());
+    }).bind("paste",function(e) {
+        e.preventDefault();
     });
+    
+    
     if (contxt.value != undefined) {
         optionCont.val(contxt.value);
     }
@@ -215,6 +219,8 @@ function getContextApplicationYearMonthCEP(contxt) {
 	        }
 	        
 	        Math.abs($('input[name=' + contxt.name + ']').val());
+	    }).bind("paste",function(e) {
+	        e.preventDefault();
 	    });
 	    
 	    
@@ -565,7 +571,11 @@ function getTextQuestion(quesText, clickEvent, name) {
                     allowNegative: false
                 });
             }
-        });
+        }).bind("paste",function(e) {
+	        e.preventDefault();
+	    });
+        
+        
         $(inputBox).val(refinanceTeaserRate[name]);
         
         
@@ -715,7 +725,7 @@ function paintRefinanceStepCEP() {
         var saveAndContinueButton = $('<div>').attr({
             "class": "cep-button-color ce-save-btn"
         }).html("Save & continue").on('click', function() {
-           removeToastMessage();
+            removeToastMessage();
         	
         	refinanceTeaserRate.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.isIncludeTaxes = quesContxts["isIncludeTaxes"].value;//quesContxts[1].value;
@@ -923,7 +933,7 @@ function paintRefinanceHomeZipCode() {
 function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccountBtn) {
         
 	
-	if(!parentContainer){
+	    if(!parentContainer){
             parentContainer=$('#ce-refinance-cp');
         }
         if(!teaserRateData){
@@ -2006,7 +2016,11 @@ function getLoanAmountRowCEP(desc, detail, id) {
 		});	
     	
     	flag = true;
-    });/*.on('keyup',function(e){
+    }).bind("paste",function(e) {
+        e.preventDefault();
+    });
+    
+    /*.on('keyup',function(e){
     	if(e.which == 27){
     		$(this).blur();
     	}
