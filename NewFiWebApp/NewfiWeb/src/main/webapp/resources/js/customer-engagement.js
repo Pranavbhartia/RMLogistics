@@ -127,8 +127,6 @@ function getContextApplicationTextQuesCEP(contxt) {
         }
         
         Math.abs($('input[name=' + contxt.name + ']').val());
-    }).bind("paste",function(e) {
-        e.preventDefault();
     });
     
     
@@ -219,8 +217,6 @@ function getContextApplicationYearMonthCEP(contxt) {
 	        }
 	        
 	        Math.abs($('input[name=' + contxt.name + ']').val());
-	    }).bind("paste",function(e) {
-	        e.preventDefault();
 	    });
 	    
 	    
@@ -571,9 +567,7 @@ function getTextQuestion(quesText, clickEvent, name) {
                     allowNegative: false
                 });
             }
-        }).bind("paste",function(e) {
-	        e.preventDefault();
-	    });
+        });
         
         
         $(inputBox).val(refinanceTeaserRate[name]);
@@ -2054,8 +2048,6 @@ function getLoanAmountRowCEP(desc, detail, id) {
 		});	
     	
     	flag = true;
-    }).bind("paste",function(e) {
-        e.preventDefault();
     });
     
     /*.on('keyup',function(e){

@@ -1,5 +1,6 @@
 package com.nexera.core.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.nexera.common.vo.StateLookupVO;
@@ -23,6 +24,6 @@ public interface StateLookupService {
 	 * @param zipCode
 	 * @return
 	 */
-	String getZipCodeData(String zipCode);
+	public HashMap<String, String> getZipCodeData(String zipCode);
 
 }
