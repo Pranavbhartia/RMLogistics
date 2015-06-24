@@ -737,7 +737,7 @@ input[type="button"]:focus, button:focus {
 
 .closing-cost-cont-desc-row {
 	min-height: 35px;
-	border-bottom: 1px #E9E9E9 dashed;
+	border-top: 1px #E9E9E9 dashed;
 }
 
 .dropdown-arrow {
@@ -5430,5 +5430,13 @@ a.session-login-btn {
 
 .ccSummary{
 	text-align: center;
-	font-size : 12px;
+	font-size : 14px;
+	background-color: white;
+}
+
+
+.light-solid-line{
+	border-color: rgb(237, 236, 236);
+  	border: 2px #E9E9E9 solid;
+  	margin-bottom: 20px;
 }

@@ -607,7 +607,11 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
                 allowNegative: false
             });
         }
+    }).bind("paste",function(e) {
+        e.preventDefault();
     });
+    
+    
     optionContainer.append(inputBox).append(errFeild);
     var saveBtn = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
