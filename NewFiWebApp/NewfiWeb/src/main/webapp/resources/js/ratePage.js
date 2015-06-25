@@ -921,7 +921,15 @@ function getTeaserRateData(){
         else
             return buyHomeTeaserRate;
     }else{
-        return appUserDetails;
+        if(teaserRateValHolder.teaserRate){
+            if(appUserDetails.loanType.description=="Purchase"){
+                return createTeaserRateObjectForPurchase(appUserDetails);
+            }else{
+                return createTeaserRateObjectForRefinance(appUserDetails);
+            }
+        }else{
+            return appUserDetails;
+        }
     }
 }
 function updateElementsOnSlide(rateVO,year){
