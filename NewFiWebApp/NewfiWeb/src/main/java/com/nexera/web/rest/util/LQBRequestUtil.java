@@ -742,12 +742,15 @@ public class LQBRequestUtil {
 
 	public JSONObject pullTrimergeCreditScore(String loanNumber,
 	        LoanAppFormVO loanAppFormVO, String sTicket, String ssnNumber,
-	        String reportId) {
+	        String reportId, boolean requestTrimerge) {
 
 		HashMap<String, String> hashmap = new HashMap<>();
 		hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail()
 		        .getSsn());
-		hashmap.put("report_id", reportId);
+		if (reportId!= null && requestTrimerge)
+		{
+			hashmap.put("report_id", reportId);
+		}
 		hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
 		        .getFirstName());
 		hashmap.put("lastName", loanAppFormVO.getLoan().getUser().getLastName());
@@ -767,11 +770,15 @@ public class LQBRequestUtil {
 			hashmap.put("applicantAddress", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressStreet());
 		}
-
-		hashmap = saveTrimergeStatus(hashmap);
-
+		if (requestTrimerge)
+		{
+			hashmap = saveTrimergeStatus(hashmap);			
+		}
+		else
+		{
+			hashmap = saveTransunionStatus(hashmap);			
+		}
 		JSONObject jsonObject = new JSONObject(hashmap);
-
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
 
@@ -802,6 +809,18 @@ public class LQBRequestUtil {
 		hashmap.put("equifaxStatus", "Y");
 		hashmap.put("experianStatus", "Y");
 		hashmap.put("transunionStatus", "N");
+
+		return hashmap;
+	}
+	
+	HashMap<String, String> saveTransunionStatus(HashMap<String, String> hashmap) {
+
+		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
+		hashmap.put("LOGIN_NAME", "testact");
+		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("equifaxStatus", "N");
+		hashmap.put("experianStatus", "N");
+		hashmap.put("transunionStatus", "Y");
 
 		return hashmap;
 	}

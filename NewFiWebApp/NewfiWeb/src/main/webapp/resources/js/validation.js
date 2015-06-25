@@ -19,17 +19,13 @@ function appendErrorMessage(){
 function validateInput(element,inputVal,message){
 		
 	var name=$(element).attr('name');
-	var width=$(element).css('width');
-	//$('input[name="currentMortgageBalance"]')
+	var height=$(element).offset().top-100;
 
 	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""){
 	
 			$('input[name="' + name + '"]').parent().find('.err-msg').html(message).show();
 			$('input[name="' + name + '"]').addClass('ce-err-input').show();
-			 /* NEXNF-524 */
-/*			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
-				$(".err-msg").css('width',width);
-			}*/
+			$(window).scrollTop(height);
 			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
 				$('input[name="' + name + '"]').parent().find('.err-msg').removeClass('float-left');
 			}
@@ -39,13 +35,12 @@ function validateInput(element,inputVal,message){
 			if(name!="zipCode"){
 				$('input[name="' + name + '"]').parent().find('.err-msg').html(feildShouldNotBeZero).show();
 				$('input[name="' + name + '"]').addClass('ce-err-input').show();
-				 /* NEXNF-524 */
-	/*			if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
-					$(".err-msg").css('width',width);
-				}*/if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
+				$(window).scrollTop(height);
+				if(name=="propertyTaxesPaid"||name=="annualHomeownersInsurance"){
 					$('input[name="' + name + '"]').parent().find('.err-msg').addClass('float-left');
-					return false;
+					
 				}
+				return false;
 			}			
 		}else{
 			$('input[name="' + name + '"]').parent().find('.err-msg').hide();
@@ -150,19 +145,19 @@ function validateInputsOfMyIncomePage(element,inputVal,message,offset){
 function validateFormFeild(inputElement,divErrElement,message){
 	var inputVal=$(inputElement).val();
 	if(inputVal == undefined || inputVal == ""){
-		$(inputElement).next('.err-msg').html(message).show();
+		$(inputElement).parent().find('.err-msg').html(message).show();
 		$(divErrElement).addClass('ce-err-input').show();
 		return false;
 
 	}
 	else{
-			$(inputElement).next('.err-msg').hide();
+			$(inputElement).parent().find('.err-msg').hide();
 			$(divErrElement).removeClass('ce-err-input');			
     }
 	return true;
 }
 
-function validateCustomerRegistration(phoneNumber){
+function validateCustomerRegistration(){
 	
     if($('input[name="fname"]').val()==""){
 	    	$('input[name="fname"]').next('.err-msg').html(firstNameEmptyMessage).show();
@@ -292,3 +287,79 @@ function phoneNumberValidation(phoneNo,customerStatus,elementId){
 	}
 
 	}
+
+function currentlyLivingValidation(){
+	
+	var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),yesyNoErrorMessage);
+	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
+	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
+	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);		    			    	
+	var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);		    	
+	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
+	if($('input[name="rentPerMonth"]').length>0){
+		var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
+		if(!questionfour){
+    		return false;
+    	}
+	}
+	if(!stateValidation){
+		//showErrorToastMessage(yesyNoErrorMessage);
+		return false;
+	}
+	if(!questionOne){
+		return false;
+	}		    	
+	if(!addressValidation){
+		return false;
+	}
+	
+	if(!questionTwo){
+		return false;
+	}else{
+		
+     if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){			
+    	$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+    	$('input[name="zipCode"]').addClass('ce-err-input').show();
+    	var height=$('input[name="zipCode"]').offset().top-100;
+    	$(window).scrollTop(height);
+       	return false;
+       
+	  }  
+	}
+	if(!questionThree){
+		return false;
+	}
+
+	if(!propertQuestionTwo){
+		return false;
+	}else{
+		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){		
+			$('input[name="propZipCode"]').next('.err-msg').html(zipCodeMessage).show();
+			$('input[name="propZipCode"]').addClass('ce-err-input').show();
+			var height=$('input[name="propZipCode"]').offset().top-100;
+	    	$(window).scrollTop(height);
+   		 return false;
+   	 }
+		
+	}
+	if($('.ce-option-checkbox').hasClass('app-option-checked')){
+		
+	}else{
+		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
+		var propertQuestionThree=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),yesyNoErrorMessage);
+    	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
+    	
+    	if(!propertQuestionOne){
+    		return false;
+    	}
+
+    	if(!propertQuestionThree){
+    		return false;
+    	}
+
+    	if(!propertQuestionfour){
+    		return false;
+    	}
+	}
+	return true;
+}

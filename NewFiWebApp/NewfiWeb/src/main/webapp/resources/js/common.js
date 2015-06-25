@@ -920,9 +920,11 @@ function userIsCustomer() {
 
 function hideCompleteYourProfile(){
 	if(newfiObject.applicationNavTab){
-		$(newfiObject.applicationNavTab).remove();
-		newfiObject.applicationNavTab=undefined;
-		flagToShowCompletPro = false;
+		if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+			$(newfiObject.applicationNavTab).remove();
+			newfiObject.applicationNavTab=undefined;
+			flagToShowCompletPro = false;
+		}
 	}
 }
 
@@ -1060,16 +1062,19 @@ function resizeHeaderWidth(){
 }
 
 
-function restrictSpecialChar(name){
-	
-	$('input[name="'+name+'"]').bind('keypress', function (e) {
+function restrictSpecialChar(name,element){
+	if(!element)
+		element=$('input[name="'+name+'"]')
+	$(element).bind('keypress', function (e) {
 	    console.log(e.which);
 
 	    var k = e.which;
 	    var ok = k >= 65 && k <= 90 || // A-Z
 	    k >= 97 && k <= 122 || // a-z
 	    k >= 48 && k <= 57 ||// 0-9
-	    k==32;//to allow space
+	    k==32 ||//to allow space
+	    k==8 ||//to allow to delte
+	    k==46;//to allow backspace
 	    if (!ok) {
 	        e.preventDefault();
 	        console.log("hii");

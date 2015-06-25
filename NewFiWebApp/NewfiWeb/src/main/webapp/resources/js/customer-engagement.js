@@ -1119,16 +1119,20 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "name": "fname"
     }).bind('keypress', function(e) {
  
-        if($(this).val().length == 0){
+     
             var k = e.which;
             var ok = k >= 65 && k <= 90 || // A-Z
                 k >= 97 && k <= 122 || // a-z
-                k >= 48 && k <= 57; // 0-9
+                k >= 48 && k <= 57||// 0-9
+                k==32 ||//to allow space
+	    	    k==8 ||//to allow to delte
+	    	    k==46;//to allow backspace
+ 
  
             if (!ok){
                 e.preventDefault();
             }
-        }
+        
     });
     regInputContainerFname.append(regInputfname).append(appendErrorMessage());
     var regInputContainerlname = $('<div>').attr({
@@ -1140,16 +1144,19 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "name": "lname"
     }).bind('keypress', function(e) {
  
-        if($(this).val().length == 0){
+ 
             var k = e.which;
             var ok = k >= 65 && k <= 90 || // A-Z
                 k >= 97 && k <= 122 || // a-z
-                k >= 48 && k <= 57; // 0-9
+                k >= 48 && k <= 57||// 0-9
+                k==32 ||//to allow space
+	    	    k==8 ||//to allow to delte
+	    	    k==46;//to allow backspace
  
             if (!ok){
                 e.preventDefault();
             }
-        }
+    
     });
     regInputContainerlname.append(regInputlname).append(appendErrorMessage());
     var regInputContainerEmail = $('<div>').attr({
@@ -1208,6 +1215,10 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         var dateVar = new Date();
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
+        var status=validateCustomerRegistration();
+        if(!status){
+        	return false;
+        }
     	if (teaserRateValHolder.leadCustomer)
     	{
     		isNoProductFound=true;
@@ -1220,7 +1231,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
 	       /* var phoneNumber = $('input[name="phone"]').val();
 	        registration.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');*/
 	       
-	        var status=validateCustomerRegistration(registration.phoneNumber);
+	        var status=validateCustomerRegistration();
 	        if(!status){
 	        	return false;
 	        }
@@ -1601,21 +1612,19 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                 $('#rate-slider-cont').append(rateSlider);
                 index = parseInt(event.data.ratesArray.length / 2);
                
-                $('#aprid').html(event.data.ratesArray[index].APR + " %");
-                $('#closingCostId').html(showValue(event.data.ratesArray[index].closingCost));
-                $('#teaserRateId').html(parseFloat(event.data.ratesArray[index].teaserRate).toFixed(3)+" %");
-               
                 if(event.data.year =='5' || event.data.year =="7")
-                $('#loanprogramId').html(event.data.year +" Year ARM");
+                    $('#loanprogramId').html(event.data.year +" Year ARM");
                 else
-                $('#loanprogramId').html(event.data.year +" Year Fixed");
+                    $('#loanprogramId').html(event.data.year +" Year Fixed");
                 
-                $('#principalIntId').html(showValue(event.data.ratesArray[index].payment));
                 var ratVo=event.data.ratesArray[index];
-                ratVo.yearData=event.data.year
-                updateOnSlide(ratVo);
+                ratVo.yearData=event.data.year;
+
+                globalChangeContainer.ratVo=ratVo;
+                updateElementsOnSlide(ratVo,event.data.year)
+                /*updateOnSlide(ratVo);
                 
-                teaseCalculation(inputCustomerDetails);
+                teaseCalculation(inputCustomerDetails);*/
             }
         });
         var gridItem = $('<div>').attr({
@@ -1680,15 +1689,17 @@ function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
         value: index,
         change: function(event, ui) {
          
-            $('#aprid').html(gridArray[ui.value].APR +" %");
+            /*$('#aprid').html(gridArray[ui.value].APR +" %");
             $('#closingCostId').html(showValue(gridArray[ui.value].closingCost));
             $('#teaserRateId').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(3) +" %");
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
-            teaseCalculation(inputCustomerDetails);
+            teaseCalculation(inputCustomerDetails);*/
             var ratVo=gridArray[ui.value];
             ratVo.yearData=yearValue
-            updateOnSlide(ratVo);
+            /*updateOnSlide(ratVo);*/
+            globalChangeContainer.ratVo=ratVo;
+            updateElementsOnSlide(ratVo);
         }
     });
     container.append(tsIcon);
@@ -1709,67 +1720,7 @@ function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
 }
 
 
-function teaseCalculation(inputCustomerDetails){
-	
-	var taxesTemp = 0;
-	 var InsuranceTemp = 0;
-	var principalInterest = parseFloat(removedDoller(removedComma($('#principalIntId').text())));
-	if($('#calTaxID2').val() != "") 
-	taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));
-    
-	if($('#CalInsuranceID2').val() != "") 
-	InsuranceTemp =  parseFloat(removedDoller(removedComma($('#CalInsuranceID2').val())));
-    
-    var  monthlyPayment;
-    var isIncludeTaxes;
-    if(teaserRateValHolder.teaserRate){
-        if(inputCustomerDetails.loanType=="REF")
-            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.currentMortgagePayment))); 
-        else
-            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.rentPerMonth))); 
-        isIncludeTaxes=inputCustomerDetails.isIncludeTaxes;
-    }else{
-        if(inputCustomerDetails.loanType.loanTypeCd =="REF")
-            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.refinancedetails.currentMortgagePayment)));    
-        else
-            monthlyPayment  = parseFloat(removedDoller(removedComma(inputCustomerDetails.monthlyRent)));
-        isIncludeTaxes=inputCustomerDetails.refinancedetails.includeTaxes;
-    }
-    var investment = (InsuranceTemp + taxesTemp);
-	
-    
-    var totalEstMonthlyPaymentId=principalInterest;
-    if(isIncludeTaxes =="Yes"||isIncludeTaxes ==true){
-        monthlyPayment = monthlyPayment -investment ;
-        totalEstMonthlyPaymentId = (principalInterest + investment);
-    }
-	
-	
-	var monthlyPaymentDifference = (Math.abs(principalInterest - monthlyPayment));
-	
-    
-    var textDiv=$('#monthlyPaymentDifferenceId').prev();
-    var hgLow="";
-    var ele=$('#monthlyPaymentDifferenceId');
-    ele.removeClass("loan-summary-green-col-detail");
-    ele.removeClass("loan-summary-red-col-detail");
-    var clas="";
-    if(principalInterest < monthlyPayment){
-        hgLow='<font color="green"><b>Lower</b></font>';
-        clas="loan-summary-green-col-detail";
-    }else{
-        hgLow='<font color="red"><b>Higher</b></font>';
-        clas="loan-summary-red-col-detail";
-    }
-    textDiv.html('This Monthly<br/> Payment is '+hgLow+' by');
-    ele.addClass(clas);
 
-
-	$('#monthlyPaymentId').text(showValue(monthlyPayment));
-	$('#monthlyPaymentDifferenceId').text(showValue(monthlyPaymentDifference));
-	$('#totalEstMonthlyPaymentId').text((showValue(totalEstMonthlyPaymentId)));
-	
-}
 
 function getLoanSummaryWrapperTeaserRate(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
     

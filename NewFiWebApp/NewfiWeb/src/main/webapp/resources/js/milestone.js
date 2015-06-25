@@ -1059,7 +1059,14 @@ $(document).on('click', '.creditScoreClickableClass', function(e) {
 	if(newfiObject.user.userRole.roleCd=="INTERNAL"){
 		var loanid=$(this).attr("loanid");
 		var textMessage="Are you sure you want to fetch Credit Score ?"
-		confirmFetchScore(textMessage, loanid)
+		var trimerge=true;
+	     if($(e.target).parent()[0].innerHTML.indexOf("EQ-?")>=0&&
+			   $(e.target).parent()[0].innerHTML.indexOf("TU-?")>=0&&
+			   $(e.target).parent()[0].innerHTML.indexOf("EX-?")>=0){
+			   		textMessage="Are you sure you want to fetch Transunion Score ?"
+			   			trimerge=false;
+		}	     		
+		confirmFetchScore(textMessage, loanid,trimerge)
 	}
 });
 function checkDeleteBtnApplicable(userDetails){
@@ -1077,13 +1084,13 @@ function checkDeleteBtnApplicable(userDetails){
 	}
 	return false;
 }
-function confirmFetchScore(textMessage, loanID,callback) {
+function confirmFetchScore(textMessage, loanID,trimerge,callback) {
 	$('#overlay-confirm').off();
 	$('#overlay-cancel').off();
 	$('#overlay-popup-txt').html(textMessage);
 	$('#overlay-confirm').on('click', function() {
 		if(loanID){
-			fetchCreditScore(loanID,callback);
+			fetchCreditScore(loanID,trimerge,callback);
 			$('#overlay-popup').hide();
 			$('#overlay-confirm').on('click', function() {});			
 		}
@@ -1097,9 +1104,14 @@ function confirmFetchScore(textMessage, loanID,callback) {
 	$('#overlay-popup').show();
 }
 
-function fetchCreditScore(loanid,callback){
+function fetchCreditScore(loanid,trimerge, callback){
 	var data={}
-	ajaxRequest("rest/application//pullTrimergeScore/"+loanid,"GET","json",data,function(response){
+	var pullScoreURL = "rest/application/pullScore/"+loanid+"/N";
+	if (trimerge && trimerge == true)
+	{
+		 pullScoreURL = "rest/application/pullScore/"+loanid+ "/Y";	
+	}
+	ajaxRequest(pullScoreURL,"GET","json",data,function(response){
 		if(response.error){
 			showToastMessage(response.error.message);
 		}else{
@@ -1693,10 +1705,10 @@ function appendLoanStatusPopup(element,milestoneId) {
 	
 	var wrapper = $('<div>').attr({
 		"id" : "loan-status-popup",
-		"class" : "ms-add-member-popup loan-status-popup"
+		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
 	}).css({
 		"left" : offset.left,
-		"top" : offset.top
+		"top" : offset.top+42
 	});
 	
 	var header = $('<div>').attr({
@@ -1824,10 +1836,10 @@ function appendQCPopup(element,milestoneId) {
 	
 	var wrapper = $('<div>').attr({
 		"id" : "qc-popup",
-		"class" : "ms-add-member-popup loan-status-popup"
+		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
 	}).css({
 		"left" : offset.left,
-		"top" : offset.top
+		"top" : offset.top+42
 	});
 	
 	var header = $('<div>').attr({
@@ -1910,10 +1922,10 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	
 	var wrapper = $('<div>').attr({
 		"id" : "appfee-edit-popup",
-		"class" : "ms-add-member-popup loan-status-popup"
+		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
 	}).css({
 		"left" : offset.left,
-		"top" : offset.top
+		"top" : offset.top+42
 	});
 	
 	var header = $('<div>').attr({
@@ -1972,7 +1984,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 					}
 			},false);
 		}else{
-			showToastMessage(addValue);
+			showErrorToastMessage(addValue);
 		}
 	});
 	var cancelBtn = $('<div>').attr({
