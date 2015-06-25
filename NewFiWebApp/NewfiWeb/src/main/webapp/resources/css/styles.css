@@ -5455,3 +5455,8 @@ a.session-login-btn {
 	font-family:'opensanssemiBold';
 	padding-right: 10px;
 }
+
+.ms-add-member-popup-adjustment:after {
+	right:0;
+	left:12px;
+}
