@@ -749,9 +749,9 @@ function paintCustomerApplicationPageStep1a() {
 	    	}
             ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":zipCode}, function(response) {
                 if (response.error) {
-                    showToastMessage(response.error.message)
+                    showToastMessage(response.error.message);
                 } else {
-                    if(response.resultObject==true){
+                    if(response.resultObject == zipcode_valid){
                         appUserDetails.user.customerDetail.addressCity = city;
                         appUserDetails.user.customerDetail.addressState = inputState;
                         appUserDetails.user.customerDetail.addressZipCode = zipCode;
@@ -759,9 +759,14 @@ function paintCustomerApplicationPageStep1a() {
                         appUserDetails.user.customerDetail.selectedProperty = selectedProperty;
                         saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b);
                     }else{
-                        $('input[name="propZipCode"]').next('.err-msg').html(invalidStateZipCode).show();
+                    	if(response.resultObject == zipcode_isnot_valid){
+	                   		 invalidStateZipCodeMsg =response.resultObject; 
+	                   	 }else{
+	                   		 invalidStateZipCodeMsg =response.resultObject;
+	                   	 }
+                        $('input[name="propZipCode"]').next('.err-msg').html(invalidStateZipCodeMsg).show();
                         $('input[name="propZipCode"]').addClass('ce-err-input').show();
-                        return false;
+			       		return false;
                     }
                 }
             });
@@ -1777,9 +1782,8 @@ function getContextApplicationTextQues(contxt) {
     				  if(key.charCode < 48 || key.charCode > 57) return false;
     			}
     	      
-    	    });;
+    	    });
 
-    	    
     }
     
     

@@ -23,7 +23,7 @@ public interface StateLookupDao extends GenericDao {
 	 * @param zipCode
 	 * @return
 	 */
-	boolean validateZip(String zipCode);
+	public String validateZip(String zipCode);
 
 	/**
 	 * @param zipCode

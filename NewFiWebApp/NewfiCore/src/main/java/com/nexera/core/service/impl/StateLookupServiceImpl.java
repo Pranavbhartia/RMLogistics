@@ -64,7 +64,7 @@ public class StateLookupServiceImpl implements StateLookupService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Boolean validateZipCode(String zipCode) {
+	public String validateZipCode(String zipCode) {
 		return stateLookupDao.validateZip(zipCode);
 	}
 

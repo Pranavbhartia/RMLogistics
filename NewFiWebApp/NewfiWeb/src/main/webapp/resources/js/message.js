@@ -150,3 +150,9 @@ function getNoProductMessageInLockRatePage(){
 	}
 	return errorText;
 }
+
+
+
+var zipcode_isnot_valid = "Zip code is not valid";
+var zipcode_isnot_approved ="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
+var zipcode_valid ="Valid ZipCode";

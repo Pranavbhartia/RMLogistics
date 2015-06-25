@@ -72,7 +72,11 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 	public String getStateCodeByZip(String addressZipCode) {
 		LOG.info("Find state by zip code of zipcode Value = "+addressZipCode);
 		ZipCodeLookup lookup = getStatelookupValues(addressZipCode);
+		if(null != lookup)
 		return lookup.getStateLookup().getStatecode();
+		else{
+			return CommonConstants.ZIPCODE_ISNOT_VALID;
+		}
 	}
 
 	private ZipCodeLookup getStatelookupValues(String zipCode) {
@@ -105,12 +109,23 @@ public class StateLookupDaoImpl extends GenericDaoImpl implements
 
 	@Override
 	@Transactional(readOnly = true)
-	public boolean validateZip(String zipCode) {
-		String stateCode=getStateCodeByZip(zipCode);
-		for(String allowedStateCode : CommonConstants.allowedStates){
-			if (allowedStateCode.equalsIgnoreCase(stateCode))
-				return true;
+	public String validateZip(String zipCode) {
+		
+		
+		int count = 0;
+		String stateCode = getStateCodeByZip(zipCode);
+		if(!stateCode.equalsIgnoreCase(CommonConstants.ZIPCODE_ISNOT_VALID)){
+			for(String allowedStateCode : CommonConstants.allowedStates){
+				if (allowedStateCode.equalsIgnoreCase(stateCode)){
+					count ++;
+					return CommonConstants.ZIPCODE_VALID;
+				}
+			}
+			if(count == 0){
+				return  CommonConstants.ZIPCODE_ISNOT_APPROVED;
+			}
+			
 		}
-		return false;
+		return CommonConstants.ZIPCODE_ISNOT_VALID;
 	}
 }
