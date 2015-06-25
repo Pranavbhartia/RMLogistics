@@ -578,7 +578,9 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
 
 }
 function getTableRow(key,desc,value,id){
-    var row=$('<div>');
+    var row=$('<div>').attr({
+        "class": "clearfix"
+    });
     var column1=$('<div>').attr({
         "class": "row-one-col-one"
     }).html(desc);
