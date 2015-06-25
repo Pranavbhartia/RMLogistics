@@ -1693,10 +1693,10 @@ function appendLoanStatusPopup(element,milestoneId) {
 	
 	var wrapper = $('<div>').attr({
 		"id" : "loan-status-popup",
-		"class" : "ms-add-member-popup loan-status-popup"
+		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
 	}).css({
 		"left" : offset.left,
-		"top" : offset.top
+		"top" : offset.top+42
 	});
 	
 	var header = $('<div>').attr({
@@ -1824,10 +1824,10 @@ function appendQCPopup(element,milestoneId) {
 	
 	var wrapper = $('<div>').attr({
 		"id" : "qc-popup",
-		"class" : "ms-add-member-popup loan-status-popup"
+		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
 	}).css({
 		"left" : offset.left,
-		"top" : offset.top
+		"top" : offset.top+42
 	});
 	
 	var header = $('<div>').attr({
@@ -1910,10 +1910,10 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	
 	var wrapper = $('<div>').attr({
 		"id" : "appfee-edit-popup",
-		"class" : "ms-add-member-popup loan-status-popup"
+		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
 	}).css({
 		"left" : offset.left,
-		"top" : offset.top
+		"top" : offset.top+42
 	});
 	
 	var header = $('<div>').attr({
@@ -1972,7 +1972,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 					}
 			},false);
 		}else{
-			showToastMessage(addValue);
+			showErrorToastMessage(addValue);
 		}
 	});
 	var cancelBtn = $('<div>').attr({
