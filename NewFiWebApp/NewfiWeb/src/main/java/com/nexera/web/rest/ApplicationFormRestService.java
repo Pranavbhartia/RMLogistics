@@ -279,9 +279,9 @@ public class ApplicationFormRestService {
 		return responseVO;
 	}
 
-	@RequestMapping(value = "/pullTrimergeScore/{loanID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pullScore/{loanID}/{trimerge}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getTrimergeScore(
-	        @PathVariable int loanID) {
+	        @PathVariable int loanID,  @PathVariable String trimerge) {
 		LOG.debug("Inside pullTrimergeScore");
 		String status = null;
 		LoanVO loanVO = loanService.getLoanByID(loanID);
@@ -351,11 +351,15 @@ public class ApplicationFormRestService {
 							}
 						}
 						if (userSSN != null && reportId != null) {
+							boolean requestTrimerge= false;
+							if (trimerge!= null && trimerge.equalsIgnoreCase("Y")){
+								requestTrimerge= true;
+							}
 							JSONObject requestObject = lQBRequestUtil
 							        .pullTrimergeCreditScore(
 							                loanVO.getLqbFileId(),
 							                loaAppFormVO, sTicket, userSSN,
-							                reportId);
+							                reportId,requestTrimerge);
 							if (requestObject != null) {
 								String response = "error";
 								HashMap<String, String> map = invokeRest(requestObject

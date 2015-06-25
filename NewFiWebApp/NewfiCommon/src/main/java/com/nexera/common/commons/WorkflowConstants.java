@@ -85,8 +85,7 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED
 	                        .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),	               
 	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING
 	                        .getLosStatusID(),
