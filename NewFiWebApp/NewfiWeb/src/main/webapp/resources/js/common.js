@@ -1070,7 +1070,9 @@ function restrictSpecialChar(name,element){
 	    var ok = k >= 65 && k <= 90 || // A-Z
 	    k >= 97 && k <= 122 || // a-z
 	    k >= 48 && k <= 57 ||// 0-9
-	    k==32;//to allow space
+	    k==32 ||//to allow space
+	    k==8 ||//to allow to delte
+	    k==46;//to allow backspace
 	    if (!ok) {
 	        e.preventDefault();
 	        console.log("hii");

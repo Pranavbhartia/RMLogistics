@@ -3189,6 +3189,7 @@ function paintCustomerApplicationPageStep4a() {
     		//Validation
 	    	for(var i=0;i<quesDeclarationContxts.length;i++){
 	    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
+	    			$(window).scrollTop(0);
 	    			showErrorToastMessage(yesyNoErrorMessage);
 	    			return false;
 	    		}
@@ -3712,10 +3713,10 @@ function paintCustomerApplicationPageStep5() {
 		        var yearCount=(dateNow.getTime()-dat.getTime());
 		    	
 		    	var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
-		    	var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
 		    	if(!questionOne){
 		    		return false;
 		    	}
+		    	var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);		   	
 		    	if(!questionTwo){
 		    		return false;
 		    	}else{
@@ -3740,12 +3741,6 @@ function paintCustomerApplicationPageStep5() {
 		    				return false;
 		    			}
 		    		}
-		    	}else{
-		    		if(!questionOne){
-		        		return false;
-		        	}else if(!questionTwo){
-		        		return false;
-		        	}
 		    	}
 		    	//alert('ssnProvided'+ssnProvided);
 		    	
