@@ -149,13 +149,13 @@ function paintAgentDashboardRightPanel(data) {
 		"class" : "agent-customer-list-header clearfix"
 	});
 	var leftCon = $('<div>').attr({
-		"class" : "agent-customer-list-header-txt float-left uppercase"
+		"class" : "agent-customer-list-header-txt page-header-loan  float-left"
 	});
 
 	if (newfiObject.user.userRole.id == "4") {
-		leftCon.html("loan list");
+		leftCon.html("Loan List");
 	} else if (newfiObject.user.userRole.id != "4") {
-		leftCon.html("customer list");
+		leftCon.html("Customer List");
 	}
 
 	var rightCon = $('<div>').attr({

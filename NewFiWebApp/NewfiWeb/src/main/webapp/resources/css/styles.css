@@ -737,7 +737,7 @@ input[type="button"]:focus, button:focus {
 
 .closing-cost-cont-desc-row {
 	min-height: 35px;
-	border-bottom: 1px #E9E9E9 dashed;
+	border-top: 1px #E9E9E9 dashed;
 }
 
 .dropdown-arrow {
@@ -927,7 +927,7 @@ input[type="button"]:focus, button:focus {
 	background-color: #f5f9fc;
 	padding-left: 10px;
 	border-radius: 3px;
-	font-size: 13px; 
+	font-size: 16px; 
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
 }
@@ -1058,6 +1058,8 @@ input[type="button"]:focus, button:focus {
 	padding-left: 20px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
+	text-transform: capitalize;
+	font-size: 16px;
 }
 
 .file-drag-drop-container {
@@ -1155,6 +1157,8 @@ input[type="button"]:focus, button:focus {
 	font-family: 'opensanssemibold';
 	background: url(../images/item-needed.png) no-repeat 15px center;
 	background-color: #f5f9fc;
+	text-transform: capitalize;
+	font-size: 16px;
 }
 
 .needed-items-rc {
@@ -1256,7 +1260,7 @@ input[type="button"]:focus, button:focus {
 	line-height: 45px;
 	background-color: #f5f9fc;
 	padding-left: 10px;	
-	font-size: 13px; 
+	font-size: 16px; 
 	font-family: 'opensanssemibold';
 	
 }
@@ -1600,9 +1604,10 @@ input[type="button"]:focus, button:focus {
 	height: 45px;
 	margin-left: 15px;
 	margin-bottom: 10px;
-	padding-left: 20px;
+	padding-left: 10px;
 	padding-right: 10px;
 	background-color: #EAF5FD;
+	font-size: 16px;
 }
 
 .agent-customer-list-header-txt {
@@ -1621,6 +1626,7 @@ input[type="button"]:focus, button:focus {
 	background: url(../images/arrow_down.png) no-repeat right center;
 	background-color: #f5f9fc;
 	font-family: 'opensanssemibold';
+	font-size: 13px;
 }
 
 .leads-container-row {
@@ -2053,7 +2059,7 @@ input[type="button"]:focus, button:focus {
 	margin-bottom: 20px;
 	padding-left: 20px;
 	background-color: #f5f9fc;
-	font-size: 13px;
+	font-size: 16px;
 	font-family: 'opensanssemibold';
 }
 
@@ -2088,7 +2094,7 @@ input[type="button"]:focus, button:focus {
 	margin-bottom: 20px;
 	padding-left: 10px;
 	background-color: #f5f9fc;
-	font-size: 13px;
+	font-size: 16px;
 	font-family: 'opensanssemibold';
 }
 
@@ -2524,14 +2530,10 @@ input.calc-input {
 	padding-left: 10px;
 	background-color: #f5f9fc;
 	text-transform: capitalize;
-    font-size: 13px;
-    font-family: 'opensanssemiBold';
-}
-
-.message-header-customer {
-	/*  NEXNF-568 */
+    
 	font-size: 16px;
-	font-family: 'opensanssemiBold';
+    
+	font-family: 'opensanssemibold';
 }
 
 .initial-list-doc-wrapper {
@@ -2691,7 +2693,7 @@ input.calc-input {
 	margin-bottom: 20px;
 	padding: 11px 15px;
 	font-family: 'opensanssemibold';
-	font-size: 14px;
+	font-size: 16px;
 }
 
 .cust-personal-info-header-url {
@@ -3217,9 +3219,9 @@ input.calc-input {
 	background-color: #f5f9fc;
 	padding-left: 20px;
 	margin-bottom: 20px;
-	text-transform: uppercase;
+	text-transform: capitalize;
 	font-family: "opensanssemibold";
-	font-size: 13px;
+	font-size: 16px;
 
 }
 
@@ -5430,5 +5432,26 @@ a.session-login-btn {
 
 .ccSummary{
 	text-align: center;
-	font-size : 12px;
+	font-size : 14px;
+	background-color: white;
+}
+
+
+.light-solid-line{
+	border-color: rgb(237, 236, 236);
+  	border: 2px #E9E9E9 solid;
+  	margin-bottom: 20px;
+}
+
+.page-header-loan{
+	font-size: 16px;
+	font-family: 'opensanssemiBold';
+	margin-right: 5px;
+	white-space: nowrap;
+}
+
+.rate-btn-alertRate-header {
+	font-size:16px;
+	font-family:'opensanssemiBold';
+	padding-right: 10px;
 }

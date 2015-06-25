@@ -2,6 +2,7 @@ package com.nexera.core.service.impl;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class StateLookupServiceImpl implements StateLookupService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public String getZipCodeData(String zipCode) {
+	public HashMap<String, String> getZipCodeData(String zipCode) {
 		return stateLookupDao.getZipCodeData(zipCode);
 	}
 }

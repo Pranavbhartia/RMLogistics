@@ -29,11 +29,11 @@ function turnAroundTime() {
 		});
 		$('#right-panel').append(tunrarounfDashboardMainContainer);
 		var header = $('<div>').attr({
-			"class" : "agent-customer-list-header clearfix"
+			"class" : "agent-customer-list-header  clearfix"
 
 		});
 		var leftCon = $('<div>').attr({
-			"class" : "agent-customer-list-header-txt float-left uppercase"
+			"class" : "agent-customer-list-header-txt page-header-loan float-left"
 		});
 		leftCon.html("Turn Times");
 		var container = $('<div>').attr({
@@ -95,7 +95,7 @@ function turnAroundTime() {
 		}
 		var saveBtn = $('<div>')
 				.attr({
-					"class" : "prof-cust-save-btn float-left"
+					"class" : "cep-button-color prof-cust-save-btn float-left"
 				})
 				.html("save")
 				.on(

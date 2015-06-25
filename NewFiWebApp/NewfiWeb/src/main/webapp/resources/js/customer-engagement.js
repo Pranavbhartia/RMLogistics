@@ -128,6 +128,8 @@ function getContextApplicationTextQuesCEP(contxt) {
         
         Math.abs($('input[name=' + contxt.name + ']').val());
     });
+    
+    
     if (contxt.value != undefined) {
         optionCont.val(contxt.value);
     }
@@ -566,6 +568,8 @@ function getTextQuestion(quesText, clickEvent, name) {
                 });
             }
         });
+        
+        
         $(inputBox).val(refinanceTeaserRate[name]);
         
         
@@ -715,7 +719,7 @@ function paintRefinanceStepCEP() {
         var saveAndContinueButton = $('<div>').attr({
             "class": "cep-button-color ce-save-btn"
         }).html("Save & continue").on('click', function() {
-           removeToastMessage();
+            removeToastMessage();
         	
         	refinanceTeaserRate.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val()
             refinanceTeaserRate.isIncludeTaxes = quesContxts["isIncludeTaxes"].value;//quesContxts[1].value;
@@ -970,7 +974,7 @@ function paintRefinanceHomeZipCode() {
 function paintRefinanceSeeRates(parentContainer,teaserRateData,hideCreateAccountBtn) {
         
 	
-	if(!parentContainer){
+	    if(!parentContainer){
             parentContainer=$('#ce-refinance-cp');
         }
         if(!teaserRateData){
@@ -1474,7 +1478,7 @@ function getLoanSummaryHeaderCEP() {
             "class": "loan-summary-header clearfix"
         });
         var col1 = $('<div>').attr({
-            "class": "loan-summary-header-col1 float-left capitalize"
+            "class": "loan-summary-header-col1 page-header-loan float-left"
         }).html('Programs and Rates');
         var col2 = $('<div>').attr({
             "class": "loan-summary-header-col2 float-left"
@@ -1786,7 +1790,7 @@ function getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn) {
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
-        "class": "loan-summary-header-col1 float-left capitalize"
+        "class": "loan-summary-header-col1 page-header-loan float-left"
     }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
@@ -1795,7 +1799,7 @@ function getLoanSummaryHeaderCEP(inputCustomerDetails,hideCreateAccountBtn) {
     var rateBtn2="";
     if(!hideCreateAccountBtn){
         rateBtn2 = $('<div>').attr({
-            "class": "rate-btn-alertRate float-right"
+            "class": "rate-btn-alertRate rate-btn-alertRate-header float-right"
         }).html("Email This Quote").on('click', function() {
             var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
@@ -2044,7 +2048,9 @@ function getLoanAmountRowCEP(desc, detail, id) {
 		});	
     	
     	flag = true;
-    });/*.on('keyup',function(e){
+    });
+    
+    /*.on('keyup',function(e){
     	if(e.which == 27){
     		$(this).blur();
     	}

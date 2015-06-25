@@ -307,20 +307,10 @@ function appendInitialNeedsListWrapper(){
 		"id" : "initial-needs-wrapper",
 		"class" : "initial-needs-wrapper"
 	});
-	var header ="";
-	if(newfiObject.user.userRole.id!=1){
-		 header = $('<div>').attr({
-			"class" : "initial-needs-header"
-		}).html("initial need list");
-		
-	}else{
-		 header = $('<div>').attr({
-			"class" : "initial-needs-header message-header-customer"
-		}).html("initial need list");
-	}
-	/*var header = $('<div>').attr({
+
+	var header = $('<div>').attr({
 		"class" : "initial-needs-header"
-	}).html("initial need list");*/
+	}).html("initial need list");
 	
 	var container = $('<div>').attr({
 		"class" : "initial-needs-container clearfix"

@@ -227,23 +227,11 @@ function getMessageDashboardWrapper() {
 		"class" : "message-wrapper"
 	});
 	
-	var header="";
-	if(newfiObject.user.userRole.id!=1){
-		 header = $('<div>').attr({
-			"class" : "message-header"
-		}).html("Talk to Your Newfi Team");
-		
-	}else{
-		 header = $('<div>').attr({
-			"class" : "message-header message-header-customer"
-		}).html("Talk to Your Newfi Team");
-		
-	}
 	wrapper.append(header);
-	/*var header = $('<div>').attr({
+	var header = $('<div>').attr({
 		"class" : "message-header"
 	}).html("Talk to Your Newfi Team");
-	wrapper.append(header);*/
+	wrapper.append(header);
 
 	var container = $('<div>').attr({
 		"class" : "message-container"

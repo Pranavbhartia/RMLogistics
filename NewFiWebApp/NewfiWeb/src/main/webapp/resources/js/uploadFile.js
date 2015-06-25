@@ -388,7 +388,7 @@ function getNeedItemsWrapper(neededItemListObject) {
 		"class" : "needed-items-wrapper"
 	});
 	var header = $('<div>').attr({
-		"class" : "needed-items-header uppercase"
+		"class" : "needed-items-header"
 	}).html("needed items");
 	var container = $('<div>').attr({
 		"class" : "needed-items-container clearfix"
@@ -519,7 +519,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 		"id" : "uploadedNeedContainer"
 	});
 	var header = $('<div>').attr({
-		"class" : "upload-item-header message-header-customer uppercase"
+		"class" : "upload-item-header"
 	}).html("Upload needed items");
 	var container = $('<div>').attr({
 		"class" : "upload-item-container"

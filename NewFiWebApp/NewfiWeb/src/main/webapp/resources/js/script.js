@@ -111,7 +111,7 @@ function getCustomerSecondaryLeftNav() {
     }
     var step2 = "";
     if(flag){
-        step2 = getCustomerSecondaryLeftNavStep(2, "complete my loan profile");
+        step2 = getCustomerSecondaryLeftNavStep(2, "complete my application");
         newfiObject.applicationNavTab=step2;
     } 
     var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");
@@ -474,8 +474,8 @@ function redirectToGettingToKnowLastPage() {
 	cont2.append("<div class='getting-to-know-hdr-txt'>Next Steps</div>");
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Complete My Loan Profile").on('click',function(){
-
+	}).html("Complete My Application").on('click',function(){
+		//NEXNF-577 changed the text Complete My Loan Profile to Complete My Application
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
 	        newfiObject.applicationKnowNewfi=undefined;
@@ -621,19 +621,10 @@ function getCompletYourApplicationHeader() {
     var parent = $('<div>').attr({
         "class": "complete-application-wrapper"
     });
-    var header="";
-    if(newfiObject.user.userRole.id!=1){
-    	  header = $('<div>').attr({
-    	        "class": "complete-application-header"
-    	    }).html("Complete My Loan Profile");
-    }else{
-    	  header = $('<div>').attr({
-    	        "class": "complete-application-header message-header-customer "
-    	    }).html("Complete My Loan Profile");
-    }
-   /* var header = $('<div>').attr({
+
+    var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Loan Profile");*/
+    }).html("Complete My Loan Profile");
     return parent.append(header);
 }
 
@@ -1464,7 +1455,7 @@ function getLoanSummaryHeader() {
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
-        "class": "loan-summary-header-col1 float-left capitalize"
+        "class": "loan-summary-header-col1 page-header-loan float-left"
     }).html('Programs and Rates');
     var col2 = $('<div>').attr({
         "class": "loan-summary-header-col2 float-left"
@@ -1735,7 +1726,11 @@ function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
     	
     	flag = true;
     	
-    });/*.on('keyup',function(e){
+    });
+    
+    
+    
+    /*.on('keyup',function(e){
     	if(e.which == 27){
     		$(this).blur();
     	}
@@ -2059,7 +2054,7 @@ function getClosingCostHeader(text) {
 
 function getClosingCostTopConatiner() {
     var wrapper = $('<div>').attr({
-        "class": "closing-cost-cont-wrapper-top"
+        //"class": "closing-cost-cont-wrapper-top"
     });
     //var heading = getClosingCostHeadingCont("Estimated Closing Costs");
     var container1 = $('<div>').attr({
@@ -2108,8 +2103,9 @@ function getClosingCostTopConatiner() {
 }
 
 function getClosingCostBottomConatiner() {
-    var wrapper = $('<div>').attr({
-        "class": "closing-cost-cont-wrapper-bottom no-border-bottom"
+    // removed class to fixed : NEXNF-578
+	var wrapper = $('<div>').attr({
+        "class": ""
     });
     //var heading = getClosingCostHeadingCont("Total Estimated Closing Cost");
     var container2 = $('<div>').attr({
@@ -2159,9 +2155,18 @@ function getClosingCostContainerLastRow(rowNum, desc, detail) {
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
     }
-    var row = $('<div>').attr({
-        "class": "closing-cost-cont-desc-row no-border-bottom clearfix"
-    });
+    
+    if(desc != "Total Estimated Prepaids"){
+    
+    	var row = $('<div>').attr({
+            "class": "closing-cost-cont-desc-row clearfix light-solid-line"
+        });
+    }else{
+    	var row = $('<div>').attr({
+            "class": "closing-cost-cont-desc-row clearfix"
+        });
+    }
+    
     if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
     }
@@ -2230,8 +2235,8 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     }
 
     //NEXNF-483
-    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Month"||desc=="Homeowners Insurance Reserve - Estimated 2 Month"){
-
+    //NEXNF-578
+    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Months"||desc=="Homeowners Insurance Reserve - Estimated 2 Months"){
     	   var rowDesc = $('<div>').attr({
     	        "class": "closing-cost-desc eng-indent float-left"
     	    });
@@ -3026,6 +3031,7 @@ function getLoanAmountRowPurchase(desc, detail, id,row1Desc,row1Val,row2Desc,row
     	
     	flag = true;
     });
+    
     row1.append(col1row1).append(col2row1);
     var row2 = $('<div>').attr({
         "class": "loan-summary-sub-row clearfix"

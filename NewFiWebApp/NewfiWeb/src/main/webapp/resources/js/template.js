@@ -32,7 +32,7 @@ function populateTemplate() {
 
 		});
 		var leftCon = $('<div>').attr({
-			"class" : "agent-customer-list-header-txt uppercase"
+			"class" : "agent-customer-list-header-txt page-header-loan"
 		});
 		leftCon.html("Templates");
 		var container = $('<div>').attr({
