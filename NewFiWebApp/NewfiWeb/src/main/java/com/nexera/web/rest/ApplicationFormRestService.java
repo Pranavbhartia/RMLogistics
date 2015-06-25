@@ -283,6 +283,10 @@ public class ApplicationFormRestService {
 	public @ResponseBody CommonResponseVO getTrimergeScore(
 	        @PathVariable int loanID,  @PathVariable String trimerge) {
 		LOG.debug("Inside pullTrimergeScore");
+		boolean requestTrimerge= false;
+		if (trimerge!= null && trimerge.equalsIgnoreCase("Y")){
+			requestTrimerge= true;
+		}
 		String status = null;
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		if (loanVO != null) {
@@ -295,7 +299,6 @@ public class ApplicationFormRestService {
 					LOG.debug("Getting token for loan manager");
 					String sTicket = null;
 					try {
-
 						sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 					} catch (Exception e) {
 						LOG.error("Exception caught while generating ticket "
@@ -350,11 +353,10 @@ public class ApplicationFormRestService {
 								}
 							}
 						}
-						if (userSSN != null && reportId != null) {
-							boolean requestTrimerge= false;
-							if (trimerge!= null && trimerge.equalsIgnoreCase("Y")){
-								requestTrimerge= true;
-							}
+						if (userSSN != null && requestTrimerge && reportId ==null) {
+							status = "Unable to find credit report for this user, hence cannot upgrade. Please contact your System Admin ";
+						}
+						else if (userSSN != null ) {							
 							JSONObject requestObject = lQBRequestUtil
 							        .pullTrimergeCreditScore(
 							                loanVO.getLqbFileId(),
@@ -425,13 +427,10 @@ public class ApplicationFormRestService {
 									status = "error while saving your request to pull trimerge score, please make sure your SSN is valid";
 								}
 							}
-						} else {
-							if (userSSN == null) {
+						} else if (userSSN == null) {
 								status = "Unable to fetch user  ssn number from lqb ";
-							} else {
-								status = "Unable to find credit report for this user, hence cannot upgrade. Please contact you System Admin ";
-							}
-						}
+						} 													
+						
 					}
 				} else {
 					status = "LQB Information Not Present";

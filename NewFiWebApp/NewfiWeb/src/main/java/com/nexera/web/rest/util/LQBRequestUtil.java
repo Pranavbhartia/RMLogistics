@@ -747,7 +747,10 @@ public class LQBRequestUtil {
 		HashMap<String, String> hashmap = new HashMap<>();
 		hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail()
 		        .getSsn());
-		hashmap.put("report_id", reportId);
+		if (reportId!= null && requestTrimerge)
+		{
+			hashmap.put("report_id", reportId);
+		}
 		hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
 		        .getFirstName());
 		hashmap.put("lastName", loanAppFormVO.getLoan().getUser().getLastName());
