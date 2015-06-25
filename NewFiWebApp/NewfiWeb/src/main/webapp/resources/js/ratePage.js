@@ -272,7 +272,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
         rightCol.append(monthlyDiff);
     }
 
-    var taxRow = getInputElmentRow("tax","Taxes",showValue(tax),"calTaxID2",customerInputData);
+    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData);
     rightCol.append(taxRow);
 
     var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData);
@@ -472,7 +472,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var purchasePrice = getInputElmentRow("purchasePrice","Purchase Price",showValue(housePrice),"firstInput",customerInputData);
     leftCol.append(purchasePrice);
 
-    var taxRow = getInputElmentRow("tax","Taxes",showValue(tax),"calTaxID2",customerInputData);
+    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData);
     rightCol.append(taxRow);
 
     var dwnPayment = getInputElmentRow("downPayment","Down Payment",showValue(downPayment),"secondInput",customerInputData);
