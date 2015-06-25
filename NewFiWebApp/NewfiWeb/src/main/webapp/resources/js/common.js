@@ -920,9 +920,11 @@ function userIsCustomer() {
 
 function hideCompleteYourProfile(){
 	if(newfiObject.applicationNavTab){
-		$(newfiObject.applicationNavTab).remove();
-		newfiObject.applicationNavTab=undefined;
-		flagToShowCompletPro = false;
+		if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+			$(newfiObject.applicationNavTab).remove();
+			newfiObject.applicationNavTab=undefined;
+			flagToShowCompletPro = false;
+		}
 	}
 }
 
