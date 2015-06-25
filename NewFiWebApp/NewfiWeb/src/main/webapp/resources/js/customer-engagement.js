@@ -1113,7 +1113,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "name": "fname"
     }).bind('keypress', function(e) {
  
-        if($(this).val().length == 0){
+     
             var k = e.which;
             var ok = k >= 65 && k <= 90 || // A-Z
                 k >= 97 && k <= 122 || // a-z
@@ -1122,7 +1122,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
             if (!ok){
                 e.preventDefault();
             }
-        }
+        
     });
     regInputContainerFname.append(regInputfname).append(appendErrorMessage());
     var regInputContainerlname = $('<div>').attr({
@@ -1134,7 +1134,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "name": "lname"
     }).bind('keypress', function(e) {
  
-        if($(this).val().length == 0){
+ 
             var k = e.which;
             var ok = k >= 65 && k <= 90 || // A-Z
                 k >= 97 && k <= 122 || // a-z
@@ -1143,7 +1143,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
             if (!ok){
                 e.preventDefault();
             }
-        }
+    
     });
     regInputContainerlname.append(regInputlname).append(appendErrorMessage());
     var regInputContainerEmail = $('<div>').attr({
@@ -1202,6 +1202,10 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         var dateVar = new Date();
         var timezone = dateVar.getTimezoneOffset();
         registration.emailId = $('input[name="email"]').val() + ":" + timezone;
+        var status=validateCustomerRegistration();
+        if(!status){
+        	return false;
+        }
     	if (teaserRateValHolder.leadCustomer)
     	{
     		isNoProductFound=true;
@@ -1214,7 +1218,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
 	       /* var phoneNumber = $('input[name="phone"]').val();
 	        registration.phoneNumber = phoneNumber.replace(/[^0-9]/g, '');*/
 	       
-	        var status=validateCustomerRegistration(registration.phoneNumber);
+	        var status=validateCustomerRegistration();
 	        if(!status){
 	        	return false;
 	        }
