@@ -608,6 +608,8 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
             });
         }
     });
+    
+    
     optionContainer.append(inputBox).append(errFeild);
     var saveBtn = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"

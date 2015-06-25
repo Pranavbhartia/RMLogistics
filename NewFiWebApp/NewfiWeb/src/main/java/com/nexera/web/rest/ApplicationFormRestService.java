@@ -51,6 +51,7 @@ import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
+import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.core.helper.MessageServiceHelper;
 import com.nexera.core.lqb.broker.LqbInvoker;
@@ -65,6 +66,7 @@ import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
+import com.nexera.web.rest.util.LQBResponseMapping;
 import com.nexera.web.rest.util.PreQualificationletter;
 import com.nexera.web.rest.util.RestUtil;
 
@@ -106,6 +108,11 @@ public class ApplicationFormRestService {
 
 	@Autowired
 	NexeraUtility nexeraUtility;
+	
+	@Autowired
+	LQBResponseMapping lQBResponseMapping;
+	
+	
 
 	@Value("${cryptic.key}")
 	private String crypticKey;
@@ -175,6 +182,9 @@ public class ApplicationFormRestService {
 	        @PathVariable int loanID) {
 		LOG.debug("Inside method getLockRateData for loan " + loanID);
 		String status = null;
+		
+		LqbTeaserRateVo lqbTeaserRateVo = new LqbTeaserRateVo();
+		
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		if (loanVO != null) {
 			Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
@@ -212,10 +222,13 @@ public class ApplicationFormRestService {
 									loadResponse = nexeraUtility
 									        .removeBackSlashDelimiter(loadResponse);
 									boolean rateLocked = false;
-									String rateLockData = null;
+
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 									if (loadResponseList != null) {
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
+											
+											lQBResponseMapping.setLqbTeaserRateVo(lqbTeaserRateVo,loadResponseVO);
+											
 											String fieldId = loadResponseVO
 											        .getFieldId();
 											if (fieldId
@@ -228,24 +241,10 @@ public class ApplicationFormRestService {
 												}
 											}
 
-											if (fieldId
-											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_DATA)) {
-												rateLockData = loadResponseVO
-												        .getFieldValue();
-											}
-
 										}
 
 										if (rateLocked) {
-											if (rateLockData != null) {
-												// TODO SAX Parsing to retrieve
-												// the locked rate and show it
-												// on UI
-											} else {
-												LOG.error("Unable to find rate lock data for this lqb id "
-												        + loanVO.getLqbFileId());
-												status = "Unable to fetch the lock rate data, please try after sometime";
-											}
+											// TODO fetch all related fields
 										} else {
 											LOG.debug("Rate not locked in LQB yet, hence not fetching the lock data ");
 											status = "Rates not yet locked in LQB";
@@ -280,9 +279,9 @@ public class ApplicationFormRestService {
 		return responseVO;
 	}
 
-	@RequestMapping(value = "/pullTrimergeScore/{loanID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/pullScore/{loanID}/{trimerge}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getTrimergeScore(
-	        @PathVariable int loanID) {
+	        @PathVariable int loanID,  @PathVariable String trimerge) {
 		LOG.debug("Inside pullTrimergeScore");
 		String status = null;
 		LoanVO loanVO = loanService.getLoanByID(loanID);
@@ -352,11 +351,15 @@ public class ApplicationFormRestService {
 							}
 						}
 						if (userSSN != null && reportId != null) {
+							boolean requestTrimerge= false;
+							if (trimerge!= null && trimerge.equalsIgnoreCase("Y")){
+								requestTrimerge= true;
+							}
 							JSONObject requestObject = lQBRequestUtil
 							        .pullTrimergeCreditScore(
 							                loanVO.getLqbFileId(),
 							                loaAppFormVO, sTicket, userSSN,
-							                reportId);
+							                reportId,requestTrimerge);
 							if (requestObject != null) {
 								String response = "error";
 								HashMap<String, String> map = invokeRest(requestObject

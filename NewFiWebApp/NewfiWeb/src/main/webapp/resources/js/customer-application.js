@@ -85,7 +85,9 @@ var applicationItemsList = [
 	                            "onselect" : paintRefinanceStep2
 	                        },
 	                        {
-								"text":"Borrower(s) on the Loan?",
+	                        	//NEXNF-574
+								/*"text":"Borrower(s) on the Loan?",*/
+								"text":"Borrower(s) on Loan",
 		                        "onselect" : paintCustomerApplicationPageStep2
 		                    },
 	                        {

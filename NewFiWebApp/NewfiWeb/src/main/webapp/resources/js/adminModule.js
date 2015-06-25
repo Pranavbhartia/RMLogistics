@@ -280,7 +280,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	userTypeCont.append(userTypeSel);
 	
 	var createUserButton=$('<div>').attr({
-	"class":"prof-cust-save-btn-admin-um float-left-admin",
+	"class":"cep-button-color prof-cust-save-btn-admin-um float-left",
 	"id":"create-user-id",
     
 	}).html("Create User").click(function(e){

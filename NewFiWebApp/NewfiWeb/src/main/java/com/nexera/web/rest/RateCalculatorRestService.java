@@ -35,6 +35,7 @@ import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateVO;
 import com.nexera.core.service.LqbInterface;
+import com.nexera.core.service.StateLookupService;
 import com.nexera.web.rest.util.TeaserRateHandler;
 
 @RestController
@@ -50,6 +51,8 @@ public class RateCalculatorRestService {
 	@Autowired
 	LqbInterface lqbCacheInvoker;
 
+	@Autowired
+	StateLookupService stateLookupService;
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
 	public @ResponseBody String getTeaserRate(String teaseRate) {
 		Gson gson = new Gson();
@@ -187,9 +190,12 @@ public class RateCalculatorRestService {
 			teaserRateVO.setHomeWorthToday("350000");
 		}
 
-		JSONObject geoFromAPI = getStateUtlity(teaserRateVO.getZipCode());
-
-		try {
+		//JSONObject geoFromAPI = getStateUtlity(teaserRateVO.getZipCode());
+		HashMap<String, String> stateLookup = stateLookupService.getZipCodeData(teaserRateVO.getZipCode());
+		stateFromAPI = stateLookup.get("stateName");
+		shopperCounty = stateLookup.get("countyName");
+		
+		/*try {
 
 			stateFromAPI = geoFromAPI.getString("state");
 			shopperCounty = geoFromAPI.getString("county");
@@ -203,7 +209,7 @@ public class RateCalculatorRestService {
 			}
 		} catch (Exception e) {
 			LOG.error("Error in createMapforJson", e);
-		}
+		}*/
 
 		HashMap<String, String> hashmap = new HashMap<String, String>();
 		hashmap.put("homeWorthToday",
