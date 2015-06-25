@@ -575,8 +575,8 @@ function changePassword(){
 	changePasswordData.newPassword = $("#password").val();
 	console.info("userProfileJson:"+JSON.stringify(changePasswordData));
 	
-	    var passwordField=validateInput($('#password'),$('#password').val(),passwordFieldEmptyErrorMessage);
-	    var confirmPasswordField=validateInput($('#confirmpassword'),$('#confirmpassword').val(),passwordFieldEmptyErrorMessage);
+	    var passwordField=validateFormFeild($('#password'),$('#password'),passwordFieldEmptyErrorMessage);
+	    var confirmPasswordField=validateFormFeild($('#confirmpassword'),$('#confirmpassword'),passwordFieldEmptyErrorMessage);
 		if(!passwordField){
 			return false;
 		}
@@ -921,7 +921,7 @@ function getCustomerNameFormRow(user) {
 		"id" : "firstNameId"
 	}).bind('keypress', function(e) {
 
-	    if($(this).val().length == 0){
+
 	        var k = e.which;
 	        var ok = k >= 65 && k <= 90 || // A-Z
 	            k >= 97 && k <= 122 || // a-z
@@ -933,8 +933,8 @@ function getCustomerNameFormRow(user) {
 	        if (!ok){
 	            e.preventDefault();
 	        }
-	    }
-	});;
+	
+	});
 
 	var firstNameErrMessage = $('<div>').attr({
 		"class" : "err-msg hide"
@@ -955,7 +955,7 @@ function getCustomerNameFormRow(user) {
 		"id" : "lastNameId"
 	}).bind('keypress', function(e) {
 
-	    if($(this).val().length == 0){
+	  
 	        var k = e.which;
 	        var ok = k >= 65 && k <= 90 || // A-Z
 	            k >= 97 && k <= 122 || // a-z
@@ -967,8 +967,8 @@ function getCustomerNameFormRow(user) {
 	        if (!ok){
 	            e.preventDefault();
 	        }
-	    }
-	});;
+
+	});
 	
 	var lastNameErrMessage = $('<div>').attr({
 		"class" : "err-msg hide"
