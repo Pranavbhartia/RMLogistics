@@ -896,6 +896,7 @@ function paintNewResidenceTypeQues(){
                             	 }
                                  $('input[name="zipCode"]').next('.err-msg').html(invalidStateZipCodeMsg).show();
                                  $('input[name="zipCode"]').addClass('ce-err-input').show();
+                                 return false;
                             }
                         }
                     });

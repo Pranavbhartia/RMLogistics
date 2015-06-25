@@ -391,9 +391,9 @@ function paintCustomerApplicationPurchasePageStep1a() {
 
 		    	ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":propZipCode}, function(response) {
 	                if (response.error) {
-	                    showToastMessage(response.error.message)
+	                    showToastMessage(response.error.message);
 	                } else {
-	                    if(response.resultObject==true){
+	                    if(response.resultObject == zipcode_valid){
 	                        customerDetail.addressStreet=addressStreet;
 				    		customerDetail.addressCity = city;
 				    		customerDetail.addressState = inputState;
@@ -429,8 +429,13 @@ function paintCustomerApplicationPurchasePageStep1a() {
     		
     						saveAndUpdateLoanAppForm(appUserDetails ,paintloanamountBuyApp());
 	                    }else{
-	                       	$('input[name="propZipCode"]').next('.err-msg').html(invalidStateZipCode).show();
-			    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
+	                    	 if(response.resultObject == zipcode_isnot_valid){
+                        		 invalidStateZipCodeMsg =response.resultObject; 
+                        	 }else{
+                        		 invalidStateZipCodeMsg =response.resultObject;
+                        	 }
+                             $('input[name="propZipCode"]').next('.err-msg').html(invalidStateZipCodeMsg).show();
+                             $('input[name="propZipCode"]').addClass('ce-err-input').show();
 				       		return false;
 	                    }
 	                }
