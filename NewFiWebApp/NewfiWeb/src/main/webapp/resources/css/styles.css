@@ -665,6 +665,17 @@ input[type="button"]:focus, button:focus {
   	border-radius: 3px;
 }
 
+.loan-summary-last-row .loan-summary-col-detail-light{
+	width: 120px;
+	color:#fff;
+	font-size: 15px;
+	text-align: center;
+	background: #8DC2F0;
+	padding: 5px 10px;
+  	border-radius: 3px;
+}
+
+
 .loan-summary-last-row .loan-summary-red-col-detail{
 	width: 120px;
 	color:#fff;
@@ -5434,6 +5445,25 @@ a.session-login-btn {
 	text-align: center;
 	font-size : 14px;
 	background-color: white;
+}
+
+.row-one-col-one {
+    line-height: 1px;
+    background-color: #F5F9FC;    
+    margin-right: 3px;    
+    margin-bottom: 3px;
+    font-family: 'opensanssemibold';    
+    padding: 10px 0 10px 5px;
+    width: 185px;
+    float: left;
+}
+
+.tab-value-column{
+    color: #428bca;
+}
+
+.tax-clas-Rate-page{
+	text-align: center;
 }
 
 

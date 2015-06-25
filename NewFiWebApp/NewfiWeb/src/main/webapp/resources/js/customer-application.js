@@ -5860,8 +5860,8 @@ function getContextApplicationPercentageQues(contxt) {
     return container.append(quesTextCont).append(optionsContainer);
 }
 function getpurchaseValue(){
-    if($("#secondInput").length>0){
-        return $('#secondInput').val();
+    if($("#firstInput").length>0){
+        return $('#firstInput').val();
     }else if($('input[name="homeWorthToday"]').length>0){
         return $('input[name="homeWorthToday"]').val();
     }else if($('input[name="housePrice"]').length>0){
@@ -5889,5 +5889,6 @@ function percentageUpdateEventListener(e){
         }
     }
     var ctx=e.data.contxt;
-	ctx.value=valComp.val();
+    if(ctx)
+	   ctx.value=valComp.val();
 }

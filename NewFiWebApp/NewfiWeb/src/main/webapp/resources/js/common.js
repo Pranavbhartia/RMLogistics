@@ -1060,9 +1060,10 @@ function resizeHeaderWidth(){
 }
 
 
-function restrictSpecialChar(name){
-	
-	$('input[name="'+name+'"]').bind('keypress', function (e) {
+function restrictSpecialChar(name,element){
+	if(!element)
+		element=$('input[name="'+name+'"]')
+	$(element).bind('keypress', function (e) {
 	    console.log(e.which);
 
 	    var k = e.which;
