@@ -1109,7 +1109,7 @@ function fetchCreditScore(loanid,trimerge, callback){
 	var pullScoreURL = "rest/application/pullScore/"+loanid+"/N";
 	if (trimerge && trimerge == true)
 	{
-		 pullScoreURL = rest/application/pullScore+ "/Y";	
+		 pullScoreURL = "rest/application/pullScore/"+loanid+ "/Y";	
 	}
 	ajaxRequest(pullScoreURL,"GET","json",data,function(response){
 		if(response.error){
