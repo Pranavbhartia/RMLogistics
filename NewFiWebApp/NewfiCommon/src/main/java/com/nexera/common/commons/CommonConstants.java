@@ -334,4 +334,10 @@ public interface CommonConstants {
 	public static final String FILE_NAME_PREQUAL_LETTER = "newfi pre-qualification.pdf";
 	public static final String DEFAULT_CREDIT_SCORE = "800";
 	public static final String[] allowedStates = { "CA", "OR", "WA" };
+	
+	public static final String ZIPCODE_ISNOT_VALID = "Zip code is not valid";
+	public static final String ZIPCODE_ISNOT_APPROVED ="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
+	public static final String ZIPCODE_VALID ="Valid ZipCode";
+	
+	
 }

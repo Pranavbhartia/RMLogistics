@@ -64,7 +64,7 @@ public class StateLookupRestServive {
 		if (zipCode == null || zipCode.length() < 1)
 			throw new BaseRestException();
 
-		Boolean status = stateLookupService.validateZipCode(zipCode);
+		String status = stateLookupService.validateZipCode(zipCode);
 
 		CommonResponseVO responseVO = null;
 		responseVO = RestUtil.wrapObjectForSuccess(status);

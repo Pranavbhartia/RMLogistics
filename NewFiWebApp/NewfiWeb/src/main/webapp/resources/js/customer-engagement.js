@@ -839,7 +839,7 @@ function paintNewResidenceTypeQues(){
         "class": "cep-button-color ce-save-btn"
     }).html("Save & continue").on('click', function() {
     	removeToastMessage();
-        var zipCode=quesContxts["zipCode"].value
+        var zipCode=quesContxts["zipCode"].value;
         var propertyType=quesContxts["propertyType"].value;
         var residenceType=quesContxts["residenceType"].value;
         var className=$('input[name="zipCode"]');
@@ -855,7 +855,7 @@ function paintNewResidenceTypeQues(){
                         if (response.error) {
                             showToastMessage(response.error.message)
                         } else {
-                            if(response.resultObject==true){
+                            if(response.resultObject == zipcode_valid){
                                 removeToastMessage();
                                 if(refinanceTeaserRate.loanType){
                                     refinanceTeaserRate.propertyType = propertyType;//$('input[name="currentMortgagePayment"]').val()
@@ -889,7 +889,12 @@ function paintNewResidenceTypeQues(){
                                     }*/
                                 }
                             }else{
-                                 $('input[name="zipCode"]').next('.err-msg').html(invalidStateZipCode).show();
+                            	 if(response.resultObject == zipcode_isnot_valid){
+                            		 invalidStateZipCodeMsg =response.resultObject; 
+                            	 }else{
+                            		 invalidStateZipCodeMsg =response.resultObject;
+                            	 }
+                                 $('input[name="zipCode"]').next('.err-msg').html(invalidStateZipCodeMsg).show();
                                  $('input[name="zipCode"]').addClass('ce-err-input').show();
                             }
                         }
