@@ -289,3 +289,42 @@ k}
 .color-change:hover {
     background: #F47521;
 }
+
+.page-header-loan{
+	font-size: 16px;
+	font-family: 'opensanssemiBold';
+	margin-right: 5px;
+	white-space: nowrap;
+}
+
+.rate-btn-alertRate-header {
+	
+	font-size:14px;
+	font-family:'opensanssemiBold';
+	width: 148px;
+	background: url(../images/mail-new.png) no-repeat 15px;
+	background-size: 15px;
+	margin-top: 6px;
+	padding-left: 33px;
+
+}
+
+.ms-add-member-popup-adjustment:after {
+	right:0;
+	left:12px;
+}
+
+.loan-summary-header-col2-adjustment {
+	font-size: 11px;
+  	margin: 0 10px;
+}
+
+.loan-summary-header-column-right {
+	width: 200px;
+	padding-right: 10px;
+}
+
+.loan-summary-header-col2-teaser-adj {
+	width: 113px;
+	margin: 0 auto;
+}

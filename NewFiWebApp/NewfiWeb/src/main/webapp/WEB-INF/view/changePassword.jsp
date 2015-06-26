@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 <title>newfi</title>
 <link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
 <link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
@@ -70,23 +70,35 @@ $('#changePwdForm').submit(function(event){
 	var dateVar = new Date();
 	var timezone = dateVar.getTimezoneOffset();
 	changePasswordData.emailID = currentUser.emailID+ ":"+timezone;
-	console.log("Create user button clicked. User : "
-					+ JSON.stringify(changePasswordData));
-	if( $('#password').val()=="" || $('#confirmpassword').val()==""){
-		$('#password').next('.err-msg').html(passwordFieldEmptyErrorMessage).show();
+/* 	console.log("Create user button clicked. User : "
+					+ JSON.stringify(changePasswordData)); */
+	//NEXNF-586
+	if($('#password').val()=="" && $('#confirmpassword').val()==""){
+		$('#password').next('.err-msg').html(passwordFieldEmptyErrorMessage).show();		
+		$('#email-container').addClass('ce-err-input').show();	
 		$('#confirmpassword').next('.err-msg').html(passwordFieldEmptyErrorMessage).show();
-		$('#email-container').addClass('ce-err-input').show();
 		$('#email-container-cp').addClass('ce-err-input').show();
-		
 		return false;
 	}else{
-		$('#password').next('.err-msg').html(passwordFieldEmptyErrorMessage).hide();
-		$('#confirmpassword').next('.err-msg').html(passwordFieldEmptyErrorMessage).hide();
-		$('#email-container').removeClass('ce-err-input');
-		$('#email-container-cp').removeClass('ce-err-input');
-		
+		if( $('#password').val()=="" ){
+			$('#password').next('.err-msg').html(passwordFieldEmptyErrorMessage).show();		
+			$('#email-container').addClass('ce-err-input').show();		
+			return false;
+		}else{
+			$('#password').next('.err-msg').html(passwordFieldEmptyErrorMessage).hide();			
+			$('#email-container').removeClass('ce-err-input');		
+		}
+		if($('#confirmpassword').val()==""){
+			$('#confirmpassword').next('.err-msg').html(passwordFieldEmptyErrorMessage).show();
+			$('#email-container-cp').addClass('ce-err-input').show();
+			return false;
+		}else{
+			$('#confirmpassword').next('.err-msg').html(passwordFieldEmptyErrorMessage).hide();
+			$('#email-container-cp').removeClass('ce-err-input');
+		}
 	}
-
+	
+	
 	var password=$('#password').val();
 	var confirmPassword=$('#confirmpassword').val();
 	var firstName=currentUser.firstName;
