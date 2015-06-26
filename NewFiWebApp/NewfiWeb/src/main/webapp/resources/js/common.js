@@ -570,7 +570,7 @@ function getClosingCostLabel(item) {
 	case "Homeowners Insurance Reserve - Estimated 2 Month(s)":
 		return "Homeowners Insurance Reserve - Estimated 2 Months";
 	case "Total Estimated Reserves Deposited in Escrow Account":
-		return "Total Estimated Reserves Deposited in Escrow Account";
+		return "Total Estimated Prepaids and Escrows";
 	case "Total Estimated Closing Cost":
 		return "Total Estimated Closing Costs";//changed for portal updates 6.17 addition of s
 	}
@@ -738,11 +738,15 @@ function getCalculationFunctionForItem(key) {
 		break;
 	case "totEstResDepWthLen":
 		fun = function() {
-			var val1 = getFloatValue(closingCostHolder["taxResrv1004"]
-					.getValueForItem());
-			var val2 = getFloatValue(closingCostHolder["hazInsReserve1002"]
-					.getValueForItem());
-			var result = val1 + val2;
+			
+		var val1 = getFloatValue(closingCostHolder["interest901"].getValueForItem());
+		var val2 = getFloatValue(closingCostHolder["hazIns903"].getValueForItem());
+		var val3 = getFloatValue(closingCostHolder["taxResrv1004"].getValueForItem());
+		var val4 = getFloatValue(closingCostHolder["hazInsReserve1002"].getValueForItem());
+			
+			
+	
+			var result = val1 + val2 +val3 +val4;
 			return result;
 		};
 		break;
@@ -761,10 +765,10 @@ function getCalculationFunctionForItem(key) {
 					.getValueForItem());
 			var val2 = getFloatValue(closingCostHolder["totEstThdPtyCst"]
 					.getValueForItem());
-			var val3 = getFloatValue(closingCostHolder["totPrepaids"]
-					.getValueForItem());
+			//var val3 = getFloatValue(closingCostHolder["totPrepaids"].getValueForItem());
 			
-			var result = val1 + val2 + val3;
+			//var result = val1 + val2 + val3;
+			var result = val1 + val2;
 			return result;
 		};
 		break;

@@ -1,14 +1,15 @@
 
 function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
-    var headerCont = $('<div>').attr({
+/*    var headerCont = $('<div>').attr({
         "class": "loan-summary-header clearfix"
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-header-col1 page-header-loan float-left"
     }).html('Programs and Rates');
     var col2 = $('<div>').attr({
-        "class": "loan-summary-header-col2 float-left"
+        "class": "loan-summary-header-col2 loan-summary-header-col2-adjustment float-right"
     }).html(getCurrentDate(responseTime));
+    //Web portal updates 6.25 changes moving col2 to extreme right
     var rateBtn2="";
     if(!hideCreateAccountBtn && teaserRateValHolder.teaserRate){
         rateBtn2 = $('<div>').attr({
@@ -29,6 +30,59 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
         //Code to show Rate locked Status comes here....
     }
     headerCont.append(col1).append(col2).append(rateBtn2);
+    return headerCont;*/
+    
+    
+    var col1 = $('<div>').attr({
+        "class": "loan-summary-header-col1 page-header-loan float-left",
+        "style":"line-height: 45px;"
+    }).html('Programs and Rates');
+    
+    var columnRight=$('<div>').attr({
+        "class": "loan-summary-header-column-right float-right clearfix"
+    });
+    var rateBtn2="";
+    var timeStamp="";
+    var headerCont ="";
+    if(!hideCreateAccountBtn && teaserRateValHolder.teaserRate){
+        rateBtn2 = $('<div>').attr({
+            "class": "rate-btn-alertRate rate-btn-alertRate-header float-right"
+        }).html("Email This Quote").on('click', function() {
+            var emailQuote = true;
+            var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
+            if(teaserRateValHolder.teaserRate){
+                if(refinanceTeaserRate.loanType)
+                    progressBaar(7);
+                else
+                    homeProgressBaar(5);
+            }
+            $('#ce-refinance-cp').html(mainContainer);
+        });
+        var headerCont = $('<div>').attr({
+            "class": "loan-summary-header clearfix",
+            "style":"line-height: normal;"
+        });
+        
+         timeStamp = $('<div>').attr({
+            "class": "loan-summary-header-col2 loan-summary-header-col2-teaser-adj float-left"
+        }).html(getCurrentDate(responseTime));
+         
+        
+    }else{
+    	 var headerCont = $('<div>').attr({
+    	        "class": "loan-summary-header clearfix",
+    	        
+    	    });
+		   timeStamp = $('<div>').attr({
+		        "class": "loan-summary-header-col2 loan-summary-header-col2-adjustment float-right"
+		    }).html(getCurrentDate(responseTime));
+    }
+    var timeStamp = $('<div>').attr({
+        "class": "loan-summary-header-col2 loan-summary-header-col2-teaser-adj float-right"
+    }).html(getCurrentDate(responseTime));
+    
+    columnRight.append(rateBtn2).append(timeStamp);
+    headerCont.append(col1).append(columnRight);
     return headerCont;
 }
 var teaserRateValHolder={};
