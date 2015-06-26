@@ -147,7 +147,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     //var index = parseInt(yearValues[yearValues.length-1].rateVO.length / 2);
    
    
-   
+   var yearLeftOnMortgage;
     var loanAmount  = teaserRateValHolder.teaserRate==true?customerInputData.currentMortgageBalance:customerInputData.refinancedetails.currentMortgageBalance;
     var refinanceOption;
     if(teaserRateValHolder.teaserRate){
@@ -161,6 +161,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
             var currentMortgageBalance = getFloatValue(customerInputData.currentMortgageBalance);
             loanAmount = cashTakeOut + currentMortgageBalance;
         }
+        yearLeftOnMortgage=getFloatValue(customerInputData.yearLeftOnMortgage);
     }else{
         refinanceOption=customerInputData.refinancedetails.refinanceOption;
         if (refinanceOption == "REFLMP") refinanceOpt = "Lower monthly payment";
@@ -172,6 +173,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
             var currentMortgageBalance = getFloatValue(customerInputData.refinancedetails.currentMortgageBalance);
             loanAmount = cashTakeOut + currentMortgageBalance;
         }
+        yearLeftOnMortgage=getFloatValue(customerInputData.refinancedetails.mortgageyearsleft);
     }
    
     var  monthlyPayment; 
@@ -257,7 +259,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     }
 
     if(refinanceOption == "REFMF"){
-        var remainingPayment=(getFloatValue(monthlyPayment)*customerInputData.yearLeftOnMortgage);
+        var remainingPayment=(getFloatValue(monthlyPayment)*yearLeftOnMortgage);
         var currentMortgagePayment = getLoanSummaryLastRow("Remaining<br/> Payments<br/>Current Mortgage", showValue(remainingPayment),"monthlyPaymentId",true);
         leftCol.append(currentMortgagePayment);
         var proposedMonthlyPayment=(getFloatValue(rateVO.yearData)*getFloatValue(rateVO.payment))/12;
