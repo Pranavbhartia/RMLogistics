@@ -243,7 +243,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var estClosingCstRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
     leftCol.append(estClosingCstRow);
 
-    var bottomRcRow = getLoanSummaryLastRow("Proposed<br/>Mortgage Payment ", showValue(principalInterest),"principalIntId");
+    var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment ", showValue(principalInterest),"principalIntId");
     rightCol.append(bottomRcRow);
 
     if(refinanceOption == "REFCO"){
@@ -259,10 +259,10 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     }
 
     if(refinanceOption == "REFMF"){
-        var remainingPayment=(getFloatValue(monthlyPayment)*yearLeftOnMortgage);
+        var remainingPayment=(getFloatValue(monthlyPayment)*yearLeftOnMortgage*12);
         var currentMortgagePayment = getLoanSummaryLastRow("Remaining<br/> Payments<br/>Current Mortgage", showValue(remainingPayment),"monthlyPaymentId",true);
         leftCol.append(currentMortgagePayment);
-        var proposedMonthlyPayment=(getFloatValue(rateVO.yearData)*getFloatValue(rateVO.payment))/12;
+        var proposedMonthlyPayment=(getFloatValue(rateVO.yearData)*getFloatValue(rateVO.payment)*12);
         var proposedPrincipalIns = getLoanSummaryLastRow("Total Payments<br/> Proposed Mortgage", showValue(proposedMonthlyPayment),"totPayProposedMortgage",true);
         leftCol.append(proposedPrincipalIns);
         var monthlyDiff = getLoanSummaryLastRow('This Monthly<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
@@ -274,36 +274,21 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
         rightCol.append(monthlyDiff);
     }
 
-    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData);
+    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
+    leftCol.append(totHousingPayment);
+
+    var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment));
+    rightCol.append(toggletaxComponent);
+
+    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
     rightCol.append(taxRow);
 
-    var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData);
+    var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
     rightCol.append(taxRow);
 
-    if(refinanceOption == "REFMF"){
-        var totHousingPayment = getLoanSummaryLastRow("Total Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
-        rightCol.append(totHousingPayment);
-    }
-
-
-    container = $('<div>').attr({
-        "class": "clearfix"
-    });
-    leftCol = $('<div>').attr({
-        "class": "loan-summary-lp float-left"
-    });
-    rightCol = $('<div>').attr({
-        "class": "loan-summary-rp float-right"
-    });
-    container.append(leftCol).append(rightCol);
     
-    wrapper.append(container);
 
-
-    if(refinanceOption != "REFMF"){
-        var totHousingPayment = getLoanSummaryLastRow("Total Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
-        leftCol.append(totHousingPayment);
-    }
+    
 
 
     /*var purchasePrice = getInputElmentRow("purchasePrice","Purchase Price",showValue(monthlyPayment),"firstInput",customerInputData);
@@ -444,6 +429,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
 
         Insurance=(getFloatValue(loanAmount)*.0035)/12;
     }
+    var investment=tax+Insurance;
     var totEstHousingPayment=getFloatValue(rateVO.payment)+getFloatValue(tax)+getFloatValue(Insurance);
    /* var principalInterest = parseFloat(removedDoller(removedComma(rateVO[index].payment)));
     var totalEstMonthlyPayment = principalInterest;
@@ -474,19 +460,22 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var purchasePrice = getInputElmentRow("purchasePrice","Purchase Price",showValue(housePrice),"firstInput",customerInputData);
     leftCol.append(purchasePrice);
 
-    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData);
+    var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment));
+    rightCol.append(toggletaxComponent);
+
+    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
     rightCol.append(taxRow);
 
     var dwnPayment = getInputElmentRow("downPayment","Down Payment",showValue(downPayment),"secondInput",customerInputData);
     leftCol.append(dwnPayment);
 
-    var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData);
+    var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
     rightCol.append(taxRow);
 
     var proposedLoanAmt = getLoanSummaryLastRow("Proposed Loan<br/>Amount", showValue(loanAmount) ,"loanAmount",true);
     leftCol.append(proposedLoanAmt);
 
-    var estHousngPaymnt = getLoanSummaryLastRow("Total Estimated<br/>Housing Payment", showValue(totEstHousingPayment) ,"totalEstMonthlyPaymentId",true);
+    var estHousngPaymnt = getLoanSummaryLastRow("Estimated<br/>Housing Payment", showValue(totEstHousingPayment) ,"totalEstMonthlyPaymentId",true);
     rightCol.append(estHousngPaymnt);
 
     container.append(leftCol).append(rightCol);
@@ -586,8 +575,8 @@ function getTableRow(key,desc,value,id){
     var column1=$('<div>').attr({
         "class": "row-one-col-one"
     }).html(desc);
-     var column2=$('<div>').attr({
-        "class": "row-one-col-one tab-value-column",
+    var column2=$('<div>').attr({
+        "class": "row-one-col-two tab-value-column",
         "id":id
     }).html(value);
     return row.append(column1).append(column2);
@@ -615,12 +604,14 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     var ratePageHeader=getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn);
     var ratePageSlider="";
     var bottomText="";
+    var buttonWrapper="";
     if(!rateVO.dummyData){
 
     	teaserRateValHolder.leadCustomer = undefined;
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
+        buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
     }
     else if (teaserRateValHolder.teaserRate)
     {
@@ -629,7 +620,7 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     
     var loanSummaryWrapper = getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
-    var buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
+    
   //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
 
     parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper).append(bottomText);
@@ -664,15 +655,52 @@ function getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccoun
    
     return parentWrapper;
 }
-var globalChangeContainer={};
-function getInputElmentRow(key,desc, val,inputElementId,appUserDetails) {
-    
+function getTaxInsDropToggleBtn(investment){
     var container = $('<div>').attr({
-        "class": "loan-summary-row clearfix no-border-bottom"
+        "class": "loan-summary-row clearfix no-border-bottom "
+    }).bind("click",function(e){
+        var taxContainer=$("#taxContainerId");
+        var insContainer=$("#insContainerId");
+        if($(taxContainer).hasClass("hide")){
+            taxContainer.removeClass("hide");
+            insContainer.removeClass("hide");
+        }else{
+            taxContainer.addClass("hide");
+            insContainer.addClass("hide");
+        }
     });
+    var col1 = $('<div>').attr({
+        "class": "loan-summary-col-desc float-left "
+    }).html("Tax & Insurance");
+    var col2 = $('<div>').attr({
+        "class": "loan-summary-col-detail float-left"
+    })
+    var col2Txt = $('<div>').attr({
+        "class" : "tax-Ins-clas float-left"
+    }).html(investment);
+    var dropdownarrow = $('<div>').attr({
+        "class": "dropdown-arrow float-left"
+    });
+    container.append(col1).append(col2.append(col2Txt).append(dropdownarrow));
+    return container;
+}
+var globalChangeContainer={};
+function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,containerId) {
+    var hideclass="";
     var txtAlignClas="";
-    if(key=="tax"||key=="Insurance")
+    if(key=="tax"||key=="Insurance"){
         txtAlignClas="tax-clas-Rate-page"
+        hideclass="hide"
+    }
+    var container = $('<div>').attr({
+        "class": "loan-summary-row clearfix no-border-bottom "+hideclass
+    });
+    if(containerId){
+        container .attr({
+            "id": containerId
+        });
+    }
+    
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left "+txtAlignClas
     }).html(desc);
@@ -965,8 +993,10 @@ function updateElementsOnSlide(rateVO,year){
     }
     
     if(refinanceOption == "REFMF"){
-        var proposedMonthlyPayment=(getFloatValue(rateVO.yearData)*getFloatValue(rateVO.payment))/12;
+        var proposedMonthlyPayment=(getFloatValue(rateVO.yearData)*getFloatValue(rateVO.payment)*12);
         $('#totPayProposedMortgage').html(showValue(proposedMonthlyPayment));
+
+
     }
     teaseCalculation(customerInputData);
     updateOnSlide(rateVO);

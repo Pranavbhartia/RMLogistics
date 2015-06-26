@@ -1933,16 +1933,20 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
 
 
 function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag) {
+    var clas="loan-summary-col-detail";
+    var paddingClass="";
+    if(lighterBackFlag){
+        clas="loan-summary-col-detail-light";
+    }else{
+        paddingClass="estimated-row-padding-clas";
+    }
     var container = $('<div>').attr({
-        "class": "loan-summary-last-row clearfix"
+        "class": "loan-summary-last-row clearfix "+paddingClass
     });
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
-    var clas="loan-summary-col-detail";
     
-    if(lighterBackFlag)
-        clas="loan-summary-col-detail-light";
     
     if(desc.indexOf('color="green"')>0){
         clas="loan-summary-green-col-detail";
