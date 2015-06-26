@@ -329,7 +329,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     }
 
     var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
-    leftCol.append(totHousingPayment);
+    rightCol.append(totHousingPayment);
 
     var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment));
     rightCol.append(toggletaxComponent);
