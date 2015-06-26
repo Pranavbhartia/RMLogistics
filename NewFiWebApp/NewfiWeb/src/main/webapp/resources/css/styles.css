@@ -620,7 +620,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-rp {
 	width: 50%;
-	padding: 0 15px 0 30px;
+	padding: 0 30px 0 15px;
 }
 
 .loan-summary-col-desc,.loan-summary-col-detail,.loan-summary-green-col-detail,.loan-summary-red-col-detail {
@@ -669,10 +669,11 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-last-row .loan-summary-col-detail-light{
 	width: 120px;
-	color:#fff;
-	font-size: 15px;
-	text-align: center;
-	background: #8DC2F0;
+	/*color:#fff;*/
+	color:#428bca;
+	font-size: 12px;
+	/*text-align: center;*/
+	/*background: #8DC2F0;*/
 	padding: 5px 10px;
   	border-radius: 3px;
 }
@@ -680,19 +681,21 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-last-row .loan-summary-red-col-detail{
 	width: 120px;
-	color:#fff;
-	font-size: 15px;
-	text-align: center;
-	background: #AB1010;
+	/*color:#fff;*/
+	color:#428bca;
+	font-size: 12px;
+	/*text-align: center;*/
+	/*background: #AB1010;*/
 	padding: 5px 10px;
   	border-radius: 3px;
 }
 .loan-summary-last-row .loan-summary-green-col-detail{
 	width: 120px;
-	color:#fff;
-	font-size: 15px;
-	text-align: center;
-	background: #2DB018;
+	/*color:#fff;*/
+	color:#428bca;
+	font-size: 12px;
+	/*text-align: center;*/
+	/*background: #2DB018;*/
 	padding: 5px 10px;
   	border-radius: 3px;
 }
@@ -5458,6 +5461,17 @@ a.session-login-btn {
     margin-right: 3px;    
     margin-bottom: 3px;
     font-family: 'opensanssemibold';    
+    padding: 10px 0 10px 20px;
+    width: 185px;
+    float: left;
+}
+
+.row-one-col-two {
+    line-height: 1px;
+    background-color: #F5F9FC;    
+    margin-right: 3px;    
+    margin-bottom: 3px;
+    font-family: 'opensanssemibold';    
     padding: 10px 0 10px 5px;
     width: 185px;
     float: left;
@@ -5468,7 +5482,7 @@ a.session-login-btn {
 }
 
 .tax-clas-Rate-page{
-	text-align: center;
+	padding-left: 40px;
 }
 
 
@@ -5478,12 +5492,17 @@ a.session-login-btn {
   	margin-bottom: 20px;
 }
 
-
-
 .total-es-clo-cost{
   border-color: rgb(165, 165, 165);	
 }
 
+.estimated-row-padding-clas{
+	padding: 10px 0 20px;
+}
+
+.tax-Ins-clas{
+	padding-left: 8px;
+}
 .homeowners-insurance-reserve{
   padding: 20px 10px;
 }

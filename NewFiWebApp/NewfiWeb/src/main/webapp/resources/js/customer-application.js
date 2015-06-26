@@ -5719,19 +5719,24 @@ function paintTeaserRatePageBasedOnLoanType(appUserDet){
         paintRefinanceSeeRates(parentContainer,createTeaserRateObjectForRefinance(appUserDet),true);
     }
 }
-function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
+function modifiyLockRateLoanAmt(amount1,amount2) {
     $('#overlay-loader').show();
-    loanAmount = getFloatValue(loanAmount);  
-    purchaseAmount = getFloatValue(purchaseAmount); 
+    amount1 = getFloatValue(amount1);  
+    amount2 = getFloatValue(amount2); 
     if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
-        appUserDetails.purchaseDetails.loanAmount=loanAmount-purchaseAmount;
-        appUserDetails.purchaseDetails.housePrice=loanAmount;
+        //for better understanding changed var names in this block
+        var purAmt=amount1;
+        var dwnPay=amount2;
+        appUserDetails.purchaseDetails.loanAmount=purAmt-dwnPay;
+        appUserDetails.purchaseDetails.housePrice=purAmt;
         appUserDetails.propertyTypeMaster.propertyTaxesPaid = $('#calTaxID2').val();
         appUserDetails.propertyTypeMaster.propertyInsuranceCost = $('#CalInsuranceID2').val();
     }else{
+        var currentLoanAmt=amount1;
+        var cashOut=amount2;
         var parentContainer=$('#center-panel-cont');
-        appUserDetails.refinancedetails.currentMortgageBalance=loanAmount;
-        appUserDetails.refinancedetails.cashTakeOut=purchaseAmount;
+        appUserDetails.refinancedetails.currentMortgageBalance=currentLoanAmt;
+        appUserDetails.refinancedetails.cashTakeOut=cashOut;
         appUserDetails.propertyTypeMaster.propertyTaxesPaid = $('#calTaxID2').val();
         appUserDetails.propertyTypeMaster.propertyInsuranceCost = $('#CalInsuranceID2').val();
     }
@@ -5765,6 +5770,7 @@ function modifiyLockRateLoanAmt(loanAmount,purchaseAmount) {
         
     });
 }
+
 
 $(document).on('click',function(){
 	$('.app-dropdown-cont').hide();
