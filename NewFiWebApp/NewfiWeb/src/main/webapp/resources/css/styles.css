@@ -608,7 +608,9 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-header-col2 {
-	font-size: 12px;
+	/* font-size: 12px; */
+	font-size: 11px;
+	margin-right:5px;
 }
 
 .loan-summary-lp {
@@ -1492,6 +1494,7 @@ input[type="button"]:focus, button:focus {
 
 .conv-message,.reply-cont {
 	margin-left: 60px;
+	word-wrap: break-word;
 }
 
 .conv-message {
@@ -4643,9 +4646,9 @@ input.calc-input {
     cursor:pointer;
     background: url(../images/Mail-icon.png) no-repeat 24px center;
     background-size: 28px;
-    line-height: 31px;
+/*     line-height: 31px; */
     margin-top: 6px;
-    padding-right:40px;
+  /*   padding-right:40px; */
     
 }
 
@@ -5475,23 +5478,7 @@ a.session-login-btn {
   	margin-bottom: 20px;
 }
 
-.page-header-loan{
-	font-size: 16px;
-	font-family: 'opensanssemiBold';
-	margin-right: 5px;
-	white-space: nowrap;
-}
 
-.rate-btn-alertRate-header {
-	font-size:16px;
-	font-family:'opensanssemiBold';
-	padding-right: 10px;
-}
-
-.ms-add-member-popup-adjustment:after {
-	right:0;
-	left:12px;
-}
 
 .total-es-clo-cost{
   border-color: rgb(165, 165, 165);	
