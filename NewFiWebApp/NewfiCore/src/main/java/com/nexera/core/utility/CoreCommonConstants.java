@@ -51,6 +51,8 @@ public interface CoreCommonConstants {
 	public static String SOAP_XML_RATE_LOCK_EXPIRED_DATE = "sRLckdExpiredD";
 
 	public static String SOAP_XML_LOCKED_RATE = "sBrokerLockOriginatorPriceNoteIR";
+	
+	public static String SOAP_XML_DOCS_OUT = "sDocsD";
 
 	// Borrower Credit Score Constants
 	public static String SOAP_XML_BORROWER_EQUIFAX_SCORE = "aBEquifaxScore";

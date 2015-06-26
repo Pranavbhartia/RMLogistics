@@ -330,7 +330,7 @@ public class WorkflowConstants {
 
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_APPROVED,
-		        new WorkItemMilestoneInfo(Milestones.UW, null,
+		        new WorkItemMilestoneInfo(Milestones.LOAN_APPROVED, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_APPROVED)));
 		LQB_STATUS_MILESTONE_LOOKUP
