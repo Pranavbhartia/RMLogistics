@@ -2064,42 +2064,43 @@ function getClosingCostTopConatiner() {
         "class": "closing-cost-container"
     });
     var headerCon1 = getClosingCostConatinerHeader("Estimated Lender Costs");
-    var row1Con1 = getClosingCostContainerRow(1, getClosingCostLabel("Lender Fee"), "$ 1,495.00");
-    var row2Con1 = getClosingCostContainerRow(2, getClosingCostLabel("This is your cost or credit based on rate selected"), "$ 5,128.75");
-    var row3Con1 = getClosingCostContainerLastRow(3, getClosingCostLabel("Estimated Lender Costs"), "$ 6,623.75");
+    var row1Con1 = getClosingCostContainerRow(1, getClosingCostLabel("Lender Fee"), "");
+    var row2Con1 = getClosingCostContainerRow(2, getClosingCostLabel("This is your cost or credit based on rate selected"), "");
+    var row3Con1 = getClosingCostContainerLastRow(3, getClosingCostLabel("Estimated Lender Costs"), "");
     container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1);
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
     var headerCon2 = getClosingCostConatinerHeader("Estimated Third Party Costs");
-    var row1Con2 = getClosingCostContainerRow(1, getClosingCostLabel("Appraisal Fee"), "$ 455.00");
-    var row2Con2 = getClosingCostContainerRow(2, getClosingCostLabel("Credit Report"), "$ 455.00");
-    var row3Con2 = getClosingCostContainerRow(3, getClosingCostLabel("Flood Certification"), "$ 455.00");
-    var row4Con2 = getClosingCostContainerRow(4, getClosingCostLabel("Wire Fee"), "$ 455.00");
+    var row1Con2 = getClosingCostContainerRow(1, getClosingCostLabel("Appraisal Fee"), "");
+    var row2Con2 = getClosingCostContainerRow(2, getClosingCostLabel("Credit Report"), "");
+    var row3Con2 = getClosingCostContainerRow(3, getClosingCostLabel("Flood Certification"), "");
+    var row4Con2 = getClosingCostContainerRow(4, getClosingCostLabel("Wire Fee"), "");
     var row4_1Con2;
     if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
-        row4_1Con2 = getClosingCostContainerRow(5, getClosingCostLabel("Owners Title Insurance"), "$ 450.00");
-    var row5Con2 = getClosingCostContainerRow(5, getClosingCostLabel("Lenders Title Insurance"), "$ 450.00");
-    var row6Con2 = getClosingCostContainerRow(6, getClosingCostLabel("Closing/Escrow Fee"), "$ 500.00");
-    var row7Con2 = getClosingCostContainerRow(7, getClosingCostLabel("Recording Fee"), "$ 107.00");
+        row4_1Con2 = getClosingCostContainerRow(5, getClosingCostLabel("Owners Title Insurance"), "");
+    var row5Con2 = getClosingCostContainerRow(5, getClosingCostLabel("Lenders Title Insurance"), "");
+    var row6Con2 = getClosingCostContainerRow(6, getClosingCostLabel("Closing/Escrow Fee"), "");
+    var row7Con2 = getClosingCostContainerRow(7, getClosingCostLabel("Recording Fee"), "");
     var row8Con2;
     if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
     	//NEXNF-483
         //row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
-    row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
-    var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "$ 1,562.00");
+    row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "");
+    var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
     
     var container3 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon3 = getClosingCostConatinerHeader("Estimated Prepaids");
-    var row1Con3 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "$ 699.40","");
-    var row2Con3 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "$ 455.00");
-    var row3Con3 = getClosingCostContainerLastRow(3, getClosingCostLabel("Total Prepaids"), "$ 699.40");
-    var row10Con3 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "$ 8,162.00");
+    //var headerCon3 = getClosingCostConatinerHeader("Estimated Prepaids");
+   // var row1Con3 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "","");
+    //var row2Con3 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "");
+    //var row3Con3 = getClosingCostContainerLastRow(3, getClosingCostLabel("Total Prepaids"), "");
+    var row10Con3 = getClosingCostContainerLastRow(10, getClosingCostLabel("Total Estimated Closing Cost"), "");
     
-    container3.append(headerCon3).append(row1Con3).append(row2Con3).append(row3Con3).append(row10Con3);
+    //container3.append(headerCon3).append(row1Con3).append(row2Con3).append(row3Con3).append(row10Con3);
+    container3.append(row10Con3);
     
     //return wrapper.append(heading).append(container1).append(container2).append(container3);
     return wrapper.append(container1).append(container2).append(container3);
@@ -2114,14 +2115,22 @@ function getClosingCostBottomConatiner() {
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon2 = getClosingCostConatinerHeader("Estimated Reserves Deposited in Escrow Account");
+    var headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrows");
     //NEXNF-569
+    
+    var row1Con3 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "","");
+    var row2Con3 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "");
+    
     var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");
     var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
     //var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
     //var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
-    var row4Con2 = getClosingCostContainerLastRow(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "$ 3,216.00");
-    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
+    var row4Con2 = getClosingCostContainerLastRow(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "");
+    
+    
+    //container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
+    container2.append(headerCon2).append(row1Con3).append(row2Con3).append(row1Con2).append(row2Con2).append(row4Con2);
+    
     var bottomSubText = $('<div>').attr({
         "class": "closing-cost-bot-row eng-closing-cost-note"
     }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
@@ -2159,16 +2168,18 @@ function getClosingCostContainerLastRow(rowNum, desc, detail) {
         detail=closingCostHolder.valueSet[key];
     }
     
+    var cssclass ="closing-cost-cont-desc-row clearfix";
     if(desc != "Total Estimated Prepaids"){
-    
-    	var row = $('<div>').attr({
-            "class": "closing-cost-cont-desc-row clearfix light-solid-line"
-        });
-    }else{
-    	var row = $('<div>').attr({
-            "class": "closing-cost-cont-desc-row clearfix"
-        });
+    	cssclass ="closing-cost-cont-desc-row clearfix light-solid-line";
     }
+    if(desc == "Total Estimated Closing Costs"){
+    	cssclass ="closing-cost-cont-desc-row clearfix light-solid-line total-es-clo-cost";
+    }
+    
+    var row = $('<div>').attr({
+        "class": cssclass
+    });
+
     
     if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
@@ -2258,9 +2269,18 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
         "class": "subtext"
     }).html(subtext);
     rowDesc.append(descText).append(subTextDiv);
+    
+    
+    var cssClass = "closing-cost-detail float-left";
+    
+    if(desc=="Homeowners Insurance Reserve - Estimated 2 Months" || desc=="Tax Reserve - Estimated 2 Months"){
+    	cssClass = "closing-cost-detail float-left homeowners-insurance-reserve";
+    }
+    
     var rowDetail = $('<div>').attr({
-        "class": "closing-cost-detail float-left"
+        "class":cssClass
     }).html(detail);
+    
     var rwObj=getRowHolderObject(rowDetail,detail,key);
     closingCostHolder[key]=rwObj;
     rwObj.updateView();

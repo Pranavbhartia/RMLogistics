@@ -743,12 +743,14 @@ input[type="button"]:focus, button:focus {
 }
 .closing-cost-detail {
 	width: 25%;
-	padding: 5px 0;
+	padding: 10px 10px;
 }
 
 .closing-cost-cont-desc-row {
 	min-height: 35px;
 	border-top: 1px #E9E9E9 dashed;
+	border-left: 1px #E9E9E9 solid;
+    border-right: 1px #E9E9E9 solid
 }
 
 .dropdown-arrow {
@@ -861,7 +863,7 @@ input[type="button"]:focus, button:focus {
 	padding: 5px 0 5px 5px;
 	font-size: 12px;
 	font-family: 'opensanslight';
-	border-top: 1px #E9E9E9 dashed;
+	/*border-top: 1px #E9E9E9 dashed;*/
 }
 .eng-closing-cost-note{
 	font-size:10px;
@@ -872,8 +874,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .closing-cost-wrapper {
-	border-bottom: 1px #E9E9E9 solid;
-	  border: 1px solid #fafafa;
+	/*border-bottom: 1px #E9E9E9 solid;
+	  border: 1px solid #fafafa;*/
 	    margin-bottom: 2%;
 }
 
@@ -5489,4 +5491,12 @@ a.session-login-btn {
 .ms-add-member-popup-adjustment:after {
 	right:0;
 	left:12px;
+}
+
+.total-es-clo-cost{
+  border-color: rgb(165, 165, 165);	
+}
+
+.homeowners-insurance-reserve{
+  padding: 20px 10px;
 }
