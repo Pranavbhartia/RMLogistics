@@ -94,8 +94,7 @@ public class WorkflowConstants {
 	private static final List<Integer> APPRAISAL_LIST = new ArrayList<Integer>(
 	        Arrays.asList(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED
 	                .getLosStatusID(), LOSLoanStatus.LQB_STATUS_DOCS_DRAWN
-	                .getLosStatusID(), LOSLoanStatus.LQB_STATUS_DOCS_OUT
-	                .getLosStatusID(), LOSLoanStatus.LQB_STATUS_DOCS_BACK
+	                .getLosStatusID(),  LOSLoanStatus.LQB_STATUS_DOCS_BACK
 	                .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
 	                        .getLosStatusID(),
@@ -185,7 +184,7 @@ public class WorkflowConstants {
 		        UW_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PRE_APPROVED,
 		        UW_LIST);
-		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED, UW_LIST);
+		//MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED, UW_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW,
 		        UW_LIST);
 		MILESTONE_ORDER_LOOKUP.put(
@@ -198,8 +197,6 @@ public class WorkflowConstants {
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
 		        APPRAISAL_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN,
-		        APPRAISAL_LIST);
-		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_OUT,
 		        APPRAISAL_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_BACK,
 		        APPRAISAL_LIST);
@@ -365,11 +362,7 @@ public class WorkflowConstants {
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN)));
-		LQB_STATUS_MILESTONE_LOOKUP.put(
-		        LOSLoanStatus.LQB_STATUS_DOCS_OUT,
-		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
-		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_OUT)));
+		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_BACK,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,

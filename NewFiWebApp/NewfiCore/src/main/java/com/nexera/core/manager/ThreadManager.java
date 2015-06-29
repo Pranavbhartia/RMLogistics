@@ -244,20 +244,27 @@ public class ThreadManager implements Runnable {
 								loanService.updateLoan(loan);
 							}
 							if (docsoutDate != null) {
+								LoanMilestoneMaster lmMaster = getLoanMilestoneMasterBasedOnMilestone(Milestones.DOCS_OUT);
+								LoanMilestone loanMilestone = getLoanMilestone(
+								        loan, lmMaster);
 								// Update Docs Out milestone here.
-								LoanMilestone loanMilestone = new LoanMilestone();
-								LOSLoanStatus loanStatus = LOSLoanStatus.LQB_STATUS_DOCS_OUT;
-								loanMilestone.setLoan(loan);
-								loanMilestone
-								        .setLoanMilestoneMaster(getLoanMilestoneMasterBasedOnMilestone(Milestones.DOCS_OUT));
-								loanMilestone.setStatusUpdateTime(new Date(
-								        System.currentTimeMillis()));
-								loanMilestone.setStatus(String
-								        .valueOf(loanStatus.getLosStatusID()));
-								loanMilestone.setComments(loanStatus
-								        .getDisplayStatus());
-								loanMilestone.setOrder(loanStatus.getOrder());
-								saveLoanMilestone(loanMilestone);
+								if (loanMilestone == null) {
+									loanMilestone = new LoanMilestone();
+									LOSLoanStatus loanStatus = LOSLoanStatus.LQB_STATUS_DOCS_OUT;
+									loanMilestone.setLoan(loan);
+									loanMilestone
+									        .setLoanMilestoneMaster(getLoanMilestoneMasterBasedOnMilestone(Milestones.DOCS_OUT));
+									loanMilestone.setStatusUpdateTime(new Date(
+									        System.currentTimeMillis()));
+									loanMilestone.setStatus(String
+									        .valueOf(loanStatus
+									                .getLosStatusID()));
+									loanMilestone.setComments(loanStatus
+									        .getDisplayStatus());
+									loanMilestone.setOrder(loanStatus
+									        .getOrder());
+									saveLoanMilestone(loanMilestone);
+								}
 							}
 
 							LOSLoanStatus loanStatusID = null;
