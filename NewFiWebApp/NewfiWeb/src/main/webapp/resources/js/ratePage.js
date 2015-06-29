@@ -47,7 +47,7 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     if(!hideCreateAccountBtn && teaserRateValHolder.teaserRate){
         rateBtn2 = $('<div>').attr({
             "class": "rate-btn-alertRate rate-btn-alertRate-header float-right"
-        }).html("Email This Quote").on('click', function() {
+        }).html("email this quote").on('click', function() {
             var emailQuote = true;
             var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
             if(teaserRateValHolder.teaserRate){
@@ -912,8 +912,8 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
     }
     else if(key=="purchasePrice"||key=="cashOut"){
         var saveBtn = $('<div>').attr({
-            "class" : "cep-button-color sm-save-btn float-right"
-        }).html("Update").on('click',{"path":undefined},function(e){
+            "class" : "cep-button-color-orange sm-save-btn float-right"
+        }).html("update").on('click',{"path":undefined},function(e){
             var flag=globalChangeContainer.flag;
             if(flag){
                 amt = $('#firstInput').val();
