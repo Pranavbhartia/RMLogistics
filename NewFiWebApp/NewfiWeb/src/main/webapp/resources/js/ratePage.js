@@ -472,6 +472,27 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
 
     return parentWrapper;
 }
+function getLoanSummaryRow(desc, detail, id,containerId,hideFlag) {
+    var clas="";
+    if(hideFlag)
+        clas="hide";
+    var container = $('<div>').attr({
+        "class": "loan-summary-row loan-summary-row-border-adj clearfix "+clas
+    });
+    if(containerId)
+        container.attr({
+            "id":containerId
+        });
+    var col1 = $('<div>').attr({
+        "class": "loan-summary-col-desc float-left"
+    }).html(desc);
+    var col2 = $('<div>').attr({
+        "class": "loan-summary-col-detail float-left",
+        "id": id
+    }).html(detail).val(detail);
+    container.append(col1).append(col2);
+    return container;
+}
 
 
 function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
