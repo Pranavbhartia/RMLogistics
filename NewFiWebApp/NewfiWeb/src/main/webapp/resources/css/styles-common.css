@@ -328,3 +328,9 @@ k}
 	width: 113px;
 	margin: 0 auto;
 }
+
+.closing-cost-cont-desc-header-adj {
+	border-left: 1px #E9E9E9 solid;
+	border-right: 1px #E9E9E9 solid;
+	border-top: 1px #E9E9E9 solid;
+}
