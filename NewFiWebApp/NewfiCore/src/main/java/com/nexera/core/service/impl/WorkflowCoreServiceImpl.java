@@ -14,6 +14,9 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.enums.Milestones;
+import com.nexera.common.vo.LoanMilestoneVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.workflow.bean.WorkflowExec;
@@ -35,6 +38,22 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 	@Autowired
 	private WorkflowService workflowService;
 
+	@Override
+	public List<LoanMilestoneVO> getMilestones(int loanId) {
+
+		
+		List<LoanMilestoneVO> milestonesList = new ArrayList<LoanMilestoneVO>();
+		Loan loan = new Loan(loanId);
+		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.DOCS_OUT.getMilestoneKey());
+		if (mileStone!= null)
+		milestonesList.add(LoanMilestoneVO.convertFromEntityToVO(mileStone));
+		LoanMilestone mileStone1 = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.LOAN_APPROVED.getMilestoneKey());
+		if (mileStone1!= null)
+		milestonesList.add(LoanMilestoneVO.convertFromEntityToVO(mileStone1));
+		return milestonesList;
+	}
 	@Override
 	@Transactional
 	public void createWorkflow(WorkflowVO workflowVO) throws Exception {

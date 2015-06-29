@@ -26,6 +26,8 @@ var workFlowContext = {
 	mileStoneStepsStructured : [],
 	milestoneStepsLookup:{},
 	mileStoneContextList : {},
+	mileStoneStatuses:[],
+	mileStoneStatusLookup:{},
 	getWorkflowID : function(callback) {
 		var ob = this;
 		var data = {};
@@ -103,6 +105,26 @@ var workFlowContext = {
 		});
 
 	},
+	getMilestonesStatusForLoan : function( callback) {
+		var ob = this;
+		var data = {};
+		
+		var ajaxURL = "rest/workflow/milestones/";		
+		ajaxURL = ajaxURL  + ob.loanId;		
+		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+			if (response.error) {
+				showToastMessage(response.error.message)
+			} else {
+				ob.mileStoneStatuses = response.resultObject;				
+				//Do somethng here	
+				ob.createMileStoneStatusLookup();
+			}
+			if (callback) {
+				callback(ob);
+			}
+		});
+
+	},
 	createMileStoneStepsLookup :function ()
 	{
 		var ob=this;
@@ -110,6 +132,18 @@ var workFlowContext = {
 		for ( stepNo = 0; stepNo < ob.mileStoneSteps.length; stepNo++)
 		{
 			ob.milestoneStepsLookup[ob.mileStoneSteps[stepNo].workflowItemType]=ob.mileStoneSteps[stepNo];
+		}
+	},
+	createMileStoneStatusLookup :function ()
+	{
+		var ob=this;
+		ob.mileStoneStatusLookup = {};
+		for ( stepNo = 0; stepNo < ob.mileStoneStatuses.length; stepNo++)
+		{
+			var loanMilestone = ob.mileStoneStatuses[stepNo];
+			var loanMilestoneName = loanMilestone.loanMilestoneMaster.name;
+			var loanMilestoneStatus = loanMilestone.status;
+			ob.mileStoneStatusLookup[loanMilestoneName]=loanMilestoneStatus;
 		}
 	},
 	structureParentChild:function(){
@@ -217,16 +251,21 @@ var workFlowContext = {
 	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
+			
 			ob.getMileStoneSteps(role, function(ob) {
-				ob.structureParentChild();
+				ob.structureParentChild();				
 				ob.renderMileStoneSteps(function(){
-					ob.fetchLatestStatus();
-					if (role != "AGENT")
-					{
+					ob.fetchLatestStatus();					
+				});
+				if (role != "AGENT")
+				{
+					ob.getMilestonesStatusForLoan(function (){								
 						showProgressHeaderSteps();
 					}
-				});
+					);
+				}
 			});
+			
 		});
 
 		if (callback) {
@@ -733,11 +772,23 @@ function showProgressHeaderSteps(){
 	msStep = workFlowContext.milestoneStepsLookup["LOCK_YOUR_RATE"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Rate Locked");
 	container.append(stepElement);	
-	msStep = workFlowContext.milestoneStepsLookup["VIEW_NEEDS"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Needs List");
+	
+	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
+	var docsOutLMStatusRep = "0";
+	if (docsOutLMStatus && docsOutLMStatus == "5")
+	{
+		docsOutLMStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 3, "Docs Ready");
 	container.append(stepElement);	
-	msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 4, "Application Fee");
+
+	var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
+	var loanApprovedLMStatusRep = "0";
+	if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
+	{
+		loanApprovedLMStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 4, "Loan Approved");
 	container.append(stepElement);	
 	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
