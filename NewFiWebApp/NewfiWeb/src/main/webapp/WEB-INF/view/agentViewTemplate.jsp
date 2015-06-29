@@ -14,6 +14,7 @@
 <link href="${initParam.resourcesPath}/resources/css/bootstrap-datetimepicker.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/dropzone.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
+<link href="${initParam.resourcesPath}/resources/css/styles-common.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/jquery.Jcrop.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/customer-application.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/customer-engagement.css" rel="stylesheet">
