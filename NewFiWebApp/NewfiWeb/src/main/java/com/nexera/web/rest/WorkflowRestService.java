@@ -127,30 +127,7 @@ public class WorkflowRestService {
 		LOG.debug("Loan ID for this workflow is " + loanID);
 		CommonResponseVO response = null;
 		try {
-			/*
-			 * 
-			 * List<LoanMilestoneVO> milestonesList = new
-			 * ArrayList<LoanMilestoneVO>(); LoanMilestoneVO loanMilestoneVO =
-			 * new LoanMilestoneVO(); LoanMilestoneMasterVO loanMSMaster = new
-			 * LoanMilestoneMasterVO();
-			 * loanMSMaster.setName(Milestones.DOCS_OUT.getMilestoneKey());
-			 * loanMilestoneVO
-			 * .setStatus(String.valueOf(LOSLoanStatus.LQB_STATUS_DOCS_OUT
-			 * .getLosStatusID()));
-			 * loanMilestoneVO.setLoanMilestoneMaster(loanMSMaster);
-			 * milestonesList.add(loanMilestoneVO);
-			 * 
-			 * LoanMilestoneVO loanMilestoneVO1 = new LoanMilestoneVO();
-			 * LoanMilestoneMasterVO loanMSMaster1 = new
-			 * LoanMilestoneMasterVO();
-			 * loanMSMaster1.setName(Milestones.LOAN_APPROVED
-			 * .getMilestoneKey());
-			 * loanMilestoneVO1.setStatus(String.valueOf(LOSLoanStatus
-			 * .LQB_STATUS_APPROVED.getLosStatusID()));
-			 * loanMilestoneVO1.setLoanMilestoneMaster(loanMSMaster1);
-			 * milestonesList.add(loanMilestoneVO1);
-			 * LOG.debug("Putting loan manager workflow into execution ");
-			 */
+
 			List<LoanMilestoneVO> milestonesList = workflowCoreService
 			        .getMilestones(loanID);
 			response = RestUtil.wrapObjectForSuccess(milestonesList);
