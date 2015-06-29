@@ -279,7 +279,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     });
     
     var container = $('<div>').attr({
-        "class": "clearfix"
+        "class": "lock-rate-header-val-cont-clas clearfix"
     });
     var leftCol = $('<div>').attr({
         "class": "loan-summary-lp float-left"
@@ -300,6 +300,19 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment ", showValue(principalInterest),"principalIntId");
     rightCol.append(bottomRcRow);
 
+    container = $('<div>').attr({
+        "class": "lock-ratebottom-summary-clas clearfix"
+    });
+    leftCol = $('<div>').attr({
+        "class": "loan-summary-lp float-left"
+    });
+    rightCol = $('<div>').attr({
+        "class": "loan-summary-rp float-right"
+    });
+    container.append(leftCol).append(rightCol);
+    
+    wrapper.append(container);
+
     if(refinanceOption == "REFCO"){
         var loanBalCol = getInputElmentRow("loanBal","Current Loan <br/>Balance",showValue(currentMortgageBalance),"firstInput",customerInputData);        
         var cashOutCol = getInputElmentRow("cashOut","Cash Out",showValue(cashTakeOut),"secondInput",customerInputData);
@@ -311,22 +324,22 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
         var proposedLoanAmtCol = getInputElmentRow("propLoanAmt","Proposed Loan<br/> Amount",showValue(loanAmount),"loanAmount",customerInputData);
         leftCol.append(proposedLoanAmtCol);
     }
-
-    if(refinanceOption == "REFMF"){
+    //NEXNF-603
+    /*if(refinanceOption == "REFMF"){
         var remainingPayment=(getFloatValue(monthlyPayment)*yearLeftOnMortgage*12);
         var currentMortgagePayment = getLoanSummaryLastRow("Remaining<br/> Payments<br/>Current Mortgage", showValue(remainingPayment),"monthlyPaymentId",true);
         leftCol.append(currentMortgagePayment);
         var proposedMonthlyPayment=(getFloatValue(rateVO.yearData)*getFloatValue(rateVO.payment)*12);
         var proposedPrincipalIns = getLoanSummaryLastRow("Total Payments<br/> Proposed Mortgage", showValue(proposedMonthlyPayment),"totPayProposedMortgage",true);
         leftCol.append(proposedPrincipalIns);
-        var monthlyDiff = getLoanSummaryLastRow('This Monthly<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
+        var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
         leftCol.append(monthlyDiff);
-    }else{
+    }else{*/
         var currentMortgagePayment = getLoanSummaryLastRow("Current<br/> Mortgage Payment", showValue(monthlyPayment),"monthlyPaymentId",true);
         rightCol.append(currentMortgagePayment);
-        var monthlyDiff = getLoanSummaryLastRow('This Monthly<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
+        var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
         rightCol.append(monthlyDiff);
-    }
+    /*}*/
 
     var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
     rightCol.append(totHousingPayment);
@@ -334,10 +347,12 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment));
     rightCol.append(toggletaxComponent);
 
-    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
+    //var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
+    var taxRow = getLoanSummaryRow("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
     rightCol.append(taxRow);
 
-    var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
+    //var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
+    var taxRow = getLoanSummaryRow("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
     rightCol.append(taxRow);
 
     
@@ -398,13 +413,35 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     bottomRightCol.append(bottomRcRow);
 
    
-    var rcRow7 = getLoanSummaryLastRow('This Monthly<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
+    var rcRow7 = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
     bottomRightCol.append(rcRow7);
 
     
     bottomRow.append(bottomLeftCol).append(bottomRightCol);*/
-    
-    var tableContaner=$('<div>').attr({
+    var grp=$('<div>').attr({
+        "class": "loan-rate-tableRow-container"
+    });
+    var loanTypeRow=getLoanTableSummary("Loan Type", "Refinance", "loanType");
+    grp.append(loanTypeRow);
+
+    var loanProgRow=getLoanTableSummary("Loan Program", rateVO.yearData +" Year Fixed", "loanprogramId");
+    grp.append(loanProgRow);
+    leftCol.append(grp);
+    grp=$('<div>').attr({
+        "class": "loan-rate-tableRow-container"
+    });
+    var val="";
+    if(rateVO.teaserRate)
+        val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
+    var interestRateRow=getLoanTableSummary("Interest Rate", val, "teaserRateId");
+    grp.append(interestRateRow);
+
+
+    var aprRow=getLoanTableSummary("APR",rateVO.APR +" %", "aprid");
+    grp.append(aprRow);
+    leftCol.append(grp);
+    //NEXNF-621
+    /*var tableContaner=$('<div>').attr({
         "class": "clearfix"
     });
 
@@ -430,7 +467,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     tabLeftColumn.append(loanProgCol);
 
     var aprCol=getTableRow("apr","APR",rateVO.APR +" %","aprid");
-    tabRightColumn.append(aprCol);
+    tabRightColumn.append(aprCol);*/
 
     return parentWrapper;
 }
@@ -517,13 +554,15 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment));
     rightCol.append(toggletaxComponent);
 
-    var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
+    //var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
+    var taxRow = getLoanSummaryRow("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
     rightCol.append(taxRow);
 
     var dwnPayment = getInputElmentRow("downPayment","Down Payment",showValue(downPayment),"secondInput",customerInputData);
     leftCol.append(dwnPayment);
 
-    var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
+    //var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
+    var taxRow = getLoanSummaryRow("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
     rightCol.append(taxRow);
 
     var proposedLoanAmt = getLoanSummaryLastRow("Proposed Loan<br/>Amount", showValue(loanAmount) ,"loanAmount",true);
@@ -665,7 +704,10 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
-        buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
+        if(typeof(newfiObject)!=="undefined"&&teaserRateValHolder.teaserRate)
+            buttonWrapper="";
+        else
+            buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
     }
     else if (teaserRateValHolder.teaserRate)
     {
@@ -881,7 +923,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
                 hgLow='<font color="red"><b>Higher</b></font>';
             }
             var itm=$("#monthlyPaymentDifferenceId").parent()[0]
-            $(itm).find(".loan-summary-col-desc").html('This Monthly<br/> Payment is '+hgLow+' by');
+            $(itm).find(".loan-summary-col-desc").html('Estimated Mortgage<br/> Payment is '+hgLow+' by');
             if(hgLow=='<font color="green"><b>Lower</b></font>'){
                 if(!($("#monthlyPaymentDifferenceId").hasClass("loan-summary-green-col-detail"))){
                     $("#monthlyPaymentDifferenceId").removeClass("loan-summary-red-col-detail");
@@ -930,7 +972,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
     }else if(key=="propLoanAmt"){
         var saveBtn = $('<div>').attr({
             "class" : "cep-button-color sm-save-btn float-right"
-        }).html("Save").on('click',{},function(){
+        }).html("Update").on('click',{},function(){
             var flag=globalChangeContainer.flag;
             if(flag){
                 amt = $('#loanAmount').val();
@@ -1109,7 +1151,7 @@ function teaseCalculation(inputCustomerDetails){
         hgLow='<font color="red"><b>Higher</b></font>';
         clas="loan-summary-red-col-detail";
     }
-    textDiv.html('This Monthly<br/> Payment is '+hgLow+' by');
+    textDiv.html('Estimated Mortgage<br/> Payment is '+hgLow+' by');
     ele.addClass(clas);
 
 
@@ -1269,5 +1311,21 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
         }
         container.append(gridItemCont);
     }
+    return container;
+}
+
+
+function getLoanTableSummary(desc, detail, id) {
+    var container = $('<div>').attr({
+        "class": "loan-rate-tableRow-clas clearfix"
+    });
+    var col1 = $('<div>').attr({
+        "class": "loan-summary-col-desc float-left"
+    }).html(desc);
+    var col2 = $('<div>').attr({
+        "class": "loan-summary-col-detail float-left",
+        "id": id
+    }).html(detail);
+    container.append(col1).append(col2);
     return container;
 }
