@@ -5529,3 +5529,7 @@ a.session-login-btn {
 .loan-rate-tableRow-container{
 	margin-top: 10px;
 }
+
+.loan-summary-row-border-adj {
+	border: none;
+}
