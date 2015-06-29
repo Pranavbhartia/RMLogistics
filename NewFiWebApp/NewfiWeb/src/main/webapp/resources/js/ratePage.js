@@ -984,8 +984,8 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
         container.append(col1).append(col2.append(saveBtn));
     }else if(key=="propLoanAmt"){
         var saveBtn = $('<div>').attr({
-            "class" : "cep-button-color sm-save-btn float-right"
-        }).html("Update").on('click',{},function(){
+            "class" : "cep-button-color-orange sm-save-btn float-right"
+        }).html("update").on('click',{},function(){
             var flag=globalChangeContainer.flag;
             if(flag){
                 amt = $('#loanAmount').val();
