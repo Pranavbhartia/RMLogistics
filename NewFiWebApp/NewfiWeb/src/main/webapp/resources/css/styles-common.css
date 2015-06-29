@@ -335,6 +335,7 @@ k}
 	border-top: 1px #E9E9E9 solid;
 }
 
+/* NEXNF-619 */
 .cep-button-color-orange {
 	background: #F47521;
 }
@@ -342,3 +343,4 @@ k}
 .cep-button-color-orange:hover {
 	background: rgba(24,72,141,0.9);
 }
+/* NEXNF-619  end */
