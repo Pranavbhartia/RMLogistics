@@ -2170,6 +2170,10 @@ function getClosingCostConatinerHeader(text) {
     var header = $('<div>').attr({
         "class": "closing-cost-cont-desc-header"
     }).html(text);
+    
+    //NEXNF-622
+    header.addClass('closing-cost-cont-desc-header-adj');
+    
     return header;
 }
 
@@ -2183,6 +2187,7 @@ function getClosingCostContainerLastRow(rowNum, desc, detail) {
     if(desc != "Total Estimated Prepaids"){
     	cssclass ="closing-cost-cont-desc-row clearfix light-solid-line";
     }
+    
     if(desc == "Total Estimated Closing Costs"){
     	cssclass ="closing-cost-cont-desc-row clearfix light-solid-line total-es-clo-cost";
     }
@@ -2191,10 +2196,15 @@ function getClosingCostContainerLastRow(rowNum, desc, detail) {
         "class": cssclass
     });
 
-    
-    if (rowNum % 2 == 0) {
+    //NEXNF-622
+/*    if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
-    }
+    }*/
+    
+
+        row.addClass("closing-cost-cont-desc-row-even");
+
+    
     var rowDesc = $('<div>').attr({
         "class": "closing-cost-desc float-left"
     }).html(desc);
@@ -2216,13 +2226,17 @@ function getClosingCostContainerRow(rowNum, desc, detail) {
     var row = $('<div>').attr({
         "class": "closing-cost-cont-desc-row clearfix"
     });
-    if (rowNum % 2 == 0) {
-        row.addClass("closing-cost-cont-desc-row-even");
-    }
+    //NEXNF-622
+   /* if (rowNum % 2 == 0) {
+    	 row.addClass("closing-cost-cont-desc-row-even");
+    }*/
     //NEXNF-483 and updated for 6.17 updates
     // NEXNF-537
     if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || desc =="Your cost or credit based on rate selected"){
     	indentTextFlag=true;
+    }else{
+    	//NEXNF-622
+    	 row.addClass("closing-cost-cont-desc-row-even");
     }
     var rowDesc="";
     if(indentTextFlag){
@@ -2255,9 +2269,10 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     var row = $('<div>').attr({
         "class": "closing-cost-cont-desc-row clearfix"
     });
-    if (rowNum % 2 == 0) {
+    //NEXNF-622
+   /* if (rowNum % 2 == 0) {
         row.addClass("closing-cost-cont-desc-row-even");
-    }
+    }*/
 
     //NEXNF-483
     //NEXNF-578
@@ -2269,6 +2284,8 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     	   var rowDesc = $('<div>').attr({
     	        "class": "closing-cost-desc float-left"
     	    });
+    	 //NEXNF-622
+    	   row.addClass("closing-cost-cont-desc-row-even");
     }
 /*    var rowDesc = $('<div>').attr({
         "class": "closing-cost-desc eng-indentfloat-left"
