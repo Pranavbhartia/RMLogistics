@@ -349,11 +349,11 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     rightCol.append(toggletaxComponent);
 
     //var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
-    var taxRow = getLoanSummaryRow("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
+    var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
     rightCol.append(taxRow);
 
     //var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
-    var taxRow = getLoanSummaryRow("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
+    var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
     rightCol.append(taxRow);
 
     
@@ -472,7 +472,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
 
     return parentWrapper;
 }
-function getLoanSummaryRow(desc, detail, id,containerId,hideFlag) {
+function getLoanSummaryRowRatePage(desc, detail, id,containerId,hideFlag) {
     var clas="";
     if(hideFlag)
         clas="hide";
@@ -590,14 +590,14 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     rightCol.append(toggletaxComponent);
 
     //var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
-    var taxRow = getLoanSummaryRow("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
+    var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
     rightCol.append(taxRow);
 
     var dwnPayment = getInputElmentRow("downPayment","Down Payment",showValue(downPayment),"secondInput",customerInputData);
     leftCol.append(dwnPayment);
 
     //var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
-    var taxRow = getLoanSummaryRow("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
+    var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
     rightCol.append(taxRow);
 
     var proposedLoanAmt = getLoanSummaryLastRow("Proposed Loan<br/>Amount", showValue(loanAmount) ,"loanAmount",true);
