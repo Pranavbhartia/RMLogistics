@@ -1209,10 +1209,10 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
             $('#principalIntId').html(showValue(gridArray[ui.value].payment));
             
             teaseCalculation(inputCustomerDetails);*/
-            var ratVo=gridArray[ui.value];
-            ratVo.yearData=yearValue
+            /*var ratVo=gridArray[ui.value];
+            ratVo.yearData=yearValue*/
             /*updateOnSlide(ratVo);*/
-            globalChangeContainer.ratVo=ratVo;
+            /*globalChangeContainer.ratVo=ratVo;
             updateElementsOnSlide(ratVo);
         }
     });
