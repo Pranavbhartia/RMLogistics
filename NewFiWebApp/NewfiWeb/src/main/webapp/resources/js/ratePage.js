@@ -534,7 +534,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     });
     
     var container = $('<div>').attr({
-        "class" : "clearfix"
+        "class" : "lock-rate-header-val-cont-clas clearfix"
     });
     var leftCol = $('<div>').attr({
         "class": "loan-summary-lp float-left"
@@ -542,12 +542,25 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var rightCol = $('<div>').attr({
         "class": "loan-summary-rp float-right"
     });
+    container.append(leftCol).append(rightCol);
+    wrapper.append(container);
 
     var estClosingCostRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
     leftCol.append(estClosingCostRow);
 
     var estMonthlyPaymnt = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment", showValue(rateVO.payment) ,"principalIntId");
     rightCol.append(estMonthlyPaymnt);
+
+    container = $('<div>').attr({
+        "class": "lock-ratebottom-summary-clas clearfix"
+    });
+    leftCol = $('<div>').attr({
+        "class": "loan-summary-lp float-left"
+    });
+    rightCol = $('<div>').attr({
+        "class": "loan-summary-rp float-right"
+    });
+    container.append(leftCol).append(rightCol);
 
     var purchasePrice = getInputElmentRow("purchasePrice","Purchase Price",showValue(housePrice),"firstInput",customerInputData);
     leftCol.append(purchasePrice);
@@ -572,7 +585,6 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var estHousngPaymnt = getLoanSummaryLastRow("Estimated<br/>Housing Payment", showValue(totEstHousingPayment) ,"totalEstMonthlyPaymentId",true);
     rightCol.append(estHousngPaymnt);
 
-    container.append(leftCol).append(rightCol);
     //NEXNF-483
    // var lcRow1 = getLoanSummaryRow("Loan Type", "Purchase -"+livingSituation);  
 
