@@ -4536,11 +4536,12 @@ input.calc-input {
 }
 
 .lock-rate-slider-container {
-    margin: 10px 0;
+    margin: 0px 0;
     padding: 10px 60px;
     background: #fCfcfc;
-    border: 1px  dashed #cecece;
-    border-radius: 3px;
+    border: 1px  solid #cecece;
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
 }
 
 .slider-wrapper {
@@ -5506,4 +5507,25 @@ a.session-login-btn {
 }
 .homeowners-insurance-reserve{
   padding: 20px 10px;
+}
+
+
+.lock-rate-header-val-cont-clas {
+    margin: 0px 0;
+    padding: 10px 60px;
+    background: #fCfcfc;
+    border: 1px  solid #cecece;
+    border-top: 0;
+    border-radius: 0 0 3px 3px;
+}
+.lock-ratebottom-summary-clas{
+	margin: 15px 0 0 0;
+}
+
+.loan-rate-tableRow-clas {
+	line-height: 15px;
+	padding: 10px 0;
+}
+.loan-rate-tableRow-container{
+	margin-top: 10px;
 }

@@ -1757,17 +1757,24 @@ function getLoanAmountRow(desc, detail, id,row1Desc,row1Val,row2Desc,row2Val) {
     return container.append(loanAmountCont);
 }
 
-function getLoanSummaryRow(desc, detail, id) {
+function getLoanSummaryRow(desc, detail, id,containerId,hideFlag) {
+    var clas="";
+    if(hideFlag)
+        clas="hide";
     var container = $('<div>').attr({
-        "class": "loan-summary-row clearfix"
+        "class": "loan-summary-row clearfix "+clas
     });
+    if(containerId)
+        container.attr({
+            "id":containerId
+        });
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
     var col2 = $('<div>').attr({
         "class": "loan-summary-col-detail float-left",
         "id": id
-    }).html(detail);
+    }).html(detail).val(detail);
     container.append(col1).append(col2);
     return container;
 }
