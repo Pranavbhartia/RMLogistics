@@ -1182,7 +1182,7 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
     return wrapper.append(headerTxt).append(silderCont);
 }
 
-function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
+/*function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
     
     
     var rateArray = [];
@@ -1231,8 +1231,67 @@ function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
         gridItemCont.append(gridItem);
     }
     return container.append(gridItemCont);
-}
+}*/
 
+function getRatSliderCEP(gridArray,inputCustomerDetails,yearValue) {
+    
+    
+    var rateArray = [];    
+    var container = $('<div>').attr({
+        "class": "silder-cont yr-slider rate-slider float-left"
+    });
+    
+    for (var i = 0; i < gridArray.length; i++) {
+        rateArray[i] = parseFloat(gridArray[i].teaserRate).toFixed(3);
+    }
+    index = parseInt(rateArray.length / 2);
+    for (var i = 0; i < gridArray.length; i++) { 
+        var leftOffset = i / (gridArray.length - 1) * 100;
+        var gridItemCont = $('<div>').attr({
+            "class": "yr-grid-cont"
+        });
+        var selectIcon = $('<div>').attr({
+            "class": "yr-slider-icon rate",
+        }).css({
+            "left": leftOffset + "%"
+        }).bind('click', {  
+            "value":  i,
+        }, function(event) {
+            if (!$(this).hasClass('yr-slider-icon-selected')) {
+                $('.yr-grid-cont .yr-slider-icon.rate').removeClass('yr-slider-icon-selected');
+                $(this).addClass('yr-slider-icon-selected');
+                $('.yr-grid-cont.rate .yr-grid-item').show();
+                /*$('#aprid').html(gridArray[ui.value].APR +" %");
+                $('#closingCostId').html(showValue(gridArray[ui.value].closingCost));
+                $('#teaserRateId').html(parseFloat(gridArray[ui.value].teaserRate).toFixed(3) +" %");
+                $('#principalIntId').html(showValue(gridArray[ui.value].payment));
+                
+                teaseCalculation(inputCustomerDetails);*/
+                var ratVo=gridArray[event.data.value];
+                ratVo.yearData=yearValue
+                /*updateOnSlide(ratVo);*/
+                globalChangeContainer.ratVo=ratVo;
+                updateElementsOnSlide(ratVo);
+                    
+                               
+            }
+        });
+        var gridItem = $('<div>').attr({
+            "class": "yr-grid-item"
+        }).css({
+            "left": leftOffset + "%"
+        }).html(parseFloat(gridArray[i].teaserRate).toFixed(3) + "%");
+       
+        gridItemCont.append(selectIcon).append(gridItem);
+
+        container.append(gridItemCont);
+        if (i == index) {
+            selectIcon.addClass('yr-slider-icon-selected');
+            
+        }
+    }
+    return container;
+}
 
 function getYearSliderContCEP1(teaserRate,inputCustomerDetails) {
     var wrapper = $('<div>').attr({
@@ -1274,7 +1333,7 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
                 $('.yr-grid-cont .yr-grid-item').show();
                 $(this).parent().find('.yr-grid-item').hide();
                 $(this).parent().find('.yr-grid-item-selected').show();
-                $('#rate-slider-cont').find('.rt-slider').remove();
+                $('#rate-slider-cont').find('.yr-slider').remove();
                 var rateSlider = getRatSliderCEP(event.data.ratesArray,inputCustomerDetails,event.data.year);
                 $('#rate-slider-cont').append(rateSlider);
                 index = parseInt(event.data.ratesArray.length / 2);
