@@ -267,7 +267,8 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
         if(principalInterest<monthlyPayment){
             hgLow='<font color="green"><b>Lower</b></font>';
     }else{
-        hgLow='<font color="red"><b>Higher</b></font>';
+        //hgLow='<font color="red"><b>Higher</b></font>';
+        hgLow='<font ><b>Higher</b></font>';
     }
 
 
@@ -1148,7 +1149,8 @@ function teaseCalculation(inputCustomerDetails){
         hgLow='<font color="green"><b>Lower</b></font>';
         clas="loan-summary-green-col-detail";
     }else{
-        hgLow='<font color="red"><b>Higher</b></font>';
+        //hgLow='<font color="red"><b>Higher</b></font>';
+        hgLow='<font ><b>Higher</b></font>';
         clas="loan-summary-red-col-detail";
     }
     textDiv.html('Estimated Mortgage<br/> Payment is '+hgLow+' by');
