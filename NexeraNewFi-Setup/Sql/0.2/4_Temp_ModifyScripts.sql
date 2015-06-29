@@ -64,3 +64,6 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='14' WHERE `id`='
 UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='16' WHERE `id`='35';
 
 UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='17' WHERE `id`='36';
+
+
+#New milestones 26.6

@@ -2,6 +2,7 @@ package com.nexera.web.rest;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,12 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EmailNotificationVo;
+import com.nexera.common.vo.LoanMilestoneMasterVO;
+import com.nexera.common.vo.LoanMilestoneVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MilestoneLoanTeamVO;
 import com.nexera.core.service.LoanService;
@@ -107,6 +112,26 @@ public class WorkflowRestService {
 			LoanVO loanVO = loanService.findWorkflowInfoById(loanID);
 			LOG.debug("Putting loan manager workflow into execution ");
 			response = RestUtil.wrapObjectForSuccess(loanVO);
+			LOG.debug("Response" + response);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			response = RestUtil.wrapObjectForFailure(null, "500",
+			        e.getMessage());
+		}
+		return response;
+	}
+
+	@RequestMapping(value = "milestones/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody CommonResponseVO getMilestoneStatuses(
+	        @PathVariable int loanID) {
+		LOG.debug("Loan ID for this workflow is " + loanID);
+		CommonResponseVO response = null;
+		try {
+
+			List<LoanMilestoneVO> milestonesList = workflowCoreService
+			        .getMilestones(loanID);
+			response = RestUtil.wrapObjectForSuccess(milestonesList);
+
 			LOG.debug("Response" + response);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());

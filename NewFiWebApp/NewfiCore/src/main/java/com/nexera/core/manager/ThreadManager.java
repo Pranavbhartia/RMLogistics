@@ -192,7 +192,8 @@ public class ThreadManager implements Runnable {
 						String lockStatus = null;
 						String lockexpirationDate = null;
 						String lockedRate = null;
-						Milestones milestones = null;
+						String docsoutDate = null;
+						Milestones theMilestone = null;
 						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 						if (loadResponseList != null) {
 							for (LoadResponseVO loadResponseVO : loadResponseList) {
@@ -220,6 +221,12 @@ public class ThreadManager implements Runnable {
 										lockedRate = loadResponseVO
 										        .getFieldValue();
 									}
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_DOCS_OUT)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										docsoutDate = loadResponseVO
+										        .getFieldValue();
+									}
 								}
 
 							}
@@ -235,6 +242,22 @@ public class ThreadManager implements Runnable {
 								}
 								loan.setLockStatus(lockStatus);
 								loanService.updateLoan(loan);
+							}
+							if (docsoutDate != null) {
+								// Update Docs Out milestone here.
+								LoanMilestone loanMilestone = new LoanMilestone();
+								LOSLoanStatus loanStatus = LOSLoanStatus.LQB_STATUS_DOCS_OUT;
+								loanMilestone.setLoan(loan);
+								loanMilestone
+								        .setLoanMilestoneMaster(getLoanMilestoneMasterBasedOnMilestone(Milestones.DOCS_OUT));
+								loanMilestone.setStatusUpdateTime(new Date(
+								        System.currentTimeMillis()));
+								loanMilestone.setStatus(String
+								        .valueOf(loanStatus.getLosStatusID()));
+								loanMilestone.setComments(loanStatus
+								        .getDisplayStatus());
+								loanMilestone.setOrder(loanStatus.getOrder());
+								saveLoanMilestone(loanMilestone);
 							}
 
 							LOSLoanStatus loanStatusID = null;
@@ -253,7 +276,7 @@ public class ThreadManager implements Runnable {
 
 									workflowItemExecList = new ArrayList<WorkflowItemExec>();
 								}
-								milestones = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
+								theMilestone = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
 								        .get(loanStatusID).getMilestone();
 								WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
 								if (wItemMSInfo != null) {
@@ -266,7 +289,6 @@ public class ThreadManager implements Runnable {
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_APPROVED
-								        || currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_CONDITION_REVIEW
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_UNDER_WRITING
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_FINAL_DOCS) {
@@ -297,11 +319,12 @@ public class ThreadManager implements Runnable {
 								} else if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
 									LOGGER.debug("These status are related to 1003 ");
 
+								} else if (currentLoanStatus == LoadConstants.LQB_STATUS_APPROVED) {
+									LOGGER.debug("Approved has now been received ");
 								}
-
 								LoanMilestoneMaster loanMilestoneMaster = null;
-								if (milestones != null) {
-									loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(milestones);
+								if (theMilestone != null) {
+									loanMilestoneMaster = getLoanMilestoneMasterBasedOnMilestone(theMilestone);
 									LOGGER.debug("Saving/Updating LoanMileStone ");
 									boolean sameStatus = false;
 									boolean newStatus = true;
@@ -316,7 +339,6 @@ public class ThreadManager implements Runnable {
 										        loadResponseList,
 										        loanMilestoneMaster);
 										newStatus = false;
-
 									} else {
 										LOGGER.debug("Milestone exist, need to update the status ");
 										List<LoanMilestone> loanMilestoneList = loan
@@ -1103,11 +1125,13 @@ public class ThreadManager implements Runnable {
 	        LoanMilestoneMaster loanMilestoneMaster) {
 
 		LoanMilestone loanMilestone = new LoanMilestone();
-		String dateTime = getDataTimeField(currentLoanStatus, loadResponseList);
 		Date date = null;
-		if (dateTime != null && !dateTime.equals(""))
-			date = parseStringIntoDate(dateTime);
-
+		if (loadResponseList != null) {
+			String dateTime = getDataTimeField(currentLoanStatus,
+			        loadResponseList);
+			if (dateTime != null && !dateTime.equals(""))
+				date = parseStringIntoDate(dateTime);
+		}
 		loanMilestone.setLoan(loan);
 		loanMilestone.setLoanMilestoneMaster(loanMilestoneMaster);
 		loanMilestone.setStatusUpdateTime(date);

@@ -3,6 +3,10 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.nexera.common.entity.CustomerDetail;
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestone;
+
 public class LoanMilestoneVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -85,5 +89,39 @@ public class LoanMilestoneVO implements Serializable {
 
 	public void setOrder(int order) {
 		this.order = order;
+	}
+
+	public static LoanMilestone convertFromVOToEntity(
+	        final LoanMilestoneVO inputVO) {
+		if (inputVO == null) {
+			return null;
+		}
+		LoanMilestone loanMilestone = new LoanMilestone();
+		loanMilestone.setId(inputVO.getId());
+		if (inputVO.getComments() != null) {
+			loanMilestone.setComments(inputVO.getComments().toString());
+		}
+		loanMilestone.setStatus(inputVO.getStatus());
+		loanMilestone.setLoanMilestoneMaster(LoanMilestoneMasterVO
+		        .convertFromVOToEntity(inputVO.getLoanMilestoneMaster()));
+		loanMilestone.setLoan(new Loan(inputVO.getLoan().getId()));
+		return loanMilestone;
+	}
+
+	public static LoanMilestoneVO convertFromEntityToVO(
+	        final LoanMilestone inputEntity) {
+		if (inputEntity == null) {
+			return null;
+		}
+		LoanMilestoneVO loanMilestoneVO = new LoanMilestoneVO();
+		loanMilestoneVO.setId(inputEntity.getId());
+		if (loanMilestoneVO.getComments() != null) {
+			loanMilestoneVO.setComments(inputEntity.getComments().getBytes());
+		}
+		loanMilestoneVO.setStatus(inputEntity.getStatus());
+		loanMilestoneVO.setLoanMilestoneMaster(LoanMilestoneMasterVO
+		        .convertFromEntityToVO(inputEntity.getLoanMilestoneMaster()));
+		loanMilestoneVO.setLoan(new LoanVO(inputEntity.getLoan().getId()));
+		return loanMilestoneVO;
 	}
 }
