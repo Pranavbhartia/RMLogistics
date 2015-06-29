@@ -772,6 +772,14 @@ function showProgressHeaderSteps(){
 	msStep = workFlowContext.milestoneStepsLookup["LOCK_YOUR_RATE"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Rate Locked");
 	container.append(stepElement);	
+	var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
+	var loanApprovedLMStatusRep = "0";
+	if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
+	{
+		loanApprovedLMStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
+	container.append(stepElement);	
 	
 	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
 	var docsOutLMStatusRep = "0";
@@ -779,17 +787,10 @@ function showProgressHeaderSteps(){
 	{
 		docsOutLMStatusRep = COMPLETED;
 	}
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 3, "Docs Ready");
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Ready");
 	container.append(stepElement);	
 
-	var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
-	var loanApprovedLMStatusRep = "0";
-	if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
-	{
-		loanApprovedLMStatusRep = COMPLETED;
-	}
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 4, "Loan Approved");
-	container.append(stepElement);	
+	
 	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
 	container.append(stepElement);	
