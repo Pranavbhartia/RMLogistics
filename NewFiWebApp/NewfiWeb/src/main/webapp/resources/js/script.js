@@ -1968,7 +1968,7 @@ function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag) {
     
     if(desc.indexOf('color="green"')>0){
         clas="loan-summary-green-col-detail";
-    }else if(desc.indexOf('color="red"')>0){
+    }else if(desc.indexOf('<font >')>0){
         clas="loan-summary-red-col-detail";
     }
     var col2 = $('<div>').attr({
