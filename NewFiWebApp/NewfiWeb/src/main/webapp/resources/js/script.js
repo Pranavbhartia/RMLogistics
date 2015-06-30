@@ -111,12 +111,17 @@ function getCustomerSecondaryLeftNav() {
     }
     var step2 = "";
     if(flag){
-        step2 = getCustomerSecondaryLeftNavStep(2, "complete my application");
+    	//NEXNF-635 changed complete my application to application
+        step2 = getCustomerSecondaryLeftNavStep(2, "application");
         newfiObject.applicationNavTab=step2;
     } 
-    var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");
+    //NEXNF-635
+    /*  var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");*/
+    var step3 = getCustomerSecondaryLeftNavStep(3, "programs<br />and rates");
     var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");
-    var step5 = getCustomerSecondaryLeftNavStep(5, "my <br /> loan progress");
+    //NEXNF-635
+    /* var step5 = getCustomerSecondaryLeftNavStep(5, "my <br /> loan progress");*/
+    var step5 = getCustomerSecondaryLeftNavStep(5, "loan progress");
     return leftTab2Wrapper.append(step1).append(step2).append(step3).append(step4).append(step5);
 }
 
@@ -476,6 +481,7 @@ function redirectToGettingToKnowLastPage() {
 		"class" : "getting-to-know-btn float-right"
 	}).html("Complete My Application").on('click',function(){
 		//NEXNF-577 changed the text Complete My Loan Profile to Complete My Application
+		
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
 	        newfiObject.applicationKnowNewfi=undefined;
