@@ -628,9 +628,14 @@ function getCompletYourApplicationHeader() {
         "class": "complete-application-wrapper"
     });
 
+    //NEXNF-637
+    /*var header = $('<div>').attr({
+        "class": "complete-application-header"
+    }).html("Complete My Loan Profile");*/
     var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Loan Profile");
+    }).html("Complete My Application");
+    
     return parent.append(header);
 }
 
