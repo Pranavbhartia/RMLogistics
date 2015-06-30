@@ -653,8 +653,9 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-col-desc {
-	width: 50%;
-	padding-right: 5px;
+	/* width: 50%;
+	padding-right: 5px; */
+	width: 130px;
 }
 
 .loan-summary-last-row .loan-summary-col-detail{
@@ -782,8 +783,10 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-sub-col-detail {
-  width: 100px;
-  padding:0 10px;
+ /*  width: 100px; 
+ padding:0 10px;*/
+  width: 85px;
+  padding:0 3px;
   color: #428bca;
   font-family: 'opensanssemibold';
   border: 1px solid #dcdcdc;
@@ -4537,7 +4540,8 @@ input.calc-input {
 
 .lock-rate-slider-container {
     margin: 0px 0;
-    padding: 10px 60px;
+    /* padding: 10px 60px; */
+    padding: 10px 45px;
     background: #fCfcfc;
     border: 1px  solid #cecece;
     border-bottom: 0;
@@ -4976,13 +4980,22 @@ input.calc-input {
 }
 
 .sm-save-btn {
-	margin-left: 15px;
+	/* margin-left: 15px;
 	padding: 0 5px;
 	background: #6c9f2e;
 	color: #fff;
 	font-size: 10px;
 	border-radius: 3px;
+	cursor: pointer; */	
+	padding: 0 6px;
+	background: #6c9f2e;
+	color: #fff;
+	font-size: 10px;
+	border-radius: 3px;
 	cursor: pointer;
+	margin: 0 0 0 5px;
+	float: left;
+	width: 45px;
 }
 
 .sm-save-btn:hover,.add-btn:hover,.app-save-btn:hover {
@@ -5512,14 +5525,17 @@ a.session-login-btn {
 
 .lock-rate-header-val-cont-clas {
     margin: 0px 0;
-    padding: 10px 60px;
+   /*  padding: 10px 60px; */
+    padding: 10px 45px;
     background: #fCfcfc;
     border: 1px  solid #cecece;
     border-top: 0;
     border-radius: 0 0 3px 3px;
 }
 .lock-ratebottom-summary-clas{
-	margin: 15px 0 0 0;
+	/* margin: 15px 0 0 0; */
+	width: 664px;
+	margin: 15px auto;
 }
 
 .loan-rate-tableRow-clas {
