@@ -131,4 +131,14 @@ public interface LoanDao extends GenericDao {
 	public Boolean checkIfLoanHasSalesManager(Long loanId);
 
 	public Loan findLoanByWorkflowExec(Integer workflowExecId);
+
+	/**
+	 * @param parseUserModel
+	 * @param loanProgressStatusIds
+	 * @param startLimit
+	 * @param endLimit
+	 * @return
+	 */
+	List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
+	        int[] loanProgressStatusIds, int startLimit, int endLimit);
 }

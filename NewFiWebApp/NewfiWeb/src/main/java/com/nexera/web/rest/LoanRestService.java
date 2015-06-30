@@ -348,13 +348,23 @@ public class LoanRestService {
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/retrieveDashboardForMyLoans/{userID}")
 	public @ResponseBody CommonResponseVO retrieveDashboardForMyLoan(
-	        @PathVariable Integer userID) {
+	        @PathVariable Integer userID,
+	        @RequestParam(required = false) String startlimit,
+	        @RequestParam(required = false) String count) {
 		UserVO user = new UserVO();
 		user.setId(userID);
-		LoanDashboardVO responseVO = loanService
-		        .retrieveDashboardForWorkLoans(user);
+		CommonResponseVO commonResponseVO = null;
+		if (startlimit != null) {
+			LoanDashboardVO responseVO = loanService
+			        .retrieveDashboardForWorkLoans(user, startlimit, count);
+			commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+		} else {
+			LoanDashboardVO responseVO = loanService
+			        .retrieveDashboardForWorkLoans(user);
+			commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+		}
 
-		return RestUtil.wrapObjectForSuccess(responseVO);
+		return commonResponseVO;
 	}
 
 	// TODO-move this to User profile rest service
