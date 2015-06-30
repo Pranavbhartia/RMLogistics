@@ -863,7 +863,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
         inputBox=getDwnPayComponent(val,inputElementId);
     }else{
         inputBox = $('<input>').attr({
-            "class" : "loan-summary-sub-col-detail",
+            "class" : "loan-summary-sub-col-detail float-left",
             "id":inputElementId,
             "value":showValue(val),
         }).bind('keyup',{"appUserDetails":appUserDetails,"key":key},function(e){
@@ -988,7 +988,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
     }
     else if(key=="purchasePrice"||key=="cashOut"){
         var saveBtn = $('<div>').attr({
-            "class" : "cep-button-color-orange sm-save-btn float-right"
+            "class" : "cep-button-color-orange sm-save-btn"//removed float-right for NEXNF-632
         }).html("update").on('click',{"path":undefined},function(e){
             var flag=globalChangeContainer.flag;
             if(flag){
@@ -1005,7 +1005,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
         container.append(col1).append(col2.append(saveBtn));
     }else if(key=="propLoanAmt"){
         var saveBtn = $('<div>').attr({
-            "class" : "cep-button-color-orange sm-save-btn float-right"
+            "class" : "cep-button-color-orange sm-save-btn"//removed float-right for NEXNF-632
         }).html("update").on('click',{},function(){
             var flag=globalChangeContainer.flag;
             if(flag){
@@ -1046,7 +1046,7 @@ function getDwnPayComponent(value,inputElementId){
         restrictSpecialChar(undefined,$('#'+inputElementId));
     });
     var percentageComp = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail dwn-percentage"
+    	"class": "loan-summary-sub-col-detail dwn-percentage"
     }).attr('maxlength','2');;
     
     optionCont.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"val":true},

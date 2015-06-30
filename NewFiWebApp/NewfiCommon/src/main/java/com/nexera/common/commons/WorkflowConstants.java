@@ -127,7 +127,9 @@ public class WorkflowConstants {
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are {\"72\":\"elapsed\"}";
 	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Click here to learn more about using the newfi portal";
 	public static final String VERIFY_EMAIL_NOTIFICATION_CONTENT = "Your email is not verified. Click <a href='#' onclick='forgetPassword()' 'style=color: blue;'> here </a> to resend your verification email.";
-	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your loan profile.";
+	//NEXNF-634
+	//public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your loan profile.";
+	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your application.";
 	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have a real estate agent? Click here to add them to your newfi loan team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION = "The purchase documents are about to expire within {\"24\":\"elapsed\"} hours ";

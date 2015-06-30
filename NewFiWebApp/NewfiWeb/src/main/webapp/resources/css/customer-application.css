@@ -52,7 +52,8 @@
     font-size: 14px;
 }
 .dwn-val{
-	width: 100px;
+	/* width: 100px; */
+	width: 85px;
 }
 .dwn-percentage{
 	width: 50px;
