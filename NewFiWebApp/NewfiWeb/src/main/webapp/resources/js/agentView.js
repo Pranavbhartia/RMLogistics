@@ -155,9 +155,11 @@ function getDashboardRightPanelForMyLoans(loanType) {
 	var startLimit=0;
 	if(newfiObject.fetchedCount)
 		startLimit=newfiObject.fetchedCount;
+	newfiObject.fetchLock=true;
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
+				newfiObject.fetchLock=undefined;
 				if(startLimit==0){
 					paintAgentDashboardRightPanel(response);
 				}else{
@@ -165,9 +167,9 @@ function getDashboardRightPanelForMyLoans(loanType) {
 						customers=response.resultObject.customers
 						appendCustomers("leads-container", customers,true);
 					}
-				}
+				}	
 				startLimit=startLimit+customerFetchCount;
-				newfiObject.fetchedCount=startLimit;
+				newfiObject.fetchedCount=startLimit;		
 			});
 }
 
@@ -4194,7 +4196,7 @@ function entryPointAgentViewChangeNav(viewName) {
 $(window).scroll(
 		function() {
 			var dashboard=$("#leads-container");
-			if (dashboard&&dashboard.length>0&&currentLoanType == "myloans") {
+			if (dashboard&&dashboard.length>0&&currentLoanType == "myloans"&&!newfiObject.fetchLock) {
 				if (($(document).height()-($(window).scrollTop()+$(window).height()))<=400) {
 					getMoreCustomers();
 				}
