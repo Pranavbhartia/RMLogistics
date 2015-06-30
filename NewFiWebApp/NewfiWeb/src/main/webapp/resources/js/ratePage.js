@@ -489,7 +489,7 @@ function getLoanSummaryRowRatePage(desc, detail, id,containerId,hideFlag) {
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
     var col2 = $('<div>').attr({
-        "class": "loan-summary-col-detail float-left",
+        "class": "loan-summary-col-detail rate-page-normal-text float-left",
         "id": id
     }).html(detail).val(detail);
     container.append(col1).append(col2);
