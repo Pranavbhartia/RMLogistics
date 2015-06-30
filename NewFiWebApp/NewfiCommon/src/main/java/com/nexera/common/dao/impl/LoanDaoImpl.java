@@ -13,6 +13,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -317,6 +318,71 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				for (LoanTeam loanTeam : loanTeamList) {
 					Hibernate.initialize(loanTeam.getLoan());
 					Loan loan = loanTeam.getLoan();
+					if (loanIdList.contains(loan.getId())) {
+						continue;
+					}
+
+					if (checkIfIdIsInList(loan.getLoanProgressStatus().getId(),
+					        loanProgressStatusIds)) {
+						loanListForUser.add(loan);
+						loanIdList.add(loan.getId());
+					}
+
+				}
+			}
+
+			for (Loan loan : loanListForUser) {
+				Hibernate.isInitialized(loan.getLoanProgressStatus());
+			}
+			/*
+			 * Collections.sort(loanListForUser, new Comparator<Loan>() { public
+			 * int compare(Loan loan1, Loan loan2) { return
+			 * loan1.getCreatedDate().compareTo(loan2.getCreatedDate()); } });
+			 */
+			return loanListForUser;
+		} catch (HibernateException hibernateException) {
+
+			throw new DatabaseException(
+			        "Exception caught in retrieveLoanForDashboard() ",
+			        hibernateException);
+		}
+	}
+
+	@Override
+	public List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
+	        int[] loanProgressStatusIds, int startLimit, int endLimit) {
+
+		try {
+			List<Loan> loanListForUser = new ArrayList<Loan>();
+			
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.createAlias("loan", "loan");
+			criteria.setProjection(Projections.projectionList().add(
+			        Projections.groupProperty("loan.id")));
+			criteria.addOrder(Order.desc("loan.modifiedDate"));
+			// If the user is Sales manager, retrieve all loans
+			parseUserModel = (User) this.load(User.class,
+			        parseUserModel.getId());
+			if (parseUserModel.getInternalUserDetail() != null) {
+				if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
+				        .getInternalUserDetail().getInternaUserRoleMaster()
+				        .getId()) {
+					criteria.add(Restrictions.eq("user.id",
+					        parseUserModel.getId()));
+				}
+			} else {
+				criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			}
+			criteria.setFirstResult(startLimit);
+			criteria.setMaxResults(endLimit);
+			List<Integer> loanTeamList = criteria.list();
+			List<Integer> loanIdList = new ArrayList<Integer>();
+			int i = 0;
+			if (loanTeamList != null) {
+				for (Integer loanTeam : loanTeamList) {
+
+					Loan loan = (Loan) session.get(Loan.class, loanTeam);
 					if (loanIdList.contains(loan.getId())) {
 						continue;
 					}

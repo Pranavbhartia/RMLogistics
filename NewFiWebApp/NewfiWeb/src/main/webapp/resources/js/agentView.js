@@ -6,7 +6,7 @@ var docData = [];
 var currentLoanType = null;
 var mobileCarrierNames = [];
 var stateLists = [];
-
+var customerFetchCount=15;
 LOAN_ENUM = {
 	ALL : "ALL",
 	NEW_PROSPECT : "NEW PROSPECT",
@@ -88,9 +88,10 @@ function paintAgentDashboard(loanType) {
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
 	currentLoanType = loanType;
+	newfiObject.fetchedCount=undefined;
+	$(window).scrollTop(0);
 	if (loanType == "workloans") {
 		$('#lp-work-on-loan').addClass('lp-item-active');
-
 		getDashboardRightPanelForWorkLoans();
 	} else if (loanType == "myloans") {
 		$('#lp-my-loans').addClass('lp-item-active');
@@ -118,10 +119,30 @@ function paintAgentDashboardCallBack(data) {
 // ajax call to get dashboard for my loans
 function getDashboardRightPanel() {
 	var userID = newfiObject.user.id;
+	if(newfiObject.fetchedCount)
+		startLimit=newfiObject.fetchedCount;
+	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
-			"json", {}, paintAgentDashboardRightPanel);
+			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
+				if(startLimit==0){
+					paintAgentDashboardRightPanel(response);
+				}else{
+					appendCustomers("leads-container", customerData.customers,true);
+				}
+				startLimit=startLimit+customerFetchCount;
+				newfiObject.fetchedCount=startLimit;
+			});
 }
 
+function getMoreCustomers(){
+	if (currentLoanType == "workloans") {
+		getDashboardRightPanelForWorkLoans();
+	} else if (currentLoanType == "myloans") {
+		getDashboardRightPanelForMyLoans();
+	} else if (currentLoanType == "archivesloans") {
+		getDashboardRightPanelForArchivesLoans();
+	}
+}
 // ajax call to get dashboard for work loans
 function getDashboardRightPanelForWorkLoans(loanType) {
 	var userID = newfiObject.user.id;
@@ -131,9 +152,23 @@ function getDashboardRightPanelForWorkLoans(loanType) {
 
 // ajax call to get dashboard for my loans
 function getDashboardRightPanelForMyLoans(loanType) {
+	var startLimit=0;
+	if(newfiObject.fetchedCount)
+		startLimit=newfiObject.fetchedCount;
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
-			"json", {}, paintAgentDashboardRightPanel);
+			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
+				if(startLimit==0){
+					paintAgentDashboardRightPanel(response);
+				}else{
+					if(response.resultObject&&response.resultObject.customers){
+						customers=response.resultObject.customers
+						appendCustomers("leads-container", customers,true);
+					}
+				}
+				startLimit=startLimit+customerFetchCount;
+				newfiObject.fetchedCount=startLimit;
+			});
 }
 
 // ajax call to get dashboard for archive loans
@@ -388,11 +423,11 @@ function checkCreditScore(creditScore){
     }
 	return creditScore;
 }
-function appendCustomers(elementId, customers) {
-
-	$('#' + elementId).html("");
-	appendCustomerTableHeader(elementId);
-
+function appendCustomers(elementId, customers,skipDataClearing) {
+	if(!skipDataClearing){
+		$('#' + elementId).html("");
+		appendCustomerTableHeader(elementId);
+	}
 	for (var i = 0; i < customers.length; i++) {
 
 		var customer = customers[i];
@@ -4154,3 +4189,15 @@ function entryPointAgentViewChangeNav(viewName) {
 	paintMyLoansView();
 	changeAgentSecondaryLeftPanel('lp-step' + viewName);
 }
+
+
+$(window).scroll(
+		function() {
+			var dashboard=$("#leads-container");
+			if (dashboard&&dashboard.length>0&&currentLoanType == "myloans") {
+				if (($(document).height()-($(window).scrollTop()+$(window).height()))<=400) {
+					getMoreCustomers();
+				}
+			}
+
+		});

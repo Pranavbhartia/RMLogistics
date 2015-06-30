@@ -373,6 +373,30 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO,
+	        String startLimit, String endLimit) {
+		int startLimt = Integer.parseInt(startLimit);
+		int endLimt = startLimt + 15;
+		if(endLimit!=null){
+			endLimt= Integer.parseInt(endLimit);
+		}
+		// Get new prospect and lead loans this user has access to.
+		List<Loan> loanList = loanDao
+		        .retrieveLoanByProgressStatus(
+		                this.parseUserModel(userVO),
+		                new int[] {
+		                        LoanProgressStatusMasterEnum.NEW_LOAN
+		                                .getStatusId(),
+		                        LoanProgressStatusMasterEnum.IN_PROGRESS
+		                                .getStatusId() }, startLimt, endLimt);
+		;
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
+
+		return loanDashboardVO;
+	}
 
 	private boolean checkIfUserIsSalesManager() {
 
