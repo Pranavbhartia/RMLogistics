@@ -162,7 +162,8 @@
 				});
 			}); */
 		//	retrieveState();
-
+		
+			
 			
 			$('[data-toggle="tooltip"]').tooltip();  
 			$('#footer-wrapper').show();
