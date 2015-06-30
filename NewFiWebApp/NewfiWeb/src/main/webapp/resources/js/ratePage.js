@@ -317,12 +317,12 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     if(refinanceOption == "REFCO"){
         var loanBalCol = getInputElmentRow("loanBal","Current Loan <br/>Balance",showValue(currentMortgageBalance),"firstInput",customerInputData);        
         var cashOutCol = getInputElmentRow("cashOut","Cash Out",showValue(cashTakeOut),"secondInput",customerInputData);
-        var proposedLoanAmtCol = getLoanSummaryLastRow("Proposed Loan<br/> Amount", showValue(loanAmount),"loanAmount",true);
+        var proposedLoanAmtCol = getLoanSummaryLastRow("Loan<br/> Amount", showValue(loanAmount),"loanAmount",true);
         leftCol.append(loanBalCol);
         leftCol.append(cashOutCol);
         leftCol.append(proposedLoanAmtCol);
     }else{
-        var proposedLoanAmtCol = getInputElmentRow("propLoanAmt","Proposed Loan<br/> Amount",showValue(loanAmount),"loanAmount",customerInputData);
+        var proposedLoanAmtCol = getInputElmentRow("propLoanAmt","Loan<br/> Amount",showValue(loanAmount),"loanAmount",customerInputData);
         leftCol.append(proposedLoanAmtCol);
     }
     //NEXNF-603
@@ -342,9 +342,6 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
         rightCol.append(monthlyDiff);
     /*}*/
 
-    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
-    rightCol.append(totHousingPayment);
-
     var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment));
     rightCol.append(toggletaxComponent);
 
@@ -354,7 +351,12 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
 
     //var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
     var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
-    rightCol.append(taxRow);
+    rightCol.append(taxRow);    
+
+    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
+    rightCol.append(totHousingPayment);
+
+    
 
     
 
@@ -600,7 +602,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
     rightCol.append(taxRow);
 
-    var proposedLoanAmt = getLoanSummaryLastRow("Proposed Loan<br/>Amount", showValue(loanAmount) ,"loanAmount",true);
+    var proposedLoanAmt = getLoanSummaryLastRow("Loan<br/>Amount", showValue(loanAmount) ,"loanAmount",true);
     leftCol.append(proposedLoanAmt);
 
     var estHousngPaymnt = getLoanSummaryLastRow("Estimated<br/>Housing Payment", showValue(totEstHousingPayment) ,"totalEstMonthlyPaymentId",true);
@@ -736,7 +738,7 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
 
     	teaserRateValHolder.leadCustomer = undefined;
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
-        bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
+        bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. </br>Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         if(typeof(newfiObject)!=="undefined"&&teaserRateValHolder.teaserRate)
             buttonWrapper="";
@@ -1332,7 +1334,7 @@ function getYearSliderContCEP1(teaserRate,inputCustomerDetails) {
     });
     var headerTxt = $('<div>').attr({
         "class": "slider-hdr-txt float-left"
-    }).html("Length of Loan");
+    }).html("Loan Term");
     
     var silderCont = getYearSliderCEP(teaserRate,inputCustomerDetails);
     

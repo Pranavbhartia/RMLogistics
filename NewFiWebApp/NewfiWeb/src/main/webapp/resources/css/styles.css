@@ -567,6 +567,7 @@ input[type="button"]:focus, button:focus {
 	padding: 0 5px;
 	margin-bottom: 20px;
 	font-size:12px;
+	text-align: center;
 }
 
 .cp-rate-header-text {
@@ -5548,4 +5549,5 @@ a.session-login-btn {
 
 .loan-summary-row-border-adj {
 	border: none;
+	margin-left: 10px;
 }
