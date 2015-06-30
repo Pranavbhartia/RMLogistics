@@ -479,9 +479,9 @@ function redirectToGettingToKnowLastPage() {
 	cont2.append("<div class='getting-to-know-hdr-txt'>Next Steps</div>");
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Complete My Application").on('click',function(){
+	}).html("Application").on('click',function(){
 		//NEXNF-577 changed the text Complete My Loan Profile to Complete My Application
-		
+		//NEXNF-635 changed the text Complete My Application to Application
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
 	        newfiObject.applicationKnowNewfi=undefined;
