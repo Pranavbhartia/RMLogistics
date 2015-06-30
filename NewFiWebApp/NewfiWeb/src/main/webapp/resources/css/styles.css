@@ -691,6 +691,7 @@ input[type="button"]:focus, button:focus {
 	/*background: #AB1010;*/
 	padding: 5px 10px;
   	border-radius: 3px;
+  	font-family: 'OpenSans';
 }
 .loan-summary-last-row .loan-summary-green-col-detail{
 	width: 120px;
@@ -5550,4 +5551,7 @@ a.session-login-btn {
 .loan-summary-row-border-adj {
 	border: none;
 	margin-left: 10px;
+}
+.rate-page-normal-text{
+	font-family: 'OpenSans';
 }
