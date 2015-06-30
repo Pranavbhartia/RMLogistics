@@ -1046,6 +1046,7 @@ function getDwnPayComponent(value,inputElementId){
         restrictSpecialChar(undefined,$('#'+inputElementId));
     });
     var percentageComp = $('<input>').attr({
+    	"class": "loan-summary-sub-col-detail dwn-percentage"
     }).attr('maxlength','2');;
     
     optionCont.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"val":true},
