@@ -205,4 +205,9 @@ public interface LoanService {
 	LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO,
 	        String startLimit, String endLimit);
 
+	/**
+	 * @param loanId
+	 */
+	void markLoanDeleted(int loanId);
+
 }

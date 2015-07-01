@@ -67,3 +67,7 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='17' WHERE `id`='
 
 
 #New milestones 26.6
+
+#Charu Joshi 01 July for marking loan deleted
+INSERT INTO `newfi_schema`.`loanprogressstatusmaster` (`id`, `loan_progress_status`) VALUES ('8', 'DELETED');
+
