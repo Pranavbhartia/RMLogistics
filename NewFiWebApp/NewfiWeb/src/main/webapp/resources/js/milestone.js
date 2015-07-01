@@ -706,7 +706,7 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 			"class" : "cursor-pointer",
 			"mileNotificationId" : workItem.id,
 			"data-text" : workItem.workflowItemType
-		}).html("Click here to upload more items");
+		}).html("Click here to upload items");
 		txtRow1.append(spanHolder);
 		
 		spanHolder.bind("click", function(e) {
@@ -792,7 +792,13 @@ function showProgressHeaderSteps(){
 
 	
 	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
+	var fundedStatus = msStep.stateInfo;
+	var fundedStatusRep = "0";
+	if (fundedStatus && fundedStatus == "Funded")
+	{
+		fundedStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(fundedStatusRep, 5, "Funded");
 	container.append(stepElement);	
 	
 	return container;
@@ -939,7 +945,7 @@ function getMilestoneTeamMembeTable(input,workItem) {
 		"class" : clas+" showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
-	}).html("Click here to add a Team Member").bind("click", function(e) {
+	}).html("Click here to add Team Member").bind("click", function(e) {
 		milestoneChildEventHandler(e)
 	});
 
