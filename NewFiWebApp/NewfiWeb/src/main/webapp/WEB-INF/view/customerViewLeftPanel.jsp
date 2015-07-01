@@ -30,6 +30,7 @@
 			
 			</div>
 		</div>
+		<!-- <div id="lp-loan-wrapper" class="lp-loan-wrapper lp-item clearfix" onclick="changeLeftPanel(2);"> -->
 		<div id="lp-loan-wrapper" class="lp-loan-wrapper lp-item clearfix">
 			<div class="loan-txt1">Work on my loan</div>
 		
@@ -48,7 +49,7 @@
 			<div class="work-on-loan-inactive clearfix">
 				<!--NEXNF-636  -->
 				<!-- <div class="work-on-loan-item-cont lp-details-icn">Details</div> -->
-				<div class="work-on-loan-item-cont lp-details-icn">APP</div>
+				<div class="work-on-loan-item-cont lp-details-icn" id="loan-app">APP</div>
 				<div class="work-on-loan-item-cont lp-rates-icn" onclick="window.location.href='#myLoan/lock-my-rate'">Rates</div>
 				<div class="work-on-loan-item-cont lp-upload-icn" onclick="window.location.href='#myLoan/upload-my-needs'">Upload</div>
 				<div class="work-on-loan-item-cont lp-progess-icn" onclick="window.location.href='#myLoan/my-loan-progress'">Progress</div>
