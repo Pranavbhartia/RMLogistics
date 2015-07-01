@@ -503,7 +503,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			
 		}
 
-		col1.append(onlineStatus).append(profImage).append(cusName);
+		col1.append(profImage).append(cusName);
 		var phone_num = "NA";
 		if (customer.phone_no != null && customer.phone_no.trim() != "") {
 			phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
@@ -555,10 +555,21 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				ob.loanLstCntElement.append(alerts);
 			}
 		});
-
+		
 		row.append(col1).append(col2).append(col3).append(col4).append(col5)
 				.append(col6).append(col7);
-
+		if((newfiObject.user&&newfiObject.user.internalUserDetail&&
+			newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
+			newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
+			newfiObject.user.userRole.id==4){
+			var userDelIcn = $('<div>').attr({
+				"class" : "delCustClas clearfix",
+				"loanID" : customer.loanID
+			});
+			row.append(userDelIcn);
+		}else{
+			$('.leads-container-tr').css("padding","15px 15px 10px");
+		}
 		$('#' + elementId).append(row);
 	}
 	updateHandler.initiateRequest();
@@ -4203,3 +4214,39 @@ $(window).scroll(
 			}
 
 		});
+
+$(document).on('click', '.delCustClas', function(e) {
+	var element=e.target;
+	var loanId=$(element).attr("loanId");
+	var parentComponent=$(element).parent();
+
+	$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	$('#overlay-popup-txt').html("Are you sure you want to delete this loan?");
+	$('#overlay-confirm').on('click', function() {
+		if(loanId){
+			ajaxRequest("rest/loan/"+loanId, "DELETE", "json", {}, function(response) {
+		        if (response.error) {
+		            showToastMessage(response.error.message)
+		        } else {
+		            if(response.resultObject=="Success"){
+		            	$(parentComponent).remove();
+		                callback();    
+		            }else{
+		                 
+		            }
+		        }
+		    });
+			$('#overlay-popup').hide();
+			$('#overlay-confirm').on('click', function() {});			
+		}
+	});
+
+	$('#overlay-cancel').on('click', function() {
+		$('#overlay-popup').hide();
+		$('#overlay-confirm').on('click', function() {});
+	});
+
+	$('#overlay-popup').show();
+	e.stopImmediatePropagation();
+});

@@ -2186,6 +2186,7 @@ public class LoanServiceImpl implements LoanService {
 			}
 		} while (userFound == true);
 		user.setEmailId(updatedEmail);
+		user.setStatus(-1);
 		loanDao.saveOrUpdate(user);
 	}
 

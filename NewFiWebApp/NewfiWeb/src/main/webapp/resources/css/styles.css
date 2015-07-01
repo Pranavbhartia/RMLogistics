@@ -1655,7 +1655,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-row {
-	padding: 10px;
+	padding: 10px 5px;
 	line-height: 20px;
 	background-color: #fcfcfc;
 	border-top: 1px #cecece dashed;
@@ -1702,7 +1702,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-tc7 {
-	width: 55px;
+	width: 40px;
 }
 
 .onl-status-icn {
@@ -1849,7 +1849,7 @@ input[type="button"]:focus, button:focus {
 
 .leads-container-tr {
 	/* cursor: pointer; */
-	padding: 15px 10px 10px;
+	padding: 15px 5px 10px;
 }
 
 .leads-container-tr .cus-name,.leads-container-tr .leads-container-tc5,.leads-container-tr .leads-container-tc7{
@@ -5554,4 +5554,9 @@ a.session-login-btn {
 }
 .rate-page-normal-text{
 	font-family: 'OpenSans';
+}
+.delCustClas{
+	background: url(../images/user_del.png) no-repeat right 1px;
+	background-size: 20px;
+}	
 }
