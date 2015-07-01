@@ -71,7 +71,7 @@
           </div>
           --%>
         </div>
-        <div class="float-right new-user-container">
+        <div class="float-right new-user-container" id="right-container-id">
                 <c:set var="val" value="${userRole}"/>
                  <c:choose>                 
                   <c:when test="${val == 'Realtor'}">
@@ -224,6 +224,7 @@
           
           
         </div>
+        <div class="cus-eng-success-message hide" id="cus-eng-success-message-id"></div>
       </div>
       
       
@@ -231,6 +232,7 @@
       <!-- End of second div -->
       
     </div>
+    
     
   </div>
 </div>
@@ -420,8 +422,11 @@
         datatype: "application/json",
         success: function(data) {
             $('#overlay-loader').hide();
-            window.location.href =baseurl;
-            window.location.href = data;
+            appendUserCreationSuccessMessage(data);
+            $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
+            $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
+            /* window.location.href =baseurl;
+            window.location.href = data; */
             // printMedianRate(data,container);
         },
         error: function(data) {
@@ -444,9 +449,12 @@
 		        success: function(data) {
 		            // $('#overlay-loader').hide();
 		            $('#overlay-loader').hide();
+		            appendUserCreationSuccessMessage(data);
+		            $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
+		            $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
 		          // alert (data);
-		            window.location.href =baseurl;
-		            window.location.href = data;
+		            /* window.location.href =baseurl;
+		            window.location.href = data; */
 		            // printMedianRate(data,container);
 		        },
 		        error: function(data) {

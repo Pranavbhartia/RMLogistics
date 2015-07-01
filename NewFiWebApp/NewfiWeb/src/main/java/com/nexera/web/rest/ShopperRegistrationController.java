@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.User;
@@ -77,6 +78,7 @@ public class ShopperRegistrationController {
 	        HttpServletResponse response) throws IOException {
 
 		Gson gson = new Gson();
+		String message="";
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
@@ -99,8 +101,10 @@ public class ShopperRegistrationController {
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
 			        teaseRateDatalist);
 
-			LOG.info("User succesfully created, now trying to autologin" + user);
-			authenticateUserAndSetSession(emailId, user.getPassword(), request);
+			LOG.info("User succesfully created, now trying to autologin" + user.getEmailId());
+			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account.</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loaAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
+			//NEXNF-628
+			//authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (FatalException e) {
 			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered");
@@ -108,10 +112,14 @@ public class ShopperRegistrationController {
 			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered ");
 		}
-		String redirectUrl = profileUrl + "home.do#myLoan/myTeam";
+		/*String redirectUrl = profileUrl + "home.do#myLoan/myTeam";
 		LOG.info("Redirecting user to login page: " + redirectUrl);
 
 		return redirectUrl;
+*/	
+		
+		return message;
+		
 	}
 
 	@RequestMapping(value = "/record", method = RequestMethod.POST)

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/title-logo.png">
+<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
 <link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
@@ -22,8 +22,8 @@ var resendIndex=locationURL.indexOf("?resend");
 </script>
 <body>
 	<jsp:include page="loginHeader.jsp"></jsp:include>
-	<div class="home-container container">
-		<div class="login-container container">
+	<div class="home-container-adj container">
+		<div class="forget-pass-adj container">
 				<div class="container-row row clearfix">
 				
 					<div id="reg-display-title" class="reg-display-title"></div>
@@ -68,13 +68,13 @@ var resendIndex=locationURL.indexOf("?resend");
 
 $(document).ready(function(e){
 	globalBinder();
+
 	if("${error}"!="" && "${error}"!=undefined && "${error}"!=null){
         $("#errorMessage").text("${error}");
 		$("#errorMessage").show(); 
 
 	}
-	
-	
+
 	var title = "";
 	var buttonText = "";
 	var headerText = "";

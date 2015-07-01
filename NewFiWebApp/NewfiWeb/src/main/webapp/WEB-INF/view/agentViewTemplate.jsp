@@ -116,10 +116,10 @@
 				         return false;
 				    }
 				}); 
-			 $('#footer-wrapper').show();
+			
 			
 		});
-		
+		 $('#footer-wrapper').show();
 	</script>
 </body>
 </html>

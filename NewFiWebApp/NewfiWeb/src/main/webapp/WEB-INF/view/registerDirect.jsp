@@ -28,7 +28,7 @@
 	<jsp:include page="loginHeader.jsp"></jsp:include>
 	<div class="home-container container">
 		<div class="container-row row clearfix">
-			<div id="reg-main-container" class="reg-main-container">
+			<div id="reg-main-container-registerNew" class="reg-main-container">
 				
 				<div class="reg-display-title">Get Started</div>
 				<div class="reg-display-title-subtxt">Create a Newfi account now to access our powerful lending tool and take control on your terms.</div>
@@ -99,7 +99,8 @@
 				
 							
 			</div>
-			</div>			
+			</div>
+						
 		</div>
 	</div>
 	<script>
@@ -118,7 +119,10 @@
 	        var k = e.which;
 	        var ok = k >= 65 && k <= 90 || // A-Z
 	            k >= 97 && k <= 122 || // a-z
-	            k >= 48 && k <= 57; // 0-9
+	            k >= 48 && k <= 57|| // 0-9
+	            k==32 ||//to allow space
+	    	    k==8 ||//to allow to delte
+	    	    k==46;//to allow backspace
 
 	        if (!ok){
 	            e.preventDefault();
@@ -131,7 +135,10 @@
 	        var k = e.which;
 	        var ok = k >= 65 && k <= 90 || // A-Z
 	            k >= 97 && k <= 122 || // a-z
-	            k >= 48 && k <= 57; // 0-9
+	            k >= 48 && k <= 57 ||// 0-9
+	            k==32 ||//to allow space
+	    	    k==8 ||//to allow to delte
+	    	    k==46;//to allow backspace
 
 	        if (!ok){
 	            e.preventDefault();
@@ -257,7 +264,9 @@
         datatype: "application/json",
         success: function(data) {
             $('#overlay-loader').hide();
-            window.location.href = data;
+            appendUserCreationSuccessMessage(data);
+           
+          /*   window.location.href = data; */
             // printMedianRate(data,container);
         },
         error: function(data) {
@@ -279,7 +288,9 @@
 		        datatype: "application/json",
 		        success: function(data) {
 		            $('#overlay-loader').hide();
-		            window.location.href = data;
+		            appendUserCreationSuccessMessage(data);
+		         
+		           /*  window.location.href = data; */
 		            // printMedianRate(data,container);
 		        },
 		        error: function(data) {

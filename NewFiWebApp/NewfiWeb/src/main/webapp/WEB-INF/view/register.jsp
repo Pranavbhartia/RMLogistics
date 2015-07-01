@@ -40,7 +40,8 @@
 				</div>
 				
 			
-			</div>			
+			</div>
+			<div class="cus-eng-success-message hide" id="cus-eng-success-message-id"></div>			
 		</div>
 	</div>
 	<script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>

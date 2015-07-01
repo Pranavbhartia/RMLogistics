@@ -1403,6 +1403,11 @@
 	}
 	.rt-grid-item {
 		font-size: 11px;
+	}	
+	.cus-eng-succ-mess-row {
+		white-space: normal;
+		padding: 5px 20px;
+		text-align: left;
 	}
 }
 

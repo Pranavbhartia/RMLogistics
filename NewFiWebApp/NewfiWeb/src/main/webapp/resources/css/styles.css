@@ -2928,9 +2928,9 @@ input.calc-input {
 }
 
 .login-container {
-	 margin-top: 110px;
-	margin-bottom: 100px; 
-	/* margin: 150px 100px; */
+	 /* margin-top: 110px;
+	margin-bottom: 100px;  */
+	 margin: 150px 100px; 
 }
 
 .display-title {
@@ -5558,5 +5558,18 @@ a.session-login-btn {
 .delCustClas{
 	background: url(../images/user_del.png) no-repeat right 1px;
 	background-size: 20px;
-}	
+}
+.home-container-adj {
+	min-height:100%;
+	margin-bottom:100px;
+	padding-bottom:0px;
+	margin-top:80px;
+}
+
+.forget-pass-adj {
+	margin: 0;
+	padding: 36px;
+}
+.login-container-adj {
+	margin: 0;
 }
