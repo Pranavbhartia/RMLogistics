@@ -2048,6 +2048,7 @@ function modifiyTeaserRate(amt,amt1) {
         }else{
             if (buyHomeTeaserRate.loanType){
             	buyHomeTeaserRate.purchaseDetails.housePrice=amt;
+                buyHomeTeaserRate.homeWorthToday=amt
                 buyHomeTeaserRate.purchaseDetails.loanAmount=(amt-amt1);
                 buyHomeTeaserRate.currentMortgageBalance = amt1;
                 paintBuyHomeSeeTeaserRate();
