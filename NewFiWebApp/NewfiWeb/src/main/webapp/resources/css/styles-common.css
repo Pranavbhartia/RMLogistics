@@ -344,3 +344,46 @@ k}
 	background: rgba(24,72,141,0.9);
 }
 /* NEXNF-619  end */
+
+.cus-eng-success-message {
+  margin: 110px 0;
+  width: 100%;
+}
+.cus-eng-succ-mess-header {
+  font-family: opensanssemiBold;
+  text-align: center;
+  font-size: 24px;
+  padding-bottom: 15px;
+}
+
+.cus-eng-success-mess-container {
+  margin: 0px auto;
+  text-align: left;
+}
+
+.cus-eng-succ-mess-row {
+  font-family: openSans;
+  font-size: 14px;
+  white-space: nowrap;
+  padding: 3px 0;
+  text-align: center;
+}
+
+a.cus-eng-succ-mess-email {
+  font-family: openSans;
+  font-size: 14px;
+  color: blue;
+}
+
+
+.cus-eng-success-message-adjust {
+	display: block;
+	float: left;
+	margin: 90px 0 0;
+	width: 74%;
+	padding: 10px;
+}
+
+.cus-eng-succ-mess-row-adjust {
+	white-space: normal;
+}
