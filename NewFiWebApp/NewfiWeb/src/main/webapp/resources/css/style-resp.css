@@ -4,7 +4,7 @@
 		overflow-x: hidden;
 	}
 	.home-container{
-		padding-right: 5px;
+		padding-right: 15px;
 		overflow: hidden;
 	}
 	.left-panel{
@@ -1403,6 +1403,30 @@
 	}
 	.rt-grid-item {
 		font-size: 11px;
+	}
+	.eng-indent {
+	 	padding: 10px 0 10px 10px;
+	}
+	.first-column {
+		padding: 0;
+		width: 25%;
+	}
+	.first-column img[name="seal"] {
+		width: 50px;
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	.second-column {
+		width: 55%;
+	}
+	.second-column * {
+		font-size: 10px;
+	}
+	a.footer-inline-txt {
+		display: inline-block;
+	}
+	.third-column {
+		width: 20%;
 	}
 }
 
