@@ -542,4 +542,14 @@ public class LoanRestService {
 
 	}
 
+	@RequestMapping(value = "/{loanID}", method = RequestMethod.DELETE)
+	public @ResponseBody CommonResponseVO markLoanDeleted(
+	        @PathVariable Integer loanID) {
+
+		loanService.markLoanDeleted(loanID);
+
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess("Success");
+		return responseVO;
+	}
+
 }

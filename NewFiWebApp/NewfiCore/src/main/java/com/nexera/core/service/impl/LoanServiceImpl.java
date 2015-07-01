@@ -53,6 +53,7 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -2154,4 +2155,38 @@ public class LoanServiceImpl implements LoanService {
 		}
 		return creditScoreValid;
 	}
+
+	@Override
+	@Transactional
+	public void markLoanDeleted(int loanId){
+		Loan loan = (Loan) loanDao.load(Loan.class, loanId);
+		LoanProgressStatusMaster loanProgressStatusMaster = (LoanProgressStatusMaster) loanDao
+		        .load(LoanProgressStatusMaster.class,
+		                LoanProgressStatusMasterEnum.DELETED.getStatusId());
+		loan.setLoanProgressStatus(loanProgressStatusMaster);
+		loanDao.saveOrUpdate(loan);
+		User user = loan.getUser();
+		String updatedEmail = "deletedEmail-" + user.getEmailId();
+		boolean userFound = true;
+		int count = 0;
+		do {
+
+			try {
+				User userVo = userProfileService.findUserByMail(updatedEmail);
+				if (userVo != null) {
+					updatedEmail = "deletedEmail" + count + "-"
+					        + user.getEmailId();
+					count++;
+				} else {
+					userFound = false;
+				}
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} while (userFound == true);
+		user.setEmailId(updatedEmail);
+		loanDao.saveOrUpdate(user);
+	}
+
 }
