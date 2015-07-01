@@ -100,7 +100,7 @@
 							
 			</div>
 			</div>
-						
+			<div class="cus-eng-success-message hide" id="cus-eng-success-message-id"></div>			
 		</div>
 	</div>
 	<script>
