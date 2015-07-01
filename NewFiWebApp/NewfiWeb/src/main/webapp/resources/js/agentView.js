@@ -558,19 +558,20 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 		
 		row.append(col1).append(col2).append(col3).append(col4).append(col5)
 				.append(col6).append(col7);
-		if((newfiObject.user&&newfiObject.user.internalUserDetail&&
-			newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
-			newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
-			newfiObject.user.userRole.id==4){
-			var userDelIcn = $('<div>').attr({
-				"class" : "delCustClas clearfix",
-				"loanID" : customer.loanID
-			});
-			row.append(userDelIcn);
-		}else{
-			$('.leads-container-tr').css("padding","15px 15px 10px");
-		}
+		
 		$('#' + elementId).append(row);
+		if((newfiObject.user&&newfiObject.user.internalUserDetail&&
+				newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
+				newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
+				newfiObject.user.userRole.id==4){
+				var userDelIcn = $('<div>').attr({
+					"class" : "delCustClas clearfix",
+					"loanID" : customer.loanID
+				});
+				row.append(userDelIcn);
+			}else{
+				$('.leads-container-tr').css("padding","15px 15px 10px");
+			}
 	}
 	updateHandler.initiateRequest();
 
