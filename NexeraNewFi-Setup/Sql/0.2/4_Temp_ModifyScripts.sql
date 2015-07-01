@@ -73,6 +73,7 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='17' WHERE `id`='
 
 
 #New milestones 26.6
+
 INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('11', 'LOAN_APPROVED', 'LOAN_APPROVED', '1');
 INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('12', 'DOCS_OUT', 'DOCS_OUT', '1');
 
@@ -95,3 +96,9 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='14' WHERE `id`='
 UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='15' WHERE `id`='35';
 
 UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='16' WHERE `id`='36';
+
+
+#Charu Joshi 01 July for marking loan deleted
+INSERT INTO `newfi_schema`.`loanprogressstatusmaster` (`id`, `loan_progress_status`) VALUES ('8', 'DELETED');
+
+
