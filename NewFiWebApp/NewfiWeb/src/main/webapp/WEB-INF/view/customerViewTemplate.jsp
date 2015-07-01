@@ -109,7 +109,7 @@
 			        }
 			});
 			
-			$('#footer-wrapper').show(); 
+			
 		});
 		function callBackFun(){
 			$(window).resize(function() {
@@ -191,7 +191,7 @@
 			$('[data-toggle="tooltip"]').tooltip();  
 			
 		}
-
+		$('#footer-wrapper').show(); 
 	</script>
 </body>
 </html>

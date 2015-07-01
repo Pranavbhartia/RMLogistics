@@ -305,6 +305,7 @@ public class TemplateController extends DefaultController {
 			        identifier, rawOffSet);
 			if (verifyEmailPath != null && !verifyEmailPath.isEmpty()) {
 				// Update the flag for Email Verified Here
+
 				mav.addObject("verifyEmailPath", "verifyEmail");
 			}
 			if (userDetail == null) {
