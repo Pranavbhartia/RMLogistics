@@ -82,7 +82,7 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     }).html(getCurrentDate(responseTime));
     
     columnRight.append(rateBtn2).append(timeStamp);
-    headerCont.append(col1).append(columnRight);
+    headerCont.append(col1)/*.append(columnRight)*/;
     return headerCont;
 }
 var teaserRateValHolder={};
