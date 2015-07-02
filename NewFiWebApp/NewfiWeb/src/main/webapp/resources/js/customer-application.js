@@ -1772,9 +1772,10 @@ function getContextApplicationTextQues(contxt) {
     				    precision:0,
     				    allowNegative:false
     				});
+    				restrictChar(contxt.name);
     			}
     			/* this is the piece of code to retrict user put special charector*/
-    			restrictChar(contxt.name);
+    			restrictSpecialChar(contxt.name);
     			
     		}).keypress(function(key) {
     			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" || $('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode"){
