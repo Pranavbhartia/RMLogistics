@@ -1774,7 +1774,7 @@ function getContextApplicationTextQues(contxt) {
     				});
     			}
     			/* this is the piece of code to retrict user put special charector*/
-    			restrictSpecialChar(contxt.name);
+    			restrictChar(contxt.name);
     			
     		}).keypress(function(key) {
     			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" || $('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode"){
@@ -4383,7 +4383,7 @@ function putCurrencyFormat(name){
 		});		
     });
 	
-	restrictSpecialChar(name);
+	restrictChar(name);
 }
 
 function getMonthYearTextQuestion(question) {
@@ -5845,7 +5845,7 @@ function getContextApplicationPercentageQues(contxt) {
 		    allowNegative:false
 		});
 		/* this is the piece of code to retrict user put special charector*/
-		restrictSpecialChar(contxt.name);
+		restrictChar(contxt.name);
 	});
 	var percentageComp = $('<input>').attr({
 	    "class": "app-input dwn-percentage"
