@@ -1,5 +1,6 @@
 package com.nexera.web.rest.util;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
-import com.nexera.common.entity.CustomerEmploymentIncome;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
 import com.nexera.common.vo.CustomerSpouseEmploymentIncomeVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -314,8 +314,13 @@ public class LQBRequestUtil {
 				hashmap = appendCBDefCredScore(hashmap);
 				condition = "coborrowerWithoutSSNBoth";
 			}
-
-			JSONObject jsonObject = new JSONObject(hashmap);
+			HashMap<String, String> finalmap = new HashMap();
+			for (String key : hashmap.keySet()) {
+				String	encodedValue=URLEncoder.encode(hashmap.get(key)).replaceAll("[+]", " ");
+				finalmap.put(key, encodedValue);
+				
+			}
+			JSONObject jsonObject = new JSONObject(finalmap);
 
 			JSONObject json = new JSONObject();
 			JSONObject jsonChild = new JSONObject();

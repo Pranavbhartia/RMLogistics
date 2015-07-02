@@ -268,11 +268,11 @@ function paintMySpouseIncome() {
 					if($(otherContainer).find('.app-option-checked').hasClass('app-option-checked')){
 					    appUserDetails.customerSpouseOtherAccountDetails=getAccountValues(otherContainer,"customerSpouseOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
 					}
-					
-					if(!appUserDetails.customerSpouseDetail.skipMyAssets && !($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(otherContainer).find('.app-option-checked').hasClass('app-option-checked'))){
+					//validation for my assests
+					/*if(!appUserDetails.customerSpouseDetail.skipMyAssets && !($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(otherContainer).find('.app-option-checked').hasClass('app-option-checked'))){
 						showErrorToastMessage("Please select any option for my assets");
 		    			return false;
-					}
+					}*/
 					
 					
 				}
