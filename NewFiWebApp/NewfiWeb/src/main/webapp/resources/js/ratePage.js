@@ -1122,18 +1122,24 @@ function getDwnPayComponent(value,inputElementId){
         /* this is the piece of code to retrict user put special charector*/
         restrictSpecialChar(undefined,$('#'+inputElementId));
     });
+    globalChangeContainer.dwnVal=showValue(value);
     var percentageComp = $('<input>').attr({
     	"class": "loan-summary-sub-col-detail dwn-percentage"
     }).attr('maxlength','2');;
     
     optionCont.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"val":true},
         function(e){
-            percentageUpdateEventListener(e);
-            globalChangeContainer.flag=true;
             var purchaseAmt=getFloatValue(getpurchaseValue());
             var dwnPmntVal=getFloatValue($(e.data.valComp).val());
             var loanAmt=showValue(purchaseAmt-dwnPmntVal);
-            $("#loanAmount").html(loanAmt);
+            if(dwnPmntVal>purchaseAmt){
+                $(e.data.valComp).val(globalChangeContainer.dwnVal);
+            }else{
+                percentageUpdateEventListener(e);
+                globalChangeContainer.flag=true;
+                globalChangeContainer.dwnVal=showValue(dwnPmntVal);
+                $("#loanAmount").html(loanAmt);
+            }
         })
     percentageComp.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"percentage":true},
         function(e){
