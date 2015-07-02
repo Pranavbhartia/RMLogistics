@@ -1950,7 +1950,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
 }
 
 
-function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag) {
+function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag,paddingLeftFlag) {
     var clas="loan-summary-col-detail";
     var paddingClass="";
     if(lighterBackFlag){
@@ -1971,8 +1971,12 @@ function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag) {
     }else if(desc.indexOf('<font >')>0){
         clas="loan-summary-red-col-detail";
     }
+    var paddingClass="";
+    if(paddingLeftFlag){
+    	paddingClass="tax-Ins-clas";
+    }
     var col2 = $('<div>').attr({
-        "class": clas+" float-left",
+        "class": clas+" float-left "+paddingClass,
         "id": id
     }).html(detail);
     container.append(col1).append(col2);
