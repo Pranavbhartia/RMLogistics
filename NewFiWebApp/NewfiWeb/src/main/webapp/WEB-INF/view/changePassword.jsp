@@ -23,7 +23,7 @@
 				<div class="container-row row clearfix">
 					<div class="reg-display-title">Set Password</div>
 <!-- 					<div class="reg-display-title-subtxt">You have successfully verified your email. Please enter your new password below.</div> -->
-					<div class="reg-display-title-subtxt reg-display-title-subtxt-adj">Success! Your <i>newfi</i> account has been validated.</div>
+					<div class="reg-display-title-subtxt reg-display-title-subtxt-adj">Success! Your newfi account has been validated.</div>
 					<div class="reg-display-title-subtxt sub-text-change-pwd">Please enter your email and set your account password below.</div>
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
