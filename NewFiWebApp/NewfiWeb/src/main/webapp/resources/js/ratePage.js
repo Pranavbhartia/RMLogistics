@@ -811,6 +811,15 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     	teaserRateValHolder.leadCustomer=true;
     }
     
+    var linkForDisclosure=$('<div>').attr({
+    	"class":"cp-sub-txt-link"
+    		
+    }).on('click',function(e){
+    	window.open("https://www.newfi.com/rates-disclosures/");
+    	
+    }).html('view additional disclosures');
+    
+    
     var loanSummaryWrapper = getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
     
@@ -820,7 +829,8 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     
     if(!parentContainer)
         parentContainer=$('#ce-refinance-cp');
-    $(parentContainer).append(parentWrapper).append(closingCostWrapper).append(bottomText);
+    $(parentContainer).append(parentWrapper).append(bottomText).append(linkForDisclosure).append(closingCostWrapper);
+    
 }
 
 function getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
