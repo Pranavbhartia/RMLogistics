@@ -1087,6 +1087,14 @@ function restrictSpecialChar(name,element){
 	    }
 
 	});
+	$(element).bind('paste',function(e){
+		var pastedText = e.originalEvent.clipboardData.getData('text');
+		console.log(pastedText);
+		var regex = /^[0-9a-zA-Z]*$/;
+		if(!regex.test(pastedText)){
+			e.preventDefault();
+		}
+	});
 }
 
 function restrictChar(name){
@@ -1102,7 +1110,14 @@ function restrictChar(name){
 	        return false;
 
 	    }
-
+	});
+	$('input[name="'+name+'"]').bind('paste',function(e){
+		var pastedText = e.originalEvent.clipboardData.getData('text');
+		console.log(pastedText);
+		var regex = /^[0-9]*$/;
+		if(!regex.test(pastedText)){
+			e.preventDefault();
+		}
 	});
 }
 function updateNotifications(loanid){
