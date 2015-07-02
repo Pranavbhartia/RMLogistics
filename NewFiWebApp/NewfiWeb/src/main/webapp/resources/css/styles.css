@@ -646,7 +646,7 @@ input[type="button"]:focus, button:focus {
 .loan-summary-row {
 	line-height: 20px;
 	border-bottom: 1px #E9E9E9 dashed;
-	padding: 10px 0;
+	padding: 5px 0;
 }
 
 .no-border-bottom {
@@ -657,6 +657,7 @@ input[type="button"]:focus, button:focus {
 	/* width: 50%;
 	padding-right: 5px; */
 	width: 130px;
+	line-height: 13px;
 }
 
 .loan-summary-last-row .loan-summary-col-detail{
@@ -677,7 +678,7 @@ input[type="button"]:focus, button:focus {
 	/*text-align: center;*/
 	/*background: #8DC2F0;*/
 	/* padding: 5px 10px; */
-	padding: 10px 10px;
+	padding: 5px 10px 5px 0;
   	border-radius: 3px;
 }
 
@@ -822,7 +823,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-last-row {
   line-height: 20px;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .subtext {
@@ -5514,11 +5515,11 @@ a.session-login-btn {
 }
 
 .estimated-row-padding-clas{
-	padding: 10px 0 20px;
+	padding: 5px 0;
 }
 
 .tax-Ins-clas{
-	padding-left: 8px;
+	padding-left: 8px !important;
 }
 .homeowners-insurance-reserve{
   padding: 20px 10px;
@@ -5542,7 +5543,7 @@ a.session-login-btn {
 
 .loan-rate-tableRow-clas {
 	line-height: 15px;
-	padding: 10px 0;
+	padding: 5px 0;
 }
 .loan-rate-tableRow-container{
 	margin-top: 10px;
@@ -5550,7 +5551,7 @@ a.session-login-btn {
 
 .loan-summary-row-border-adj {
 	border: none;
-	margin-left: 10px;
+	/* margin-left: 10px; */
 }
 .rate-page-normal-text{
 	font-family: 'OpenSans';
