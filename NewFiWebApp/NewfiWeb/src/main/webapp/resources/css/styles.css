@@ -5583,3 +5583,10 @@ a.session-login-btn {
 .login-container-adj {
 	margin: 0;
 }
+.loan-summary-rateapr-detail {
+	color: #428bca;
+}
+.loan-summary-rateapr-seperator {
+	width: 12px;
+	text-align: center;
+}
