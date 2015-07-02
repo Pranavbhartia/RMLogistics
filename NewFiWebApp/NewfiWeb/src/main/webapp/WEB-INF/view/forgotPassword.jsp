@@ -57,6 +57,7 @@ var resendIndex=locationURL.indexOf("?resend");
 	<script src="${initParam.resourcesPath}/resources/js/message.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/include/jquery-maskMoney.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/historySupport.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/message.js"></script>
 	<script>
 		resizeHeaderWidth();
 		$(window).resize(function() {
@@ -75,6 +76,11 @@ $(document).ready(function(e){
 
 	}
 
+	$('#errorMessage').on('click',function(e){
+		$("#errorMessage").text('');
+		$('#errorMessage').hide();
+	});
+	
 	var title = "";
 	var buttonText = "";
 	var headerText = "";
@@ -108,7 +114,7 @@ $('#loginForm').submit(function(event){
 		console.log("Create user button clicked. User : "
 						+ JSON.stringify(user));
 	if($('#emailID').val()==""||$('#emailID').val()==null){
-		$("#emailID").next('.err-msg').html("Email ID cannot be empty").show();
+		$("#emailID").next('.err-msg').html(emailEmptyMessage).show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
 			return;
 		
@@ -130,7 +136,10 @@ $('#loginForm').submit(function(event){
 	});
 
 function paintForgetPasswordResponse(data){
-	if(data.resultObject!=null){		
+	if(data.resultObject!=null){	
+		if($("#errorMessage").html()!=""){
+			$("#errorMessage").hide();
+		}
 		$('#emailID').val('');		
 		showToastMessage(data.resultObject);
 		$("#emailID").next('.err-msg').hide();
