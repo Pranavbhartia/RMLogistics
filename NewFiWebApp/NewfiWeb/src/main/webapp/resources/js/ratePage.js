@@ -816,11 +816,11 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     
   //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
 
-    parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper).append(bottomText);
+    parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper);
     
     if(!parentContainer)
         parentContainer=$('#ce-refinance-cp');
-    $(parentContainer).append(parentWrapper).append(closingCostWrapper);
+    $(parentContainer).append(parentWrapper).append(closingCostWrapper).append(bottomText);
 }
 
 function getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
