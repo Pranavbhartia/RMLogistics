@@ -1102,7 +1102,8 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "class": "container-row row clearfix"
     });
     var regMainContainer = $('<div>').attr({
-        "class": "reg-main-container"
+        "class": "reg-main-container",
+        "id": "reg-main-container-id"
     });
     var regDisplayTitle = $('<div>').attr({
         "class": "reg-display-title"
@@ -1167,6 +1168,11 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
         "placeholder": "Email",
         "name": "email"
     });
+    
+    var successMessageContainer=$('<div>').attr({
+		"class":"cus-eng-success-message hide",
+		"id": "cus-eng-success-message-id"
+	});
     regInputContainerEmail.append(regInputEmail).append(appendErrorMessage());
     //TODO added phone feild
 /*    var regInputContainerPhone = $('<div>').attr({
@@ -1336,7 +1342,7 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
     regMainContainer.append(errorMsg);
     regMainContainer.append(regContainerGetStarted);
    
-    return parentWrapper.append(regMainContainer);
+    return parentWrapper.append(regMainContainer).append(successMessageContainer);
 }
 function validateUsersBeforeRegistration(registration,teaseRateDataList){
 	
@@ -1388,7 +1394,7 @@ function sendInfoToNewfi(registration){
             $('#overlay-loader').hide();
             if(data.error==null){
             	$('.reg-main-container').hide();
-            	$('.contactInfoText').html('Your information has been submitted and someone from the newfi team will contact you shortly.')
+            	$('.contactInfoText').html(send_info_message);
             	
             }else{
             	showErrorToastMessage(data.error.message);
@@ -1419,10 +1425,11 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
         success: function(data) {
             // $('#overlay-loader').hide();
             $('#overlay-loader').hide();
-            // alert (data);
+           appendUserCreationSuccessMessage(data);
+           /* // alert (data);
             window.location.href = data;
             // printMedianRate(data,container);
-        },
+*/        },
         error: function(data) {
            // alert(data);
         	validateDropDown();
@@ -1431,6 +1438,16 @@ function saveUserAndRedirect(registration,teaseRateDataList) {
             showErrorToastMessage(data);
         }
     });
+}
+
+function appendUserCreationSuccessMessage(data){
+	
+	$('#right-container-id').hide();
+	$('#reg-main-container-registerNew').hide();	 
+	$('#reg-main-container-id').hide();
+	$('.ce-refinance-wrapper').css('margin-left','15px');
+	$('#cus-eng-success-message-id').append(data);
+	$('#cus-eng-success-message-id').show();
 }
 
 function saveAndUpdateLoanAppForm(appUserDetails) {
@@ -2048,6 +2065,7 @@ function modifiyTeaserRate(amt,amt1) {
         }else{
             if (buyHomeTeaserRate.loanType){
             	buyHomeTeaserRate.purchaseDetails.housePrice=amt;
+                buyHomeTeaserRate.homeWorthToday=amt
                 buyHomeTeaserRate.purchaseDetails.loanAmount=(amt-amt1);
                 buyHomeTeaserRate.currentMortgageBalance = amt1;
                 paintBuyHomeSeeTeaserRate();

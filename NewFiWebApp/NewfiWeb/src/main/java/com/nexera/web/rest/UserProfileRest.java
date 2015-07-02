@@ -273,11 +273,11 @@ public class UserProfileRest {
 		try {
 			passwordChanged = userProfileService
 			        .changeUserPassword(updatePassword);
-			if (updatePassword.isVerifyEmailPath()) {
+			/*if (updatePassword.isVerifyEmailPath()) {
 				LOG.info("The user is verifying his email: set his verified to true");
 				userProfileService.verifyEmail(updatePassword.getUserId());
 				LOG.info("Also dismiss alert for Verification");
-			}
+			}*/
 			if (passwordChanged == true) {
 				String emailId = updatePassword.getEmailID();
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

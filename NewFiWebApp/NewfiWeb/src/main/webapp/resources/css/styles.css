@@ -646,7 +646,7 @@ input[type="button"]:focus, button:focus {
 .loan-summary-row {
 	line-height: 20px;
 	border-bottom: 1px #E9E9E9 dashed;
-	padding: 10px 0;
+	padding: 5px 0;
 }
 
 .no-border-bottom {
@@ -657,6 +657,7 @@ input[type="button"]:focus, button:focus {
 	/* width: 50%;
 	padding-right: 5px; */
 	width: 130px;
+	line-height: 13px;
 }
 
 .loan-summary-last-row .loan-summary-col-detail{
@@ -677,7 +678,7 @@ input[type="button"]:focus, button:focus {
 	/*text-align: center;*/
 	/*background: #8DC2F0;*/
 	/* padding: 5px 10px; */
-	padding: 10px 10px;
+	padding: 5px 10px 5px 0;
   	border-radius: 3px;
 }
 
@@ -822,7 +823,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-last-row {
   line-height: 20px;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .subtext {
@@ -1655,7 +1656,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-row {
-	padding: 10px;
+	padding: 10px 5px;
 	line-height: 20px;
 	background-color: #fcfcfc;
 	border-top: 1px #cecece dashed;
@@ -1702,7 +1703,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-tc7 {
-	width: 55px;
+	width: 40px;
 }
 
 .onl-status-icn {
@@ -1849,7 +1850,7 @@ input[type="button"]:focus, button:focus {
 
 .leads-container-tr {
 	/* cursor: pointer; */
-	padding: 15px 10px 10px;
+	padding: 15px 5px 10px;
 }
 
 .leads-container-tr .cus-name,.leads-container-tr .leads-container-tc5,.leads-container-tr .leads-container-tc7{
@@ -2928,9 +2929,9 @@ input.calc-input {
 }
 
 .login-container {
-	 margin-top: 110px;
-	margin-bottom: 100px; 
-	/* margin: 150px 100px; */
+	 /* margin-top: 110px;
+	margin-bottom: 100px;  */
+	 margin: 150px 100px; 
 }
 
 .display-title {
@@ -4551,7 +4552,7 @@ input.calc-input {
 }
 
 .slider-wrapper {
-  margin: 25px 0;
+  margin: 20px 0 35px;
 }
 
 .slider-hdr-txt {
@@ -5514,11 +5515,11 @@ a.session-login-btn {
 }
 
 .estimated-row-padding-clas{
-	padding: 10px 0 20px;
+	padding: 5px 0;
 }
 
 .tax-Ins-clas{
-	padding-left: 8px;
+	padding-left: 8px !important;
 }
 .homeowners-insurance-reserve{
   padding: 20px 10px;
@@ -5542,7 +5543,7 @@ a.session-login-btn {
 
 .loan-rate-tableRow-clas {
 	line-height: 15px;
-	padding: 10px 0;
+	padding: 5px 0;
 }
 .loan-rate-tableRow-container{
 	margin-top: 10px;
@@ -5550,8 +5551,26 @@ a.session-login-btn {
 
 .loan-summary-row-border-adj {
 	border: none;
-	margin-left: 10px;
+	/* margin-left: 10px; */
 }
 .rate-page-normal-text{
 	font-family: 'OpenSans';
+}
+.delCustClas{
+	background: url(../images/user_del.png) no-repeat right 1px;
+	background-size: 20px;
+}
+.home-container-adj {
+	min-height:100%;
+	margin-bottom:100px;
+	padding-bottom:0px;
+	margin-top:80px;
+}
+
+.forget-pass-adj {
+	margin: 0;
+	padding: 36px;
+}
+.login-container-adj {
+	margin: 0;
 }
