@@ -829,7 +829,7 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     
     if(!parentContainer)
         parentContainer=$('#ce-refinance-cp');
-    $(parentContainer).append(parentWrapper).append(bottomText).append(linkForDisclosure).append(closingCostWrapper);
+    $(parentContainer).append(parentWrapper).append(closingCostWrapper).append(bottomText).append(linkForDisclosure);
     
 }
 
