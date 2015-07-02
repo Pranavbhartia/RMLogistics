@@ -2147,20 +2147,24 @@ function getClosingCostBottomConatiner() {
     var row1Con3 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "","");
     var row2Con3 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "");
     
-    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");
-    var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
+/*    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");*///NEXNF-655
+    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Varies based on calendar month of closing");
+   /* var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");*/
+    var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
     //var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
-    //var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
+    //var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");//NEXNF-655
     var row4Con2 = getClosingCostContainerLastRow(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "");
     
     
     //container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
     container2.append(headerCon2).append(row1Con3).append(row2Con3).append(row1Con2).append(row2Con2).append(row4Con2);
-    
+    //NEXNF-655
+    /* 
     var bottomSubText = $('<div>').attr({
         "class": "closing-cost-bot-row eng-closing-cost-note"
     }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
-    return wrapper.append(container2).append(bottomSubText);
+    return wrapper.append(container2).append(bottomSubText);*/
+    return wrapper.append(container2);
 }
 
 function getClosingCostConatinerHeader(text) {
@@ -2276,7 +2280,7 @@ function getClosingCostContainerRow(rowNum, desc, detail) {
     return row.append(rowDesc).append(rowDetail);
 }
 
-function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
+function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext,isHomeOwnersInsurance) {
     var key=objectKeyMakerFunction(desc);
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
@@ -2311,7 +2315,18 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
    var subTextDiv = $('<div>').attr({
         "class": "subtext"
     }).html(subtext);
-    rowDesc.append(descText).append(subTextDiv);
+   
+ //NEXNF-655
+   if(isHomeOwnersInsurance){
+   	 var bottomSubText = $('<div>').attr({
+   	        "class": "closing-cost-bot-row eng-closing-cost-note"
+   	    }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
+   	   rowDesc.append(descText).append(subTextDiv).append(bottomSubText);
+   }else{
+	   rowDesc.append(descText).append(subTextDiv);
+   }
+ 
+    //rowDesc.append(descText).append(subTextDiv);
     
     
     var cssClass = "closing-cost-detail float-left";
@@ -2327,6 +2342,8 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     var rwObj=getRowHolderObject(rowDetail,detail,key);
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
+    
+    
     return row.append(rowDesc).append(rowDetail);
 }
 
