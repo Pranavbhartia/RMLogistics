@@ -11,6 +11,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
@@ -24,7 +25,12 @@ public class LQBRequestUtil {
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LQBRequestUtil.class);
-
+	@Value("${adv.credit.user}")
+	private String advCreditUserName;
+	@Value("${adv.credit.password}")
+	private String advCreditPassword;
+	
+	
 	public JSONObject prepareCreateLoanJson(String templateName, String sTicket) {
 		JSONObject json = new JSONObject();
 		JSONObject jsonChild = new JSONObject();
@@ -520,8 +526,8 @@ public class LQBRequestUtil {
 	HashMap<String, String> getBorrowerCredit(HashMap<String, String> hashmap) {
 
 		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
-		hashmap.put("LOGIN_NAME", "testact");
-		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("LOGIN_NAME", advCreditUserName);
+		hashmap.put("PASSWORD", advCreditPassword);
 		hashmap.put("equifaxStatus", "N");
 		hashmap.put("experianStatus", "N");
 		hashmap.put("transunionStatus", "Y");
@@ -534,8 +540,8 @@ public class LQBRequestUtil {
 		        "eb228885-b484-404a-99ff-b28511dd3e38");
 		hashmap.put("equifaxCoborrowerStatus", "N");
 		hashmap.put("experianCoborrowerStatus", "N");
-		hashmap.put("LOGIN_Coborrower_NAME", "testact");
-		hashmap.put("PASS_COBORROWER_WORD", "1234nexera");
+		hashmap.put("LOGIN_Coborrower_NAME", advCreditUserName);
+		hashmap.put("PASS_COBORROWER_WORD", advCreditPassword);
 		hashmap.put("transunionCoborrowerStatus", "Y");
 
 		return hashmap;
@@ -809,8 +815,8 @@ public class LQBRequestUtil {
 	HashMap<String, String> saveTrimergeStatus(HashMap<String, String> hashmap) {
 
 		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
-		hashmap.put("LOGIN_NAME", "testact");
-		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("LOGIN_NAME", advCreditUserName);
+		hashmap.put("PASSWORD", advCreditPassword);
 		hashmap.put("equifaxStatus", "Y");
 		hashmap.put("experianStatus", "Y");
 		hashmap.put("transunionStatus", "N");
@@ -821,8 +827,8 @@ public class LQBRequestUtil {
 	HashMap<String, String> saveTransunionStatus(HashMap<String, String> hashmap) {
 
 		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
-		hashmap.put("LOGIN_NAME", "testact");
-		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("LOGIN_NAME", advCreditUserName);
+		hashmap.put("PASSWORD", advCreditPassword);
 		hashmap.put("equifaxStatus", "N");
 		hashmap.put("experianStatus", "N");
 		hashmap.put("transunionStatus", "Y");

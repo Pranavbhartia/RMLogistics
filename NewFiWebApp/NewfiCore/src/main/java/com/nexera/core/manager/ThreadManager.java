@@ -768,10 +768,12 @@ public class ThreadManager implements Runnable {
 				LOGGER.debug("Updating customer details ");
 				updateCustomerDetails(customerDetail);
 
-				if (borrowerEquifaxScore != null
-				        && borrowerExperianScore != null
-				        && borrowerTransunionScore != null)
+				if ( (borrowerEquifaxScore != null && !borrowerEquifaxScore.equalsIgnoreCase(CommonConstants.DEFAULT_CREDIT_SCORE) ) 
+				        || (borrowerExperianScore != null && !borrowerExperianScore.equalsIgnoreCase(CommonConstants.DEFAULT_CREDIT_SCORE))
+				        || (borrowerTransunionScore != null && !borrowerTransunionScore.equalsIgnoreCase(CommonConstants.DEFAULT_CREDIT_SCORE)))
+				{
 					invokeCreditScoreMilestone();
+				}
 
 			} else {
 				LOGGER.error("Credit Scores Not Found For This Loan ");
