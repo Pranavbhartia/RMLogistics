@@ -5,7 +5,7 @@ function paintMySpouseIncome() {
 	 coborrowerName = appUserDetails.customerSpouseDetail.spouseName;
 	
 	//var quesTxt =coborrowerName+ " details :Select all that apply";
-	var quesTxt ="Income for co-borrower "+coborrowerName+ " :Select all that apply";//Changed for web portal updates 7.1 part 2
+	var quesTxt ="Income for co-borrower "+coborrowerName+ " : select all that apply";//Changed for web portal updates 7.1 part 2
 	
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.selfEmployedIncome){
@@ -1284,7 +1284,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 	 coborrower = appUserDetails.customerSpouseDetail.spouseName;
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for "+coborrower;
+    var quesHeaderTxt = "Credit for co-borrower"+coborrower;
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
