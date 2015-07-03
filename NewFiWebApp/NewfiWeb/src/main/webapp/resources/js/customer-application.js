@@ -1803,8 +1803,9 @@ function getContextApplicationTextQues(contxt) {
 
 function incomesSelectALLThatApply() {
 
-	
-	var quesTxt = "Select all that apply";
+	var borrowerName=appUserDetails.user.firstName;
+	/*var quesTxt = "Select all that apply";*/
+	var quesTxt = "Income for borrower "+borrowerName+" :Select all that apply";//Changed for web portal updates 7.1 part 2
 
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.isselfEmployed){
@@ -2967,7 +2968,9 @@ function paintCustomerApplicationPageStep4a() {
 	quesDeclarationContxts = [];
 	appProgressBaar(5);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Declaration Questions";
+	var borrowerFirstName=appUserDetails.user.firstName;
+    /*var quesHeaderTxt = "Declaration Questions";*/
+    var quesHeaderTxt = "Declarations for borrower "+borrowerFirstName;//Changed for web portal updates 7.1 part 2
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -3378,8 +3381,9 @@ function paintCustomerApplicationPageStep4a() {
 	
 	
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Government Monitoring Questions";
-
+	var borrowerFirstName=appUserDetails.user.firstName;
+   /* var quesHeaderTxt = "Government Monitoring Questions";*/
+    var quesHeaderTxt = "Government Monitoring Questions for borrower "+borrowerFirstName;//changed  for web portal updates 7.1 part 2
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     });
