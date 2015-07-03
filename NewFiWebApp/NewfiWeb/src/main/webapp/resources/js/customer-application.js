@@ -1805,7 +1805,7 @@ function incomesSelectALLThatApply() {
 
 	var borrowerName=appUserDetails.user.firstName;
 	/*var quesTxt = "Select all that apply";*/
-	var quesTxt = "Income for borrower "+borrowerName+" :Select all that apply";//Changed for web portal updates 7.1 part 2
+	var quesTxt = "Income for borrower "+borrowerName+" : select all that apply";//Changed for web portal updates 7.1 part 2
 
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.isselfEmployed){
@@ -3637,7 +3637,7 @@ function paintCustomerApplicationPageStep5() {
 	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for " +userName;
+    var quesHeaderTxt = "Credit for borrower" +userName;
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
