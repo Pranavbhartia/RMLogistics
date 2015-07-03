@@ -4,7 +4,8 @@ function paintMySpouseIncome() {
 	if(appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.spouseName) 
 	 coborrowerName = appUserDetails.customerSpouseDetail.spouseName;
 	
-	var quesTxt =coborrowerName+ " details :Select all that apply";
+	//var quesTxt =coborrowerName+ " details :Select all that apply";
+	var quesTxt ="Income for co-borrower "+coborrowerName+ " :Select all that apply";//Changed for web portal updates 7.1 part 2
 	
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.selfEmployedIncome){
@@ -707,9 +708,9 @@ function getMultiTextQuestionSpouse(quesText,value) {
 
 function paintSpouseCustomerApplicationPageStep4a() {
    
-	 var quesHeaderTxt = "Declaration for co-borrower";
+	 var quesHeaderTxt = "Declarations for co-borrower";//added s after declaration  for web portal updates 7.1 part 2
 	 if(appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.spouseName)
-		  quesHeaderTxt = "Declaration for " +appUserDetails.customerSpouseDetail.spouseName;
+		  quesHeaderTxt = "Declarations for co-borrower " +appUserDetails.customerSpouseDetail.spouseName;//added s after declaration  for web portal updates 7.1 part 2
 	quesDeclarationContxts = [];
 	
 	$('#app-right-panel').html('');
@@ -1102,12 +1103,16 @@ function paintSpouseCustomerApplicationPageStep4a() {
 function paintSpouseCustomerApplicationPageStep4b(){
 	
 	var coborrower ="co-borrower";
-	if(appUserDetails.customerSpouseDetail.spouseName)
-	coborrower = appUserDetails.customerSpouseDetail.spouseName;
+	var quesHeaderTxt="";
+	if(appUserDetails.customerSpouseDetail.spouseName){
+		coborrower = appUserDetails.customerSpouseDetail.spouseName;		
+		quesHeaderTxt = "Government Monitoring Questions for co-borrower "+coborrower;//Changed for web portal updates 7.1 part 2
+	}else{
+		quesHeaderTxt = "Government Monitoring Questions for "+coborrower;
+	}
 	
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Government Monitoring Questions for "+coborrower;
-
+	/*var quesHeaderTxt = "Government Monitoring Questions for "+coborrower;*/
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     });

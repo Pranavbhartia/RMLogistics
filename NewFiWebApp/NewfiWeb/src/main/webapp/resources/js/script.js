@@ -634,7 +634,7 @@ function getCompletYourApplicationHeader() {
     }).html("Complete My Loan Profile");*/
     var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Application");
+    }).html("Complete Application");//Changed from Complete My Application to Complete Application
     
     return parent.append(header);
 }
