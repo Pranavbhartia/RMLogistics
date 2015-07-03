@@ -419,6 +419,7 @@ public class NeedsListServiceImpl implements NeedsListService {
 	@Override
 	@Transactional
 	public int saveLoanNeeds(int loanId, List<Integer> needsList) {
+		LOGGER.info("In Save Loan Needs : " + loanId + needsList);
 		LinkedHashMap<String, LoanNeedsList> existingNeeds = new LinkedHashMap<String, LoanNeedsList>();
 		boolean initialList = false;
 		List<LoanNeedsList> existingNeedsList = null;

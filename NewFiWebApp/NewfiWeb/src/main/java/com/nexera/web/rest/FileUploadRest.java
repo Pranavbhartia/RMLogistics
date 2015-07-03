@@ -327,7 +327,7 @@ public class FileUploadRest {
 			        "User Not Logged in."));
 		}
 
-		LOG.info("in document upload  wuth user id " + userID + " and loanId :"
+		LOG.info("in document upload  with user id " + userID + " and loanId :"
 		        + loanId + " and assignedBy : " + assignedBy
 		        + " and need id : " + needId);
 		List<String> unsupportedFile = new ArrayList<String>();
