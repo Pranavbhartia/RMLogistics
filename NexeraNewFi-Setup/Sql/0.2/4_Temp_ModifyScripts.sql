@@ -102,3 +102,6 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `display_order`='16' WHERE `id`='
 INSERT INTO `newfi_schema`.`loanprogressstatusmaster` (`id`, `loan_progress_status`) VALUES ('8', 'DELETED');
 
 
+###Anoop : Change file_name column length in uploadedfileslist table. Executed in PROD
+ALTER TABLE `newfi_schema`.`uploadedfileslist` 
+CHANGE COLUMN `file_name` `file_name` VARCHAR(150) NULL DEFAULT NULL ;
