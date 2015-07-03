@@ -444,7 +444,10 @@ public class NexeraUtility {
 
 		File convFile = new File(directory.getAbsolutePath() + File.separator
 		        + multipart.getOriginalFilename());
-		multipart.transferTo(convFile);
+		// multipart.transferTo(convFile);
+		FileOutputStream fos = new FileOutputStream(convFile);
+		fos.write(multipart.getBytes());
+		fos.close();
 		return convFile;
 	}
 
