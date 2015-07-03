@@ -158,3 +158,6 @@ var zipcode_isnot_approved ="Please enter a valid Zip Code in a newfi approved s
 var zipcode_valid ="Valid ZipCode";
 var send_info_message="Your information has been submitted and someone from the newfi team will contact you shortly.";
 var email_id_unmatch_error_message="Please provide the registered Email ID";
+var borrower_creation_unsuccess_message="Error while creating borrower";
+var realtor_creation_unsuccess_message="Error while creating realtor";
+var validation_unsuccess_message="Something went wrong while creating user. Please try again later.";

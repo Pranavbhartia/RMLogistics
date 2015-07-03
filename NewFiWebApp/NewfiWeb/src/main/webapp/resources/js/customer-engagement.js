@@ -1110,7 +1110,8 @@ function paintApplyNow(inputCustomerDetails,emailQuote,appendedFlag) {
     }).html("Get Started");
     var regDisplaySubTitle = $('<div>').attr({
         "class": "reg-display-title-subtxt cus-eng-reg"
-    }).html("Create your account now to have immediate access to the powerful newfi lending tool.");
+    }).html("Create your account now to have immediate access to the powerful benefits of newfi");
+    //"Create your account now to have immediate access to the powerful newfi lending tool."NEXNF-658
     var regInputContainerFname = $('<div>').attr({
         "class": "reg-input-cont reg-fname"
     });
