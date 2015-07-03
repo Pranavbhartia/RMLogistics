@@ -1284,7 +1284,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 	 coborrower = appUserDetails.customerSpouseDetail.spouseName;
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for co-borrower"+coborrower;
+    var quesHeaderTxt = "Credit for co-borrower "+coborrower;
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"

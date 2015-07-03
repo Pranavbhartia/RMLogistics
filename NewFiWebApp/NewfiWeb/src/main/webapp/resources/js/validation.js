@@ -363,3 +363,37 @@ function currentlyLivingValidation(){
 	}
 	return true;
 }
+
+function validateFormFeildInRealtorReferalRegistration(){
+	if($("#userTypeID").attr('value')==""||$("#userTypeID").attr('value')==null||$("#userTypeID").attr('value')==undefined){
+		showErrorToastMessage(selectUserType);
+		return false;
+	}
+	var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',firstNameEmptyMessage);
+	if(!firstName){
+		$('.reg-input-row').css('margin-bottom','38px');
+		return false;
+	}
+	var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',lastNameEmptyMessage);
+	if(!lastName){
+		return false;
+	}
+	var emailID=validateFormFeild("#emailID",'.reg-input-cont.reg-email',emailEmptyMessage);
+	if(!emailID){
+		return false;
+	}
+	if($("#emailID").val()!=null||$("#emailID").val()!=""){
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;;
+        if (!regex.test($("#emailID").val())) {
+        	$('#emailID').next('.err-msg').html(invalidEmailErrorMessage).show();
+			$('.reg-input-cont.reg-email').addClass('ce-err-input').show();
+		return false;
+        }
+	}
+	/* var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
+	if(!phone){
+		$('.reg-input-row').css('margin-bottom','38px');
+		return false;
+	} */
+	return true;
+}

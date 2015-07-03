@@ -21,7 +21,9 @@
 			<div id="reg-main-container" class="reg-main-container">
 				
 				<div class="reg-display-title">Get Started Now</div>
-				<div class="reg-display-title-subtxt">Create a Newfi account now to access our powerful lending tool and take control on your terms.</div>
+					<!-- NEXNF-658 -->
+<!-- 				<div class="reg-display-title-subtxt">Create a newfi account now to access our powerful lending tool and take control on your terms.</div> -->
+					<div class="reg-display-title-subtxt">Create your account now to have immediate access to the powerful benefits of newfi.</div>
 				<div class="reg-input-cont reg-fname">
 					<input class="reg-input" placeholder="First Name">
 				</div>

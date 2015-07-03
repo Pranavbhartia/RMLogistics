@@ -34,8 +34,10 @@
       <div class="reg-display-title">
         Get Started 
       </div>
-      <div class="reg-display-title-subtxt">
-        Create a Newfi account now to access our powerful lending tool and take control on your terms.
+      <!-- NEXNF-659 -->
+<!-- 				<div class="reg-display-title-subtxt">Create a newfi account now to access our powerful lending tool and take control on your terms.</div> -->
+      <div class="reg-display-title-subtxt referal-sub-txt">
+        Create your account now to have immediate access to the powerful benefits of newfi.
       </div>
       
       <div class="clearfix user-info-outer-container">
@@ -132,8 +134,12 @@
            </div>
           </div> -->
             <div class="reg-btn-wrapper clearfix">
-            <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
+            <!-- NEXNF-659 -->
+            <!-- <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
               Submit
+            </div> -->
+             <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
+              Create Account
             </div>
           </div>
           <div class="reg-input-error hide errorMsg">
@@ -151,8 +157,9 @@
               <div class="reg-select reg-input-cont">
                     <input class="reg-option-selected prof-form-input-select"  id="userTypeID" placeholder="User Type" value="">
                     <div class="reg-option-dropdown hide">
-                      <div class="reg-select-option" id="customerID" role="cus">Customer</div>
-                      
+                    	<!-- NEXNF-659 -->
+                      	<!-- <div class="reg-select-option" id="customerID" role="cus">Customer</div> -->
+                      <div class="reg-select-option" id="customerID" role="cus">Borrower</div>
                       <div class="reg-select-option" id="realtorID" role="rel">Realtor</div>
                     </div>
                     </div>
@@ -207,8 +214,12 @@
            </div>
           </div> -->
           <div class="reg-btn-wrapper clearfix">
-            <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
+            <!-- NEXNF-659 -->
+            <!-- <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
               Submit
+            </div> -->
+             <div class="cep-button-color reg-btn reg-chg-width float-left" id="submitID">
+              Create Account
             </div>
           </div>
           <div class="reg-input-error hide errorMsg">
@@ -280,8 +291,7 @@
 	    }
 	});
 		$(document).ready(function() {
-			
-			
+						
 			if(window.location.href.indexOf("us") > -1){
 				var url=window.location.href.split('us');
 				baseurl=url[0];
@@ -322,64 +332,39 @@
 				$("#realor-email").hide();
 			});
 			
-				$("#submitID").click(function(e){
-				var LoanAppFormVO=new Object();
-				var user = new Object();
-				var loan=new Object();
-				user.firstName=$("#firstName").val();
-				var dateVar = new Date();
-				var timezone = dateVar.getTimezoneOffset();
-				user.emailId = $("#emailID").val() + ":" + timezone;
-				user.lastName = $("#lastName").val();
-				/* var phoneNumber =$("#phoneID").val();
-				user.phoneNumber = phoneNumber.replace(/[^0-9]/g, ''); */
-				user.userRole={
-							roleDescription :$("#userTypeID").val()
-						}
-				LoanAppFormVO.user=user;
-				LoanAppFormVO.loanMangerEmail=email;
-				LoanAppFormVO.realtorEmail=email;
-				
-				//TODO form validation
-				if($("#userTypeID").attr('value')==""||$("#userTypeID").attr('value')==null||$("#userTypeID").attr('value')==undefined){
-					showErrorToastMessage("Please Select the user");
-					return false;
-				}
-				var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',"First name cannot be empty");
-				if(!firstName){
-					$('.reg-input-row').css('margin-bottom','38px');
-					return false;
-				}
-				var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',"Last name cannot be empty");
-				if(!lastName){
-					return false;
-				}
-				var emailID=validateFormFeild("#emailID",'.reg-input-cont.reg-email',"Email ID cannot be empty");
-				if(!emailID){
-					return false;
-				}
-				if($("#emailID").val()!=null||$("#emailID").val()!=""){
-					var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;;
-	                if (!regex.test($("#emailID").val())) {
-	                	$('#emailID').next('.err-msg').html("Incorrect Email").show();
-	        			$('.reg-input-cont.reg-email').addClass('ce-err-input').show();
-					return false;
-	                }
-				}
-				/* var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
-				if(!phone){
-					$('.reg-input-row').css('margin-bottom','38px');
-					return false;
-				} */
-				//End of validation
-				validateUser(LoanAppFormVO);
+			$("#submitID").click(function(e){
+			var LoanAppFormVO=new Object();
+			var user = new Object();
+			var loan=new Object();
+			user.firstName=$("#firstName").val();
+			var dateVar = new Date();
+			var timezone = dateVar.getTimezoneOffset();
+			user.emailId = $("#emailID").val() + ":" + timezone;
+			user.lastName = $("#lastName").val();
+			/* var phoneNumber =$("#phoneID").val();
+			user.phoneNumber = phoneNumber.replace(/[^0-9]/g, ''); */
+			user.userRole={
+						roleDescription :$("#userTypeID").val()
+					}
+			LoanAppFormVO.user=user;
+			LoanAppFormVO.loanMangerEmail=email;
+			LoanAppFormVO.realtorEmail=email;
+			
+			//TODO form validation
+			var isStatus=validateFormFeildInRealtorReferalRegistration();
+			
+			if(!isStatus){
+				return false;
+			}
+			//End of validation
+			validateUser(LoanAppFormVO);
 				
 				
 			});
 		});
 		
 		function validateUser(registration){
-			$('#overlay-loader').show();
+			showOverlay();
 		    $.ajax({
 		        url: baseurl+"rest/shopper/validate",
 		        type: "POST",
@@ -389,9 +374,9 @@
 		        },
 		        datatype: "application/json",
 		        success: function(data) {
-		            $('#overlay-loader').hide();
+		        	hideOverlay();
 		            if(data.error==null){
-		            	if($("#userTypeID").attr('value')=="Customer"){
+		            	if($("#userTypeID").attr('value')=="Borrower"){//NEXNF-659 changed from customer to borrower
 							createNewCustomer(registration);
 						}else if($("#userTypeID").attr('value')=="Realtor"){
 							createNewRealtor(registration);
@@ -403,15 +388,22 @@
 		           
 		        },
 		        error: function(data) {
-		             showErrorToastMessage(data);
-		             $('#overlay-loader').hide();
+		        	
+		        	hideOverlay();
+		        	if(data!=""||data!=null){
+		        		 showErrorToastMessage(data);
+		        	}else{
+		        		 showErrorToastMessage(validation_unsuccess_message);
+		        	}
+		            
+		             
 		        }
 		    });
 		}
    
 	    function createNewCustomer(registration) {
      //alert(JSON.stringify(registration));
-        $('#overlay-loader').show();
+        showOverlay();
         $.ajax({
         url: baseurl+"rest/shopper/registration",
         type: "POST",
@@ -421,7 +413,8 @@
         },
         datatype: "application/json",
         success: function(data) {
-            $('#overlay-loader').hide();
+        	
+        	hideOverlay();
             appendUserCreationSuccessMessage(data);
             $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
             $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
@@ -430,14 +423,16 @@
             // printMedianRate(data,container);
         },
         error: function(data) {
-            showErrorToastMessage("error while creating user");
-            $('#overlay-loader').hide();
+        	
+        	hideOverlay();
+            showErrorToastMessage(user_creation_unsuccess_message);
+           
           }
          });
         }
 		
 		function createNewRealtor(user){
-		    $('#overlay-loader').show();
+			showOverlay();
 		    $.ajax({
 		        url: baseurl+"rest/shopper/realtorRegistration",
 		        type: "POST",
@@ -448,7 +443,7 @@
 		        datatype: "application/json",
 		        success: function(data) {
 		            // $('#overlay-loader').hide();
-		            $('#overlay-loader').hide();
+		            hideOverlay();
 		            appendUserCreationSuccessMessage(data);
 		            $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
 		            $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
@@ -459,8 +454,9 @@
 		        },
 		        error: function(data) {
 		         // alert(data);
-		            showErrorToastMessage("error while creating user");
-		            $('#overlay-loader').hide();
+		         	hideOverlay();
+		            showErrorToastMessage(realtor_creation_unsuccess_message);
+		            
 		        }
 		    });	
 		}

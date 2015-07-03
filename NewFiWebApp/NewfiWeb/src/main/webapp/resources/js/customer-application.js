@@ -3637,7 +3637,7 @@ function paintCustomerApplicationPageStep5() {
 	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for borrower" +userName;
+    var quesHeaderTxt = "Credit for borrower " +userName;
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
