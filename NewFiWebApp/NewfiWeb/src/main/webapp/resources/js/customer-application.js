@@ -4904,7 +4904,7 @@ var questions = [
                     "type": "desc",
                     "text": "What is your current mortgage balance?",
                     "name": "currentMortgageBalance",
-                    "selected": appUserDetails.refinancedetails.currentMortgageBalance
+                    "selected": showValue(appUserDetails.refinancedetails.currentMortgageBalance)
                 }];
 
 		for(var i=0;i<questions.length;i++){
@@ -5656,7 +5656,7 @@ function mapDbDataForFrontend(key){
             break;
         case "cashTakeOut":
             if(appUserDetails.refinancedetails)
-                return appUserDetails.refinancedetails.cashTakeOut;
+                return showValue(appUserDetails.refinancedetails.cashTakeOut);
             break;
         case "mortgageyearsleft":
             if(appUserDetails.refinancedetails)
