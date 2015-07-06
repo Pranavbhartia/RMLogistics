@@ -3853,7 +3853,13 @@ $(".ce-option-checkbox").click();
 }
 
 function paintLockRatePage(){
-    var userId=selectedUserDetail.userID;
+    var userId
+    if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+        userId=newfiObject.user.id;
+    }else{
+        userId=selectedUserDetail.userID;
+    }
+    
     getAppDetailsForUser(userId,function(appUserDetailsTemp){
         $('#overlay-loader').show();
         var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
@@ -5451,7 +5457,8 @@ $.ajax({
                 	   if(flag)
                 		{
                 		   changeSecondaryLeftPanel(3,true); 
-                           hideCompleteYourProfile();               		  
+                           //NEXNF-647
+                           /*hideCompleteYourProfile();*/
                 		}
                 	   paintLockRate(ob, appUserDetails); 
                    }
