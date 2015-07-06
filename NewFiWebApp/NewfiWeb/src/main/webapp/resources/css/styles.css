@@ -565,7 +565,8 @@ input[type="button"]:focus, button:focus {
 .cp-header-text {
 	color: #606060;
 	padding: 0 5px;
-	margin-bottom: 20px;
+	/* margin-bottom: 20px; */
+	margin-bottom: 10px;
 	font-size:12px;
 	text-align: center;
 }
@@ -4570,7 +4571,7 @@ input.calc-input {
   margin-right: 35px;
   font-size: 14px;
   color: #428bca;
-  text-align: center;
+  text-align: left;
   font-family: 'opensanssemibold';
 }
 
@@ -5590,4 +5591,12 @@ a.session-login-btn {
 .loan-summary-rateapr-seperator {
 	width: 12px;
 	text-align: center;
+}
+
+.cp-sub-txt-link {
+  text-align: center;
+  margin-top: 0;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 }

@@ -362,7 +362,7 @@ function appendAgentDashboardContainer() {
 	}).html("Leads");
 
 	var text=$('<div>').attr({
-		"class" : " cust-profile-url float-right"
+		"class" : " cust-profile-url cust-profile-url-dash float-right"
 	}).html("Add customer : ");	
 	
 		var emailInput = $('<input>').attr({

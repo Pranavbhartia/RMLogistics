@@ -415,7 +415,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			}
 
 			// Upload succesfull
-
+			LOG.info("file valid");
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
 				// Path path = Paths.get(serverFile.getAbsolutePath());
