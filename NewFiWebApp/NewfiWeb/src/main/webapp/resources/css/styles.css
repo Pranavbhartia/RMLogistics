@@ -5605,3 +5605,27 @@ a.session-login-btn {
 	  background: url(../images/newfiHome.ico) no-repeat 5px center;
 	  background-size: 15%;
 }
+
+.leads-container-row-realtor>div {
+	padding-left: 50px;
+}
+
+.leads-container-tc1-realtor {
+	width: 225px;
+}
+
+.leads-container-tc2-realtor {
+  	width: 215px;
+}
+
+.leads-container-tc3-realtor {
+	width: 135px;
+}
+
+.leads-container-tc4-realtor {
+	width: 200px;
+}
+
+.leads-container-tc5-realtor {
+	background: url(../images/alram_blue.png) no-repeat 40px 5px;
+}
