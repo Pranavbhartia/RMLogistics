@@ -359,6 +359,7 @@ a,a:hover,a:visited {
 	white-space: pre-line;
 	font-family: 'opensanssemibold';
 	clear: both;
+	font-size: 11px!important;
 }
 
 .mammoth-table2 {
