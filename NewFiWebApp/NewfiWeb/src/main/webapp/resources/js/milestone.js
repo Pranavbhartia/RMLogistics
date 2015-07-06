@@ -1116,7 +1116,7 @@ $(document).on('click', '.creditScoreClickableClass', function(e) {
 	e.stopImmediatePropagation();
 	if(newfiObject.user.userRole.roleCd=="INTERNAL"){
 		var loanid=$(this).attr("loanid");
-		var textMessage="Are you sure you want to fetch Credit Score ?"
+		var textMessage="Are you sure you want to request a Tri-merge ?"
 		var trimerge=true;
 	     if($(e.target).parent()[0].innerHTML.indexOf("EQ-?")>=0&&
 			   $(e.target).parent()[0].innerHTML.indexOf("TU-?")>=0&&
