@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
@@ -415,7 +416,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			}
 
 			// Upload succesfull
-			LOG.info("file valid");
+
 			if (fileUpload) {
 				serverFile = new File(localFilePath);
 				// Path path = Paths.get(serverFile.getAbsolutePath());
@@ -959,13 +960,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		try {
 
+			Map<Integer, FileAssignmentMappingVO> filteredMapping = new HashMap<Integer, FileAssignmentMappingVO>();
+			// First do the Extra Assignment and remove it from HashSet
 			for (Integer key : mapFileMappingToNeed.keySet()) {
 				LoanNeedsList loanNeed = loanNeedListDAO.findById(key);
 
 				NeedsListMaster needMaster = loanNeed.getNeedsListMaster();
 				LOG.info("Need Master label: " + needMaster.getLabel());
-				System.out.println("Need Master label: "
-				        + needMaster.getLabel());
 				if (needMaster.getLabel()
 				        .equals(CommonConstants.EXTRA_DOCUMENT)) {
 					FileAssignmentMappingVO mapping = mapFileMappingToNeed
@@ -974,35 +975,43 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					for (Integer fileId : fileIds) {
 						deactivateFileUsingFileId(fileId);
 					}
-					mapFileMappingToNeed.remove(key);
 				} else {
-					FileAssignmentMappingVO mapping = mapFileMappingToNeed
-					        .get(key);
-					List<Integer> fileIds = mapping.getFileIds();
-					Integer newFileRowId = null;
-					if (mapping.getIsMiscellaneous()) {
-						UploadedFilesList filesList = loanService
-						        .fetchUploadedFromLoanNeedId(key);
-						LOG.info("fetchUploadedFromLoanNeedId returned : "
-						        + filesList);
-						if (filesList != null) {
-							fileIds.add(filesList.getId());
-						}
-						newFileRowId = mergeAndUploadFiles(fileIds, loanId,
-						        userId, assignedBy);
-
-						for (Integer fileId : fileIds) {
-							deactivateFileUsingFileId(fileId);
-						}
-					} else {
-						newFileRowId = fileIds.get(0);
-					}
-					LOG.info("new file pdf path :: " + newFileRowId);
-					updateFileInLoanNeedList(key, newFileRowId);
-					updateIsAssignedToTrue(newFileRowId);
+					filteredMapping.put(key, mapFileMappingToNeed.get(key));
 				}
 			}
-			changeWorkItem(mapFileMappingToNeed, loanId);
+			for (Integer key : filteredMapping.keySet()) {
+				LoanNeedsList loanNeed = loanNeedListDAO.findById(key);
+
+				NeedsListMaster needMaster = loanNeed.getNeedsListMaster();
+				LOG.info("Need Master label: " + needMaster.getLabel());
+				System.out.println("Need Master label: "
+				        + needMaster.getLabel());
+
+				FileAssignmentMappingVO mapping = filteredMapping.get(key);
+				List<Integer> fileIds = mapping.getFileIds();
+				Integer newFileRowId = null;
+				if (mapping.getIsMiscellaneous()) {
+					UploadedFilesList filesList = loanService
+					        .fetchUploadedFromLoanNeedId(key);
+					LOG.info("fetchUploadedFromLoanNeedId returned : "
+					        + filesList);
+					if (filesList != null) {
+						fileIds.add(filesList.getId());
+					}
+					newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
+					        assignedBy);
+
+					for (Integer fileId : fileIds) {
+						deactivateFileUsingFileId(fileId);
+					}
+				} else {
+					newFileRowId = fileIds.get(0);
+				}
+				LOG.info("new file pdf path :: " + newFileRowId);
+				updateFileInLoanNeedList(key, newFileRowId);
+				updateIsAssignedToTrue(newFileRowId);
+			}
+			changeWorkItem(filteredMapping, loanId);
 			isSuccess = true;
 			// commonResponseVO = RestUtil.wrapObjectForSuccess( true );
 
