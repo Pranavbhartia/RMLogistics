@@ -5600,3 +5600,8 @@ a.session-login-btn {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.lp-item-active .append-home-icon {
+	  background: url(../images/newfiHome.ico) no-repeat 5px center;
+	  background-size: 15%;
+}

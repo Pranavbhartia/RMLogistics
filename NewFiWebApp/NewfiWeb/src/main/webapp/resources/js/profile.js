@@ -100,11 +100,19 @@ function LoanPersonalInfoWrapper(user) {
 	var wrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
 	});
-
+	//NEXNF-664
+	var text="";
+	
+	if(newfiObject.user.userRole.id==2){
+		text="My Profile";
+	}else{
+		text="Personal Information";
+	}
+	
 	var header = $('<div>').attr({
 		//included that of customer css
 		"class" : "cust-personal-info-header"
-	}).html("Personal Information");
+	}).html(text);
 
 	
 	var text=$('<div>').attr({
@@ -275,10 +283,11 @@ function getLoanPersonalInfoContainer(user) {
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
 	
-	var assignManager=getLoanManager(user);
+	//NEXNF-664
+	/*var assignManager=getLoanManager(user);
 	if(user.userRole.id==2){
 		container.append(assignManager);	
-	}
+	}*/
 
 	var phone1Row = getPhone1RowLM(user);
 	container.append(phone1Row);
@@ -289,7 +298,10 @@ function getLoanPersonalInfoContainer(user) {
 	var checkBox=getCheckStatus(user);
 	container.append(checkBox);
 	var stateRow = getManagerStateRow(user);
+	//NEXNF-664
+	if(user.userRole.id!=2){
 	container.append(stateRow);
+	}
 	
 	if(user.internalUserStateMappingVOs!=undefined){
 		userStateMappingVOs=user.internalUserStateMappingVOs;
@@ -303,7 +315,10 @@ function getLoanPersonalInfoContainer(user) {
 	}
  	
 	var licensesRow = getLicensesRow(user);
-	container.append(licensesRow);
+	//NEXNF-664
+	if(user.userRole.id!=2){
+		container.append(licensesRow);
+	}
 	
 	if(user.internalUserStateMappingVOs == undefined){
 		//licensesRow.addClass('hide');
@@ -816,6 +831,7 @@ function customerPersonalInfoWrapper(user) {
 	var wrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
 	});
+
 
 	var header = $('<div>').attr({
 		"class" : "cust-personal-info-header"

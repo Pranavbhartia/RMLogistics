@@ -46,9 +46,28 @@ function getAgentSecondaryLeftNav() {
 		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
 	}
 
-	var step3 = getAgentSecondaryLeftNavStep(3, "lock<br />rate");
-	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
-	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
+	//NEXNF-661
+	var step3 ="";
+	if(newfiObject.user.userRole.id!=2){
+		step3=getAgentSecondaryLeftNavStep(3, "lock<br />rate");
+	}
+	
+	//NEXNF-661
+	var text="";
+	if(newfiObject.user.userRole.id==2){
+		text="upload<br />contract items";
+	}else{
+		text="upload<br />needed items";
+	}
+	var step4 = getAgentSecondaryLeftNavStep(4, text);
+	//NEXNF-661
+	var text1="";
+	if(newfiObject.user.userRole.id==2){
+		text1="transaction<br />progress";
+	}else{
+		text1="loan<br />progress";
+	}
+	var step5 = getAgentSecondaryLeftNavStep(5, text1);
 
 	if (userIsRealtor()) {
 		return leftTab2Wrapper.append(step0).append(step1).append(step3)
@@ -192,7 +211,12 @@ function paintAgentDashboardRightPanel(data) {
 	if (newfiObject.user.userRole.id == "4") {
 		leftCon.html("Loan List");
 	} else if (newfiObject.user.userRole.id != "4") {
-		leftCon.html("Customer List");
+		if (newfiObject.user.userRole.id != "2"){
+			leftCon.html("Customer List");
+		}else {
+			leftCon.html("Pipeline");//NEXNF-660
+		}
+		
 	}
 
 	var rightCon = $('<div>').attr({
@@ -582,10 +606,18 @@ function appendCustomerTableHeader(elementId) {
 	var tableHeader = $('<div>').attr({
 		"class" : "leads-container-th leads-container-row clearfix"
 	});
-
+	
+	//NEXNF-660
+	var column1Name;
+	if(newfiObject.user.userRole.id==2){
+		 column1Name="Customer";
+	}else {
+		 column1Name="Customer Name";
+	}
+	
 	var thCol1 = $('<div>').attr({
 		"class" : "leads-container-tc1 float-left"
-	}).html("Customer Name");
+	}).html(column1Name);
 
 	var thCol2 = $('<div>').attr({
 		"class" : "leads-container-tc2 float-left"
@@ -1451,6 +1483,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Lock Rate Details",
 			loanDetails.userLoanStatus.lockRate);
 	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);
+
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
 	if (loanDetails.creditReportUrl == undefined
 			|| loanDetails.creditReportUrl == "") {
