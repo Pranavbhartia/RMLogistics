@@ -741,7 +741,8 @@ public class Utility {
 				System.out
 				        .println("Size is different, hence returning cached data");
 				response.setData(lastData);
-			}
+				response.setTimestamp(fileTimeStamp);
+			}else{
 			System.out.println("Updating cache since there is a new data set");
 			cache = new HashMap<Long, Map<String, List<UIEntity>>>();
 			cache.put(fileTimeStamp, data);
@@ -755,6 +756,7 @@ public class Utility {
 			response.setData(data);
 							
 	}
+		}
 		workBook = writeDataToExcelSheet(newTempelate, response, workBook);
 		workBook.setForceFormulaRecalculation(true);
 		
