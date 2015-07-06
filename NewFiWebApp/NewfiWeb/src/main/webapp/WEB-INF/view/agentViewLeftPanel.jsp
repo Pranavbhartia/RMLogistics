@@ -36,11 +36,28 @@
 			</div>
 		</div> --%>
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
-			<div class="lp-item-header">my loans</div>
+			<!--  NEXNF-660--->
+			<c:choose>
+				<c:when test="${userVO.userRole.id eq 2 }">
+					<div class="lp-item-header">my pipeline</div>
+				</c:when>
+				<c:otherwise>
+					<div class="lp-item-header">my loans</div>
+				</c:otherwise>
+			</c:choose>
 			<div class="lp-item-body lp-agent-item2">
 				<div class="lp-item-body-row lp-item-body-top-row">
-					<span id="lp-new-loans">${progressVO.newLoans }</span> <span>
-						New loans</span>
+				<!--  NEXNF-660--->
+					<c:choose>
+						<c:when test="${userVO.userRole.id eq 2 }">
+							<span id="lp-new-loans">${progressVO.newLoans }</span> 
+							<span>Transactions</span>
+						</c:when>
+						<c:otherwise>
+							<span id="lp-new-loans">${progressVO.newLoans }</span> 
+							<span>New loans</span>
+						</c:otherwise>
+					</c:choose>
 				</div>
 				<div class="lp-item-body-row">
 					<span id="lp-in-progress">${progressVO.inProgress }</span> <span>
@@ -51,18 +68,29 @@
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-archives" onclick="paintAgentDashboard('archivesloans');">
 			<div class="lp-item-header">my archives</div>
 			<div class="lp-item-body lp-agent-item3">
-				<div class="lp-item-body-row lp-item-body-top-row">
-					<span id="lp-closed">${progressVO.closed }</span> <span>
-						Closed</span>
-				</div>
-				<div class="lp-item-body-row">
-					<span id="lp-withdrawn">${progressVO.withdrawn }</span> <span>
-						Withdrawn</span>
-				</div>
-				<div class="lp-item-body-row">
-					<span id="lp-declined">${progressVO.declined }</span> <span>
-						Declined</span>
-				</div>
+			<c:choose>
+				<c:when test="${userVO.userRole.id eq 2 }">
+					<div class="lp-item-body-row lp-item-body-top-row">
+						<span id="lp-past-transaction"></span>  
+						<span>Past Transactions</span>
+							
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="lp-item-body-row lp-item-body-top-row">
+						<span id="lp-closed">${progressVO.closed }</span> <span>
+							Closed</span>
+					</div>
+					<div class="lp-item-body-row">
+						<span id="lp-withdrawn">${progressVO.withdrawn }</span> <span>
+							Withdrawn</span>
+					</div>
+					<div class="lp-item-body-row">
+						<span id="lp-declined">${progressVO.declined }</span> <span>
+							Declined</span>
+					</div>
+				</c:otherwise>
+			</c:choose>
 			</div>
 		</div>
 		<div class="lp-alert-wrapper lp-item clearfix" id="lp-imp-alerts">

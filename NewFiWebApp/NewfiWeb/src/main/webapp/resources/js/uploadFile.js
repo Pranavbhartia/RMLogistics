@@ -387,9 +387,19 @@ function getNeedItemsWrapper(neededItemListObject) {
 	var wrapper = $('<div>').attr({
 		"class" : "needed-items-wrapper"
 	});
+	
+	//NEXNF-662
+	var text="";
+	
+	if(newfiObject.user.userRole.id==2){
+		text="previously uploaded items";
+	}else {
+		text="needed items";
+	}
+	
 	var header = $('<div>').attr({
 		"class" : "needed-items-header"
-	}).html("needed items");
+	}).html(text);
 	var container = $('<div>').attr({
 		"class" : "needed-items-container clearfix"
 	});
@@ -518,9 +528,17 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	var uploadedNeedContainer = $("<div>").attr({
 		"id" : "uploadedNeedContainer"
 	});
+	//NEXNF-662
+	var text="";
+	if(newfiObject.user.userRole.id==2){
+		text="Upload contract items";
+	}else{
+		text="Upload needed items";
+	}
 	var header = $('<div>').attr({
 		"class" : "upload-item-header"
-	}).html("Upload needed items");
+	}).html(text);
+	
 	var container = $('<div>').attr({
 		"class" : "upload-item-container"
 	});
