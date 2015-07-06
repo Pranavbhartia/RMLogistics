@@ -332,7 +332,7 @@ function getContextApplicationSelectQues(contxt) {
         "class": "app-dropdown-cont hide"
     });
 
-
+    var applicationLocked=checkLqbFileId();
     for (var i = 0; i < contxt.options.length; i++) {
         var option = contxt.options[i];
        // alert('option value is   '+ option.value);
@@ -362,7 +362,8 @@ function getContextApplicationSelectQues(contxt) {
                 });
                 if(option.value==contxt.value)
                     selVal=optionCont;
-        dropDownContainer.append(optionCont);
+        if((applicationLocked&&option.value==contxt.value)||!applicationLocked)
+            dropDownContainer.append(optionCont);
     }
     var val=contxt.value;
 
@@ -383,7 +384,7 @@ function getApplicationSelectQues(question,val) {
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(question.text);
-
+    var applicationLocked=checkLqbFileId();
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont",
         "name": question.name
@@ -408,7 +409,9 @@ function getApplicationSelectQues(question,val) {
             }).data({
                 "value": option.value
             }).html(option.text)
-            .on(
+
+            if(!applicationLocked){
+                optionCont.on(
                 'click',
                 function() {
                     $(this).closest('.app-options-cont').find(
@@ -417,9 +420,11 @@ function getApplicationSelectQues(question,val) {
                     '.app-option-selected').data("value",$(this).data("value"));
                     $(this).closest('.app-dropdown-cont').toggle();
                 });
+            }
             if(option.value==val)
                 selVal=optionCont;
-        dropDownContainer.append(optionCont);
+        if((applicationLocked&&option.value==val)||!applicationLocked)
+            dropDownContainer.append(optionCont);
     }
     var val=getMappedValue(question);
     if(val)
@@ -477,6 +482,7 @@ function getApplicationTextQues(question) {
 		question.value=formatPhoneNumberToUsFormat(question.value);
 		
 	}
+    var applicationLocked=checkLqbFileId();
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
     });
@@ -484,87 +490,85 @@ function getApplicationTextQues(question) {
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(question.text);
-
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
 
     var optionCont;
-  if(question.name!='streetAddress'){
-	  optionCont = $('<input>').attr({
+    if(question.name!='streetAddress'){
+        optionCont = $('<input>').attr({
 	        "class": "app-input",
 	        "name": question.name,
 	        "value":question.value
-	    }).on("focus", function(e){
-	          	
-	        if (checkForUnmaskedFields(question)) {
-				$('input[name='+question.name+']').maskMoney({
-					thousands:',',
-					decimal:'.',
-					allowZero:true,
-					prefix: '$',
-				    precision:0,
-				    allowNegative:false
-				});
-			}
-
-
+	    })
+        if(!applicationLocked){
+            optionCont.on("focus", function(e){
+    	        if (checkForUnmaskedFields(question)) {
+    				$('input[name='+question.name+']').maskMoney({
+    					thousands:',',
+    					decimal:'.',
+    					allowZero:true,
+    					prefix: '$',
+    				    precision:0,
+    				    allowNegative:false
+    				});
+    			}
+                if (question.name == 'ssn') {
+                  // $('input[name="ssn"]').mask("999-99-9999");
+                 // $('input[name="ssn"]').attr('type', 'password');
+                }
 			
-			   if (question.name == 'ssn') {
-				  // $('input[name="ssn"]').mask("999-99-9999");
-				 // $('input[name="ssn"]').attr('type', 'password');
-	        }
-			
-		}).keypress(function(key) {
-			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
-				
-				  if(key.charCode < 48 || key.charCode > 57) return false;
-			}
-	      
-	    });
+    		}).keypress(function(key) {
+    			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+    				
+    				  if(key.charCode < 48 || key.charCode > 57) return false;
+    			}
+    	      
+    	    });
+        }
 
-	  if(question.name =="birthday"){
-		  optionCont.removeClass("app-input").addClass("prof-form-input date-picker").attr("placeholder","MM/DD/YYYY");
-		 // $('input[name=birthday]').mask("__/__/____");
-	  }
-	
-  }else{
-	   optionCont = $('<input>').attr({
+        if(question.name =="birthday"){
+            if(!applicationLocked)
+                optionCont.removeClass("app-input").addClass("prof-form-input date-picker").attr("placeholder","MM/DD/YYYY");
+         // $('input[name=birthday]').mask("__/__/____");
+        }
+    }else{
+	    optionCont = $('<input>').attr({
 	        "class": "app-input app-append-width",
 	        "name": question.name,
 	        "value":question.value
-	    }).on("focus", function(e){
-	          	
-	        if (checkForUnmaskedFields(question)) {
-				$('input[name='+question.name+']').maskMoney({
-					thousands:',',
-					decimal:'.',
-					allowZero:true,
-					prefix: '$',
-				    precision:0,
-				    allowNegative:false
-				});
-			}
-			
-			   if (question.name == 'ssn') {
-				  // $('input[name="ssn"]').mask("999-99-9999");
-				 // $('input[name="ssn"]').attr('type', 'password');
-	        }
-			
-		}).keypress(function(key) {
-			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
-				
-				  if(key.charCode < 48 || key.charCode > 57) return false;
-			}
-	      
-	    });
-	   
+	    })
+        if(!applicationLocked){
+            optionCont.on("focus", function(e){
+    	        if (checkForUnmaskedFields(question)) {
+    				$('input[name='+question.name+']').maskMoney({
+    					thousands:',',
+    					decimal:'.',
+    					allowZero:true,
+    					prefix: '$',
+    				    precision:0,
+    				    allowNegative:false
+    				});
+    			}
+    			if (question.name == 'ssn') {
+    				  // $('input[name="ssn"]').mask("999-99-9999");
+    				 // $('input[name="ssn"]').attr('type', 'password');
+    	        }
+    		}).keypress(function(key) {
+    			if($('input[name='+question.name+']').attr('name')=="phoneNumber"){
+    				if(key.charCode < 48 || key.charCode > 57) return false;
+    			}
+    	    });
+	   }
 	  
   }
 	
 
     if (question.value != undefined) {
         optionCont.val(question.value);
+    }
+    if(applicationLocked){
+        $(optionCont).attr("readonly",true);
     }
 
     optionsContainer.append(optionCont).append(errFeild);
@@ -623,7 +627,7 @@ function getApplicationMultipleChoiceQues(question,value) {
         "class": "app-options-cont",
         "name": question.name
     });
-
+    var applicationLocked=checkLqbFileId();
     for (var i = 0; i < question.options.length; i++) {
         var option = question.options[i];
         var selctedClas="";
@@ -642,7 +646,8 @@ function getApplicationMultipleChoiceQues(question,value) {
 	        	$(this).addClass('app-option-checked');
         	}
         });
-        optionsContainer.append(optionCont);
+        if((applicationLocked&&value&&value==option.value)||!applicationLocked)
+            optionsContainer.append(optionCont);
     }
 
     return container.append(quesTextCont).append(optionsContainer);
@@ -669,7 +674,7 @@ function paintCustomerApplicationPageStep1a() {
     }).html(quesHeaderTxt);
 
     var row=paintCheckBox();
-    
+    var applicationLocked=checkLqbFileId();
     var selectedProperty = appUserDetails.user.customerDetail.selectedProperty;
     
     var questions = [{
@@ -781,9 +786,10 @@ function paintCustomerApplicationPageStep1a() {
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(saveAndContinueButton);
    
-    
-    addStateCityZipLookUp();
-    addCityStateZipLookUpForProperty();
+    if(!applicationLocked){
+        addStateCityZipLookUp();
+        addCityStateZipLookUpForProperty();
+    }
 }
 
 function paintCheckBox(){
@@ -1665,7 +1671,7 @@ function getContextApplicationYesNoQues(contxt) {
         "class": "app-options-cont",
         "name": contxt.name
     });
-
+    var applicationLocked=checkLqbFileId();
     for (var i = 0; i < contxt.options.length; i++) {
         var option = contxt.options[i];
         var sel="false";
@@ -1676,13 +1682,15 @@ function getContextApplicationYesNoQues(contxt) {
             "isSelected" : sel
         }).html(option.text);
          
-        optionCont.bind("click",{"contxt":contxt,"value":option.text,"option":option},function(event){
-        	var ctx=event.data.contxt;
-        	var opt=event.data.option;
-        	var val=event.data.value;
-        	optionClicked($(this),ctx,opt,val);
-        });
-        
+
+        if((applicationLocked&&contxt.value==option.text)||!applicationLocked){
+            optionCont.bind("click",{"contxt":contxt,"value":option.text,"option":option},function(event){
+            	var ctx=event.data.contxt;
+            	var opt=event.data.option;
+            	var val=event.data.value;
+            	optionClicked($(this),ctx,opt,val);
+            });
+        }
         optionsContainer.append(optionCont);
         
         if(contxt.value==option.text){
@@ -1722,16 +1730,19 @@ function getContextApplicationTextQues(contxt) {
     });
     var optionCont ;
     var errFeild=appendErrorMessage();
+    var applicationLocked=checkLqbFileId();
     if(contxt.name == 'propStreetAddress' || contxt.name == 'coBorrowerStreetAddress' || contxt.name=='streetAddress' || contxt.name=='addressStreet'){
-    	 optionCont = $('<input>').attr({
-    	        "class": "app-input app-append-width",
-    	        "name": contxt.name,
-    	        "value":showValue(contxt.value)
-    	    }).bind("change",{"contxt":contxt},function(event){
-    	    	var ctx=event.data.contxt;
-    	    	ctx.value=$(this).val();
-    	    }).on("load focus", function(e){
-    	          
+    	optionCont = $('<input>').attr({
+	        "class": "app-input app-append-width",
+	        "name": contxt.name,
+	        "value":showValue(contxt.value)
+	    }).bind("change",{"contxt":contxt},function(event){
+	    	var ctx=event.data.contxt;
+	    	ctx.value=$(this).val();
+	    });
+
+        if(!applicationLocked){
+            optionCont.on("load focus", function(e){
     			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
     				$('input[name='+contxt.name+']').maskMoney({
     					thousands:',',
@@ -1742,26 +1753,25 @@ function getContextApplicationTextQues(contxt) {
     				    allowNegative:false
     				});
     			}
-    			
-    			
     		}).keypress(function(key) {
     			if($('input[name='+contxt.name+']').attr('name')=="propZipCode" ||$('input[name='+contxt.name+']').attr('name')=="zipCode" ||$('input[name='+contxt.name+']').attr('name')=="coBorrowerZipCode" ){
-    				
-  				  if(key.charCode < 48 || key.charCode > 57) return false;
-  			}
+      				if(key.charCode < 48 || key.charCode > 57) return false;
+      			}
   	      
-  	    });
-
-    	    
+  	        });
+        }
     }else{
-    	 optionCont = $('<input>').attr({
-    	        "class": "app-input",
-    	        "name": contxt.name,
-    	        "value":showValue(contxt.value)
-    	    }).bind("change",{"contxt":contxt},function(event){
-    	    	var ctx=event.data.contxt;
-    	    	ctx.value=$(this).val();
-    	    }).on("load focus", function(e){
+    	optionCont = $('<input>').attr({
+	        "class": "app-input",
+	        "name": contxt.name,
+	        "value":showValue(contxt.value)
+	    }).bind("change",{"contxt":contxt},function(event){
+	    	var ctx=event.data.contxt;
+	    	ctx.value=$(this).val();
+	    })
+
+        if(!applicationLocked){
+            optionCont.on("load focus", function(e){
     	          
     			if(contxt.name != 'propStreetAddress' && contxt.name != 'propState' && contxt.name != 'propCity' && contxt.name != 'propZipCode' && contxt.name != 'coBorrowerZipCode' && contxt.name != 'coBorrowerName' && contxt.name != 'coBorrowerLastName' && contxt.name != 'coBorrowerStreetAddress' && contxt.name != 'coBorrowerState' && contxt.name != 'coBorrowerCity' && contxt.name != 'zipCode' && contxt.name != 'mortgageyearsleft' && contxt.name != 'locationZipCode' && contxt.name != 'buyhomeZipPri'  && contxt.name != 'city' && contxt.name != 'state' && contxt.name != 'startLivingTime' && contxt.name != 'spouseName' && contxt.name!='streetAddress' && contxt.name!='addressStreet'){
     				$('input[name='+contxt.name+']').maskMoney({
@@ -1784,6 +1794,7 @@ function getContextApplicationTextQues(contxt) {
     			}
     	      
     	    });
+        }
 
     }
     
@@ -1791,6 +1802,9 @@ function getContextApplicationTextQues(contxt) {
     
     if (contxt.value != undefined) {
         optionCont.val(contxt.value);
+    }
+    if(applicationLocked){
+        $(optionCont).attr("readonly",true);
     }
 
     optionsContainer.append(optionCont).append(errFeild);
@@ -2240,8 +2254,9 @@ function paintRefinanceEmployed(divId,value) {
     	}
     	$('#ce-option_' + divId).toggle();
     }
-
-    putCurrencyFormat("beforeTax");
+    var applicationLocked=checkLqbFileId();
+    if(!applicationLocked)
+        putCurrencyFormat("beforeTax");
 }
 
 function getMultiTextQuestion(quesText, value) {
@@ -2249,7 +2264,7 @@ function getMultiTextQuestion(quesText, value) {
     var wrapper = $('<div>').attr({
         "class": "ce-option-ques-wrapper"
     });
-
+    var applicationLocked=checkLqbFileId();
 
     var container = $('<div>').attr({
         "class": "ce-ques-wrapper",
@@ -2304,6 +2319,8 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox4.attr("value", val);
     }
+    if(applicationLocked)
+        $(inputBox4).attr("readonly",true);
     quesTextCont4.append(inputBox4).append(appendErrorMessage());
     
 
@@ -2324,7 +2341,8 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox1.attr("value", val);
     }
-  
+    if(applicationLocked)
+        $(inputBox1).attr("readonly",true);
     quesTextCont1.append(inputBox1).append(appendErrorMessage());
     
     
@@ -2345,6 +2363,8 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox2.attr("value", val);
     }
+    if(applicationLocked)
+        $(inputBox2).attr("readonly",true);
     quesTextCont2.append(inputBox2).append(appendErrorMessage());
     
     
@@ -2365,6 +2385,8 @@ function getMultiTextQuestion(quesText, value) {
     if (val != "") {
         inputBox3.attr("value", val);
     }
+    if(applicationLocked)
+        $(inputBox3).attr("readonly",true);
     quesTextCont3.append(inputBox3).append(appendErrorMessage());
 
    
@@ -2380,30 +2402,32 @@ function getMultiTextQuestion(quesText, value) {
 }
 
 $('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(e){
-
-	$(this).datepicker({
-		format: "M yyyy",
-	    minViewMode: "months",
-	    autoclose : true,
-		maxDate: 0,
-		defaultDate:'',
-	    constrainInput: false
-    }).on('changeDate',function(e){
-    	e.stopImmediatePropagation();
-    	e.preventDefault();
-    	var year = $(this).data('datepicker').getFormattedDate('yyyy');
-    	var month = $(this).data('datepicker').getFormattedDate('mm');
-    	var currentYear = new Date().getFullYear();
-    	var currentMonth = new Date().getMonth();
-    	
-    	/*if( (currentYear - year < 2) || (currentYear - year == 2 && month > (currentMonth+1)) ){
-    		$('#ce-option_0').find('.add-account-btn').trigger('click');
-    		if($('#ce-option_0').children('.prev-employement-ques').length <= 0){
-    			$('#ce-option_0').find('.add-account-btn').before(getPreviousEmployementQuestions());
-    		}
-    	}*/
-    	
-    });
+    var applicationLocked=checkLqbFileId();
+    if(!applicationLocked){
+    	$(this).datepicker({
+    		format: "M yyyy",
+    	    minViewMode: "months",
+    	    autoclose : true,
+    		maxDate: 0,
+    		defaultDate:'',
+    	    constrainInput: false
+        }).on('changeDate',function(e){
+        	e.stopImmediatePropagation();
+        	e.preventDefault();
+        	var year = $(this).data('datepicker').getFormattedDate('yyyy');
+        	var month = $(this).data('datepicker').getFormattedDate('mm');
+        	var currentYear = new Date().getFullYear();
+        	var currentMonth = new Date().getMonth();
+        	
+        	/*if( (currentYear - year < 2) || (currentYear - year == 2 && month > (currentMonth+1)) ){
+        		$('#ce-option_0').find('.add-account-btn').trigger('click');
+        		if($('#ce-option_0').children('.prev-employement-ques').length <= 0){
+        			$('#ce-option_0').find('.add-account-btn').before(getPreviousEmployementQuestions());
+        		}
+        	}*/
+        	
+        });
+    }
 });
 
 
@@ -2528,7 +2552,8 @@ function getPreviousEmployementQuestions(value) {
 }
 
 $('body').on('focus',"input[name='birthday']",function(){
-			
+	var applicationLocked=checkLqbFileId();
+    if(!applicationLocked){
     	$(this).datepicker({
 			orientation : "top auto",
 			autoclose : true,
@@ -2537,7 +2562,7 @@ $('body').on('focus',"input[name='birthday']",function(){
 			placeholder : "MM/DD/YYYY",
 			
 		});
-   
+    }
 });
 $('body').on('focus',"input[name='purchaseTime']",function(e){
 	
@@ -2607,7 +2632,7 @@ function paintRefinanceSelfEmployed(divId,value) {
     if(value&&!value.selected)
         flag=false;
     //appUserDetails.employed ="true";
- 
+    var applicationLocked=checkLqbFileId();
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
     		var wrapper = $('<div>').attr({
@@ -2631,6 +2656,8 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"name" : "selfEmployedIncome",
     			"value" : val
     		});
+            if(applicationLocked)
+                $(inputBox).attr("readonly",true);
     		optionContainer.append(inputBox).append(appendErrorMessage());
     		container.append(quesTextCont).append(optionContainer);
     		
@@ -2652,6 +2679,8 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"name" : "selfEmployedYears",
     			"value" : val
     		});
+            if(applicationLocked)
+                $(inputBox1).attr("readonly",true);
     		optionContainer1.append(inputBox1).append(appendErrorMessage);
     		container1.append(quesTextCont1).append(optionContainer1);
     		
@@ -2659,10 +2688,11 @@ function paintRefinanceSelfEmployed(divId,value) {
     		$('#ce-option_' + divId).prepend(wrapper);
     	}
     	$('#ce-option_' + divId).toggle();
-    	
-    	putCurrencyFormat("selfEmployedIncome");
-    	restrictSpecialChar("selfEmployedYears");
-    	restrictChar("selfEmployedYears");
+    	if(!applicationLocked){
+        	putCurrencyFormat("selfEmployedIncome");
+        	restrictSpecialChar("selfEmployedYears");
+        	restrictChar("selfEmployedYears");
+        }
     }
 }
 
@@ -2711,6 +2741,7 @@ function paintRefinancePension(divId,value,name) {
     var flag=true;
     if(value&&!value.selected)
         flag=false;
+    var applicationLocked=checkLqbFileId();
     //appUserDetails.employed ="true";
     if(flag){
     	if($('#ce-option_' + divId).children('.ce-option-ques-wrapper').size() == 0){
@@ -2743,12 +2774,14 @@ function paintRefinancePension(divId,value,name) {
     			"name" : inputElementName,
     			"value": val
     		});
-    	
+    	    if(applicationLocked)
+                $(inputBox).attr("readonly",true);
     		optionContainer.append(inputBox).append(errFeild);
     		container.append(quesTextCont).append(optionContainer);
     		wrapper.append(container);
     		$('#ce-option_' + divId).prepend(wrapper);
-    		putCurrencyFormat(inputElementName);
+            if(!applicationLocked)
+                putCurrencyFormat(inputElementName);
     	}
     	$('#ce-option_' + divId).toggle();
     	
@@ -2858,7 +2891,7 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 	var container = $('<div>').attr({
 		"class" : "ce-ques-wrapper"
 	});
-
+    var applicationLocked=checkLqbFileId();
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
@@ -2886,32 +2919,36 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
         var option = $('<div>').attr({
 			"class" : "ce-option-checkbox "+selectedClas,
 			"value" : options[i].value
-		}).html(options[i].text).bind('click', {
-			"option" : options[i],
-			"name" : options[i].name+"-CHK"
-		}, function(event) {
-			if($(this).hasClass('app-option-checked')){
-        		$(this).removeClass('app-option-checked');
-        		//appUserDetails[name] = false;
-        		var selectedCheck = $(this).attr("value");
-        		$("#ce-option_"+selectedCheck+" :input").each(function() {
-        			  $(this).val('');
-        			  
-        		});
-        		
-        	}else{
-	        	$(this).addClass('app-option-checked');
-	        	//appUserDetails[name] = true;
-        	}
-			var key = event.data.name;
-			
-			console.info("key = "+key+" ---- > value attr = "+$(this).attr("value"));
-			
-			//appUserDetails[key] = event.data.option.value;
-			event.data.option.onselect(event.data.option.value,undefined,event.data.option.name);
-		});
+		}).html(options[i].text)
 
-		optionContainer.append(option);
+        if((applicationLocked&&options[i].data&&options[i].data.selected)||!applicationLocked){
+            option.bind('click', {
+    			"option" : options[i],
+    			"name" : options[i].name+"-CHK"
+    		}, function(event) {
+    			if($(this).hasClass('app-option-checked')){
+            		$(this).removeClass('app-option-checked');
+            		//appUserDetails[name] = false;
+            		var selectedCheck = $(this).attr("value");
+            		$("#ce-option_"+selectedCheck+" :input").each(function() {
+            			  $(this).val('');
+            			  
+            		});
+            		
+            	}else{
+    	        	$(this).addClass('app-option-checked');
+    	        	//appUserDetails[name] = true;
+            	}
+    			var key = event.data.name;
+    			
+    			console.info("key = "+key+" ---- > value attr = "+$(this).attr("value"));
+    			
+    			//appUserDetails[key] = event.data.option.value;
+    			event.data.option.onselect(event.data.option.value,undefined,event.data.option.name);
+    		});
+
+    		optionContainer.append(option);
+        }
 		
 		if(i==0){
 			var addAccountBtn = $('<div>').attr({
@@ -2946,7 +2983,8 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 				
 				$(this).parent().children('.ce-option-ques-wrapper').append(removeAccBtn);
 			});
-			optionsWrapper.append(addAccountBtn);
+            if(!applicationLocked)
+			    optionsWrapper.append(addAccountBtn);
 		}
 		
 		optionContainer.append(optionsWrapper);
@@ -4433,7 +4471,7 @@ function getYearMonthOptionContainer(contxt){
         "class": "month-cont app-options-cont float-left",
         "name": "yearMonth"
     });
-
+    var applicationLocked=checkLqbFileId();
     
     var options=[
          {
@@ -4445,7 +4483,12 @@ function getYearMonthOptionContainer(contxt){
              text:"Month"
          }
    ];
-    
+    if(applicationLocked){
+        options=[{
+            value:contxt.yearMonthVal,
+            text:contxt.yearMonthVal
+        }]
+    }
     var selectedOption = $('<div>').attr({
     	 "class": "app-option-selected"
     }).data("value",options[0].value)
@@ -4509,6 +4552,7 @@ function getMonthYearTextQuestionContext(contxt) {
     var container = $('<div>').attr({
         "class": "ce-ques-wrapper"
     });
+    var applicationLocked=checkLqbFileId();
     contxt.container = container;
     contxt.parentContainer.append(contxt.container);
     var quesTextCont = $('<div>').attr({
@@ -4539,20 +4583,26 @@ function getMonthYearTextQuestionContext(contxt) {
             var val=getFloatValue($(this).val())/12;
             ctx.value = val;
         }
-    }).on("load keydown", function(e) {
-        if (name != 'zipCode' && name != 'yearLeftOnMortgage') {
-            $('input[name=' + contxt.name + ']').maskMoney({
-                thousands: ',',
-                decimal: '.',
-                allowZero: true,
-                prefix: '$',
-                precision: 0,
-                allowNegative: false
-            });
-        }
-        
-        Math.abs($('input[name=' + contxt.name + ']').val());
-    });
+    })
+
+    if(!applicationLocked){
+        optionCont.on("load keydown", function(e) {
+            if (name != 'zipCode' && name != 'yearLeftOnMortgage') {
+                $('input[name=' + contxt.name + ']').maskMoney({
+                    thousands: ',',
+                    decimal: '.',
+                    allowZero: true,
+                    prefix: '$',
+                    precision: 0,
+                    allowNegative: false
+                });
+            }
+            
+            Math.abs($('input[name=' + contxt.name + ']').val());
+        });
+    }else{
+        $(optionCont).attr("readonly",true);
+    }
 
 
     var requird = $('<div>').attr({
@@ -4689,58 +4739,63 @@ function paintSelectLoanTypeQuestion() {
 
 	var option1 = $('<div>').attr({
 		"class" : "cep-button-color ce-option"
-	}).html("Refinance").on('click', function() {
-		
-		// In case when user is not coming from the customer engagement path 
-		$('#loanType').text("Refinance");
-		
-		//
-		
-		//loanType.loanTypeCd = "REF";
-		appUserDetails.loanType.id= "2";
-		appUserDetails.loan.loanType.id = "2";
-		appUserDetails.loanType.loanTypeCd= "REF";
-		appUserDetails.loan.loanType.loanTypeCd = "REF";
-		appUserDetails.loanType.description= "Refinance";
-		appUserDetails.loan.loanType.description = "Refinance";
-		
-		paintPageBasedObLoanType(appUserDetails);
-	});
+	}).html("Refinance")
+
+
+
+
 	
-	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Refinance"){
-		option1.css("background","rgb(244, 117, 34)");
-	}
 
 	var option2 = $('<div>').attr({
 		"class" : "cep-button-color ce-option"
-	}).html("Buy a home").on('click', function() {
-	
-	console.log('setting value as purchase');
-		
-	
-	// in case when user come directly not from customer engagement path 
-	
-	$('#loanType').text("Home Buyer");
-	
-	//
-	
-		//loanType.loanTypeCd = "PUR";
-		appUserDetails.loanType.id= "1";
-		appUserDetails.loan.loanType.id = "1";
-		appUserDetails.loanType.loanTypeCd= "PUR";
-		appUserDetails.loan.loanType.loanTypeCd = "PUR";
-		appUserDetails.loanType.description= "Purchase";
-		appUserDetails.loan.loanType.description = "Purchase";
-		
-		
-		
-		
-		paintPageBasedObLoanType(appUserDetails);
-	});
+	}).html("Buy a home")
 
-	if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
-		option2.css("background","rgb(244, 117, 34)");
-	}
+    var applicationLocked=checkLqbFileId();
+    var selectedOption;
+    if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Refinance"){
+        option1.css("background","rgb(244, 117, 34)");
+        selectedOption="REF";
+    }
+    if (appUserDetails.loanType.description && appUserDetails.loanType.description =="Purchase"){
+        option2.css("background","rgb(244, 117, 34)");
+        selectedOption="PUR";
+    }
+
+    if((applicationLocked&&selectedOption=="REF")||!applicationLocked){
+        option1.on('click', function() {
+            // In case when user is not coming from the customer engagement path 
+            $('#loanType').text("Refinance");
+            //
+            //loanType.loanTypeCd = "REF";
+            appUserDetails.loanType.id= "2";
+            appUserDetails.loan.loanType.id = "2";
+            appUserDetails.loanType.loanTypeCd= "REF";
+            appUserDetails.loan.loanType.loanTypeCd = "REF";
+            appUserDetails.loanType.description= "Refinance";
+            appUserDetails.loan.loanType.description = "Refinance";
+            
+            paintPageBasedObLoanType(appUserDetails);
+        });
+    }
+
+    if((applicationLocked&&selectedOption=="PUR")||!applicationLocked){
+        option2.on('click', function() {
+        	console.log('setting value as purchase');
+        	// in case when user come directly not from customer engagement path 
+        	$('#loanType').text("Home Buyer");
+    	    //
+    		//loanType.loanTypeCd = "PUR";
+    		appUserDetails.loanType.id= "1";
+    		appUserDetails.loan.loanType.id = "1";
+    		appUserDetails.loanType.loanTypeCd= "PUR";
+    		appUserDetails.loan.loanType.loanTypeCd = "PUR";
+    		appUserDetails.loanType.description= "Purchase";
+    		appUserDetails.loan.loanType.description = "Purchase";
+    		paintPageBasedObLoanType(appUserDetails);
+    	});
+    }
+
+	
 	
 	optionsContainer.append(option1).append(option2);
 
@@ -4848,7 +4903,7 @@ var questions = [
 
 		for(var i=0;i<questions.length;i++){
 			var question=questions[i];
-			var contxt=getQuestionContextCEP(question,$('#app-right-panel'));
+			var contxt=getQuestionContext(question,$('#app-right-panel'));
 			contxt.drawQuestion();
 			
 			quesContxts.push(contxt);
@@ -5229,35 +5284,42 @@ function getTextQuestion(quesText, clickEvent, name) {
 		"class" : "ce-input",
 		"name" : name,
 		"value" : value
-	}).on("load focus", function(e){
-          
-		if(name != 'zipCode' && name != 'mortgageyearsleft'){
-			$('input[name='+name+']').maskMoney({
-				thousands:',',
-				decimal:'.',
-				allowZero:true,
-				prefix: '$',
-			    precision:0,
-			    allowNegative:false
-			});
-		}
-		
-	});
+	})
+    var applicationLocked=checkLqbFileId();
+    if(applicationLocked){
+        $(inputBox).attr("readonly",true);
+        buttonText = next;
+    }else{
+        inputBox.on("load focus", function(e){
+            if(name != 'zipCode' && name != 'mortgageyearsleft'){
+                $('input[name='+name+']').maskMoney({
+                    thousands:',',
+                    decimal:'.',
+                    allowZero:true,
+                    prefix: '$',
+                    precision:0,
+                    allowNegative:false
+                });
+            }
+        });
+    }
 	
 	optionContainer.append(inputBox).append(errFeild);
-
 	var saveBtn = $('<div>').attr({
 		"class" : "cep-button-color ce-save-btn"
-	}).html("Save & Continue").bind('click', {
+	}).html(buttonText).bind('click', {
 		'clickEvent' : clickEvent,
 		"name" : name
 	}, function(event) {
-		var key = event.data.name;
-		console.log('key'+key);
-		inputValue= $('input[name="' + key + '"]').val();
-        var className=$('input[name="' + key + '"]');
-		appUserDetails.refinancedetails[key]  = inputValue;
-        var isSuccess=validateInput(className,$('input[name="' + key + '"]').val(),message);
+        if(this.innerHTML!=next ){
+    		var key = event.data.name;
+    		console.log('key'+key);
+    		inputValue= $('input[name="' + key + '"]').val();
+            var className=$('input[name="' + key + '"]');
+    		appUserDetails.refinancedetails[key]  = inputValue;
+            var isSuccess=validateInput(className,$('input[name="' + key + '"]').val(),message);
+        }else
+            var isSuccess=true;
         if(isSuccess){
         	event.data.clickEvent();
         }else{
@@ -5291,27 +5353,31 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
-
+    var applicationLocked=checkLqbFileId();
 	for (var i = 0; i < options.length; i++) {
 		var option = $('<div>').attr({
 			"class" : "cep-button-color ce-option",
 			"value" : options[i].value
-		}).html(options[i].text).bind('click', {
-			"option" : options[i],
-			"name" : name
-		}, function(event) {
-			var key = event.data.name;
+		}).html(options[i].text)
 
-		//	refinanceTeaserRate[key] = event.data.option.value;
-			
-			//customerEnagagement[key] = event.data.option.value;			
-			//user.customerEnagagement = customerEnagagement;					
-			//appUserDetails.user = user;	
-			refinancedetails.refinanceOption = event.data.option.value;
-		    appUserDetails.refinancedetails = refinancedetails;	
-			
-			event.data.option.onselect();
-		});
+        if((applicationLocked&&options[i].value==appUserDetails.refinancedetails.refinanceOption)||!applicationLocked){
+            option.bind('click', {
+    			"option" : options[i],
+    			"name" : name
+    		}, function(event) {
+    			var key = event.data.name;
+
+    		//	refinanceTeaserRate[key] = event.data.option.value;
+    			
+    			//customerEnagagement[key] = event.data.option.value;			
+    			//user.customerEnagagement = customerEnagagement;					
+    			//appUserDetails.user = user;	
+    			refinancedetails.refinanceOption = event.data.option.value;
+    		    appUserDetails.refinancedetails = refinancedetails;	
+    			
+    			event.data.option.onselect();
+    		});
+        }
 		if(options[i].value==appUserDetails.refinancedetails.refinanceOption){
 			option.css("background","rgb(244, 117, 34)")
 		}
@@ -5831,7 +5897,7 @@ function getContextApplicationPercentageQues(contxt) {
     var quesTextCont = $('<div>').attr({
         "class": "app-ques-text"
     }).html(contxt.text);
-
+    var applicationLocked=checkLqbFileId();
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
@@ -5840,18 +5906,21 @@ function getContextApplicationPercentageQues(contxt) {
 	    "class": "app-input dwn-val float-left",
 	    "name": contxt.name,
 	    "value":showValue(contxt.value)
-	}).on("load focus", function(e){
-		$('input[name='+contxt.name+']').maskMoney({
-			thousands:',',
-			decimal:'.',
-			allowZero:true,
-			prefix: '$',
-		    precision:0,
-		    allowNegative:false
-		});
-		/* this is the piece of code to retrict user put special charector*/
-		restrictChar(contxt.name);
-	});
+	})
+    if(!applicationLocked){
+        optionCont.on("load focus", function(e){
+    		$('input[name='+contxt.name+']').maskMoney({
+    			thousands:',',
+    			decimal:'.',
+    			allowZero:true,
+    			prefix: '$',
+    		    precision:0,
+    		    allowNegative:false
+    		});
+    		/* this is the piece of code to retrict user put special charector*/
+    		restrictChar(contxt.name);
+    	});
+    }
 	var percentageComp = $('<input>').attr({
 	    "class": "app-input dwn-percentage"
 	}).attr('maxlength','2');;
@@ -5864,9 +5933,12 @@ function getContextApplicationPercentageQues(contxt) {
     		this.value = this.value.replace(/[^0-9]/g,'')
     		percentageUpdateEventListener(e);
     	})
-
     optionsContainer.append(optionCont).append(percentageComp).append(errFeild);
     $(optionCont).trigger("keyup")
+    if(applicationLocked){
+        $(optionCont).attr("readonly",true);
+        $(percentageComp).attr("readonly",true);
+    }
     return container.append(quesTextCont).append(optionsContainer);
 }
 function getpurchaseValue(){
