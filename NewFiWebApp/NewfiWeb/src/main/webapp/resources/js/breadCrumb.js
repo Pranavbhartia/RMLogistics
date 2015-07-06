@@ -77,7 +77,8 @@ function getBredCrumContext(element,item,indx){
         },
         clickHandler:function(callback){
             var ob=this;
-            if(Math.round(contxtHolder.getPercentageForStep(ob.indx))<=Math.round(appUserDetails.loanAppFormCompletionStatus)||appUserDetails.loanAppFormCompletionStatus==1)
+            var applicationLocked=checkLqbFileId();
+            if((Math.round(contxtHolder.getPercentageForStep(ob.indx))<=Math.round(appUserDetails.loanAppFormCompletionStatus)||appUserDetails.loanAppFormCompletionStatus==1)||applicationLocked)
             if(ob.item.onselect){
                 ob.item.onselect();
             }

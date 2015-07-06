@@ -101,10 +101,10 @@ function getCustomerSecondaryLeftNav() {
         	else{
         		loan = newfiObject.appUserDetails.loan;
         	}
-        	
-            if(loan.lqbFileId && loan.lqbFileId!=""){
+        	//NEXNF-647
+            /*if(loan.lqbFileId && loan.lqbFileId!=""){
                 flag=false;
-            }
+            }*/
         }catch(e){
         	 console.log("catch");
         }
@@ -201,12 +201,12 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
     } else if (secondary == 2) {
     	var userId=newfiObject.user.id;
         getAppDetailsForUser(userId,function(appUserDetailsTemp){
-            if(!appUserDetailsTemp.loan.lqbFileId){
+            /*if(!appUserDetailsTemp.loan.lqbFileId){*/
                 paintCustomerApplicationPage();
-            }else{
+            /*}else{
             	hideCompleteYourProfile();
             	paintApplicationAlreadySubmittedPage(appUserDetailsTemp.loanType.loanTypeCd);
-            }
+            }*/
         });
         //paintSelecedOption();
     } else if (secondary == 3) {
