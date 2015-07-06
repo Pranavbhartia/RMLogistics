@@ -113,6 +113,13 @@ function paintBuyHomeQuest(appUserDetails) {
 		"onselect" : paintCustomerApplicationPurchasePageStep1a,
 		"value" : "homeOwner"
 	} ];
+	var applicationLocked=checkLqbFileId();
+	if(applicationLocked&&appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="renting"){
+		options[1].onselect=function(){};
+	} 
+	if(applicationLocked&&appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="homeOwner"){
+		options[0].onselect=function(){};
+	}	
 
 	var quesCont = getBuyHomeMutipleChoiceQuestion(quesText, options,"livingSituation");
 	$('#app-right-panel').html(quesCont);
@@ -237,7 +244,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	questions.push(sellYourHouse);
     	
     }
-    
+    var applicationLocked=checkLqbFileId();
     
     var propQuestions = [{
         type: "desc",
@@ -388,10 +395,10 @@ function paintCustomerApplicationPurchasePageStep1a() {
     });
 
     $('#app-right-panel').append(saveAndContinueButton);
-    
-    addStateCityZipLookUp();
-    addCityStateZipLookUpForProperty();
-   
+    if(!applicationLocked){
+	    addStateCityZipLookUp();
+	    addCityStateZipLookUpForProperty();
+   	}
 }
 
 
