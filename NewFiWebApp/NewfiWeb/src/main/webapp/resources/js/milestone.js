@@ -82,28 +82,28 @@ var workFlowContext = {
 						});
 
 	},
-	getMileStoneSteps : function(role, callback) {
+	getMileStoneSteps : function(role, callback) {		
 		var ob = this;
 		var data = {};
 		ob.currentRole = role;
-		var ajaxURL = "rest/workflow/";
-		if (role == "CUSTOMER") {
-			ajaxURL = ajaxURL  + ob.customerWorkflowID;
-		} else {
-			ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
-		}
-		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
-			if (response.error) {
-				showToastMessage(response.error.message)
+			var ajaxURL = "rest/workflow/";
+			if (role == "CUSTOMER") {
+				ajaxURL = ajaxURL  + ob.customerWorkflowID;
 			} else {
-				ob.mileStoneSteps = response.resultObject;
-				ob.createMileStoneStepsLookup();
+				ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
 			}
-			if (callback) {
-				callback(ob);
-			}
-		});
-
+			ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+				if (response.error) {
+					showToastMessage(response.error.message)
+				} else {
+					ob.mileStoneSteps = response.resultObject;
+					ob.createMileStoneStepsLookup();
+				}
+				if (callback) {
+					callback(ob);
+				}
+			});
+	
 	},
 	getMilestonesStatusForLoan : function( callback) {
 		var ob = this;
@@ -249,6 +249,24 @@ var workFlowContext = {
 			}
 		}
 	},
+	initializeRealtor :  function(role, callback) {
+			this.getWorkflowID(function(ob) {
+			
+			ob.getMileStoneSteps(role, function(ob) {
+					ob.fetchLatestStatus();					
+					ob.getMilestonesStatusForLoan(function (){						
+						showRealtorHeaderSteps();						
+					}
+					);
+				
+			});
+			
+		});
+
+		if (callback) {
+			callback();
+		}
+	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
 			
@@ -259,8 +277,8 @@ var workFlowContext = {
 				});
 				if (role != "AGENT")
 				{
-					ob.getMilestonesStatusForLoan(function (){								
-						showProgressHeaderSteps();
+					ob.getMilestonesStatusForLoan(function (){						
+							showProgressHeaderSteps();						
 					}
 					);
 				}
@@ -714,15 +732,26 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 		});
 		itemToAppendTo.append(txtRow1);	
 }
-function paintCustomerLoanProgressPage() {
+function paintCustomerLoanProgressPage() {	
 	if(!userIsRealtor()){
 		workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user);	
 	}else{
 		workFlowContext.init(selectedUserDetail.loanID, createNewfiUser());
 	}
-	workFlowContext.initialize("CUSTOMER", function() {
-	});
-	paintCustomerInfo ()
+	
+	if (!userIsRealtor())
+	{
+			workFlowContext.initialize("CUSTOMER", function() {
+			});
+			
+	}
+	else if (userIsRealtor())
+	{
+		
+		workFlowContext.initializeRealtor("CUSTOMER", function() {
+		});	
+	}
+	paintCustomerInfo();
 }
 
 function paintCustomerInfo ()
@@ -737,16 +766,28 @@ function paintCustomerInfo ()
 		}).html("loan progress");
 	 
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
+	var subTextInfo ="Below is a detailed list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, please reach out to the newfi team with questions.";
+	if (userIsRealtor())
+	{
+		subTextInfo = "newfi understands the importance of getting your transaction closed within the contract date with as little effort possible and with great communication along the way. So we have given you visibility to exactly where your client is in the newfi process and if you have any questions along the way, pelase contact your newfi Loan Advisor.";
+	}
 	var subText = $('<div>').attr({
 		"class" : "loan-progress-sub-txt"
-	}).html("Below is a detailed list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, please reach out to the newfi team with questions.");
+	}).html(subTextInfo);
 	
 	
 	var container = $('<div>').attr({
 		"id" : "cust-loan-progress",
 		"class" : "loan-progress-container"
 	});
-	wrapper.append(header).append(progressHeader).append(subText).append(container);
+	if (userIsRealtor())
+	{
+		wrapper.append(header).append(subText).append(progressHeader).append(container);
+	}
+	else
+	{
+		wrapper.append(header).append(progressHeader).append(subText).append(container);
+	}
 	$('#center-panel-cont').append(wrapper);
 	
 	paintCustomerLoanProgressContainer();
@@ -788,6 +829,51 @@ function showProgressHeaderSteps(){
 		docsOutLMStatusRep = COMPLETED;
 	}
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Ready");
+	container.append(stepElement);	
+
+	
+	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
+	var fundedStatus = msStep.stateInfo;
+	var fundedStatusRep = "0";
+	if (fundedStatus && fundedStatus == "Funded")
+	{
+		fundedStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(fundedStatusRep, 5, "Funded");
+	container.append(stepElement);	
+	
+	return container;
+}
+
+function showRealtorHeaderSteps(){
+	var container=$("#WFProgressHeaderBar");
+	
+	if($('#WFProgressHeaderBar >div').length!=0){
+		//Avoid duplicate eppend issue
+		return;
+	}
+	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
+	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(0, 1, "Pre Approved");
+	container.append(stepElement);	
+	msStep = workFlowContext.milestoneStepsLookup["VIEW_APPRAISAL"];
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Appraisal Received");
+	container.append(stepElement);	
+	var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
+	var loanApprovedLMStatusRep = "0";
+	if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
+	{
+		loanApprovedLMStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
+	container.append(stepElement);	
+	
+	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
+	var docsOutLMStatusRep = "0";
+	if (docsOutLMStatus && docsOutLMStatus == "5")
+	{
+		docsOutLMStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Out");
 	container.append(stepElement);	
 
 	
