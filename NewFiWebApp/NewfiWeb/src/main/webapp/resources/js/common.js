@@ -21,6 +21,7 @@ function removeToastMessage(){
 
 }
 
+
 function removeParticularToastMessage(ElementID){
 
 	$(document).on('blur',ElementID,function(){
@@ -1182,3 +1183,118 @@ $(document).on('keydown', '#stateId' ,function(e){
 		}
 	}
 });
+
+
+
+	function validateUser(baseurl,registration,isViaReferal){
+		showOverlay();
+	    $.ajax({
+	        url: baseurl+"rest/shopper/validate",
+	        type: "POST",
+	        cache:false,
+	        data: {
+	            "registrationDetails": JSON.stringify(registration)
+	        },
+	        datatype: "application/json",
+	        success: function(data) {
+	        	hideOverlay();
+	            if(data.error==null){
+	            	var userType="";
+	            	if(isViaReferal){
+	            		userType="Borrower";
+	            	}else {
+	            		userType="Customer";
+	            	}
+	            	if($("#userTypeID").attr('value')==userType){//NEXNF-659 changed from customer to borrower
+						createNewCustomer(baseurl,registration,isViaReferal);
+					}else if($("#userTypeID").attr('value')=="Realtor"){
+						createNewRealtor(baseurl,registration,isViaReferal);
+					}
+	            }else{
+	            	//showErrorToastMessage(data.error.message);
+	            	$('.errorMsg').show();
+	            }
+	           
+	        },
+	        error: function(data) {
+	        	
+	        	hideOverlay();
+	        	if(data!=""||data!=null){
+	        		 showErrorToastMessage(data);
+	        	}else{
+	        		 showErrorToastMessage(validation_unsuccess_message);
+	        	}
+	            
+	             
+	        }
+	    });
+	}
+
+    function createNewCustomer(baseurl,registration,isViaReferal) {
+ //alert(JSON.stringify(registration));
+    showOverlay();
+    $.ajax({
+    url: baseurl+"rest/shopper/registration",
+    type: "POST",
+    cache:false,
+    data: {
+        "registrationDetails": JSON.stringify(registration)
+    },
+    datatype: "application/json",
+    success: function(data) {
+    	
+    	hideOverlay();
+        appendUserCreationSuccessMessage(data);
+        $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
+        $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
+        if(!isViaReferal){
+        	$('.cus-eng-success-message').removeClass('cus-eng-success-message-adjust');
+        	$('.cus-eng-success-message').addClass('cus-eng-success-message-new-adjust');
+        }
+        /* window.location.href =baseurl;
+        window.location.href = data; */
+        // printMedianRate(data,container);
+    },
+    error: function(data) {
+    	
+    	hideOverlay();
+        showErrorToastMessage(user_creation_unsuccess_message);
+       
+      }
+     });
+    }
+	
+	function createNewRealtor(baseurl,user,isViaReferal){
+		showOverlay();
+	    $.ajax({
+	        url: baseurl+"rest/shopper/realtorRegistration",
+	        type: "POST",
+	        cache:false,
+	        data: {
+	            "registrationDetails": JSON.stringify(user)
+	        },
+	        datatype: "application/json",
+	        success: function(data) {
+	            // $('#overlay-loader').hide();
+	            hideOverlay();
+	            appendUserCreationSuccessMessage(data);
+	            $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
+	            $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
+	            if(!isViaReferal){
+	            	$('.cus-eng-success-message').removeClass('cus-eng-success-message-adjust');
+	            	$('.cus-eng-success-message').addClass('cus-eng-success-message-new-adjust');
+	            }
+	          // alert (data);
+	            /* window.location.href =baseurl;
+	            window.location.href = data; */
+	            // printMedianRate(data,container);
+	        },
+	        error: function(data) {
+	         // alert(data);
+	         	hideOverlay();
+	            showErrorToastMessage(realtor_creation_unsuccess_message);
+	            
+	        }
+	    });	
+	}
+

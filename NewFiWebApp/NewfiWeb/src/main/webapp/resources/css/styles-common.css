@@ -410,3 +410,9 @@ a.cus-eng-succ-mess-email {
 	line-height: 35px;
 }
 
+.cus-eng-success-message-new-adjust {
+
+  margin: 150px auto;
+  width: 100%;
+  padding: 0;
+}

@@ -364,14 +364,14 @@ function currentlyLivingValidation(){
 	return true;
 }
 
-function validateFormFeildInRealtorReferalRegistration(){
+function validateFormFeildInReferalRegistration(){
 	if($("#userTypeID").attr('value')==""||$("#userTypeID").attr('value')==null||$("#userTypeID").attr('value')==undefined){
 		showErrorToastMessage(selectUserType);
 		return false;
 	}
 	var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',firstNameEmptyMessage);
 	if(!firstName){
-		$('.reg-input-row').css('margin-bottom','38px');
+		/*$('.reg-input-row').css('margin-bottom','38px');*/
 		return false;
 	}
 	var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',lastNameEmptyMessage);
@@ -390,6 +390,7 @@ function validateFormFeildInRealtorReferalRegistration(){
 		return false;
         }
 	}
+
 	/* var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
 	if(!phone){
 		$('.reg-input-row').css('margin-bottom','38px');
