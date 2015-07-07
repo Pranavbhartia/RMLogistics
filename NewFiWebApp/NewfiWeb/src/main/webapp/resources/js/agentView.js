@@ -550,10 +550,18 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			var col2 = $('<div>').attr({
 				"class" : "leads-container-tc2 leads-container-tc2-realtor float-left"
 			}).html(textCol2);
-
+			var lockedClosingCost="-";
+			if(customer.lockedRateData){
+				try{
+					var lockedData=JSON.parse(customer.lockedRateData);
+					lockedClosingCost=lockedData.closingCost;
+				}catch(e){
+					lockedClosingCost="-";
+				}
+			}
 			var col3 = $('<div>').attr({
 				"class" : "leads-container-tc3 leads-container-tc3-realtor float-left"
-			}).html("-");//to be asked
+			}).html(lockedClosingCost);//to be asked
 
 			var textCol4="";
 			if(customer.processor==""||customer.processor==null){
@@ -594,7 +602,6 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			
 		}
 		else{
-			alert("is not realtor");
 			var phone_num = "NA";
 			if (customer.phone_no != null && customer.phone_no.trim() != "") {
 				phone_num = formatPhoneNumberToUsFormat(customer.phone_no);

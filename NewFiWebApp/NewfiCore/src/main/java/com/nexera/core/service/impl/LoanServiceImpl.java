@@ -492,6 +492,7 @@ public class LoanServiceImpl implements LoanService {
 		        .getLoanProgressStatus());
 
 		loanCustomerVO.setLqbFileId(loan.getLqbFileId());
+		loanCustomerVO.setLockedRateData(loan.getLockedRateData());
 		/*
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
 		 * name of the loan manager instead of processor.

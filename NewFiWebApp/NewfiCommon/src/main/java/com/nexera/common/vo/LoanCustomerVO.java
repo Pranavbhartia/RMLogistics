@@ -19,7 +19,7 @@ public class LoanCustomerVO {
 	private Integer userID;
 	private Integer loanID;
 	private String lqbFileId;
-	
+	private String lockedRateData;
 	private String loanStatus;
 	private List<AlertListVO> alerts;
 	private List<NotesVO> notes;
@@ -215,6 +215,14 @@ public class LoanCustomerVO {
 
 	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
 	    this.mobileAlertsPreference = mobileAlertsPreference;
+    }
+
+	public String getLockedRateData() {
+	    return lockedRateData;
+    }
+
+	public void setLockedRateData(String lockedRateData) {
+	    this.lockedRateData = lockedRateData;
     }
 
 	
