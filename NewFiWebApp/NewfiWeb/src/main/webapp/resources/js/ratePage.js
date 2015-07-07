@@ -1510,7 +1510,8 @@ function getLoanTableSummary(desc, detail, id) {
     }).html(detail);
     
     if(desc=="Loan Type" || desc=="Loan Program" ){
-    	$('#loanprogramId').css('font-family','opensans');
+     col2.removeClass('loan-summary-col-detail');
+     col2.addClass('loan-summary-col-detail-new');
     }
     container.append(col1).append(col2);
     return container;
