@@ -81,7 +81,7 @@
                        <!-- <div class="reg-row-lc-new reg-row-lc float-left hide">Register as</div> -->
                          <div class="reg-row-rc-new reg-row-rc float-left hide">
                            <div class="reg-select reg-input-cont hide">
-                              <input class="reg-option-selected prof-form-input-select hide"  id="userTypeID" placeholder="User Type" value="Customer"> 
+                              <input class="reg-option-selected prof-form-input-select hide"  id="userTypeID" placeholder="User Type" value="Borrower"> 
                             </div>
                           </div>
                        </div> 
