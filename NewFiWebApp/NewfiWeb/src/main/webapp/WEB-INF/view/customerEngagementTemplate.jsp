@@ -107,7 +107,7 @@
 			$(document).on('click','#progressBaarId_2',function(){
 				removeToastMessage();
 				if(stages>1){
-					progressBaar(2);
+					//progressBaar(2);
 					//paintRefinanceLiveNow();
 					paintRefinanceStep2();
 				}
@@ -115,7 +115,7 @@
 			$(document).on('click','#progressBaarId_3',function(){
 				removeToastMessage();
 				if(stages>2){
-					progressBaar(3);
+					//progressBaar(3);
 					//paintRefinanceStartLiving();
 					paintRefinanceStepCEP();
 				}
@@ -123,21 +123,21 @@
 			$(document).on('click','#progressBaarId_4',function(){
 				removeToastMessage();
 				if(stages>3){
-					progressBaar(4);
+					//progressBaar(4);
 					paintRefinanceHomeWorthToday();
 				}
 			});
 			$(document).on('click','#progressBaarId_5',function(){
 				removeToastMessage();
 				if(stages>4){
-					progressBaar(5);
+					//progressBaar(5);
 					paintNewResidenceTypeQues();
 				}
 			});
 			$(document).on('click','#progressBaarId_6',function(){
 				removeToastMessage();
 				if(stages>5){
-					progressBaar(6);
+					//progressBaar(6);
 					paintRatesPageFromCrumb();
 				}
 			});
@@ -158,21 +158,21 @@
 			$(document).on('click','#homeProgressBaarId_2',function(){
 				removeToastMessage();
 				if(active>1){
-					homeProgressBaar(2);
+					//homeProgressBaar(2);
 					paintRentOfYourHouse();
 				}
 			});
 			$(document).on('click','#homeProgressBaarId_3',function(){
 				removeToastMessage();
 				if(active>2){
-					homeProgressBaar(3);
+					//homeProgressBaar(3);
 					paintNewResidenceTypeQues();
 				}
 			});
 			 $(document).on('click','#homeProgressBaarId_4',function(){
 				 removeToastMessage();
 				if(active>3){
-					homeProgressBaar(4);
+					//homeProgressBaar(4);
 					paintRatesPageFromCrumb();
 				}
 			});
