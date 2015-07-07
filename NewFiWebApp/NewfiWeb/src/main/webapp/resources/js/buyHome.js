@@ -789,8 +789,10 @@ function homeProgressBaar(num) {
             .removeClass('ce-lp-complete').addClass('ce-lp-not-started');
         $('#homeStepNoId_' + i).html(i);
     }
-    if(typeof(newfiObject)==='undefined')
+    if(typeof(newfiObject)==='undefined'&&!historyPopStage)
         saveState(undefined, undefined, undefined,(num-1));
+    if(historyPopStage)
+            historyPopStage=false;
     active=num;
     sessionStorage.refinaceData = JSON.stringify(buyHomeTeaserRate);
 }
