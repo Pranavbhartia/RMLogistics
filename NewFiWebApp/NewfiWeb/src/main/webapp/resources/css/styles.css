@@ -5618,27 +5618,29 @@ a.session-login-btn {
 }
 
 .leads-container-row-realtor>div {
-	padding-left: 50px;
+	padding-left: 25px;
 }
 
 .leads-container-tc1-realtor {
-	width: 225px;
+	width: 170px;
 }
 
 .leads-container-tc2-realtor {
-  	width: 215px;
+  	width: 164px;
 }
 
 .leads-container-tc3-realtor {
-	width: 135px;
+	width: 140px;
 }
 
 .leads-container-tc4-realtor {
-	width: 200px;
+	width: 170px;
 }
-
 .leads-container-tc5-realtor {
-	background: url(../images/alram_blue.png) no-repeat 40px 5px;
+	width: 179px;
+}
+.leads-container-tc6-realtor {
+	background: url(../images/alram_blue.png) no-repeat 20px 5px;
 }
 
 .loan-summary-col-desc-adj {

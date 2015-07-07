@@ -305,7 +305,7 @@ public class UserProfileRest {
 			throw new FatalException("Could not login user");
 
 		}
-		return profileUrl + "home.do";
+		return profileUrl + "home.do#myLoan/myTeam";
 
 	}
 
