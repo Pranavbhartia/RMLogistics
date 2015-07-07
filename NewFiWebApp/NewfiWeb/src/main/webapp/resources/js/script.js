@@ -2076,7 +2076,7 @@ function getClosingCostSummaryContainer(valueSet) {
 
 function getClosingCostHeader(text) {
     var header = $('<div>').attr({
-        "class": "closing-cost-header cus-eng-font capitalize ccSummary"
+        "class": "closing-cost-header  cus-eng-font capitalize ccSummary"
     }).html(text);
     return header;
 }

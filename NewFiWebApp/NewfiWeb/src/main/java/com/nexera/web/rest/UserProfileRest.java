@@ -120,14 +120,14 @@ public class UserProfileRest {
 				String successMessage = "";
 				if (resend != null) {
 					userProfileService.resendRegistrationDetails(userDetail);
-					successMessage = "Reminder sent. We’ve sent an email to "
+					successMessage = "We’ve sent an email to "
 					        + userVO.getEmailId()
 					        + ". It contains a link to verify your email and reset your password";
 				}
 
 				else {
 					userProfileService.resetPassword(userDetail);
-					successMessage = "Reminder sent. We’ve sent an email to "
+					successMessage = "We’ve sent an email to "
 					        + userVO.getEmailId()
 					        + ". It contains a link with instructions to reset your password";
 				}
