@@ -5641,6 +5641,7 @@ a.session-login-btn {
 }
 .leads-container-tc6-realtor {
 	background: url(../images/alram_blue.png) no-repeat 20px 5px;
+	cursor: pointer;
 }
 
 .loan-summary-col-desc-adj {
