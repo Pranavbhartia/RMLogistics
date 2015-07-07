@@ -563,18 +563,23 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				"class" : "leads-container-tc3 leads-container-tc3-realtor float-left"
 			}).html(lockedClosingCost);//to be asked
 
+			var col4 = $('<div>').attr({
+				"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
+			}).html(lockedClosingCost);
+			
 			var textCol4="";
 			if(customer.processor==""||customer.processor==null){
 				textCol4="-";
 			}else{
 				textCol4=customer.processor;
 			}
-			var col4 = $('<div>').attr({
-				"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
-			}).html(textCol4);
 			
 			var col5 = $('<div>').attr({
-				"class" : "leads-container-tc5 alert-col leads-container-tc5-realtor float-left"
+				"class" : "leads-container-tc5  leads-container-tc5-realtor float-left"
+			}).html(textCol4);
+			
+			var col6 = $('<div>').attr({
+				"class" : "leads-container-tc6 alert-col leads-container-tc6-realtor float-left"
 			}).bind(
 					'click',
 					{
@@ -585,7 +590,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 						appendCustomerDetailContianer($(this).parent(),
 								event.data.customer);
 					});
-			loanNotificationCntxt.loanLstCntElement = col5;
+			loanNotificationCntxt.loanLstCntElement = col6;
 			loanNotificationCntxt.getNotificationForLoan(function(ob) {
 				if (parseInt(ob.loanNotificationList.length) > 0) {
 					var alerts = $('<div>').attr({
@@ -596,7 +601,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}
 			});
 			
-			row.append(col1).append(col2).append(col3).append(col4).append(col5);
+			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6);
 			
 			$('#' + elementId).append(row);
 			
@@ -664,7 +669,8 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 					newfiObject.user.userRole.id==4){
 					var userDelIcn = $('<div>').attr({
 						"class" : "delCustClas clearfix",
-						"loanID" : customer.loanID
+						"loanID" : customer.loanID,
+						"customer_name":customer.name
 					});
 					row.append(userDelIcn);
 				}else{
@@ -699,16 +705,20 @@ function appendCustomerTableHeader(elementId,isRealtor) {
 		var thCol3 = $('<div>').attr({
 			"class" : "leads-container-tc3 leads-container-tc3-realtor float-left"
 		}).html("COE");
-
+		
 		var thCol4 = $('<div>').attr({
 			"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
-		}).html("Loan Advisor");
+		}).html("Loan Status");
 
 		var thCol5 = $('<div>').attr({
-			"class" : "leads-container-tc5 float-left"
+			"class" : "leads-container-tc5 leads-container-tc5-realtor  float-left"
+		}).html("Loan Advisor");
+
+		var thCol6 = $('<div>').attr({
+			"class" : "leads-container-tc6 float-left"
 		}).html("Alert");
 
-		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5);
+		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6);
 	}else{
 	var thCol1 = $('<div>').attr({
 		"class" : "leads-container-tc1 float-left"
@@ -4348,11 +4358,13 @@ $(window).scroll(
 $(document).on('click', '.delCustClas', function(e) {
 	var element=e.target;
 	var loanId=$(element).attr("loanId");
+	var customer_name=$(element).attr("customer_name");
 	var parentComponent=$(element).parent();
-
+	var parentElemet=$(this).parent();
+	$(parentElemet).addClass('leads-container-tr-sel');
 	$('#overlay-confirm').off();
 	$('#overlay-cancel').off();
-	$('#overlay-popup-txt').html("Are you sure you want to delete this loan?");
+	$('#overlay-popup-txt').html("Are you sure you want to delete loan- "+customer_name+"?");
 	$('#overlay-confirm').on('click', function() {
 		if(loanId){
 			ajaxRequest("rest/loan/"+loanId, "DELETE", "json", {}, function(response) {
@@ -4374,6 +4386,7 @@ $(document).on('click', '.delCustClas', function(e) {
 
 	$('#overlay-cancel').on('click', function() {
 		$('#overlay-popup').hide();
+		$(parentElemet).removeClass('leads-container-tr-sel');
 		$('#overlay-confirm').on('click', function() {});
 	});
 
