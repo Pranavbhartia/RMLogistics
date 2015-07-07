@@ -883,7 +883,7 @@ function getTaxInsDropToggleBtn(investment,flag){
         "class": "loan-summary-col-detail float-left "+paddingClass
     })
     var col2Txt = $('<div>').attr({
-        "class" : "float-left"
+        "class" : "loan-row-text float-left "//7.2 portal updates
     }).html(investment);
     var dropdownarrow = $('<div>').attr({
         "class": "dropdown-arrow float-left"
@@ -907,9 +907,12 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
             "id": containerId
         });
     }
-    
+    var cla="";
+    if(key=="cashOut"){
+    	cla="loan-summary-col-desc-adj";
+    }
     var col1 = $('<div>').attr({
-        "class": "loan-summary-col-desc float-left "+txtAlignClas
+        "class": "loan-summary-col-desc float-left "+txtAlignClas+" "+cla
     }).html(desc);
     var col2 = $('<div>').attr({
         "class": "loan-summary-col-detail float-left"
@@ -1284,9 +1287,11 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
         "id": "rate-slider-cont",
         "class": "slider-wrapper clearfix"
     });
+    
+    var text="Rate";//Changed from Interest Rate to Rate
     var headerTxt = $('<div>').attr({
         "class": "slider-hdr-txt float-left"
-    }).html("Interest Rate");
+    }).html(text);
     
     var yearValues = LQBResponse;
     
@@ -1503,6 +1508,10 @@ function getLoanTableSummary(desc, detail, id) {
         "class": "loan-summary-col-detail float-left",
         "id": id
     }).html(detail);
+    
+    if(desc=="Loan Type" || desc=="Loan Program" ){
+    	$('#loanprogramId').css('font-family','opensans');
+    }
     container.append(col1).append(col2);
     return container;
 }

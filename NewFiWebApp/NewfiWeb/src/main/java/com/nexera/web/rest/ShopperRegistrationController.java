@@ -102,7 +102,7 @@ public class ShopperRegistrationController {
 			        teaseRateDatalist);
 
 			LOG.info("User succesfully created, now trying to autologin" + user.getEmailId());
-			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account.</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loaAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
+			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account!</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loaAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
 			//NEXNF-628
 			//authenticateUserAndSetSession(emailId, user.getPassword(), request);
 		} catch (FatalException e) {
@@ -227,7 +227,7 @@ public class ShopperRegistrationController {
 			User newUser = userProfileService.createNewUser(loanAppFormVO
 			        .getUser());
 			userProfileService.sendEmailToCustomer(newUser);
-			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account.</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loanAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
+			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account!</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loanAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
 			//NEXNF-628
 			/*authenticateUserAndSetSession(emailId, userVO.getPassword(),
 			        request);*/
