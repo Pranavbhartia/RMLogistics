@@ -284,6 +284,7 @@ function retrieveState() {
 			var vals=newLocation.split("-")
 			var num=parseInt(vals[1]);
 			num=num+1;
+            historyPopStage=true;
 			changeToState(num);
 			return;
 		}

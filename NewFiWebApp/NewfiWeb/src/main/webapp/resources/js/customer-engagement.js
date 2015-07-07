@@ -1,5 +1,6 @@
 //JavaScript functions for customer engagement pages
 var isNoProductFound=false;
+var historyPopStage=false;
 $(document).on('mouseover','.app-option-choice',function(){
 	$(this).parent().find('.app-option-choice').removeClass('choice-hover');
 	$(this).addClass('choice-hover');
@@ -1085,11 +1086,13 @@ function progressBaar(num) {
             $('#stepNoId_' + i).html(i);
         }
         sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
-        if(typeof(newfiObject)==='undefined'){
+        if(typeof(newfiObject)==='undefined'&&!historyPopStage){
             //window.location.hash="#CE-"+(num-1);
             if(window.location.hash!=("#CE-"+(num-1)))
                 saveState(undefined, undefined, undefined,(num-1));
         }
+        if(historyPopStage)
+            historyPopStage=false;
             
     }
    
@@ -2106,7 +2109,7 @@ function changeToState(num){
             if(refinanceTeaserRate.loanType == "REF")
                 paintRefinanceHomeWorthToday(); 
             else
-                paintHomeZipCode();
+                paintBuyHomeSeeTeaserRate();
             break;
         case 5:
             if(refinanceTeaserRate.loanType == "REF")
