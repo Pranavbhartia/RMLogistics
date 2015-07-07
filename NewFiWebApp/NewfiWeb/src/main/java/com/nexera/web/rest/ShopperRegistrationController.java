@@ -196,6 +196,7 @@ public class ShopperRegistrationController {
 	        throws IOException {
 
 		Gson gson = new Gson();
+		String message="";
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
 			LoanAppFormVO loanAppFormVO = gson.fromJson(registrationDetails,
@@ -226,14 +227,17 @@ public class ShopperRegistrationController {
 			User newUser = userProfileService.createNewUser(loanAppFormVO
 			        .getUser());
 			userProfileService.sendEmailToCustomer(newUser);
-			authenticateUserAndSetSession(emailId, userVO.getPassword(),
-			        request);
+			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account.</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loanAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
+			//NEXNF-628
+			/*authenticateUserAndSetSession(emailId, userVO.getPassword(),
+			        request);*/
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOG.error("Error in user registration", e);
 		}
-
-		return profileUrl + "home.do";
+		//NEXNF-628
+		/*return profileUrl + "home.do";*/
+		return message;
 	}
 
 	// public UserVO registerCustomer(LoanAppFormVO loaAppFormVO)

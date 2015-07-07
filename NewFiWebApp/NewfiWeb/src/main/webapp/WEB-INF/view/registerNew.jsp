@@ -351,120 +351,22 @@
 			LoanAppFormVO.realtorEmail=email;
 			
 			//TODO form validation
-			var isStatus=validateFormFeildInRealtorReferalRegistration();
+			var isStatus=validateFormFeildInReferalRegistration();
 			
 			if(!isStatus){
 				return false;
 			}
 			//End of validation
-			validateUser(LoanAppFormVO);
+			validateUser(baseurl,LoanAppFormVO,true);
 				
 				
 			});
-		});
-		
-		function validateUser(registration){
-			showOverlay();
-		    $.ajax({
-		        url: baseurl+"rest/shopper/validate",
-		        type: "POST",
-		        cache:false,
-		        data: {
-		            "registrationDetails": JSON.stringify(registration)
-		        },
-		        datatype: "application/json",
-		        success: function(data) {
-		        	hideOverlay();
-		            if(data.error==null){
-		            	if($("#userTypeID").attr('value')=="Borrower"){//NEXNF-659 changed from customer to borrower
-							createNewCustomer(registration);
-						}else if($("#userTypeID").attr('value')=="Realtor"){
-							createNewRealtor(registration);
-						}
-		            }else{
-		            	//showErrorToastMessage(data.error.message);
-		            	$('.errorMsg').show();
-		            }
-		           
-		        },
-		        error: function(data) {
-		        	
-		        	hideOverlay();
-		        	if(data!=""||data!=null){
-		        		 showErrorToastMessage(data);
-		        	}else{
-		        		 showErrorToastMessage(validation_unsuccess_message);
-		        	}
-		            
-		             
-		        }
-		    });
-		}
-   
-	    function createNewCustomer(registration) {
-     //alert(JSON.stringify(registration));
-        showOverlay();
-        $.ajax({
-        url: baseurl+"rest/shopper/registration",
-        type: "POST",
-        cache:false,
-        data: {
-            "registrationDetails": JSON.stringify(registration)
-        },
-        datatype: "application/json",
-        success: function(data) {
-        	
-        	hideOverlay();
-            appendUserCreationSuccessMessage(data);
-            $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
-            $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
-            /* window.location.href =baseurl;
-            window.location.href = data; */
-            // printMedianRate(data,container);
-        },
-        error: function(data) {
-        	
-        	hideOverlay();
-            showErrorToastMessage(user_creation_unsuccess_message);
-           
-          }
-         });
-        }
-		
-		function createNewRealtor(user){
-			showOverlay();
-		    $.ajax({
-		        url: baseurl+"rest/shopper/realtorRegistration",
-		        type: "POST",
-		        cache:false,
-		        data: {
-		            "registrationDetails": JSON.stringify(user)
-		        },
-		        datatype: "application/json",
-		        success: function(data) {
-		            // $('#overlay-loader').hide();
-		            hideOverlay();
-		            appendUserCreationSuccessMessage(data);
-		            $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
-		            $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
-		          // alert (data);
-		            /* window.location.href =baseurl;
-		            window.location.href = data; */
-		            // printMedianRate(data,container);
-		        },
-		        error: function(data) {
-		         // alert(data);
-		         	hideOverlay();
-		            showErrorToastMessage(realtor_creation_unsuccess_message);
-		            
-		        }
-		    });	
-		}
-		
+		});				
+/* 		
 		function goToLoginPage(){
 			
 			window.location.href="${baseurl}";
-		}
+		} */
 	</script>
 </body>
 </html>
