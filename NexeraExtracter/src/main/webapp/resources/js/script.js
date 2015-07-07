@@ -931,7 +931,9 @@ function getMammothARMAdjustersTable2() {
 					"0.125", "", "" ],
 			[ "Investor", "0.000", "0.250", "0.375", "", "", "", "" ],
 			[ "DTI > 40%", "0.125", "0.125", "0.125", "0.125", "0.125",
-					"0.250", "0.375" ] ];
+					"0.250", "0.375" ],
+			[ "IO Loan Amt <= 417k", "0.375", "0.375", "0.375", "0.375", "0.375",
+					 					"n/a", "n/a" ] ];
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
