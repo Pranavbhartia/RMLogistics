@@ -121,6 +121,8 @@ public class LQBRequestUtil {
 					        .getPropertyTypeMaster().getPropCity());
 					hashmap.put("propertyZip", loanAppFormVO
 					        .getPropertyTypeMaster().getHomeZipCode());
+					hashmap.put("applicantOccupancyType", loanAppFormVO
+					        .getPropertyTypeMaster().getResidenceTypeCd());
 				}
 				hashmap.put("applicantAddrYrs", getYearsSpent(loanAppFormVO
 				        .getUser().getCustomerDetail().getLivingSince()));
@@ -143,7 +145,10 @@ public class LQBRequestUtil {
 				        .unformatCurrencyField(loanAppFormVO
 				                .getRefinancedetails()
 				                .getCurrentMortgageBalance()));
-
+				if (null != loanAppFormVO.getPropertyTypeMaster()){
+					hashmap.put("applicantOccupancyType", loanAppFormVO
+					        .getPropertyTypeMaster().getResidenceTypeCd());
+				}
 				hashmap.put("propertyState", loanAppFormVO.getUser()
 				        .getCustomerDetail().getAddressState());
 				hashmap.put("propertyStreetAddress", loanAppFormVO.getUser()

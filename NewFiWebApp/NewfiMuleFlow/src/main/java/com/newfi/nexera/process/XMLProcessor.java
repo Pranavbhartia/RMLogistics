@@ -60,6 +60,9 @@ public class XMLProcessor
             newApplicant.appendChild( aBExperianScore );
             newApplicant.appendChild( aBEquifax );
             newApplicant.appendChild( aBTransUnionScore );
+            Element applicationOccupancyType = createNewElement( doc, "field", "aOccT",
+                    "applicantOccupancyType" );
+            newApplicant.appendChild( applicationOccupancyType );
 
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITH_SSN_BOTH ) ) {
             Element newApplicant = doc.createElement( "applicant" );
@@ -176,7 +179,7 @@ public class XMLProcessor
             Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "abprimaryjobtitle",
                 "applicationCoborrowerEmployementTitle" );
             newApplicant.appendChild( applicationCoborrowerEmployementTitle );
-
+          
             loan.appendChild( newApplicant );
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITHOUT_SSN_BOTH ) ) {
             LOG.debug( "Need to remove ssn related info for borrower" );
@@ -415,7 +418,7 @@ public class XMLProcessor
             Element applicantState = createNewElement( doc, "field", "aBState", "applicantCoborrowerState" );
             newApplicant.appendChild( applicantState );
             Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
-            newApplicant.appendChild( applicantZip );
+            newApplicant.appendChild( applicantZip );          
             loan.appendChild( newApplicant );
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITH_SSN_BOTH ) ) {
             NodeList newApplicantList = doc.getElementsByTagName( "applicant" );
