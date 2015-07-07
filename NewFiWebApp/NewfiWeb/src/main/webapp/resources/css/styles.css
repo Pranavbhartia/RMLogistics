@@ -5648,3 +5648,8 @@ a.session-login-btn {
 .closing-cost-header {
 	margin-bottom: 5px;
 }
+.loan-summary-col-detail-new {
+	font-family: 'OpenSans';
+	color: #428bca;
+	line-height: 13px;
+}
