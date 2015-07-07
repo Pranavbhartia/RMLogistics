@@ -81,29 +81,7 @@
 			<field id="abprimaryjobtitle">applicantEmplrJobTitle</field>
 
 
-			<collection id="aLiaCollection">
-				<record>
-					<field id="DebtT">1</field>
-					<field id="ComNm">Bank Of America</field>
-					<field id="AccNum">234235908</field>
-					<field id="Bal">30000</field>
-					<field id="Pmt">200</field>
-				</record>
-				<record>
-					<field id="DebtT">1</field>
-					<field id="ComNm">Bank Of America Visa</field>
-					<field id="AccNum">2222234235908</field>
-					<field id="Bal">30000</field>
-					<field id="Pmt">200</field>
-				</record>
-				<record>
-					<field id="DebtT">1</field>
-					<field id="ComNm">Bank Of America</field>
-					<field id="AccNum">2awe34235908</field>
-					<field id="Bal">30000</field>
-					<field id="Pmt">200</field>
-				</record>
-			</collection>
+			
 		</applicant>
 	</loan>
 </LOXmlFormat>
