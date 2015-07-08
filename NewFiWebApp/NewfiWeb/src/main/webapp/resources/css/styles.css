@@ -2939,7 +2939,7 @@ input.calc-input {
 .login-container {
 	 /* margin-top: 110px;
 	margin-bottom: 100px;  */
-	 margin: 150px 100px; 
+	 margin: 150px auto; 
 }
 
 .display-title {
@@ -5590,7 +5590,7 @@ a.session-login-btn {
 
 .forget-pass-adj {
 	margin: 0;
-	padding: 36px;
+	padding: 36px 0;
 }
 .login-container-adj {
 	margin: 0;
