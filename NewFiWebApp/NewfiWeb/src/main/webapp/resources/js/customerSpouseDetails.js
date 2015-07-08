@@ -5,7 +5,7 @@ function paintMySpouseIncome() {
 	 coborrowerName = appUserDetails.customerSpouseDetail.spouseName;
 	
 	//var quesTxt =coborrowerName+ " details :Select all that apply";
-	var quesTxt ="Income for co-borrower "+coborrowerName+ " : select all that apply";//Changed for web portal updates 7.1 part 2
+	var quesTxt ="Income for "+coborrowerName+ " : select all that apply";//Changed for web portal updates 7.1 part 2//jirs-678,709
 	
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.selfEmployedIncome){
@@ -708,9 +708,9 @@ function getMultiTextQuestionSpouse(quesText,value) {
 
 function paintSpouseCustomerApplicationPageStep4a() {
    
-	 var quesHeaderTxt = "Declarations for co-borrower";//added s after declaration  for web portal updates 7.1 part 2
+	 var quesHeaderTxt = "Declarations for ";//added s after declaration  for web portal updates 7.1 part 2//jira-678,709
 	 if(appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.spouseName)
-		  quesHeaderTxt = "Declarations for co-borrower " +appUserDetails.customerSpouseDetail.spouseName;//added s after declaration  for web portal updates 7.1 part 2
+		  quesHeaderTxt = "Declarations for " +appUserDetails.customerSpouseDetail.spouseName;//added s after declaration  for web portal updates 7.1 part 2//jira-678,709
 	quesDeclarationContxts = [];
 	
 	$('#app-right-panel').html('');
@@ -1106,7 +1106,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	var quesHeaderTxt="";
 	if(appUserDetails.customerSpouseDetail.spouseName){
 		coborrower = appUserDetails.customerSpouseDetail.spouseName;		
-		quesHeaderTxt = "Government Monitoring Questions for co-borrower "+coborrower;//Changed for web portal updates 7.1 part 2
+		quesHeaderTxt = "Government Monitoring Questions for "+coborrower;//Changed for web portal updates 7.1 part 2//jira-678,709
 	}else{
 		quesHeaderTxt = "Government Monitoring Questions for "+coborrower;
 	}
@@ -1284,7 +1284,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 	 coborrower = appUserDetails.customerSpouseDetail.spouseName;
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for co-borrower "+coborrower;
+    var quesHeaderTxt = "Credit for "+coborrower;//jira-678,709
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
