@@ -651,6 +651,8 @@ function fieldsWhichCanExceptSpecialCharacter(question){
             return false;
         case "propZipCode":
             return false;
+        case "coBorrowerState":
+        	return false;
     }
     return true;
 }
@@ -1864,7 +1866,7 @@ function incomesSelectALLThatApply() {
 
 	var borrowerName=appUserDetails.user.firstName;
 	/*var quesTxt = "Select all that apply";*/
-	var quesTxt = "Income for borrower "+borrowerName+" : select all that apply";//Changed for web portal updates 7.1 part 2
+	var quesTxt = "Income for "+borrowerName+" : select all that apply";//Changed for web portal updates 7.1 part 2jira-678,709
 
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.isselfEmployed){
@@ -3053,7 +3055,7 @@ function paintCustomerApplicationPageStep4a() {
 	$('#app-right-panel').html('');
 	var borrowerFirstName=appUserDetails.user.firstName;
     /*var quesHeaderTxt = "Declaration Questions";*/
-    var quesHeaderTxt = "Declarations for borrower "+borrowerFirstName;//Changed for web portal updates 7.1 part 2
+    var quesHeaderTxt = "Declarations for "+borrowerFirstName;//Changed for web portal updates 7.1 part 2,jira-678,709
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -3466,7 +3468,7 @@ function paintCustomerApplicationPageStep4a() {
 	$('#app-right-panel').html('');
 	var borrowerFirstName=appUserDetails.user.firstName;
    /* var quesHeaderTxt = "Government Monitoring Questions";*/
-    var quesHeaderTxt = "Government Monitoring Questions for borrower "+borrowerFirstName;//changed  for web portal updates 7.1 part 2
+    var quesHeaderTxt = "Government Monitoring Questions for "+borrowerFirstName;//changed  for web portal updates 7.1 part 2//jira-709
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     });
@@ -3720,7 +3722,7 @@ function paintCustomerApplicationPageStep5() {
 	
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for borrower " +userName;
+    var quesHeaderTxt = "Credit for " +userName;//jira-709
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
