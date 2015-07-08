@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import com.nexera.common.entity.CustomerSpouseOtherAccountDetails;
 import com.nexera.common.entity.CustomerSpouseRetirementAccountDetails;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.ZipCodeLookup;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -102,12 +104,13 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		if(loanAppForm.getLoan() != null){
 			
 			LOG.info("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan().getLqbFileId()"+loanAppForm.getLoan().getLqbFileId());
-			
+			updateLoanType(loanAppForm.getLoan().getId(), loanAppForm.getLoan()
+			        .getLoanType());
+
 		}
 		
-		if (null != loanAppForm.getLoan()) {
-			if (null == loanAppForm.getLoan().getUser())
-				loanAppForm.getLoan().setUser(loanAppForm.getUser());
+		if (null != loanAppForm.getLoan()
+		        && null != loanAppForm.getLoan().getLqbFileId()) {
 			
 			LOG.info("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan().getLqbFileId()"
 	                + loanAppForm.getLoan().getLqbFileId());
@@ -499,6 +502,17 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		}
 
 		return loanAppForm;
+	}
+
+	private void updateLoanType(Integer loanId, LoanTypeMaster loanType) {
+
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.loanType = :loanType WHERE loan.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("loanType", loanType);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
+
 	}
 
 	@Override
