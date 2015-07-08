@@ -1297,4 +1297,76 @@ $(document).on('keydown', '#stateId' ,function(e){
 	        }
 	    });	
 	}
+	
+	$(document).on('keypress','input[name="yearLeftOnMortgage"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+	        //display error message
+	        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+	          return false;
+	    }
+	});
+
+ $(document).on('keypress','input[name="zipCode"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+	        //display error message
+	        //showToastMessage("Enter correct zipcode");
+	          return false;
+	    }				
+		if($(this).val().length >= 5){
+
+	         return false;
+	    }
+	});  
+ $(document).on('keypress','input[name="coBorrowerZipCode"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+	        //display error message
+	        //showToastMessage("Enter correct zipcode");
+	          return false;
+	    }				
+		if($(this).val().length >= 5){
+
+	         return false;
+	    }
+	});  
+ 
+ $(document).on('keypress','input[name="propZipCode"]',function(e){
+	 			
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+	        //display error message
+	        //showToastMessage("Enter correct zipcode");
+	          return false;
+		}				
+		if($(this).val().length >= 5){
+
+	         return false;
+	    }
+	});  
+ $(document).on('keypress','input[name="state"]',function(e){
+	 
+		if($(this).val().length >= 2){
+	         return false;
+	    }
+		
+	}); 
+ 
+ $(document).on('keypress','input[name="propState"]',function(e){
+	 
+			if($(this).val().length >= 2){
+	         return false;
+	    }
+			
+	}); 
+ 
+ 
+ $(document).on('keypress','input[name="coBorrowerState"]',function(e){
+	 
+			if($(this).val().length >= 2){
+	         return false;
+	    }
+			
+	}); 
+ 
 

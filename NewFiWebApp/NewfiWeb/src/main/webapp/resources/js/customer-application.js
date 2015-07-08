@@ -648,6 +648,8 @@ function fieldsWhichCanExceptSpecialCharacter(question){
             return false;
         case "propZipCode":
             return false;
+        case "coBorrowerState":
+        	return false;
     }
     return true;
 }
