@@ -5044,8 +5044,8 @@ function validateRefinanceHomeWorthTodayAppPath()
     }
     if (homeWorthToday < mortgageVal)
     {               
-        $('.ce-input').next('.err-msg').html(propertyValueErrorMessage + refinanceTeaserRate.currentMortgageBalance).show();
-        $('.ce-input').addClass('ce-err-input').show();
+        $('input[name="homeWorthToday"]').next('.err-msg').html(propertyValueErrorMessage + refinanceTeaserRate.currentMortgageBalance).show();
+        $('input[name="homeWorthToday"]').addClass('ce-err-input').show();
         return false;
     }
     else
