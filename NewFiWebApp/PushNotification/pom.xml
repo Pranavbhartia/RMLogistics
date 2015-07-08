@@ -19,7 +19,7 @@
 		
 		<!-- Uncomment this if you require maven to publish the war in a specific
 			folder such as the tomcat's webapps   -->
-			<dev.deployment.path>C:\Software\apache-tomcat-7.0.59\webapps</dev.deployment.path>
+			<!-- <dev.deployment.path>C:\Software\apache-tomcat-7.0.59\webapps</dev.deployment.path> -->
 
 		<!-- Spring -->
 		
