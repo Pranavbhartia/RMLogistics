@@ -4364,7 +4364,10 @@ $(document).on('click', '.delCustClas', function(e) {
 	$(parentElemet).addClass('leads-container-tr-sel');
 	$('#overlay-confirm').off();
 	$('#overlay-cancel').off();
+	$('.overlay-popup-wrapper').addClass('overlay-popup-wrapper-adj');
+	$('#overlay-popup-txt').addClass('overlay-popup-txt-adj');
 	$('#overlay-popup-txt').html("Are you sure you want to delete loan- "+customer_name+"?");
+	
 	$('#overlay-confirm').on('click', function() {
 		if(loanId){
 			ajaxRequest("rest/loan/"+loanId, "DELETE", "json", {}, function(response) {

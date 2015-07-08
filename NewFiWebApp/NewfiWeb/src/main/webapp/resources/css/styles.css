@@ -5656,3 +5656,11 @@ a.session-login-btn {
 	color: #428bca;
 	line-height: 13px;
 }
+
+.overlay-popup-wrapper-adj {
+	width: 385px;
+}
+
+.overlay-popup-txt-adj {
+	white-space: nowrap;
+}
