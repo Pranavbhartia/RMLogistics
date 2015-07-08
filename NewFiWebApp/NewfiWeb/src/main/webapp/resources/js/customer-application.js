@@ -873,202 +873,206 @@ function paintCheckBox(){
 
 }
 function addCityStateZipLookUpForProperty(){
-synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
-    
-    var stateDropDownWrapper = $('<div>').attr({
-    	"id" : "state-dropdown-wrapper-property",
-    	"class" : "state-dropdown-wrapper hide"
+    ajaxRequest("rest/states/", "GET", "json", "", function(response){ 
+        stateListCallBack(response);
+        
+        var stateDropDownWrapper = $('<div>').attr({
+        	"id" : "state-dropdown-wrapper-property",
+        	"class" : "state-dropdown-wrapper hide"
+        });
+
+        $('input[name="propState"]').after(stateDropDownWrapper);
+    	$('input[name="propState"]').attr("id","stateID").addClass('prof-form-input-statedropdown').bind('click',function(e){
+
+    		e.stopPropagation();
+    		if($('#state-dropdown-wrapper-property').css("display") == "none"){
+    			appendStateDropDownForProperty('state-dropdown-wrapper-property',filterAllowedStates(stateList));
+    			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+    				$('#state-dropdown-wrapper-property').perfectScrollbar({
+    					suppressScrollX : true
+    				});
+    				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+    			});
+    		}/*else{
+    			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
+    				$('#state-dropdown-wrapper-property').perfectScrollbar({
+    					suppressScrollX : true
+    				});
+    				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
+    			});
+    		}*/
+    	}).bind('keyup',function(e){
+    		var searchTerm = "";
+    		if(!$(this).val()){
+    			return false;
+    		}
+    		searchTerm = $(this).val().trim();
+    		var searchedList = searchInStateArray(searchTerm,filterAllowedStates(stateList));
+    		appendStateDropDownForProperty('state-dropdown-wrapper-property',searchedList);
+    	});
+    	
+        $('input[name="propCity"]').attr("id","cityID").bind('click keydown',function(){
+
+        		var searchData = [];
+        		for(var i=0; i<currentZipcodeLookUp.length; i++){
+        			searchData[i] = currentZipcodeLookUp[i].cityName;
+        		}
+        		
+        		var uniqueSearchData = searchData.filter(function(itm,i,a){
+        		    return i==a.indexOf(itm);
+        		});
+        		
+        		initializeCityLookupForProperty(uniqueSearchData);
+        	}).bind('focus', function(){ 
+        		$(this).trigger('keydown');
+        		$(this).autocomplete("search"); 
+        	}).width(200);
+
+        $('input[name="propZipCode"]').attr("id","zipcodeID").bind('click keydown',function(){
+
+        	var selectedCity = $('#cityID').val();
+        	var searchData = [];
+        	var count = 0;
+        	for(var i=0; i<currentZipcodeLookUp.length; i++){
+        		if(selectedCity == currentZipcodeLookUp[i].cityName){
+        			searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+        		}
+        	}
+
+        	initializeZipcodeLookupForProperty(searchData);
+        }).bind('focus', function(){ 
+        	$(this).trigger('keydown');
+        	$(this).autocomplete("search"); 
+        });
     });
-
-    $('input[name="propState"]').after(stateDropDownWrapper);
-	$('input[name="propState"]').attr("id","stateID").addClass('prof-form-input-statedropdown').bind('click',function(e){
-
-		e.stopPropagation();
-		if($('#state-dropdown-wrapper-property').css("display") == "none"){
-			appendStateDropDownForProperty('state-dropdown-wrapper-property',filterAllowedStates(stateList));
-			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
-				$('#state-dropdown-wrapper-property').perfectScrollbar({
-					suppressScrollX : true
-				});
-				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
-			});
-		}/*else{
-			$('#state-dropdown-wrapper-property').slideToggle("slow",function(){
-				$('#state-dropdown-wrapper-property').perfectScrollbar({
-					suppressScrollX : true
-				});
-				$('#state-dropdown-wrapper-property').perfectScrollbar('update');		
-			});
-		}*/
-	}).bind('keyup',function(e){
-		var searchTerm = "";
-		if(!$(this).val()){
-			return false;
-		}
-		searchTerm = $(this).val().trim();
-		var searchedList = searchInStateArray(searchTerm,filterAllowedStates(stateList));
-		appendStateDropDownForProperty('state-dropdown-wrapper-property',searchedList);
-	});
-	
-$('input[name="propCity"]').attr("id","cityID").bind('click keydown',function(){
-
-		var searchData = [];
-		for(var i=0; i<currentZipcodeLookUp.length; i++){
-			searchData[i] = currentZipcodeLookUp[i].cityName;
-		}
-		
-		var uniqueSearchData = searchData.filter(function(itm,i,a){
-		    return i==a.indexOf(itm);
-		});
-		
-		initializeCityLookupForProperty(uniqueSearchData);
-	}).bind('focus', function(){ 
-		$(this).trigger('keydown');
-		$(this).autocomplete("search"); 
-	}).width(200);
-
-$('input[name="propZipCode"]').attr("id","zipcodeID").bind('click keydown',function(){
-
-	var selectedCity = $('#cityID').val();
-	var searchData = [];
-	var count = 0;
-	for(var i=0; i<currentZipcodeLookUp.length; i++){
-		if(selectedCity == currentZipcodeLookUp[i].cityName){
-			searchData[count++] = currentZipcodeLookUp[i].zipcode;				
-		}
-	}
-
-	initializeZipcodeLookupForProperty(searchData);
-}).bind('focus', function(){ 
-	$(this).trigger('keydown');
-	$(this).autocomplete("search"); 
-});
-
 }
 
 function addStateCityZipLookUp(){
-synchronousAjaxRequest("rest/states/", "GET", "json", "", stateListCallBack);
-    
-    var stateDropDownWrapper = $('<div>').attr({
-    	"id" : "state-dropdown-wrapper",
-    	"class" : "state-dropdown-wrapper hide"
+    ajaxRequest("rest/states/", "GET", "json", "",function(response){
+        stateListCallBack(response);
+        
+        var stateDropDownWrapper = $('<div>').attr({
+        	"id" : "state-dropdown-wrapper",
+        	"class" : "state-dropdown-wrapper hide"
+        });
+        
+        $('input[name="state"]').after(stateDropDownWrapper);
+        $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
+     
+        $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind(' click keypress focus',function(e){
+    		e.stopImmediatePropagation();
+    		if($('#state-dropdown-wrapper').css("display") == "none"){
+    			appendStateDropDown('state-dropdown-wrapper',stateList);
+    			toggleStateDropDown();
+    		}/*else{
+    			toggleStateDropDown();
+    		}
+    		$*/
+    	}).bind('keyup',function(e){
+    		var searchTerm = "";
+    		if(!$(this).val()){
+    			return false;
+    		}
+    		searchTerm = $(this).val().trim();
+    		var searchList = searchInStateArray(searchTerm);
+    		appendStateDropDown('state-dropdown-wrapper',searchList);
+    	});
+        
+        
+        $('input[name="coBorrowerState"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click keypress',function(e){
+    		e.stopImmediatePropagation();
+    		if($('#state-dropdown-wrapper').css("display") == "none"){
+    			appendStateDropDown('state-dropdown-wrapper',stateList);
+    			toggleStateDropDown();
+    		}/*else{
+    			toggleStateDropDown();
+    		}*/
+    	}).bind('keyup',function(e){
+    		var searchTerm = "";
+    		if(!$(this).val()){
+    			return false;
+    		}
+    		searchTerm = $(this).val().trim();
+    		var searchList = searchInStateArray(searchTerm);
+    		appendStateDropDown('state-dropdown-wrapper',searchList);
+    	});
+        
+
+        
+        
+        $('input[name="city"]').attr("id","cityId").bind('click keydown',function(){
+    		
+    		var searchData = [];
+    		for(var i=0; i<currentZipcodeLookUp.length; i++){
+    			searchData[i] = currentZipcodeLookUp[i].cityName;
+    		}
+    		
+    		var uniqueSearchData = searchData.filter(function(itm,i,a){
+    		    return i==a.indexOf(itm);
+    		});
+    		
+    		initializeCityLookup(uniqueSearchData);
+    	}).bind('focus', function(){ 
+    		$(this).trigger('keydown');
+    		$(this).autocomplete("search"); 
+    	}).width(200);
+        
+        
+        
+     $('input[name="coBorrowerCity"]').attr("id","cityId").bind('click keydown',function(){
+    		
+    		var searchData = [];
+    		for(var i=0; i<currentZipcodeLookUp.length; i++){
+    			searchData[i] = currentZipcodeLookUp[i].cityName;
+    		}
+    		
+    		var uniqueSearchData = searchData.filter(function(itm,i,a){
+    		    return i==a.indexOf(itm);
+    		});
+    		
+    		initializeCityLookup(uniqueSearchData);
+    	}).bind('focus', function(){ 
+    		$(this).trigger('keydown');
+    		$(this).autocomplete("search"); 
+    	}).width(200);
+     
+     
+        $('input[name="zipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
+    		
+    		var selectedCity = $('#cityId').val();
+    		var searchData = [];
+    		var count = 0;
+    		for(var i=0; i<currentZipcodeLookUp.length; i++){
+    			if(selectedCity == currentZipcodeLookUp[i].cityName){
+    				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+    			}
+    		}
+
+    		initializeZipcodeLookup(searchData);
+    	}).bind('focus', function(){ 
+    		$(this).trigger('keydown');
+    		$(this).autocomplete("search"); 
+    	});
+        
+        
+     $('input[name="coBorrowerZipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
+    		
+    		var selectedCity = $('#cityId').val();
+    		var searchData = [];
+    		var count = 0;
+    		for(var i=0; i<currentZipcodeLookUp.length; i++){
+    			if(selectedCity == currentZipcodeLookUp[i].cityName){
+    				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
+    			}
+    		}
+
+    		initializeZipcodeLookup(searchData);
+    	}).bind('focus', function(){ 
+    		$(this).trigger('keydown');
+    		$(this).autocomplete("search"); 
+    	});
+
     });
-    
-    $('input[name="state"]').after(stateDropDownWrapper);
-    $('input[name="coBorrowerState"]').after(stateDropDownWrapper);
- 
-    $('input[name="state"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind(' click keypress focus',function(e){
-		e.stopImmediatePropagation();
-		if($('#state-dropdown-wrapper').css("display") == "none"){
-			appendStateDropDown('state-dropdown-wrapper',stateList);
-			toggleStateDropDown();
-		}/*else{
-			toggleStateDropDown();
-		}
-		$*/
-	}).bind('keyup',function(e){
-		var searchTerm = "";
-		if(!$(this).val()){
-			return false;
-		}
-		searchTerm = $(this).val().trim();
-		var searchList = searchInStateArray(searchTerm);
-		appendStateDropDown('state-dropdown-wrapper',searchList);
-	});
-    
-    
-    $('input[name="coBorrowerState"]').attr("id","stateId").addClass('prof-form-input-statedropdown').bind('click keypress',function(e){
-		e.stopImmediatePropagation();
-		if($('#state-dropdown-wrapper').css("display") == "none"){
-			appendStateDropDown('state-dropdown-wrapper',stateList);
-			toggleStateDropDown();
-		}/*else{
-			toggleStateDropDown();
-		}*/
-	}).bind('keyup',function(e){
-		var searchTerm = "";
-		if(!$(this).val()){
-			return false;
-		}
-		searchTerm = $(this).val().trim();
-		var searchList = searchInStateArray(searchTerm);
-		appendStateDropDown('state-dropdown-wrapper',searchList);
-	});
-    
-
-    
-    
-    $('input[name="city"]').attr("id","cityId").bind('click keydown',function(){
-		
-		var searchData = [];
-		for(var i=0; i<currentZipcodeLookUp.length; i++){
-			searchData[i] = currentZipcodeLookUp[i].cityName;
-		}
-		
-		var uniqueSearchData = searchData.filter(function(itm,i,a){
-		    return i==a.indexOf(itm);
-		});
-		
-		initializeCityLookup(uniqueSearchData);
-	}).bind('focus', function(){ 
-		$(this).trigger('keydown');
-		$(this).autocomplete("search"); 
-	}).width(200);
-    
-    
-    
- $('input[name="coBorrowerCity"]').attr("id","cityId").bind('click keydown',function(){
-		
-		var searchData = [];
-		for(var i=0; i<currentZipcodeLookUp.length; i++){
-			searchData[i] = currentZipcodeLookUp[i].cityName;
-		}
-		
-		var uniqueSearchData = searchData.filter(function(itm,i,a){
-		    return i==a.indexOf(itm);
-		});
-		
-		initializeCityLookup(uniqueSearchData);
-	}).bind('focus', function(){ 
-		$(this).trigger('keydown');
-		$(this).autocomplete("search"); 
-	}).width(200);
- 
- 
-    $('input[name="zipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
-		
-		var selectedCity = $('#cityId').val();
-		var searchData = [];
-		var count = 0;
-		for(var i=0; i<currentZipcodeLookUp.length; i++){
-			if(selectedCity == currentZipcodeLookUp[i].cityName){
-				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
-			}
-		}
-
-		initializeZipcodeLookup(searchData);
-	}).bind('focus', function(){ 
-		$(this).trigger('keydown');
-		$(this).autocomplete("search"); 
-	});
-    
-    
- $('input[name="coBorrowerZipCode"]').attr("id","zipcodeId").bind('click keydown',function(){
-		
-		var selectedCity = $('#cityId').val();
-		var searchData = [];
-		var count = 0;
-		for(var i=0; i<currentZipcodeLookUp.length; i++){
-			if(selectedCity == currentZipcodeLookUp[i].cityName){
-				searchData[count++] = currentZipcodeLookUp[i].zipcode;				
-			}
-		}
-
-		initializeZipcodeLookup(searchData);
-	}).bind('focus', function(){ 
-		$(this).trigger('keydown');
-		$(this).autocomplete("search"); 
-	});
 }
 
 
@@ -4969,13 +4973,13 @@ var questions = [
 				 appUserDetails.refinancedetails = refinancedetails;
 				var isSuccess=validateInput( $('input[name="currentMortgageBalance"]'),refinancedetails.currentMortgageBalance ,message);
 					if(isSuccess){
-						 saveAndUpdateLoanAppForm(appUserDetails ,paintRefinanceStep3);
+						 saveAndUpdateLoanAppForm(appUserDetails ,paintRefinanceHomeWorthTodayAppPath);
 						
 					}else{
 						return false;
 					}
 			  }else{
-				  paintRefinanceStep3();
+				  paintRefinanceHomeWorthTodayAppPath();
 			}
 			
 			//paintCustomerApplicationPageStep1a();
@@ -4983,6 +4987,72 @@ var questions = [
 		
 		
 	$('#app-right-panel').append(saveAndContinueButton);
+}
+
+function paintRefinanceHomeWorthTodayAppPath() {
+    $('#app-right-panel').html("");
+    var val="";
+
+    var questions = [
+        {
+            "type": "desc",
+            "text": "Approximately what is your home worth today?",
+            "name": "homeWorthToday",
+            "selected": showValue(appUserDetails.propertyTypeMaster.homeWorthToday)
+        }
+    ];
+
+    for(var i=0;i<questions.length;i++){
+        var question=questions[i];
+        var contxt=getQuestionContext(question,$('#app-right-panel'));
+        contxt.drawQuestion();
+        
+        quesContxts.push(contxt);
+    }
+    var lqbFileId = checkLqbFileId();
+    if(lqbFileId){
+        buttonText = "Next";
+    }
+    
+    var saveAndContinueButton = $('<div>').attr({
+        "class": "cep-button-color ce-save-btn"
+    }).html(buttonText).bind('click',{'contxt':contxt}, function(event) {
+        if(this.innerText!="Next"){
+            var valsValid=validateRefinanceHomeWorthTodayAppPath();
+            if(valsValid){
+                appUserDetails.propertyTypeMaster.homeWorthToday=getFloatValue( $('input[name="homeWorthToday"]').val());
+                saveAndUpdateLoanAppForm(appUserDetails ,paintRefinanceStep3);
+            }
+        }else{
+            paintRefinanceStep3();
+        }
+       });
+    
+        
+    $('#app-right-panel').append(saveAndContinueButton);
+}
+function validateRefinanceHomeWorthTodayAppPath()
+{
+    var homeWorthToday =getFloatValue( $('input[name="homeWorthToday"]').val());
+    var mortgageVal=0;
+    if(appUserDetails.refinancedetails.refinanceOption=="REFCO"){
+        mortgageVal=getFloatValue(appUserDetails.refinancedetails.cashTakeOut)+getFloatValue(appUserDetails.refinancedetails.currentMortgageBalance)
+    }else if(appUserDetails.refinancedetails.refinanceOption=="REFLMP"){
+        mortgageVal=getFloatValue(appUserDetails.refinancedetails.currentMortgageBalance)
+    }else if(appUserDetails.refinancedetails.refinanceOption=="REFMF"){
+        mortgageVal=getFloatValue(appUserDetails.refinancedetails.currentMortgageBalance)
+    }
+    if (homeWorthToday < mortgageVal)
+    {               
+        $('.ce-input').next('.err-msg').html(propertyValueErrorMessage + refinanceTeaserRate.currentMortgageBalance).show();
+        $('.ce-input').addClass('ce-err-input').show();
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+    
 }
 
 
