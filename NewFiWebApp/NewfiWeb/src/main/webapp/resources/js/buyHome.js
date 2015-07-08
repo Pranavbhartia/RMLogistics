@@ -607,6 +607,8 @@ function getBuyHomeTextQuestion(quesText, clickEvent, name) {
                 allowNegative: false
             });
         }
+        //Shubhams fix for jira-380
+        restrictChar(name);
     });
     
     

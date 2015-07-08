@@ -512,6 +512,8 @@ function getApplicationTextQues(question) {
     				    precision:0,
     				    allowNegative:false
     				});
+    			}else if(!fieldsWhichCanExceptSpecialCharacter(question)){
+    				restrictSpecialChar(question.name);
     			}
                 if (question.name == 'ssn') {
                   // $('input[name="ssn"]').mask("999-99-9999");
@@ -601,6 +603,42 @@ function checkForUnmaskedFields(question){
         case 'birthday':
             return false;
         case 'streetAddress':
+            return false;
+        case 'purchaseTime':
+            return false;
+        case "propCity":
+            return false;
+        case "propState":
+            return false;
+        case "propZipCode":
+            return false;
+    }
+    return true;
+}
+
+function fieldsWhichCanExceptSpecialCharacter(question){
+    switch(question.name){
+        case 'zipCode':
+            return false;
+        case 'mortgageyearsleft':
+            return false;
+        case 'locationZipCode':
+            return false;
+        case 'buyhomeZipPri':
+            return false;
+        case 'city':
+            return false;
+        case 'state':
+            return false;
+        case 'startLivingTime':
+            return false;
+        case 'spouseName':
+            return false;
+        case 'phoneNumber':
+            return false;
+        case 'ssn':
+            return false;
+        case 'birthday':
             return false;
         case 'purchaseTime':
             return false;

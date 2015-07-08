@@ -85,8 +85,8 @@ public class LQBRequestUtil {
 			        .getLoanTypeCd())) {
 				// is it cashout
 				if (loanAppFormVO.getRefinancedetails() != null
-				        &&("REFCO") .equalsIgnoreCase(loanAppFormVO.getRefinancedetails()
-				                .getRefinanceOption())) {
+				        && ("REFCO").equalsIgnoreCase(loanAppFormVO
+				                .getRefinancedetails().getRefinanceOption())) {
 					loanPurpose = "2";
 					hashmap.put("loanPurchasePrice", Utils
 					        .unformatCurrencyField(loanAppFormVO
@@ -145,18 +145,47 @@ public class LQBRequestUtil {
 				        .unformatCurrencyField(loanAppFormVO
 				                .getRefinancedetails()
 				                .getCurrentMortgageBalance()));
-				if (null != loanAppFormVO.getPropertyTypeMaster()){
+				if (null != loanAppFormVO.getPropertyTypeMaster()) {
 					hashmap.put("applicantOccupancyType", loanAppFormVO
 					        .getPropertyTypeMaster().getResidenceTypeCd());
 				}
-				hashmap.put("propertyState", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressState());
-				hashmap.put("propertyStreetAddress", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressStreet());
-				hashmap.put("propertyCity", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressCity());
-				hashmap.put("propertyZip", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressZipCode());
+
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getPropState()) {
+					hashmap.put("propertyState", loanAppFormVO
+					        .getPropertyTypeMaster().getPropState());
+				} else {
+					hashmap.put("propertyState", loanAppFormVO.getUser()
+					        .getCustomerDetail().getAddressState());
+				}
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getPropStreetAddress()) {
+					hashmap.put("propertyStreetAddress", loanAppFormVO
+					        .getPropertyTypeMaster().getPropStreetAddress());
+				} else {
+					hashmap.put("propertyStreetAddress", loanAppFormVO
+					        .getUser().getCustomerDetail().getAddressStreet());
+				}
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getPropCity()) {
+					hashmap.put("propertyCity", loanAppFormVO
+					        .getPropertyTypeMaster().getPropCity());
+				} else {
+					hashmap.put("propertyCity", loanAppFormVO.getUser()
+					        .getCustomerDetail().getAddressCity());
+				}
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getHomeZipCode()) {
+					hashmap.put("propertyZip", loanAppFormVO
+					        .getPropertyTypeMaster().getHomeZipCode());
+				} else {
+					hashmap.put("propertyZip", loanAppFormVO.getUser()
+					        .getCustomerDetail().getAddressZipCode());
+				}
 
 			}
 
