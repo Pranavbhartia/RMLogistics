@@ -166,7 +166,7 @@ function paintCustomerApplicationPage() {
 	
 	
 	 if(appUserDetails.propertyTypeMaster != null){
-		 propertyTypeMaster.id = appUserDetails.propertyTypeMaster.id;
+		 /*propertyTypeMaster.id = appUserDetails.propertyTypeMaster.id;
 		 propertyTypeMaster.propertyTypeCd = appUserDetails.propertyTypeMaster.propertyTypeCd;
 		 propertyTypeMaster.residenceTypeCd = appUserDetails.propertyTypeMaster.residenceTypeCd;
 		 propertyTypeMaster.propertyTaxesPaid = appUserDetails.propertyTypeMaster.propertyTaxesPaid;
@@ -174,24 +174,27 @@ function paintCustomerApplicationPage() {
 		 propertyTypeMaster.propertyInsuranceCost = appUserDetails.propertyTypeMaster.propertyInsuranceCost;
 		 propertyTypeMaster.propertyPurchaseYear = appUserDetails.propertyTypeMaster.propertyPurchaseYear;
 		 propertyTypeMaster.homeWorthToday=appUserDetails.propertyTypeMaster.homeWorthToday;
-		 propertyTypeMaster.homeZipCode = appUserDetails.propertyTypeMaster.homeZipCode;
+		 propertyTypeMaster.homeZipCode = appUserDetails.propertyTypeMaster.homeZipCode;*/
 
+         propertyTypeMaster=appUserDetails.propertyTypeMaster
 	 }
 	 
 	 
 	 if(appUserDetails.refinancedetails !=null){
-     refinancedetails.id =appUserDetails.refinancedetails.id; 	 
-	 refinancedetails.refinanceOption = appUserDetails.refinancedetails.refinanceOption;
-	 refinancedetails.currentMortgageBalance = appUserDetails.refinancedetails.currentMortgageBalance;
-	 //refinancedetails.currentMortgageBalance=9090;
-	 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
-	 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
-	 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
-	 
-	 //refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
-	 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
-	
-	 refinancedetails.cashTakeOut = appUserDetails.refinancedetails.cashTakeOut;
+         /*refinancedetails.id =appUserDetails.refinancedetails.id; 	 
+    	 refinancedetails.refinanceOption = appUserDetails.refinancedetails.refinanceOption;
+    	 refinancedetails.currentMortgageBalance = appUserDetails.refinancedetails.currentMortgageBalance;
+    	 //refinancedetails.currentMortgageBalance=9090;
+    	 refinancedetails.currentMortgagePayment = appUserDetails.refinancedetails.currentMortgagePayment;
+    	 refinancedetails.includeTaxes = appUserDetails.refinancedetails.includeTaxes;
+    	 refinancedetails.secondMortageBalance = appUserDetails.refinancedetails.secondMortageBalance;
+    	 
+    	 //refinancedetails.mortgageyearsleft = appUserDetails.refinancedetails.mortgageyearsleft;
+    	 refinancedetails.mortgageyearsleft=appUserDetails.refinancedetails.mortgageyearsleft;
+    	
+    	 refinancedetails.cashTakeOut = appUserDetails.refinancedetails.cashTakeOut;*/
+
+         refinancedetails=appUserDetails.refinancedetails
 	 }
 	 
 	 
@@ -1172,15 +1175,15 @@ function paintCustomerApplicationPageStep1b() {
 		    		return false;
 		    	}*/
 		    	
-	    		propertyTypeMaster.propertyTypeCd = propertyTypeCd;
-	        	propertyTypeMaster.residenceTypeCd = residenceTypeCd;
+	    		appUserDetails.propertyTypeMaster.propertyTypeCd = propertyTypeCd;
+	        	appUserDetails.propertyTypeMaster.residenceTypeCd = residenceTypeCd;
 	        	//propertyTypeMaster.propertyTaxesPaid = propertyTaxesPaid;
 	        	//propertyTypeMaster.propertyInsuranceProvider = propertyInsuranceProvider;
 	        	//propertyTypeMaster.propertyInsuranceCost = propertyInsuranceCost;
-	        	propertyTypeMaster.propertyPurchaseYear = propertyPurchaseYear;
+	        	appUserDetails.propertyTypeMaster.propertyPurchaseYear = propertyPurchaseYear;
 	            //propertyTypeMaster.homeWorthToday = homeWorthToday ;
 	        	  	
-	        	appUserDetails.propertyTypeMaster = propertyTypeMaster;
+	        	//appUserDetails.propertyTypeMaster = propertyTypeMaster;
 	        	
 	        	
 	        	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
@@ -4969,9 +4972,9 @@ var questions = [
 			
 			
 			if(this.innerText!="Next"){
-				refinancedetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
-				 appUserDetails.refinancedetails = refinancedetails;
-				var isSuccess=validateInput( $('input[name="currentMortgageBalance"]'),refinancedetails.currentMortgageBalance ,message);
+				appUserDetails.refinancedetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
+				// appUserDetails.refinancedetails = refinancedetails;
+				var isSuccess=validateInput( $('input[name="currentMortgageBalance"]'),appUserDetails.refinancedetails.currentMortgageBalance ,message);
 					if(isSuccess){
 						 saveAndUpdateLoanAppForm(appUserDetails ,paintRefinanceHomeWorthTodayAppPath);
 						
@@ -5133,16 +5136,16 @@ function paintRefinanceStep3() {
 	}).html(buttonText).on('click', function() {
 		
 			if(this.innerText != next){
-			    refinancedetails.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val();		  
-				refinancedetails.includeTaxes = quesContxts["includeTaxes"].value;//quesContxts[1].getValuesForDB();
+			    appUserDetails.refinancedetails.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val();		  
+				appUserDetails.refinancedetails.includeTaxes = quesContxts["includeTaxes"].value;//quesContxts[1].getValuesForDB();
 				
-				propertyTypeMaster.propertyTaxesPaid = quesContxts["propertyTaxesPaid"].value;//$('input[name="annualPropertyTaxes"]').val();
-				propertyTypeMaster.propertyInsuranceCost = quesContxts["annualHomeownersInsurance"].value;//$('input[name="annualHomeownersInsurance"]').val();
-	            propertyTypeMaster.propTaxMonthlyOryearly = quesContxts["propertyTaxesPaid"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
-	            propertyTypeMaster.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
-	             var questionOne=validateInput($('input[name="currentMortgagePayment"]'),refinancedetails.currentMortgagePayment ,message);
-	             var questionTwo=validateInput($('input[name="propertyTaxesPaid"]'),propertyTypeMaster.propertyTaxesPaid,message);
-	             var questionThree=validateInput($('input[name="annualHomeownersInsurance"]'),propertyTypeMaster.propertyInsuranceCost,message);
+				appUserDetails.propertyTypeMaster.propertyTaxesPaid = quesContxts["propertyTaxesPaid"].value;//$('input[name="annualPropertyTaxes"]').val();
+				appUserDetails.propertyTypeMaster.propertyInsuranceCost = quesContxts["annualHomeownersInsurance"].value;//$('input[name="annualHomeownersInsurance"]').val();
+	            appUserDetails.propertyTypeMaster.propTaxMonthlyOryearly = quesContxts["propertyTaxesPaid"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
+	            appUserDetails.propertyTypeMaster.propInsMonthlyOryearly = quesContxts["annualHomeownersInsurance"].yearMonthVal;//$('input[name="annualHomeownersInsurance"]').val();
+	             var questionOne=validateInput($('input[name="currentMortgagePayment"]'),appUserDetails.refinancedetails.currentMortgagePayment ,message);
+	             var questionTwo=validateInput($('input[name="propertyTaxesPaid"]'),appUserDetails.propertyTypeMaster.propertyTaxesPaid,message);
+	             var questionThree=validateInput($('input[name="annualHomeownersInsurance"]'),appUserDetails.propertyTypeMaster.propertyInsuranceCost,message);
 	            
 	             if(!questionOne){
 	            	 return false;
@@ -5158,8 +5161,8 @@ function paintRefinanceStep3() {
 	            	 showErrorToastMessage(yesyNoErrorMessage);
 	            	 return false;
 	             }
-			    appUserDetails.refinancedetails=refinancedetails;
-			    appUserDetails.propertyTypeMaster=propertyTypeMaster;
+			    //appUserDetails.refinancedetails=refinancedetails;
+			    //appUserDetails.propertyTypeMaster=propertyTypeMaster;
 			    saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1a());
 			    //paintCustomerApplicationPageStep1a();
 		    }else{

@@ -5,9 +5,7 @@ import java.util.Iterator;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +105,9 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 			
 		}
 		
-		if (null != loanAppForm.getLoan() && null != loanAppForm.getLoan().getLqbFileId() ) {
+		if (null != loanAppForm.getLoan()) {
+			if (null == loanAppForm.getLoan().getUser())
+				loanAppForm.getLoan().setUser(loanAppForm.getUser());
 			
 			LOG.info("Before saveOrUpdate(loanAppForm.loanAppForm.getLoan().getLqbFileId()"
 	                + loanAppForm.getLoan().getLqbFileId());

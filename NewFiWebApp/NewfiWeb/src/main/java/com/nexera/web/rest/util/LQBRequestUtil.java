@@ -361,7 +361,10 @@ public class LQBRequestUtil {
 			}
 			HashMap<String, String> finalmap = new HashMap();
 			for (String key : hashmap.keySet()) {
-				String encodedValue = URLEncoder.encode(hashmap.get(key))
+				
+				String encodedValue = hashmap.get(key);
+				if(!key.equalsIgnoreCase("applicantEmailAddress"))
+					encodedValue =URLEncoder.encode(hashmap.get(key))
 				        .replaceAll("[+]", " ");
 				finalmap.put(key, encodedValue);
 
