@@ -5612,8 +5612,13 @@ a.session-login-btn {
   cursor: pointer;
 }
 
+.append-home-icon {
+	  background: url(../images/transaction-blue.png) no-repeat 5px center;
+	  background-size: 15%;
+}
+
 .lp-item-active .append-home-icon {
-	  background: url(../images/newfiHome.ico) no-repeat 5px center;
+	  background: url(../images/transactions.png) no-repeat 5px center;
 	  background-size: 15%;
 }
 
