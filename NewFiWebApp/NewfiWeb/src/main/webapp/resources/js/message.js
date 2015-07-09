@@ -1,5 +1,6 @@
 var updateErrorMessage="Something went wrong while update . Please try again later";
 var updateSuccessMessage="Succesfully updated";
+var passwordUpdateSuccessMessage="Password successfully updated";
 var errorMessage="Something went wrong";
 var message = "Invalid Entry";
 var ProfileImageSuccessMessage="Image uploaded succesfully";

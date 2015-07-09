@@ -421,3 +421,12 @@ a.cus-eng-succ-mess-email {
 	font-family: 'openSanssemiBold';
 	font-size: 14px;
 }
+
+.prof-note-txt {
+  width: 100%;
+  padding: 20px 15px;
+  text-align: left;
+  margin: 0px auto;
+  font-family: opensanssemiBold;
+  color: rgb(221, 75, 57);
+}
