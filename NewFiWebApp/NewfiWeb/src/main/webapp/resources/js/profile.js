@@ -298,7 +298,7 @@ function getLoanPersonalInfoContainer(user) {
 	var phone1Row = getPhone1RowLM(user,isRealtor);
 	container.append(phone1Row);
 	
-	//jira-713
+	//jira-714
 	var carrierInfo="";
 	if(isRealtor){
 		carrierInfo = getCarrierDropdown(user,isRealtor);
@@ -2113,7 +2113,7 @@ function getPhone1RowLM(user) {
 	});
 	
 	inputCont.append(phone1Input).append(errMessage);
-	//jira-713
+	//jira-714
 	var carrierInfo="";
 	if(!isRealtor){
 		 carrierInfo=getCarrierDropdown(user);
@@ -2225,7 +2225,7 @@ function getCarrierDropdown(user,isRealtor){
 
     var carrierName = getCarrierName(user.carrierInfo);
 
-    //jira-713
+    //jira-714
     var cls="";
     if(isRealtor){
     	cls="prof-form-row ";
@@ -2238,7 +2238,7 @@ function getCarrierDropdown(user,isRealtor){
 	});
 	var rowCol1="";
 	
-	//jira-713
+	//jira-714
 	if(isRealtor){
 		 rowCol1 = $('<div>').attr({
 			"class" : "prof-form-row-desc float-left"
