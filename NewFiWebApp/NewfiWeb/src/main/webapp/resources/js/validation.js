@@ -45,12 +45,12 @@ function validateInput(element,inputVal,message){
 		}else{
 			$('input[name="' + name + '"]').parent().find('.err-msg').hide();
 			$('input[name="' + name + '"]').removeClass('ce-err-input');			
-			return true;
+			
 		}
 		
 	}
 	
-	
+	return true;
 	
 	
 }
