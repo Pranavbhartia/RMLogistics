@@ -2388,7 +2388,9 @@ function appendCustomerEditProfilePopUp() {
 	 * appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode,
 	 * "zipCodeID");
 	 */
-	appendStateEditRow();
+	
+	appendStateEditRow();	
+	
 	appendCityEditRow();
 	// appendCustomerProfEditRow("City", selectedUserDetail.city, "cityId");
 	appendZipEditRow();

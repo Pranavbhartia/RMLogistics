@@ -10,7 +10,8 @@
 			<div class="lp-pic-txt float-left">
 				<div class="lp-txt1" id ="profileNameId">${userVO.firstName}</div>
 				<div class="lp-txt2" id="loanType"></div>
-				<div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber}</div>
+				<!-- NEXNF-711 -->
+				<%-- <div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber}</div> --%>
 			</div>
 		</div>
 		<div id="lp-talk-wrapper" class="lp-talk-wrapper lp-item clearfix" onclick="changeLeftPanel(1);">
