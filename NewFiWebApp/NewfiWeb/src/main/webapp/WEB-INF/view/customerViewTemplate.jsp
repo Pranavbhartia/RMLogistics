@@ -80,7 +80,8 @@
 			}				
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
-			$('#loan-app').on('click',function(e){
+			//web portal updates 7.7
+			/* $('#loan-app').on('click',function(e){
 				 var isApplicationSubmitted=false;
 				 if(newfi.appUserDetails){
 					
@@ -107,7 +108,7 @@
 			        }else{
 			        	window.location.href="#myLoan/my-application";
 			        }
-			});
+			}); */
 			
 			
 		});
