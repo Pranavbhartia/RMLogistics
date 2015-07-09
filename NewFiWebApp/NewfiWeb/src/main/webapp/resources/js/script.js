@@ -118,6 +118,7 @@ function getCustomerSecondaryLeftNav() {
     //NEXNF-635
     /*  var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");*/
     var step3 = getCustomerSecondaryLeftNavStep(3, "programs<br />and rates");
+    //jira-711
 /*    var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");*/
     var step4 = getCustomerSecondaryLeftNavStep(4, "manage<br />documents");
     //NEXNF-635
