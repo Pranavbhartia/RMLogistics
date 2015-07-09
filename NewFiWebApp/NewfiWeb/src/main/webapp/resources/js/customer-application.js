@@ -5899,6 +5899,9 @@ function createTeaserRateObjectForRefinance(appUserDet){
             "zipCode":appUserDet.propertyTypeMaster!=undefined?appUserDet.propertyTypeMaster.homeZipCode:""
         };
     }
+    if(ob.refinanceOption=="REFCO"){
+        ob.cashTakeOut=appUserDet.refinancedetails.cashTakeOut;
+    }
     return ob;
 }
 function paintTeaserRatePageBasedOnLoanType(appUserDet){
