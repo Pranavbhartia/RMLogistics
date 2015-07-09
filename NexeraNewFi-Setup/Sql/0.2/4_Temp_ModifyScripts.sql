@@ -105,3 +105,13 @@ INSERT INTO `newfi_schema`.`loanprogressstatusmaster` (`id`, `loan_progress_stat
 ###Anoop : Change file_name column length in uploadedfileslist table. Executed in PROD
 ALTER TABLE `newfi_schema`.`uploadedfileslist` 
 CHANGE COLUMN `file_name` `file_name` VARCHAR(150) NULL DEFAULT NULL ;
+
+
+
+#Rajeswari
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='My Profile' WHERE `id`='22';
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='23';
+DELETE FROM `newfi_schema`.`workflowitemexec` WHERE  workflow_item_master= '23';
+DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='17';
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=1;
