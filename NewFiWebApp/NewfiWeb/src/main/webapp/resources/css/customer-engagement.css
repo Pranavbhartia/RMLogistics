@@ -105,7 +105,8 @@
 }
 
 .ce-save-btn {
-	width: 200px;
+	/* webportal updates 7.7 */
+/* 	width: 200px;
 	background: #6c9f2e;
 	color: #fff;
 	font-size: 20px;
@@ -115,9 +116,23 @@
 	text-align: center;
 	text-transform: capitalize;
 	border-radius: 3px;
+	cursor: pointer; */
+		
+	width: 160px;
+	height: 40px;
+	line-height: 40px;
+	margin: 15px 0;
+	text-align: center;
+	font-size: 16px;
+	color: #fff;
+	background: #6c9f2e;
+	border-radius: 3px;
+	text-transform: capitalize;
+	font-family: 'opensanssemibold';
 	cursor: pointer;
 }
 
+  
 .ce-title {
     text-align: center;
     font-size: 24px;
