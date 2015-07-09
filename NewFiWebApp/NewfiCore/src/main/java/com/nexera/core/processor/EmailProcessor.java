@@ -112,6 +112,9 @@ public class EmailProcessor implements Runnable {
 						entireTeam = true;
 
 					}
+					// For temporary disabling sending update mail
+					sendEmail = false;
+
 					LOGGER.debug("From Address is  " + fromAddress[0]);
 					String fromAddressString = fromAddress[0].toString();
 					if (fromAddressString.contains("<")
