@@ -2165,7 +2165,7 @@ var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
 
-	var text="Receive Text Alert";
+	var text="Receive Text Alerts";
 	
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
