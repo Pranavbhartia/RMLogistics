@@ -105,12 +105,11 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     container.append(tenureSlider).append(rateSlider);
     return container
 }
-function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate,isViaEngagementPath){
+function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate){
     var wrapper = $('<div>').attr({
         "class": "lock-rate-slider-wrapper"
     });
     if(teaserRateValHolder.teaserRate){
-    	if(isViaEngagementPath){
         var rateBtn1="";
         //NEXNF-434
         //var rateBtn2="";
@@ -150,6 +149,7 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                 var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
                 $('#ce-main-container').html(mainContainer);
             });*/
+            wrapper.append(rateBtn1);
         }else{
             if(newfiObject.user.userRole.roleCd!="REALTOR"){
                 rateBtn1= $('<div>').attr({
@@ -172,12 +172,10 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                
             }
         }
-        wrapper.append(rateBtn1);
-    	} 
+         
     }else{
         var rateBtn = $('<div>');
-        getRequestRateLockStatus(rateBtn,isViaEngagementPath);
-        
+        getRequestRateLockStatus(rateBtn);
         var sendPreQualification = $('<div>').attr({
             "class": "rate-btn pre-qualification "
         }).html("Send Pre-Qualification Letter").on('click',function(){
@@ -186,7 +184,10 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
         });
         var rateVO = getLQBObj(teaserRate);
         if(appUserDetails.loanType.loanTypeCd == "PUR" && !rateVO.dummyData){
-            return wrapper.append(rateBtn).append(sendPreQualification);
+            wrapper.append(rateBtn);
+            //NEXNF-721
+            //wrapper.append(sendPreQualification);
+            return wrapper;
         }else{
             wrapper.append(rateBtn);
         }

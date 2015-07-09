@@ -1479,7 +1479,7 @@ function saveAndUpdateLoanAppForm(appUserDetails) {
 function paintFixYourRatePageCEP(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn) {
     //set teaser rate flag
     teaserRateValHolder.teaserRate=true;
-    paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn,true)
+    paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn)
 	/*var teaserRate =  modifiedLQBJsonRes(teaserRate);
     var loanSummaryWrapper = getLoanSummaryWrapperCEP(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     
