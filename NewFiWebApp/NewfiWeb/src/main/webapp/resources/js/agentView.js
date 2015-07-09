@@ -57,7 +57,8 @@ function getAgentSecondaryLeftNav() {
 	if(newfiObject.user.userRole.id==2){
 		text="upload<br />contract items";
 	}else{
-		text="upload<br />needed items";
+		/*text="upload<br />needed items";*/
+		text="manage<br />documents";//jira-711
 	}
 	var step4 = getAgentSecondaryLeftNavStep(4, text);
 	//NEXNF-661
