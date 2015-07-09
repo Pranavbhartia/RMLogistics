@@ -25,6 +25,8 @@
 <!-- 					<div class="reg-display-title-subtxt">You have successfully verified your email. Please enter your new password below.</div> -->
 					<!-- <div class="reg-display-title-subtxt reg-display-title-subtxt-adj">Success! Your newfi account has been validated.</div> -->
 					<div class="reg-display-title-subtxt sub-text-change-pwd">Please enter your <i class="txt-font-family">newfi</i> account email and new password below.</div>
+					<!--portal updates 7.7  -->
+					<div class="prof-note-txt prof-note-txt-chg-pwd">Password must be a minimum of 8 characters and contain at least one uppercase and one lowercase character</div>
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
 						   <div class="change-input-reset-password login-input-pwd reg-email" id="email-id">

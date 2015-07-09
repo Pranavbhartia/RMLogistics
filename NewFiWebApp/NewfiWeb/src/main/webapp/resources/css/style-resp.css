@@ -382,11 +382,12 @@
 	.reg-row-lc{
 		line-height: 25px;
 	}
-	.reg-display-title-subtxt{
+	/* .reg-display-title-subtxt{
 		max-width: 100%;
 		padding: 0 10px;
 		margin-bottom: 15px;
-	}
+	} */
+	
 	.cust-eng-step-hdr,.cust-app-step-hdr {
 		display: block;
 		padding: 0 20px;
@@ -1435,8 +1436,14 @@
 	}
 	
 	.forget-pass-adj {	
-	padding:36px 0;
-}
+		padding:36px 0;
+	}
+
+	.reg-display-title-subtxt {
+		text-align: left;
+		width: 453px;
+		font-size: 12px;
+	}
 }
 
 

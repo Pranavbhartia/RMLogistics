@@ -40,9 +40,9 @@ var invalidEmailErrorMessage="Email ID is not valid";
 //Messages in profile.js
 var passwordFieldEmptyErrorMessage="should not be empty";
 var passwordDonotMatchErrorMessage="Passwords do not match";
-var passwordlengthErrorMessage="Password length should be at least 8 digits";
-var invalidPassword="Password can not contain first name or last name";
-var passwordRegexErrorMessage="Password should have at least 1 uppercase and 1 lowercase character";
+var passwordlengthErrorMessage="Password must be a minimum of 8 characters";//portal updates 7.7
+var invalidPassword="Password must not contain first name or last name";//portal updates 7.7
+var passwordRegexErrorMessage="Password must contain at least one uppercase and one lowercase character";//portal updates 7.7
 var priAndSecEmailValidation="Primary and secondary email should not be same.";
 var carrierSelectmessage="Please select a carrier";
 var copiedToClipBoard="copied to clipboard";
