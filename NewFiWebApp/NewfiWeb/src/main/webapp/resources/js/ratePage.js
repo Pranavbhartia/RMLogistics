@@ -105,11 +105,12 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     container.append(tenureSlider).append(rateSlider);
     return container
 }
-function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate){
+function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate,isViaEngagementPath){
     var wrapper = $('<div>').attr({
         "class": "lock-rate-slider-wrapper"
     });
     if(teaserRateValHolder.teaserRate){
+    	if(isViaEngagementPath){
         var rateBtn1="";
         //NEXNF-434
         //var rateBtn2="";
@@ -172,9 +173,10 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
             }
         }
         wrapper.append(rateBtn1);
+    	} 
     }else{
         var rateBtn = $('<div>');
-        getRequestRateLockStatus(rateBtn);
+        getRequestRateLockStatus(rateBtn,isViaEngagementPath);
         
         var sendPreQualification = $('<div>').attr({
             "class": "rate-btn pre-qualification "
@@ -773,7 +775,7 @@ function getTableRow(key,desc,value,id){
 }
 
 
-function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn) {
+function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn,isViaEngagementPath) {
 
    // var quesTxt = "Programs and Rates";
     var container = $('<div>').attr({
