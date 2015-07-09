@@ -164,40 +164,60 @@ public class MarketingTeaserRate {
 			        || loanDuration.indexOf("15") == 0) {
 				JSONArray rateVOArray = item.getJSONArray("rateVO");
 				boolean found = false;
+				LqbTeaserRateVo recordedObject=null;
 				for (int j = 0; j < rateVOArray.length(); j++) {
 					thirtyYearRateVoDataSet = rateVOArray.getJSONObject(j);
 					LqbTeaserRateVo LqbTeaserRateVo = gson.fromJson(
 					        thirtyYearRateVoDataSet.toString(),
 					        LqbTeaserRateVo.class);
-					if (LqbTeaserRateVo.getClosingCost().equals("$0.00")
-					        && (j + 1) < rateVOArray.length()) {
-						thirtyYearRateVoDataSet = rateVOArray
-						        .getJSONObject(j + 1);
-						LqbTeaserRateVo = gson.fromJson(
-						        thirtyYearRateVoDataSet.toString(),
-						        LqbTeaserRateVo.class);
-						MarketingPageRateVo marketingPageRateVo = new MarketingPageRateVo();
-						marketingPageRateVo.setLoanDuration(loanDuration
-						        .split(" ")[0] + "Year Fixed");
-						marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
-						marketingPageRatelist.add(marketingPageRateVo);
-						found = true;
-						break;
+					
+						
+					Float pointValue = Float.parseFloat(LqbTeaserRateVo
+					        .getPoint());
+					if (pointValue < 0)
+						pointValue = pointValue * -1;
+					if(recordedObject==null)
+						recordedObject = LqbTeaserRateVo;
+					else {
+						Float recFloatVal = Float.parseFloat(recordedObject
+						        .getPoint());
+						if (recFloatVal < 0)
+							recFloatVal = recFloatVal * -1;
+						if (pointValue < recFloatVal)
+							recordedObject = LqbTeaserRateVo;
 					}
+						
+					/*
+					 * if (LqbTeaserRateVo.getClosingCost().equals("$0.00") &&
+					 * (j + 1) < rateVOArray.length()) { thirtyYearRateVoDataSet
+					 * = rateVOArray .getJSONObject(j + 1); LqbTeaserRateVo =
+					 * gson.fromJson( thirtyYearRateVoDataSet.toString(),
+					 * LqbTeaserRateVo.class); MarketingPageRateVo
+					 * marketingPageRateVo = new MarketingPageRateVo();
+					 * marketingPageRateVo.setLoanDuration(loanDuration
+					 * .split(" ")[0] + "Year Fixed");
+					 * marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
+					 * marketingPageRatelist.add(marketingPageRateVo); found =
+					 * true; break; }
+					 */
 				}
-				if (!found) {
-					thirtyYearRateVoDataSet = rateVOArray
-					        .getJSONObject(rateVOArray.length() / 2);
-					LqbTeaserRateVo LqbTeaserRateVo = gson.fromJson(
-					        thirtyYearRateVoDataSet.toString(),
-					        LqbTeaserRateVo.class);
-					MarketingPageRateVo marketingPageRateVo = new MarketingPageRateVo();
-					marketingPageRateVo
-					        .setLoanDuration(loanDuration.split(" ")[0]
-					                + "Year Fixed");
-					marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
-					marketingPageRatelist.add(marketingPageRateVo);
-				}
+				MarketingPageRateVo marketingPageRateVo = new MarketingPageRateVo();
+				marketingPageRateVo.setLoanDuration(loanDuration.split(" ")[0]
+				        + "Year Fixed");
+				marketingPageRateVo.setLqbTeaserRateVo(recordedObject);
+				marketingPageRatelist.add(marketingPageRateVo);
+				/*
+				 * if (!found) { thirtyYearRateVoDataSet = rateVOArray
+				 * .getJSONObject(rateVOArray.length() / 2); LqbTeaserRateVo
+				 * LqbTeaserRateVo = gson.fromJson(
+				 * thirtyYearRateVoDataSet.toString(), LqbTeaserRateVo.class);
+				 * MarketingPageRateVo marketingPageRateVo = new
+				 * MarketingPageRateVo(); marketingPageRateVo
+				 * .setLoanDuration(loanDuration.split(" ")[0] + "Year Fixed");
+				 * marketingPageRateVo.setLqbTeaserRateVo(LqbTeaserRateVo);
+				 * marketingPageRatelist.add(marketingPageRateVo); }
+				 */
+				
 			}
 
 		}
