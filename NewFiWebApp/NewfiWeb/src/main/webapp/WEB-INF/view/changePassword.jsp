@@ -44,7 +44,7 @@
 				            </div>
 							<div class="forget-pass-btn-wrapper clearfix">
                                  <div class="cancel-btn color-change float-left" onclick="window.location='./'">Cancel</div>
-					             <div class="reset-password color-change float-right" onclick="$('#changePwdForm').submit();">Submit</div>
+					             <div class="reset-password color-change float-right" onclick="$('#changePwdForm').submit();"></div>
 				            </div>											
 						</form>
 					</div>
@@ -190,10 +190,12 @@ $(document).ready(function() {
 		/* $('.reg-display-title-subtxt').show(); */
 		$('.reg-display-title-subtxt.reg-display-title-subtxt-adj').show();
 		$('.reg-display-title').html('Set Password');
+		$('.reset-password').html('Submit');
 		
 	}else {
 		$('.reg-display-title-subtxt.sub-text-change-pwd').show();
 		$('.reg-display-title').html('Reset Password');
+		$('.reset-password').html('Reset Password');
 	}
 
 });
