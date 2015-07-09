@@ -292,9 +292,18 @@ function getLoanPersonalInfoContainer(user) {
 		container.append(assignManager);	
 	}*/
 
-	var phone1Row = getPhone1RowLM(user);
+	if(newfiObject.user.userRole.id==2){
+		isRealtor=true;
+	}
+	var phone1Row = getPhone1RowLM(user,isRealtor);
 	container.append(phone1Row);
 	
+	//jira-713
+	var carrierInfo="";
+	if(isRealtor){
+		carrierInfo = getCarrierDropdown(user,isRealtor);
+		container.append(carrierInfo);
+	}
 	
 	
    // added check box 
@@ -2104,8 +2113,12 @@ function getPhone1RowLM(user) {
 	});
 	
 	inputCont.append(phone1Input).append(errMessage);
-	var carrierInfo=getCarrierDropdown(user);
-	
+	//jira-713
+	var carrierInfo="";
+	if(!isRealtor){
+		 carrierInfo=getCarrierDropdown(user);
+	}
+		
 	rowCol2.append(inputCont).append(carrierInfo);
 	return row.append(rowCol1).append(rowCol2);
 }
@@ -2208,18 +2221,36 @@ var row = $('<div>').attr({
 
 
 }
-function getCarrierDropdown(user){
+function getCarrierDropdown(user,isRealtor){
 
     var carrierName = getCarrierName(user.carrierInfo);
+
+    //jira-713
+    var cls="";
+    if(isRealtor){
+    	cls="prof-form-row ";
+    }else {
+    	cls="prof-form-row-carrier ";
+    }
 	var row = $('<div>').attr({
-		"class" : "prof-form-row-carrier clearfix hide",
+		"class" : cls+"clearfix hide",
 		"id":"prof-form-row-custom-email"
 	});
-
+	var rowCol1="";
+	
+	//jira-713
+	if(isRealtor){
+		 rowCol1 = $('<div>').attr({
+			"class" : "prof-form-row-desc float-left"
+		}).html("Carrier");
+	}
+	
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-			
+		
+	
 	var carrierinfo = $('<input>').attr({
 		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
 		"value" : carrierName,
@@ -2247,7 +2278,7 @@ function getCarrierDropdown(user){
 	});
 	
 	rowCol2.append(carrierinfo).append(appendErrorMessage()).append(dropDownWrapper);
-	return row.append(rowCol2);	
+	return row.append(rowCol1).append(rowCol2);	
 }
 /**
  * Functions related to form validations
