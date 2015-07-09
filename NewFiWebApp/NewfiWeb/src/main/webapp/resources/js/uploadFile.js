@@ -406,8 +406,12 @@ function getNeedItemsWrapper(neededItemListObject) {
 	var leftContainer = $('<div>').attr({
 		"class" : "needed-items-lc float-left"
 	});
-
-	addNeededDocuments(neededItemListObject, leftContainer, container);
+	
+	
+	
+		addNeededDocuments(neededItemListObject, leftContainer, container);
+	
+	
 
 	return wrapper.append(header).append(container);
 }
@@ -533,7 +537,8 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	if(newfiObject.user.userRole.id==2){
 		text="Upload contract items";
 	}else{
-		text="Upload needed items";
+		/*text="Upload needed items";*/
+		text="Manage Documents";//jira-711
 	}
 	var header = $('<div>').attr({
 		"class" : "upload-item-header"

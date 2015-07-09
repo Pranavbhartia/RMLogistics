@@ -118,7 +118,9 @@ function getCustomerSecondaryLeftNav() {
     //NEXNF-635
     /*  var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");*/
     var step3 = getCustomerSecondaryLeftNavStep(3, "programs<br />and rates");
-    var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");
+    //jira-711
+/*    var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");*/
+    var step4 = getCustomerSecondaryLeftNavStep(4, "manage<br />documents");
     //NEXNF-635
     /* var step5 = getCustomerSecondaryLeftNavStep(5, "my <br /> loan progress");*/
     var step5 = getCustomerSecondaryLeftNavStep(5, "loan progress");
@@ -2762,7 +2764,7 @@ function sendPreQualificationLetter(){
 }
 
 
-function getRequestRateLockStatus(element){
+function getRequestRateLockStatus(element,isViaEngagementPath){
     if(!appUserDetails.loan.isRateLocked){
         var loanId=appUserDetails.loan.id;
         ajaxRequest("rest/loan/"+loanId+"/rateCheck","GET","json",undefined,function(response){
@@ -2782,21 +2784,24 @@ function getRequestRateLockStatus(element){
                     	element.html( "Rate Lock Requested").unbind( "click").addClass("rateLockRequested");
                     }
                 }else{
-                	element.addClass("rate-btn");
-                    element.html("Contact Your Loan Advisor").on('click',function(){
-                     //changeLeftPanel(1);
-                    	
-                    	if(newfiObject.user.userRole.roleCd!="REALTOR"){
-                    	
-	                        if(typeof(selectedUserDetail)!=='undefined'){
-	                            window.location.hash="#loan/"+selectedUserDetail.loanID+"/progress"
-	                        }else{
-	                            window.location.hash="#myTeam";  
-	                        }
-                    	}else{
-                    		showToastMessage("Please contact your customer");
-                    	}
-                    });
+                	if(isViaEngagementPath){
+                		element.addClass("rate-btn");
+                        element.html("Contact Your Loan Advisor").on('click',function(){
+                         //changeLeftPanel(1);
+                        	
+                        	if(newfiObject.user.userRole.roleCd!="REALTOR"){
+                        	
+    	                        if(typeof(selectedUserDetail)!=='undefined'){
+    	                            window.location.hash="#loan/"+selectedUserDetail.loanID+"/progress"
+    	                        }else{
+    	                            window.location.hash="#myTeam";  
+    	                        }
+                        	}else{
+                        		showToastMessage("Please contact your customer");
+                        	}
+                        });
+                	}
+                	
                 }
             }
         });

@@ -18,8 +18,8 @@
 					</c:otherwise>
 				</c:choose>
 				
-				
-				<div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber }</div>
+				<!-- jira-711 -->
+				<%-- <div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber }</div> --%>
 			</div>
 		</div>
 		<%-- <div class="lp-item lp-item-agent clearfix" id="lp-work-on-loan" onclick="paintAgentDashboard('workloans');">
