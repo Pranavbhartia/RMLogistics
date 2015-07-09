@@ -148,18 +148,21 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        .parseInt(objectMap.get(
 				                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
 				                .toString()));
-				UserVO userVO = loanVO.getUser();
+				LoanApplicationFee loanApplicationFee = transactionService
+				        .findByLoan(loanVO);
+				String appFee = "";
+				if (loanApplicationFee != null) {
+					appFee = String.valueOf(loanApplicationFee.getFee());
+				}
 
-				String appFee = String.valueOf(loanVO.getAppFee());
 				substitutions.put("-amount-", new String[] { appFee });
-				substitutions.put("-address-", new String[] { userVO
-				        .getCustomerDetail().getAddressStreet() });
-				substitutions.put("-city-", new String[] { userVO
-				        .getCustomerDetail().getAddressCity() });
-				substitutions.put("-state-", new String[] { userVO
-				        .getCustomerDetail().getAddressState() });
-				substitutions.put("-zip-", new String[] { userVO
-				        .getCustomerDetail().getAddressZipCode() });
+				String paymentDate = "";
+				if (loanApplicationFee != null
+				        && loanApplicationFee.getPaymentDate() != null) {
+					paymentDate = String.valueOf(loanApplicationFee
+					        .getPaymentDate());
+				}
+				substitutions.put("-date-", new String[] { paymentDate });
 				ary[0] = objectMap.get(
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO)
 				        .toString();
