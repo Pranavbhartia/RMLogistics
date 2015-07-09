@@ -101,13 +101,16 @@ function LoanPersonalInfoWrapper(user) {
 		"class" : "loan-personal-info-wrapper"
 	});
 	//NEXNF-664
-	var text="";
+/*	var text="";
 	
 	if(newfiObject.user.userRole.id==2){
 		text="My Profile";
 	}else{
 		text="Personal Information";
 	}
+	*/
+	//NEXNF-711
+	var text="My Profile";
 	
 	var header = $('<div>').attr({
 		//included that of customer css
@@ -772,7 +775,8 @@ function updateLMDetails() {
             if(data.error==null){
             	    if(newfiObject.user.id==userProfileJson.id){
             	    	$("#profileNameId").text($("#firstNameId").val());
-                    	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+            	    	//NEXNF-711
+                    	/*$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));*/
                     	$("#priPhoneNumberId").mask("(999) 999-9999");
             			showToastMessage(updateSuccessMessage);
             		  	$('#overlay-toast').fadeIn("fast",function(){
@@ -832,10 +836,12 @@ function customerPersonalInfoWrapper(user) {
 		"class" : "loan-personal-info-wrapper"
 	});
 
-
+	//jira-711
+    var text="My Profile";
+    
 	var header = $('<div>').attr({
 		"class" : "cust-personal-info-header"
-	}).html("Personal Information");
+	}).html(text);
 
 	var container = getCustPersonalInfoContainer(user);
 	wrapper.append(header).append(container);
@@ -877,10 +883,10 @@ function getCustPersonalInfoContainer(user) {
 	 * var streetAddrRow = getStreetAddrRow(user);
 	 * container.append(streetAddrRow);
 	 */
-
+	
 	var stateRow = getStateRow(user);
 	formWrapper.append(stateRow);
-
+	
 	var cityRow = getCityRow(user);
 	formWrapper.append(cityRow);
 	
@@ -1303,9 +1309,9 @@ function getSecEmailRow(user) {
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
-	
+	//removal of  prof-form-input-lg as per jira-711
 	var emailInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg",
+		"class" : "prof-form-input",
 		"value" : user.customerDetail.secEmailId,
 		"id" : "secEmailId"
 	});
@@ -2145,9 +2151,12 @@ function getPhone2Row(user) {
 var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
+
+	var text="Receive Text Alert";
+	
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Receive SMS Alert");
+	}).html(text);
 	
 	var rowColtext = $('<div>').attr({
 		"class" : "cust-sms-ch float-left"
@@ -2519,7 +2528,8 @@ function updateUserDetails() {
 				showToastMessage(updateSuccessMessage);
 				hideOverlay();			
 				$("#profileNameId").text($("#firstNameId").val());
-			  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+				//NEXNF-711
+			  /*	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));*/
 			  	$("#priPhoneNumberId").mask("(999) 999-9999");
 			  	$('#overlay-toast').fadeIn("fast",function(){
 				setTimeout(function(){
@@ -2783,7 +2793,8 @@ function saveEditUserProfile(user){
 	$('#profileNameId').text(fname);
 	//$('#profilePhoneNumId').text(priPhone);
 	$('#loanType').text(loanType);
-	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat(priPhone));
+	//NEXNF-711
+	/*$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat(priPhone));*/
 	
 	
 	$('#center-panel-cont').html("");
