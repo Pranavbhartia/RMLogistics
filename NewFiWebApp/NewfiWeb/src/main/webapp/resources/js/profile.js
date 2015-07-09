@@ -229,6 +229,13 @@ function getPasswordInfoContainer(){
 		"class" : "loan-personal-info-container"
 	});
 
+	//NEXNF-725
+	var noteText=$('<div>').attr({
+		"class" : "prof-note-txt clearfix"
+	}).html("Note: Password must be a minimum of 8 characters and contain at least one uppercase and one lowercase character");
+	
+	container.append(noteText);
+	
 	var passwordRow = getPasswordRow("New Password","password");
 	container.append(passwordRow);
 
@@ -242,6 +249,8 @@ function getPasswordInfoContainer(){
 		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "changePassword()"
 	}).html("Update");
+	
+	 
 	container.append(saveBtn);
 	return container;
 }
@@ -626,7 +635,7 @@ function changePassword(){
 					cache:false,
 					success : function(data) {
 						$('#overlay-loader').hide();
-						showToastMessage(updateSuccessMessage);
+						showToastMessage(passwordUpdateSuccessMessage);
 					},
 					error : function(error) {
 						$('#overlay-loader').hide();
