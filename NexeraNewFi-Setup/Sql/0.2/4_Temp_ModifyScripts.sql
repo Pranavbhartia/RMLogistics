@@ -115,3 +115,13 @@ DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='23';
 DELETE FROM `newfi_schema`.`workflowitemexec` WHERE  workflow_item_master= '23';
 DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='17';
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=1;
+
+#Rajeswari Portal 7.9 Updates Renaming of Milestones
+#Loan Advisor
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Credit' WHERE `id`='10';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Documents' WHERE `id`='14';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Rate Lock' WHERE `id`='19';
+#For Customer
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Documents' WHERE `id`='41';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Rate Lock' WHERE `id`='33';
+
