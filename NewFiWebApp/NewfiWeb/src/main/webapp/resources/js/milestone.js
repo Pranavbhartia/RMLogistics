@@ -1130,7 +1130,7 @@ function getMilestoneTeamMembeTableHeader(floatCls) {
 
 	var titleCol = $('<div>').attr({
 		"class" : "ms-team-member-th-col2 float-left"
-	}).html("Title");
+	}).html("Profile");
 
 	return row.append(nameCol).append(titleCol);
 }

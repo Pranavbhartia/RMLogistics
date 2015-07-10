@@ -787,6 +787,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		List<String> restrictedDocTypes = utils.getRestrictedDocTypes();
 		for (LQBedocVO edoc : edocsList) {
 			// edoc.getFolder_name()
+			LOG.debug("Trying to upload file for Loan " + loan.getId()  + " Doc Type : "+ edoc.getDoc_type() + " Folder : " + edoc.getFolder_name());
 			if (edoc.getDoc_type() != null
 			        && restrictedDocTypes.contains(edoc.getDoc_type()
 			                .toUpperCase())) {
