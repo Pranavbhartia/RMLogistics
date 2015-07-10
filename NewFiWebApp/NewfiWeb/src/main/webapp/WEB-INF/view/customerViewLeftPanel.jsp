@@ -44,8 +44,12 @@
 					<span class="txt-light">Lorem ipsum</span>
 				</div>
 			</div> -->
-			 <div class="work-on-loan-active">
+			<!--  <div class="work-on-loan-active">
 				Input, Shop, Upload and<br />Track your Loan Progress.
+			</div> -->
+			<!-- portal updates 7.9 -->
+			 <div class="work-on-loan-active">
+				Manage loan,compare programs <br />and track loan progress
 			</div>
 			<div class="work-on-loan-inactive clearfix">
 				<!--NEXNF-636  -->

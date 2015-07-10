@@ -21,10 +21,13 @@
 	<div class="home-container container">
 		<div class="login-container login-container-adj  container">
 				<div class="container-row row clearfix">
-					<div class="reg-display-title">Reset Password</div>
-<!-- 					<div class="reg-display-title-subtxt">You have successfully verified your email. Please enter your new password below.</div> -->
-					<!-- <div class="reg-display-title-subtxt reg-display-title-subtxt-adj">Success! Your newfi account has been validated.</div> -->
-					<div class="reg-display-title-subtxt sub-text-change-pwd">Please enter your <i class="txt-font-family">newfi</i> account email and new password below.</div>
+					<div class="reg-display-title"></div>
+					<!-- <div class="reg-display-title-subtxt hide">You have successfully verified your email. Please enter your new password below.</div> -->
+	                <div class="reg-display-title-subtxt reg-display-title-subtxt-adj hide">Success! Your newfi account has been validated.</div>
+	                <div class="reg-display-title-subtxt reg-display-title-subtxt-adj hide">Please enter your  email and set your account password below.</div>
+					<div class="reg-display-title-subtxt sub-text-change-pwd hide">Please enter your <i class="txt-font-family">newfi</i> account email and new password below.</div>
+					<!--portal updates 7.7  -->
+					<div class="prof-note-txt prof-note-txt-chg-pwd">Password must be a minimum of 8 characters and contain at least one uppercase and one lowercase character</div>
 					<div class="login-form-wrapper">
 						<form id="changePwdForm" name="changePwdForm" action="#" method="POST">
 						   <div class="change-input-reset-password login-input-pwd reg-email" id="email-id">
@@ -41,7 +44,7 @@
 				            </div>
 							<div class="forget-pass-btn-wrapper clearfix">
                                  <div class="cancel-btn color-change float-left" onclick="window.location='./'">Cancel</div>
-					             <div class="reset-password color-change float-right" onclick="$('#changePwdForm').submit();">Submit</div>
+					             <div class="reset-password color-change float-right" onclick="$('#changePwdForm').submit();"></div>
 				            </div>											
 						</form>
 					</div>
@@ -78,6 +81,8 @@ $('#changePwdForm').submit(function(event){
 	changePasswordData.emailID = currentUser.emailID+ ":"+timezone;
 /* 	console.log("Create user button clicked. User : "
 					+ JSON.stringify(changePasswordData)); */
+	
+	
 	//NEXNF-586
 	if($('#emailID').val()==""){
 		
@@ -180,6 +185,18 @@ $(document).ready(function() {
     currentUser.lastName="${userVO.lastName}";
     currentUser.userId= "${userVO.id}";
     verifyEmail = "${verifyEmailPath}";
+    
+    if(verifyEmail){
+		/* $('.reg-display-title-subtxt').show(); */
+		$('.reg-display-title-subtxt.reg-display-title-subtxt-adj').show();
+		$('.reg-display-title').html('Set Password');
+		$('.reset-password').html('Submit');
+		
+	}else {
+		$('.reg-display-title-subtxt.sub-text-change-pwd').show();
+		$('.reg-display-title').html('Reset Password');
+		$('.reset-password').html('Reset Password');
+	}
 
 });
 </script>

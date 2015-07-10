@@ -391,7 +391,7 @@ a.cus-eng-succ-mess-email {
 }
 
 .reg-display-title-subtxt-adj {
-	margin-bottom: 14px;
+	margin-bottom: 0;
 }
 
 .sub-text-change-pwd {
@@ -429,4 +429,11 @@ a.cus-eng-succ-mess-email {
   margin: 0px auto;
   font-family: opensanssemiBold;
   color: rgb(221, 75, 57);
+}
+
+.prof-note-txt-chg-pwd {
+	width: inherit;
+	padding: 25px 0 0 0;
+	text-align: center;
+  
 }
