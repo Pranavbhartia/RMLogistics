@@ -612,6 +612,7 @@ public class ApplicationFormRestService {
 					        .toString());
 					if (map.get("responseMessage") != null) {
 						response = map.get("responseMessage");
+						invalidateCache(loanNumber, sTicket);
 					} else if (map
 					        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
 						String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
@@ -777,6 +778,35 @@ public class ApplicationFormRestService {
 				cacheableMethodInterface.invalidateApplicationRateCache(
 				        loanNumber, json.toString());
 			}
+
+		} catch (JSONException e) {
+			LOG.error("JSON Exception for application rate of loanNumber: "
+			        + loanNumber, e);
+		}
+
+		LOG.debug("loadLoanRateData" + gson.toJson(teaserRateList));
+		return gson.toJson(teaserRateList);
+
+	}
+
+	private String invalidateCache(String loanNumber, String sTicket) {
+		Gson gson = new Gson();
+		List<TeaserRateResponseVO> teaserRateList = null;
+		RateCalculatorRestService rateService = new RateCalculatorRestService();
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(CommonConstants.SLOANNUMBER, loanNumber);
+			jsonChild.put(CommonConstants.SXMLQUERYMAP, new JSONObject("{}"));
+			jsonChild.put(CommonConstants.FORMAT, 0);
+			jsonChild.put(CommonConstants.STICKET, sTicket);
+
+			json.put(CommonConstants.OPNAME, "Load");
+			json.put(CommonConstants.LOANVO, jsonChild);
+			LOG.debug("jsonMapObject load Loandata" + json);
+
+			cacheableMethodInterface.invalidateApplicationRateCache(loanNumber,
+			        json.toString());
 
 		} catch (JSONException e) {
 			LOG.error("JSON Exception for application rate of loanNumber: "
