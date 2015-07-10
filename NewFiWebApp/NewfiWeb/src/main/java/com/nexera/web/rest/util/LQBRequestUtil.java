@@ -264,6 +264,28 @@ public class LQBRequestUtil {
 				        .unformatCurrencyField(loanAppFormVO
 				                .getRefinancedetails()
 				                .getCurrentMortgageBalance()));
+				
+				
+				if ("REF".equalsIgnoreCase(loanAppFormVO.getLoanType()
+				        .getLoanTypeCd())) {
+					// is it cashout
+					if (loanAppFormVO.getRefinancedetails() != null
+					        && ("REFCO").equalsIgnoreCase(loanAppFormVO
+					                .getRefinancedetails().getRefinanceOption())) {
+						
+						Float loanAmount=Float.parseFloat(Utils
+						        .unformatCurrencyField(loanAppFormVO
+						                        .getRefinancedetails()
+						                        .getCashTakeOut()))
+						        + Float.parseFloat(Utils
+								        .unformatCurrencyField(loanAppFormVO
+								                .getRefinancedetails()
+								                .getCurrentMortgageBalance()));
+						
+						hashmap.put("loanAmount", loanAmount.toString());
+					}
+				}
+				
 			}
 			hashmap.put("applicantCity", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressCity());
