@@ -1305,8 +1305,27 @@ $(document).on('keydown', '#stateId' ,function(e){
 	        $("#errmsg").html("Digits Only").show().fadeOut("slow");
 	          return false;
 	    }
-	});
+		//NEXNF-595(in eng path)
+		if($(this).val().length >= 2){
 
+	         return false;
+	    }
+	});
+	//NEXNF-595(in application path)
+	$(document).on('keypress','input[name="mortgageyearsleft"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+	        //display error message
+	        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+	          return false;
+	    }
+		
+		if($(this).val().length >= 2){
+
+	         return false;
+	    }
+	});
+	
  $(document).on('keypress','input[name="zipCode"]',function(e){
 		
 		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
