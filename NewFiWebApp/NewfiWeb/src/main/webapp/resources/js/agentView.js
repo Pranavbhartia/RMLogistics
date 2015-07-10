@@ -37,19 +37,25 @@ function getAgentSecondaryLeftNav() {
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 ="";
 	if(!userIsRealtor()){
-		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
+		//portal updates 7.9
+/*		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");*/
+		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>application");
 		newfiObject.applicationNavTab=step1;
 	}
 	//step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
 	var step2 = '';
 	if (!userIsRealtor()) {
-		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
+		//portal updates 7.9
+	/*	step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");*/
+		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>summary");
 	}
 
 	//NEXNF-661
 	var step3 ="";
 	if(newfiObject.user.userRole.id!=2){
-		step3=getAgentSecondaryLeftNavStep(3, "lock<br />rate");
+		//portal updates 7.9
+		/*step3=getAgentSecondaryLeftNavStep(3, "lock<br />rate");*/
+		step3=getAgentSecondaryLeftNavStep(3, "programs<br />and rates");
 	}
 	
 	//NEXNF-661

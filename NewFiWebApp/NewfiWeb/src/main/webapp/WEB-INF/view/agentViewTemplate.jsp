@@ -120,9 +120,9 @@
 			 if(newfiObject.user.userRole.id==2){
 				 $('.lp-item-body.lp-agent-item2').addClass('append-home-icon');
 			 }
-			
+			 $('#footer-wrapper').show();
 		});
-		 $('#footer-wrapper').show();
+		
 	</script>
 </body>
 </html>

@@ -112,7 +112,8 @@ function getCustomerSecondaryLeftNav() {
     var step2 = "";
     if(flag){
     	//NEXNF-635 changed complete my application to application
-        step2 = getCustomerSecondaryLeftNavStep(2, "application");
+    	//portal updates 7.9 changed from application to loan application
+        step2 = getCustomerSecondaryLeftNavStep(2, "loan<br />application");
         newfiObject.applicationNavTab=step2;
     } 
     //NEXNF-635
