@@ -49,7 +49,7 @@
 			</div> -->
 			<!-- portal updates 7.9 -->
 			 <div class="work-on-loan-active">
-				Manage loan,compare programs and<br />track loan progress.
+				Manage loan,compare programs <br />and track loan progress
 			</div>
 			<div class="work-on-loan-inactive clearfix">
 				<!--NEXNF-636  -->
