@@ -2058,7 +2058,7 @@ function modifiyTeaserRate(amt,amt1) {
             if(appUserDetails.loanType.description=="Purchase"){
                 var parentContainer=$('#center-panel-cont');
                 appUserDetails.purchaseDetails.housePrice=amt;
-                appUserDetails.purchaseDetails.loanAmount=(amt-amt1);
+                appUserDetails.purchaseDetails.loanAmount=amt1;
                 paintBuyHomeSeeTeaserRate(parentContainer,createTeaserRateObjectForPurchase(appUserDetails),true);
             }else{
                 var parentContainer=$('#center-panel-cont');
