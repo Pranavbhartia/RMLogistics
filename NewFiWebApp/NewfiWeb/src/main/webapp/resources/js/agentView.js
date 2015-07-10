@@ -7,6 +7,8 @@ var currentLoanType = null;
 var mobileCarrierNames = [];
 var stateLists = [];
 var customerFetchCount=15;
+var currentElement="";
+
 LOAN_ENUM = {
 	ALL : "ALL",
 	NEW_PROSPECT : "NEW PROSPECT",
@@ -2040,6 +2042,13 @@ $(document).click(function() {
 		$('#add-member-input').val("");
 		hideUserNameDropDown();
 	}
+	
+	if($('.overlay-popup-wrapper').css("display") == "block"){
+		var parentElement=$('.delCustClas').parent();
+		$(parentElement).removeClass('leads-container-tr-sel');
+		$('.overlay-popup-wrapper').hide();
+	}
+	
 });
 
 function userTypeClicked(event) {
@@ -4365,7 +4374,17 @@ $(window).scroll(
 		});
 
 $(document).on('click', '.delCustClas', function(e) {
+	e.stopImmediatePropagation();
 	var element=e.target;
+	//NEXNF-715
+	if($('.overlay-popup-wrapper').css("display")=="block"){
+		$('.overlay-popup-wrapper').hide();				
+		var parent=$(currentElement).parent();
+		$(parent).removeClass('leads-container-tr-sel');
+		currentElement="";
+	}
+	currentElement=$(element);	
+	currentSelectedUserFlag=1;
 	var loanId=$(element).attr("loanId");
 	var customer_name=$(element).attr("customer_name");
 	var parentComponent=$(element).parent();
