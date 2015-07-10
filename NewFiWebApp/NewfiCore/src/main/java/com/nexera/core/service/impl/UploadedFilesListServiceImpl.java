@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
@@ -89,6 +88,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private UploadedFilesListDao uploadedFilesListDao;
+
+	@Autowired
+	private Utils utils;
 
 	@Autowired
 	private UserProfileDao userProfileDao;
@@ -781,10 +783,21 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				}
 			}
 		}
-
+		List<String> restrictedFolders = utils.getRestrictedFolders();
+		List<String> restrictedDocTypes = utils.getRestrictedDocTypes();
 		for (LQBedocVO edoc : edocsList) {
-			if (edoc.getDoc_type().equalsIgnoreCase(unAssignedFolder)) {
-				LOG.debug("Ignoring files for this doc type ");
+			// edoc.getFolder_name()
+			if (edoc.getDoc_type() != null
+			        && restrictedDocTypes.contains(edoc.getDoc_type()
+			                .toUpperCase())) {
+				LOG.debug("Ignoring files for this doc type "
+				        + edoc.getDoc_type());
+				continue;
+			} else if (edoc.getFolder_name() != null
+			        && restrictedFolders.contains(edoc.getFolder_name()
+			                .toUpperCase())) {
+				LOG.debug("Ignoring files for this Folder Name "
+				        + edoc.getFolder_name());
 				continue;
 			}
 			String uuidDetails = edoc.getDescription();

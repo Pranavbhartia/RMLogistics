@@ -47,6 +47,12 @@ public class Utils {
 
 	@Value("${unprotected.urls}")
 	private String unProtectedUrls;
+	
+	@Value("${restricted.folders}")
+	private String restrictedFolders;
+	
+	@Value("${restricted.doc.types}")
+	private String restrictedDocTypes;
 
 	/**
 	 * Formatted string to be used for UI purpose. If input is null, the
@@ -360,7 +366,28 @@ public class Utils {
 		}
 		return unprotectedUrls;
 	}
+	
+	public List<String> getRestrictedFolders() {
 
+		String[] restrictedFoldersArray = restrictedFolders.split(",");
+
+		List<String> restrictedFolderList = new ArrayList<String>();
+		for (String folderName : restrictedFoldersArray) {
+			restrictedFolderList.add(folderName.toUpperCase());
+		}
+		return restrictedFolderList;
+	}
+
+	public List<String> getRestrictedDocTypes() {
+
+		String[] restrictedDocTypesArray = restrictedDocTypes.split(",");
+
+		List<String> restrictedDocTypes = new ArrayList<String>();
+		for (String docType : restrictedDocTypesArray) {
+			restrictedDocTypes.add(docType.toUpperCase());
+		}
+		return restrictedDocTypes;
+	}
 	/*
 	 * public static void main(String[] args) { String a ="$100,2313";
 	 * BigDecimal myBigNum = new BigDecimal(unformatCurrencyField(a));
