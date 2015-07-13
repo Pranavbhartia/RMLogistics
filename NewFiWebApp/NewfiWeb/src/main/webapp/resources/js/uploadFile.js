@@ -250,9 +250,18 @@ function getDocumentUploadColumn(listUploadedFiles) {
 				"data-placement" : "top",
 				"title" : "Cannot access file."
 			});
-			docImg.addClass("unlink");
-			ahrefFile = docDesc;
+			docImg.addClass("unlink");			
+			//ahrefFile = docDesc;
+			
+			//NEXNF-662
+			ahrefFile = "";
+			docImg.hide();
+			docDesc.hide();
 			docAssign.hide();
+			
+			column.remove();
+			return;
+		
 		}
 	} else {
 		docImg.attr({
@@ -491,8 +500,31 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 		container.append(leftContainer);
 		return;
 	}
+	//NEXNF-662
 
-	var rightContainer = $('<div>').attr({
+	var rightContainer="";
+	if(newfiObject.user.userRole.id!=2){
+		rightContainer = $('<div>').attr({
+			"class" : "needed-items-rc float-right"
+		});
+		var knobScore = neededItemListObject.resultObject.neededItemScoreVO;
+
+	var inputBox = $("<input>").attr({
+		"class" : "dial",
+		"id" : "knobUpload",
+		"data-min" : "0",
+		"data-width" : "150",
+		"data-thickness" : "0.1",
+		"data-fgColor" : "#F47521",
+		"data-bgColor" : "#EFE1DB",
+		"data-max" : knobScore.neededItemRequired,
+		"value" : knobScore.totalSubmittedItem
+	});
+
+		rightContainer.append(inputBox);
+	}
+	//NEXNF-662
+/*	var rightContainer = $('<div>').attr({
 		"class" : "needed-items-rc float-right"
 	});
 	var knobScore = neededItemListObject.resultObject.neededItemScoreVO;
@@ -509,7 +541,7 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 		"value" : knobScore.totalSubmittedItem
 	});
 
-	rightContainer.append(inputBox);
+	rightContainer.append(inputBox);*/
 	container.append(leftContainer).append(rightContainer);
 
 }
@@ -600,6 +632,10 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 			|| $('.document-cont-col').length == 0) {
 		$('.submit-btn').addClass('hide');
 	}
+		if($('.document-cont-col').hasClass('unlink')){
+			$('.submit-btn').addClass('hide');
+		}
+	
 
 }
 
