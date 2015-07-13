@@ -849,10 +849,10 @@ function paintCheckBox(){
 	}).html("I have not yet selected a  property").bind('click',function(event){
 		if($(this).hasClass('app-option-checked')){
     		$(this).removeClass('app-option-checked');
-    		$('input[name=streetAddress]').val('');
-    		$('input[name=streetAddress]').parent().parent().show();
+    		/*$('input[name=streetAddress]').val('');
+    		$('input[name=streetAddress]').parent().parent().show();*/
     		$('input[name=addressStreet]').parent().parent().show();
-    	    $('input[name="propStreetAddress"]').parent().parent().show();
+    	    /*$('input[name="propStreetAddress"]').parent().parent().show();*/
         	$('input[name="propState"]').parent().parent().show();
         	$('input[name="propCity"]').parent().parent().show();
         	$('input[name="propZipCode"]').parent().parent().show();
@@ -863,8 +863,8 @@ function paintCheckBox(){
     		
     	}else{
         	$(this).addClass('app-option-checked');
-        	$('input[name=streetAddress]').parent().parent().hide();
-        	$('input[name="propStreetAddress"]').parent().parent().hide();
+        	/*$('input[name=streetAddress]').parent().parent().hide();
+        	$('input[name="propStreetAddress"]').parent().parent().hide();*/
          	$('input[name="propState"]').parent().parent().hide();
          	$('input[name="propCity"]').parent().parent().hide();
          	$('input[name="propZipCode"]').parent().parent().show();
@@ -1456,11 +1456,11 @@ var quesContxts=[];
 
 //TODO-try nested yesno question
 function paintCustomerApplicationPageStep2() {
-	
-	
-	appProgressBaar(3); // this is to show the bubble status in the left panel
-	quesContxts = []; // when ever call the above function clean the array object
-	$('#app-right-panel').html('');
+    
+    
+    appProgressBaar(3); // this is to show the bubble status in the left panel
+    quesContxts = []; // when ever call the above function clean the array object
+    $('#app-right-panel').html('');
     var quesHeaderTxt = "Co-borrower Information";
 
     var quesHeaderTextCont = $('<div>').attr({
@@ -1517,12 +1517,12 @@ function paintCustomerApplicationPageStep2() {
                         type: "desc",
                         text: "Co-borrower's last name",
                         name: "coBorrowerLastName"
-                    },{
+                    },/*{
                         type: "desc",
                         text: "Co-borrower's street address",
                         name: "coBorrowerStreetAddress",
                         //value: appUserDetails.user.customerDetail.addressStreet
-                    }, {
+                    }, */{
                         type: "desc",
                         text: "Co-borrower's state",
                         name: "coBorrowerState",
@@ -1550,12 +1550,12 @@ function paintCustomerApplicationPageStep2() {
                         type: "desc",
                         text: "Co-borrower's last name",
                         name: "coBorrowerLastName"
-                    },{
+                    },/*{
                         type: "desc",
                         text: "Co-borrower's street address",
                         name: "coBorrowerStreetAddress",
                         //value: appUserDetails.user.customerDetail.addressStreet
-                    }, {
+                    },*/ {
                         type: "desc",
                         text: "Co-borrower's state",
                         name: "coBorrowerState",
@@ -1586,17 +1586,17 @@ function paintCustomerApplicationPageStep2() {
     
     for(var i=0;i<questions.length;i++){
     
-    	var question=questions[i];
-    	var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails);
-    	contxt.drawQuestion();
-    	
-    	quesContxts.push(contxt);
+        var question=questions[i];
+        var contxt=getQuestionContext(question,$('#app-right-panel'),appUserDetails);
+        contxt.drawQuestion();
+        
+        quesContxts.push(contxt);
     }
 
     var lqbFileId = checkLqbFileId();
-	if(lqbFileId){
-		buttonText = next;
-	}
+    if(lqbFileId){
+        buttonText = next;
+    }
     
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color app-save-btn"
@@ -1604,99 +1604,99 @@ function paintCustomerApplicationPageStep2() {
        // alert('quesContxts[0].value'+quesContxts[0].value);
               //  alert('quesContxts[1].value'+quesContxts[1].value);
         
-    	if(this.innerHTML!=next){
-	    	maritalStatus = quesContxts[0].value;
-	    	appUserDetails.maritalStatus =  maritalStatus;
-    	
-	    	if(maritalStatus !="" && maritalStatus !=undefined ){
-	    	
-	    		//  maritalStatus is equivalent to is co-borrower 
-	    		if(maritalStatus == "Yes"){
-	    		 appUserDetails.isCoborrowerPresent = true;
-	    			 
-	    			 if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].value!=""){
-	    		    		
-	    		    		isSpouseOnLoan = quesContxts[0].childContexts.Yes[0].value;
-	    		    		coBorrowerName = quesContxts[0].childContexts.Yes[0].childContexts[isSpouseOnLoan][0].value;
-	    		    		
-	    		    		var response=validateCoBorowerInformation();
-	    		    		if(!response){
-	    		    			return false;
-	    		    		}
-	    		    		if( isSpouseOnLoan =="Yes" && coBorrowerName!="" && coBorrowerName){ 
-	    		    			appUserDetails.isSpouseOnLoan =true;
-	    		    		}else if(isSpouseOnLoan =="No" && coBorrowerName!="" && coBorrowerName){
-	    		    			
-	    		    			appUserDetails.isSpouseOnLoan =false;
-	    		    			appUserDetails.spouseName  = "";
-	    		    		}
-	    		    		if(isSpouseOnLoan =="Yes" || isSpouseOnLoan =="No"){
-	    		    		    	  
-	    		    		}else{
-	    		    		   showErrorToastMessage(yesyNoErrorMessage);
-	 	    	    		   return false;
-	    		    		}	
-	    		     }else{
-	
-	    		    	 var response=validateCoBorowerInformation();
-	    		    		if(!response){
-	    		    			return false;
-	    		    		}
-	
-	    		     }
-	    			 
-	    		 }else{
-	    			
-	    		  appUserDetails.isCoborrowerPresent = false;
-	    			 appUserDetails.isSpouseOnLoan =false;
-		    		 appUserDetails.spouseName  = "";
-	    		 }
-	    		
-		    	// this is the condition when spouseName is in the loan
-	            if(!appUserDetails.customerSpouseDetail)
-	                appUserDetails.customerSpouseDetail={};
-		    	if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
-		    		appUserDetails.isSpouseOnLoan = true;
-		    		appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
-		    		
-		    		appUserDetails.customerSpouseDetail.spouseName = $('input[name="coBorrowerName"]').val();
-		    		appUserDetails.customerSpouseDetail.spouseLastName = $('input[name="coBorrowerLastName"]').val();
-		    		appUserDetails.customerSpouseDetail.streetAddress= $('input[name="coBorrowerStreetAddress"]').val();
-		    		appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
-		    		appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
-		    		appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
-		    	
-		    	}else if(quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.No != undefined){
-		    
-		    		appUserDetails.customerSpouseDetail.spouseName = $('input[name="coBorrowerName"]').val();
-		    		appUserDetails.customerSpouseDetail.spouseLastName = $('input[name="coBorrowerLastName"]').val();
-		    		appUserDetails.customerSpouseDetail.streetAddress= $('input[name="coBorrowerStreetAddress"]').val();
-		    		appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
-		    		appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
-		    		appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
-		    	
-		    	}
-		    	else{
-		    		appUserDetails.customerSpouseDetail.spouseName  = "";
-		    		appUserDetails.customerSpouseDetail.spouseLastName = "";
-		    		appUserDetails.customerSpouseDetail.streetAddress="";
-		    		appUserDetails.customerSpouseDetail.state="";
-		    		appUserDetails.customerSpouseDetail.city="";
-		    		appUserDetails.customerSpouseDetail.zip="";
-		    	}
-		    	
-		    	//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
-		    	////alert(JSON.stringify(appUserDetails));
-		    
-		    	saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome);
-		    	
-	    	}else{
-    		showErrorToastMessage(yesyNoErrorMessage);
-	    	}
-		}else{
-			// when click on next button
-			paintMyIncome();
-		}
+        if(this.innerHTML!=next){
+            maritalStatus = quesContxts[0].value;
+            appUserDetails.maritalStatus =  maritalStatus;
+        
+            if(maritalStatus !="" && maritalStatus !=undefined ){
+            
+                //  maritalStatus is equivalent to is co-borrower 
+                if(maritalStatus == "Yes"){
+                 appUserDetails.isCoborrowerPresent = true;
+                     
+                     if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].value!=""){
+                            
+                            isSpouseOnLoan = quesContxts[0].childContexts.Yes[0].value;
+                            coBorrowerName = quesContxts[0].childContexts.Yes[0].childContexts[isSpouseOnLoan][0].value;
+                            
+                            var response=validateCoBorowerInformation();
+                            if(!response){
+                                return false;
+                            }
+                            if( isSpouseOnLoan =="Yes" && coBorrowerName!="" && coBorrowerName){ 
+                                appUserDetails.isSpouseOnLoan =true;
+                            }else if(isSpouseOnLoan =="No" && coBorrowerName!="" && coBorrowerName){
+                                
+                                appUserDetails.isSpouseOnLoan =false;
+                                appUserDetails.spouseName  = "";
+                            }
+                            if(isSpouseOnLoan =="Yes" || isSpouseOnLoan =="No"){
+                                      
+                            }else{
+                               showErrorToastMessage(yesyNoErrorMessage);
+                               return false;
+                            }   
+                     }else{
+    
+                         var response=validateCoBorowerInformation();
+                            if(!response){
+                                return false;
+                            }
+    
+                     }
+                     
+                 }else{
+                    
+                  appUserDetails.isCoborrowerPresent = false;
+                     appUserDetails.isSpouseOnLoan =false;
+                     appUserDetails.spouseName  = "";
+                 }
+                
+                // this is the condition when spouseName is in the loan
+                if(!appUserDetails.customerSpouseDetail)
+                    appUserDetails.customerSpouseDetail={};
+                if( quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.Yes != undefined){
+                    appUserDetails.isSpouseOnLoan = true;
+                    appUserDetails.spouseName = quesContxts[0].childContexts.Yes[0].childContexts.Yes[0].value;
+                    
+                    appUserDetails.customerSpouseDetail.spouseName = $('input[name="coBorrowerName"]').val();
+                    appUserDetails.customerSpouseDetail.spouseLastName = $('input[name="coBorrowerLastName"]').val();
+                    /*appUserDetails.customerSpouseDetail.streetAddress= $('input[name="coBorrowerStreetAddress"]').val();*/
+                    appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
+                    appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
+                    appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
+                
+                }else if(quesContxts[0].childContexts.Yes !=  undefined && quesContxts[0].childContexts.Yes[0].childContexts.No != undefined){
+            
+                    appUserDetails.customerSpouseDetail.spouseName = $('input[name="coBorrowerName"]').val();
+                    appUserDetails.customerSpouseDetail.spouseLastName = $('input[name="coBorrowerLastName"]').val();
+                    /*appUserDetails.customerSpouseDetail.streetAddress= $('input[name="coBorrowerStreetAddress"]').val();*/
+                    appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
+                    appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
+                    appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
+                
+                }
+                else{
+                    appUserDetails.customerSpouseDetail.spouseName  = "";
+                    appUserDetails.customerSpouseDetail.spouseLastName = "";
+                    /*appUserDetails.customerSpouseDetail.streetAddress="";*/
+                    appUserDetails.customerSpouseDetail.state="";
+                    appUserDetails.customerSpouseDetail.city="";
+                    appUserDetails.customerSpouseDetail.zip="";
+                }
+                
+                //sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
+                ////alert(JSON.stringify(appUserDetails));
+            
+                saveAndUpdateLoanAppForm(appUserDetails,paintMyIncome);
+                
+            }else{
+            showErrorToastMessage(yesyNoErrorMessage);
+            }
+        }else{
+            // when click on next button
+            paintMyIncome();
+        }
     });
     $('#app-right-panel').append(saveAndContinueButton);
     addStateCityZipLookUp();
@@ -2010,6 +2010,8 @@ function paintMyIncome() {
     	        if(isStatus.length>0){	
     	      	 
     	        	for(var i=0;i<isStatus.length;i++){
+                        if(isStatus[i].attr("value")=="7")
+                            continue;
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
@@ -5977,7 +5979,7 @@ $(document).on('click',function(){
 function validateCoBorowerInformation(){
 	var question=validateInput($('input[name="coBorrowerName"]'),$('input[name="coBorrowerName"]').val(),message);
 	var question1=validateInput($('input[name="coBorrowerLastName"]'),$('input[name="coBorrowerLastName"]').val(),message);
-	var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);
+	/*var question2=validateInput($('input[name="coBorrowerStreetAddress"]'),$('input[name="coBorrowerStreetAddress"]').val(),message);*/
 	var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
 	var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
 	var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('input[name="coBorrowerZipCode"]').val(),message);
@@ -5988,10 +5990,10 @@ function validateCoBorowerInformation(){
 		return false;
 	
 	}
-    if(!question2){
+    /*if(!question2){
 		return false;
 		
-	}
+	}*/
     if(!question3){
     	showErrorToastMessage(yesyNoErrorMessage);
 		return false;
