@@ -720,12 +720,12 @@ function paintCustomerApplicationPageStep1a() {
     var applicationLocked=checkLqbFileId();
     var selectedProperty = appUserDetails.user.customerDetail.selectedProperty;
     
-    var questions = [{
+    var questions = [/*{
         type: "desc",
         text: "Street address",
         name: "streetAddress",
         value: appUserDetails.user.customerDetail.addressStreet
-    }, {
+    },*/ {
         type: "desc",
         text: "State",
         name: "propState",
@@ -756,15 +756,15 @@ function paintCustomerApplicationPageStep1a() {
     }).html(buttonText).on('click', function(event) {
     	
     	if(this.innerText != next){
-	    	var address= $('input[name="streetAddress"]').val();
+	    	/*var address= $('input[name="streetAddress"]').val();*/
 	    	var inputState = $('input[name="propState"]').val();
 	    	var city = $('input[name="propCity"]').val();
 	    	var zipCode = $('input[name="propZipCode"]').val();	    	
-	    	var addressStreet =   $('input[name="streetAddress"]').val();	    	
+	    	/*var addressStreet =   $('input[name="streetAddress"]').val();	    	*/
 	        var selectedProperty = $('.ce-option-checkbox').hasClass('app-option-checked');
 	    	var cityStatus=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
 	    	var zipcodeStatus=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
-	    	var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
+	    	/*var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);*/
 			var stateValidation=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),yesyNoErrorMessage);
 	   
 	    	if(!stateValidation){
@@ -778,23 +778,22 @@ function paintCustomerApplicationPageStep1a() {
 	    		return false;
 	    	} else{
 	    		if($('input[name="propZipCode"]').val().length >5 ||$('input[name="propZipCode"]').val().length < 5){
-
 	    			$('input[name="propZipCode"]').next('.err-msg').html(zipCodeMessage).show();
 	    			$('input[name="propZipCode"]').addClass('ce-err-input').show();
            		    return false;
            	 }
 	    	} 
-	    	if(!isSuccess){
+	    	/*if(!isSuccess){
 				return false;
-			}
-	       if($('.ce-option-checkbox').hasClass('app-option-checked')){
+			}*/
+	        /*if($('.ce-option-checkbox').hasClass('app-option-checked')){
 	    		
 	    	}else{
 	    		var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);
 	    		if(!isSuccess){
 	    			return false;
 	    		}
-	    	}
+	    	}*/
             ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":zipCode}, function(response) {
                 if (response.error) {
                     showToastMessage(response.error.message);
@@ -803,7 +802,7 @@ function paintCustomerApplicationPageStep1a() {
                         appUserDetails.user.customerDetail.addressCity = city;
                         appUserDetails.user.customerDetail.addressState = inputState;
                         appUserDetails.user.customerDetail.addressZipCode = zipCode;
-                        appUserDetails.user.customerDetail.addressStreet = addressStreet;
+                        /*appUserDetails.user.customerDetail.addressStreet = addressStreet;*/
                         appUserDetails.user.customerDetail.selectedProperty = selectedProperty;
                         saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep1b);
                     }else{
@@ -4468,7 +4467,7 @@ function appProgressBaar(num){
     $("#appProgressBaarId_" + tmpNum).removeClass('ce-lp-in-progress')
             .removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
     $('#appStepNoId_' + tmpNum).html(tmpNum);
-    appUserDetails.loanAppFormCompletionStatus=contxtHolder.getPercentageForStep(num);
+    appUserDetails.loanAppFormCompletionStatus=contxtHolder.getPercentageForStep(tmpNum);
 }
 
 function putCurrencyFormat(name){
