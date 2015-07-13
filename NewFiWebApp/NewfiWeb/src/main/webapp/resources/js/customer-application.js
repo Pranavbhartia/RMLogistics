@@ -755,7 +755,7 @@ function paintCustomerApplicationPageStep1a() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function(event) {
     	
-    	if(this.innerText != next){
+    	if($(this).html() != next){
 	    	/*var address= $('input[name="streetAddress"]').val();*/
 	    	var inputState = $('input[name="propState"]').val();
 	    	var city = $('input[name="propCity"]').val();
@@ -1152,7 +1152,7 @@ function paintCustomerApplicationPageStep1b() {
     }).html(buttonText).on('click', function() {
     	
     	
-    	if(this.innerText!= next){
+    	if($(this).html()!= next){
 		    	propertyTypeCd = $('.app-options-cont[name="propertyType"]').find('.app-option-selected').data().value;
 		    	residenceTypeCd= $('.app-options-cont[name="residenceType"]').find('.app-option-selected').data().value;
 		    	//propertyTaxesPaid = $('input[name="taxesPaid"]').val();
@@ -1266,7 +1266,7 @@ $('#app-right-panel').html("");
 	}).html(buttonText).on('click', function() {
 		
 		  
-		if(this.innerHTML!=next){
+		if($(this).html()!=next){
 			   isSecondaryMortgage = quesContxts[0].value;
 			   if(isSecondaryMortgage=="" || isSecondaryMortgage==undefined || isSecondaryMortgage==null){
 				   showErrorToastMessage(yesyNoErrorMessage);
@@ -1604,7 +1604,7 @@ function paintCustomerApplicationPageStep2() {
        // alert('quesContxts[0].value'+quesContxts[0].value);
               //  alert('quesContxts[1].value'+quesContxts[1].value);
         
-        if(this.innerHTML!=next){
+        if($(this).html()!=next){
             maritalStatus = quesContxts[0].value;
             appUserDetails.maritalStatus =  maritalStatus;
         
@@ -1993,7 +1993,7 @@ function paintMyIncome() {
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function(event) {
     	 var isStatus=[];
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
     	       
     	        
   	    	/*if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
@@ -3279,7 +3279,7 @@ function paintCustomerApplicationPageStep4a() {
     }).html(buttonText).on('click', function() {
     	
     	
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
     		//Validation
 	    	for(var i=0;i<quesDeclarationContxts.length;i++){
 	    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
@@ -3551,7 +3551,7 @@ function paintCustomerApplicationPageStep4a() {
 	        "class": "cep-button-color app-save-btn"
 	    }).html(buttonText).on('click', function() {
 	    	
-	    	if(this.innerHTML!=next){
+	    	if($(this).html()!=next){
             //dateOfBirth = $('input[name="birthday"]').val();
 		    	ethnicity =  $('.app-options-cont[name="ethnicity"]').find('.app-option-selected').data().value;
 		    	race =  $('.app-options-cont[name="race"]').find('.app-option-selected').data().value;
@@ -3796,7 +3796,7 @@ function paintCustomerApplicationPageStep5() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function() {
     	
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
     	
 		    	dateOfBirth = $('input[name="birthday"]').val();
 		    	ssn =  $('input[name="ssn"]').val();
@@ -4979,7 +4979,7 @@ var questions = [
 		}).html(buttonText).bind('click',{'contxt':contxt}, function(event) {
 			
 			
-			if(this.innerText!="Next"){
+			if($(this).html()!="Next"){
 				appUserDetails.refinancedetails.currentMortgageBalance = $('input[name="currentMortgageBalance"]').val();
 				// appUserDetails.refinancedetails = refinancedetails;
 				var isSuccess=validateInput( $('input[name="currentMortgageBalance"]'),appUserDetails.refinancedetails.currentMortgageBalance ,message);
@@ -5028,7 +5028,7 @@ function paintRefinanceHomeWorthTodayAppPath() {
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).bind('click',{'contxt':contxt}, function(event) {
-        if(this.innerText!="Next"){
+        if($(this).html()!="Next"){
             var valsValid=validateRefinanceHomeWorthTodayAppPath();
             if(valsValid){
                 appUserDetails.propertyTypeMaster.homeWorthToday=getFloatValue( $('input[name="homeWorthToday"]').val());
@@ -5143,7 +5143,7 @@ function paintRefinanceStep3() {
 	    "class": "cep-button-color ce-save-btn"
 	}).html(buttonText).on('click', function() {
 		
-			if(this.innerText != next){
+			if($(this).html() != next){
 			    appUserDetails.refinancedetails.currentMortgagePayment = quesContxts["currentMortgagePayment"].value;//$('input[name="currentMortgagePayment"]').val();		  
 				appUserDetails.refinancedetails.includeTaxes = quesContxts["includeTaxes"].value;//quesContxts[1].getValuesForDB();
 				

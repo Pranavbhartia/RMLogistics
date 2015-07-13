@@ -936,7 +936,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function() {
     	
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
 		    	for(var i=0;i<quesDeclarationContxts.length;i++){
 		    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
 		    			showErrorToastMessage(yesyNoErrorMessage);
@@ -1192,7 +1192,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	        "class": "cep-button-color app-save-btn"
 	    }).html(buttonText).on('click', function() {
 	    	
-	    	if(this.innerHTML!=next){
+	    	if($(this).html()!=next){
 			    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
 			    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
 			    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
@@ -1357,7 +1357,7 @@ function paintCustomerSpouseApplicationPageStep5() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function() {
     	
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
 		    	dateOfBirth = $('input[name="birthday"]').val();
 		    	ssn =  $('input[name="ssn"]').val();
 		    	secPhoneNumber =  $('input[name="phoneNumber"]').val();
