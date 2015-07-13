@@ -1387,5 +1387,23 @@ $(document).on('keydown', '#stateId' ,function(e){
 	    }
 			
 	}); 
- 
+function disablehowerEffect(){
+	var exist=$(document.getElementsByTagName('head')[0]).find("[id='howerCancellationclas']");
+	if(exist.length>0)
+		return;
+	var style = document.createElement('style');
+	style.type = 'text/css';
+	style.id="howerCancellationclas";
+	$(style).append('.app-option-choice:hover { background-color: rgba(24,72,141,0.9); }');
+
+	$(style).append('.ce-option:hover,.ce-save-btn:hover,.choice-hover:hover,.app-save-btn:hover { background-color: rgba(24,72,141,0.9); }');
+
+	$(style).append('.app-option-choice[isSelected="true"]:hover{background-color : #F47521;}');
+	document.getElementsByTagName('head')[0].appendChild(style);
+}
+
+function enablehowerEffect(){
+	$(document.getElementsByTagName('head')[0]).find("[id='howerCancellationclas']").remove();
+}
+
 

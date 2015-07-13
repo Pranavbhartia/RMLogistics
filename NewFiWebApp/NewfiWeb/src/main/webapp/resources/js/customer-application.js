@@ -5074,9 +5074,16 @@ function checkLqbFileId(){
     if(LQBFileId){
     	LQBFileIdPresent = true;
     }
+    applicationLockedStylingChanges(LQBFileIdPresent);
     return LQBFileIdPresent;
 }
-
+function applicationLockedStylingChanges(status){
+    if(status){
+        disablehowerEffect();
+    }else{
+        enablehowerEffect();
+    }
+}
 
 function paintRefinanceStep1b() {
 	var quesTxt = "How much cash do you want to take out?";
