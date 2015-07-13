@@ -1243,7 +1243,7 @@ input[type="button"]:focus, button:focus {
 .doc-link-res {
 	width: 20px;
 	height: 30px;
-	background: url('../images/doc_remove.png') no-repeat center top;
+	background: url('../images/Restricted.png') no-repeat center top;
 	cursor: pointer;
 }
 
