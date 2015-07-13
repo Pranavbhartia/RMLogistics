@@ -2401,7 +2401,13 @@ function getDocumentContainer() {
     });
     var listUploadedFiles = neededItemListObject.resultObject.listUploadedFilesListVO;
     for (i in listUploadedFiles) {
-        if (listUploadedFiles[i].needType == undefined || listUploadedFiles[i].needType == null || listUploadedFiles[i].needType == "") {
+        if (listUploadedFiles[i].needType == undefined || listUploadedFiles[i].needType == null || listUploadedFiles[i].needType == "" ) {
+        	if (listUploadedFiles[i].isMiscellaneous != undefined && !listUploadedFiles[i].isMiscellaneous && !userIsInternal())
+        	{
+        		//Not miscellaneous menas LQB
+        		// User is not internal means : he is customer or realtor - so dont show.
+        		continue;
+        	}
             var col1 = getDocumentUploadColumn(listUploadedFiles[i]);
             documentContainer.append(col1);
             $('.submit-btn').removeClass('hide');

@@ -577,12 +577,11 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									progressBarCont.append(progressBar).append(progressBarTxt);
 									ob.stateInfoContainer.append(progressBarCont);
 								}
-							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
-									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"||
+							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||									 
 									ob.workItem.workflowItemType == "APPRAISAL_STATUS"){								
-								if(ob.workItem.stateInfo){
+								if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 
 									txtRow1.bind("click", function(e) {
-										milestoneChildEventHandler(e)
+										milestoneChildEventHandler(e);
 									});
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
@@ -598,7 +597,19 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									}
 								}
 
-							}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
+							}
+							else if(
+									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"){								
+								if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 
+									
+									if(tempOb.status)
+									{
+										ob.stateInfoContainer.html(tempOb.status);
+									}
+								}
+
+							}
+							else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 									ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
 								txtRow1.bind("click", function(e) {
 									milestoneChildEventHandler(e)
