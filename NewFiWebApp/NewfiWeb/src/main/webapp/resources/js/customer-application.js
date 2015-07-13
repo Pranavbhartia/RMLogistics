@@ -3890,13 +3890,15 @@ function paintCustomerApplicationPageStep5() {
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
-        .append(socialSecurityWrapper).append(saveAndContinueButton);
+        .append(socialSecurityWrapper);
+    if(!lqbFileId){
+        $('#app-right-panel').append(saveAndContinueButton);
+    }
         
-        
-        var ssnGiven = appUserDetails.ssnProvided;
-if(ssnGiven!= undefined && ssnGiven){
-$(".ce-option-checkbox").click();
-}
+    var ssnGiven = appUserDetails.ssnProvided;
+    if(ssnGiven!= undefined && ssnGiven){
+        $(".ce-option-checkbox").click();
+    }
 }
 
 function paintLockRatePage(){
@@ -4444,26 +4446,29 @@ function saveUserAndLockRate(appUserDetails) {
  
 
 function appProgressBaar(num){
-	scrollToTop();
-	adjustCustomerApplicationPageOnResize();
-	adjustCustomerEngagementPageOnResize();
-	$('#step-no').text(num);
-	var count = 6;
-	$("#appProgressBaarId_" + num).removeClass('ce-lp-in-progress')
-			.removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
-	$('#appStepNoId_' + num).html(num);
-
-	for (var i = 1; i <= num - 1; i++) {
-		$("#appProgressBaarId_" + i).removeClass('ce-lp-in-progress')
-				.removeClass('ce-lp-not-started').addClass('ce-lp-complete');
-		$('#appStepNoId_' + i).html("");
-	}
-	for (var i = num + 1; i <= count; i++) {
-		$("#appProgressBaarId_" + i).removeClass('ce-lp-in-progress')
-				.removeClass('ce-lp-complete').addClass('ce-lp-not-started');
-		$('#appStepNoId_' + i).html(i);
-	}
-	appUserDetails.loanAppFormCompletionStatus=contxtHolder.getPercentageForStep(num);
+    scrollToTop();
+    adjustCustomerApplicationPageOnResize();
+    adjustCustomerEngagementPageOnResize();
+    $('#step-no').text(num);
+    var count = 6;
+    var applicationLocked=checkLqbFileId();
+    var tmpNum=num;
+    if(applicationLocked)
+        num=7;
+    for (var i = 1; i <= num - 1; i++) {
+        $("#appProgressBaarId_" + i).removeClass('ce-lp-in-progress')
+            .removeClass('ce-lp-not-started').addClass('ce-lp-complete');
+        $('#appStepNoId_' + i).html("");
+    }
+    for (var i = num + 1; i <= count; i++) {
+        $("#appProgressBaarId_" + i).removeClass('ce-lp-in-progress')
+            .removeClass('ce-lp-complete').addClass('ce-lp-not-started');
+        $('#appStepNoId_' + i).html(i);
+    }
+    $("#appProgressBaarId_" + tmpNum).removeClass('ce-lp-in-progress')
+            .removeClass('ce-lp-complete').addClass('ce-lp-in-progress');
+    $('#appStepNoId_' + tmpNum).html(tmpNum);
+    appUserDetails.loanAppFormCompletionStatus=contxtHolder.getPercentageForStep(num);
 }
 
 function putCurrencyFormat(name){
