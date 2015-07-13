@@ -1240,6 +1240,12 @@ input[type="button"]:focus, button:focus {
 	background: url('../images/doc-icon.png') no-repeat center top;
 	cursor: pointer;
 }
+.doc-link-res {
+	width: 20px;
+	height: 30px;
+	background: url('../images/doc_remove.png') no-repeat center top;
+	cursor: pointer;
+}
 
 .uploaded-items-header {
 	line-height: 45px;

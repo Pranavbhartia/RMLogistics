@@ -202,11 +202,11 @@ function getDocumentUploadColumn(listUploadedFiles) {
 				if (needsListMasterobj.id == listUploadedFiles.needType) {
 					option.attr('selected', 'selected');
 				}
-				if (neededItemListObj[i].needsListMaster.id == 40 ) {
-					if(userIsInternal()){
+				if (neededItemListObj[i].needsListMaster.id == 40 && userIsInternal()) { // This is for Extra  - Extra should appear only for internal					
 						docAssign.append(option);	
-					}
-						
+				}
+				else if (neededItemListObj[i].needsListMaster.needCategory == "System" && userIsInternal()) { 
+					docAssign.append(option);
 				}else{
 					docAssign.append(option);
 				}
@@ -287,8 +287,28 @@ function showFileLink(uploadedItems) {
 					uploadedItems,
 					function(index, value) {
 						var needId = value.needType;
+						var needLQB = !value.isMiscellaneous;
+						var showDocLink = false;
+						if (needLQB && userIsInternal())//if LQB only show if internal
+						{
+							showDocLink = true;
+						}
+						else if (!needLQB && newfiObject.user.userRole.roleDescription == "Realtor" && value.assignedByUser.userId == newfiObject.user.id)
+						{
+							//If not LQB and user is realtor show only if assigned by him
+							showDocLink = true;
+						}
+						else if (!needLQB && newfiObject.user.userRole.roleDescription != "Realtor")
+						{
+							showDocLink = true;
+						}
+						if (showDocLink) // If LQB File and user Internal : show file
+						{
 						$('#needDoc' + needId).removeClass('hide');
+						
 						$('#needDoc' + needId).addClass('doc-link-icn');
+						
+						
 						$('#needDoc' + needId)
 								.click(
 										function() {
@@ -318,6 +338,7 @@ function showFileLink(uploadedItems) {
 											}
 
 										});
+						
 						$("#doc-uploaded-icn_" + needId).addClass("hide");
 
 						for (i in loanNeed) {
@@ -330,7 +351,14 @@ function showFileLink(uploadedItems) {
 							}
 
 						}
-
+						}
+						else
+						{
+							$('#needDoc' + needId).removeClass('hide');
+							
+							$('#needDoc' + needId).addClass('doc-link-res');
+							$("#doc-uploaded-icn_" + needId).addClass("hide");
+						}
 					});
 
 }
