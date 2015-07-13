@@ -294,7 +294,7 @@ function currentlyLivingValidation(){
 	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
 	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);		    			    	
-	var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);		    	
+	/*var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);*/
 	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 	if($('input[name="rentPerMonth"]').length>0){
 		var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
@@ -309,9 +309,9 @@ function currentlyLivingValidation(){
 	if(!questionOne){
 		return false;
 	}		    	
-	if(!addressValidation){
+	/*if(!addressValidation){
 		return false;
-	}
+	}*/
 	
 	if(!questionTwo){
 		return false;
@@ -347,7 +347,7 @@ function currentlyLivingValidation(){
 	}else{
 		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
 		var propertQuestionThree=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),yesyNoErrorMessage);
-    	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
+    	/*var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);*/
     	
     	if(!propertQuestionOne){
     		return false;
@@ -357,9 +357,9 @@ function currentlyLivingValidation(){
     		return false;
     	}
 
-    	if(!propertQuestionfour){
+    	/*if(!propertQuestionfour){
     		return false;
-    	}
+    	}*/
 	}
 	return true;
 }
