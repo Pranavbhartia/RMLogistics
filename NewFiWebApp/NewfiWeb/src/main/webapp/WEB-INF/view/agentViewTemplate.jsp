@@ -117,9 +117,12 @@
 				    }
 				}); 
 			 
-			 if(newfiObject.user.userRole.id==2){
+		/* 	 if(newfiObject.user.userRole.id==2){
 				 $('.lp-item-body.lp-agent-item2').addClass('append-home-icon');
-			 }
+			 } */
+			 //NEXNF-744
+			 $('.lp-item-body.lp-agent-item2').addClass('append-home-icon');
+
 			 $('#footer-wrapper').show();
 		});
 		
