@@ -39,7 +39,7 @@ public class LoanAppForm implements Serializable {
 	private String maritalStatus;
 	private Boolean ownsOtherProperty;
 	private Boolean ispensionOrRetirement;
-
+	private Boolean notApplicable;
 	private Boolean receiveAlimonyChildSupport;
 	private Boolean rentedOtherProperty;
 	private Boolean secondMortgage;
@@ -613,6 +613,16 @@ public class LoanAppForm implements Serializable {
 	public void setSkipMyAssets(Boolean skipMyAssets) {
 		this.skipMyAssets = skipMyAssets;
 	}
+
+	@Column(name = "notApplicable", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getNotApplicable() {
+	    return notApplicable;
+    }
+
+	public void setNotApplicable(Boolean notApplicable) {
+	    this.notApplicable = notApplicable;
+    }
 
 	/*
 	 * @OneToOne(fetch = FetchType.LAZY)

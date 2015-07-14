@@ -1,7 +1,6 @@
 package com.nexera.common.vo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class CustomerSpouseDetailVO implements Serializable {
 
@@ -22,7 +21,7 @@ public class CustomerSpouseDetailVO implements Serializable {
 	private String currentHomePrice;
 	private String currentHomeMortgageBalance;
 	private String newHomeBudgetFromsale;
-	
+	private Boolean notApplicable;
 	
 	// Income page input
 	private String selfEmployedIncome;
@@ -264,6 +263,14 @@ public class CustomerSpouseDetailVO implements Serializable {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
+
+	public Boolean getNotApplicable() {
+	    return notApplicable;
+    }
+
+	public void setNotApplicable(Boolean notApplicable) {
+	    this.notApplicable = notApplicable;
+    }
 	
 	
 	
