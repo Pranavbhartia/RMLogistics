@@ -327,17 +327,17 @@ function getLTVTable1() {
 
 	var tableArray = [
 			[ ">=740", "(0.000)", "(0.250)", "(0.250)", "(0.500)", "(0.250)",
-					"(0.250)", "(0.250)", "(0.500)" ],
+					"(0.250)", "(0.250)", "(0.750)" ],
 			[ "720-739", "(0.000)", "(0.250)", "(0.500)", "(0.750)", "(0.500)",
-					"(0.500)", "(0.500)", "(0.750)" ],
+					"(0.500)", "(0.500)", "(1.000)" ],
 			[ "700-719", "(0.000)", "(0.500)", "(1.000)", "(1.250)", "(1.000)",
-					"(1.000)", "(1.000)", "(1.250)" ],
+					"(1.000)", "(1.000)", "(1.500)" ],
 			[ "680-699", "0.000", "(0.500)", "(1.250)", "(1.750)", "(1.500)",
-					"(1.250)", "(1.250)", "(1.250)" ],
+					"(1.250)", "(1.250)", "(1.500)" ],
 			[ "660-679", "0.000", "(1.000)", "(2.250)", "(2.750)", "(2.750)",
-					"(2.250)", "(2.250)", "(2.000)" ],
+					"(2.250)", "(2.250)", "(2.250)" ],
 			[ "640-659", "(0.500)", "(1.250)", "(2.750)", "(3.000)", "(3.250)",
-					"(2.750)", "(2.750)", "(2.500)" ],
+					"(2.750)", "(2.750)", "(2.750)" ],
 			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a",
 					"n/a", "n/a", "n/a" ] ];
 
@@ -389,18 +389,18 @@ function inverseParanthesis(input){
 
 function getLTVDescTable(addHighBalArm) {
 
-	var tableArray = [ {
+	var tableArray = [ /*{
 		"desc" : "LTV>95",
 		"value" : "0.500"
-	}, {
+	},*/{
 		"desc" : "Investment Property LTV <= 75 ",
-		"value" : "1.770"
+		"value" : "2.125"
 	}, {
 		"desc" : "Investment Property LTV >75 and <=80",
-		"value" : "3.020"
+		"value" : "3.375"
 	}, {
 		"desc" : "Investment Property LTV >80",
-		"value" : "4.000"
+		"value" : "4.125"
 	}, {
 		"desc" : "2-4 Units",
 		"value" : "1.000"
@@ -418,15 +418,24 @@ function getLTVDescTable(addHighBalArm) {
 		
 		tableArray.push(array);
 	}
-	var array = new Object(); 
+	/*var array = new Object(); 
 	array.desc = "High Bal Purch & R/T";
 	array.value = "0.020";
+	tableArray.push(array);*/
+	
+	var array = new Object(); 
+	array.desc = "High Bal Purch & R/T";
+	array.value = "0.250";
 	tableArray.push(array);
 	
 	var array = new Object(); 
 	array.desc = "High Bal Purch & R/T > 80% LTV";
 	array.value = "0.250";
 	tableArray.push(array);
+	
+	
+	
+	
 	
 	var table = $('<div>').attr({
 		"class" : "ltv-desc-table float-right"
@@ -464,14 +473,23 @@ function getLTVTable3() {
 	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80",
 			"80.01-85" ];
 
-	var tableArray = [
+	/*var tableArray = [
 			[ ">=740", "0.000", "(0.250)", "(0.250)", "(0.500)", "(0.875)" ],
 			[ "720-739", "0.000", "(0.625)", "(0.625)", "(0.750)", "(1.750)" ],
 			[ "700-719", "0.000", "(0.875)", "(0.625)", "(0.750)", "(1.750)" ],
 			[ "680-699", "(0.250)", "(1.000)", "(1.000)", "(1.625)", "(2.500)" ],
 			[ "660-679", "(0.750)", "(1.250)", "(1.000)", "(1.750)", "(3.000)" ],
 			[ "640-659", "(1.500)", "(2.500)", "(2.250)", "(3.500)", "(4.250)" ],
-			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ] ];
+			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ] ];*/
+	
+	var tableArray = [
+	      			[ ">=740", "(0.375)", "(0.625)", "(0.625)", "(0.875)", "(0.875)" ],
+	      			[ "720-739", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
+	      			[ "700-719", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
+	      			[ "680-699", "(0.375)", "(1.125)", "(1.125)", "(1.750)", "(2.500)" ],
+	      			[ "660-679", "(0.625)", "(1.125)", "(1.125)", "(1.875)", "(3.000)" ],
+	      			[ "640-659", "(0.625)", "(1.625)", "(1.625)", "(2.625)", "(4.250)" ],
+	      			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ] ];
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
@@ -503,11 +521,11 @@ function getLTVTable4() {
 	tableCont.append(hedaer);
 
 	var tableArray = [ [ "LTV", "CLTV", "<720", ">=720" ],
-			[ "<=65", "80.01-95", "(0.650)", "(0.250)" ],
-			[ "65.01-75", "80.01-95", "(0.920)", "(0.500)" ],
-			[ "75.01-95", "90.01-95", "(1.080)", "(0.775)" ],
-			[ "75.01-90", "75.01-90", "(1.080)", "(0.770)" ],
-			[ "<=95", "95.01-97", "(1.580)", "(1.580)" ] ];
+			[ "<=65", "(80.01-95)", "(0.500)", "(0.250)" ],
+			[ "65.01-75", "(80.01-95)", "(0.750)", "(0.500)" ],
+			[ "75.01-95", "(90.01-95)", "(1.000)", "(0.750)" ],
+			[ "75.01-90", "(75.01-90)", "(1.000)", "(0.775)" ],
+			[ "<=95", "(95.01-97)", "(1.500)", "(1.500)" ] ];
 
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
@@ -518,6 +536,9 @@ function getLTVTable4() {
 		tableRowCont.append(tableRow);
 	}
 
+	var newArray=["ALL LOANS W/SUB FINANCING","0.375"]
+	var newRow=	getLTVTableRow(newArray,true);
+	tableRowCont.append(newRow);
 	tableCont.append(tableRowCont);
 
 	return tableCont;
@@ -660,7 +681,8 @@ function getLTVTableHeaderRow(tableHeaderArray) {
 	return row;
 }
 
-function getLTVTableRow(rowObj) {
+function getLTVTableRow(rowObj,isOther) {
+	
 	var row = $('<div>').attr({
 		"class" : "price-table-row"
 	});
@@ -669,9 +691,13 @@ function getLTVTableRow(rowObj) {
 		var col = $('<div>').attr({
 			"class" : "price-table-td"
 		}).html(rowObj[i]);
+		if(isOther && i==0){
+			col.addClass('price-table-td-new');
+		}
 		row.append(col);
 	}
-
+	
+	
 	return row;
 }
 
@@ -919,7 +945,7 @@ function getMammothARMAdjustersTable2() {
 		"class" : "price-table-header"
 	}).html("Price / LTV/CLTV Adjustments");
 	tableCont.append(hedaer);
-	var tableHeaderArray = [ "", "<=60", "60.01-70", "65.01-70", "70.01-75",
+	var tableHeaderArray = [ "", "<=60", "60.01-65", "65.01-70", "70.01-75",
 			"75.01-80", "80.01-85", "85.01-89.90" ];
 
 	var tableArray = [
