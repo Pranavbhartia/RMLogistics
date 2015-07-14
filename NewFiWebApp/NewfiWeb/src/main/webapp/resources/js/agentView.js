@@ -49,7 +49,9 @@ function getAgentSecondaryLeftNav() {
 	if (!userIsRealtor()) {
 		//portal updates 7.9
 	/*	step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");*/
-		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>summary");
+		//NEXNF-744
+		//step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>summary");
+		step2 = getAgentSecondaryLeftNavStep(2, "summary");
 	}
 
 	//NEXNF-661
@@ -83,7 +85,8 @@ function getAgentSecondaryLeftNav() {
 				.append(step4).append(step5);
 	}
 
-	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(
+	//NEXNF-744 Change of position of loan summary in sec nav
+	return leftTab2Wrapper.append(step0).append(step2).append(step1).append(
 			step3).append(step4).append(step5);
 }
 
@@ -1518,14 +1521,18 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	var rowInitiatedOn = $('<div>').attr({
 		"class" : "cus-detail-rc-row clearfix"
 	});
+	//NEXNF-744 changed from Initiated On
+	var text="";
+	text="Lead Submitted";
 	var rowInitiatedOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
-	}).html("Inititated On");
+	}).html(text);
 	var createdDateStr;
 	var modifiedDateStr;
-	createdDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
+	//NEXNF-744 Changed date format from dd/mm/yy to mm/dd/yy
+	createdDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
 			custHeaderDetails.createdDate));
-	modifiedDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
+	modifiedDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
 			custHeaderDetails.modifiedDate));
 
 	var rowInitiatedOnValue = $('<div>').attr({
@@ -1537,9 +1544,13 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	var rowLastActiveOn = $('<div>').attr({
 		"class" : "cus-detail-rc-row clearfix"
 	});
+	
+	//NEXNF-744 Changed from last acted on
+	var text2="";
+	text2="Last Action";
 	var rowLastActiveOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
-	}).html("Last Acted On");
+	}).html(text2);
 
 	var rowLastActiveOnValue = $('<div>').attr({
 		"class" : "cus-detail-rc-value float-left"
@@ -1558,9 +1569,12 @@ function appendCustomerLoanDetails(loanDetails) {
 		"class" : "av-loan-details-wrapper"
 	});
 
+	//NEXNF-744 Changed from loan details to summary
+	var text="";
+	text="Summary";
 	var header = $('<div>').attr({
 		"class" : "av-loan-details-header"
-	}).html("Loan Details");
+	}).html(text);
 
 	var container = $('<div>').attr({
 		"id" : "av-loan-details-container",
