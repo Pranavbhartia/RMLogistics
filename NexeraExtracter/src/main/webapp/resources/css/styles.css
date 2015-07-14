@@ -325,8 +325,8 @@ a,a:hover,a:visited {
 
 .ltv-table6 {
 	position: absolute;
-	left: 447px;
-	bottom: -25px;
+	left: 466px;
+	bottom: -39px;
 }
 
 .ltv-table6 .price-table-td:first-child {
@@ -452,4 +452,9 @@ table.adjuster-table {
 
 .mamoth-table-wrapper .rate-table-container {
 	height: 210px;
+}
+
+.price-table-td-new {
+	width: 165px;
+	border-right:none;
 }
