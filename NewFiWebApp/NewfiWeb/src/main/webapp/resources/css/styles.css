@@ -490,9 +490,9 @@ input[type="button"]:focus, button:focus {
 	min-height: 800px;
 	/* margin-bottom: 80px; */
 	padding-top: 15px;
-	margin-left: 98px;
+	margin-left: 105px;
 	padding-left: 15px;
-	border-left: 1px solid #dcdcdc;
+	/* border-left: 1px solid #dcdcdc; */
 }
 .cus-eng-font{
 	font-size: 14px;
@@ -864,7 +864,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-container {
-	margin-bottom: 20px;
+	margin-bottom: 25px;
 }
 
 .apply-btn {
@@ -5660,7 +5660,8 @@ a.session-login-btn {
 }
 
 .closing-cost-header {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
+	
 }
 .loan-summary-col-detail-new {
 	font-family: 'OpenSans';
@@ -5675,3 +5676,4 @@ a.session-login-btn {
 .overlay-popup-txt-adj {
 	line-height: 17px;
 }
+
