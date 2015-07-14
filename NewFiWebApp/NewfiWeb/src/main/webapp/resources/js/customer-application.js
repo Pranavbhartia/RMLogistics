@@ -1893,7 +1893,9 @@ function incomesSelectALLThatApply() {
     var retirementIncome={};
     if(appUserDetails && appUserDetails.retirementIncome)
         retirementIncome={"selected":(appUserDetails.retirementIncome==undefined?false:true),"data":appUserDetails.retirementIncome};
-
+    var notApplicable={};
+    if(appUserDetails && appUserDetails.notApplicable)
+        notApplicable={"selected":(appUserDetails.notApplicable==undefined?false:true),"data":appUserDetails.notApplicable};
 	var options = [ {
 		"text" : "W2 Employee",
 		"onselect" : paintRefinanceEmployed,
@@ -1953,7 +1955,14 @@ function incomesSelectALLThatApply() {
 		"name" :"retirementIncome",
         "data" : retirementIncome,
 		"value" : 6
-	}];
+	}, 
+    {
+        "text" : "Not Applicable",
+        "onselect" : function(){},
+        "name" :"notApplicable",
+        "data" : notApplicable,
+        "value" : 7
+    }];
 	
     var incomesSelectALLThatApplyDiv = paintCustomerApplicationPageStep3(quesTxt, options, name);
     $('#app-right-panel').append(incomesSelectALLThatApplyDiv);
@@ -2012,15 +2021,11 @@ function paintMyIncome() {
     	        	for(var i=0;i<isStatus.length;i++){
                         if(isStatus[i].attr("value")=="7")
                             continue;
-    	        		var status=validateInputOfChecked(isStatus[i]);
+                        var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
         	        	}
-    	        		
-    	        			
     	        	}
-    	        	
-    	        	
     	        }else{
     	        	showErrorToastMessage(selectAnyOne);
     	        	return false;
@@ -2103,7 +2108,11 @@ function paintMyIncome() {
         }
        
      
-        
+        if($("#ce-option_7").prev().hasClass('app-option-checked')){
+            appUserDetails.notApplicable=true;
+        }else{
+            appUserDetails.notApplicable=false;
+        }
        
     	
         selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();

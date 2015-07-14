@@ -33,6 +33,9 @@ function paintMySpouseIncome() {
     var retirementIncome={};
     if(appUserDetails && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.retirementIncome)
         retirementIncome={"selected":true,"data":appUserDetails.customerSpouseDetail.retirementIncome};
+    var notApplicable={};
+    if(appUserDetails  && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.notApplicable)
+        notApplicable={"selected":(appUserDetails.customerSpouseDetail.notApplicable==undefined?false:true),"data":appUserDetails.customerSpouseDetail.notApplicable};
 
 	var options = [ {
 		"text" : "W2 Employee",
@@ -81,7 +84,14 @@ function paintMySpouseIncome() {
 		"name" :"retirementIncome",
         "data" : retirementIncome,
 		"value" : 6
-	}];
+	}, 
+    {
+        "text" : "Not Applicable",
+        "onselect" : function(){},
+        "name" :"notApplicable",
+        "data" : notApplicable,
+        "value" : 7
+    }];
 	
 	var quesCont = paintSpouseCustomerApplicationPageStep3(quesTxt, options, name);
 	$('#app-right-panel').html('');
@@ -115,6 +125,8 @@ function paintMySpouseIncome() {
     	        if(isStatus.length>0){	
     	      	 
     	        	for(var i=0;i<isStatus.length;i++){
+    	        		if(isStatus[i].attr("value")=="7")
+                            continue;
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
@@ -199,9 +211,16 @@ function paintMySpouseIncome() {
 					});
 			  		 
 			  		appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
-			  	 }
-	      
-	  
+			  	}
+			  	
+	      		if($("#ce-option_7").prev().hasClass('app-option-checked')){
+		            appUserDetails.customerSpouseDetail.notApplicable=true;
+		        }else{
+		            appUserDetails.customerSpouseDetail.notApplicable=false;
+		        }
+	  			
+
+
 			    selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
 		        selfEmployedYears = $('input[name="selfEmployedYears"]').val();
 		        childAlimonySupport = $('input[name="childAlimonySupport"]').val();

@@ -49,6 +49,7 @@ public class CustomerSpouseDetail implements Serializable {
 	private String state;
 	private String city;
 	private String zip;
+	private Boolean notApplicable;
 	
 	// Income page input
 	private BigDecimal selfEmployedIncome;
@@ -321,4 +322,13 @@ public class CustomerSpouseDetail implements Serializable {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
+
+	@Column(name = "notApplicable")
+	public Boolean getNotApplicable() {
+	    return notApplicable;
+    }
+
+	public void setNotApplicable(Boolean notApplicable) {
+	    this.notApplicable = notApplicable;
+    }
 }

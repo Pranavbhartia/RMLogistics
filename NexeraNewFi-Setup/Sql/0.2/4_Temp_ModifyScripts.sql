@@ -125,3 +125,11 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Rate Lock' WHERE `
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Documents' WHERE `id`='41';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Rate Lock' WHERE `id`='33';
 
+#Charu recording not applicable option in income section
+
+ALTER TABLE `newfi_schema`.`loanappform` 
+ADD COLUMN `notApplicable` TINYINT NULL AFTER `skip_my_assets`;
+
+ALTER TABLE `newfi_schema`.`customerspousedetails` 
+ADD COLUMN `notApplicable` TINYINT NULL DEFAULT NULL AFTER `spouse_last_name`;
+
