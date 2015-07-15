@@ -1564,7 +1564,7 @@ function paintCustomerApplicationPageStep2() {
                         text: "Co-borrower's zip code",
                         name: "coBorrowerZipCode",
                         //value: appUserDetails.user.customerDetail.addressZipCode
-                    }* NEXNF-730/]
+                    }NEXNF-730*/]
                 
                 }, {
                     text: "No",
@@ -1732,7 +1732,6 @@ function paintCustomerApplicationPageStep2() {
                         appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
                         appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
                     }
-                    //NEXNF-730
                     /*appUserDetails.customerSpouseDetail.streetAddress= $('input[name="coBorrowerStreetAddress"]').val();*/
                     /*appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
                     appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
@@ -1753,7 +1752,6 @@ function paintCustomerApplicationPageStep2() {
                         appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
                         appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();
                     }
-                    //NEXNF-730
                     /*appUserDetails.customerSpouseDetail.state= $('input[name="coBorrowerState"]').val();
                     appUserDetails.customerSpouseDetail.city= $('input[name="coBorrowerCity"]').val();
                     appUserDetails.customerSpouseDetail.zip= $('input[name="coBorrowerZipCode"]').val();*/
@@ -6158,7 +6156,7 @@ function validateCoBorowerInformation(questionList){
 		
 		
 	
-	 //NEXNF-730
+	 
 	/*var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
 	var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
 	var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('input[name="coBorrowerZipCode"]').val(),message);*/
