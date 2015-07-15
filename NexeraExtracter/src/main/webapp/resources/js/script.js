@@ -428,10 +428,10 @@ function getLTVDescTable(addHighBalArm) {
 	array.value = "0.250";
 	tableArray.push(array);
 	
-	var array = new Object(); 
+/*	var array = new Object(); 
 	array.desc = "High Bal Purch & R/T > 80% LTV";
 	array.value = "0.250";
-	tableArray.push(array);
+	tableArray.push(array);*/
 	
 	
 	
@@ -524,7 +524,7 @@ function getLTVTable4() {
 			[ "<=65", "(80.01-95)", "(0.500)", "(0.250)" ],
 			[ "65.01-75", "(80.01-95)", "(0.750)", "(0.500)" ],
 			[ "75.01-95", "(90.01-95)", "(1.000)", "(0.750)" ],
-			[ "75.01-90", "(75.01-90)", "(1.000)", "(0.775)" ],
+			[ "75.01-90", "(75.01-90)", "(1.000)", "(0.750)" ],
 			[ "<=95", "(95.01-97)", "(1.500)", "(1.500)" ] ];
 
 	var tableRowCont = $('<div>').attr({
@@ -951,7 +951,7 @@ function getMammothARMAdjustersTable2() {
 	var tableArray = [
 			[ "Purchase", "0.000", "0.000", "0.000", "0.000", "0.000", "0.000",
 					"0.000" ],
-			[ "Cash Out", "0.000", "0.000", "0.120", "", "", "", "" ],
+			[ "Cash Out", "0.000", "0.000", "0.125", "", "", "", "" ],
 			[ "2 Unit", "0.250", "0.250", "0.375", "0.500", "", "", "" ],
 			[ "2nd Home", "0.125", "0.125", "0.125", "0.125",
 					"0.125", "", "" ],
