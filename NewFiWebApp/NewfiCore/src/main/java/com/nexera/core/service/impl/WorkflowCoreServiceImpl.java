@@ -51,7 +51,11 @@ public class WorkflowCoreServiceImpl implements WorkflowCoreService {
 		LoanMilestone mileStone1 = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.LOAN_APPROVED.getMilestoneKey());
 		if (mileStone1!= null)
-		milestonesList.add(LoanMilestoneVO.convertFromEntityToVO(mileStone1));
+			milestonesList.add(LoanMilestoneVO.convertFromEntityToVO(mileStone1));
+		LoanMilestone mileStone3 = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.PRE_QUAL.getMilestoneKey());
+		if (mileStone3!= null)
+			milestonesList.add(LoanMilestoneVO.convertFromEntityToVO(mileStone3));
 		return milestonesList;
 	}
 	@Override

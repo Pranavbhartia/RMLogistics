@@ -283,8 +283,11 @@ public class ThreadManager implements Runnable {
 
 									workflowItemExecList = new ArrayList<WorkflowItemExec>();
 								}
+								//Rajeswari : Get the milestone that this Status code corresponds to.
 								theMilestone = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
 								        .get(loanStatusID).getMilestone();
+								//Rajeswari : Get the other look ups like : what are the concrete classes to call and 
+								// What are the other statuses linked to this milestone if missed earlier
 								WorkItemMilestoneInfo wItemMSInfo = getWorkItemMilestoneInfoBasedOnLoanStatus(loanStatusID);
 								if (wItemMSInfo != null) {
 									statusTrackingList = wItemMSInfo
@@ -1132,6 +1135,11 @@ public class ThreadManager implements Runnable {
 	private void putLoanMilestoneIntoExecution(LOSLoanStatus loanStatus,
 	        int currentLoanStatus, List<LoadResponseVO> loadResponseList,
 	        LoanMilestoneMaster loanMilestoneMaster) {
+		if (!WorkflowConstants.LQB_MONITOR_LIST.contains(loanStatus.getLosStatusID()))
+		{
+			LOGGER.debug("This is NOT a Status that newfi is tracking" +loanStatus.getLosStatusID() + ":" + loanStatus );
+			return;
+		}
 
 		LoanMilestone loanMilestone = new LoanMilestone();
 		Date date = null;

@@ -48,8 +48,10 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = loanService.getLoanByID(loanId);
-		if (loanVO != null)
+		if (loanVO.getLockStatus().equalsIgnoreCase(
+		        CoreCommonConstants.RATE_LOCKED)) {
 			return loanVO.getLockedRate();
+		}
 		return null;
 	}
 

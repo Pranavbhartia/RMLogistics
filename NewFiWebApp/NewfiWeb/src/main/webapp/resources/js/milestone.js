@@ -864,8 +864,15 @@ function showRealtorHeaderSteps(){
 		return;
 	}
 	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
-	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(0, 1, "Pre Approved");
+	var preApprovedStatus = workFlowContext.mileStoneStatusLookup["PRE_QUAL"];
+	var preApprovedStatusRep = "0";
+	if (preApprovedStatus && preApprovedStatus == "5")
+	{
+		preApprovedStatusRep = COMPLETED;
+	}
+	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(preApprovedStatusRep, 1, "Pre Approved");
 	container.append(stepElement);	
+	
 	msStep = workFlowContext.milestoneStepsLookup["VIEW_APPRAISAL"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Appraisal Received");
 	container.append(stepElement);	
