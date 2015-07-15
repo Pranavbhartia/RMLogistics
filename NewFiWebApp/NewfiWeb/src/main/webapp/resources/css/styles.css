@@ -3722,7 +3722,7 @@ input.calc-input {
   background-color: rgb(235, 235, 235);
 }
 
-.ms-icn-application-fee-app-um-new {
+.ms-icn-application-fee-um-new {
 	background-image: url(../images/under_writing_White.png);
 	background-repeat: no-repeat;
 	background-position: center;
@@ -3774,7 +3774,8 @@ input.calc-input {
 }
 
 .m-not-started .ms-icn-closing-status {
-	background-image: url(../images/closing-status-grey.png);
+	 background-image: url(../images/closing-status-grey.png); 
+		
 }
 
 .ms-icn-lock-rate {
