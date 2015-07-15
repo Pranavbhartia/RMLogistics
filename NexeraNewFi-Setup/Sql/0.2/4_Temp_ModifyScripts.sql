@@ -133,3 +133,6 @@ ADD COLUMN `notApplicable` TINYINT NULL AFTER `skip_my_assets`;
 ALTER TABLE `newfi_schema`.`customerspousedetails` 
 ADD COLUMN `notApplicable` TINYINT NULL DEFAULT NULL AFTER `spouse_last_name`;
 
+#Rajeswari For Milestone page name changes
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Closing' WHERE `id`='21';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Underwriting' WHERE `id`='20';
