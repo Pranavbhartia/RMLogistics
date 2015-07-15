@@ -124,7 +124,8 @@ function getCustomerSecondaryLeftNav() {
     var step4 = getCustomerSecondaryLeftNavStep(4, "manage<br />documents");
     //NEXNF-635
     /* var step5 = getCustomerSecondaryLeftNavStep(5, "my <br /> loan progress");*/
-    var step5 = getCustomerSecondaryLeftNavStep(5, "loan progress");
+    //NEXNF-762
+    var step5 = getCustomerSecondaryLeftNavStep(5, "loan<br />progress");
     return leftTab2Wrapper.append(step1).append(step2).append(step3).append(step4).append(step5);
 }
 
