@@ -636,6 +636,10 @@ display: block;
 .err-input{
 	border: 1px solid #dd4b39;  
 }
+
+.admin-row-adj {
+	width: 30%;
+}
 @media ( max-width : 1062px) {
 	.create-turn-around-label {
 		width: 150px !important;

@@ -210,8 +210,10 @@ function createUploadPhotoContent() {
 												"background-image" : "url("
 														+ data + ")",
 												"background-size" : "cover"
-											});
+											});							
+									
 									showToastMessage(ProfileImageSuccessMessage);
+									
 								} else {
 
 									$("#cusProfPicID").css(
@@ -227,12 +229,19 @@ function createUploadPhotoContent() {
 														+ data + ")",
 												"background-size" : "cover"
 											});
+									
+									if($("#userProfilePic").hasClass('adminUM-agent-default-img')){
+										$("#userProfilePic").removeClass('adminUM-agent-default-img');
+										$("#userProfilePic").text('');
+										$("#userProfilePic").addClass('adminUM-agent-assigned-img');
+									}
+									
 									$("#userProfilePic").css(
 											{
 												"background-image" : "url("
 														+ data + ")",
 												"background-size" : "cover"
-											});
+									});
 									showToastMessage(ProfileImageSuccessMessage);
 								}
 								//

@@ -1127,6 +1127,7 @@ function paintLeftEditProfileContainer(user){
 		                },
 		                {
 		                	"type":"popup",
+		                	"user":user
 				            
 		                },
 		                {
@@ -1167,33 +1168,38 @@ function paintFormPage(question){
 		 row=appendInputsOfFormFeild(question);
 		
 	}else if(question.type=="lookup"){
-		if(question.title=="Assign Manager"){	
+		/*if(question.title=="Assign Manager"){	
 			if(question.user.userRole.id==2){
 				var row=getLoanManager(question.user);		
 			}									
-		}			
+		}	*/		
 	} else if(question.type=="popup"){
-		 row=getManagerStateRow();				
+		if(question.user.userRole.id!=2){
+		 row=getManagerStateRow();	
+		}
 		
 	} else if(question.type=="radio"){
 		row=getCheckStatus(question.user);
+		row.find('.prof-form-row-desc').addClass('admin-row-adj');
 		
 	}
 	else if(question.type=="function"){
-		internalUserStateMappingVO = undefined; 
-		internalUserStates = new Object();
-		if(question.user.internalUserStateMappingVOs!=undefined){
-			userStateMappingVOs=question.user.internalUserStateMappingVOs;
-
-			states.length = 0;
-			//internalUserStates.length=0;
-			for(var i=0;i<userStateMappingVOs.length;i++) {
-					states.push(userStateMappingVOs[i].stateId.toString());
-					internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
-		    }
+		if(question.user.userRole.id!=2){
+			internalUserStateMappingVO = undefined; 
+			internalUserStates = new Object();
+			if(question.user.internalUserStateMappingVOs!=undefined){
+				userStateMappingVOs=question.user.internalUserStateMappingVOs;
+	
+				states.length = 0;
+				//internalUserStates.length=0;
+				for(var i=0;i<userStateMappingVOs.length;i++) {
+						states.push(userStateMappingVOs[i].stateId.toString());
+						internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
+			    }
+			}
+			row=getLicensesRow(question.user);
+			loggedInUser = question.user;
 		}
-		row=getLicensesRow(question.user);
-		loggedInUser = question.user;
 	}
 
 	return row;
