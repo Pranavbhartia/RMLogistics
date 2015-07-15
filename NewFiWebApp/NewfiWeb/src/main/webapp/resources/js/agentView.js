@@ -4004,7 +4004,7 @@ function appendAddNeedsContainer() {
 
 $(document).on('keyup', '#need_doc_title', function() {
 
-	var data = contxt.customList[$("#need_doc_type").val()];
+	var data = contxt.customList[contxt.mapNeedCategory($("#need_doc_type").val())];
 	var searchData = [];
 	for (var i = 0; i < data.length; i++) {
 		searchData[i] = data[i];
