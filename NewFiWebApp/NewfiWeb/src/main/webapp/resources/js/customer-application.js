@@ -1511,12 +1511,12 @@ function paintCustomerApplicationPageStep2() {
                     addQuestions:[{
                         type: "desc",
                         text: "Co-borrower's first name",
-                        name: "coBorrowerName",
+                        name: "coBorrowerName"
                     },
                     {
                         type: "desc",
                         text: "Co-borrower's last name",
-                        name: "coBorrowerLastName",
+                        name: "coBorrowerLastName"
                     },{
                         type: "yesno",
                         text: "Does the co-borrower has the same address?",
