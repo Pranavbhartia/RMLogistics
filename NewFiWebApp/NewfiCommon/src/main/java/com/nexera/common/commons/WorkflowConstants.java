@@ -71,6 +71,7 @@ public class WorkflowConstants {
 
 	public static final List<Integer> LQB_MONITOR_LIST = new ArrayList<Integer>(
 	        Arrays.asList(
+	        		LOSLoanStatus.LQB_STATUS_PRE_QUAL.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
@@ -245,6 +246,14 @@ public class WorkflowConstants {
 		// THese are the ones that change NewFI WF Items
 
 		LQB_STATUS_MILESTONE_LOOKUP
+        .put(LOSLoanStatus.LQB_STATUS_PRE_QUAL,
+                new WorkItemMilestoneInfo(
+                        Milestones.PRE_QUAL,
+                        MILESTONE_WF_ITEM_LOOKUP.get(Milestones.PRE_QUAL),
+                        MILESTONE_ORDER_LOOKUP
+                                .get(LOSLoanStatus.LQB_STATUS_PRE_QUAL)));
+		
+		LQB_STATUS_MILESTONE_LOOKUP
 		        .put(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING,
 		                new WorkItemMilestoneInfo(
 		                        Milestones.UW,
@@ -354,11 +363,11 @@ public class WorkflowConstants {
 
 		// For Appraisal
 
-		LQB_STATUS_MILESTONE_LOOKUP.put(
+		/*LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
 		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));*/
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_DRAWN,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,

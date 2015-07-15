@@ -136,3 +136,5 @@ ADD COLUMN `notApplicable` TINYINT NULL DEFAULT NULL AFTER `spouse_last_name`;
 #Rajeswari For Milestone page name changes
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Closing' WHERE `id`='21';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Underwriting' WHERE `id`='20';
+#Rajeswari New milestone for realtor
+INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('13', 'PRE_QUAL', 'Pre Qualification', '1');
