@@ -210,7 +210,7 @@ function getPriceAdjustmentWrapper() {
 
 }
 
-function getPriceAdjustmentWrapper1() {
+function getPriceAdjustmentWrapper1(isFNMAArm) {
 	var wrapper = $('<div>').attr({
 		"class" : "price-table-wrapper"
 	});
@@ -223,12 +223,12 @@ function getPriceAdjustmentWrapper1() {
 		"class" : "price-table-cont-wrapper"
 	});
 
-	container.append(getLTVTable(true));
+	container.append(getLTVTable(true,isFNMAArm));
 	return wrapper.append(header).append(container);
 
 }
 
-function getLTVTable(addHighBalArm) {
+function getLTVTable(addHighBalArm,isFNMAArm) {
 	var tableWrapper = $('<div>').attr({
 		"class" : "price-table"
 	});
@@ -257,7 +257,7 @@ function getLTVTable(addHighBalArm) {
 	var lockExpirationTable = getLTVTable5();
 	row2.append(lockExpirationTable);
 
-	var otherAdjustmentsTable = getLTVTable6();
+	var otherAdjustmentsTable = getLTVTable6(isFNMAArm);
 	row2.append(otherAdjustmentsTable);
 	
 	if(!addHighBalArm){
@@ -590,7 +590,7 @@ function getDateByNumberOfDaysFolderDays(days) {
 	return someFormattedDate;
 }
 
-function getLTVTable6() {
+function getLTVTable6(isFNMAArm) {
 	var tableCont = $('<div>').attr({
 		"class" : "ltv-table-container float-left ltv-table6"
 	});
@@ -600,10 +600,21 @@ function getLTVTable6() {
 	}).html("Other Adjustments");
 	tableCont.append(hedaer);
 
-	var tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
+	/*var tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
 	                   [ "Loan amount <$100k", "0.75" ]
-	                   ];
-
+	                   ];*/
+	var tableArray="";
+	if(isFNMAArm){
+		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
+		                   [ "Loan amount <$100k", "0.75" ] 
+		                   ];
+	}else{
+		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
+		                   [ "Loan amount <$100k", "0.75" ] ,
+		                   [ "Loan Amount >= $275k Standard Conforming Only", "-0.25" ]
+		                   ];
+	}
+	
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
 	});
@@ -611,6 +622,12 @@ function getLTVTable6() {
 	for (var i = 0; i < tableArray.length; i++) {
 		var tableRow = getLTVTableRow(tableArray[i]);
 		tableRowCont.append(tableRow);
+		if(!isFNMAArm){
+			if(i==2){
+				tableRow.find('.price-table-td').addClass('price-table-td-adjust-height');
+			}
+		}
+		
 	}
 
 	tableCont.append(tableRowCont);
@@ -736,7 +753,7 @@ function appendFNMAConventionalARMTableWrapper(element) {
 	// TODO:Price Adjustment tables
 	$(element).append(wrapper);
 
-	var priceWrapper = getPriceAdjustmentWrapper1();
+	var priceWrapper = getPriceAdjustmentWrapper1(true);
 	$(element).append(priceWrapper);
 }
 
