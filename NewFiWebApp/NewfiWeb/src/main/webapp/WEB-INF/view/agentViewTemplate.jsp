@@ -54,6 +54,9 @@
 				window.location.hash="#myProfile";
 				setTimeout(function(){showToastMessage("Please Provide LQB Credentials")},2000)
 			}
+			if(newfiObject.user.userRole.id==2){
+				window.location.hash="#loan";
+			}
 			isAgentTypeDashboard = true;
 			paintAgentDashboard('myloans');
 			retrieveState();
