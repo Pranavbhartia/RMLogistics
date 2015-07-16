@@ -1847,6 +1847,8 @@ function optionClicked(element,ctx,option,value,skipCondition){
     		ctx.drawChildQuestions(ctx.value,opt.addQuestions,opt.callBack);
     	}
 	}
+	if(ctx.name=="coBorrowerAddressNew")
+		addStateCityZipLookUp();
 }
 
 
