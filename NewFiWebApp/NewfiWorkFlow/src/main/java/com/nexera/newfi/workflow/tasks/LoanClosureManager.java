@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
@@ -26,7 +27,8 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 
 	@Autowired
 	private LoanService loanService;
-
+	@Autowired
+	Utils utils;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String subject = null;
@@ -96,7 +98,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 				returnString.append(mileStone.getComments());
 			}
 			if (mileStone != null && mileStone.getStatusUpdateTime() != null) {
-				returnString.append(" On " + mileStone.getStatusUpdateTime());
+				returnString.append(" " +utils.getDateAndTimeForDisplay( mileStone.getStatusUpdateTime()));
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
