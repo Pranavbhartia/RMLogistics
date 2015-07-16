@@ -51,8 +51,10 @@
 		$('.assigned-agent-contact').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
 			if(newfiObject.user.internalUserDetail!= undefined &&!newfiObject.user.internalUserDetail.lqbUsername){
+				showOverlay();
 				window.location.hash="#myProfile";
 				setTimeout(function(){showToastMessage("Please Provide LQB Credentials")},2000)
+				hideOverlay();
 			}
 			if(newfiObject.user.userRole.id==2){
 				window.location.hash="#loan";
