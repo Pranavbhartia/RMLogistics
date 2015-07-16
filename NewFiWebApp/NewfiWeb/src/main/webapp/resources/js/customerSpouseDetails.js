@@ -534,7 +534,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
-
+	var applicationLocked=checkLqbFileId();
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
@@ -553,20 +553,27 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 		var option = $('<div>').attr({
 			"class" : "ce-option-checkbox "+selectedClas,
 			"value" : options[i].value
-		}).html(options[i].text).bind('click', {
-			"option" : options[i],
-			"name" : options[i].name+"-CHK"
-		}, function(event) {
-			if($(this).hasClass('app-option-checked')){
-			    $(this).removeClass('app-option-checked');
-			}else{
-			    $(this).addClass('app-option-checked');
-			}
-			var key = event.data.name;
-			//appUserDetails[key] = event.data.option.value;
-			event.data.option.onselect(event.data.option.value,undefined,event.data.option.name);
-		});
-		optionContainer.append(option);
+		}).html(options[i].text)
+
+		if((applicationLocked&&options[i].data&&options[i].data.selected)||!applicationLocked){
+			option.bind('click', {
+				"option" : options[i],
+				"name" : options[i].name+"-CHK"
+			}, function(event) {
+				if($(this).hasClass('app-option-checked')){
+				    $(this).removeClass('app-option-checked');
+				}else{
+				    $(this).addClass('app-option-checked');
+				}
+				var key = event.data.name;
+				//appUserDetails[key] = event.data.option.value;
+				event.data.option.onselect(event.data.option.value,undefined,event.data.option.name);
+			});
+			optionContainer.append(option);
+		}
+
+
+
 		var addAccountBtn = $('<div>').attr({
 			"class" : "cep-button-color add-btn add-account-btn"
 		}).html("Add another source of W2 income").bind('click',function(){
@@ -599,7 +606,8 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 
 
 		if(i==0){
-			optionsWrapper.append(addAccountBtn);
+			if(!applicationLocked)
+				optionsWrapper.append(addAccountBtn);
 		}
 		optionContainer.append(optionsWrapper);
 	}
