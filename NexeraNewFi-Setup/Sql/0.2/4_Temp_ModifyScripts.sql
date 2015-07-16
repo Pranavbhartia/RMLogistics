@@ -138,3 +138,13 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Closing' WHERE `id
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Underwriting' WHERE `id`='20';
 #Rajeswari New milestone for realtor
 INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('13', 'PRE_QUAL', 'Pre Qualification', '1');
+
+
+#Rajeswari : Remove Loan Advisor
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`=NULL WHERE `id`='1';
+update workflowitemexec set on_success_item = NULL where workflow_item_master=1
+DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='42';
+DELETE FROM `newfi_schema`.`workflowitemexec` WHERE  workflow_item_master= '42';
+DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='34';
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=1;
