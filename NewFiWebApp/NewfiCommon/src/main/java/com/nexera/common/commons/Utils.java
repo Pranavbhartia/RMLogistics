@@ -145,7 +145,7 @@ public class Utils {
 public String getDateAndTimeForDisplay(Date date){
 		
 		Integer offSetFromUser = getOffsetFromUserObject();
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yy");
 		Date localeDate = null;
 		try {
 			dateFormat.setTimeZone(TimeZone.getTimeZone(GMT));
