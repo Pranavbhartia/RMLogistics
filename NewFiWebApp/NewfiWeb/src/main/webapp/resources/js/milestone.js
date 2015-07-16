@@ -616,16 +616,20 @@ function getInternalEmployeeMileStoneContext( workItem) {
 								});
 								txtRow1.addClass("cursor-pointer");
 								if(ob.workItem.stateInfo!=null){
-									ob.stateInfoContainer.html(ob.workItem.stateInfo);
+									var lockedRateObj=JSON.parse(ob.workItem.stateInfo);
+									var lockExpDate = lockedRateObj.lockExpirationDate;
+									var lockedRate = lockedRateObj.lockedRate;
+									var txtRow2 = $('<div>').attr({
+										"class" : rightLeftClass + "-text" ,										
+										"data-text" : ob.workItem.workflowItemType,
+										"mileNotificationId":ob.workItem.id
+									});
+									txtRow2.html("Lock Expiration Date :"+lockExpDate);									
+									ob.stateInfoContainer.html(lockedRate);
+									ob.stateInfoContainer.append(txtRow2);
 								}else
-								{
-									if (ob.workItem.status == COMPLETED)
-									{
-										ob.stateInfoContainer.html("Click here to view rates");
-									}
-									else{																		
-										ob.stateInfoContainer.html("Click here to lock rate");
-									}
+								{																									
+									ob.stateInfoContainer.html("Shop rates");									
 									$(ob.stateInfoContainer).addClass("cursor-pointer");
 								}
 							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
@@ -819,7 +823,7 @@ function showProgressHeaderSteps(){
 		return;
 	}
 	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
-	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 1, "Application");
+	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 1, "Application Submitted");
 	container.append(stepElement);	
 	msStep = workFlowContext.milestoneStepsLookup["LOCK_YOUR_RATE"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Rate Locked");
