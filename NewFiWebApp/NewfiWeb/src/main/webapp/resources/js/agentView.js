@@ -577,7 +577,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 
 			var col4 = $('<div>').attr({
 				"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
-			}).html(lockedClosingCost);
+			}).html("-");
 			
 			var textCol4="";
 			if(customer.processor==""||customer.processor==null){
