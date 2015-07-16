@@ -1527,7 +1527,7 @@ if(customerZip!="" && customerSpouseZip!=""){
                         name: "coBorrowerLastName"
                     },{
                         type: "yesno",
-                        text: "Does the co-borrower has the same address?",
+                        text: "Does the co-borrower have the same address?",
                         name: "coBorrowerAddressNew",
                         value:zipValue,
                         options: [{
