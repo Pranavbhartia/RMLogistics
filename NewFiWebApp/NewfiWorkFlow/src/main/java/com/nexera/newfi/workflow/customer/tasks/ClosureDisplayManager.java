@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
@@ -22,7 +23,8 @@ public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 
 	@Autowired
 	private LoanService loanService;
-
+	@Autowired
+	Utils utils;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		LOG.debug("Inside method execute");
@@ -43,7 +45,7 @@ public class ClosureDisplayManager implements IWorkflowTaskExecutor {
 				returnString.append(mileStone.getComments());
 			}
 			if (mileStone != null && mileStone.getStatusUpdateTime() != null) {
-				returnString.append(" On " + mileStone.getStatusUpdateTime());
+				returnString.append(" " +utils.getDateAndTimeForDisplay( mileStone.getStatusUpdateTime()));
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
