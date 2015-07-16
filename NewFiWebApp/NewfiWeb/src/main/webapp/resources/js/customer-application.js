@@ -1494,7 +1494,15 @@ function paintCustomerApplicationPageStep2() {
         }],
         selected: ""
     }];*/
-
+var customerZip=appUserDetails.user.customerDetail.addressZipCode;
+var customerSpouseZip="";
+if(appUserDetails.customerSpouseDetail!=undefined){
+	customerSpouseZip=appUserDetails.customerSpouseDetail.zip;
+}
+var zipValue="";
+if(customerZip!="" && customerSpouseZip!=""){
+	zipValue= customerZip==customerSpouseZip?"Yes":"No";
+}
     var questions = [{
         type: "yesno",
         text: "Is there a co-borrower?",
@@ -1521,7 +1529,7 @@ function paintCustomerApplicationPageStep2() {
                         type: "yesno",
                         text: "Does the co-borrower has the same address?",
                         name: "coBorrowerAddressNew",
-                        value:appUserDetails.user.customerDetail.addressZipCode==appUserDetails.customerSpouseDetail.zip?"Yes":"No",
+                        value:zipValue,
                         options: [{
                         	text:"Yes"
                         },{
@@ -1582,7 +1590,7 @@ function paintCustomerApplicationPageStep2() {
                         type: "yesno",
                         text: "Does the co-borrower has the same address?",
                         name: "coBorrowerAddressNew",
-                        value:appUserDetails.user.customerDetail.addressZipCode==appUserDetails.customerSpouseDetail.zip?"Yes":"No",
+                        value:zipValue,
                         options: [{
                         	text: "Yes"
                         },{
@@ -5676,7 +5684,14 @@ $.ajax({
                            //NEXNF-647
                            /*hideCompleteYourProfile();*/
                 		}
+                	   showToastMessage("<p class='toast-mess-style'>Your loan application has made it to the next step and you are almost done.</p><p class='toast-mess-style'>Your Loan Advisor will be contacting you shortly to finalize a few last items and you will be on your way!</p>");
+              			$('#overlay-toast').fadeIn("fast",function(){
+          				setTimeout(function(){
+          					$('#overlay-toast').fadeOut("fast");
+          				},3000);
+          			    });
                 	   paintLockRate(ob, appUserDetails); 
+                	   
                    }
                 
 
