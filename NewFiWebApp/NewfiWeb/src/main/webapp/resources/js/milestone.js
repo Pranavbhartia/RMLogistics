@@ -870,7 +870,7 @@ function showRealtorHeaderSteps(){
 	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
 	var preApprovedStatus = workFlowContext.mileStoneStatusLookup["PRE_QUAL"];
 	var preApprovedStatusRep = "0";
-	if (preApprovedStatus && preApprovedStatus == "5")
+	if (preApprovedStatus && preApprovedStatus == "1")
 	{
 		preApprovedStatusRep = COMPLETED;
 	}
