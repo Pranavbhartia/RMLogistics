@@ -5684,6 +5684,7 @@ $.ajax({
                            //NEXNF-647
                            /*hideCompleteYourProfile();*/
                 		}
+                	   //NEXNF-743
                 	   showToastMessage("<p class='toast-mess-style'>Your loan application has made it to the next step and you are almost done.</p><p class='toast-mess-style'>Your Loan Advisor will be contacting you shortly to finalize a few last items and you will be on your way!</p>");
               			$('#overlay-toast').fadeIn("fast",function(){
           				setTimeout(function(){
