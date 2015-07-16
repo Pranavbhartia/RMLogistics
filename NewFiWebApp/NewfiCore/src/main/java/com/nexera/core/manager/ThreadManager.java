@@ -294,6 +294,10 @@ public class ThreadManager implements Runnable {
 									        .getStatusTrackingList();
 
 								}
+								if (currentLoanStatus == LOSLoanStatus.LQB_STATUS_PRE_QUAL.getLosStatusID())
+								{
+									LOGGER.debug("****PRE_QUAL RECEIVED*** for Loan" + loan.getId());
+								}
 								if (currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_DOCUMENT_CHECK_FAILED
 								        || currentLoanStatus == LoadConstants.LQB_STATUS_PRE_UNDERWRITING
