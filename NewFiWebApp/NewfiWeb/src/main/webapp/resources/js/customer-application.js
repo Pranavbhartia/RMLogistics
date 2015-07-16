@@ -5691,7 +5691,7 @@ $.ajax({
               			$('#overlay-toast').fadeIn("fast",function(){
           				setTimeout(function(){
           					$('#overlay-toast').fadeOut("fast");
-          				},3000);
+          				},10000);
           			    });
                 	   paintLockRate(ob, appUserDetails); 
                 	   
