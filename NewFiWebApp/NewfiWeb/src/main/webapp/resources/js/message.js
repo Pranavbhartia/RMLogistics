@@ -4,6 +4,7 @@ var passwordUpdateSuccessMessage="Password successfully updated";
 var errorMessage="Something went wrong";
 var message = "Invalid Entry";
 var ProfileImageSuccessMessage="Image uploaded succesfully";
+var invalidFileUploadedMessage="You must upload a file with csv extension.";
 
 //Messages in agenView.js
 var messageSaved="Message saved succesfully";//line 955
