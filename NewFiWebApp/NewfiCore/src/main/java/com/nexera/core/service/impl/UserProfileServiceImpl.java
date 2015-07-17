@@ -1164,7 +1164,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		Reader reader = new InputStreamReader(file.getInputStream());
 		CSVReader csvReader = new CSVReader(reader, ',',
 		        CSVParser.DEFAULT_QUOTE_CHARACTER, 3);
-		int lineCounter = 3;
+		int lineCounter = 1;
 
 		JsonObject errors = new JsonObject();
 		JsonArray errorList = new JsonArray();
