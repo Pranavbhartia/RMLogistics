@@ -14,6 +14,7 @@ public interface LoanStatus {
 	String loancClosedMessage = "Loan Closed";
 	String loanDeclinedMessage = "Loan Declined";
 	String loanFundedMessage = "Loan Funded";
+	String loanWithdrawnMessage = "Loan Withdrawn";
 	String disclosureAvail = "Available";
 
 	String disclosureSigned = "Signed";

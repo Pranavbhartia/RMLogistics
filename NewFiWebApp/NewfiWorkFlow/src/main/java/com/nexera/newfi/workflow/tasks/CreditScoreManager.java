@@ -86,11 +86,11 @@ public class CreditScoreManager extends NexeraWorkflowTask implements
 			        .getLoanByID(Integer.parseInt(objectMap.get(
 			                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
 			                .toString()));
-			if (loanVO != null) {
-				String emailTemplateKey = objectMap.get(
-				        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
-				        .toString();
-				String emailTemplate = WorkflowDisplayConstants.EMAIL_TEMPLATE_DEFAULT_ID;
+			String emailTemplateKey = objectMap.get(
+			        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+			        .toString();
+			if (loanVO != null && emailTemplateKey != null) {
+				String emailTemplate = "";				
 				Template template = templateService
 				        .getTemplateByKey(emailTemplateKey);
 				if (template != null) {

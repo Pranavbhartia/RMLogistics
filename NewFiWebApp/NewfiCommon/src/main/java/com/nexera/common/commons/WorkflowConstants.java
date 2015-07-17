@@ -109,7 +109,7 @@ public class WorkflowConstants {
 	        LOSLoanStatus.LQB_STATUS_CLEAR_TO_PURCHASE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED.getLosStatusID()));
 
-	private static final List<Integer> LOAN_CLOSURE_LIST = new ArrayList<Integer>(
+	public static final List<Integer> LOAN_CLOSURE_LIST = new ArrayList<Integer>(
 	        Arrays.asList(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
