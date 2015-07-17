@@ -24,12 +24,13 @@ $(document).on('click',function(e){
 	if ($('#admin-create-user-popup').css("display") == "block") {
 		hideAdminUserCreatePopUp();
 	}
-
+	
 
 });
 
 $('#alert-settings-btn').click(function(e){
 	    e.stopImmediatePropagation();
+	   
 		if($('#alert-popup-cont-wrapper').css('display')=="block"){
 			$('#alert-popup-cont-wrapper').hide();
 		}
@@ -66,7 +67,8 @@ $('#alert-settings-btn').click(function(e){
 			}else{				
 				showSettingsPopup();				
 			}
-		}else{			
+		}else{
+			
 			appendSettingsDropDown();
 		}
  
@@ -139,7 +141,7 @@ function appendSettingsDropDown(){
 	   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#");
 	   		container.append(templatesRow);
 	   		
-	   		var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","#");
+	   		var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","");
 	   		container.append(securitySettingsRow);			    		
 		
     }	
@@ -155,6 +157,7 @@ function paintSettingsDropDown(elementID,label,method,href){
 		"id":elementID
 	});
 	var anchortag=$('<a>').attr({
+	"class": "admin-anchor-class",
 	"id" : elementID+"-id",	
     "href":href,
     "onclick":method	
@@ -304,12 +307,16 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		
 	}).submit(function(event){
 		  event.preventDefault();
+		  showOverlay();
+		//To check uploaded file is a csv file 
+		var status=checkFileExtension($("#file").prop("files")[0].name);
+		if(status){					
 		var formData = new FormData();
 		var file=$("#file").prop("files")[0];
 		console.log("file",file);
 		formData.append("file",file);
 		var formURL = "rest/userprofile/addusersfromcsv";
-		showOverlay();
+		
 		$.ajax({
 			url :formURL,
 			type : "POST",
@@ -319,9 +326,9 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			cache : false,
 			data : formData,
 			success:function(data){
-			hideOverlay();
-		    if(data!=null){
 			
+		    if(data!=null){
+		   
             var response=JSON.parse(data);
             
             var errors=response.errors;
@@ -329,13 +336,15 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
             	showToastMessage(response.success);
             }else{
             	$("#admin-error-wrapper").toggleClass('admin-display');
+            	
             	for(var i=0;i<=errors.length;i++){
 					var row=displayErrorMessage(errors[i]);
 					$("#admin-error-container").append(row);
 				}
             }
             	
-		    }	
+		    }
+		    hideOverlay();
 			},
 			error:function(e){
 				hideOverlay();
@@ -343,6 +352,9 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			}
 			
 		});
+		}else {
+			return false;
+		}
 	});
 	var inputFile=$('<input>').attr({
 	"class":"input-file-admin",
@@ -392,7 +404,16 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 
 }
 
-
+function checkFileExtension(filename){
+	var extension = filename.replace(/^.*\./, '');
+	if(extension=="csv"){
+		return true;
+	}else{
+		showErrorToastMessage(invalidFileUploadedMessage)
+		return false;
+	}
+	
+}
 function appendAdminUserTypeDropDown(){
 	var dropdownCont = $('<div>').attr({
 			"id" : "admin-add-usertype-dropdown-cont",
