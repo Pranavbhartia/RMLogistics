@@ -640,9 +640,20 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			{
 				creditScore = "-";
 			}
+			var addClickEvent=checkCreditScoreAval(creditScore);
+
 			var col5 = $('<div>').attr({
 				"class" : "leads-container-tc5 float-left"
 			}).html(creditScore);
+
+			if(addClickEvent){
+				col5.bind("click",{"url":"rest/loan/creditReport/"+customer.loanID},function(e){
+					if($(e.target).hasClass('creditScoreClickableClass'))
+						return;
+					var url=e.data.url;
+					window.open(url, '_blank');
+				})
+			}
 
 			var col6 = $('<div>').attr({
 				"class" : "leads-container-tc6 float-left"
@@ -694,6 +705,19 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 	updateHandler.initiateRequest();
 	
 
+}
+function checkCreditScoreAval(creditScore){
+	var o=creditScore.split("|");
+	var sA=false;
+	if(o.length>=3){
+		for(var i=0;i<o.length;i++){
+			console.log(o[i].indexOf("span")<0);
+			if(o[i].indexOf("span")<0&&o[i]!=""){ 
+				sA=true;
+			}
+		}
+	}
+	return(sA);
 }
 
 // Function to append customer table header in agent dashboard
