@@ -135,10 +135,10 @@ function appendSettingsDropDown(){
 	   		var UserManagementRow=paintSettingsDropDown("user-management","User Mangement","userManagement()","#");
 	   		container.append(UserManagementRow);
 	   		
-	   		var turnAroundTimeRow=paintSettingsDropDown("loan-detail","Turn Around Details","turnAroundTime()","#turn_around_details");
+	   		var turnAroundTimeRow=paintSettingsDropDown("loan-detail","Turn Around Details","turnAroundTime()","#turn_around_times_container");
 	   		container.append(turnAroundTimeRow);
 	   		
-	   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#templates");
+	   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#");
 	   		container.append(templatesRow);
 	   		
 	   		var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","");
