@@ -1432,7 +1432,10 @@ function paintCustomerSpouseApplicationPageStep5() {
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(socialSecurityWrapper)
-        .append(saveAndContinueButton);
+        
+    if(!lqbFileId){
+    	$('#app-right-panel').append(saveAndContinueButton);
+	}
         
         
     var cbSsnGiven = appUserDetails.cbSsnProvided;
