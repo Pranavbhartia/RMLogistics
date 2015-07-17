@@ -68,7 +68,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN
 		                .getLosStatusID()))) {
-			displayMessage = LoanStatus.loanFundedMessage;
+			displayMessage = LoanStatus.loanWithdrawnMessage;
 			subject = CommonConstants.SUBJECT_LOAN_WITHDRAWN;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
@@ -78,7 +78,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 			subject = CommonConstants.SUBJECT_LOAN_ARCHIVED;
 		}
-		if (status != null && !status.isEmpty()) {
+		if (status != null && !status.isEmpty() ) {
 			/*
 			 * makeANote(Integer.parseInt(objectMap.get(
 			 * WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
@@ -86,6 +86,9 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			 */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        displayMessage);
+		}
+		if ( objectMap != null && objectMap.get(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME) != null)
+		{
 			sendEmailToInternalUsers(objectMap, subject);
 		}
 		return completedStatus;
