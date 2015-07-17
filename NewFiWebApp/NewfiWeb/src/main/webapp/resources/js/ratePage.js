@@ -1167,7 +1167,7 @@ function getDwnPayComponent(value,inputElementId){
         })
 
     optionsContainer.append(optionCont).append(percentageComp);
-    setTimeout(function(){ $(optionCont).trigger("keyup") }, 500);
+    setTimeout(function(){ $(optionCont).trigger("keyup");globalChangeContainer.flag=false; }, 500);
     
     return optionsContainer;
 }
