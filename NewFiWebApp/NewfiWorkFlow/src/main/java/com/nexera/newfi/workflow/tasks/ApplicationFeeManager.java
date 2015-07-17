@@ -25,7 +25,6 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.UserVO;
 import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
@@ -54,7 +53,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	private WorkflowService workflowService;
 	@Autowired
 	private ApplicationContext applicationContext;
-
+	@Autowired
+	private Utils utils;
 	@Autowired
 	TemplateService templateService;
 
@@ -152,15 +152,16 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        .findByLoan(loanVO);
 				String appFee = "";
 				if (loanApplicationFee != null) {
-					appFee = String.valueOf(loanApplicationFee.getFee());
+					 
+					appFee = "$"+String.valueOf(String.format("%.2f", loanApplicationFee.getFee()));
 				}
 
 				substitutions.put("-amount-", new String[] { appFee });
 				String paymentDate = "";
 				if (loanApplicationFee != null
 				        && loanApplicationFee.getPaymentDate() != null) {
-					paymentDate = String.valueOf(loanApplicationFee
-					        .getPaymentDate());
+					paymentDate = String.valueOf(utils.getDateAndTimeForDisplay(loanApplicationFee
+					        .getPaymentDate()));
 				}
 				substitutions.put("-date-", new String[] { paymentDate });
 				ary[0] = objectMap.get(
