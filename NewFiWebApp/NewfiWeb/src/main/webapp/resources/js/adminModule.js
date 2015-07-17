@@ -307,7 +307,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		
 	}).submit(function(event){
 		  event.preventDefault();
-		  showOverlay();
+		  
 		//To check uploaded file is a csv file 
 		var status=checkFileExtension($("#file").prop("files")[0].name);
 		if(status){					
@@ -316,7 +316,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		console.log("file",file);
 		formData.append("file",file);
 		var formURL = "rest/userprofile/addusersfromcsv";
-		
+		showOverlay();
 		$.ajax({
 			url :formURL,
 			type : "POST",
@@ -361,7 +361,8 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	"type":"file",
 	"name":"file",
 	"id":"file",
-	"onchange":"$('#upload-form-admin').submit();"
+	"onchange":"$('#upload-form-admin').submit();",
+	"accept":".csv"
 	}); 
 	var uploadCSV=$('<div>').attr({
 	"class":"prof-cust-upload-btn-admin-um float-left-admin",
