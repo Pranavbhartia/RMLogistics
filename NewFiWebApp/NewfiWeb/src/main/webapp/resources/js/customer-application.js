@@ -3992,7 +3992,14 @@ function paintCustomerApplicationPageStep5() {
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer)
         .append(socialSecurityWrapper);
-    if(!lqbFileId){
+    var showNextBtn=true;
+    if(lqbFileId){
+        if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true){
+            showNextBtn=false;
+        }
+    }
+
+    if(showNextBtn){
         $('#app-right-panel').append(saveAndContinueButton);
     }
         
