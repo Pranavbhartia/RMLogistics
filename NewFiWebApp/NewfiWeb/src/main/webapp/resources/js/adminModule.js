@@ -326,7 +326,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			cache : false,
 			data : formData,
 			success:function(data){
-			
+			hideOverlay();
 		    if(data!=null){
 		   
             var response=JSON.parse(data);
@@ -344,7 +344,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
             }
             	
 		    }
-		    hideOverlay();
+		    
 			},
 			error:function(e){
 				hideOverlay();
