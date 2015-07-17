@@ -38,7 +38,6 @@ import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
@@ -651,11 +650,13 @@ public class ApplicationFormRestService {
 		if (lockRateData == null || lockRateData == "error") {
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
-				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
-				        .getId());
-				messageServiceHelper.generatePrivateMessage(loaAppFormVO
-				        .getLoan().getId(), LoanStatus.noProductFound, utils
-				        .getLoggedInUser(), false);
+				/*
+				 * loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan(
+				 * ) .getId());
+				 * messageServiceHelper.generatePrivateMessage(loaAppFormVO
+				 * .getLoan().getId(), LoanStatus.noProductFound, utils
+				 * .getLoggedInUser(), false);
+				 */
 			}
 		}
 		return lockRateData;
