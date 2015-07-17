@@ -2,6 +2,9 @@ package com.nexera.web.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +129,21 @@ public class LoanRestService {
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
 		return responseVO;
+	}
+
+	@RequestMapping(value = "/creditReport/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody String creditReport(
+	        @PathVariable Integer loanID, HttpServletRequest arg0,
+	        HttpServletResponse response) {
+
+		LoanVO loanVO = loanService.wrapperCallForDashboard(loanID);
+
+		response.setHeader("Location", loanVO.getCreditReportUrl());
+		response.setStatus(302);
+		if (loanVO.getCreditReportUrl().equals("")
+		        || null == loanVO.getCreditReportUrl())
+			return "Credit Report Not Available";
+		return "";
 	}
 
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.POST)
