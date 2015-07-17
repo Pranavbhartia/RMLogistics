@@ -18,7 +18,7 @@ public class WorkflowDisplayConstants {
 	public static final String APP_FEE_KEY_NAME = "appfee";
 	public static final String NOTIFICATION_VO_KEY_NAME = "notificationVo";
 	public static final String EMAIL_TEMPLATE_KEY_NAME = "EMAIL_TEMPLATE_NAME";
-	public static final String EMAIL_TEMPLATE_DEFAULT_ID = "01efab20-fe83-4a79-bdc5-c3abf624526b";
+	
 	public static final String EMAIL_RECIPIENT_KEY_NAME = "EMAIL_RECIPIENT";
 	public static final String EMAIL_RECIPIENT_NAME = "EMAIL_RECIPIENT_NAME";
 	public static final String SYSTEM_PARAM_KEY_NAME = "SYSTEM_PARAM";

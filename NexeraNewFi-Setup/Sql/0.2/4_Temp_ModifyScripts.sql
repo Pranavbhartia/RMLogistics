@@ -148,3 +148,6 @@ DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='42';
 DELETE FROM `newfi_schema`.`workflowitemexec` WHERE  workflow_item_master= '42';
 DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='34';
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=1;
+
+#Rajeswari : Removed Default template reference from everywrhe
+update newfi_schema.workflowtaskconfigmaster set params=null where id>0;
