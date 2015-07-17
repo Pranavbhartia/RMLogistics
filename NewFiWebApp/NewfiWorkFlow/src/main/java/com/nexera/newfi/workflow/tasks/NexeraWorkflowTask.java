@@ -46,7 +46,18 @@ public abstract class NexeraWorkflowTask {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(NexeraWorkflowTask.class);
 
+	public void sendEmailToInternalUsers(HashMap<String, Object> objectMap,
+	        String subject) {
+		sendEmail(objectMap, subject,
+		        CommonConstants.SEND_EMAIL_TO_INTERNAL_USERS);
+	}
+
 	public void sendEmail(HashMap<String, Object> objectMap, String subject) {
+		sendEmail(objectMap, subject, null);
+	}
+
+	public void sendEmail(HashMap<String, Object> objectMap, String subject,
+	        String receipientType) {
 		if (objectMap != null) {
 			LoanVO loanVO = loanService
 			        .getLoanByID(Integer.parseInt(objectMap.get(
@@ -78,7 +89,8 @@ public abstract class NexeraWorkflowTask {
 							emailEntity.setSenderEmailId(loanVO.getUser()
 							        .getUsername()
 							        + CommonConstants.SENDER_EMAIL_ID);
-							emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+							emailEntity
+							        .setSenderName(CommonConstants.SENDER_NAME);
 							if (subject == null) {
 								emailEntity
 								        .setSubject(CommonConstants.SUBJECT_DEFAULT);
@@ -92,8 +104,19 @@ public abstract class NexeraWorkflowTask {
 							        + CommonConstants.SENDER_EMAIL_ID);
 							emailEntity.setCCList(ccList);
 							try {
-								sendEmailService.sendEmailForTeam(emailEntity,
-								        loanVO.getId(), template);
+								if (receipientType != null
+								        && CommonConstants.SEND_EMAIL_TO_INTERNAL_USERS
+								                .equalsIgnoreCase(receipientType)) {
+									sendEmailService
+									        .sendEmailForInternalUsersAndSM(
+									                emailEntity,
+									                loanVO.getId(), template);
+
+								} else {
+									sendEmailService.sendEmailForTeam(
+									        emailEntity, loanVO.getId(),
+									        template);
+								}
 							} catch (InvalidInputException e) {
 								LOG.error("Exception Caught " + e.getMessage());
 							} catch (UndeliveredEmailException e) {

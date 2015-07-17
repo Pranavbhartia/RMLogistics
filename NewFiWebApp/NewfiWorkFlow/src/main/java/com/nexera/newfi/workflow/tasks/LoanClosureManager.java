@@ -1,6 +1,9 @@
 package com.nexera.newfi.workflow.tasks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +16,13 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.Template;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -78,7 +86,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			 */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        displayMessage);
-			sendEmail(objectMap, subject);
+			sendEmailToInternalUsers(objectMap, subject);
 		}
 		return completedStatus;
 	}
@@ -124,5 +132,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		// Do Nothing : No Reminders
 		return null;
 	}
+	
+	
 
 }
