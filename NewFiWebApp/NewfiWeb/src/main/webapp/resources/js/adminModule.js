@@ -537,7 +537,7 @@ var popUpWrapper = $('<div>').attr({
 //TODO function to create single user 
 function createUserFromAdmin(user){
 	if ($('#admin-create-user-popup').css("display") == "block") {
-			$('#admin-create-user-popup').hide();
+		hideAdminUserCreatePopUp();
 	}
 	ajaxRequest("rest/userprofile/adduser", "POST", "json", JSON.stringify(user),
 				appendDataToNewfiTeamWrapperForAdmin);
@@ -1295,6 +1295,25 @@ function hideAdminUserCreatePopUp(){
 	
 	$('#admin-create-user-popup').hide();
 	
+	//To remove validation
+	$('#admin-create-user-first-name').next('.admin-err-msg').hide();
+	$('#admin-create-user-first-name').removeClass('ce-err-input');
+
+
+	$('#admin-create-user-last-name').next('.admin-err-msg').hide();
+	$('#admin-create-user-last-name').removeClass('ce-err-input');
+
+
+	$('#admin-create-user-emailId').next('.admin-err-msg').hide();
+	$('#admin-create-user-emailId').removeClass('ce-err-input');
+
+
+	$('#admin-create-user-emailId').next('.admin-err-msg').hide();
+	$('#admin-create-user-emailId').removeClass('ce-err-input');
+	
+	//TO Empty feild values if any
+	EmptyTheFormFeildsInUM();
+
 }
 
 function showAdminUserCreatePopUp(){
