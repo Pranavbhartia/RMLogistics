@@ -981,7 +981,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
                 allowNegative:false
             }); 
             
-            if(key=="propLoanAmt"||key=="cashOut"||key=="loanBal")
+            if(key=="propLoanAmt"||key=="cashOut"||key=="loanBal"||key=="purchasePrice")
                 globalChangeContainer.flag=true;
             /*if(e.which == 27){
                 var prevVal = $(this).prev('.calculate-btn').text();
