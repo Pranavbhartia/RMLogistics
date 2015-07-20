@@ -572,9 +572,14 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var Insurance;
     var tax;
     if(teaserRateValHolder.teaserRate){
-        housePrice = parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.housePrice)));   
-        loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;    
-        downPayment = (housePrice-loanAmount);
+        housePrice = parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.housePrice))); 
+        if(typeof(newfiObject)!=="undefined"){
+            loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;
+            downPayment = (housePrice-loanAmount);
+        }else{
+            downPayment =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;
+            loanAmount = (housePrice-downPayment);
+        }
         Insurance =  parseFloat(removedDoller(removedComma(customerInputData.propertyInsuranceCost)));
         tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
     }else{
