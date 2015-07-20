@@ -56,6 +56,7 @@ public class LockYourRateManager implements IWorkflowTaskExecutor {
 			map.put(WorkflowDisplayConstants.RESPONSE_LOCKED_RATE_KEY,
 					loanVO.getLockedRate());
 			map.put(WorkflowDisplayConstants.RESPONSE_LOCK_EXPIRATION_KEY,utils.getDateAndTimeForDisplay(loanVO.getLockExpirationDate()));
+			map.put(WorkflowDisplayConstants.RESPONSE_LOCKED_DATA_KEY,loanVO.getLockedRateData());
 			return utils.getJsonStringOfMap(map);
 		}		
 		return null;
