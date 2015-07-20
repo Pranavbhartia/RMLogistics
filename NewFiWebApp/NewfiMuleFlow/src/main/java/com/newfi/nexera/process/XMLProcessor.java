@@ -523,12 +523,14 @@ public class XMLProcessor
             Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "acprimaryemplrnm",
                 "applicationCoborrowerEmplrName" );
             newApplicant.appendChild( applicationCoborrowerEmplrName );
-            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "acprimaryempltstartd",
-                "applicationCoborrowerEmploymentStartDate" );
-            newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "acprimaryemplmtlen",
+                "applicationCoborrowerEmploymentLength" );
+            newApplicant.appendChild( applicationCoborrowerEmploymentLength );
             Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "acprimaryjobtitle",
                 "applicationCoborrowerEmployementTitle" );
             newApplicant.appendChild( applicationCoborrowerEmployementTitle );
+            
+            
 
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITHOUT_SSN_BOTH ) ) {
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
@@ -650,9 +652,9 @@ public class XMLProcessor
             Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "acprimaryemplrnm",
                 "applicationCoborrowerEmplrName" );
             newApplicant.appendChild( applicationCoborrowerEmplrName );
-            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "acprimaryempltstartd",
-                "applicationCoborrowerEmploymentStartDate" );
-            newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "acprimaryemplmtlen",
+                    "applicationCoborrowerEmploymentLength" );
+                newApplicant.appendChild( applicationCoborrowerEmploymentLength );
             Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "acprimaryjobtitle",
                 "applicationCoborrowerEmployementTitle" );
             newApplicant.appendChild( applicationCoborrowerEmployementTitle );
