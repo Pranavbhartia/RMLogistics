@@ -125,6 +125,8 @@ function validateInputsOfMyIncomePage(element,inputVal,message,offset){
 			}
 			return false;
 	}else{
+		
+		
 		if(inputVal == "$0" || inputVal == 0){
 			$(element).next('.err-msg').html(feildShouldNotBeZero).show();
 			$(element).addClass('ce-err-input').show();
@@ -136,12 +138,33 @@ function validateInputsOfMyIncomePage(element,inputVal,message,offset){
 			}
 			return false;
 		}else{
+			
 			$(element).next('.err-msg').hide();
 			$(element).removeClass('ce-err-input');
+			
+			if( name=="startWorking"){
+				var feildValue=inputVal;
+				 if(feildValue.indexOf('.') == -1){
+					 if(inputVal.length>=3){
+						 $(element).next('.err-msg').html(message).show();
+						 $(element).addClass('ce-err-input').show();
+						 return false;
+					 }else{
+						 $(element).next('.err-msg').hide();
+							$(element).removeClass('ce-err-input');
+							return true;
+
+					 }
+				 }
+			}
 			return true;
 		}
+		
 }
+	
+	
 }
+
 function validateFormFeild(inputElement,divErrElement,message){
 	var inputVal=$(inputElement).val();
 	if(inputVal == undefined || inputVal == ""){

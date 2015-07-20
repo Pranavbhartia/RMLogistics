@@ -2182,15 +2182,15 @@ function paintMyIncome() {
 	            jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
 	            EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
 	            EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
-	            EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
-	
+	            EmploymentLength = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
+	            
 	            customerEmploymentIncome1.id  = id;
 	            customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
 	            customerEmploymentIncome1.jobTitle=jobTitle;
 	            customerEmploymentIncome1.employedAt = EmployedAt;
 	         /*   customerEmploymentIncome1.employedSince = EmployedSince;*/
 	            //web portal updates 7.16 and jira-780
-	            customerEmploymentIncome1.employmentLength = EmployedSince;
+	            customerEmploymentIncome1.employmentLength = EmploymentLength;
 	            
 	            var termp = {};
 	            termp.customerEmploymentIncome = customerEmploymentIncome1;
@@ -2527,9 +2527,12 @@ function getMultiTextQuestion(quesText, value) {
     }).html(text);
     
     val = "";
+  //web portal updates 7.16 and jira-780
+ /*   if (value && value.employedSince)
+        val = value.employedSince;*/
+    if (value && value.employmentLength)
+        val = value.employmentLength;
     
-    if (value && value.employedSince)
-        val = value.employedSince;
     var inputBox3 = $('<input>').attr({
         "class": "ce-input",
         "name": "startWorking"
@@ -2672,8 +2675,11 @@ function getPreviousEmployementQuestions(value) {
 		"class" : "ce-rp-ques-text"
 	}).html("Years of employment");
     val="";
-    if(value&&value.employedSince)
-        val=value.employedSince;
+  //web portal updates 7.16 and jira-780
+/*    if(value&&value.employedSince)
+        val=value.employedSince;*/
+    if(value&&value.employmentLength)
+        val=value.employmentLength;
 	var inputBox3 = $('<input>').attr({
 		"class" : "ce-input",
 		"name" : "startWorking"
@@ -2764,7 +2770,6 @@ $('body').on('keypress',"input[name='startWorking']",function(evt){
 
          return false;
 	 }
-
 });
 $('body').on('focus',"input[name='ssn']",function(){
 	
