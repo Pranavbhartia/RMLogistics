@@ -2024,7 +2024,7 @@ function getLoanSummaryTextRow(text) {
 function getHeaderText(text) {
     var headerText = $('<div>').attr({
         "class": "cp-header-text"
-    }).html("<span class='mandatoryClass'>*</span>"+text);
+    }).html("<span class='rate-mandatoryClass'>*</span>"+text);
 
     return headerText;
 }
