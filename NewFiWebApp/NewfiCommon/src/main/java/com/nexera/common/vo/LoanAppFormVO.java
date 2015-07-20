@@ -981,9 +981,14 @@ public class LoanAppFormVO implements Serializable {
 			customerEmploymentIncome
 			        .setEmployedSince(customeremploymentincomeVO
 			                .getCustomerEmploymentIncome().getEmployedSince());
-			customerEmploymentIncome
-	        .setEmploymentLength(Double.parseDouble(customeremploymentincomeVO
-	                .getCustomerEmploymentIncome().getEmploymentLength()));
+			if (customeremploymentincomeVO.getCustomerEmploymentIncome() != null
+			        && customeremploymentincomeVO.getCustomerEmploymentIncome()
+			                .getEmploymentLength() != null) {
+				customerEmploymentIncome.setEmploymentLength(Double
+				        .parseDouble(customeremploymentincomeVO
+				                .getCustomerEmploymentIncome()
+				                .getEmploymentLength()));
+			}
 			customerEmploymentIncomeList.add(customerEmploymentIncome);
 		}
 		return customerEmploymentIncomeList;
@@ -1137,10 +1142,16 @@ public class LoanAppFormVO implements Serializable {
 			        .setEmployedSince(customerSpouseEmploymentincomeVO
 			                .getCustomerSpouseEmploymentIncome()
 			                .getEmployedSince());
-			customerSpouseEmploymentIncome
-	        .setEmploymentLength(Double.parseDouble(customerSpouseEmploymentincomeVO
-	                .getCustomerSpouseEmploymentIncome()
-	                .getEmploymentLength()));
+			if (customerSpouseEmploymentincomeVO
+			        .getCustomerSpouseEmploymentIncome() != null
+			        && customerSpouseEmploymentincomeVO
+			                .getCustomerSpouseEmploymentIncome()
+			                .getEmploymentLength() != null) {
+				customerSpouseEmploymentIncome.setEmploymentLength(Double
+				        .parseDouble(customerSpouseEmploymentincomeVO
+				                .getCustomerSpouseEmploymentIncome()
+				                .getEmploymentLength()));
+			}
 			customerSpouseEmploymentIncomeList
 			        .add(customerSpouseEmploymentIncome);
 
@@ -1476,11 +1487,11 @@ public class LoanAppFormVO implements Serializable {
 	}
 
 	public Boolean getNotApplicable() {
-	    return notApplicable;
-    }
+		return notApplicable;
+	}
 
 	public void setNotApplicable(Boolean notApplicable) {
-	    this.notApplicable = notApplicable;
-    }
+		this.notApplicable = notApplicable;
+	}
 
 }
