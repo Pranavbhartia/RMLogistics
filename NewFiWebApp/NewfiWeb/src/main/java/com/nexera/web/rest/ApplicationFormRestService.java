@@ -2,6 +2,7 @@ package com.nexera.web.rest;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,18 +179,22 @@ public class ApplicationFormRestService {
 	}
 
 	@RequestMapping(value = "/fetchLockRateData/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody CommonResponseVO getLockRateData(
-	        @PathVariable int loanID) {
+	public @ResponseBody String getLockRateData(@PathVariable int loanID) {
+		
 		LOG.debug("Inside method getLockRateData for loan " + loanID);
+		
+		List<TeaserRateResponseVO> teaserRateList = new ArrayList<TeaserRateResponseVO>();
+		ArrayList<LqbTeaserRateVo> lqbTeaserRateVolist = new ArrayList<LqbTeaserRateVo>();
+		Gson gson = new Gson();
+		
 		String status = null;
 		
-		LqbTeaserRateVo lqbTeaserRateVo = new LqbTeaserRateVo();
-		
 		LoanVO loanVO = loanService.getLoanByID(loanID);
-		if (loanVO != null) {
+		String lqbFileId = loanVO.getLqbFileId();
+		
+		if (loanVO != null && lqbFileId != null) {
 			Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
-			LoanAppFormVO loaAppFormVO = loanAppFormService
-			        .getLoanAppFormByLoan(loan);
+			LoanAppFormVO loaAppFormVO = loanAppFormService.getLoanAppFormByLoan(loan);
 			if (loaAppFormVO != null) {
 				if (loanVO.getLqbFileId() != null) {
 					LOG.debug("Getting token for loan manager");
@@ -205,51 +210,32 @@ public class ApplicationFormRestService {
 					}
 					if (sTicket != null) {
 						LOG.debug("Token retrieved for loan manager" + sTicket);
-						Map<String, String> hashmap = new HashMap<String, String>();
-						org.json.JSONObject loadOperationObject = nexeraUtility
-						        .createLoadJsonObject(hashmap,
-						                WebServiceOperations.OP_NAME_LOAN_LOAD,
-						                loan.getLqbFileId(), 0, null);
+				
+						org.json.JSONObject loadOperationObject = nexeraUtility.createLoadJson(lqbFileId,sTicket);
 						if (loadOperationObject != null) {
-							org.json.JSONObject loadJSONResponse = lqbInvoker
-							        .invokeLqbService(loadOperationObject
-							                .toString());
+							org.json.JSONObject loadJSONResponse = lqbInvoker.invokeLqbService(loadOperationObject.toString());
 							if (loadJSONResponse != null) {
-								if (!loadJSONResponse
-								        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
-									String loadResponse = loadJSONResponse
-									        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-									loadResponse = nexeraUtility
-									        .removeBackSlashDelimiter(loadResponse);
-									boolean rateLocked = false;
-
+								if (!loadJSONResponse.isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+									
+									String loadResponse = loadJSONResponse.getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+									loadResponse = nexeraUtility.removeBackSlashDelimiter(loadResponse);
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
+									
 									if (loadResponseList != null) {
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
-											
-											lQBResponseMapping.setLqbTeaserRateVo(lqbTeaserRateVo,loadResponseVO);
-											
-											String fieldId = loadResponseVO
-											        .getFieldId();
-											if (fieldId
-											        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_STATUS)) {
-												String rateLockStatus = loadResponseVO
-												        .getFieldValue();
-												if (rateLockStatus
-												        .equalsIgnoreCase(CoreCommonConstants.RATE_LOCKED)) {
-													rateLocked = true;
-												}
+										
+											LqbTeaserRateVo lqbTeaserRateVo = lQBResponseMapping.setLqbTeaserRateVo(loadResponseVO);
+											if(null != lqbTeaserRateVo)
+											{
+												lqbTeaserRateVolist.add(lqbTeaserRateVo);
 											}
-
-										}
-
-										if (rateLocked) {
-											// TODO fetch all related fields
-										} else {
-											LOG.debug("Rate not locked in LQB yet, hence not fetching the lock data ");
-											status = "Rates not yet locked in LQB";
+											
 										}
 									}
+									
+									TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
+									teaserRateResponseVO.setRateVO(lqbTeaserRateVolist);
+									teaserRateList.add(teaserRateResponseVO);
 								}
 							}
 						} else {
@@ -275,8 +261,8 @@ public class ApplicationFormRestService {
 			LOG.error("Loan not found for this loanID " + loanID);
 			status = "Unable to fetch loan information";
 		}
-		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(status);
-		return responseVO;
+		
+		return gson.toJson(teaserRateList);
 	}
 
 	@RequestMapping(value = "/pullScore/{loanID}/{trimerge}", method = RequestMethod.GET)
@@ -671,18 +657,27 @@ public class ApplicationFormRestService {
 		try {
 
 			LOG.debug("appFormData is" + appFormData);
-
-			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
-			        LoanAppFormVO.class);
-			String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
-			if (sTicket != null) {
-				lockRateData = loadLoanRateData(loanNumber, sTicket);
-				LOG.debug("lockRateData" + lockRateData);
-			} else {
-				LOG.error("Unable to generate authentication token, please try after some time");
-				return "Unable to generate authentication toke, please try after some time";
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
+			
+			int loanId = loaAppFormVO.getLoan().getId();
+			LoanVO loanVO = loanService.getLoanByID(loanId);
+			if(null!= loanVO.getLockStatus() && loanVO.getLockStatus().equalsIgnoreCase("1")){
+				/* this is the case when lock status is 1 in the loan table and we have to by pass the below request*/
+				LOG.debug("Lock status is 1");
+				
+				
+			}else{
+				
+				String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
+				if (sTicket != null) {
+					lockRateData = loadLoanRateData(loanNumber, sTicket);
+					LOG.debug("lockRateData" + lockRateData);
+				} else {
+					LOG.error("Unable to generate authentication token, please try after some time");
+					return "Unable to generate authentication toke, please try after some time";
+				}
 			}
-
+			
 		} catch (Exception e) {
 			LOG.error(" fetchLockRatedata failed; " + loanNumber, e);
 			return "error while fetching locked rate, please try after some time";
@@ -735,23 +730,19 @@ public class ApplicationFormRestService {
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
 			try {
-				HashMap<String, String> lqbResponse = cacheableMethodInterface
-				        .cacheInvokeRest(loanNumber, json.toString());
+				HashMap<String, String> lqbResponse = cacheableMethodInterface.cacheInvokeRest(loanNumber, json.toString());
 				String responseMessage = "error";
-				if (lqbResponse != null
-				        && lqbResponse.containsKey("responseMessage")) {
+				
+				if (lqbResponse != null && lqbResponse.containsKey("responseMessage")) {
 					responseMessage = lqbResponse.get("responseMessage");
 				} else {
 					LOG.debug("Invalidating cache since response contains error");
-					cacheableMethodInterface.invalidateApplicationRateCache(
-					        loanNumber, json.toString());
+					cacheableMethodInterface.invalidateApplicationRateCache(loanNumber, json.toString());
 				}
-				teaserRateList = rateService
-				        .parseLqbResponse(retrievePricingDetails(responseMessage));
+				teaserRateList = rateService.parseLqbResponse(retrievePricingDetails(responseMessage));
 
 				String responseTime = "";
-				if (lqbResponse != null
-				        && lqbResponse.containsKey("responseTime")) {
+				if (lqbResponse != null && lqbResponse.containsKey("responseTime")) {
 					responseTime = lqbResponse.get("responseTime");
 				}
 
