@@ -691,6 +691,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .getJobTitle());
 		customerEmploymentITemp.setEmployedSince(customerEmploymentIncome
 		        .getEmployedSince());
+		customerEmploymentITemp.setEmploymentLength(String.valueOf(customerEmploymentIncome
+		        .getEmploymentLength()));
 		customerEmploymentITemp.setEmployedAt(customerEmploymentIncome
 		        .getEmployedAt());
 		customerEmploymentITemp

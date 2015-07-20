@@ -76,9 +76,9 @@
 			<field id="aBIsWhite">applicantIsWhite</field>
 			<field id="aBGender">applicantGender</field>
 			<field id="aBAddrYrs">applicantAddrYrs</field>
-			<field id="abprimaryemplrnm">applicantEmplrNm</field>
-			<field id="abprimaryempltstartd">applicantEmplrStartDate</field>
+			<field id="abprimaryemplrnm">applicantEmplrNm</field>			
 			<field id="abprimaryjobtitle">applicantEmplrJobTitle</field>
+			<field id="abprimaryemplmtlen">applicantEmplrLength</field>
 			<field id="aOccT">applicantOccupancyType</field>
 
 
