@@ -836,7 +836,7 @@ function updateOnSlide(valueSet) {
 }
 
 function getLQBObj(yearValues) {
-	if (!appUserDetails.loan || !appUserDetails.loan.isRateLocked) {
+	if ((appUserDetails.loan && appUserDetails.loan.lockStatus!="1")||typeof(newfiObject)==="undefined") {
 		try {
 			var rateVO = yearValues[yearValues.length - 1].rateVO;
 			var index = parseInt(yearValues[yearValues.length - 1].rateVO.length / 2);
@@ -1101,8 +1101,7 @@ function restrictSpecialChar(name,element){
 function restrictChar(name){
 	
 	$('input[name="'+name+'"]').bind('keypress', function (e) {
-	    console.log(e.which);
-
+	   
 	    var k = e.which;
 	    var ok = k >= 48 && k <= 57; // 0-9
 

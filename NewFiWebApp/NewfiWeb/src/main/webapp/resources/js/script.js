@@ -971,24 +971,50 @@ function fetchLockRatedata(loanNumber,appUserDetailsParam)
 {
 //alert('inside create loan method');
  showOverlay();
+
+var url="";
+var method="";
+var data=undefined;
+if(appUserDetailsParam&&appUserDetailsParam.loan&&appUserDetailsParam.loan.lockStatus=="1"){
+    method="GET";
+    url="rest/application/fetchLockRateData/"+appUserDetailsParam.loan.id;
+}else if(appUserDetails&&appUserDetails.loan&&appUserDetails.loan.lockStatus=="1"){
+    method="GET"
+    url="rest/application/fetchLockRateData/"+appUserDetailsParam.loan.id;
+}else{
+    url="rest/application/fetchLockRatedata/"+loanNumber;
+    method="POST"
+    data={"appFormData" : JSON.stringify(appUserDetailsParam)};
+}
+
+
  $.ajax({
-		url:"rest/application/fetchLockRatedata/"+loanNumber,
-		type:"POST",
+		url:url,
+		type:method,
 		cache:false,
-		data:{"appFormData" : JSON.stringify(appUserDetailsParam)},
+		data:data,
 		datatype : "application/json",
 		success:function(data){
-		    var ob;
-            try{
-                ob=JSON.parse(data);
-                if(ob.length>0){
-                    responseTime=ob[0].responseTime;
-                }
-            }catch(exception){
+            var ob;
+            if(appUserDetailsParam&&appUserDetailsParam.loan&&appUserDetailsParam.loan.lockStatus=="1"){
+                appUserDetails=JSON.parse(data);
                 ob={};
-                responseTime="";
-                console.log("Invalid Data");
+            }else if(appUserDetails&&appUserDetails.loan&&appUserDetails.loan.lockStatus=="1"){
+                appUserDetails=data;
+                ob={};
+            }else{
+                try{
+                    ob=JSON.parse(data);
+                    if(ob.length>0){
+                        responseTime=ob[0].responseTime;
+                    }
+                }catch(exception){
+                    ob={};
+                    responseTime="";
+                    console.log("Invalid Data");
+                }
             }
+		    
            // alert('fetchLockRatedata data is '+JSON.stringify(data));
             /*if(data==""){
                 $('#center-panel-cont').html("Sorry, We could not find suitable products for you! One of our Loan officers will get in touch with you");

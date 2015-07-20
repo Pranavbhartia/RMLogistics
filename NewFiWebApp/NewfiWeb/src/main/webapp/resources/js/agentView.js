@@ -711,7 +711,6 @@ function checkCreditScoreAval(creditScore){
 	var sA=false;
 	if(o.length>=3){
 		for(var i=0;i<o.length;i++){
-			console.log(o[i].indexOf("span")<0);
 			if(o[i].indexOf("span")<0&&o[i]!=""){ 
 				sA=true;
 			}

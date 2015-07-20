@@ -98,6 +98,16 @@
 		<field id="sSuspendedD" />
 		<field id="sSuspendedDTime" />
 		<field id="sRejectD" />
+		<field id="sApr" />
+		<field id="sMonthlyPmt" />
+		<field id="sLpTemplateNm" />
+		<field id="sLpTemplateId" />
+		<field id="sBrokerLockOriginatorPriceNoteIR" />
+		<field id="sLpTemplateNm" />
+		
+		
+		
+		<field id="sBrokerLockOriginatorPriceBrokComp1PcFee" />
 		<field id="sRejectDTime" />
 		<field id="sWithdrawnD" />
 		<field id="sWithdrawnDTime" />

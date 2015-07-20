@@ -737,7 +737,8 @@ public class LoanAppFormVO implements Serializable {
 		loan.setLoanManagerWorkflow(loanVO.getLoanManagerWorkflowID());
 		loan.setLockedRateData(loanVO.getLockedRateData());
 		loan.setUser(User.convertFromVOToEntity(this.getUser()));
-
+		if (null != loanVO.getLockStatus())
+			loan.setLockStatus(loanVO.getLockStatus());
 		return loan;
 
 	}
