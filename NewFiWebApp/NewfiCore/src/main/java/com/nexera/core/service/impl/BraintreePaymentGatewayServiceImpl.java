@@ -28,6 +28,7 @@ import com.braintreegateway.exceptions.UnexpectedException;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.TransactionDetailsDao;
 import com.nexera.common.entity.Loan;
@@ -97,6 +98,9 @@ public class BraintreePaymentGatewayServiceImpl implements
 	@Autowired
 	private SendEmailService sendEmailService;
 
+	@Autowired
+	private Utils utils;
+
 	/**
 	 * Method to generate client token to be used by the front end.
 	 * 
@@ -124,8 +128,11 @@ public class BraintreePaymentGatewayServiceImpl implements
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { user.getFirstName() });
 		if (loanApplicationFee != null) {
-			substitutions.put("-date-", new String[] { loanApplicationFee
-			        .getPaymentDate().toString() });
+
+			substitutions.put("-date-", new String[] { utils
+			        .getDateAndTimeForDisplay(loanApplicationFee
+			                .getPaymentDate()) });
+
 			if (user.getCustomerDetail() != null) {
 				if (user.getCustomerDetail().getAddressStreet() != null) {
 					substitutions.put("-address-", new String[] { user
@@ -153,10 +160,13 @@ public class BraintreePaymentGatewayServiceImpl implements
 				}
 			}
 
-			if (loanApplicationFee.getFee() != null) {
-				substitutions.put("-amount-", new String[] { loanApplicationFee
-				        .getFee().toString() });
+			if (loanApplicationFee != null) {
+				String appFee = "$"
+				        + String.valueOf(String.format("%.2f",
+				                loanApplicationFee.getFee()));
+				substitutions.put("-amount-", new String[] { appFee });
 			}
+
 		}
 		if (user.getUsername() != null) {
 			emailVO.setSenderEmailId(user.getUsername()
@@ -442,7 +452,6 @@ public class BraintreePaymentGatewayServiceImpl implements
 
 		// Now we check the different possible cases of the transaction status
 		if (transaction.getStatus() == Transaction.Status.SETTLED) {
-
 			User sysAdmin = new User();
 			sysAdmin.setId(CommonConstants.SYSTEM_ADMIN_ID);
 
@@ -465,12 +474,7 @@ public class BraintreePaymentGatewayServiceImpl implements
 			// Update the transaction details table to soft delete the record.
 			transactionDetails
 			        .setStatus(CommonConstants.TRANSACTION_STATUS_DISABLED);
-			loanDao.update(transactionDetails);
-			Template template = templateService
-			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_PAYMENT);
-			sendPaymentMail(transactionDetails.getUser(), template,
-			        DisplayMessageConstants.PAYMENT_SUCCESSFUL_SUBJECT,
-			        applicationFee);
+			loanDao.update(transactionDetails);			
 			paymentStatus = LoanStatus.APP_PAYMENT_SUCCESS;
 		} else if (transaction.getStatus() == Transaction.Status.AUTHORIZATION_EXPIRED
 		        || transaction.getStatus() == Transaction.Status.FAILED
