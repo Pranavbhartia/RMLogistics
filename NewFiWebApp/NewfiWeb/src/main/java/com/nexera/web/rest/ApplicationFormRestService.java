@@ -2,7 +2,6 @@ package com.nexera.web.rest;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,22 +177,32 @@ public class ApplicationFormRestService {
 	}
 
 	@RequestMapping(value = "/fetchLockRateData/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody String getLockRateData(@PathVariable int loanID) {
+	public @ResponseBody String getLockRateData(@PathVariable int loanID,
+	        HttpServletRequest httpServletRequest) {
 		
 		LOG.debug("Inside method getLockRateData for loan " + loanID);
 		
-		List<TeaserRateResponseVO> teaserRateList = new ArrayList<TeaserRateResponseVO>();
-		ArrayList<LqbTeaserRateVo> lqbTeaserRateVolist = new ArrayList<LqbTeaserRateVo>();
+		/*
+		 * List<TeaserRateResponseVO> teaserRateList = new
+		 * ArrayList<TeaserRateResponseVO>(); ArrayList<LqbTeaserRateVo>
+		 * lqbTeaserRateVolist = new ArrayList<LqbTeaserRateVo>();
+		 */
 		Gson gson = new Gson();
 		
 		String status = null;
 		
 		LoanVO loanVO = loanService.getLoanByID(loanID);
+		Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
+		LoanAppFormVO loaAppFormVO = loanAppFormService
+		        .getLoanAppFormByLoan(loan);
 		String lqbFileId = loanVO.getLqbFileId();
 		
 		if (loanVO != null && lqbFileId != null) {
-			Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
-			LoanAppFormVO loaAppFormVO = loanAppFormService.getLoanAppFormByLoan(loan);
+			
+			if (!loanVO.getLockStatus().equals("1")) {
+				LOG.debug("loan not locked...");
+				return gson.toJson(loaAppFormVO);
+			}
 			if (loaAppFormVO != null) {
 				if (loanVO.getLqbFileId() != null) {
 					LOG.debug("Getting token for loan manager");
@@ -221,20 +230,23 @@ public class ApplicationFormRestService {
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 									
 									if (loadResponseList != null) {
+										LqbTeaserRateVo lqbTeaserRateVo=new LqbTeaserRateVo();
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
-										
-											LqbTeaserRateVo lqbTeaserRateVo = lQBResponseMapping.setLqbTeaserRateVo(loadResponseVO);
-											if(null != lqbTeaserRateVo)
-											{
-												lqbTeaserRateVolist.add(lqbTeaserRateVo);
-											}
-											
+											lQBResponseMapping
+											        .setLqbTeaserRateVo(
+											                lqbTeaserRateVo,
+											                loadResponseVO);
 										}
+										loaAppFormVO
+										        .getLoan()
+										        .setLockedRateData(
+										                new Gson()
+										                        .toJson(lqbTeaserRateVo));
+										String loanAppFrm = gson
+										        .toJson(loaAppFormVO);
+										createApplication(loanAppFrm,
+										        httpServletRequest);
 									}
-									
-									TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
-									teaserRateResponseVO.setRateVO(lqbTeaserRateVolist);
-									teaserRateList.add(teaserRateResponseVO);
 								}
 							}
 						} else {
@@ -261,7 +273,7 @@ public class ApplicationFormRestService {
 			status = "Unable to fetch loan information";
 		}
 		
-		return gson.toJson(teaserRateList);
+		return gson.toJson(loaAppFormVO);
 	}
 
 	@RequestMapping(value = "/pullScore/{loanID}/{trimerge}", method = RequestMethod.GET)

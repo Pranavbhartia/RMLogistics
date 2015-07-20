@@ -99,10 +99,11 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
         });
     	/*rateArray=rateArray.reverse();*/
     }
-    var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
-    var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
-    
-    container.append(tenureSlider).append(rateSlider);
+    if(appUserDetails.loan.lockStatus!="1"){
+        var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
+        var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
+        container.append(tenureSlider).append(rateSlider);
+    }
     return container
 }
 function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate){
@@ -801,7 +802,6 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     if(!rateVO.dummyData){
 
     	teaserRateValHolder.leadCustomer = undefined;
-        ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. </br>Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         if(typeof(newfiObject)!=="undefined"&&teaserRateValHolder.teaserRate)
