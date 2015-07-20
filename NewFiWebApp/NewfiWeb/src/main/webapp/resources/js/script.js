@@ -1998,7 +1998,12 @@ function getLoanSummaryTextRow(text) {
 function getHeaderText(text) {
     var headerText = $('<div>').attr({
         "class": "cp-header-text"
-    }).html(text);
+    });
+    var span=$('<span>').attr({
+		"class" : "mandatoryClass"
+	}).html("*");
+    headerText.append(span);
+    headerText.html(text);
     return headerText;
 }
 
