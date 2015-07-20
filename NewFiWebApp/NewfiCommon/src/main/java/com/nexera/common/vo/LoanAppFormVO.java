@@ -1136,7 +1136,10 @@ public class LoanAppFormVO implements Serializable {
 			        .setEmployedSince(customerSpouseEmploymentincomeVO
 			                .getCustomerSpouseEmploymentIncome()
 			                .getEmployedSince());
-
+			customerSpouseEmploymentIncome
+	        .setEmploymentLength(Double.parseDouble(customerSpouseEmploymentincomeVO
+	                .getCustomerSpouseEmploymentIncome()
+	                .getEmploymentLength()));
 			customerSpouseEmploymentIncomeList
 			        .add(customerSpouseEmploymentIncome);
 

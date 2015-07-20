@@ -468,10 +468,14 @@ public class LQBRequestUtil {
 				                .getJobTitle());
 				// hashmap.put(
 				// "applicationCoborrowerMontlyIncome",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
-				hashmap.put("applicationCoborrowerEmploymentStartDate",
+			/*	hashmap.put("applicationCoborrowerEmploymentStartDate",
 				        loanAppFormVO.getCustomerSpouseEmploymentIncome()
 				                .get(0).getCustomerSpouseEmploymentIncome()
-				                .getEmployedSince());
+				                .getEmployedSince());*/
+				hashmap.put("applicationCoborrowerEmploymentLength",
+				        loanAppFormVO.getCustomerSpouseEmploymentIncome()
+				                .get(0).getCustomerSpouseEmploymentIncome()
+				                .getEmploymentLength());
 
 			}
 
@@ -581,10 +585,14 @@ public class LQBRequestUtil {
 			        .getCustomerSpouseEmploymentIncome().getJobTitle());
 			// hashmap.put(
 			// "applicationCoborrowerMontlyIncome",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
-			hashmap.put("applicationCoborrowerEmploymentStartDate",
+		/*	hashmap.put("applicationCoborrowerEmploymentStartDate",
 			        loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0)
 			                .getCustomerSpouseEmploymentIncome()
-			                .getEmployedSince());
+			                .getEmployedSince());*/
+			hashmap.put("applicationCoborrowerEmploymentLength",
+			        loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0)
+			                .getCustomerSpouseEmploymentIncome()
+			                .getEmploymentLength());
 
 		}
 		hashmap = getCoBorrowerGovernmentQuestion(hashmap, loanAppFormVO);
