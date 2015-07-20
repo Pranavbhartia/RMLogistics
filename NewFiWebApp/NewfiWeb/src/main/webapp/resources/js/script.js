@@ -205,7 +205,7 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
     } else if (secondary == 2) {
     	var userId=newfiObject.user.id;
         getAppDetailsForUser(userId,function(appUserDetailsTemp){
-            /*if(!appUserDetailsTemp.loan.lqbFileId){*/
+        	/*if(!appUserDetailsTemp.loan.lqbFileId){*/
                 paintCustomerApplicationPage();
             /*}else{
             	hideCompleteYourProfile();
@@ -483,9 +483,10 @@ function redirectToGettingToKnowLastPage() {
 	cont2.append("<div class='getting-to-know-hdr-txt'>Next Steps</div>");
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Application").on('click',function(){
+	}).html("Complete Application").on('click',function(){
 		//NEXNF-577 changed the text Complete My Loan Profile to Complete My Application
 		//NEXNF-635 changed the text Complete My Application to Application
+		//portal updates 7.16 changed the text Application to Complete Application 
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
 	        newfiObject.applicationKnowNewfi=undefined;

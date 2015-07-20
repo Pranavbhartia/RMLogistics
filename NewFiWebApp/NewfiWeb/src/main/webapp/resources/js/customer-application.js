@@ -2188,7 +2188,10 @@ function paintMyIncome() {
 	            customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
 	            customerEmploymentIncome1.jobTitle=jobTitle;
 	            customerEmploymentIncome1.employedAt = EmployedAt;
-	            customerEmploymentIncome1.employedSince = EmployedSince;
+	         /*   customerEmploymentIncome1.employedSince = EmployedSince;*/
+	            //web portal updates 7.16 and jira-780
+	            customerEmploymentIncome1.employmentLength = EmployedSince;
+	            
 	            var termp = {};
 	            termp.customerEmploymentIncome = customerEmploymentIncome1;
 	
@@ -2517,10 +2520,11 @@ function getMultiTextQuestion(quesText, value) {
     
     
    // Start working 
-    
+    var text="";
+    text="Years on job";//portal updates 7.16 changed from "Start date"
     var quesTextCont3 = $('<div>').attr({
         "class": "ce-rp-ques-text"
-    }).html("Start date");
+    }).html(text);
     
     val = "";
     
@@ -2548,8 +2552,8 @@ function getMultiTextQuestion(quesText, value) {
 
     return wrapper.append(container);
 }
-
-$('body').on('focus',"input[name='startWorking'], input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(e){
+//removing input[name='startWorking'] for portal updates 7.16
+$('body').on('focus',"input[name='startLivingTime'] ,input[name='purchaseTime'],input[name='spouseStartWorking']", function(e){
     var applicationLocked=checkLqbFileId();
     if(!applicationLocked){
     	$(this).datepicker({
@@ -2750,18 +2754,18 @@ $('body').on('keypress',"input[name='startLivingTime']",function(e){
         }
 
 	});
-$('body').on('keypress',"input[name='startWorking']",function(e){
+//portal updates 7.16
+$('body').on('keypress',"input[name='startWorking']",function(evt){
+	 var charCode = (evt.which) ? evt.which : evt.keyCode;
+	 if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46)
+	    return false;
+	 
+	 if($(this).val().length >=4){
 
-        var k = e.which;
-        var ok = k >= 65 && k <= 90 || // A-Z
-            k >= 97 && k <= 122 || // a-z
-            k >= 48 && k <= 57 || k == 32; // 0-9
-        
-        if (!ok){
-            e.preventDefault();
-        }
+         return false;
+	 }
 
-	});
+});
 $('body').on('focus',"input[name='ssn']",function(){
 	
 	$(this).mask("999-99-9999");
