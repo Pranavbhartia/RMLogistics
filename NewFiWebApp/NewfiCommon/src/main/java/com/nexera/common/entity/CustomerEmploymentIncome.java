@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-
-
 /**
  * The persistent class for the CustomerEmploymentIncome database table.
  * 
@@ -21,72 +19,64 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "customeremploymentincome")
 @NamedQuery(name = "CustomerEmploymentIncome.findAll", query = "SELECT ci FROM CustomerEmploymentIncome ci")
-public class CustomerEmploymentIncome implements Serializable{
+public class CustomerEmploymentIncome implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private Integer      id;
-	private String   employedIncomePreTax;
-	private String   employedAt;
-	private String   employedSince;
-	private String   jobTitle;
+	private Integer id;
+	private String employedIncomePreTax;
+	private String employedAt;
+	private String employedSince;
+	private String jobTitle;
+	private Double employmentLength;
+	
+
 	private LoanAppForm loanAppForms;
-	
-	
+
 	public CustomerEmploymentIncome() {
 	}
-	
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}
 
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
-	
-	
+
 	@Column(name = "employed_income_pre_tax")
 	public String getEmployedIncomePreTax() {
 		return employedIncomePreTax;
 	}
-	
-
 
 	public void setEmployedIncomePreTax(String employedIncomePreTax) {
 		this.employedIncomePreTax = employedIncomePreTax;
 	}
+
 	@Column(name = "employed_at")
 	public String getEmployedAt() {
 		return employedAt;
 	}
-	
-	
+
 	public void setEmployedAt(String employedAt) {
 		this.employedAt = employedAt;
 	}
-	
-	
+
 	@Column(name = "employed_since")
 	public String getEmployedSince() {
 		return employedSince;
 	}
+
 	public void setEmployedSince(String employedSince) {
 		this.employedSince = employedSince;
 	}
-	
-	
-	
-	
+
 	@ManyToOne
-    @JoinColumn(name="cust_emp_income")
+	@JoinColumn(name = "cust_emp_income")
 	public LoanAppForm getLoanAppForms() {
 		return loanAppForms;
 	}
-
 
 	public void setLoanAppForms(LoanAppForm loanAppForms) {
 		this.loanAppForms = loanAppForms;
@@ -97,11 +87,15 @@ public class CustomerEmploymentIncome implements Serializable{
 		return jobTitle;
 	}
 
-
 	public void setJobTitle(String jobTitle) {
 		this.jobTitle = jobTitle;
 	}
+	@Column(name = "empl_len")
+	public Double getEmploymentLength() {
+		return employmentLength;
+	}
 
-   
-	
+	public void setEmploymentLength(Double employmentLength) {
+		this.employmentLength = employmentLength;
+	}
 }

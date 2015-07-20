@@ -520,6 +520,10 @@ function getRateAprRowCol(desc, rateDetail, aprDetail, rateid, aprId, containerI
         "class": "loan-summary-row loan-summary-row-border-adj clearfix "
     });
     
+    var span=$('<span>').attr({
+		"class" : "mandatoryClass"
+	}).html("*");
+    
     if(containerId)
         container.attr({
             "id":containerId
@@ -528,6 +532,9 @@ function getRateAprRowCol(desc, rateDetail, aprDetail, rateid, aprId, containerI
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
     
+    if(desc=="Rate / APR"){
+    	col1.append(span);
+    }
     var col2 = $('<div>').attr({
         "class": "loan-summary-rateapr-detail rate-page-normal-text float-left ",
         "id": rateid

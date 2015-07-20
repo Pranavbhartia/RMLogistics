@@ -9,6 +9,8 @@ public class CustomerEmploymentIncomeVO implements Serializable{
 	private String   employedAt;
 	private String   employedSince; 
 	private String   jobTitle;
+	private String employmentLength;
+	
 	
 	private CustomerEmploymentIncomeVO customerEmploymentIncome ;
 	
@@ -51,6 +53,12 @@ public class CustomerEmploymentIncomeVO implements Serializable{
 	}
 	public void setJobTitle(String jobTitle) {
 		this.jobTitle = jobTitle;
+	}
+	public String getEmploymentLength() {
+		return employmentLength;
+	}
+	public void setEmploymentLength(String employmentLength) {
+		this.employmentLength = employmentLength;
 	}
 	
 }

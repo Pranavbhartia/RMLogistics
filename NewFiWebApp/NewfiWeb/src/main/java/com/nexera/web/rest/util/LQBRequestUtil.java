@@ -264,28 +264,30 @@ public class LQBRequestUtil {
 				        .unformatCurrencyField(loanAppFormVO
 				                .getRefinancedetails()
 				                .getCurrentMortgageBalance()));
-				
-				
+
 				if ("REF".equalsIgnoreCase(loanAppFormVO.getLoanType()
 				        .getLoanTypeCd())) {
 					// is it cashout
 					if (loanAppFormVO.getRefinancedetails() != null
-					        && ("REFCO").equalsIgnoreCase(loanAppFormVO
-					                .getRefinancedetails().getRefinanceOption())) {
-						
-						Float loanAmount=Float.parseFloat(Utils
-						        .unformatCurrencyField(loanAppFormVO
+					        && ("REFCO")
+					                .equalsIgnoreCase(loanAppFormVO
+					                        .getRefinancedetails()
+					                        .getRefinanceOption())) {
+
+						Float loanAmount = Float
+						        .parseFloat(Utils
+						                .unformatCurrencyField(loanAppFormVO
 						                        .getRefinancedetails()
 						                        .getCashTakeOut()))
 						        + Float.parseFloat(Utils
-								        .unformatCurrencyField(loanAppFormVO
-								                .getRefinancedetails()
-								                .getCurrentMortgageBalance()));
-						
+						                .unformatCurrencyField(loanAppFormVO
+						                        .getRefinancedetails()
+						                        .getCurrentMortgageBalance()));
+
 						hashmap.put("loanAmount", loanAmount.toString());
 					}
 				}
-				
+
 			}
 			hashmap.put("applicantCity", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressCity());
@@ -312,9 +314,10 @@ public class LQBRequestUtil {
 				        .getCustomerEmploymentIncome().get(0)
 				        .getCustomerEmploymentIncome().getJobTitle());
 				// hashmap.put("borrowerEmplrMonthlyIncome",loanAppFormVO.getCustomerEmploymentIncome().get(0).getCustomerEmploymentIncome().getEmployedIncomePreTax());
-				hashmap.put("applicantEmplrStartDate", loanAppFormVO
+				hashmap.put("applicantEmplrLength", loanAppFormVO
 				        .getCustomerEmploymentIncome().get(0)
-				        .getCustomerEmploymentIncome().getEmployedSince());
+				        .getCustomerEmploymentIncome().getEmploymentLength()
+				        .toString());
 			}
 
 			hashmap = getBorrowerGovernmentQuestion(hashmap, loanAppFormVO);
@@ -383,12 +386,12 @@ public class LQBRequestUtil {
 			}
 			HashMap<String, String> finalmap = new HashMap();
 			for (String key : hashmap.keySet()) {
-				
+
 				String encodedValue = hashmap.get(key);
 				if (!key.equalsIgnoreCase("applicantEmailAddress")
 				        && null != hashmap.get(key))
-					encodedValue =URLEncoder.encode(hashmap.get(key))
-				        .replaceAll("[+]", " ");
+					encodedValue = URLEncoder.encode(hashmap.get(key))
+					        .replaceAll("[+]", " ");
 				finalmap.put(key, encodedValue);
 
 			}
@@ -465,10 +468,14 @@ public class LQBRequestUtil {
 				                .getJobTitle());
 				// hashmap.put(
 				// "applicationCoborrowerMontlyIncome",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
-				hashmap.put("applicationCoborrowerEmploymentStartDate",
+			/*	hashmap.put("applicationCoborrowerEmploymentStartDate",
 				        loanAppFormVO.getCustomerSpouseEmploymentIncome()
 				                .get(0).getCustomerSpouseEmploymentIncome()
-				                .getEmployedSince());
+				                .getEmployedSince());*/
+				hashmap.put("applicationCoborrowerEmploymentLength",
+				        loanAppFormVO.getCustomerSpouseEmploymentIncome()
+				                .get(0).getCustomerSpouseEmploymentIncome()
+				                .getEmploymentLength());
 
 			}
 
@@ -578,10 +585,14 @@ public class LQBRequestUtil {
 			        .getCustomerSpouseEmploymentIncome().getJobTitle());
 			// hashmap.put(
 			// "applicationCoborrowerMontlyIncome",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
-			hashmap.put("applicationCoborrowerEmploymentStartDate",
+		/*	hashmap.put("applicationCoborrowerEmploymentStartDate",
 			        loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0)
 			                .getCustomerSpouseEmploymentIncome()
-			                .getEmployedSince());
+			                .getEmployedSince());*/
+			hashmap.put("applicationCoborrowerEmploymentLength",
+			        loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0)
+			                .getCustomerSpouseEmploymentIncome()
+			                .getEmploymentLength());
 
 		}
 		hashmap = getCoBorrowerGovernmentQuestion(hashmap, loanAppFormVO);

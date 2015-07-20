@@ -197,13 +197,14 @@ function paintMySpouseIncome() {
 						jobTitle = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="jobTitle"]').val();
 						EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
 						EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
-						EmployedSince = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
+						EmploymentLength = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
 			
 						customerSpouseEmploymentIncomeTemp1.id = id;
 						customerSpouseEmploymentIncomeTemp1.jobTitle=jobTitle;
 						customerSpouseEmploymentIncomeTemp1.employedIncomePreTax = EmployedIncomePreTax;
 						customerSpouseEmploymentIncomeTemp1.employedAt = EmployedAt;
-						customerSpouseEmploymentIncomeTemp1.employedSince = EmployedSince;
+						/*customerSpouseEmploymentIncomeTemp1.employedSince = EmployedSince;*/
+						customerSpouseEmploymentIncomeTemp1.employmentLength = EmploymentLength;
 						var temp = {};
 						temp.customerSpouseEmploymentIncome = customerSpouseEmploymentIncomeTemp1;
 			
@@ -697,9 +698,12 @@ function getMultiTextQuestionSpouse(quesText,value) {
 		}).html("Start date");
 
 		 val="";
-	    if(value&&value.employedSince)
-	        val=value.employedSince;
-	        
+		 //jira-780
+	   /* if(value&&value.employedSince)
+	        val=value.employedSince;*/
+	    if(value&&value.employmentLength)
+	        val=value.employmentLength;
+	    
 		var inputBox3 = $('<input>').attr({
 			"class" : "ce-input",
 			"name" : "spouseStartWorking",

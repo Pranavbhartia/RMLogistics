@@ -645,6 +645,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		customerSpouseEmploymentIncomeVOTemp
 		        .setEmployedSince(customerSpouseEmploymentIncome
 		                .getEmployedSince());
+		customerSpouseEmploymentIncomeVOTemp.setEmploymentLength(String
+		        .valueOf(customerSpouseEmploymentIncome.getEmploymentLength()));
 		customerSpouseEmploymentIncomeVOTemp
 		        .setEmployedAt(customerSpouseEmploymentIncome.getEmployedAt());
 		customerSpouseEmploymentIncomeVOTemp
@@ -691,6 +693,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		        .getJobTitle());
 		customerEmploymentITemp.setEmployedSince(customerEmploymentIncome
 		        .getEmployedSince());
+		customerEmploymentITemp.setEmploymentLength(String
+		        .valueOf(customerEmploymentIncome.getEmploymentLength()));
 		customerEmploymentITemp.setEmployedAt(customerEmploymentIncome
 		        .getEmployedAt());
 		customerEmploymentITemp
