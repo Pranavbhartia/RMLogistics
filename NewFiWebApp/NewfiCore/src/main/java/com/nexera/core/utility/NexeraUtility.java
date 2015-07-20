@@ -1053,5 +1053,24 @@ public class NexeraUtility {
 		}
 		return json;
 	}
+	
+	public JSONObject createLoadJson(String loanNumber, String sTicket) {
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(CommonConstants.SLOANNUMBER, loanNumber);
+			jsonChild.put(CommonConstants.SXMLQUERYMAP, new JSONObject("{}"));
+			jsonChild.put(CommonConstants.FORMAT, 0);
+			jsonChild.put(CommonConstants.STICKET, sTicket);
+
+			json.put(CommonConstants.OPNAME, "Load");
+			json.put(CommonConstants.LOANVO, jsonChild);
+			LOGGER.debug("jsonMapObject load Loandata" + json);
+		} catch (JSONException e) {
+			LOGGER.error("Invalid Json String ");
+			
+		}
+		return json;
+	}
 
 }

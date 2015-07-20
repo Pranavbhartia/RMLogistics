@@ -323,9 +323,9 @@ display: block;
 	padding-right: 10px;
 }
 
-.admin-btn-active {
-	background: url(../images/greenToggle.png) no-repeat left;
-	background-position: 2px 1px;
+.admin-btn-status {
+	
+	
 	height: 20px;
 	cursor: pointer;
 	margin-right: 197px;
@@ -340,18 +340,15 @@ display: block;
 	font-family: 'opensanssemibold';
 }
 
+.admin-btn-active {
+	background: url(../images/greenToggle.png) no-repeat left;
+	background-position: 2px 1px;
+}
+
 .admin-btn-in-active {
 	background: url(../images/redToggle.png) no-repeat right;
 	background-position: 22px 1px;
-	height: 20px;
-	cursor: pointer;
-	margin-right: 197px;
-	border: 1px #d3d3d3 solid;
-	width: 40px;
-	border-radius: 20px;
-	height: 18px;
 }
-
 .float-right-admin {
 	float: right;
 }

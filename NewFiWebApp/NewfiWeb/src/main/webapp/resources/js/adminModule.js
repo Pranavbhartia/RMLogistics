@@ -760,48 +760,55 @@ function getAdminTeamListTableRow(user) {
 			"class" : "admin-newfi-team-list-tr-col3 float-left"
 		}).html(user.emailId);	
 		
-		var inputActive=$('<div>').attr({
-		"class":"admin-btn-active",
-		"id":"admin-status-active"
-		});
-		var inputInActive=$('<div>').attr({
-		"class":"admin-btn-in-active",
-		"id":"admin-status-inactive"
-		});
-		
 		var trCol4 = $('<div>').attr({
 			"class" : "admin-newfi-team-list-tr-col4 float-left",
 			"userID":user.id
 			
 		});
+		
+		var inputActive=$('<div>').attr({
+		"class":"admin-btn-status",
+		"id":"admin-status-active"
+		}).bind('click',function(e){
+			if($(this).hasClass('admin-btn-active')){
+				ajaxRequest("rest/userprofile/disable/"+user.id,"GET", "json", {},"");
+				trCol4 = $(".admin-newfi-team-list-tr-col4[userID=" +user.id + "]");
+				trCol4.find('.admin-btn-status').removeClass('admin-btn-active');
+				trCol4.find('.admin-btn-status').addClass('admin-btn-in-active');
+			}else if($(this).hasClass('admin-btn-in-active')){
+				ajaxRequest("rest/userprofile/enable/"+user.id,"GET", "json", {},
+				"");
+				trCol4 = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
+				trCol4.find('.admin-btn-status').removeClass('admin-btn-in-active');
+				trCol4.find('.admin-btn-status').addClass('admin-btn-active');
+			}
+			
+			
+		});
+		
+		
 		if(user.userRole.id==3){
 		if(user.internalUserDetail.internalUserRoleMasterVO.id==1){
 		if(user.internalUserDetail.activeInternal==statusActive){
+			inputActive.addClass('admin-btn-active');
 			trCol4.append(inputActive);
+			
+			
 
 		}
 		else if(user.internalUserDetail.activeInternal==statusInActive){
-			trCol4.append(inputInActive);
+			inputActive.addClass('admin-btn-in-active');
+			trCol4.append(inputActive);
+			
 		}
 		else{
+			inputActive.addClass('admin-btn-active');
 			trCol4.append(inputActive);
+			
 		}
 		}
 		}
-	    inputActive.click(function(){
-		    ajaxRequest("rest/userprofile/disable/"+user.id,"GET", "json", {},"");
-			var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
-			teamMemberRow.empty();
-			teamMemberRow.append(inputInActive);
-			});	
-			inputInActive.click(function(){
-		    ajaxRequest("rest/userprofile/enable/"+user.id,"GET", "json", {},
-					"");
-			var teamMemberRow = $(".admin-newfi-team-list-tr-col4[userID=" + user.id + "]");
-			teamMemberRow.empty();
-			teamMemberRow.append(inputActive);	
-		});
-		
+
 		var trCol5 = $('<div>').attr({
 			"class" : "admin-newfi-team-list-tr-col5 float-left"
 		});
