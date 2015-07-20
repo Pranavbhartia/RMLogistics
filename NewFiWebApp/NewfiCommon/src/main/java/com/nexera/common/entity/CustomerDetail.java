@@ -445,8 +445,8 @@ public class CustomerDetail implements Serializable {
 		                .getEmployedIncomePreTax());
 		customerEmploymentIncomeVO.setEmployedSince(customerEmploymentIncome
 		        .getEmployedSince());
-		customerEmploymentIncomeVO.setEmploymentLength(String.valueOf(customerEmploymentIncome
-		        .getEmploymentLength()));
+		customerEmploymentIncomeVO.setEmploymentLength(String
+		        .valueOf(customerEmploymentIncome.getEmploymentLength()));
 
 		return customerEmploymentIncomeVO;
 	}
@@ -611,8 +611,11 @@ public class CustomerDetail implements Serializable {
 		                .getEmployedIncomePreTax());
 		customerEmploymentIncome.setEmployedSince(customerEmploymentIncomeVO
 		        .getEmployedSince());
-		customerEmploymentIncome.setEmploymentLength(Double.parseDouble(customerEmploymentIncomeVO
-		        .getEmploymentLength()));
+		if (customerEmploymentIncomeVO.getEmploymentLength() != null) {
+			customerEmploymentIncome.setEmploymentLength(Double
+			        .parseDouble(customerEmploymentIncomeVO
+			                .getEmploymentLength()));
+		}
 		return customerEmploymentIncome;
 	}
 
