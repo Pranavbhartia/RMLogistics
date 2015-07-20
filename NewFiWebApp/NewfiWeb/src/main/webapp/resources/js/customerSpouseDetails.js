@@ -1334,7 +1334,7 @@ function paintCustomerSpouseApplicationPageStep5() {
     
     var isAuthorizedCheckBox = $('<div>').attr({
     	"class" : "ce-option-checkbox"
-    }).text("I authorize Newfi To Pull My Credit Report For the Purposes of Appying for a Mortgage Loan")
+    }).text("I authorize Newfi To Pull My Credit Report For the Purposes of Applying for a Mortgage Loan")
     .bind('click',function(){
     	if($(this).hasClass('ce-option-checked')){
     		$(this).removeClass('ce-option-checked');
