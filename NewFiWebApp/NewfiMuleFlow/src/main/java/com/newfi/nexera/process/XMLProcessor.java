@@ -173,9 +173,14 @@ public class XMLProcessor
             Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "abprimaryemplrnm",
                 "applicationCoborrowerEmplrName" );
             newApplicant.appendChild( applicationCoborrowerEmplrName );
-            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd",
+            /*Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd",
                 "applicationCoborrowerEmploymentStartDate" );
             newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            */
+            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "abprimaryemplmtlen",
+                    "applicationCoborrowerEmploymentLength" );
+                newApplicant.appendChild( applicationCoborrowerEmploymentLength );
+                
             Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "abprimaryjobtitle",
                 "applicationCoborrowerEmployementTitle" );
             newApplicant.appendChild( applicationCoborrowerEmployementTitle );
@@ -325,12 +330,18 @@ public class XMLProcessor
             Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "abprimaryemplrnm",
                 "applicationCoborrowerEmplrName" );
             newApplicant.appendChild( applicationCoborrowerEmplrName );
-            Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd",
+            /*Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd",
                 "applicationCoborrowerEmploymentStartDate" );
             newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
+            */
+            
             Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "abprimaryjobtitle",
                 "applicationCoborrowerEmployementTitle" );
             newApplicant.appendChild( applicationCoborrowerEmployementTitle );
+            
+            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "abprimaryemplmtlen",
+                    "applicationCoborrowerEmploymentLength" );
+                newApplicant.appendChild( applicationCoborrowerEmploymentLength );
 
             Element aBCoBorrowerExperianScore = createNewElement( doc, "field", "aBExperianScore", "800" );
             Element aBCoBorrowerEquifax = createNewElement( doc, "field", "aBEquifaxScore", "800" );
