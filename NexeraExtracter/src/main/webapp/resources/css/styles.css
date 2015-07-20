@@ -325,8 +325,8 @@ a,a:hover,a:visited {
 
 .ltv-table6 {
 	position: absolute;
-	left: 447px;
-	bottom: -25px;
+	left: 466px;
+	top: 135px;
 }
 
 .ltv-table6 .price-table-td:first-child {
@@ -359,6 +359,7 @@ a,a:hover,a:visited {
 	white-space: pre-line;
 	font-family: 'opensanssemibold';
 	clear: both;
+	font-size: 11px!important;
 }
 
 .mammoth-table2 {
@@ -451,4 +452,13 @@ table.adjuster-table {
 
 .mamoth-table-wrapper .rate-table-container {
 	height: 210px;
+}
+
+.price-table-td-new {
+	width: 165px;
+	border-right:none;
+}
+
+.price-table-td-adjust-height:first-child:after {
+	height:28px;
 }

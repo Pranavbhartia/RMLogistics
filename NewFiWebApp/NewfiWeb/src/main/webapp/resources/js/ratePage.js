@@ -82,7 +82,7 @@ function getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn) {
     }).html(getCurrentDate(responseTime));
     
     columnRight.append(rateBtn2).append(timeStamp);
-    headerCont.append(col1).append(columnRight);
+    headerCont.append(col1)/*.append(columnRight)*/;
     return headerCont;
 }
 var teaserRateValHolder={};
@@ -149,6 +149,7 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                 var mainContainer = paintApplyNow(inputCustomerDetails,emailQuote);
                 $('#ce-main-container').html(mainContainer);
             });*/
+            wrapper.append(rateBtn1);
         }else{
             if(newfiObject.user.userRole.roleCd!="REALTOR"){
                 rateBtn1= $('<div>').attr({
@@ -171,11 +172,10 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
                
             }
         }
-        wrapper.append(rateBtn1);
+         
     }else{
         var rateBtn = $('<div>');
         getRequestRateLockStatus(rateBtn);
-        
         var sendPreQualification = $('<div>').attr({
             "class": "rate-btn pre-qualification "
         }).html("Send Pre-Qualification Letter").on('click',function(){
@@ -184,7 +184,10 @@ function getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,te
         });
         var rateVO = getLQBObj(teaserRate);
         if(appUserDetails.loanType.loanTypeCd == "PUR" && !rateVO.dummyData){
-            return wrapper.append(rateBtn).append(sendPreQualification);
+            wrapper.append(rateBtn);
+            //NEXNF-721
+            //wrapper.append(sendPreQualification);
+            return wrapper;
         }else{
             wrapper.append(rateBtn);
         }
@@ -317,12 +320,12 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     if(refinanceOption == "REFCO"){
         var loanBalCol = getInputElmentRow("loanBal","Current Loan <br/>Balance",showValue(currentMortgageBalance),"firstInput",customerInputData);        
         var cashOutCol = getInputElmentRow("cashOut","Cash Out",showValue(cashTakeOut),"secondInput",customerInputData);
-        var proposedLoanAmtCol = getLoanSummaryLastRow("Proposed Loan<br/> Amount", showValue(loanAmount),"loanAmount",true);
+        var proposedLoanAmtCol = getLoanSummaryLastRow("Loan<br/> Amount", showValue(loanAmount),"loanAmount",true);
         leftCol.append(loanBalCol);
         leftCol.append(cashOutCol);
         leftCol.append(proposedLoanAmtCol);
     }else{
-        var proposedLoanAmtCol = getInputElmentRow("propLoanAmt","Proposed Loan<br/> Amount",showValue(loanAmount),"loanAmount",customerInputData);
+        var proposedLoanAmtCol = getInputElmentRow("propLoanAmt","Loan<br/> Amount",showValue(loanAmount),"loanAmount",customerInputData);
         leftCol.append(proposedLoanAmtCol);
     }
     //NEXNF-603
@@ -336,25 +339,27 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
         var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
         leftCol.append(monthlyDiff);
     }else{*/
-        var currentMortgagePayment = getLoanSummaryLastRow("Current<br/> Mortgage Payment", showValue(monthlyPayment),"monthlyPaymentId",true);
+        var currentMortgagePayment = getLoanSummaryLastRow("Current<br/> Mortgage Payment", showValue(monthlyPayment),"monthlyPaymentId",true,true);
         rightCol.append(currentMortgagePayment);
-        var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId");
+        var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId",undefined,true);
         rightCol.append(monthlyDiff);
     /*}*/
 
-    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
-    rightCol.append(totHousingPayment);
-
-    var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment));
+    var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment),true);
     rightCol.append(toggletaxComponent);
 
     //var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
-    var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
+    var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true,true,true);
     rightCol.append(taxRow);
 
     //var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
-    var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
-    rightCol.append(taxRow);
+    var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true,true,true);
+    rightCol.append(taxRow);    
+
+    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true,true);
+    rightCol.append(totHousingPayment);
+
+    
 
     
 
@@ -434,13 +439,18 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var val="";
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
-    var interestRateRow=getLoanTableSummary("Interest Rate", val, "teaserRateId");
-    grp.append(interestRateRow);
+   /* var interestRateRow=getLoanTableSummary("Interest Rate", val, "teaserRateId");*/
+    var interestRateCol = getRateAprRowCol("Rate / APR", val, rateVO.APR+ " %", "teaserRateId", "aprid");
+    grp.append(interestRateCol);
 
 
-    var aprRow=getLoanTableSummary("APR",rateVO.APR +" %", "aprid");
-    grp.append(aprRow);
+   /* var aprRow=getLoanTableSummary("APR",rateVO.APR +" %", "aprid");
+    grp.append(aprRow);*/
     leftCol.append(grp);
+
+
+    /*rightCol.append(interestRateCol);*/
+    
     //NEXNF-621
     /*var tableContaner=$('<div>').attr({
         "class": "clearfix"
@@ -472,13 +482,43 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
 
     return parentWrapper;
 }
-function getLoanSummaryRowRatePage(desc, detail, id,containerId,hideFlag) {
+function getLoanSummaryRowRatePage(desc, detail, id,containerId,hideFlag,paddingLeftFlag,paddingLeftFlagLabel) {
     var clas="";
     if(hideFlag)
         clas="hide";
     var container = $('<div>').attr({
         "class": "loan-summary-row loan-summary-row-border-adj clearfix "+clas
     });
+    
+    if(containerId)
+        container.attr({
+            "id":containerId
+        });
+    var paddingClass="";
+    if(paddingLeftFlag){
+        paddingClass="tax-Ins-clas";
+    }
+    var col1 = $('<div>').attr({
+        "class": "loan-summary-col-desc float-left "+paddingClass
+    }).html(desc);
+    var paddinglabelClass="";
+    if(paddingLeftFlagLabel){
+        paddinglabelClass="tax-Ins-clas";
+    }
+    var col2 = $('<div>').attr({
+        "class": "loan-summary-col-detail rate-page-normal-text float-left "+paddinglabelClass,
+        "id": id
+    }).html(detail).val(detail);
+    container.append(col1).append(col2);
+    return container;
+}
+
+function getRateAprRowCol(desc, rateDetail, aprDetail, rateid, aprId, containerId) {
+    
+    var container = $('<div>').attr({
+        "class": "loan-summary-row loan-summary-row-border-adj clearfix "
+    });
+    
     if(containerId)
         container.attr({
             "id":containerId
@@ -486,11 +526,19 @@ function getLoanSummaryRowRatePage(desc, detail, id,containerId,hideFlag) {
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left"
     }).html(desc);
+    
     var col2 = $('<div>').attr({
-        "class": "loan-summary-col-detail float-left",
-        "id": id
-    }).html(detail).val(detail);
-    container.append(col1).append(col2);
+        "class": "loan-summary-rateapr-detail rate-page-normal-text float-left ",
+        "id": rateid
+    }).html(rateDetail).val(rateDetail);
+    var col3 = $('<div>').attr({
+        "class": "loan-summary-rateapr-detail rate-page-normal-text float-left ",
+        "id": aprId
+    }).html(aprDetail).val(aprDetail);
+    var sepCol = $('<div>').attr({
+        "class": "loan-summary-rateapr-seperator float-left "
+    }).html("/");
+    container.append(col1).append(col2).append(sepCol).append(col3);
     return container;
 }
 
@@ -517,8 +565,8 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var tax;
     if(teaserRateValHolder.teaserRate){
         housePrice = parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.housePrice)));   
-        downPayment =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;    
-        loanAmount = (housePrice-downPayment);
+        loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;    
+        downPayment = (housePrice-loanAmount);
         Insurance =  parseFloat(removedDoller(removedComma(customerInputData.propertyInsuranceCost)));
         tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
     }else{
@@ -590,17 +638,17 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     rightCol.append(toggletaxComponent);
 
     //var taxRow = getInputElmentRow("tax","Tax",showValue(tax),"calTaxID2",customerInputData,"taxContainerId");
-    var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true);
+    var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true,true);
     rightCol.append(taxRow);
 
     var dwnPayment = getInputElmentRow("downPayment","Down Payment",showValue(downPayment),"secondInput",customerInputData);
     leftCol.append(dwnPayment);
 
     //var taxRow = getInputElmentRow("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
-    var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true);
+    var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true,true);
     rightCol.append(taxRow);
 
-    var proposedLoanAmt = getLoanSummaryLastRow("Proposed Loan<br/>Amount", showValue(loanAmount) ,"loanAmount",true);
+    var proposedLoanAmt = getLoanSummaryLastRow("Loan<br/>Amount", showValue(loanAmount) ,"loanAmount",true);
     leftCol.append(proposedLoanAmt);
 
     var estHousngPaymnt = getLoanSummaryLastRow("Estimated<br/>Housing Payment", showValue(totEstHousingPayment) ,"totalEstMonthlyPaymentId",true);
@@ -664,7 +712,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     });*/
     parentWrapper.append(wrapper)/*.append(bottomRow)*/;
 
-    var tableContaner=$('<div>').attr({
+    /*var tableContaner=$('<div>').attr({
         "class": "clearfix"
     });
 
@@ -680,6 +728,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var loanTypeCol=getTableRow("loanType","Loan Type","Purchase","loanType");
     tabLeftColumn.append(loanTypeCol);
 
+    
     var val="";
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
@@ -690,7 +739,24 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     tabLeftColumn.append(loanProgCol);
 
     var aprCol=getTableRow("apr","APR",rateVO.APR +" %","aprid");
-    tabRightColumn.append(aprCol);
+    tabRightColumn.append(aprCol);*/
+
+    var loanTypeRow = getLoanSummaryRowRatePage("Loan Type" ,"Purchase","loanType");
+    leftCol.append(loanTypeRow);
+    
+    var val="";
+    if(rateVO.teaserRate)
+        val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
+    
+    var interestRateCol = getRateAprRowCol("Rate / APR", val, rateVO.APR+ " %", "teaserRateId", "aprid");;
+    rightCol.append(interestRateCol);
+    
+
+    var loanProgCol = getLoanSummaryRowRatePage("Loan Program" ,rateVO.yearData +" Year Fixed","loanprogramId");
+    rightCol.append(loanProgCol);
+    
+    /*var interestRateCol = getLoanSummaryRowRatePage("APR" ,rateVO.APR +" %","aprid","","",true);
+    rightCol.append(interestRateCol);*/
 
     return parentWrapper;
 
@@ -710,7 +776,7 @@ function getTableRow(key,desc,value,id){
 }
 
 
-function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn) {
+function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn,isViaEngagementPath) {
 
    // var quesTxt = "Programs and Rates";
     var container = $('<div>').attr({
@@ -736,7 +802,7 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
 
     	teaserRateValHolder.leadCustomer = undefined;
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
-        bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
+        bottomText = getHeaderText("Rate and APR quoted are based on the information you provided, are not guaranteed, and are subject to change. </br>Actual rate and APR will be available on your Good Faith Estimate after loan amount and income are verified.");
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         if(typeof(newfiObject)!=="undefined"&&teaserRateValHolder.teaserRate)
             buttonWrapper="";
@@ -748,16 +814,34 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
     	teaserRateValHolder.leadCustomer=true;
     }
     
+    var linkForDisclosure=$('<div>').attr({
+    	"class":"cp-sub-txt-link"
+    		
+    }).on('click',function(e){
+    	window.open("https://www.newfi.com/rates-disclosures/");
+    	
+    }).html('view additional disclosures');
+    
+    
     var loanSummaryWrapper = getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
     var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
     
   //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
 
-    parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper).append(bottomText);
+    parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper);
     
     if(!parentContainer)
         parentContainer=$('#ce-refinance-cp');
-    $(parentContainer).append(parentWrapper).append(closingCostWrapper);
+    $(parentContainer).append(parentWrapper).append(closingCostWrapper).append(bottomText).append(linkForDisclosure);
+    
+
+
+    if(teaserRateValHolder.teaserRate&&typeof(newfiObject)==="undefined"){
+        $(".lock-ratebottom-summary-clas").css("width", "664px");
+    }else{
+        $(".lock-ratebottom-summary-clas").css("width", "730px");
+    }
+    
 }
 
 function getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
@@ -785,7 +869,7 @@ function getLoanSummaryWrapper(teaserRate, inputCustomerDetails,hideCreateAccoun
    
     return parentWrapper;
 }
-function getTaxInsDropToggleBtn(investment){
+function getTaxInsDropToggleBtn(investment,flag){
     var container = $('<div>').attr({
         "class": "loan-summary-row clearfix no-border-bottom "
     }).bind("click",function(e){
@@ -802,11 +886,15 @@ function getTaxInsDropToggleBtn(investment){
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left "
     }).html("Tax & Insurance");
+    var paddingClass="";
+    if(flag){
+        paddingClass="tax-Ins-clas";
+    }
     var col2 = $('<div>').attr({
-        "class": "loan-summary-col-detail float-left"
+        "class": "loan-summary-col-detail float-left "+paddingClass
     })
     var col2Txt = $('<div>').attr({
-        "class" : "tax-Ins-clas float-left"
+        "class" : "loan-row-text float-left "//7.2 portal updates
     }).html(investment);
     var dropdownarrow = $('<div>').attr({
         "class": "dropdown-arrow float-left"
@@ -830,9 +918,12 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
             "id": containerId
         });
     }
-    
+    var cla="";
+    if(key=="cashOut"){
+    	cla="loan-summary-col-desc-adj";
+    }
     var col1 = $('<div>').attr({
-        "class": "loan-summary-col-desc float-left "+txtAlignClas
+        "class": "loan-summary-col-desc float-left "+txtAlignClas+" "+cla
     }).html(desc);
     var col2 = $('<div>').attr({
         "class": "loan-summary-col-detail float-left"
@@ -863,7 +954,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
         inputBox=getDwnPayComponent(val,inputElementId);
     }else{
         inputBox = $('<input>').attr({
-            "class" : "loan-summary-sub-col-detail",
+            "class" : "loan-summary-sub-col-detail float-left",
             "id":inputElementId,
             "value":showValue(val),
         }).bind('keyup',{"appUserDetails":appUserDetails,"key":key},function(e){
@@ -988,7 +1079,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
     }
     else if(key=="purchasePrice"||key=="cashOut"){
         var saveBtn = $('<div>').attr({
-            "class" : "cep-button-color-orange sm-save-btn float-right"
+            "class" : "cep-button-color-orange sm-save-btn"//removed float-right for NEXNF-632
         }).html("update").on('click',{"path":undefined},function(e){
             var flag=globalChangeContainer.flag;
             if(flag){
@@ -1005,7 +1096,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
         container.append(col1).append(col2.append(saveBtn));
     }else if(key=="propLoanAmt"){
         var saveBtn = $('<div>').attr({
-            "class" : "cep-button-color-orange sm-save-btn float-right"
+            "class" : "cep-button-color-orange sm-save-btn"//removed float-right for NEXNF-632
         }).html("update").on('click',{},function(){
             var flag=globalChangeContainer.flag;
             if(flag){
@@ -1045,18 +1136,24 @@ function getDwnPayComponent(value,inputElementId){
         /* this is the piece of code to retrict user put special charector*/
         restrictSpecialChar(undefined,$('#'+inputElementId));
     });
+    globalChangeContainer.dwnVal=showValue(value);
     var percentageComp = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail dwn-percentage"
+    	"class": "loan-summary-sub-col-detail dwn-percentage"
     }).attr('maxlength','2');;
     
     optionCont.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"val":true},
         function(e){
-            percentageUpdateEventListener(e);
-            globalChangeContainer.flag=true;
             var purchaseAmt=getFloatValue(getpurchaseValue());
             var dwnPmntVal=getFloatValue($(e.data.valComp).val());
             var loanAmt=showValue(purchaseAmt-dwnPmntVal);
-            $("#loanAmount").html(loanAmt);
+            if(dwnPmntVal>purchaseAmt){
+                $(e.data.valComp).val(globalChangeContainer.dwnVal);
+            }else{
+                percentageUpdateEventListener(e);
+                globalChangeContainer.flag=true;
+                globalChangeContainer.dwnVal=showValue(dwnPmntVal);
+                $("#loanAmount").html(loanAmt);
+            }
         })
     percentageComp.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"percentage":true},
         function(e){
@@ -1070,7 +1167,7 @@ function getDwnPayComponent(value,inputElementId){
         })
 
     optionsContainer.append(optionCont).append(percentageComp);
-    setTimeout(function(){ $(optionCont).trigger("keyup") }, 500);
+    setTimeout(function(){ $(optionCont).trigger("keyup");globalChangeContainer.flag=false; }, 500);
     
     return optionsContainer;
 }
@@ -1193,7 +1290,7 @@ function teaseCalculation(inputCustomerDetails){
     
     $('#monthlyPaymentDifferenceId').text(showValue(monthlyPaymentDifference));
     $('#totalEstMonthlyPaymentId').text((showValue(totalEstMonthlyPaymentId)));
-    
+    $('#totalEstMonthlyPaymentId').addClass('tax-Ins-clas');
 }
 
 function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
@@ -1201,9 +1298,11 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
         "id": "rate-slider-cont",
         "class": "slider-wrapper clearfix"
     });
+    
+    var text="Rate";//Changed from Interest Rate to Rate
     var headerTxt = $('<div>').attr({
         "class": "slider-hdr-txt float-left"
-    }).html("Interest Rate");
+    }).html(text);
     
     var yearValues = LQBResponse;
     
@@ -1332,7 +1431,7 @@ function getYearSliderContCEP1(teaserRate,inputCustomerDetails) {
     });
     var headerTxt = $('<div>').attr({
         "class": "slider-hdr-txt float-left"
-    }).html("Length of Loan");
+    }).html("Loan Term");
     
     var silderCont = getYearSliderCEP(teaserRate,inputCustomerDetails);
     
@@ -1420,6 +1519,11 @@ function getLoanTableSummary(desc, detail, id) {
         "class": "loan-summary-col-detail float-left",
         "id": id
     }).html(detail);
+    
+    if(desc=="Loan Type" || desc=="Loan Program" ){
+     col2.removeClass('loan-summary-col-detail');
+     col2.addClass('loan-summary-col-detail-new');
+    }
     container.append(col1).append(col2);
     return container;
 }

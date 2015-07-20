@@ -1,6 +1,9 @@
 package com.nexera.newfi.workflow.tasks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +12,17 @@ import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.Template;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.Milestones;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.UndeliveredEmailException;
+import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -26,7 +35,8 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 
 	@Autowired
 	private LoanService loanService;
-
+	@Autowired
+	Utils utils;
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String subject = null;
@@ -58,7 +68,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN
 		                .getLosStatusID()))) {
-			displayMessage = LoanStatus.loanFundedMessage;
+			displayMessage = LoanStatus.loanWithdrawnMessage;
 			subject = CommonConstants.SUBJECT_LOAN_WITHDRAWN;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 		} else if (status.equals(String
@@ -68,7 +78,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 			subject = CommonConstants.SUBJECT_LOAN_ARCHIVED;
 		}
-		if (status != null && !status.isEmpty()) {
+		if (status != null && !status.isEmpty() ) {
 			/*
 			 * makeANote(Integer.parseInt(objectMap.get(
 			 * WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()),
@@ -76,7 +86,10 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			 */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        displayMessage);
-			sendEmail(objectMap, subject);
+		}
+		if ( objectMap != null && objectMap.get(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME) != null)
+		{
+			sendEmailToInternalUsers(objectMap, subject);
 		}
 		return completedStatus;
 	}
@@ -96,7 +109,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 				returnString.append(mileStone.getComments());
 			}
 			if (mileStone != null && mileStone.getStatusUpdateTime() != null) {
-				returnString.append(" On " + mileStone.getStatusUpdateTime());
+				returnString.append(" " +utils.getDateAndTimeForDisplay( mileStone.getStatusUpdateTime()));
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
@@ -122,5 +135,7 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 		// Do Nothing : No Reminders
 		return null;
 	}
+	
+	
 
 }

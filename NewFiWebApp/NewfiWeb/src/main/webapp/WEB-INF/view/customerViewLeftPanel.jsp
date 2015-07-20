@@ -10,7 +10,8 @@
 			<div class="lp-pic-txt float-left">
 				<div class="lp-txt1" id ="profileNameId">${userVO.firstName}</div>
 				<div class="lp-txt2" id="loanType"></div>
-				<div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber}</div>
+				<!-- NEXNF-711 -->
+				<%-- <div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber}</div> --%>
 			</div>
 		</div>
 		<div id="lp-talk-wrapper" class="lp-talk-wrapper lp-item clearfix" onclick="changeLeftPanel(1);">
@@ -30,8 +31,12 @@
 			
 			</div>
 		</div>
-		<div id="lp-loan-wrapper" class="lp-loan-wrapper lp-item clearfix" onclick="changeLeftPanel(2);">
-			<div class="loan-txt1">Work on your loan</div>
+		<!-- <div id="lp-loan-wrapper" class="lp-loan-wrapper lp-item clearfix" onclick="changeLeftPanel(2);"> -->
+		<div id="lp-loan-wrapper" class="lp-loan-wrapper lp-item clearfix">
+			<div class="loan-txt1" onclick="changeLeftPanel(2);">Work on my loan</div>
+		
+			<!--NEXNF-636  -->
+			<!-- <div class="loan-txt1">Work on your loan</div> -->
 			<!-- <div class="loan-txt clearfix">
 				<div class="float-left loan-pic"></div>
 				<div class="float-left loan-txt2">
@@ -39,14 +44,20 @@
 					<span class="txt-light">Lorem ipsum</span>
 				</div>
 			</div> -->
-			<div class="work-on-loan-active">
+			<!--  <div class="work-on-loan-active">
 				Input, Shop, Upload and<br />Track your Loan Progress.
+			</div> -->
+			<!-- portal updates 7.9 -->
+			 <div class="work-on-loan-active">
+				Manage loan,compare programs <br />and track loan progress
 			</div>
 			<div class="work-on-loan-inactive clearfix">
-				<div class="work-on-loan-item-cont lp-details-icn">Details</div>
-				<div class="work-on-loan-item-cont lp-rates-icn">Rates</div>
-				<div class="work-on-loan-item-cont lp-upload-icn">Upload</div>
-				<div class="work-on-loan-item-cont lp-progess-icn">Progress</div>
+				<!--NEXNF-636  -->
+				<!-- <div class="work-on-loan-item-cont lp-details-icn">Details</div> -->
+				<div class="work-on-loan-item-cont lp-details-icn" onclick="window.location.href='#myLoan/my-application'">App</div>
+				<div class="work-on-loan-item-cont lp-rates-icn" onclick="window.location.href='#myLoan/lock-my-rate'">Rates</div>
+				<div class="work-on-loan-item-cont lp-upload-icn" onclick="window.location.href='#myLoan/upload-my-needs'">Upload</div>
+				<div class="work-on-loan-item-cont lp-progess-icn" onclick="window.location.href='#myLoan/my-loan-progress'">Progress</div>
 			</div>
 		</div>
 		<div id="lp-alert-wrapper" class="lp-alert-wrapper lp-item clearfix">

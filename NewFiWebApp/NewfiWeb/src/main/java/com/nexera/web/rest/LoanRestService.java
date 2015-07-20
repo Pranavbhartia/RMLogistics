@@ -2,6 +2,9 @@ package com.nexera.web.rest;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +129,21 @@ public class LoanRestService {
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess(loanVO);
 		return responseVO;
+	}
+
+	@RequestMapping(value = "/creditReport/{loanID}", method = RequestMethod.GET)
+	public @ResponseBody String creditReport(
+	        @PathVariable Integer loanID, HttpServletRequest arg0,
+	        HttpServletResponse response) {
+
+		LoanVO loanVO = loanService.wrapperCallForDashboard(loanID);
+
+		response.setHeader("Location", loanVO.getCreditReportUrl());
+		response.setStatus(302);
+		if (loanVO.getCreditReportUrl().equals("")
+		        || null == loanVO.getCreditReportUrl())
+			return "Credit Report Not Available";
+		return "";
 	}
 
 	@RequestMapping(value = "/{loanID}/team", method = RequestMethod.POST)
@@ -348,13 +366,23 @@ public class LoanRestService {
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/retrieveDashboardForMyLoans/{userID}")
 	public @ResponseBody CommonResponseVO retrieveDashboardForMyLoan(
-	        @PathVariable Integer userID) {
+	        @PathVariable Integer userID,
+	        @RequestParam(required = false) String startlimit,
+	        @RequestParam(required = false) String count) {
 		UserVO user = new UserVO();
 		user.setId(userID);
-		LoanDashboardVO responseVO = loanService
-		        .retrieveDashboardForWorkLoans(user);
+		CommonResponseVO commonResponseVO = null;
+		if (startlimit != null) {
+			LoanDashboardVO responseVO = loanService
+			        .retrieveDashboardForWorkLoans(user, startlimit, count);
+			commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+		} else {
+			LoanDashboardVO responseVO = loanService
+			        .retrieveDashboardForWorkLoans(user);
+			commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+		}
 
-		return RestUtil.wrapObjectForSuccess(responseVO);
+		return commonResponseVO;
 	}
 
 	// TODO-move this to User profile rest service
@@ -530,6 +558,16 @@ public class LoanRestService {
 
 		return commonResponseVO;
 
+	}
+
+	@RequestMapping(value = "/{loanID}", method = RequestMethod.DELETE)
+	public @ResponseBody CommonResponseVO markLoanDeleted(
+	        @PathVariable Integer loanID) {
+
+		loanService.markLoanDeleted(loanID);
+
+		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess("Success");
+		return responseVO;
 	}
 
 }

@@ -230,7 +230,7 @@ function getMessageDashboardWrapper() {
 	wrapper.append(header);
 	var header = $('<div>').attr({
 		"class" : "message-header"
-	}).html("Talk to Your Newfi Team");
+	}).html("Talk to Your newfi Team");//NEXNF-641
 	wrapper.append(header);
 
 	var container = $('<div>').attr({

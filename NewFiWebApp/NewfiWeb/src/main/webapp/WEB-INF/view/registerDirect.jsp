@@ -28,10 +28,12 @@
 	<jsp:include page="loginHeader.jsp"></jsp:include>
 	<div class="home-container container">
 		<div class="container-row row clearfix">
-			<div id="reg-main-container" class="reg-main-container">
+			<div id="reg-main-container-registerNew" class="reg-main-container">
 				
 				<div class="reg-display-title">Get Started</div>
-				<div class="reg-display-title-subtxt">Create a Newfi account now to access our powerful lending tool and take control on your terms.</div>
+				<!-- NEXNF-658 -->
+<!-- 			<div class="reg-display-title-subtxt">Create a newfi account now to access our powerful lending tool and take control on your terms.</div> -->
+				<div class="reg-display-title-subtxt">Create your account now to have immediate access to the powerful benefits of newfi.</div>
 				<div class="reg-form-content">
 				<div class="reg-input-row clearfix">
 					<div class="reg-row-lc float-left"></div>
@@ -99,7 +101,8 @@
 				
 							
 			</div>
-			</div>			
+			</div>
+			<div class="cus-eng-success-message hide" id="cus-eng-success-message-id"></div>			
 		</div>
 	</div>
 	<script>
@@ -118,7 +121,10 @@
 	        var k = e.which;
 	        var ok = k >= 65 && k <= 90 || // A-Z
 	            k >= 97 && k <= 122 || // a-z
-	            k >= 48 && k <= 57; // 0-9
+	            k >= 48 && k <= 57|| // 0-9
+	            k==32 ||//to allow space
+	    	    k==8 ||//to allow to delte
+	    	    k==46;//to allow backspace
 
 	        if (!ok){
 	            e.preventDefault();
@@ -131,7 +137,10 @@
 	        var k = e.which;
 	        var ok = k >= 65 && k <= 90 || // A-Z
 	            k >= 97 && k <= 122 || // a-z
-	            k >= 48 && k <= 57; // 0-9
+	            k >= 48 && k <= 57 ||// 0-9
+	            k==32 ||//to allow space
+	    	    k==8 ||//to allow to delte
+	    	    k==46;//to allow backspace
 
 	        if (!ok){
 	            e.preventDefault();
@@ -177,117 +186,20 @@
 				
 				
 				//TODO form validation
-				if($("#userTypeID").attr('value')==""||$("#userTypeID").attr('value')==null||$("#userTypeID").attr('value')==undefined){
-					showErrorToastMessage("Please Select the user");
+				var isStatus=validateFormFeildInReferalRegistration();
+				
+				if(!isStatus){
 					return false;
 				}
-				var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',"First name cannot be empty");
-				if(!firstName){
-					$('.reg-input-row').css('margin-bottom','38px');
-					return false;
-				}
-				var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',"Last name cannot be empty");
-				if(!lastName){
-					return false;
-				}
-				var emailID=validateFormFeild("#emailID",'.reg-input-cont.reg-email',"Email ID cannot be empty");
-				if(!emailID){
-					return false;
-				}
-				if($("#emailID").val()!=null||$("#emailID").val()!=""){
-					var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;;
-	                if (!regex.test($("#emailID").val())) {
-	                	$('#emailID').next('.err-msg').html("Incorrect Email").show();
-	        			$('.reg-input-cont.reg-email').addClass('ce-err-input').show();
-					return false;
-	                }
-				}
-/* 				var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
-				if(!phone){
-					$('.reg-input-row').css('margin-bottom','38px');
-					return false;
-				} */
 				//End of validation
-				validateUser(LoanAppFormVO);
+				var url=window.location.href.split('registerNew.do');
+				var baseurl=url[0];
+				validateUser(baseurl,LoanAppFormVO,false);
 				
 				
 			});
 		});
 		
-		function validateUser(registration){
-			$('#overlay-loader').show();
-		    $.ajax({
-		        url: "rest/shopper/validate",
-		        type: "POST",
-		        cache:false,
-		        data: {
-		            "registrationDetails": JSON.stringify(registration)
-		        },
-		        datatype: "application/json",
-		        success: function(data) {
-		            $('#overlay-loader').hide();
-		            if(data.error==null){
-		            	if($("#userTypeID").attr('value')=="Customer"){
-							createNewCustomer(registration);
-						}else if($("#userTypeID").attr('value')=="Realtor"){
-							createNewRealtor(registration);
-						}
-		            }else{
-		            	//showErrorToastMessage(data.error.message);
-		            	$('.errorMsg').show();
-		            }
-		           
-		        },
-		        error: function(data) {
-		             showErrorToastMessage(data);
-		             $('#overlay-loader').hide();
-		        }
-		    });
-		}
-		function createNewCustomer(registration) {
-    // alert(JSON.stringify(registration));
-    $('#overlay-loader').show();
-    $.ajax({
-        url: "/NewfiWeb/rest/shopper/registration",
-        type: "POST",
-        cache:false,
-        data: {
-            "registrationDetails": JSON.stringify(registration)
-        },
-        datatype: "application/json",
-        success: function(data) {
-            $('#overlay-loader').hide();
-            window.location.href = data;
-            // printMedianRate(data,container);
-        },
-        error: function(data) {
-            showErrorToastMessage("error while creating user");
-            $('#overlay-loader').hide();
-        }
-    });
-}
-		
-		function createNewRealtor(user){
-		    $('#overlay-loader').show();
-		    $.ajax({
-		        url: "/NewfiWeb/rest/shopper/realtorRegistration",
-		        type: "POST",
-		        cache:false,
-		        data: {
-		            "registrationDetails": JSON.stringify(user)
-		        },
-		        datatype: "application/json",
-		        success: function(data) {
-		            $('#overlay-loader').hide();
-		            window.location.href = data;
-		            // printMedianRate(data,container);
-		        },
-		        error: function(data) {
-		            showErrorToastMessage("error while creating user");
-		            $('#overlay-loader').hide();
-		        }
-		    });	
-		}
 		
 	 function goToLoginPage(){
 			

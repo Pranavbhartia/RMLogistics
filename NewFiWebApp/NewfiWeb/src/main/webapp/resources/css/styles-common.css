@@ -61,6 +61,7 @@
 	margin: 5px auto;
 	text-align: center;
 	margin-bottom: 45px;
+	font-family: 'opensanssemibold';
 }
 .cus-eng-reg{
 	width: 338px;
@@ -262,6 +263,7 @@ k}
 	border-left-width: 7px;
 	width: 300px;
 	margin: 20px auto;
+	cursor: pointer;
 }
 .err-input {
   border: 1px solid #dd4b39;
@@ -337,10 +339,101 @@ k}
 
 /* NEXNF-619 */
 .cep-button-color-orange {
-	background: #F47521;
+	background: lightgray;/*7.2 portal updates  */
 }
 
 .cep-button-color-orange:hover {
-	background: rgba(24,72,141,0.9);
+	background: #F47521;/*7.2 portal updates  */
 }
 /* NEXNF-619  end */
+
+.cus-eng-success-message {
+  margin: 110px 0;
+  width: 100%;
+}
+.cus-eng-succ-mess-header {
+  font-family: opensanssemiBold;
+  text-align: center;
+  font-size: 24px;
+  padding-bottom: 15px;
+}
+
+.cus-eng-success-mess-container {
+  margin: 0px auto;
+  text-align: left;
+}
+
+.cus-eng-succ-mess-row {
+  font-family: openSans;
+  font-size: 14px;
+  white-space: nowrap;
+  padding: 3px 0;
+  text-align: center;
+}
+
+a.cus-eng-succ-mess-email {
+  font-family: openSans;
+  font-size: 14px;
+  color: blue;
+}
+
+
+.cus-eng-success-message-adjust {
+	display: block;
+	float: left;
+	margin: 90px 0 0;
+	width: 74%;
+	padding: 10px;
+}
+
+.cus-eng-succ-mess-row-adjust {
+	white-space: normal;
+}
+
+.reg-display-title-subtxt-adj {
+	margin-bottom: 0;
+}
+
+.sub-text-change-pwd {
+	padding: 0;
+	margin: 0 auto;
+	/* width: 828px; */
+	line-height: 0;
+	font-size: 14px;
+}
+
+.referal-sub-txt {
+	width: 349px;
+}
+
+.cust-profile-url-dash {
+	line-height: 35px;
+}
+
+.cus-eng-success-message-new-adjust {
+
+  margin: 150px auto;
+  width: 100%;
+  padding: 0;
+}
+
+.txt-font-family {
+	font-family: 'openSanssemiBold';
+	font-size: 14px;
+}
+
+.prof-note-txt {
+  width: 100%;
+  padding: 20px 15px;
+  text-align: left;
+  margin: 0px auto;
+  font-family: opensanssemiBold;
+  color: rgb(221, 75, 57);
+}
+
+.prof-note-txt-chg-pwd {
+	width: inherit;
+	padding: 25px 0 0 0;
+	text-align: center;
+  
+}

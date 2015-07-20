@@ -68,25 +68,49 @@
 	var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
 			
-			
-	/* 		$('#right-panel').css('min-height',window.innerHeight - 98 + 'px'); */
-			$('#right-panel').css('min-height','100%');
-			
+			$('#right-panel').css('min-height','100%');			
 			$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
 			if(window.location.hash==""){
-				changeLeftPanel(2,callBackFun);
-				$('#footer-wrapper').show();
-			}
-				
+				changeLeftPanel(2,callBackFun);				
+			}				
 			else{
 				callBackFun();
 				updateNotifications(0);
-			}
-				
+			}				
 			//adjustCenterPanelWidth();
 			//adjustRightPanelOnResize();
-
+			//web portal updates 7.7
+			/* $('#loan-app').on('click',function(e){
+				 var isApplicationSubmitted=false;
+				 if(newfi.appUserDetails){
+					
+					try{
+						var loan = undefined;
+						
+						if(newfiObject.appUserDetails.user == undefined){
+						loan = JSON.parse(newfiObject.appUserDetails).loan;
+						
+					}
+					else{
+						loan = newfiObject.appUserDetails.loan;
+					}
+					
+					if(loan.lqbFileId && loan.lqbFileId!=""){
+					   	isApplicationSubmitted=true;
+					}
+					}catch(e){
+						console.log("catch");
+					}					  
+					}
+				  	if(isApplicationSubmitted){
+				  		window.location.href="#myLoan/my-loan-progress";
+			        }else{
+			        	window.location.href="#myLoan/my-application";
+			        }
+			}); */
+			
+			
 		});
 		function callBackFun(){
 			$(window).resize(function() {
@@ -162,12 +186,13 @@
 				});
 			}); */
 		//	retrieveState();
-
+		
+			
 			
 			$('[data-toggle="tooltip"]').tooltip();  
-			$('#footer-wrapper').show();
+			
 		}
-
+		$('#footer-wrapper').show(); 
 	</script>
 </body>
 </html>

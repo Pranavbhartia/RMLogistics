@@ -100,11 +100,22 @@ function LoanPersonalInfoWrapper(user) {
 	var wrapper = $('<div>').attr({
 		"class" : "loan-personal-info-wrapper"
 	});
-
+	//NEXNF-664
+/*	var text="";
+	
+	if(newfiObject.user.userRole.id==2){
+		text="My Profile";
+	}else{
+		text="Personal Information";
+	}
+	*/
+	//NEXNF-711
+	var text="My Profile";
+	
 	var header = $('<div>').attr({
 		//included that of customer css
 		"class" : "cust-personal-info-header"
-	}).html("Personal Information");
+	}).html(text);
 
 	
 	var text=$('<div>').attr({
@@ -218,6 +229,13 @@ function getPasswordInfoContainer(){
 		"class" : "loan-personal-info-container"
 	});
 
+	//NEXNF-725
+	var noteText=$('<div>').attr({
+		"class" : "prof-note-txt clearfix"
+	}).html("Note: Password must be a minimum of 8 characters and contain at least one uppercase and one lowercase character");
+	
+	container.append(noteText);
+	
 	var passwordRow = getPasswordRow("New Password","password");
 	container.append(passwordRow);
 
@@ -231,6 +249,8 @@ function getPasswordInfoContainer(){
 		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "changePassword()"
 	}).html("Update");
+	
+	 
 	container.append(saveBtn);
 	return container;
 }
@@ -275,21 +295,34 @@ function getLoanPersonalInfoContainer(user) {
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
 	
-	var assignManager=getLoanManager(user);
+	//NEXNF-664
+	/*var assignManager=getLoanManager(user);
 	if(user.userRole.id==2){
 		container.append(assignManager);	
-	}
+	}*/
 
-	var phone1Row = getPhone1RowLM(user);
+	if(newfiObject.user.userRole.id==2){
+		isRealtor=true;
+	}
+	var phone1Row = getPhone1RowLM(user,isRealtor);
 	container.append(phone1Row);
 	
+	//jira-714
+	var carrierInfo="";
+	if(isRealtor){
+		carrierInfo = getCarrierDropdown(user,isRealtor);
+		container.append(carrierInfo);
+	}
 	
 	
    // added check box 
 	var checkBox=getCheckStatus(user);
 	container.append(checkBox);
 	var stateRow = getManagerStateRow(user);
+	//NEXNF-664
+	if(user.userRole.id!=2){
 	container.append(stateRow);
+	}
 	
 	if(user.internalUserStateMappingVOs!=undefined){
 		userStateMappingVOs=user.internalUserStateMappingVOs;
@@ -303,7 +336,10 @@ function getLoanPersonalInfoContainer(user) {
 	}
  	
 	var licensesRow = getLicensesRow(user);
-	container.append(licensesRow);
+	//NEXNF-664
+	if(user.userRole.id!=2){
+		container.append(licensesRow);
+	}
 	
 	if(user.internalUserStateMappingVOs == undefined){
 		//licensesRow.addClass('hide');
@@ -599,7 +635,7 @@ function changePassword(){
 					cache:false,
 					success : function(data) {
 						$('#overlay-loader').hide();
-						showToastMessage(updateSuccessMessage);
+						showToastMessage(passwordUpdateSuccessMessage);
 					},
 					error : function(error) {
 						$('#overlay-loader').hide();
@@ -757,7 +793,8 @@ function updateLMDetails() {
             if(data.error==null){
             	    if(newfiObject.user.id==userProfileJson.id){
             	    	$("#profileNameId").text($("#firstNameId").val());
-                    	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+            	    	//NEXNF-711
+                    	/*$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));*/
                     	$("#priPhoneNumberId").mask("(999) 999-9999");
             			showToastMessage(updateSuccessMessage);
             		  	$('#overlay-toast').fadeIn("fast",function(){
@@ -817,9 +854,12 @@ function customerPersonalInfoWrapper(user) {
 		"class" : "loan-personal-info-wrapper"
 	});
 
+	//jira-711
+    var text="My Profile";
+    
 	var header = $('<div>').attr({
 		"class" : "cust-personal-info-header"
-	}).html("Personal Information");
+	}).html(text);
 
 	var container = getCustPersonalInfoContainer(user);
 	wrapper.append(header).append(container);
@@ -861,10 +901,10 @@ function getCustPersonalInfoContainer(user) {
 	 * var streetAddrRow = getStreetAddrRow(user);
 	 * container.append(streetAddrRow);
 	 */
-
+	
 	var stateRow = getStateRow(user);
 	formWrapper.append(stateRow);
-
+	
 	var cityRow = getCityRow(user);
 	formWrapper.append(cityRow);
 	
@@ -1287,9 +1327,9 @@ function getSecEmailRow(user) {
 	var inputCont = $('<div>').attr({
 		"class" : "prof-form-input-cont"
 	});
-	
+	//removal of  prof-form-input-lg as per jira-711
 	var emailInput = $('<input>').attr({
-		"class" : "prof-form-input prof-form-input-lg",
+		"class" : "prof-form-input",
 		"value" : user.customerDetail.secEmailId,
 		"id" : "secEmailId"
 	});
@@ -2082,8 +2122,12 @@ function getPhone1RowLM(user) {
 	});
 	
 	inputCont.append(phone1Input).append(errMessage);
-	var carrierInfo=getCarrierDropdown(user);
-	
+	//jira-714
+	var carrierInfo="";
+	if(!isRealtor){
+		 carrierInfo=getCarrierDropdown(user);
+	}
+		
 	rowCol2.append(inputCont).append(carrierInfo);
 	return row.append(rowCol1).append(rowCol2);
 }
@@ -2129,9 +2173,12 @@ function getPhone2Row(user) {
 var row = $('<div>').attr({
 		"class" : "prof-form-row clearfix"
 	});
+
+	var text="Receive Text Alerts";
+	
 	var rowCol1 = $('<div>').attr({
 		"class" : "prof-form-row-desc float-left"
-	}).html("Receive SMS Alert");
+	}).html(text);
 	
 	var rowColtext = $('<div>').attr({
 		"class" : "cust-sms-ch float-left"
@@ -2183,18 +2230,36 @@ var row = $('<div>').attr({
 
 
 }
-function getCarrierDropdown(user){
+function getCarrierDropdown(user,isRealtor){
 
     var carrierName = getCarrierName(user.carrierInfo);
+
+    //jira-714
+    var cls="";
+    if(isRealtor){
+    	cls="prof-form-row ";
+    }else {
+    	cls="prof-form-row-carrier ";
+    }
 	var row = $('<div>').attr({
-		"class" : "prof-form-row-carrier clearfix hide",
+		"class" : cls+"clearfix hide",
 		"id":"prof-form-row-custom-email"
 	});
-
+	var rowCol1="";
+	
+	//jira-714
+	if(isRealtor){
+		 rowCol1 = $('<div>').attr({
+			"class" : "prof-form-row-desc float-left"
+		}).html("Carrier");
+	}
+	
+	
 	var rowCol2 = $('<div>').attr({
 		"class" : "prof-form-rc float-left"
 	});
-			
+		
+	
 	var carrierinfo = $('<input>').attr({
 		"class" : "prof-form-input-carrier prof-form-input-carrierDropdown prof-form-input-select",
 		"value" : carrierName,
@@ -2222,7 +2287,7 @@ function getCarrierDropdown(user){
 	});
 	
 	rowCol2.append(carrierinfo).append(appendErrorMessage()).append(dropDownWrapper);
-	return row.append(rowCol2);	
+	return row.append(rowCol1).append(rowCol2);	
 }
 /**
  * Functions related to form validations
@@ -2503,7 +2568,8 @@ function updateUserDetails() {
 				showToastMessage(updateSuccessMessage);
 				hideOverlay();			
 				$("#profileNameId").text($("#firstNameId").val());
-			  	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));
+				//NEXNF-711
+			  /*	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($("#priPhoneNumberId").val()));*/
 			  	$("#priPhoneNumberId").mask("(999) 999-9999");
 			  	$('#overlay-toast').fadeIn("fast",function(){
 				setTimeout(function(){
@@ -2767,7 +2833,8 @@ function saveEditUserProfile(user){
 	$('#profileNameId').text(fname);
 	//$('#profilePhoneNumId').text(priPhone);
 	$('#loanType').text(loanType);
-	$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat(priPhone));
+	//NEXNF-711
+	/*$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat(priPhone));*/
 	
 	
 	$('#center-panel-cont').html("");

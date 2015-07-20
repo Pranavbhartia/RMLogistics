@@ -1,8 +1,10 @@
 var updateErrorMessage="Something went wrong while update . Please try again later";
 var updateSuccessMessage="Succesfully updated";
+var passwordUpdateSuccessMessage="Password successfully updated";
 var errorMessage="Something went wrong";
 var message = "Invalid Entry";
 var ProfileImageSuccessMessage="Image uploaded succesfully";
+var invalidFileUploadedMessage="You must upload a file with csv extension.";
 
 //Messages in agenView.js
 var messageSaved="Message saved succesfully";//line 955
@@ -39,9 +41,9 @@ var invalidEmailErrorMessage="Email ID is not valid";
 //Messages in profile.js
 var passwordFieldEmptyErrorMessage="should not be empty";
 var passwordDonotMatchErrorMessage="Passwords do not match";
-var passwordlengthErrorMessage="Password length should be at least 8 digits";
-var invalidPassword="Password can not contain first name or last name";
-var passwordRegexErrorMessage="Password should have at least 1 uppercase and 1 lowercase character";
+var passwordlengthErrorMessage="Password must be a minimum of 8 characters";//portal updates 7.7
+var invalidPassword="Password must not contain first name or last name";//portal updates 7.7
+var passwordRegexErrorMessage="Password must contain at least one uppercase and one lowercase character";//portal updates 7.7
 var priAndSecEmailValidation="Primary and secondary email should not be same.";
 var carrierSelectmessage="Please select a carrier";
 var copiedToClipBoard="copied to clipboard";
@@ -156,3 +158,8 @@ function getNoProductMessageInLockRatePage(){
 var zipcode_isnot_valid = "Zip code is not valid";
 var zipcode_isnot_approved ="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
 var zipcode_valid ="Valid ZipCode";
+var send_info_message="Your information has been submitted and someone from the newfi team will contact you shortly.";
+var email_id_unmatch_error_message="Please provide the registered Email ID";
+var borrower_creation_unsuccess_message="Error while creating borrower";
+var realtor_creation_unsuccess_message="Error while creating realtor";
+var validation_unsuccess_message="Something went wrong while creating user. Please try again later.";

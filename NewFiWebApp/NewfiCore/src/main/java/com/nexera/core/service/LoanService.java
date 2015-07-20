@@ -196,4 +196,18 @@ public interface LoanService {
 	public void saveCreditScoresForBorrower(Map<String, String> creditScoreMap,
 	        Loan loan, ExceptionMaster exceptionMaster);
 
+	/**
+	 * @param userVO
+	 * @param startLimit
+	 * @param endLimit
+	 * @return
+	 */
+	LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO,
+	        String startLimit, String endLimit);
+
+	/**
+	 * @param loanId
+	 */
+	void markLoanDeleted(int loanId);
+
 }

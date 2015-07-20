@@ -71,6 +71,7 @@ public class WorkflowConstants {
 
 	public static final List<Integer> LQB_MONITOR_LIST = new ArrayList<Integer>(
 	        Arrays.asList(
+	        		LOSLoanStatus.LQB_STATUS_PRE_QUAL.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
@@ -108,7 +109,7 @@ public class WorkflowConstants {
 	        LOSLoanStatus.LQB_STATUS_CLEAR_TO_PURCHASE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED.getLosStatusID()));
 
-	private static final List<Integer> LOAN_CLOSURE_LIST = new ArrayList<Integer>(
+	public static final List<Integer> LOAN_CLOSURE_LIST = new ArrayList<Integer>(
 	        Arrays.asList(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
@@ -127,7 +128,9 @@ public class WorkflowConstants {
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are {\"72\":\"elapsed\"}";
 	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Click here to learn more about using the newfi portal";
 	public static final String VERIFY_EMAIL_NOTIFICATION_CONTENT = "Your email is not verified. Click <a href='#' onclick='forgetPassword()' 'style=color: blue;'> here </a> to resend your verification email.";
-	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your loan profile.";
+	//NEXNF-634
+	//public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your loan profile.";
+	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your application.";
 	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have a real estate agent? Click here to add them to your newfi loan team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
 	public static final String PURCHASE_DOCUMENT_EXPIRY_NOTIFICATION = "The purchase documents are about to expire within {\"24\":\"elapsed\"} hours ";
@@ -243,6 +246,14 @@ public class WorkflowConstants {
 		// THese are the ones that change NewFI WF Items
 
 		LQB_STATUS_MILESTONE_LOOKUP
+        .put(LOSLoanStatus.LQB_STATUS_PRE_QUAL,
+                new WorkItemMilestoneInfo(
+                        Milestones.PRE_QUAL,
+                        MILESTONE_WF_ITEM_LOOKUP.get(Milestones.PRE_QUAL),
+                        MILESTONE_ORDER_LOOKUP
+                                .get(LOSLoanStatus.LQB_STATUS_PRE_QUAL)));
+		
+		LQB_STATUS_MILESTONE_LOOKUP
 		        .put(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING,
 		                new WorkItemMilestoneInfo(
 		                        Milestones.UW,
@@ -352,11 +363,11 @@ public class WorkflowConstants {
 
 		// For Appraisal
 
-		LQB_STATUS_MILESTONE_LOOKUP.put(
+		/*LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
 		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));*/
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_DRAWN,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
@@ -445,11 +456,7 @@ public class WorkflowConstants {
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_OPEN)));
 
-		LQB_STATUS_MILESTONE_LOOKUP.put(
-		        LOSLoanStatus.LQB_STATUS_PRE_QUAL,
-		        new WorkItemMilestoneInfo(Milestones.OTHER, null,
-		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_PRE_QUAL)));
+		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_REGISTERED,
 		        new WorkItemMilestoneInfo(Milestones.OTHER, null,

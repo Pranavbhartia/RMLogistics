@@ -1,5 +1,6 @@
 package com.nexera.web.rest.util;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,10 +11,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.Utils;
-import com.nexera.common.entity.CustomerEmploymentIncome;
 import com.nexera.common.vo.CustomerEmploymentIncomeVO;
 import com.nexera.common.vo.CustomerSpouseEmploymentIncomeVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -24,6 +25,10 @@ public class LQBRequestUtil {
 
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LQBRequestUtil.class);
+	@Value("${adv.credit.user}")
+	private String advCreditUserName;
+	@Value("${adv.credit.password}")
+	private String advCreditPassword;
 
 	public JSONObject prepareCreateLoanJson(String templateName, String sTicket) {
 		JSONObject json = new JSONObject();
@@ -76,24 +81,30 @@ public class LQBRequestUtil {
 				        .unformatCurrencyField(loanAppFormVO
 				                .getPurchaseDetails().getHousePrice()));
 				hashmap.put("prodCashOut", "0");
-			} else if ("REFCO".equalsIgnoreCase(loanAppFormVO.getLoanType()
+			} else if ("REF".equalsIgnoreCase(loanAppFormVO.getLoanType()
 			        .getLoanTypeCd())) {
-				loanPurpose = "2";
-				hashmap.put("loanPurchasePrice", Utils
-				        .unformatCurrencyField(loanAppFormVO
-				                .getPropertyTypeMaster().getCurrentHomePrice()));
+				// is it cashout
+				if (loanAppFormVO.getRefinancedetails() != null
+				        && ("REFCO").equalsIgnoreCase(loanAppFormVO
+				                .getRefinancedetails().getRefinanceOption())) {
+					loanPurpose = "2";
+					hashmap.put("loanPurchasePrice", Utils
+					        .unformatCurrencyField(loanAppFormVO
+					                .getPropertyTypeMaster()
+					                .getCurrentHomePrice()));
 
-				hashmap.put("prodCashOut", Utils
-				        .unformatCurrencyField(loanAppFormVO
-				                .getRefinancedetails().getCashTakeOut()));
-			} else {
-				loanPurpose = "1";
-				hashmap.put("loanPurchasePrice", Utils
-				        .unformatCurrencyField(loanAppFormVO
-				                .getPropertyTypeMaster().getCurrentHomePrice()));
-				hashmap.put("prodCashOut", "0");
+					hashmap.put("prodCashOut", Utils
+					        .unformatCurrencyField(loanAppFormVO
+					                .getRefinancedetails().getCashTakeOut()));
+				} else {
+					loanPurpose = "1";
+					hashmap.put("loanPurchasePrice", Utils
+					        .unformatCurrencyField(loanAppFormVO
+					                .getPropertyTypeMaster()
+					                .getCurrentHomePrice()));
+					hashmap.put("prodCashOut", "0");
+				}
 			}
-
 			hashmap.put("loanPurpose", loanPurpose);
 
 			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
@@ -110,6 +121,8 @@ public class LQBRequestUtil {
 					        .getPropertyTypeMaster().getPropCity());
 					hashmap.put("propertyZip", loanAppFormVO
 					        .getPropertyTypeMaster().getHomeZipCode());
+					hashmap.put("applicantOccupancyType", loanAppFormVO
+					        .getPropertyTypeMaster().getResidenceTypeCd());
 				}
 				hashmap.put("applicantAddrYrs", getYearsSpent(loanAppFormVO
 				        .getUser().getCustomerDetail().getLivingSince()));
@@ -132,15 +145,47 @@ public class LQBRequestUtil {
 				        .unformatCurrencyField(loanAppFormVO
 				                .getRefinancedetails()
 				                .getCurrentMortgageBalance()));
+				if (null != loanAppFormVO.getPropertyTypeMaster()) {
+					hashmap.put("applicantOccupancyType", loanAppFormVO
+					        .getPropertyTypeMaster().getResidenceTypeCd());
+				}
 
-				hashmap.put("propertyState", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressState());
-				hashmap.put("propertyStreetAddress", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressStreet());
-				hashmap.put("propertyCity", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressCity());
-				hashmap.put("propertyZip", loanAppFormVO.getUser()
-				        .getCustomerDetail().getAddressZipCode());
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getPropState()) {
+					hashmap.put("propertyState", loanAppFormVO
+					        .getPropertyTypeMaster().getPropState());
+				} else {
+					hashmap.put("propertyState", loanAppFormVO.getUser()
+					        .getCustomerDetail().getAddressState());
+				}
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getPropStreetAddress()) {
+					hashmap.put("propertyStreetAddress", loanAppFormVO
+					        .getPropertyTypeMaster().getPropStreetAddress());
+				} else {
+					hashmap.put("propertyStreetAddress", loanAppFormVO
+					        .getUser().getCustomerDetail().getAddressStreet());
+				}
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getPropCity()) {
+					hashmap.put("propertyCity", loanAppFormVO
+					        .getPropertyTypeMaster().getPropCity());
+				} else {
+					hashmap.put("propertyCity", loanAppFormVO.getUser()
+					        .getCustomerDetail().getAddressCity());
+				}
+				if (null != loanAppFormVO.getPropertyTypeMaster()
+				        && null != loanAppFormVO.getPropertyTypeMaster()
+				                .getHomeZipCode()) {
+					hashmap.put("propertyZip", loanAppFormVO
+					        .getPropertyTypeMaster().getHomeZipCode());
+				} else {
+					hashmap.put("propertyZip", loanAppFormVO.getUser()
+					        .getCustomerDetail().getAddressZipCode());
+				}
 
 			}
 
@@ -219,6 +264,28 @@ public class LQBRequestUtil {
 				        .unformatCurrencyField(loanAppFormVO
 				                .getRefinancedetails()
 				                .getCurrentMortgageBalance()));
+				
+				
+				if ("REF".equalsIgnoreCase(loanAppFormVO.getLoanType()
+				        .getLoanTypeCd())) {
+					// is it cashout
+					if (loanAppFormVO.getRefinancedetails() != null
+					        && ("REFCO").equalsIgnoreCase(loanAppFormVO
+					                .getRefinancedetails().getRefinanceOption())) {
+						
+						Float loanAmount=Float.parseFloat(Utils
+						        .unformatCurrencyField(loanAppFormVO
+						                        .getRefinancedetails()
+						                        .getCashTakeOut()))
+						        + Float.parseFloat(Utils
+								        .unformatCurrencyField(loanAppFormVO
+								                .getRefinancedetails()
+								                .getCurrentMortgageBalance()));
+						
+						hashmap.put("loanAmount", loanAmount.toString());
+					}
+				}
+				
 			}
 			hashmap.put("applicantCity", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressCity());
@@ -314,8 +381,18 @@ public class LQBRequestUtil {
 				hashmap = appendCBDefCredScore(hashmap);
 				condition = "coborrowerWithoutSSNBoth";
 			}
+			HashMap<String, String> finalmap = new HashMap();
+			for (String key : hashmap.keySet()) {
+				
+				String encodedValue = hashmap.get(key);
+				if (!key.equalsIgnoreCase("applicantEmailAddress")
+				        && null != hashmap.get(key))
+					encodedValue =URLEncoder.encode(hashmap.get(key))
+				        .replaceAll("[+]", " ");
+				finalmap.put(key, encodedValue);
 
-			JSONObject jsonObject = new JSONObject(hashmap);
+			}
+			JSONObject jsonObject = new JSONObject(finalmap);
 
 			JSONObject json = new JSONObject();
 			JSONObject jsonChild = new JSONObject();
@@ -515,8 +592,8 @@ public class LQBRequestUtil {
 	HashMap<String, String> getBorrowerCredit(HashMap<String, String> hashmap) {
 
 		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
-		hashmap.put("LOGIN_NAME", "testact");
-		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("LOGIN_NAME", advCreditUserName);
+		hashmap.put("PASSWORD", advCreditPassword);
 		hashmap.put("equifaxStatus", "N");
 		hashmap.put("experianStatus", "N");
 		hashmap.put("transunionStatus", "Y");
@@ -529,8 +606,8 @@ public class LQBRequestUtil {
 		        "eb228885-b484-404a-99ff-b28511dd3e38");
 		hashmap.put("equifaxCoborrowerStatus", "N");
 		hashmap.put("experianCoborrowerStatus", "N");
-		hashmap.put("LOGIN_Coborrower_NAME", "testact");
-		hashmap.put("PASS_COBORROWER_WORD", "1234nexera");
+		hashmap.put("LOGIN_Coborrower_NAME", advCreditUserName);
+		hashmap.put("PASS_COBORROWER_WORD", advCreditPassword);
 		hashmap.put("transunionCoborrowerStatus", "Y");
 
 		return hashmap;
@@ -747,8 +824,7 @@ public class LQBRequestUtil {
 		HashMap<String, String> hashmap = new HashMap<>();
 		hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail()
 		        .getSsn());
-		if (reportId!= null && requestTrimerge)
-		{
+		if (reportId != null && requestTrimerge) {
 			hashmap.put("report_id", reportId);
 		}
 		hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
@@ -770,13 +846,10 @@ public class LQBRequestUtil {
 			hashmap.put("applicantAddress", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressStreet());
 		}
-		if (requestTrimerge)
-		{
-			hashmap = saveTrimergeStatus(hashmap);			
-		}
-		else
-		{
-			hashmap = saveTransunionStatus(hashmap);			
+		if (requestTrimerge) {
+			hashmap = saveTrimergeStatus(hashmap);
+		} else {
+			hashmap = saveTransunionStatus(hashmap);
 		}
 		JSONObject jsonObject = new JSONObject(hashmap);
 		JSONObject json = new JSONObject();
@@ -804,20 +877,20 @@ public class LQBRequestUtil {
 	HashMap<String, String> saveTrimergeStatus(HashMap<String, String> hashmap) {
 
 		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
-		hashmap.put("LOGIN_NAME", "testact");
-		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("LOGIN_NAME", advCreditUserName);
+		hashmap.put("PASSWORD", advCreditPassword);
 		hashmap.put("equifaxStatus", "Y");
 		hashmap.put("experianStatus", "Y");
 		hashmap.put("transunionStatus", "N");
 
 		return hashmap;
 	}
-	
+
 	HashMap<String, String> saveTransunionStatus(HashMap<String, String> hashmap) {
 
 		hashmap.put("creditCardId", "eb228885-b484-404a-99ff-b28511dd3e38");
-		hashmap.put("LOGIN_NAME", "testact");
-		hashmap.put("PASSWORD", "1234nexera");
+		hashmap.put("LOGIN_NAME", advCreditUserName);
+		hashmap.put("PASSWORD", advCreditPassword);
 		hashmap.put("equifaxStatus", "N");
 		hashmap.put("experianStatus", "N");
 		hashmap.put("transunionStatus", "Y");

@@ -169,7 +169,7 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		loanAppFormVO
 		        .setPropertyTypeMaster(convertTOPropertyTypeMasterVO(loanAppForm
 		                .getPropertyTypeMaster()));
-
+		loanAppFormVO.setNotApplicable(loanAppForm.getNotApplicable());
 		loanAppFormVO
 		        .setGovernmentquestion(convertTOGovernmentquestionVO(loanAppForm
 		                .getGovernmentquestion()));
@@ -531,7 +531,8 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 			customerSpouseDetailVO.setSpouseDateOfBirth(df
 			        .format(customerspousedetail.getSpouseDateOfBirth()));
 		}
-
+		customerSpouseDetailVO.setNotApplicable(customerspousedetail
+		        .getNotApplicable());
 		customerSpouseDetailVO
 		        .setSpouseSsn(customerspousedetail.getSpouseSsn());
 		customerSpouseDetailVO.setSpouseSecPhoneNumber(customerspousedetail

@@ -45,12 +45,12 @@ function validateInput(element,inputVal,message){
 		}else{
 			$('input[name="' + name + '"]').parent().find('.err-msg').hide();
 			$('input[name="' + name + '"]').removeClass('ce-err-input');			
-			return true;
+			
 		}
 		
 	}
 	
-	
+	return true;
 	
 	
 }
@@ -294,7 +294,7 @@ function currentlyLivingValidation(){
 	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
 	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);		    			    	
-	var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);		    	
+	/*var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);*/
 	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 	if($('input[name="rentPerMonth"]').length>0){
 		var questionfour=validateInput($('input[name="rentPerMonth"]'),$('input[name="rentPerMonth"]').val(),message);
@@ -309,9 +309,9 @@ function currentlyLivingValidation(){
 	if(!questionOne){
 		return false;
 	}		    	
-	if(!addressValidation){
+	/*if(!addressValidation){
 		return false;
-	}
+	}*/
 	
 	if(!questionTwo){
 		return false;
@@ -347,7 +347,7 @@ function currentlyLivingValidation(){
 	}else{
 		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
 		var propertQuestionThree=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),yesyNoErrorMessage);
-    	var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);
+    	/*var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);*/
     	
     	if(!propertQuestionOne){
     		return false;
@@ -357,9 +357,44 @@ function currentlyLivingValidation(){
     		return false;
     	}
 
-    	if(!propertQuestionfour){
+    	/*if(!propertQuestionfour){
     		return false;
-    	}
+    	}*/
 	}
+	return true;
+}
+
+function validateFormFeildInReferalRegistration(){
+	if($("#userTypeID").attr('value')==""||$("#userTypeID").attr('value')==null||$("#userTypeID").attr('value')==undefined){
+		showErrorToastMessage(selectUserType);
+		return false;
+	}
+	var firstName=validateFormFeild("#firstName",'.reg-input-cont.reg-fname',firstNameEmptyMessage);
+	if(!firstName){
+		/*$('.reg-input-row').css('margin-bottom','38px');*/
+		return false;
+	}
+	var lastName=validateFormFeild("#lastName",'.reg-input-cont.reg-lname',lastNameEmptyMessage);
+	if(!lastName){
+		return false;
+	}
+	var emailID=validateFormFeild("#emailID",'.reg-input-cont.reg-email',emailEmptyMessage);
+	if(!emailID){
+		return false;
+	}
+	if($("#emailID").val()!=null||$("#emailID").val()!=""){
+		var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;;
+        if (!regex.test($("#emailID").val())) {
+        	$('#emailID').next('.err-msg').html(invalidEmailErrorMessage).show();
+			$('.reg-input-cont.reg-email').addClass('ce-err-input').show();
+		return false;
+        }
+	}
+
+	/* var phone=validateFormFeild("#phoneID",'.reg-input-cont.reg-phone',phoneFieldEmptyMessage);
+	if(!phone){
+		$('.reg-input-row').css('margin-bottom','38px');
+		return false;
+	} */
 	return true;
 }

@@ -76,8 +76,10 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			/* makeANote(loanID, LoanStatus.submittedMessage) */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        Milestones.App1003.getMilestoneKey());
-			//Rajeswari : Removing this call to send an email when 1003 is submitted - till a etmplate is given by nexera
-			//sendEmail(objectMap, CommonConstants.SUBJECT_APPLICATION_SUBMITTED);
+			// Rajeswari : Removing this call to send an email when 1003 is
+			// submitted - till a etmplate is given by nexera
+			// sendEmail(objectMap,
+			// CommonConstants.SUBJECT_APPLICATION_SUBMITTED);
 			createAlertForDisclosureDue(objectMap);
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			LOG.info("Saving Loan as INprogres");
@@ -97,11 +99,11 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			        .getLoanByID(Integer.parseInt(objectMap.get(
 			                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
 			                .toString()));
-			if (loanVO != null) {
-				String emailTemplateKey = objectMap.get(
-				        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
-				        .toString();
-				String emailTemplate = WorkflowDisplayConstants.EMAIL_TEMPLATE_DEFAULT_ID;
+			String emailTemplateKey = objectMap.get(
+			        WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME)
+			        .toString();
+			if (loanVO != null && emailTemplateKey != null) {
+				String emailTemplate = "";
 				Template template = templateService
 				        .getTemplateByKey(emailTemplateKey);
 				if (template != null) {

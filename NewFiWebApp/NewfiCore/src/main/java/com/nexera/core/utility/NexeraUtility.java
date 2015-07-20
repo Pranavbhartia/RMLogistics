@@ -436,6 +436,8 @@ public class NexeraUtility {
 	public File multipartToFile(MultipartFile multipart)
 	        throws IllegalStateException, IOException {
 		String uniqueId = uuidString();
+		LOGGER.info("UploadFile Temp File Creation" + uniqueId + "--"
+		        + multipart.getOriginalFilename());
 		String folderName = tomcatDirectoryPath() + File.separator + uniqueId;
 		File directory = new File(folderName);
 		if (!directory.exists()) {
@@ -444,7 +446,11 @@ public class NexeraUtility {
 
 		File convFile = new File(directory.getAbsolutePath() + File.separator
 		        + multipart.getOriginalFilename());
-		multipart.transferTo(convFile);
+		// multipart.transferTo(convFile);
+		FileOutputStream fos = new FileOutputStream(convFile);
+		fos.write(multipart.getBytes());
+		fos.close();
+		LOGGER.info("Temp File Created : ");
 		return convFile;
 	}
 

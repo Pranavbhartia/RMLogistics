@@ -113,6 +113,13 @@ function paintBuyHomeQuest(appUserDetails) {
 		"onselect" : paintCustomerApplicationPurchasePageStep1a,
 		"value" : "homeOwner"
 	} ];
+	var applicationLocked=checkLqbFileId();
+	if(applicationLocked&&appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="renting"){
+		options[1].onselect=function(){};
+	} 
+	if(applicationLocked&&appUserDetails.purchaseDetails.livingSituation && appUserDetails.purchaseDetails.livingSituation =="homeOwner"){
+		options[0].onselect=function(){};
+	}	
 
 	var quesCont = getBuyHomeMutipleChoiceQuestion(quesText, options,"livingSituation");
 	$('#app-right-panel').html(quesCont);
@@ -181,12 +188,12 @@ function paintCustomerApplicationPurchasePageStep1a() {
 
     var row=paintCheckBox();
     
-    var questions = [{
+    var questions = [/*{
         type: "desc",
         text: "Street address",
         name: "addressStreet",
         value: appUserDetails.user.customerDetail.addressStreet
-    }, {
+    },*/ {
         type: "desc",
         text: "State",
         name: "state",
@@ -237,14 +244,14 @@ function paintCustomerApplicationPurchasePageStep1a() {
     	questions.push(sellYourHouse);
     	
     }
+    var applicationLocked=checkLqbFileId();
     
-    
-    var propQuestions = [{
+    var propQuestions = [/*{
         type: "desc",
         text: "Property street address",
         name: "propStreetAddress",
         value: appUserDetails.propertyTypeMaster.propStreetAddress
-    }, {
+    },*/ {
         type: "desc",
         text: "Property state",
         name: "propState",
@@ -306,8 +313,8 @@ function paintCustomerApplicationPurchasePageStep1a() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function(event) {
     	
-    	if(this.innerHTML!=next ){
-		    	var addressStreet = $('input[name="addressStreet"]').val();
+    	if($(this).html()!=next ){
+		    	/*var addressStreet = $('input[name="addressStreet"]').val();*/
 		    	var inputState = $('input[name="state"]').val();
 		    	var city = $('input[name="city"]').val();
 		    	var zipCode = $('input[name="zipCode"]').val();
@@ -315,7 +322,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	var monthlyRent =  $('input[name="rentPerMonth"]').val();
 		    	var isSellYourhome = quesContxts[5].value;
 		    			    	
-		    	var propAddress= $('input[name="propStreetAddress"]').val();
+		    	/*var propAddress= $('input[name="propStreetAddress"]').val();*/
 		    	var propState = $('input[name="propState"]').val();
 		    	var propCity = $('input[name="propCity"]').val();
 		    	var propZipCode = $('input[name="propZipCode"]').val();
@@ -332,7 +339,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 	                    showToastMessage(response.error.message);
 	                } else {
 	                    if(response.resultObject == zipcode_valid){
-	                        customerDetail.addressStreet=addressStreet;
+	                       /* customerDetail.addressStreet=addressStreet;*/
 				    		customerDetail.addressCity = city;
 				    		customerDetail.addressState = inputState;
 				    		customerDetail.addressZipCode = zipCode;
@@ -359,7 +366,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 				
 				    		
 				    		//if(appUserDetails.propertyTypeMaster){
-				    		appUserDetails.propertyTypeMaster.propStreetAddress=propAddress;
+				    		/*appUserDetails.propertyTypeMaster.propStreetAddress=propAddress;*/
 				    		appUserDetails.propertyTypeMaster.propState=propState;
 				    		appUserDetails.propertyTypeMaster.propCity=propCity;
 				    		appUserDetails.propertyTypeMaster.homeZipCode=propZipCode;
@@ -388,10 +395,10 @@ function paintCustomerApplicationPurchasePageStep1a() {
     });
 
     $('#app-right-panel').append(saveAndContinueButton);
-    
-    addStateCityZipLookUp();
-    addCityStateZipLookUpForProperty();
-   
+    if(!applicationLocked){
+	    addStateCityZipLookUp();
+	    addCityStateZipLookUpForProperty();
+   	}
 }
 
 
@@ -430,7 +437,7 @@ function paintloanamountBuyApp() {
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function() {
        
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
     	
 	    	appUserDetails.purchaseDetails.housePrice = $('input[name="housePrice"]').val();
 	        appUserDetails.purchaseDetails.loanAmount = getFloatValue(appUserDetails.purchaseDetails.housePrice)-getFloatValue($('input[name="dwnPayment"]').val());
@@ -506,7 +513,7 @@ function paintWhereYouLiveStep(){
 	    "class": "cep-button-color ce-save-btn"
 	}).html(buttonText).on('click', function() {
 		 
-		if(this.innerHTML!=next){
+		if($(this).html()!=next){
 			var isSuccess=validateInput( $('input[name="buyhomeZipPri"]'), $('input[name="buyhomeZipPri"]').val(),"Please enter a valid 5-digit zipcode");
 		    if(!isSuccess){
 		    	return false;

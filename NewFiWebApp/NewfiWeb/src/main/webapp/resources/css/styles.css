@@ -490,15 +490,15 @@ input[type="button"]:focus, button:focus {
 	min-height: 800px;
 	/* margin-bottom: 80px; */
 	padding-top: 15px;
-	margin-left: 98px;
+	margin-left: 105px;
 	padding-left: 15px;
-	border-left: 1px solid #dcdcdc;
+	/* border-left: 1px solid #dcdcdc; */
 }
 .cus-eng-font{
 	font-size: 14px;
 	font-family: openSanssemiBold;
 }
-.rate-program-header,.loan-summary-header,.closing-cost-header {
+.rate-program-header,.loan-summary-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
 	padding-left: 5px;
@@ -565,8 +565,10 @@ input[type="button"]:focus, button:focus {
 .cp-header-text {
 	color: #606060;
 	padding: 0 5px;
-	margin-bottom: 20px;
+	/* margin-bottom: 20px; */
+	margin-bottom: 10px;
 	font-size:12px;
+	text-align: center;
 }
 
 .cp-rate-header-text {
@@ -645,7 +647,7 @@ input[type="button"]:focus, button:focus {
 .loan-summary-row {
 	line-height: 20px;
 	border-bottom: 1px #E9E9E9 dashed;
-	padding: 10px 0;
+	padding: 0 0 10px;
 }
 
 .no-border-bottom {
@@ -653,8 +655,10 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-col-desc {
-	width: 50%;
-	padding-right: 5px;
+	/* width: 50%;
+	padding-right: 5px; */
+	width: 130px;
+	line-height: 13px;
 }
 
 .loan-summary-last-row .loan-summary-col-detail{
@@ -674,9 +678,10 @@ input[type="button"]:focus, button:focus {
 	font-size: 12px;
 	/*text-align: center;*/
 	/*background: #8DC2F0;*/
-	/* padding: 5px 10px; */
-	padding: 10px 10px;
+	 padding: 5px 0; 
+	/* padding: 13px 10px 0 0; */
   	border-radius: 3px;
+	/* line-height: 13px; */
 }
 
 
@@ -689,6 +694,7 @@ input[type="button"]:focus, button:focus {
 	/*background: #AB1010;*/
 	padding: 5px 10px;
   	border-radius: 3px;
+  	font-family: 'OpenSans';
 }
 .loan-summary-last-row .loan-summary-green-col-detail{
 	width: 120px;
@@ -697,8 +703,10 @@ input[type="button"]:focus, button:focus {
 	font-size: 12px;
 	/*text-align: center;*/
 	/*background: #2DB018;*/
-	padding: 5px 10px;
+	padding: 5px 10px 0;
   	border-radius: 3px;
+	line-height: 13px;
+	font-family: 'openSans';
 }
 
 
@@ -759,9 +767,13 @@ input[type="button"]:focus, button:focus {
     border-right: 1px #E9E9E9 solid
 }
 
+.loan-row-text {
+	line-height: 13px;
+}
+
 .dropdown-arrow {
   width: 8px;
-  height: 16px;
+  height: 13px;
   margin-left: 10px;
   margin-bottom: 2px;
   display: inline-block;
@@ -782,10 +794,12 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-sub-col-detail {
-  width: 100px;
-  padding:0 10px;
+ /*  width: 100px; 
+ padding:0 10px;*/
+  width: 85px;
+  padding:0 3px;
   color: #428bca;
-  font-family: 'opensanssemibold';
+  font-family: 'openSans'; 
   border: 1px solid #dcdcdc;
   border-radius: 3px;
 }
@@ -817,7 +831,7 @@ input[type="button"]:focus, button:focus {
 
 .loan-summary-last-row {
   line-height: 20px;
-  padding: 10px 0;
+  padding: 0 0 10px;
 }
 
 .subtext {
@@ -851,7 +865,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .loan-summary-container {
-	margin-bottom: 20px;
+	margin-bottom: 25px;
 }
 
 .apply-btn {
@@ -873,6 +887,7 @@ input[type="button"]:focus, button:focus {
 }
 .eng-closing-cost-note{
 	font-size:10px;
+	padding: 0;
 }
 .header-row {
 	/*margin-right: -5px;*/
@@ -1225,6 +1240,12 @@ input[type="button"]:focus, button:focus {
 	height: 30px;
 	background: url('../images/doc-icon.png') no-repeat center top;
 	cursor: pointer;
+}
+.doc-link-res {
+	width: 20px;
+	height: 30px;
+	background: url('../images/Restricted.png') no-repeat center top;
+	cursor: not-allowed;
 }
 
 .uploaded-items-header {
@@ -1650,7 +1671,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-row {
-	padding: 10px;
+	padding: 10px 5px;
 	line-height: 20px;
 	background-color: #fcfcfc;
 	border-top: 1px #cecece dashed;
@@ -1697,7 +1718,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-tc7 {
-	width: 55px;
+	width: 40px;
 }
 
 .onl-status-icn {
@@ -1844,7 +1865,7 @@ input[type="button"]:focus, button:focus {
 
 .leads-container-tr {
 	/* cursor: pointer; */
-	padding: 15px 10px 10px;
+	padding: 15px 5px 10px;
 }
 
 .leads-container-tr .cus-name,.leads-container-tr .leads-container-tc5,.leads-container-tr .leads-container-tc7{
@@ -2923,9 +2944,9 @@ input.calc-input {
 }
 
 .login-container {
-	 margin-top: 110px;
-	margin-bottom: 100px; 
-	/* margin: 150px 100px; */
+	 /* margin-top: 110px;
+	margin-bottom: 100px;  */
+	 margin: 150px auto; 
 }
 
 .display-title {
@@ -3692,12 +3713,21 @@ input.calc-input {
   background-color: rgb(235, 235, 235);
 }
 
-.ms-icn-application-fee-app-um {
+.ms-icn-application-fee-um {
 	background-image: url(../images/underwriting_selected.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
+.m-not-started .ms-icn-application-fee-um-new {
+  background: url(../images/under_writing.png) no-repeat center;
+  background-color: rgb(235, 235, 235);
+}
 
+.ms-icn-application-fee-um-new {
+	background-image: url(../images/under_writing_White.png);
+	background-repeat: no-repeat;
+	background-position: center;
+}
 .ms-icn-appraisal {
 	background-image: url(../images/ms-appraisal.png);
 	background-repeat: no-repeat;
@@ -3745,7 +3775,8 @@ input.calc-input {
 }
 
 .m-not-started .ms-icn-closing-status {
-	background-image: url(../images/closing-status-grey.png);
+	 background-image: url(../images/closing-status-grey.png); 
+		
 }
 
 .ms-icn-lock-rate {
@@ -4519,25 +4550,26 @@ input.calc-input {
     line-height: 30px;
 }
 .rate-btn:hover{
-	background-color:#F37521;
+	background-color:rgba(24,72,141,0.9);
 }
 
 .rate-btn {
     height: 40px;
     line-height: 40px;
     font-size: 14px;
-    background-color: rgba(24,72,141,0.9);
+    background-color: #F37521;
     color: #fff;
     width: 200px;
     text-align: center;
     border-radius: 3px;
-    margin: 0 auto;
+    margin: 5px auto;
     cursor:pointer;
 }
 
 .lock-rate-slider-container {
     margin: 0px 0;
-    padding: 10px 60px;
+    /* padding: 10px 60px; */
+    padding: 10px 45px;
     background: #fCfcfc;
     border: 1px  solid #cecece;
     border-bottom: 0;
@@ -4545,7 +4577,7 @@ input.calc-input {
 }
 
 .slider-wrapper {
-  margin: 25px 0;
+  margin: 20px 0 30px;
 }
 
 .slider-hdr-txt {
@@ -4553,8 +4585,10 @@ input.calc-input {
   margin-right: 35px;
   font-size: 14px;
   color: #428bca;
-  text-align: center;
+  text-align: left;
   font-family: 'opensanssemibold';
+  /* line-height: 20px; */
+  margin-top: 10px;
 }
 
 .silder-cont{
@@ -4976,13 +5010,22 @@ input.calc-input {
 }
 
 .sm-save-btn {
-	margin-left: 15px;
+	/* margin-left: 15px;
 	padding: 0 5px;
 	background: #6c9f2e;
 	color: #fff;
 	font-size: 10px;
 	border-radius: 3px;
+	cursor: pointer; */	
+	padding: 0 6px;
+	background: #6c9f2e;
+	color: #fff;
+	font-size: 10px;
+	border-radius: 3px;
 	cursor: pointer;
+	margin: 0 0 0 5px;
+	float: left;
+	width: 45px;
 }
 
 .sm-save-btn:hover,.add-btn:hover,.app-save-btn:hover {
@@ -5453,7 +5496,7 @@ a.session-login-btn {
 
 .ccSummary{
 	text-align: center;
-	font-size : 14px;
+	font-size : 15px;
 	background-color: white;
 }
 
@@ -5499,11 +5542,11 @@ a.session-login-btn {
 }
 
 .estimated-row-padding-clas{
-	padding: 10px 0 20px;
+	padding: 0 0 10px;
 }
 
 .tax-Ins-clas{
-	padding-left: 8px;
+	padding-left: 8px !important;
 }
 .homeowners-insurance-reserve{
   padding: 20px 10px;
@@ -5512,24 +5555,132 @@ a.session-login-btn {
 
 .lock-rate-header-val-cont-clas {
     margin: 0px 0;
-    padding: 10px 60px;
+   /*  padding: 10px 60px; */
+    padding: 10px 45px;
     background: #fCfcfc;
     border: 1px  solid #cecece;
     border-top: 0;
     border-radius: 0 0 3px 3px;
 }
 .lock-ratebottom-summary-clas{
-	margin: 15px 0 0 0;
+	/* margin: 15px 0 0 0; */
+	width: 664px;
+	margin: 15px auto;
 }
 
 .loan-rate-tableRow-clas {
-	line-height: 15px;
-	padding: 10px 0;
+	line-height: 20px;
+	padding: 0 0 10px;
 }
 .loan-rate-tableRow-container{
-	margin-top: 10px;
+	margin: 0 0 5px;
 }
 
 .loan-summary-row-border-adj {
 	border: none;
+	/* margin-left: 10px; */
+}
+.rate-page-normal-text{
+	font-family: 'OpenSans';
+	line-height: 13px;
+}
+.delCustClas{
+	background: url(../images/user_del.png) no-repeat right 1px;
+	background-size: 20px;
+	cursor: pointer;
+}
+.home-container-adj {
+	min-height:100%;
+	margin-bottom:100px;
+	padding-bottom:0px;
+	margin-top:80px;
+}
+
+.forget-pass-adj {
+	margin: 0;
+	padding: 36px 0;
+}
+.login-container-adj {
+	margin: 0;
+}
+.loan-summary-rateapr-detail {
+	color: #428bca;
+}
+.loan-summary-rateapr-seperator {
+	width: 12px;
+	text-align: center;
+	line-height: 13px;
+}
+
+.cp-sub-txt-link {
+  text-align: center;
+  margin-top: 0;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.append-home-icon {
+	  background: url(../images/transaction-blue.png) no-repeat 5px center;
+	  background-size: 15%;
+}
+
+.lp-item-active .append-home-icon {
+	  background: url(../images/transactions.png) no-repeat 5px center;
+	  background-size: 15%;
+}
+
+.leads-container-row-realtor>div {
+	padding-left: 25px;
+}
+
+.leads-container-tc1-realtor {
+	width: 170px;
+}
+
+.leads-container-tc2-realtor {
+  	width: 164px;
+}
+
+.leads-container-tc3-realtor {
+	width: 140px;
+}
+
+.leads-container-tc4-realtor {
+	width: 170px;
+}
+.leads-container-tc5-realtor {
+	width: 179px;
+}
+.leads-container-tc6-realtor {
+	background: url(../images/alram_blue.png) no-repeat 20px 5px;
+	cursor: pointer;
+}
+
+.loan-summary-col-desc-adj {
+	line-height: 20px;
+}
+
+.closing-cost-header {
+	margin-bottom: 10px;
+	
+}
+.loan-summary-col-detail-new {
+	font-family: 'OpenSans';
+	color: #428bca;
+	line-height: 13px;
+}
+
+.overlay-popup-wrapper-adj {
+	width: 400px;
+}
+
+.overlay-popup-txt-adj {
+	line-height: 17px;
+}
+
+p.toast-mess-style {
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }

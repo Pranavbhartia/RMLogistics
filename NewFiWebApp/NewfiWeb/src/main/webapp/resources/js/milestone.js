@@ -82,28 +82,28 @@ var workFlowContext = {
 						});
 
 	},
-	getMileStoneSteps : function(role, callback) {
+	getMileStoneSteps : function(role, callback) {		
 		var ob = this;
 		var data = {};
 		ob.currentRole = role;
-		var ajaxURL = "rest/workflow/";
-		if (role == "CUSTOMER") {
-			ajaxURL = ajaxURL  + ob.customerWorkflowID;
-		} else {
-			ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
-		}
-		ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
-			if (response.error) {
-				showToastMessage(response.error.message)
+			var ajaxURL = "rest/workflow/";
+			if (role == "CUSTOMER") {
+				ajaxURL = ajaxURL  + ob.customerWorkflowID;
 			} else {
-				ob.mileStoneSteps = response.resultObject;
-				ob.createMileStoneStepsLookup();
+				ajaxURL = ajaxURL + ob.loanManagerWorkflowID;
 			}
-			if (callback) {
-				callback(ob);
-			}
-		});
-
+			ajaxRequest(ajaxURL, "GET", "json", data, function(response) {
+				if (response.error) {
+					showToastMessage(response.error.message)
+				} else {
+					ob.mileStoneSteps = response.resultObject;
+					ob.createMileStoneStepsLookup();
+				}
+				if (callback) {
+					callback(ob);
+				}
+			});
+	
 	},
 	getMilestonesStatusForLoan : function( callback) {
 		var ob = this;
@@ -249,6 +249,24 @@ var workFlowContext = {
 			}
 		}
 	},
+	initializeRealtor :  function(role, callback) {
+			this.getWorkflowID(function(ob) {
+			
+			ob.getMileStoneSteps(role, function(ob) {
+					ob.fetchLatestStatus();					
+					ob.getMilestonesStatusForLoan(function (){						
+						showRealtorHeaderSteps();						
+					}
+					);
+				
+			});
+			
+		});
+
+		if (callback) {
+			callback();
+		}
+	},
 	initialize : function(role, callback) {
 		this.getWorkflowID(function(ob) {
 			
@@ -259,8 +277,8 @@ var workFlowContext = {
 				});
 				if (role != "AGENT")
 				{
-					ob.getMilestonesStatusForLoan(function (){								
-						showProgressHeaderSteps();
+					ob.getMilestonesStatusForLoan(function (){						
+							showProgressHeaderSteps();						
 					}
 					);
 				}
@@ -315,8 +333,8 @@ var workFlowContext = {
 				VIEW_APPRAISAL : { active : "ms-icn-appraisal"	, inactive : "m-not-started ms-icn-appraisal"	},
 				LOCK_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},
 				LOCK_YOUR_RATE : { active : "ms-icn-lock-rate"	, inactive : "m-not-started ms-icn-lock-rate"	},							
-				UW_STATUS : { active : "ms-icn-application-fee-um"	, inactive : "m-not-started ms-icn-application-fee-um"	},
-				VIEW_UW : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},		
+				UW_STATUS : { active : "ms-icn-application-fee-um-new"	, inactive : "m-not-started ms-icn-application-fee-um-new"	},
+				VIEW_UW : { active : "ms-icn-application-fee-um-new"	, inactive : "m-not-started ms-icn-application-fee-um-new"	},		
 				CLOSURE_STATUS : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
 				VIEW_CLOSING : { active : "ms-icn-closing-status"	, inactive : "m-not-started ms-icn-closing-status"	},
 				MANAGE_PROFILE : { active : "ms-icn-application-fee-profile"	, inactive : "m-not-started ms-icn-application-fee-profile"	},
@@ -559,12 +577,11 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									progressBarCont.append(progressBar).append(progressBarTxt);
 									ob.stateInfoContainer.append(progressBarCont);
 								}
-							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
-									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"||
+							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||									 
 									ob.workItem.workflowItemType == "APPRAISAL_STATUS"){								
-								if(ob.workItem.stateInfo){
+								if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 
 									txtRow1.bind("click", function(e) {
-										milestoneChildEventHandler(e)
+										milestoneChildEventHandler(e);
 									});
 									var tempOb=JSON.parse(ob.workItem.stateInfo);
 									if(tempOb.url){
@@ -580,23 +597,39 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									}
 								}
 
-							}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
+							}
+							else if(
+									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"){								
+								if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 
+									
+									if(tempOb.status)
+									{
+										ob.stateInfoContainer.html(tempOb.status);
+									}
+								}
+
+							}
+							else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 									ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
 								txtRow1.bind("click", function(e) {
 									milestoneChildEventHandler(e)
 								});
 								txtRow1.addClass("cursor-pointer");
 								if(ob.workItem.stateInfo!=null){
-									ob.stateInfoContainer.html(ob.workItem.stateInfo);
+									var lockedRateObj=JSON.parse(ob.workItem.stateInfo);
+									var lockExpDate = lockedRateObj.lockExpirationDate;
+									var lockedRate = lockedRateObj.lockedRate;
+									var txtRow2 = $('<div>').attr({
+										"class" : rightLeftClass + "-text" ,										
+										"data-text" : ob.workItem.workflowItemType,
+										"mileNotificationId":ob.workItem.id
+									});
+									txtRow2.html("Lock Expiration Date :"+lockExpDate);									
+									ob.stateInfoContainer.html(lockedRate);
+									ob.stateInfoContainer.append(txtRow2);
 								}else
-								{
-									if (ob.workItem.status == COMPLETED)
-									{
-										ob.stateInfoContainer.html("Click here to view rates");
-									}
-									else{																		
-										ob.stateInfoContainer.html("Click here to lock rate");
-									}
+								{																									
+									ob.stateInfoContainer.html("Shop rates");									
 									$(ob.stateInfoContainer).addClass("cursor-pointer");
 								}
 							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
@@ -706,7 +739,7 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 			"class" : "cursor-pointer",
 			"mileNotificationId" : workItem.id,
 			"data-text" : workItem.workflowItemType
-		}).html("Click here to upload more items");
+		}).html("Click here to upload items");
 		txtRow1.append(spanHolder);
 		
 		spanHolder.bind("click", function(e) {
@@ -714,15 +747,26 @@ function paintNeedsInfo(itemToAppendTo,workItem)
 		});
 		itemToAppendTo.append(txtRow1);	
 }
-function paintCustomerLoanProgressPage() {
+function paintCustomerLoanProgressPage() {	
 	if(!userIsRealtor()){
 		workFlowContext.init(newfi.user.defaultLoanId, newfiObject.user);	
 	}else{
 		workFlowContext.init(selectedUserDetail.loanID, createNewfiUser());
 	}
-	workFlowContext.initialize("CUSTOMER", function() {
-	});
-	paintCustomerInfo ()
+	
+	if (!userIsRealtor())
+	{
+			workFlowContext.initialize("CUSTOMER", function() {
+			});
+			
+	}
+	else if (userIsRealtor())
+	{
+		
+		workFlowContext.initializeRealtor("CUSTOMER", function() {
+		});	
+	}
+	paintCustomerInfo();
 }
 
 function paintCustomerInfo ()
@@ -737,16 +781,28 @@ function paintCustomerInfo ()
 		}).html("loan progress");
 	 
 	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
+	var subTextInfo ="Below is a detailed list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, please reach out to the newfi team with questions.";
+	if (userIsRealtor())
+	{
+		subTextInfo = "newfi understands the importance of getting your transaction closed within the contract date with as little effort possible and with great communication along the way. So we have given you visibility to exactly where your client is in the newfi process and if you have any questions along the way, pelase contact your newfi Loan Advisor.";
+	}
 	var subText = $('<div>').attr({
 		"class" : "loan-progress-sub-txt"
-	}).html("Below is a detailed list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, please reach out to the newfi team with questions.");
+	}).html(subTextInfo);
 	
 	
 	var container = $('<div>').attr({
 		"id" : "cust-loan-progress",
 		"class" : "loan-progress-container"
 	});
-	wrapper.append(header).append(progressHeader).append(subText).append(container);
+	if (userIsRealtor())
+	{
+		wrapper.append(header).append(subText).append(progressHeader).append(container);
+	}
+	else
+	{
+		wrapper.append(header).append(progressHeader).append(subText).append(container);
+	}
 	$('#center-panel-cont').append(wrapper);
 	
 	paintCustomerLoanProgressContainer();
@@ -767,7 +823,7 @@ function showProgressHeaderSteps(){
 		return;
 	}
 	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
-	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 1, "Application");
+	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 1, "Application Submitted");
 	container.append(stepElement);	
 	msStep = workFlowContext.milestoneStepsLookup["LOCK_YOUR_RATE"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Rate Locked");
@@ -792,7 +848,65 @@ function showProgressHeaderSteps(){
 
 	
 	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
+	var fundedStatus = msStep.stateInfo;
+	var fundedStatusRep = "0";
+	if (fundedStatus && fundedStatus == "Funded")
+	{
+		fundedStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(fundedStatusRep, 5, "Funded");
+	container.append(stepElement);	
+	
+	return container;
+}
+
+function showRealtorHeaderSteps(){
+	var container=$("#WFProgressHeaderBar");
+	
+	if($('#WFProgressHeaderBar >div').length!=0){
+		//Avoid duplicate eppend issue
+		return;
+	}
+	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
+	var preApprovedStatus = workFlowContext.mileStoneStatusLookup["PRE_QUAL"];
+	var preApprovedStatusRep = "0";
+	if (preApprovedStatus && preApprovedStatus == "1")
+	{
+		preApprovedStatusRep = COMPLETED;
+	}
+	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(preApprovedStatusRep, 1, "Pre Approved");
+	container.append(stepElement);	
+	
+	msStep = workFlowContext.milestoneStepsLookup["VIEW_APPRAISAL"];
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Appraisal Received");
+	container.append(stepElement);	
+	var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
+	var loanApprovedLMStatusRep = "0";
+	if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
+	{
+		loanApprovedLMStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
+	container.append(stepElement);	
+	
+	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
+	var docsOutLMStatusRep = "0";
+	if (docsOutLMStatus && docsOutLMStatus == "5")
+	{
+		docsOutLMStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Out");
+	container.append(stepElement);	
+
+	
+	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
+	var fundedStatus = msStep.stateInfo;
+	var fundedStatusRep = "0";
+	if (fundedStatus && fundedStatus == "Funded")
+	{
+		fundedStatusRep = COMPLETED;
+	}
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(fundedStatusRep, 5, "Funded");
 	container.append(stepElement);	
 	
 	return container;
@@ -939,7 +1053,7 @@ function getMilestoneTeamMembeTable(input,workItem) {
 		"class" : clas+" showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
-	}).html("Click here to add a Team Member").bind("click", function(e) {
+	}).html("Click here to add Team Member").bind("click", function(e) {
 		milestoneChildEventHandler(e)
 	});
 
@@ -1038,7 +1152,7 @@ function getMilestoneTeamMembeTableHeader(floatCls) {
 
 	var titleCol = $('<div>').attr({
 		"class" : "ms-team-member-th-col2 float-left"
-	}).html("Title");
+	}).html("Profile");
 
 	return row.append(nameCol).append(titleCol);
 }
@@ -1110,7 +1224,7 @@ $(document).on('click', '.creditScoreClickableClass', function(e) {
 	e.stopImmediatePropagation();
 	if(newfiObject.user.userRole.roleCd=="INTERNAL"){
 		var loanid=$(this).attr("loanid");
-		var textMessage="Are you sure you want to fetch Credit Score ?"
+		var textMessage="Are you sure you want to request a Tri-merge ?"
 		var trimerge=true;
 	     if($(e.target).parent()[0].innerHTML.indexOf("EQ-?")>=0&&
 			   $(e.target).parent()[0].innerHTML.indexOf("TU-?")>=0&&

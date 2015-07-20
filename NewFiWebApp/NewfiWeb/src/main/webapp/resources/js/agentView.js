@@ -6,6 +6,8 @@ var docData = [];
 var currentLoanType = null;
 var mobileCarrierNames = [];
 var stateLists = [];
+var customerFetchCount=15;
+var currentElement="";
 
 LOAN_ENUM = {
 	ALL : "ALL",
@@ -37,25 +39,54 @@ function getAgentSecondaryLeftNav() {
 	var step0 = getAgentSecondaryLeftNavStep(0, "talk to<br/>your team");
 	var step1 ="";
 	if(!userIsRealtor()){
-		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
+		//portal updates 7.9
+/*		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");*/
+		step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>application");
 		newfiObject.applicationNavTab=step1;
 	}
 	//step1 = getAgentSecondaryLeftNavStep(1, "loan<br/>profile");
 	var step2 = '';
 	if (!userIsRealtor()) {
-		step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");
+		//portal updates 7.9
+	/*	step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>details");*/
+		//NEXNF-744
+		//step2 = getAgentSecondaryLeftNavStep(2, "loan<br/>summary");
+		step2 = getAgentSecondaryLeftNavStep(2, "summary");
 	}
 
-	var step3 = getAgentSecondaryLeftNavStep(3, "lock<br />rate");
-	var step4 = getAgentSecondaryLeftNavStep(4, "upload<br />needed items");
-	var step5 = getAgentSecondaryLeftNavStep(5, "loan<br />progress");
+	//NEXNF-661
+	var step3 ="";
+	if(newfiObject.user.userRole.id!=2){
+		//portal updates 7.9
+		/*step3=getAgentSecondaryLeftNavStep(3, "lock<br />rate");*/
+		step3=getAgentSecondaryLeftNavStep(3, "programs<br />and rates");
+	}
+	
+	//NEXNF-661
+	var text="";
+	if(newfiObject.user.userRole.id==2){
+		text="upload<br />contract items";
+	}else{
+		/*text="upload<br />needed items";*/
+		text="manage<br />documents";//jira-711
+	}
+	var step4 = getAgentSecondaryLeftNavStep(4, text);
+	//NEXNF-661
+	var text1="";
+	if(newfiObject.user.userRole.id==2){
+		text1="transaction<br />progress";
+	}else{
+		text1="loan<br />progress";
+	}
+	var step5 = getAgentSecondaryLeftNavStep(5, text1);
 
 	if (userIsRealtor()) {
 		return leftTab2Wrapper.append(step0).append(step1).append(step3)
 				.append(step4).append(step5);
 	}
 
-	return leftTab2Wrapper.append(step0).append(step1).append(step2).append(
+	//NEXNF-744 Change of position of loan summary in sec nav
+	return leftTab2Wrapper.append(step0).append(step2).append(step1).append(
 			step3).append(step4).append(step5);
 }
 
@@ -88,9 +119,10 @@ function paintAgentDashboard(loanType) {
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
 	currentLoanType = loanType;
+	newfiObject.fetchedCount=undefined;
+	$(window).scrollTop(0);
 	if (loanType == "workloans") {
 		$('#lp-work-on-loan').addClass('lp-item-active');
-
 		getDashboardRightPanelForWorkLoans();
 	} else if (loanType == "myloans") {
 		$('#lp-my-loans').addClass('lp-item-active');
@@ -118,10 +150,30 @@ function paintAgentDashboardCallBack(data) {
 // ajax call to get dashboard for my loans
 function getDashboardRightPanel() {
 	var userID = newfiObject.user.id;
+	if(newfiObject.fetchedCount)
+		startLimit=newfiObject.fetchedCount;
+	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
-			"json", {}, paintAgentDashboardRightPanel);
+			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
+				if(startLimit==0){
+					paintAgentDashboardRightPanel(response);
+				}else{
+					appendCustomers("leads-container", customerData.customers,true);
+				}
+				startLimit=startLimit+customerFetchCount;
+				newfiObject.fetchedCount=startLimit;
+			});
 }
 
+function getMoreCustomers(){
+	if (currentLoanType == "workloans") {
+		getDashboardRightPanelForWorkLoans();
+	} else if (currentLoanType == "myloans") {
+		getDashboardRightPanelForMyLoans();
+	} else if (currentLoanType == "archivesloans") {
+		getDashboardRightPanelForArchivesLoans();
+	}
+}
 // ajax call to get dashboard for work loans
 function getDashboardRightPanelForWorkLoans(loanType) {
 	var userID = newfiObject.user.id;
@@ -131,9 +183,25 @@ function getDashboardRightPanelForWorkLoans(loanType) {
 
 // ajax call to get dashboard for my loans
 function getDashboardRightPanelForMyLoans(loanType) {
+	var startLimit=0;
+	if(newfiObject.fetchedCount)
+		startLimit=newfiObject.fetchedCount;
+	newfiObject.fetchLock=true;
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
-			"json", {}, paintAgentDashboardRightPanel);
+			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
+				newfiObject.fetchLock=undefined;
+				if(startLimit==0){
+					paintAgentDashboardRightPanel(response);
+				}else{
+					if(response.resultObject&&response.resultObject.customers){
+						customers=response.resultObject.customers
+						appendCustomers("leads-container", customers,true);
+					}
+				}	
+				startLimit=startLimit+customerFetchCount;
+				newfiObject.fetchedCount=startLimit;		
+			});
 }
 
 // ajax call to get dashboard for archive loans
@@ -155,7 +223,12 @@ function paintAgentDashboardRightPanel(data) {
 	if (newfiObject.user.userRole.id == "4") {
 		leftCon.html("Loan List");
 	} else if (newfiObject.user.userRole.id != "4") {
-		leftCon.html("Customer List");
+		if (newfiObject.user.userRole.id != "2"){
+			leftCon.html("Customer List");
+		}else {
+			leftCon.html("Pipeline");//NEXNF-660
+		}
+		
 	}
 
 	var rightCon = $('<div>').attr({
@@ -325,7 +398,7 @@ function appendAgentDashboardContainer() {
 	}).html("Leads");
 
 	var text=$('<div>').attr({
-		"class" : " cust-profile-url float-right"
+		"class" : " cust-profile-url cust-profile-url-dash float-right"
 	}).html("Add customer : ");	
 	
 		var emailInput = $('<input>').attr({
@@ -388,11 +461,17 @@ function checkCreditScore(creditScore){
     }
 	return creditScore;
 }
-function appendCustomers(elementId, customers) {
-
-	$('#' + elementId).html("");
-	appendCustomerTableHeader(elementId);
-
+function appendCustomers(elementId, customers,skipDataClearing) {
+	if(newfiObject.user.userRole.id==2){
+		isRealtor=true;
+	}else{
+		isRealtor=false;
+	}
+	if(!skipDataClearing){
+		$('#' + elementId).html("");
+		
+		appendCustomerTableHeader(elementId,isRealtor);
+	}
 	for (var i = 0; i < customers.length; i++) {
 
 		var customer = customers[i];
@@ -401,6 +480,7 @@ function appendCustomers(elementId, customers) {
 			"class" : "leads-container-tr leads-container-row clearfix"
 		});
 
+		
 		if (i % 2 == 0) {
 			row.addClass('leads-container-row-odd');
 		}
@@ -412,7 +492,10 @@ function appendCustomers(elementId, customers) {
 		var col1 = $('<div>').attr({
 			"class" : "leads-container-tc1 float-left clearfix"
 		});
-
+		if(newfiObject.user.userRole.id==2){
+			row.addClass('leads-container-row-realtor');
+			col1.addClass('leads-container-tc1-realtor');
+		}
 		var onlineStatus = $('<div>').attr({
 			"class" : "onl-status-icn float-left"
 		});
@@ -466,74 +549,213 @@ function appendCustomers(elementId, customers) {
 			
 		}
 
-		col1.append(onlineStatus).append(profImage).append(cusName);
-		var phone_num = "NA";
-		if (customer.phone_no != null && customer.phone_no.trim() != "") {
-			phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
-		}
-
-		var col2 = $('<div>').attr({
-			"class" : "leads-container-tc2 float-left"
-		}).html(phone_num);
-
-		var col3 = $('<div>').attr({
-			"class" : "leads-container-tc3 float-left"
-		}).html(customer.purpose);
-
-		var col4 = $('<div>').attr({
-			"class" : "leads-container-tc4 float-left"
-		}).html(customer.processor);
-		var creditScore = customer.credit_score;
-		if (userIsRealtor())
-		{
-			creditScore = "-";
-		}
-		var col5 = $('<div>').attr({
-			"class" : "leads-container-tc5 float-left"
-		}).html(creditScore);
-
-		var col6 = $('<div>').attr({
-			"class" : "leads-container-tc6 float-left"
-		}).html(customer.time);
-
-		var col7 = $('<div>').attr({
-			"class" : "leads-container-tc7 alert-col float-left"
-		}).bind(
-				'click',
-				{
-					"customer" : customer
-				},
-				function(event) {
-					event.stopImmediatePropagation();
-					appendCustomerDetailContianer($(this).parent(),
-							event.data.customer);
-				});
-		loanNotificationCntxt.loanLstCntElement = col7;
-		loanNotificationCntxt.getNotificationForLoan(function(ob) {
-			if (parseInt(ob.loanNotificationList.length) > 0) {
-				var alerts = $('<div>').attr({
-					"class" : "alerts-count"
-				}).html(ob.loanNotificationList.length);
-				ob.loanLstCntElement.html("");
-				ob.loanLstCntElement.append(alerts);
+		col1.append(profImage).append(cusName);
+		//jira-661
+		if(isRealtor){
+          var textCol2="";
+          
+			if(customer.customerDetail.addressCity==""||customer.customerDetail.addressCity==null){
+				textCol2="-";
+			}else{
+				textCol2=customer.customerDetail.addressCity;
 			}
-		});
+			var col2 = $('<div>').attr({
+				"class" : "leads-container-tc2 leads-container-tc2-realtor float-left"
+			}).html(textCol2);
+			var lockedClosingCost="-";
+			if(customer.lockedRateData){
+				try{
+					var lockedData=JSON.parse(customer.lockedRateData);
+					lockedClosingCost=lockedData.closingCost;
+				}catch(e){
+					lockedClosingCost="-";
+				}
+			}
+			var col3 = $('<div>').attr({
+				"class" : "leads-container-tc3 leads-container-tc3-realtor float-left"
+			}).html(lockedClosingCost);//to be asked
 
-		row.append(col1).append(col2).append(col3).append(col4).append(col5)
-				.append(col6).append(col7);
+			var col4 = $('<div>').attr({
+				"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
+			}).html("-");
+			
+			var textCol4="";
+			if(customer.processor==""||customer.processor==null){
+				textCol4="-";
+			}else{
+				textCol4=customer.processor;
+			}
+			
+			var col5 = $('<div>').attr({
+				"class" : "leads-container-tc5  leads-container-tc5-realtor float-left"
+			}).html(textCol4);
+			
+			var col6 = $('<div>').attr({
+				"class" : "leads-container-tc6 alert-col leads-container-tc6-realtor float-left"
+			}).bind(
+					'click',
+					{
+						"customer" : customer
+					},
+					function(event) {
+						event.stopImmediatePropagation();
+						appendCustomerDetailContianer($(this).parent(),
+								event.data.customer);
+					});
+			loanNotificationCntxt.loanLstCntElement = col6;
+			loanNotificationCntxt.getNotificationForLoan(function(ob) {
+				if (parseInt(ob.loanNotificationList.length) > 0) {
+					var alerts = $('<div>').attr({
+						"class" : "alerts-count"
+					}).html(ob.loanNotificationList.length);
+					ob.loanLstCntElement.html("");
+					ob.loanLstCntElement.append(alerts);
+				}
+			});
+			
+			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6);
+			
+			$('#' + elementId).append(row);
+			
+		}
+		else{
+			var phone_num = "NA";
+			if (customer.phone_no != null && customer.phone_no.trim() != "") {
+				phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
+			}
 
-		$('#' + elementId).append(row);
-	}
+			var col2 = $('<div>').attr({
+				"class" : "leads-container-tc2 float-left"
+			}).html(phone_num);
+
+			var col3 = $('<div>').attr({
+				"class" : "leads-container-tc3 float-left"
+			}).html(customer.purpose);
+
+			var col4 = $('<div>').attr({
+				"class" : "leads-container-tc4 float-left"
+			}).html(customer.processor);
+			var creditScore = customer.credit_score;
+			if (userIsRealtor())
+			{
+				creditScore = "-";
+			}
+			var addClickEvent=checkCreditScoreAval(creditScore);
+
+			var col5 = $('<div>').attr({
+				"class" : "leads-container-tc5 float-left"
+			}).html(creditScore);
+
+			if(addClickEvent){
+				col5.bind("click",{"url":"rest/loan/creditReport/"+customer.loanID},function(e){
+					if($(e.target).hasClass('creditScoreClickableClass'))
+						return;
+					var url=e.data.url;
+					window.open(url, '_blank');
+				})
+			}
+
+			var col6 = $('<div>').attr({
+				"class" : "leads-container-tc6 float-left"
+			}).html(customer.time);
+
+			var col7 = $('<div>').attr({
+				"class" : "leads-container-tc7 alert-col float-left"
+			}).bind(
+					'click',
+					{
+						"customer" : customer
+					},
+					function(event) {
+						event.stopImmediatePropagation();
+						appendCustomerDetailContianer($(this).parent(),
+								event.data.customer);
+					});
+			loanNotificationCntxt.loanLstCntElement = col7;
+			loanNotificationCntxt.getNotificationForLoan(function(ob) {
+				if (parseInt(ob.loanNotificationList.length) > 0) {
+					var alerts = $('<div>').attr({
+						"class" : "alerts-count"
+					}).html(ob.loanNotificationList.length);
+					ob.loanLstCntElement.html("");
+					ob.loanLstCntElement.append(alerts);
+				}
+			});
+			
+			row.append(col1).append(col2).append(col3).append(col4).append(col5)
+					.append(col6).append(col7);
+			
+			$('#' + elementId).append(row);
+			if((newfiObject.user&&newfiObject.user.internalUserDetail&&
+					newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
+					newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
+					newfiObject.user.userRole.id==4){
+					var userDelIcn = $('<div>').attr({
+						"class" : "delCustClas clearfix",
+						"loanID" : customer.loanID,
+						"customer_name":customer.name
+					});
+					row.append(userDelIcn);
+				}else{
+					$('.leads-container-tr').css("padding","15px 15px 10px");
+				}
+		}
+		}
+		
 	updateHandler.initiateRequest();
+	
 
+}
+function checkCreditScoreAval(creditScore){
+	var o=creditScore.split("|");
+	var sA=false;
+	if(o.length>=3){
+		for(var i=0;i<o.length;i++){
+			console.log(o[i].indexOf("span")<0);
+			if(o[i].indexOf("span")<0&&o[i]!=""){ 
+				sA=true;
+			}
+		}
+	}
+	return(sA);
 }
 
 // Function to append customer table header in agent dashboard
-function appendCustomerTableHeader(elementId) {
+function appendCustomerTableHeader(elementId,isRealtor) {
+	
 	var tableHeader = $('<div>').attr({
 		"class" : "leads-container-th leads-container-row clearfix"
 	});
+	
+	//jira-661
+	if(isRealtor){
+		var thCol1 = $('<div>').attr({
+			"class" : "leads-container-tc1 leads-container-tc1-realtor float-left"
+		}).html("Customer");
+		
+		tableHeader.addClass('leads-container-row-realtor');
+		var thCol2 = $('<div>').attr({
+			"class" : "leads-container-tc2 leads-container-tc2-realtor float-left"
+		}).html("Address");
 
+		var thCol3 = $('<div>').attr({
+			"class" : "leads-container-tc3 leads-container-tc3-realtor float-left"
+		}).html("COE");
+		
+		var thCol4 = $('<div>').attr({
+			"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
+		}).html("Loan Status");
+
+		var thCol5 = $('<div>').attr({
+			"class" : "leads-container-tc5 leads-container-tc5-realtor  float-left"
+		}).html("Loan Advisor");
+
+		var thCol6 = $('<div>').attr({
+			"class" : "leads-container-tc6 float-left"
+		}).html("Alert");
+
+		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6);
+	}else{
 	var thCol1 = $('<div>').attr({
 		"class" : "leads-container-tc1 float-left"
 	}).html("Customer Name");
@@ -571,6 +793,7 @@ function appendCustomerTableHeader(elementId) {
 
 	tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
 			.append(thCol4).append(thCol5).append(thCol6).append(thCol7);
+	}
 
 	$('#' + elementId).append(tableHeader);
 }
@@ -1322,14 +1545,18 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	var rowInitiatedOn = $('<div>').attr({
 		"class" : "cus-detail-rc-row clearfix"
 	});
+	//NEXNF-744 changed from Initiated On
+	var text="";
+	text="Lead Submitted";
 	var rowInitiatedOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
-	}).html("Inititated On");
+	}).html(text);
 	var createdDateStr;
 	var modifiedDateStr;
-	createdDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
+	//NEXNF-744 Changed date format from dd/mm/yy to mm/dd/yy
+	createdDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
 			custHeaderDetails.createdDate));
-	modifiedDateStr = $.datepicker.formatDate('dd/mm/yy', new Date(
+	modifiedDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
 			custHeaderDetails.modifiedDate));
 
 	var rowInitiatedOnValue = $('<div>').attr({
@@ -1341,9 +1568,13 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	var rowLastActiveOn = $('<div>').attr({
 		"class" : "cus-detail-rc-row clearfix"
 	});
+	
+	//NEXNF-744 Changed from last acted on
+	var text2="";
+	text2="Last Action";
 	var rowLastActiveOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
-	}).html("Last Acted On");
+	}).html(text2);
 
 	var rowLastActiveOnValue = $('<div>').attr({
 		"class" : "cus-detail-rc-value float-left"
@@ -1362,9 +1593,12 @@ function appendCustomerLoanDetails(loanDetails) {
 		"class" : "av-loan-details-wrapper"
 	});
 
+	//NEXNF-744 Changed from loan details to summary
+	var text="";
+	text="Summary";
 	var header = $('<div>').attr({
 		"class" : "av-loan-details-header"
-	}).html("Loan Details");
+	}).html(text);
 
 	var container = $('<div>').attr({
 		"id" : "av-loan-details-container",
@@ -1402,6 +1636,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Lock Rate Details",
 			loanDetails.userLoanStatus.lockRate);
 	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);
+
 	appendLoanDetailsRow("Loan Progress", loanDetails.status);
 	if (loanDetails.creditReportUrl == undefined
 			|| loanDetails.creditReportUrl == "") {
@@ -1845,6 +2080,13 @@ $(document).click(function() {
 		$('#add-member-input').val("");
 		hideUserNameDropDown();
 	}
+	
+	if($('.overlay-popup-wrapper').css("display") == "block"){
+		var parentElement=$('.delCustClas').parent();
+		$(parentElement).removeClass('leads-container-tr-sel');
+		$('.overlay-popup-wrapper').hide();
+	}
+	
 });
 
 function userTypeClicked(event) {
@@ -2200,7 +2442,9 @@ function appendCustomerEditProfilePopUp() {
 	 * appendCustomerProfEditRow("Zip", selectedUserDetail.zipCode,
 	 * "zipCodeID");
 	 */
-	appendStateEditRow();
+	
+	appendStateEditRow();	
+	
 	appendCityEditRow();
 	// appendCustomerProfEditRow("City", selectedUserDetail.city, "cityId");
 	appendZipEditRow();
@@ -3784,7 +4028,7 @@ function appendAddNeedsContainer() {
 
 $(document).on('keyup', '#need_doc_title', function() {
 
-	var data = contxt.customList[$("#need_doc_type").val()];
+	var data = contxt.customList[contxt.mapNeedCategory($("#need_doc_type").val())];
 	var searchData = [];
 	for (var i = 0; i < data.length; i++) {
 		searchData[i] = data[i];
@@ -4154,3 +4398,67 @@ function entryPointAgentViewChangeNav(viewName) {
 	paintMyLoansView();
 	changeAgentSecondaryLeftPanel('lp-step' + viewName);
 }
+
+
+$(window).scroll(
+		function() {
+			var dashboard=$("#leads-container");
+			if (dashboard&&dashboard.length>0&&currentLoanType == "myloans"&&!newfiObject.fetchLock) {
+				if (($(document).height()-($(window).scrollTop()+$(window).height()))<=400) {
+					getMoreCustomers();
+				}
+			}
+
+		});
+
+$(document).on('click', '.delCustClas', function(e) {
+	e.stopImmediatePropagation();
+	var element=e.target;
+	//NEXNF-715
+	if($('.overlay-popup-wrapper').css("display")=="block"){
+		$('.overlay-popup-wrapper').hide();				
+		var parent=$(currentElement).parent();
+		$(parent).removeClass('leads-container-tr-sel');
+		currentElement="";
+	}
+	currentElement=$(element);	
+	currentSelectedUserFlag=1;
+	var loanId=$(element).attr("loanId");
+	var customer_name=$(element).attr("customer_name");
+	var parentComponent=$(element).parent();
+	var parentElemet=$(this).parent();
+	$(parentElemet).addClass('leads-container-tr-sel');
+	$('#overlay-confirm').off();
+	$('#overlay-cancel').off();
+	$('.overlay-popup-wrapper').addClass('overlay-popup-wrapper-adj');
+	$('#overlay-popup-txt').addClass('overlay-popup-txt-adj');
+	$('#overlay-popup-txt').html("Are you sure you want to delete loan- "+customer_name+"?");
+	
+	$('#overlay-confirm').on('click', function() {
+		if(loanId){
+			ajaxRequest("rest/loan/"+loanId, "DELETE", "json", {}, function(response) {
+		        if (response.error) {
+		            showToastMessage(response.error.message)
+		        } else {
+		            if(response.resultObject=="Success"){
+		            	$(parentComponent).remove();
+		                callback();    
+		            }else{
+		                 
+		            }
+		        }
+		    });
+			$('#overlay-popup').hide();
+			$('#overlay-confirm').on('click', function() {});			
+		}
+	});
+
+	$('#overlay-cancel').on('click', function() {
+		$('#overlay-popup').hide();
+		$(parentElemet).removeClass('leads-container-tr-sel');
+		$('#overlay-confirm').on('click', function() {});
+	});
+
+	$('#overlay-popup').show();
+	e.stopImmediatePropagation();
+});

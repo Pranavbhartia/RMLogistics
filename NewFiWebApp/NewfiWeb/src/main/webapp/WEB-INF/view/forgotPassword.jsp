@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>newfi</title>
-<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/title-logo.png">
+<link rel="shortcut icon" type="image/x-icon" href="${initParam.resourcesPath}/resources/images/newfiHome.ico">
 <link href="${initParam.resourcesPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/jquery-ui.css" rel="stylesheet">
 <link href="${initParam.resourcesPath}/resources/css/styles.css" rel="stylesheet">
@@ -22,8 +22,8 @@ var resendIndex=locationURL.indexOf("?resend");
 </script>
 <body>
 	<jsp:include page="loginHeader.jsp"></jsp:include>
-	<div class="home-container container">
-		<div class="login-container container">
+	<div class="home-container-adj container">
+		<div class="forget-pass-adj container">
 				<div class="container-row row clearfix">
 				
 					<div id="reg-display-title" class="reg-display-title"></div>
@@ -57,6 +57,7 @@ var resendIndex=locationURL.indexOf("?resend");
 	<script src="${initParam.resourcesPath}/resources/js/message.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/include/jquery-maskMoney.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/historySupport.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/message.js"></script>
 	<script>
 		resizeHeaderWidth();
 		$(window).resize(function() {
@@ -68,12 +69,17 @@ var resendIndex=locationURL.indexOf("?resend");
 
 $(document).ready(function(e){
 	globalBinder();
+
 	if("${error}"!="" && "${error}"!=undefined && "${error}"!=null){
         $("#errorMessage").text("${error}");
 		$("#errorMessage").show(); 
 
 	}
-	
+
+	$('#errorMessage').on('click',function(e){
+		$("#errorMessage").text('');
+		$('#errorMessage').hide();
+	});
 	
 	var title = "";
 	var buttonText = "";
@@ -108,7 +114,7 @@ $('#loginForm').submit(function(event){
 		console.log("Create user button clicked. User : "
 						+ JSON.stringify(user));
 	if($('#emailID').val()==""||$('#emailID').val()==null){
-		$("#emailID").next('.err-msg').html("Email ID cannot be empty").show();
+		$("#emailID").next('.err-msg').html(emailEmptyMessage).show();
 		$(".reg-input-reset-password").addClass('err-input').focus();
 			return;
 		
@@ -130,7 +136,10 @@ $('#loginForm').submit(function(event){
 	});
 
 function paintForgetPasswordResponse(data){
-	if(data.resultObject!=null){		
+	if(data.resultObject!=null){	
+		if($("#errorMessage").html()!=""){
+			$("#errorMessage").hide();
+		}
 		$('#emailID').val('');		
 		showToastMessage(data.resultObject);
 		$("#emailID").next('.err-msg').hide();

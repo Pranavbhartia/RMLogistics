@@ -52,12 +52,13 @@
     font-size: 14px;
 }
 .dwn-val{
-	width: 100px;
+	/* width: 100px; */
+	width: 85px;
 }
 .dwn-percentage{
 	width: 50px;
 	padding-left: 5px;
-	background: url(../images/percentagesy.png) no-repeat 32px #fafafa;
+	background: url(../images/percentagesy.png) no-repeat 35px #fafafa;
 	background-size: 12px;
 	margin-right: 10px;
 	text-align: right;

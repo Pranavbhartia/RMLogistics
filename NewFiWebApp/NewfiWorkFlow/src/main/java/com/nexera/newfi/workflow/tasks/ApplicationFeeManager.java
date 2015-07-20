@@ -25,7 +25,6 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.CreateReminderVo;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.UserVO;
 import com.nexera.core.helper.SMSServiceHelper;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
@@ -54,7 +53,8 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 	private WorkflowService workflowService;
 	@Autowired
 	private ApplicationContext applicationContext;
-
+	@Autowired
+	private Utils utils;
 	@Autowired
 	TemplateService templateService;
 
@@ -148,18 +148,22 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        .parseInt(objectMap.get(
 				                WorkflowDisplayConstants.LOAN_ID_KEY_NAME)
 				                .toString()));
-				UserVO userVO = loanVO.getUser();
+				LoanApplicationFee loanApplicationFee = transactionService
+				        .findByLoan(loanVO);
+				String appFee = "";
+				if (loanApplicationFee != null) {
+					 
+					appFee = "$"+String.valueOf(String.format("%.2f", loanApplicationFee.getFee()));
+				}
 
-				String appFee = String.valueOf(loanVO.getAppFee());
 				substitutions.put("-amount-", new String[] { appFee });
-				substitutions.put("-address-", new String[] { userVO
-				        .getCustomerDetail().getAddressStreet() });
-				substitutions.put("-city-", new String[] { userVO
-				        .getCustomerDetail().getAddressCity() });
-				substitutions.put("-state-", new String[] { userVO
-				        .getCustomerDetail().getAddressState() });
-				substitutions.put("-zip-", new String[] { userVO
-				        .getCustomerDetail().getAddressZipCode() });
+				String paymentDate = "";
+				if (loanApplicationFee != null
+				        && loanApplicationFee.getPaymentDate() != null) {
+					paymentDate = String.valueOf(utils.getDateAndTimeForDisplay(loanApplicationFee
+					        .getPaymentDate()));
+				}
+				substitutions.put("-date-", new String[] { paymentDate });
 				ary[0] = objectMap.get(
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO)
 				        .toString();

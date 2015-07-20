@@ -4,7 +4,7 @@
 		overflow-x: hidden;
 	}
 	.home-container{
-		padding-right: 5px;
+		padding-right: 15px;
 		overflow: hidden;
 	}
 	.left-panel{
@@ -382,11 +382,12 @@
 	.reg-row-lc{
 		line-height: 25px;
 	}
-	.reg-display-title-subtxt{
+	/* .reg-display-title-subtxt{
 		max-width: 100%;
 		padding: 0 10px;
 		margin-bottom: 15px;
-	}
+	} */
+	
 	.cust-eng-step-hdr,.cust-app-step-hdr {
 		display: block;
 		padding: 0 20px;
@@ -1167,6 +1168,14 @@
     .app-options-cont,.app-input{
         width: 100%;
     }
+    
+    .dwn-percentage {
+    	text-align: left;
+    	padding-left: 15px;
+    	margin: 0;
+    
+    }
+    
     .complete-application-header{
         min-height: 45px;
         padding: 5px 0;
@@ -1403,6 +1412,45 @@
 	}
 	.rt-grid-item {
 		font-size: 11px;
+	}	
+	.cus-eng-succ-mess-row {
+		white-space: normal;
+		padding: 5px 20px;
+		text-align: left;
+	}
+	.eng-indent {
+	 	padding: 10px 0 10px 10px;
+	}
+	.first-column {
+		padding: 0;
+		width: 25%;
+	}
+	.first-column img[name="seal"] {
+		width: 50px;
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	.second-column {
+		width: 55%;
+	}
+	.second-column * {
+		font-size: 10px;
+	}
+	a.footer-inline-txt {
+		display: inline-block;
+	}
+	.third-column {
+		width: 20%;
+	}
+	
+	.forget-pass-adj {	
+		padding:36px 0;
+	}
+
+	.reg-display-title-subtxt {
+		text-align: left;
+		width: 453px;
+		font-size: 12px;
 	}
 }
 

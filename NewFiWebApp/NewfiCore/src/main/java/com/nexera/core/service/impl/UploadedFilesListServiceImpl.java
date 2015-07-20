@@ -90,6 +90,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	private UploadedFilesListDao uploadedFilesListDao;
 
 	@Autowired
+	private Utils utils;
+
+	@Autowired
 	private UserProfileDao userProfileDao;
 
 	@Autowired
@@ -780,10 +783,22 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				}
 			}
 		}
-
+		List<String> restrictedFolders = utils.getRestrictedFolders();
+		List<String> restrictedDocTypes = utils.getRestrictedDocTypes();
 		for (LQBedocVO edoc : edocsList) {
-			if (edoc.getDoc_type().equalsIgnoreCase(unAssignedFolder)) {
-				LOG.debug("Ignoring files for this doc type ");
+			// edoc.getFolder_name()
+			LOG.debug("Trying to upload file for Loan " + loan.getId()  + " Doc Type : "+ edoc.getDoc_type() + " Folder : " + edoc.getFolder_name());
+			if (edoc.getDoc_type() != null
+			        && restrictedDocTypes.contains(edoc.getDoc_type()
+			                .toUpperCase())) {
+				LOG.debug("Ignoring files for this doc type "
+				        + edoc.getDoc_type());
+				continue;
+			} else if (edoc.getFolder_name() != null
+			        && restrictedFolders.contains(edoc.getFolder_name()
+			                .toUpperCase())) {
+				LOG.debug("Ignoring files for this Folder Name "
+				        + edoc.getFolder_name());
 				continue;
 			}
 			String uuidDetails = edoc.getDescription();
@@ -959,13 +974,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		try {
 
+			Map<Integer, FileAssignmentMappingVO> filteredMapping = new HashMap<Integer, FileAssignmentMappingVO>();
+			// First do the Extra Assignment and remove it from HashSet
 			for (Integer key : mapFileMappingToNeed.keySet()) {
 				LoanNeedsList loanNeed = loanNeedListDAO.findById(key);
 
 				NeedsListMaster needMaster = loanNeed.getNeedsListMaster();
 				LOG.info("Need Master label: " + needMaster.getLabel());
-				System.out.println("Need Master label: "
-				        + needMaster.getLabel());
 				if (needMaster.getLabel()
 				        .equals(CommonConstants.EXTRA_DOCUMENT)) {
 					FileAssignmentMappingVO mapping = mapFileMappingToNeed
@@ -974,35 +989,43 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					for (Integer fileId : fileIds) {
 						deactivateFileUsingFileId(fileId);
 					}
-					mapFileMappingToNeed.remove(key);
 				} else {
-					FileAssignmentMappingVO mapping = mapFileMappingToNeed
-					        .get(key);
-					List<Integer> fileIds = mapping.getFileIds();
-					Integer newFileRowId = null;
-					if (mapping.getIsMiscellaneous()) {
-						UploadedFilesList filesList = loanService
-						        .fetchUploadedFromLoanNeedId(key);
-						LOG.info("fetchUploadedFromLoanNeedId returned : "
-						        + filesList);
-						if (filesList != null) {
-							fileIds.add(filesList.getId());
-						}
-						newFileRowId = mergeAndUploadFiles(fileIds, loanId,
-						        userId, assignedBy);
-
-						for (Integer fileId : fileIds) {
-							deactivateFileUsingFileId(fileId);
-						}
-					} else {
-						newFileRowId = fileIds.get(0);
-					}
-					LOG.info("new file pdf path :: " + newFileRowId);
-					updateFileInLoanNeedList(key, newFileRowId);
-					updateIsAssignedToTrue(newFileRowId);
+					filteredMapping.put(key, mapFileMappingToNeed.get(key));
 				}
 			}
-			changeWorkItem(mapFileMappingToNeed, loanId);
+			for (Integer key : filteredMapping.keySet()) {
+				LoanNeedsList loanNeed = loanNeedListDAO.findById(key);
+
+				NeedsListMaster needMaster = loanNeed.getNeedsListMaster();
+				LOG.info("Need Master label: " + needMaster.getLabel());
+				System.out.println("Need Master label: "
+				        + needMaster.getLabel());
+
+				FileAssignmentMappingVO mapping = filteredMapping.get(key);
+				List<Integer> fileIds = mapping.getFileIds();
+				Integer newFileRowId = null;
+				if (mapping.getIsMiscellaneous()) {
+					UploadedFilesList filesList = loanService
+					        .fetchUploadedFromLoanNeedId(key);
+					LOG.info("fetchUploadedFromLoanNeedId returned : "
+					        + filesList);
+					if (filesList != null) {
+						fileIds.add(filesList.getId());
+					}
+					newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
+					        assignedBy);
+
+					for (Integer fileId : fileIds) {
+						deactivateFileUsingFileId(fileId);
+					}
+				} else {
+					newFileRowId = fileIds.get(0);
+				}
+				LOG.info("new file pdf path :: " + newFileRowId);
+				updateFileInLoanNeedList(key, newFileRowId);
+				updateIsAssignedToTrue(newFileRowId);
+			}
+			changeWorkItem(filteredMapping, loanId);
 			isSuccess = true;
 			// commonResponseVO = RestUtil.wrapObjectForSuccess( true );
 

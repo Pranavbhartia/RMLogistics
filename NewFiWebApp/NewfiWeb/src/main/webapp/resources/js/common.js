@@ -21,6 +21,7 @@ function removeToastMessage(){
 
 }
 
+
 function removeParticularToastMessage(ElementID){
 
 	$(document).on('blur',ElementID,function(){
@@ -1087,6 +1088,14 @@ function restrictSpecialChar(name,element){
 	    }
 
 	});
+	$(element).bind('paste',function(e){
+		var pastedText = e.originalEvent.clipboardData.getData('text');
+		console.log(pastedText);
+		var regex = /^[0-9a-zA-Z]*$/;
+		if(!regex.test(pastedText)){
+			e.preventDefault();
+		}
+	});
 }
 
 function restrictChar(name){
@@ -1102,7 +1111,14 @@ function restrictChar(name){
 	        return false;
 
 	    }
-
+	});
+	$('input[name="'+name+'"]').bind('paste',function(e){
+		var pastedText = e.originalEvent.clipboardData.getData('text');
+		console.log(pastedText);
+		var regex = /^[0-9]*$/;
+		if(!regex.test(pastedText)){
+			e.preventDefault();
+		}
 	});
 }
 function updateNotifications(loanid){
@@ -1167,3 +1183,227 @@ $(document).on('keydown', '#stateId' ,function(e){
 		}
 	}
 });
+
+
+
+	function validateUser(baseurl,registration,isViaReferal){
+		showOverlay();
+	    $.ajax({
+	        url: baseurl+"rest/shopper/validate",
+	        type: "POST",
+	        cache:false,
+	        data: {
+	            "registrationDetails": JSON.stringify(registration)
+	        },
+	        datatype: "application/json",
+	        success: function(data) {
+	        	hideOverlay();
+	            if(data.error==null){
+	            	var userType="";
+	            	if(isViaReferal){
+	            		userType="Borrower";
+	            	}else {
+	            		userType="Customer";
+	            	}
+	            	if($("#userTypeID").attr('value')==userType){//NEXNF-659 changed from customer to borrower
+						createNewCustomer(baseurl,registration,isViaReferal);
+					}else if($("#userTypeID").attr('value')=="Realtor"){
+						createNewRealtor(baseurl,registration,isViaReferal);
+					}
+	            }else{
+	            	//showErrorToastMessage(data.error.message);
+	            	$('.errorMsg').show();
+	            }
+	           
+	        },
+	        error: function(data) {
+	        	
+	        	hideOverlay();
+	        	if(data!=""||data!=null){
+	        		 showErrorToastMessage(data);
+	        	}else{
+	        		 showErrorToastMessage(validation_unsuccess_message);
+	        	}
+	            
+	             
+	        }
+	    });
+	}
+
+    function createNewCustomer(baseurl,registration,isViaReferal) {
+ //alert(JSON.stringify(registration));
+    showOverlay();
+    $.ajax({
+    url: baseurl+"rest/shopper/registration",
+    type: "POST",
+    cache:false,
+    data: {
+        "registrationDetails": JSON.stringify(registration)
+    },
+    datatype: "application/json",
+    success: function(data) {
+    	
+    	hideOverlay();
+        appendUserCreationSuccessMessage(data);
+        $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
+        $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
+        if(!isViaReferal){
+        	$('.cus-eng-success-message').removeClass('cus-eng-success-message-adjust');
+        	$('.cus-eng-success-message').addClass('cus-eng-success-message-new-adjust');
+        }
+        /* window.location.href =baseurl;
+        window.location.href = data; */
+        // printMedianRate(data,container);
+    },
+    error: function(data) {
+    	
+    	hideOverlay();
+        showErrorToastMessage(user_creation_unsuccess_message);
+       
+      }
+     });
+    }
+	
+	function createNewRealtor(baseurl,user,isViaReferal){
+		showOverlay();
+	    $.ajax({
+	        url: baseurl+"rest/shopper/realtorRegistration",
+	        type: "POST",
+	        cache:false,
+	        data: {
+	            "registrationDetails": JSON.stringify(user)
+	        },
+	        datatype: "application/json",
+	        success: function(data) {
+	            // $('#overlay-loader').hide();
+	            hideOverlay();
+	            appendUserCreationSuccessMessage(data);
+	            $('.cus-eng-success-message').addClass('cus-eng-success-message-adjust');
+	            $('.cus-eng-succ-mess-row').addClass('cus-eng-succ-mess-row-adjust');
+	            if(!isViaReferal){
+	            	$('.cus-eng-success-message').removeClass('cus-eng-success-message-adjust');
+	            	$('.cus-eng-success-message').addClass('cus-eng-success-message-new-adjust');
+	            }
+	          // alert (data);
+	            /* window.location.href =baseurl;
+	            window.location.href = data; */
+	            // printMedianRate(data,container);
+	        },
+	        error: function(data) {
+	         // alert(data);
+	         	hideOverlay();
+	            showErrorToastMessage(realtor_creation_unsuccess_message);
+	            
+	        }
+	    });	
+	}
+	
+	$(document).on('keypress','input[name="yearLeftOnMortgage"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+	        //display error message
+	        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+	          return false;
+	    }
+		//NEXNF-595(in eng path)
+		if($(this).val().length >= 2){
+
+	         return false;
+	    }
+	});
+	//NEXNF-595(in application path)
+	$(document).on('keypress','input[name="mortgageyearsleft"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+	        //display error message
+	        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+	          return false;
+	    }
+		
+		if($(this).val().length >= 2){
+
+	         return false;
+	    }
+	});
+	
+ $(document).on('keypress','input[name="zipCode"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+	        //display error message
+	        //showToastMessage("Enter correct zipcode");
+	          return false;
+	    }				
+		if($(this).val().length >= 5){
+
+	         return false;
+	    }
+	});  
+ $(document).on('keypress','input[name="coBorrowerZipCode"]',function(e){
+		
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+	        //display error message
+	        //showToastMessage("Enter correct zipcode");
+	          return false;
+	    }				
+		if($(this).val().length >= 5){
+
+	         return false;
+	    }
+	});  
+ 
+ $(document).on('keypress','input[name="propZipCode"]',function(e){
+	 			
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+	        //display error message
+	        //showToastMessage("Enter correct zipcode");
+	          return false;
+		}				
+		if($(this).val().length >= 5){
+
+	         return false;
+	    }
+	});  
+ $(document).on('keypress','input[name="state"]',function(e){
+	 
+		if($(this).val().length >= 2){
+	         return false;
+	    }
+		
+	}); 
+ 
+ $(document).on('keypress','input[name="propState"]',function(e){
+	 
+			if($(this).val().length >= 2){
+	         return false;
+	    }
+			
+	}); 
+ 
+ 
+ $(document).on('keypress','input[name="coBorrowerState"]',function(e){
+	 
+			if($(this).val().length >= 2){
+	         return false;
+	    }
+			
+	}); 
+function disablehowerEffect(){
+	var exist=$(document.getElementsByTagName('head')[0]).find("[id='howerCancellationclas']");
+	if(exist.length>0)
+		return;
+	var style = document.createElement('style');
+	style.type = 'text/css';
+	style.id="howerCancellationclas";
+	$(style).append('.app-option-choice:hover { background-color: rgba(24,72,141,0.9); }');
+
+	$(style).append('.ce-option:hover,.ce-save-btn:hover,.choice-hover:hover,.app-save-btn:hover { background-color: rgba(24,72,141,0.9); }');
+
+	$(style).append('.app-option-choice[isSelected="true"]:hover{background-color : #F47521;}');
+	document.getElementsByTagName('head')[0].appendChild(style);
+}
+
+function enablehowerEffect(){
+	$(document.getElementsByTagName('head')[0]).find("[id='howerCancellationclas']").remove();
+}
+
+

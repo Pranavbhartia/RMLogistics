@@ -467,11 +467,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void verifyEmail(int userId) {
 		userProfileDao.verifyEmail(userId);
 		LoanVO loan = loanService.getActiveLoanOfUser(new UserVO(userId));
-		if (loan != null && loan.getId() != 0) {
+		//NEXNF-628
+		/*if (loan != null && loan.getId() != 0) {
 			dismissAlert(MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
 			        loan.getId(), null);
 			// Dismiss Alert
-		}
+		}*/
 	}
 
 	@Override
@@ -1163,7 +1164,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		Reader reader = new InputStreamReader(file.getInputStream());
 		CSVReader csvReader = new CSVReader(reader, ',',
 		        CSVParser.DEFAULT_QUOTE_CHARACTER, 3);
-		int lineCounter = 3;
+		int lineCounter = 1;
 
 		JsonObject errors = new JsonObject();
 		JsonArray errorList = new JsonArray();
@@ -1375,10 +1376,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
-							createAlert(
+							//NEXNF-628
+							/*createAlert(
 							        MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
 							        loanVO.getId(),
-							        WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT);
+							        WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT);*/
 							if (null != loanVO.getLoanType()
 							        && null != loanVO.getLoanType()
 							                .getLoanTypeCd()
@@ -1819,13 +1821,34 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public User validateRegistrationLink(String userToken, int clientRawOffset)
 	        throws InvalidInputException {
 		User userDetail = findUserByToken(userToken);
+		
 		if (userDetail == null) {
 			throw new InvalidInputException("Invalid URL");
 		}
-		if (utils.hasLinkExpired(userDetail.getTokenGeneratedTime(),
-		        clientRawOffset)) {
+		
+		
+		Boolean isLinkExpired=utils.hasLinkExpired(userDetail.getTokenGeneratedTime(),
+		        clientRawOffset);
+			
+		if (isLinkExpired) {
 			throw new InvalidInputException(
 			        "Token Expired - Please use the Reset password link to generate again");
+		}else{
+			
+			//TODO setting as email verified 
+			if(!userDetail.getEmailVerified()){
+				LOG.info("The user is verifying his email: set his verified to true");
+				verifyEmail(userDetail.getId());
+				LOG.info("Also dismiss alert for Verification");
+			}
+			
+			//TODO updating the token as null after email is verified
+			UserVO userVOUpdate = new UserVO();
+			userVOUpdate.setId(userDetail.getId());
+			userVOUpdate.setEmailEncryptionToken(null);
+			updateTokenDetails(User
+			        .convertFromVOToEntity(userVOUpdate));
+
 		}
 		return userDetail;
 	}

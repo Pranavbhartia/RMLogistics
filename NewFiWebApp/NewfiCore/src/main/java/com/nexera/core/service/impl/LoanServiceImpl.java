@@ -53,6 +53,7 @@ import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.MobileCarriersEnum;
 import com.nexera.common.enums.UserRolesEnum;
+import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -373,6 +374,30 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO,
+	        String startLimit, String endLimit) {
+		int startLimt = Integer.parseInt(startLimit);
+		int endLimt = startLimt + 15;
+		if(endLimit!=null){
+			endLimt= Integer.parseInt(endLimit);
+		}
+		// Get new prospect and lead loans this user has access to.
+		List<Loan> loanList = loanDao
+		        .retrieveLoanByProgressStatus(
+		                this.parseUserModel(userVO),
+		                new int[] {
+		                        LoanProgressStatusMasterEnum.NEW_LOAN
+		                                .getStatusId(),
+		                        LoanProgressStatusMasterEnum.IN_PROGRESS
+		                                .getStatusId() }, startLimt, endLimt);
+		;
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
+
+		return loanDashboardVO;
+	}
 
 	private boolean checkIfUserIsSalesManager() {
 
@@ -467,6 +492,7 @@ public class LoanServiceImpl implements LoanService {
 		        .getLoanProgressStatus());
 
 		loanCustomerVO.setLqbFileId(loan.getLqbFileId());
+		loanCustomerVO.setLockedRateData(loan.getLockedRateData());
 		/*
 		 * TODO: Check if the logged in user is a Sales Manager. and show the
 		 * name of the loan manager instead of processor.
@@ -2130,4 +2156,39 @@ public class LoanServiceImpl implements LoanService {
 		}
 		return creditScoreValid;
 	}
+
+	@Override
+	@Transactional
+	public void markLoanDeleted(int loanId){
+		Loan loan = (Loan) loanDao.load(Loan.class, loanId);
+		LoanProgressStatusMaster loanProgressStatusMaster = (LoanProgressStatusMaster) loanDao
+		        .load(LoanProgressStatusMaster.class,
+		                LoanProgressStatusMasterEnum.DELETED.getStatusId());
+		loan.setLoanProgressStatus(loanProgressStatusMaster);
+		loanDao.saveOrUpdate(loan);
+		User user = loan.getUser();
+		String updatedEmail = "deletedEmail-" + user.getEmailId();
+		boolean userFound = true;
+		int count = 0;
+		do {
+
+			try {
+				User userVo = userProfileService.findUserByMail(updatedEmail);
+				if (userVo != null) {
+					updatedEmail = "deletedEmail" + count + "-"
+					        + user.getEmailId();
+					count++;
+				} else {
+					userFound = false;
+				}
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} while (userFound == true);
+		user.setEmailId(updatedEmail);
+		user.setStatus(-1);
+		loanDao.saveOrUpdate(user);
+	}
+
 }

@@ -121,7 +121,7 @@ function getLoanNeedsManagerContext(loanId){
 				data.label=label;
 				data.description=desc;
 				var exist;
-				var categoryList=ob.customList[f_category];
+				var categoryList=ob.customList[category];
 				if(categoryList){
 					for(var i=0;i<categoryList.length;i++){
 						if(categoryList[i].title==label){

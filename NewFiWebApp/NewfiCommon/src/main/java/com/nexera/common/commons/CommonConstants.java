@@ -153,7 +153,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_NEW_NOTE = "NEW_NOTE_TEMPLATE";
 	public static final String TEMPLATE_KEY_NAME_PAYMENT_UNSUCCESSFUL = "PAYMENT_UNSUCCESSFUL_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_TEST_TEMPLATE = "TEST_EMAIL_TEMPLATE_ID";
-	public static final String TEMPLATE_KEY_NAME_WORKFLOW_COMPLETION = "TEMPLATE_WORKFLOW_COMPLETION";
+	
 	public static final String TEMPLATE_KEY_NAME_NEW_LEAD_NO_PRODUCTS = "NEW_LEAD_NO_PRODUCTS";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI = "WELCOME_TO_NEWFI_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR = "WELCOME_TO_NEWFI_REALTOR_TEMPLATE_ID";
@@ -338,6 +338,7 @@ public interface CommonConstants {
 	public static final String ZIPCODE_ISNOT_VALID = "Zip code is not valid";
 	public static final String ZIPCODE_ISNOT_APPROVED ="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
 	public static final String ZIPCODE_VALID ="Valid ZipCode";
+
 	
 	
 }

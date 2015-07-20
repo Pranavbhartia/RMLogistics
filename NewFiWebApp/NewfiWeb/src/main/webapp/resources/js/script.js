@@ -101,22 +101,31 @@ function getCustomerSecondaryLeftNav() {
         	else{
         		loan = newfiObject.appUserDetails.loan;
         	}
-        	
-            if(loan.lqbFileId && loan.lqbFileId!=""){
+        	//NEXNF-647
+            /*if(loan.lqbFileId && loan.lqbFileId!=""){
                 flag=false;
-            }
+            }*/
         }catch(e){
         	 console.log("catch");
         }
     }
     var step2 = "";
     if(flag){
-        step2 = getCustomerSecondaryLeftNavStep(2, "complete my application");
+    	//NEXNF-635 changed complete my application to application
+    	//portal updates 7.9 changed from application to loan application
+        step2 = getCustomerSecondaryLeftNavStep(2, "loan<br />application");
         newfiObject.applicationNavTab=step2;
     } 
-    var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");
-    var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");
-    var step5 = getCustomerSecondaryLeftNavStep(5, "my <br /> loan progress");
+    //NEXNF-635
+    /*  var step3 = getCustomerSecondaryLeftNavStep(3, "my<br />rate options");*/
+    var step3 = getCustomerSecondaryLeftNavStep(3, "programs<br />and rates");
+    //jira-711
+/*    var step4 = getCustomerSecondaryLeftNavStep(4, "upload<br />needed items");*/
+    var step4 = getCustomerSecondaryLeftNavStep(4, "manage<br />documents");
+    //NEXNF-635
+    /* var step5 = getCustomerSecondaryLeftNavStep(5, "my <br /> loan progress");*/
+    //NEXNF-762
+    var step5 = getCustomerSecondaryLeftNavStep(5, "loan<br />progress");
     return leftTab2Wrapper.append(step1).append(step2).append(step3).append(step4).append(step5);
 }
 
@@ -196,12 +205,12 @@ function changeSecondaryLeftPanel(secondary,doNothing) {
     } else if (secondary == 2) {
     	var userId=newfiObject.user.id;
         getAppDetailsForUser(userId,function(appUserDetailsTemp){
-            if(!appUserDetailsTemp.loan.lqbFileId){
+            /*if(!appUserDetailsTemp.loan.lqbFileId){*/
                 paintCustomerApplicationPage();
-            }else{
+            /*}else{
             	hideCompleteYourProfile();
             	paintApplicationAlreadySubmittedPage(appUserDetailsTemp.loanType.loanTypeCd);
-            }
+            }*/
         });
         //paintSelecedOption();
     } else if (secondary == 3) {
@@ -474,8 +483,9 @@ function redirectToGettingToKnowLastPage() {
 	cont2.append("<div class='getting-to-know-hdr-txt'>Next Steps</div>");
 	var cont2btn1 = $('<div>').attr({
 		"class" : "getting-to-know-btn float-right"
-	}).html("Complete My Application").on('click',function(){
+	}).html("Application").on('click',function(){
 		//NEXNF-577 changed the text Complete My Loan Profile to Complete My Application
+		//NEXNF-635 changed the text Complete My Application to Application
 			removedKnwoNewFi = true;
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
 	        newfiObject.applicationKnowNewfi=undefined;
@@ -622,9 +632,14 @@ function getCompletYourApplicationHeader() {
         "class": "complete-application-wrapper"
     });
 
+    //NEXNF-637
+    /*var header = $('<div>').attr({
+        "class": "complete-application-header"
+    }).html("Complete My Loan Profile");*/
     var header = $('<div>').attr({
         "class": "complete-application-header"
-    }).html("Complete My Loan Profile");
+    }).html("Complete Application");//Changed from Complete My Application to Complete Application
+    
     return parent.append(header);
 }
 
@@ -1939,7 +1954,7 @@ function getLoanSummaryRowCalculateBtn(desc, detail,id,id2,appUserDetails) {
 }
 
 
-function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag) {
+function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag,paddingLeftFlag) {
     var clas="loan-summary-col-detail";
     var paddingClass="";
     if(lighterBackFlag){
@@ -1957,11 +1972,15 @@ function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag) {
     
     if(desc.indexOf('color="green"')>0){
         clas="loan-summary-green-col-detail";
-    }else if(desc.indexOf('color="red"')>0){
+    }else if(desc.indexOf('<font >')>0){
         clas="loan-summary-red-col-detail";
     }
+    var paddingClass="";
+    if(paddingLeftFlag){
+    	paddingClass="tax-Ins-clas";
+    }
     var col2 = $('<div>').attr({
-        "class": clas+" float-left",
+        "class": clas+" float-left "+paddingClass,
         "id": id
     }).html(detail);
     container.append(col1).append(col2);
@@ -2061,7 +2080,7 @@ function getClosingCostSummaryContainer(valueSet) {
 
 function getClosingCostHeader(text) {
     var header = $('<div>').attr({
-        "class": "closing-cost-header cus-eng-font capitalize ccSummary"
+        "class": "closing-cost-header  cus-eng-font capitalize ccSummary"
     }).html(text);
     return header;
 }
@@ -2132,20 +2151,24 @@ function getClosingCostBottomConatiner() {
     var row1Con3 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "","");
     var row2Con3 = getClosingCostContainerRow(2, getClosingCostLabel("Homeowners Insurance"), "");
     
-    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");
-    var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
+/*    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");*///NEXNF-655
+    var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Varies based on calendar month of closing");
+   /* var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");*/
+    var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
     //var row1Con2 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
-    //var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");
+    //var row2Con2 = getClosingCostContainerRowWithSubText(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");//NEXNF-655
     var row4Con2 = getClosingCostContainerLastRow(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "");
     
     
     //container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
     container2.append(headerCon2).append(row1Con3).append(row2Con3).append(row1Con2).append(row2Con2).append(row4Con2);
-    
+    //NEXNF-655
+    /* 
     var bottomSubText = $('<div>').attr({
         "class": "closing-cost-bot-row eng-closing-cost-note"
     }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
-    return wrapper.append(container2).append(bottomSubText);
+    return wrapper.append(container2).append(bottomSubText);*/
+    return wrapper.append(container2);
 }
 
 function getClosingCostConatinerHeader(text) {
@@ -2261,7 +2284,7 @@ function getClosingCostContainerRow(rowNum, desc, detail) {
     return row.append(rowDesc).append(rowDetail);
 }
 
-function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
+function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext,isHomeOwnersInsurance) {
     var key=objectKeyMakerFunction(desc);
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
@@ -2296,7 +2319,18 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
    var subTextDiv = $('<div>').attr({
         "class": "subtext"
     }).html(subtext);
-    rowDesc.append(descText).append(subTextDiv);
+   
+ //NEXNF-655
+   if(isHomeOwnersInsurance){
+   	 var bottomSubText = $('<div>').attr({
+   	        "class": "closing-cost-bot-row eng-closing-cost-note"
+   	    }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
+   	   rowDesc.append(descText).append(subTextDiv).append(bottomSubText);
+   }else{
+	   rowDesc.append(descText).append(subTextDiv);
+   }
+ 
+    //rowDesc.append(descText).append(subTextDiv);
     
     
     var cssClass = "closing-cost-detail float-left";
@@ -2312,6 +2346,8 @@ function getClosingCostContainerRowWithSubText(rowNum, desc, detail, subtext) {
     var rwObj=getRowHolderObject(rowDetail,detail,key);
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
+    
+    
     return row.append(rowDesc).append(rowDetail);
 }
 
@@ -2366,7 +2402,13 @@ function getDocumentContainer() {
     });
     var listUploadedFiles = neededItemListObject.resultObject.listUploadedFilesListVO;
     for (i in listUploadedFiles) {
-        if (listUploadedFiles[i].needType == undefined || listUploadedFiles[i].needType == null || listUploadedFiles[i].needType == "") {
+        if (listUploadedFiles[i].needType == undefined || listUploadedFiles[i].needType == null || listUploadedFiles[i].needType == "" ) {
+        	if (listUploadedFiles[i].isMiscellaneous != undefined && !listUploadedFiles[i].isMiscellaneous && !userIsInternal())
+        	{
+        		//Not miscellaneous menas LQB
+        		// User is not internal means : he is customer or realtor - so dont show.
+        		continue;
+        	}
             var col1 = getDocumentUploadColumn(listUploadedFiles[i]);
             documentContainer.append(col1);
             $('.submit-btn').removeClass('hide');
@@ -2750,7 +2792,8 @@ function getRequestRateLockStatus(element){
                     	element.html( "Rate Lock Requested").unbind( "click").addClass("rateLockRequested");
                     }
                 }else{
-                	element.addClass("rate-btn");
+                    $(element).remove();
+            		/*element.addClass("rate-btn");
                     element.html("Contact Your Loan Advisor").on('click',function(){
                      //changeLeftPanel(1);
                     	
@@ -2764,7 +2807,7 @@ function getRequestRateLockStatus(element){
                     	}else{
                     		showToastMessage("Please contact your customer");
                     	}
-                    });
+                    });*/
                 }
             }
         });

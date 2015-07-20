@@ -202,11 +202,11 @@ function getDocumentUploadColumn(listUploadedFiles) {
 				if (needsListMasterobj.id == listUploadedFiles.needType) {
 					option.attr('selected', 'selected');
 				}
-				if (neededItemListObj[i].needsListMaster.id == 40 ) {
-					if(userIsInternal()){
+				if (neededItemListObj[i].needsListMaster.id == 40 && userIsInternal()) { // This is for Extra  - Extra should appear only for internal					
 						docAssign.append(option);	
-					}
-						
+				}
+				else if (neededItemListObj[i].needsListMaster.needCategory == "System" && userIsInternal()) { 
+					docAssign.append(option);
 				}else{
 					docAssign.append(option);
 				}
@@ -250,9 +250,18 @@ function getDocumentUploadColumn(listUploadedFiles) {
 				"data-placement" : "top",
 				"title" : "Cannot access file."
 			});
-			docImg.addClass("unlink");
-			ahrefFile = docDesc;
+			docImg.addClass("unlink");			
+			//ahrefFile = docDesc;
+			
+			//NEXNF-662
+			ahrefFile = "";
+			docImg.hide();
+			docDesc.hide();
 			docAssign.hide();
+			
+			column.remove();
+			return;
+		
 		}
 	} else {
 		docImg.attr({
@@ -287,8 +296,28 @@ function showFileLink(uploadedItems) {
 					uploadedItems,
 					function(index, value) {
 						var needId = value.needType;
+						var needLQB = !value.isMiscellaneous;
+						var showDocLink = false;
+						if (needLQB && userIsInternal())//if LQB only show if internal
+						{
+							showDocLink = true;
+						}
+						else if (!needLQB && newfiObject.user.userRole.roleDescription == "Realtor" && value.assignedByUser.userId == newfiObject.user.id)
+						{
+							//If not LQB and user is realtor show only if assigned by him
+							showDocLink = true;
+						}
+						else if (!needLQB && newfiObject.user.userRole.roleDescription != "Realtor")
+						{
+							showDocLink = true;
+						}
+						if (showDocLink) // If LQB File and user Internal : show file
+						{
 						$('#needDoc' + needId).removeClass('hide');
+						
 						$('#needDoc' + needId).addClass('doc-link-icn');
+						
+						
 						$('#needDoc' + needId)
 								.click(
 										function() {
@@ -318,6 +347,7 @@ function showFileLink(uploadedItems) {
 											}
 
 										});
+						
 						$("#doc-uploaded-icn_" + needId).addClass("hide");
 
 						for (i in loanNeed) {
@@ -330,7 +360,14 @@ function showFileLink(uploadedItems) {
 							}
 
 						}
-
+						}
+						else
+						{
+							$('#needDoc' + needId).removeClass('hide');
+							
+							$('#needDoc' + needId).addClass('doc-link-res');
+							$("#doc-uploaded-icn_" + needId).addClass("hide");
+						}
 					});
 
 }
@@ -387,17 +424,31 @@ function getNeedItemsWrapper(neededItemListObject) {
 	var wrapper = $('<div>').attr({
 		"class" : "needed-items-wrapper"
 	});
+	
+	//NEXNF-662
+	var text="";
+	
+	if(newfiObject.user.userRole.id==2){
+		text="previously uploaded items";
+	}else {
+		text="needed items";
+	}
+	
 	var header = $('<div>').attr({
 		"class" : "needed-items-header"
-	}).html("needed items");
+	}).html(text);
 	var container = $('<div>').attr({
 		"class" : "needed-items-container clearfix"
 	});
 	var leftContainer = $('<div>').attr({
 		"class" : "needed-items-lc float-left"
 	});
-
-	addNeededDocuments(neededItemListObject, leftContainer, container);
+	
+	
+	
+		addNeededDocuments(neededItemListObject, leftContainer, container);
+	
+	
 
 	return wrapper.append(header).append(container);
 }
@@ -449,8 +500,31 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 		container.append(leftContainer);
 		return;
 	}
+	//NEXNF-662
 
-	var rightContainer = $('<div>').attr({
+	var rightContainer="";
+	if(newfiObject.user.userRole.id!=2){
+		rightContainer = $('<div>').attr({
+			"class" : "needed-items-rc float-right"
+		});
+		var knobScore = neededItemListObject.resultObject.neededItemScoreVO;
+
+	var inputBox = $("<input>").attr({
+		"class" : "dial",
+		"id" : "knobUpload",
+		"data-min" : "0",
+		"data-width" : "150",
+		"data-thickness" : "0.1",
+		"data-fgColor" : "#F47521",
+		"data-bgColor" : "#EFE1DB",
+		"data-max" : knobScore.neededItemRequired,
+		"value" : knobScore.totalSubmittedItem
+	});
+
+		rightContainer.append(inputBox);
+	}
+	//NEXNF-662
+/*	var rightContainer = $('<div>').attr({
 		"class" : "needed-items-rc float-right"
 	});
 	var knobScore = neededItemListObject.resultObject.neededItemScoreVO;
@@ -467,7 +541,7 @@ function addNeededDocuments(neededItemListObject, leftContainer, container) {
 		"value" : knobScore.totalSubmittedItem
 	});
 
-	rightContainer.append(inputBox);
+	rightContainer.append(inputBox);*/
 	container.append(leftContainer).append(rightContainer);
 
 }
@@ -518,9 +592,18 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	var uploadedNeedContainer = $("<div>").attr({
 		"id" : "uploadedNeedContainer"
 	});
+	//NEXNF-662
+	var text="";
+	if(newfiObject.user.userRole.id==2){
+		text="Upload contract items";
+	}else{
+		/*text="Upload needed items";*/
+		text="Manage Documents";//jira-711
+	}
 	var header = $('<div>').attr({
 		"class" : "upload-item-header"
-	}).html("Upload needed items");
+	}).html(text);
+	
 	var container = $('<div>').attr({
 		"class" : "upload-item-container"
 	});
@@ -549,6 +632,10 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 			|| $('.document-cont-col').length == 0) {
 		$('.submit-btn').addClass('hide');
 	}
+		if($('.document-cont-col').hasClass('unlink')){
+			$('.submit-btn').addClass('hide');
+		}
+	
 
 }
 

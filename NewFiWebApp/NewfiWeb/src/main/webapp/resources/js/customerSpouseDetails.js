@@ -4,7 +4,8 @@ function paintMySpouseIncome() {
 	if(appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.spouseName) 
 	 coborrowerName = appUserDetails.customerSpouseDetail.spouseName;
 	
-	var quesTxt =coborrowerName+ " details :Select all that apply";
+	//var quesTxt =coborrowerName+ " details :Select all that apply";
+	var quesTxt ="Income for "+coborrowerName+ " : select all that apply";//Changed for web portal updates 7.1 part 2//jirs-678,709
 	
     var selfEmployedData={};
     if(appUserDetails && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.selfEmployedIncome){
@@ -32,6 +33,9 @@ function paintMySpouseIncome() {
     var retirementIncome={};
     if(appUserDetails && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.retirementIncome)
         retirementIncome={"selected":true,"data":appUserDetails.customerSpouseDetail.retirementIncome};
+    var notApplicable={};
+    if(appUserDetails  && appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.notApplicable)
+        notApplicable={"selected":(appUserDetails.customerSpouseDetail.notApplicable==undefined?false:true),"data":appUserDetails.customerSpouseDetail.notApplicable};
 
 	var options = [ {
 		"text" : "W2 Employee",
@@ -80,7 +84,14 @@ function paintMySpouseIncome() {
 		"name" :"retirementIncome",
         "data" : retirementIncome,
 		"value" : 6
-	}];
+	}, 
+    {
+        "text" : "Not Applicable",
+        "onselect" : function(){},
+        "name" :"notApplicable",
+        "data" : notApplicable,
+        "value" : 7
+    }];
 	
 	var quesCont = paintSpouseCustomerApplicationPageStep3(quesTxt, options, name);
 	$('#app-right-panel').html('');
@@ -114,6 +125,8 @@ function paintMySpouseIncome() {
     	        if(isStatus.length>0){	
     	      	 
     	        	for(var i=0;i<isStatus.length;i++){
+    	        		if(isStatus[i].attr("value")=="7")
+                            continue;
     	        		var status=validateInputOfChecked(isStatus[i]);
         	        	if(status==false){
         	        		return false;
@@ -198,9 +211,16 @@ function paintMySpouseIncome() {
 					});
 			  		 
 			  		appUserDetails.customerSpouseEmploymentIncome=customerSpouseEmploymentIncome;
-			  	 }
-	      
-	  
+			  	}
+			  	
+	      		if($("#ce-option_7").prev().hasClass('app-option-checked')){
+		            appUserDetails.customerSpouseDetail.notApplicable=true;
+		        }else{
+		            appUserDetails.customerSpouseDetail.notApplicable=false;
+		        }
+	  			
+
+
 			    selfEmployedIncome = $('input[name="selfEmployedIncome"]').val();
 		        selfEmployedYears = $('input[name="selfEmployedYears"]').val();
 		        childAlimonySupport = $('input[name="childAlimonySupport"]').val();
@@ -268,11 +288,11 @@ function paintMySpouseIncome() {
 					if($(otherContainer).find('.app-option-checked').hasClass('app-option-checked')){
 					    appUserDetails.customerSpouseOtherAccountDetails=getAccountValues(otherContainer,"customerSpouseOtherAccountDetails","accountSubType","currentAccountBalance","amountForNewHome");
 					}
-					
-					if(!appUserDetails.customerSpouseDetail.skipMyAssets && !($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(otherContainer).find('.app-option-checked').hasClass('app-option-checked'))){
+					//validation for my assests
+					/*if(!appUserDetails.customerSpouseDetail.skipMyAssets && !($(bankContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(retirementContainer).find('.app-option-checked').hasClass('app-option-checked')) && !($(otherContainer).find('.app-option-checked').hasClass('app-option-checked'))){
 						showErrorToastMessage("Please select any option for my assets");
 		    			return false;
-					}
+					}*/
 					
 					
 				}
@@ -514,7 +534,7 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
-
+	var applicationLocked=checkLqbFileId();
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
@@ -533,20 +553,27 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 		var option = $('<div>').attr({
 			"class" : "ce-option-checkbox "+selectedClas,
 			"value" : options[i].value
-		}).html(options[i].text).bind('click', {
-			"option" : options[i],
-			"name" : options[i].name+"-CHK"
-		}, function(event) {
-			if($(this).hasClass('app-option-checked')){
-			    $(this).removeClass('app-option-checked');
-			}else{
-			    $(this).addClass('app-option-checked');
-			}
-			var key = event.data.name;
-			//appUserDetails[key] = event.data.option.value;
-			event.data.option.onselect(event.data.option.value,undefined,event.data.option.name);
-		});
-		optionContainer.append(option);
+		}).html(options[i].text)
+
+		if((applicationLocked&&options[i].data&&options[i].data.selected)||!applicationLocked){
+			option.bind('click', {
+				"option" : options[i],
+				"name" : options[i].name+"-CHK"
+			}, function(event) {
+				if($(this).hasClass('app-option-checked')){
+				    $(this).removeClass('app-option-checked');
+				}else{
+				    $(this).addClass('app-option-checked');
+				}
+				var key = event.data.name;
+				//appUserDetails[key] = event.data.option.value;
+				event.data.option.onselect(event.data.option.value,undefined,event.data.option.name);
+			});
+			optionContainer.append(option);
+		}
+
+
+
 		var addAccountBtn = $('<div>').attr({
 			"class" : "cep-button-color add-btn add-account-btn"
 		}).html("Add another source of W2 income").bind('click',function(){
@@ -579,7 +606,8 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 
 
 		if(i==0){
-			optionsWrapper.append(addAccountBtn);
+			if(!applicationLocked)
+				optionsWrapper.append(addAccountBtn);
 		}
 		optionContainer.append(optionsWrapper);
 	}
@@ -707,9 +735,9 @@ function getMultiTextQuestionSpouse(quesText,value) {
 
 function paintSpouseCustomerApplicationPageStep4a() {
    
-	 var quesHeaderTxt = "Declaration for co-borrower";
+	 var quesHeaderTxt = "Declarations for ";//added s after declaration  for web portal updates 7.1 part 2//jira-678,709
 	 if(appUserDetails.customerSpouseDetail && appUserDetails.customerSpouseDetail.spouseName)
-		  quesHeaderTxt = "Declaration for " +appUserDetails.customerSpouseDetail.spouseName;
+		  quesHeaderTxt = "Declarations for " +appUserDetails.customerSpouseDetail.spouseName;//added s after declaration  for web portal updates 7.1 part 2//jira-678,709
 	quesDeclarationContxts = [];
 	
 	$('#app-right-panel').html('');
@@ -935,7 +963,7 @@ function paintSpouseCustomerApplicationPageStep4a() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function() {
     	
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
 		    	for(var i=0;i<quesDeclarationContxts.length;i++){
 		    		if(quesDeclarationContxts[i].value==""||quesDeclarationContxts[i].value==undefined){
 		    			showErrorToastMessage(yesyNoErrorMessage);
@@ -1102,12 +1130,16 @@ function paintSpouseCustomerApplicationPageStep4a() {
 function paintSpouseCustomerApplicationPageStep4b(){
 	
 	var coborrower ="co-borrower";
-	if(appUserDetails.customerSpouseDetail.spouseName)
-	coborrower = appUserDetails.customerSpouseDetail.spouseName;
+	var quesHeaderTxt="";
+	if(appUserDetails.customerSpouseDetail.spouseName){
+		coborrower = appUserDetails.customerSpouseDetail.spouseName;		
+		quesHeaderTxt = "Government Monitoring Questions for "+coborrower;//Changed for web portal updates 7.1 part 2//jira-678,709
+	}else{
+		quesHeaderTxt = "Government Monitoring Questions for "+coborrower;
+	}
 	
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Government Monitoring Questions for "+coborrower;
-
+	/*var quesHeaderTxt = "Government Monitoring Questions for "+coborrower;*/
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
     });
@@ -1187,7 +1219,7 @@ function paintSpouseCustomerApplicationPageStep4b(){
 	        "class": "cep-button-color app-save-btn"
 	    }).html(buttonText).on('click', function() {
 	    	
-	    	if(this.innerHTML!=next){
+	    	if($(this).html()!=next){
 			    	ethnicity =  $('.app-options-cont[name="spouseEthnicity"]').find('.app-option-selected').data().value;
 			    	race =  $('.app-options-cont[name="spouseRace"]').find('.app-option-selected').data().value;
 			    	sex =  $('.app-options-cont[name="spouseSex"]').find('.app-option-selected').data().value;
@@ -1279,7 +1311,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 	 coborrower = appUserDetails.customerSpouseDetail.spouseName;
 	appProgressBaar(6);
 	$('#app-right-panel').html('');
-    var quesHeaderTxt = "Credit for "+coborrower;
+    var quesHeaderTxt = "Credit for "+coborrower;//jira-678,709
 
     var quesHeaderTextCont = $('<div>').attr({
         "class": "app-ques-header-txt"
@@ -1352,7 +1384,7 @@ function paintCustomerSpouseApplicationPageStep5() {
         "class": "cep-button-color app-save-btn"
     }).html(buttonText).on('click', function() {
     	
-    	if(this.innerHTML!=next){
+    	if($(this).html()!=next){
 		    	dateOfBirth = $('input[name="birthday"]').val();
 		    	ssn =  $('input[name="ssn"]').val();
 		    	secPhoneNumber =  $('input[name="phoneNumber"]').val();
@@ -1400,7 +1432,10 @@ function paintCustomerSpouseApplicationPageStep5() {
     });
 
     $('#app-right-panel').append(quesHeaderTextCont).append(questionsContainer).append(socialSecurityWrapper)
-        .append(saveAndContinueButton);
+        
+    if(!lqbFileId){
+    	$('#app-right-panel').append(saveAndContinueButton);
+	}
         
         
     var cbSsnGiven = appUserDetails.cbSsnProvided;

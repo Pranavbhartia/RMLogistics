@@ -210,7 +210,7 @@ function getPriceAdjustmentWrapper() {
 
 }
 
-function getPriceAdjustmentWrapper1() {
+function getPriceAdjustmentWrapper1(isFNMAArm) {
 	var wrapper = $('<div>').attr({
 		"class" : "price-table-wrapper"
 	});
@@ -223,12 +223,12 @@ function getPriceAdjustmentWrapper1() {
 		"class" : "price-table-cont-wrapper"
 	});
 
-	container.append(getLTVTable(true));
+	container.append(getLTVTable(true,isFNMAArm));
 	return wrapper.append(header).append(container);
 
 }
 
-function getLTVTable(addHighBalArm) {
+function getLTVTable(addHighBalArm,isFNMAArm) {
 	var tableWrapper = $('<div>').attr({
 		"class" : "price-table"
 	});
@@ -257,7 +257,7 @@ function getLTVTable(addHighBalArm) {
 	var lockExpirationTable = getLTVTable5();
 	row2.append(lockExpirationTable);
 
-	var otherAdjustmentsTable = getLTVTable6();
+	var otherAdjustmentsTable = getLTVTable6(isFNMAArm);
 	row2.append(otherAdjustmentsTable);
 	
 	if(!addHighBalArm){
@@ -270,11 +270,11 @@ function getLTVTable(addHighBalArm) {
 		"class" : "adjuster-table-wrapper float-left"
 	}).html(getLTVTable7());
 	
-	var blueStreamAdv = $('<div>').attr({
+/*	var blueStreamAdv = $('<div>').attr({
 		"class" : "adjuster-table-wrapper float-left ltv-table8"
-	}).html(getLTVTable8());
+	}).html(getLTVTable8());*/
 	
-	row3.append(table1).append(blueStreamAdv);
+	row3.append(table1);
 	}
 
 	var note = "All loan level price adjustments are cumulative\n"
@@ -326,20 +326,20 @@ function getLTVTable1() {
 			"80.01-85", "85.01-90", "90.01-95", "95.01-97" ];
 
 	var tableArray = [
-			[ ">=740", "0.250", "0.000", "0.000", "(0.250)", "(0.250)",
-					"(0.250)", "(0.250)", "(0.250)" ],
-			[ "720-739", "0.250", "0.000", "(0.250)", "(0.500)", "(0.500)",
-					"(0.500)", "(0.500)", "(0.500)" ],
-			[ "700-719", "0.250", "(0.500)", "(0.750)", "(1.000)", "(1.000)",
-					"(1.000)", "(1.000)", "(1.000)" ],
+			[ ">=740", "(0.000)", "(0.250)", "(0.250)", "(0.500)", "(0.250)",
+					"(0.250)", "(0.250)", "(0.750)" ],
+			[ "720-739", "(0.000)", "(0.250)", "(0.500)", "(0.750)", "(0.500)",
+					"(0.500)", "(0.500)", "(1.000)" ],
+			[ "700-719", "(0.000)", "(0.500)", "(1.000)", "(1.250)", "(1.000)",
+					"(1.000)", "(1.000)", "(1.500)" ],
 			[ "680-699", "0.000", "(0.500)", "(1.250)", "(1.750)", "(1.500)",
-					"(1.250)", "(1.250)", "(1.000)" ],
-			[ "660-679", "0.000", "(1.000)", "(2.000)", "(2.500)", "(2.750)",
-					"(2.250)", "(2.250)", "(1.750)" ],
-			[ "640-659", "(0.500)", "(1.250)", "(2.500)", "(3.000)", "(3.250)",
-					"(2.750)", "(2.750)", "(2.250)" ],
-			[ "620-639", "(0.500)", "(1.500)", "(3.000)", "(3.000)", "(3.250)",
-					"(3.250)", "(3.250)", "(3.000)" ] ];
+					"(1.250)", "(1.250)", "(1.500)" ],
+			[ "660-679", "0.000", "(1.000)", "(2.250)", "(2.750)", "(2.750)",
+					"(2.250)", "(2.250)", "(2.250)" ],
+			[ "640-659", "(0.500)", "(1.250)", "(2.750)", "(3.000)", "(3.250)",
+					"(2.750)", "(2.750)", "(2.750)" ],
+			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a",
+					"n/a", "n/a", "n/a" ] ];
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
@@ -389,18 +389,18 @@ function inverseParanthesis(input){
 
 function getLTVDescTable(addHighBalArm) {
 
-	var tableArray = [ {
+	var tableArray = [ /*{
 		"desc" : "LTV>95",
 		"value" : "0.500"
-	}, {
+	},*/{
 		"desc" : "Investment Property LTV <= 75 ",
-		"value" : "1.750"
+		"value" : "2.125"
 	}, {
 		"desc" : "Investment Property LTV >75 and <=80",
-		"value" : "3.000"
+		"value" : "3.375"
 	}, {
 		"desc" : "Investment Property LTV >80",
-		"value" : "3.750"
+		"value" : "4.125"
 	}, {
 		"desc" : "2-4 Units",
 		"value" : "1.000"
@@ -418,6 +418,24 @@ function getLTVDescTable(addHighBalArm) {
 		
 		tableArray.push(array);
 	}
+	/*var array = new Object(); 
+	array.desc = "High Bal Purch & R/T";
+	array.value = "0.020";
+	tableArray.push(array);*/
+	
+	var array = new Object(); 
+	array.desc = "High Bal Purch & R/T";
+	array.value = "0.250";
+	tableArray.push(array);
+	
+/*	var array = new Object(); 
+	array.desc = "High Bal Purch & R/T > 80% LTV";
+	array.value = "0.250";
+	tableArray.push(array);*/
+	
+	
+	
+	
 	
 	var table = $('<div>').attr({
 		"class" : "ltv-desc-table float-right"
@@ -455,14 +473,23 @@ function getLTVTable3() {
 	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80",
 			"80.01-85" ];
 
+	/*var tableArray = [
+			[ ">=740", "0.000", "(0.250)", "(0.250)", "(0.500)", "(0.875)" ],
+			[ "720-739", "0.000", "(0.625)", "(0.625)", "(0.750)", "(1.750)" ],
+			[ "700-719", "0.000", "(0.875)", "(0.625)", "(0.750)", "(1.750)" ],
+			[ "680-699", "(0.250)", "(1.000)", "(1.000)", "(1.625)", "(2.500)" ],
+			[ "660-679", "(0.750)", "(1.250)", "(1.000)", "(1.750)", "(3.000)" ],
+			[ "640-659", "(1.500)", "(2.500)", "(2.250)", "(3.500)", "(4.250)" ],
+			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ] ];*/
+	
 	var tableArray = [
-			[ ">=740", "0.000", "(0.250)", "(0.250)", "(0.500)", "(0.625)" ],
-			[ "720-739", "0.000", "(0.625)", "(0.625)", "(0.750)", "(1.500)" ],
-			[ "700-719", "0.000", "(0.625)", "(0.625)", "(0.750)", "(1.500)" ],
-			[ "680-699", "0.000", "(0.750)", "(0.750)", "(1.375)", "(2.500)" ],
-			[ "660-679", "(0.250)", "(0.750)", "(0.750)", "(1.500)", "(2.500)" ],
-			[ "640-659", "(0.250)", "(1.250)", "(1.250)", "(2.250)", "(3.000)" ],
-			[ "620-639", "(0.250)", "(1.250)", "(1.250)", "(2.250)", "(3.000)" ] ];
+	      			[ ">=740", "(0.375)", "(0.625)", "(0.625)", "(0.875)", "(0.875)" ],
+	      			[ "720-739", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
+	      			[ "700-719", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
+	      			[ "680-699", "(0.375)", "(1.125)", "(1.125)", "(1.750)", "(2.500)" ],
+	      			[ "660-679", "(0.625)", "(1.125)", "(1.125)", "(1.875)", "(3.000)" ],
+	      			[ "640-659", "(0.625)", "(1.625)", "(1.625)", "(2.625)", "(4.250)" ],
+	      			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ] ];
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
@@ -494,11 +521,11 @@ function getLTVTable4() {
 	tableCont.append(hedaer);
 
 	var tableArray = [ [ "LTV", "CLTV", "<720", ">=720" ],
-			[ "<=65", "80.01-95", "(0.500)", "(0.250)" ],
-			[ "65.01-75", "80.01-95", "(0.750)", "(0.500)" ],
-			[ "75.01-95", "90.01-95", "(1.000)", "(0.750)" ],
-			[ "75.01-90", "75.01-90", "(1.000)", "(0.750)" ],
-			[ "<=95", "95.01-97", "(1.500)", "(1.500)" ] ];
+			[ "<=65", "(80.01-95)", "(0.500)", "(0.250)" ],
+			[ "65.01-75", "(80.01-95)", "(0.750)", "(0.500)" ],
+			[ "75.01-95", "(90.01-95)", "(1.000)", "(0.750)" ],
+			[ "75.01-90", "(75.01-90)", "(1.000)", "(0.750)" ],
+			[ "<=95", "(95.01-97)", "(1.500)", "(1.500)" ] ];
 
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
@@ -509,6 +536,9 @@ function getLTVTable4() {
 		tableRowCont.append(tableRow);
 	}
 
+	var newArray=["ALL LOANS W/SUB FINANCING","0.375"]
+	var newRow=	getLTVTableRow(newArray,true);
+	tableRowCont.append(newRow);
 	tableCont.append(tableRowCont);
 
 	return tableCont;
@@ -560,7 +590,7 @@ function getDateByNumberOfDaysFolderDays(days) {
 	return someFormattedDate;
 }
 
-function getLTVTable6() {
+function getLTVTable6(isFNMAArm) {
 	var tableCont = $('<div>').attr({
 		"class" : "ltv-table-container float-left ltv-table6"
 	});
@@ -570,10 +600,21 @@ function getLTVTable6() {
 	}).html("Other Adjustments");
 	tableCont.append(hedaer);
 
-	var tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
+	/*var tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
 	                   [ "Loan amount <$100k", "0.75" ]
-	                   ];
-
+	                   ];*/
+	var tableArray="";
+	if(isFNMAArm){
+		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
+		                   [ "Loan amount <$100k", "0.75" ] 
+		                   ];
+	}else{
+		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
+		                   [ "Loan amount <$100k", "0.75" ] ,
+		                   [ "Loan Amount >= $275k Standard Conforming Only", "-0.25" ]
+		                   ];
+	}
+	
 	var tableRowCont = $('<div>').attr({
 		"class" : "price-tr-wrapper"
 	});
@@ -581,6 +622,12 @@ function getLTVTable6() {
 	for (var i = 0; i < tableArray.length; i++) {
 		var tableRow = getLTVTableRow(tableArray[i]);
 		tableRowCont.append(tableRow);
+		if(!isFNMAArm){
+			if(i==2){
+				tableRow.find('.price-table-td').addClass('price-table-td-adjust-height');
+			}
+		}
+		
 	}
 
 	tableCont.append(tableRowCont);
@@ -651,7 +698,8 @@ function getLTVTableHeaderRow(tableHeaderArray) {
 	return row;
 }
 
-function getLTVTableRow(rowObj) {
+function getLTVTableRow(rowObj,isOther) {
+	
 	var row = $('<div>').attr({
 		"class" : "price-table-row"
 	});
@@ -660,9 +708,13 @@ function getLTVTableRow(rowObj) {
 		var col = $('<div>').attr({
 			"class" : "price-table-td"
 		}).html(rowObj[i]);
+		if(isOther && i==0){
+			col.addClass('price-table-td-new');
+		}
 		row.append(col);
 	}
-
+	
+	
 	return row;
 }
 
@@ -690,7 +742,7 @@ function appendFNMAConventionalARMTableWrapper(element) {
 			tableData["Fannie Mae 5/1 Libor ARM High Balance 2/2/5"],
 			"Fannie Mae 5/1 Libor ARM High Balance 2/2/5");
 	var table3 = getRatesTable(tableData["Fannie Mae 7/1 Libor ARM 2/2/5"],
-			"Fannie Mae 7/1 Libor ARM 2/2/5");
+			"Fannie Mae 7/1 Libor ARM 5/2/5");
 	var table4 = getRatesTable(
 			tableData["Fannie Mae 7/1 Libor ARM High Balance 5/2/5"],
 			"Fannie Mae 7/1 Libor ARM High Balance 5/2/5");
@@ -701,7 +753,7 @@ function appendFNMAConventionalARMTableWrapper(element) {
 	// TODO:Price Adjustment tables
 	$(element).append(wrapper);
 
-	var priceWrapper = getPriceAdjustmentWrapper1();
+	var priceWrapper = getPriceAdjustmentWrapper1(true);
 	$(element).append(priceWrapper);
 }
 
@@ -910,19 +962,21 @@ function getMammothARMAdjustersTable2() {
 		"class" : "price-table-header"
 	}).html("Price / LTV/CLTV Adjustments");
 	tableCont.append(hedaer);
-	var tableHeaderArray = [ "", "<=60", "60.01-70", "65.01-70", "70.01-75",
+	var tableHeaderArray = [ "", "<=60", "60.01-65", "65.01-70", "70.01-75",
 			"75.01-80", "80.01-85", "85.01-89.90" ];
 
 	var tableArray = [
 			[ "Purchase", "0.000", "0.000", "0.000", "0.000", "0.000", "0.000",
 					"0.000" ],
-			[ "Cash Out", "0.000", "0.000", "0.120", "", "", "", "" ],
+			[ "Cash Out", "0.000", "0.000", "0.125", "", "", "", "" ],
 			[ "2 Unit", "0.250", "0.250", "0.375", "0.500", "", "", "" ],
 			[ "2nd Home", "0.125", "0.125", "0.125", "0.125",
 					"0.125", "", "" ],
 			[ "Investor", "0.000", "0.250", "0.375", "", "", "", "" ],
 			[ "DTI > 40%", "0.125", "0.125", "0.125", "0.125", "0.125",
-					"0.250", "0.375" ] ];
+					"0.250", "0.375" ],
+			[ "IO Loan Amt <= 417k", "0.375", "0.375", "0.375", "0.375", "0.375",
+					 					"n/a", "n/a" ] ];
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);

@@ -24,12 +24,13 @@ $(document).on('click',function(e){
 	if ($('#admin-create-user-popup').css("display") == "block") {
 		hideAdminUserCreatePopUp();
 	}
-
+	
 
 });
 
 $('#alert-settings-btn').click(function(e){
 	    e.stopImmediatePropagation();
+	   
 		if($('#alert-popup-cont-wrapper').css('display')=="block"){
 			$('#alert-popup-cont-wrapper').hide();
 		}
@@ -66,7 +67,8 @@ $('#alert-settings-btn').click(function(e){
 			}else{				
 				showSettingsPopup();				
 			}
-		}else{			
+		}else{
+			
 			appendSettingsDropDown();
 		}
  
@@ -139,7 +141,7 @@ function appendSettingsDropDown(){
 	   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#");
 	   		container.append(templatesRow);
 	   		
-	   		var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","#");
+	   		var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","");
 	   		container.append(securitySettingsRow);			    		
 		
     }	
@@ -155,6 +157,7 @@ function paintSettingsDropDown(elementID,label,method,href){
 		"id":elementID
 	});
 	var anchortag=$('<a>').attr({
+	"class": "admin-anchor-class",
 	"id" : elementID+"-id",	
     "href":href,
     "onclick":method	
@@ -304,6 +307,10 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 		
 	}).submit(function(event){
 		  event.preventDefault();
+		  
+		//To check uploaded file is a csv file 
+		var status=checkFileExtension($("#file").prop("files")[0].name);
+		if(status){					
 		var formData = new FormData();
 		var file=$("#file").prop("files")[0];
 		console.log("file",file);
@@ -321,7 +328,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			success:function(data){
 			hideOverlay();
 		    if(data!=null){
-			
+		   
             var response=JSON.parse(data);
             
             var errors=response.errors;
@@ -329,13 +336,15 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
             	showToastMessage(response.success);
             }else{
             	$("#admin-error-wrapper").toggleClass('admin-display');
+            	
             	for(var i=0;i<=errors.length;i++){
 					var row=displayErrorMessage(errors[i]);
 					$("#admin-error-container").append(row);
 				}
             }
             	
-		    }	
+		    }
+		    
 			},
 			error:function(e){
 				hideOverlay();
@@ -343,13 +352,17 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 			}
 			
 		});
+		}else {
+			return false;
+		}
 	});
 	var inputFile=$('<input>').attr({
 	"class":"input-file-admin",
 	"type":"file",
 	"name":"file",
 	"id":"file",
-	"onchange":"$('#upload-form-admin').submit();"
+	"onchange":"$('#upload-form-admin').submit();",
+	"accept":".csv"
 	}); 
 	var uploadCSV=$('<div>').attr({
 	"class":"prof-cust-upload-btn-admin-um float-left-admin",
@@ -392,7 +405,16 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 
 }
 
-
+function checkFileExtension(filename){
+	var extension = filename.replace(/^.*\./, '');
+	if(extension=="csv"){
+		return true;
+	}else{
+		showErrorToastMessage(invalidFileUploadedMessage)
+		return false;
+	}
+	
+}
 function appendAdminUserTypeDropDown(){
 	var dropdownCont = $('<div>').attr({
 			"id" : "admin-add-usertype-dropdown-cont",
@@ -537,7 +559,7 @@ var popUpWrapper = $('<div>').attr({
 //TODO function to create single user 
 function createUserFromAdmin(user){
 	if ($('#admin-create-user-popup').css("display") == "block") {
-			$('#admin-create-user-popup').hide();
+		hideAdminUserCreatePopUp();
 	}
 	ajaxRequest("rest/userprofile/adduser", "POST", "json", JSON.stringify(user),
 				appendDataToNewfiTeamWrapperForAdmin);
@@ -1127,6 +1149,7 @@ function paintLeftEditProfileContainer(user){
 		                },
 		                {
 		                	"type":"popup",
+		                	"user":user
 				            
 		                },
 		                {
@@ -1167,33 +1190,38 @@ function paintFormPage(question){
 		 row=appendInputsOfFormFeild(question);
 		
 	}else if(question.type=="lookup"){
-		if(question.title=="Assign Manager"){	
+		/*if(question.title=="Assign Manager"){	
 			if(question.user.userRole.id==2){
 				var row=getLoanManager(question.user);		
 			}									
-		}			
+		}	*/		
 	} else if(question.type=="popup"){
-		 row=getManagerStateRow();				
+		if(question.user.userRole.id!=2){
+		 row=getManagerStateRow();	
+		}
 		
 	} else if(question.type=="radio"){
 		row=getCheckStatus(question.user);
+		row.find('.prof-form-row-desc').addClass('admin-row-adj');
 		
 	}
 	else if(question.type=="function"){
-		internalUserStateMappingVO = undefined; 
-		internalUserStates = new Object();
-		if(question.user.internalUserStateMappingVOs!=undefined){
-			userStateMappingVOs=question.user.internalUserStateMappingVOs;
-
-			states.length = 0;
-			//internalUserStates.length=0;
-			for(var i=0;i<userStateMappingVOs.length;i++) {
-					states.push(userStateMappingVOs[i].stateId.toString());
-					internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
-		    }
+		if(question.user.userRole.id!=2){
+			internalUserStateMappingVO = undefined; 
+			internalUserStates = new Object();
+			if(question.user.internalUserStateMappingVOs!=undefined){
+				userStateMappingVOs=question.user.internalUserStateMappingVOs;
+	
+				states.length = 0;
+				//internalUserStates.length=0;
+				for(var i=0;i<userStateMappingVOs.length;i++) {
+						states.push(userStateMappingVOs[i].stateId.toString());
+						internalUserStates[userStateMappingVOs[i].stateId]=userStateMappingVOs[i];
+			    }
+			}
+			row=getLicensesRow(question.user);
+			loggedInUser = question.user;
 		}
-		row=getLicensesRow(question.user);
-		loggedInUser = question.user;
 	}
 
 	return row;
@@ -1289,6 +1317,25 @@ function hideAdminUserCreatePopUp(){
 	
 	$('#admin-create-user-popup').hide();
 	
+	//To remove validation
+	$('#admin-create-user-first-name').next('.admin-err-msg').hide();
+	$('#admin-create-user-first-name').removeClass('ce-err-input');
+
+
+	$('#admin-create-user-last-name').next('.admin-err-msg').hide();
+	$('#admin-create-user-last-name').removeClass('ce-err-input');
+
+
+	$('#admin-create-user-emailId').next('.admin-err-msg').hide();
+	$('#admin-create-user-emailId').removeClass('ce-err-input');
+
+
+	$('#admin-create-user-emailId').next('.admin-err-msg').hide();
+	$('#admin-create-user-emailId').removeClass('ce-err-input');
+	
+	//TO Empty feild values if any
+	EmptyTheFormFeildsInUM();
+
 }
 
 function showAdminUserCreatePopUp(){

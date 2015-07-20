@@ -120,14 +120,14 @@ public class UserProfileRest {
 				String successMessage = "";
 				if (resend != null) {
 					userProfileService.resendRegistrationDetails(userDetail);
-					successMessage = "Reminder sent. We’ve sent an email to "
+					successMessage = "We’ve sent an email to "
 					        + userVO.getEmailId()
 					        + ". It contains a link to verify your email and reset your password";
 				}
 
 				else {
 					userProfileService.resetPassword(userDetail);
-					successMessage = "Reminder sent. We’ve sent an email to "
+					successMessage = "We’ve sent an email to "
 					        + userVO.getEmailId()
 					        + ". It contains a link with instructions to reset your password";
 				}
@@ -273,11 +273,11 @@ public class UserProfileRest {
 		try {
 			passwordChanged = userProfileService
 			        .changeUserPassword(updatePassword);
-			if (updatePassword.isVerifyEmailPath()) {
+			/*if (updatePassword.isVerifyEmailPath()) {
 				LOG.info("The user is verifying his email: set his verified to true");
 				userProfileService.verifyEmail(updatePassword.getUserId());
 				LOG.info("Also dismiss alert for Verification");
-			}
+			}*/
 			if (passwordChanged == true) {
 				String emailId = updatePassword.getEmailID();
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
@@ -305,7 +305,7 @@ public class UserProfileRest {
 			throw new FatalException("Could not login user");
 
 		}
-		return profileUrl + "home.do";
+		return profileUrl + "home.do#myLoan/myTeam";
 
 	}
 

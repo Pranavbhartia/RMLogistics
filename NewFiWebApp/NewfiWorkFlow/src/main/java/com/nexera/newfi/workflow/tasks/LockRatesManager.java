@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -29,6 +30,8 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 	private ApplicationContext applicationContext;
 	@Autowired
 	private IWorkflowService iWorkflowService;
+	@Autowired
+	Utils utils;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LockRatesManager.class);
 
@@ -40,11 +43,20 @@ public class LockRatesManager implements IWorkflowTaskExecutor {
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		LOG.info("Getting State of Rate Locked");
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		LoanVO loanVO = loanService.getLoanByID(loanId);
-		if (loanVO != null) {
-			return loanVO.getLockedRate();
+		String apr = "";
+		if (loanVO.getLockStatus().equalsIgnoreCase(
+		        CoreCommonConstants.RATE_LOCKED)) {
+			if (loanVO.getLockStatus().equalsIgnoreCase(
+			        CoreCommonConstants.RATE_LOCKED)) {
+				map.put(WorkflowDisplayConstants.RESPONSE_LOCKED_RATE_KEY,
+						loanVO.getLockedRate());
+				map.put(WorkflowDisplayConstants.RESPONSE_LOCK_EXPIRATION_KEY,utils.getDateAndTimeForDisplay(loanVO.getLockExpirationDate()));
+				return utils.getJsonStringOfMap(map);
+		}	
 		}
 		return null;
 	}

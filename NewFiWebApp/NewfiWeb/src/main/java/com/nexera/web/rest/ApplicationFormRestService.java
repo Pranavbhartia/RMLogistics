@@ -39,7 +39,6 @@ import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
-import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
@@ -598,6 +597,7 @@ public class ApplicationFormRestService {
 					        .toString());
 					if (map.get("responseMessage") != null) {
 						response = map.get("responseMessage");
+						invalidateCache(loanNumber, sTicket);
 					} else if (map
 					        .get(CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION) != null) {
 						String errorDescription = CoreCommonConstants.SOAP_XML_ERROR_DESCRIPTION;
@@ -636,11 +636,13 @@ public class ApplicationFormRestService {
 		if (lockRateData == null || lockRateData == "error") {
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
-				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
-				        .getId());
-				messageServiceHelper.generatePrivateMessage(loaAppFormVO
-				        .getLoan().getId(), LoanStatus.noProductFound, utils
-				        .getLoggedInUser(), false);
+				/*
+				 * loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan(
+				 * ) .getId());
+				 * messageServiceHelper.generatePrivateMessage(loaAppFormVO
+				 * .getLoan().getId(), LoanStatus.noProductFound, utils
+				 * .getLoggedInUser(), false);
+				 */
 			}
 		}
 		return lockRateData;
@@ -768,6 +770,35 @@ public class ApplicationFormRestService {
 				cacheableMethodInterface.invalidateApplicationRateCache(
 				        loanNumber, json.toString());
 			}
+
+		} catch (JSONException e) {
+			LOG.error("JSON Exception for application rate of loanNumber: "
+			        + loanNumber, e);
+		}
+
+		LOG.debug("loadLoanRateData" + gson.toJson(teaserRateList));
+		return gson.toJson(teaserRateList);
+
+	}
+
+	private String invalidateCache(String loanNumber, String sTicket) {
+		Gson gson = new Gson();
+		List<TeaserRateResponseVO> teaserRateList = null;
+		RateCalculatorRestService rateService = new RateCalculatorRestService();
+		JSONObject json = new JSONObject();
+		JSONObject jsonChild = new JSONObject();
+		try {
+			jsonChild.put(CommonConstants.SLOANNUMBER, loanNumber);
+			jsonChild.put(CommonConstants.SXMLQUERYMAP, new JSONObject("{}"));
+			jsonChild.put(CommonConstants.FORMAT, 0);
+			jsonChild.put(CommonConstants.STICKET, sTicket);
+
+			json.put(CommonConstants.OPNAME, "Load");
+			json.put(CommonConstants.LOANVO, jsonChild);
+			LOG.debug("jsonMapObject load Loandata" + json);
+
+			cacheableMethodInterface.invalidateApplicationRateCache(loanNumber,
+			        json.toString());
 
 		} catch (JSONException e) {
 			LOG.error("JSON Exception for application rate of loanNumber: "
