@@ -5684,3 +5684,10 @@ p.toast-mess-style {
   margin: 0;
   width: 100%;
 }
+
+.rate-mandatoryClass {
+	
+	color: rgba(24, 72, 141, 0.9);
+	font-size: 15px;
+  	font-family: opensansSemiBold;
+}
