@@ -370,6 +370,8 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 				        .getEmployedIncomePreTax());
 				customerSpouseEmploymentIncome.setEmployedSince(cei
 				        .getEmployedSince());
+				customerSpouseEmploymentIncome.setEmploymentLength(cei
+				        .getEmploymentLength());
 				customerSpouseEmploymentIncome.setLoanAppForms(loanAppForm);
 				this.saveOrUpdate(customerSpouseEmploymentIncome);
 				
