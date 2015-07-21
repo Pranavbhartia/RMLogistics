@@ -76,112 +76,112 @@ public class XMLProcessor
             credit.setAttribute( "experian", "experianCoborrowerStatus" );
             credit.setAttribute( "transunion", "transunionCoborrowerStatus" );
             newApplicant.appendChild( credit );
-            Element firstName = createNewElement( doc, "field", "aBFirstNm", "firstCoborrowerName" );
+            Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
             newApplicant.appendChild( firstName );
-            Element middleName = createNewElement( doc, "field", "aBMidNm", "middleCoborrowerName" );
+            Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
             newApplicant.appendChild( middleName );
-            Element lastName = createNewElement( doc, "field", "aBLastNm", "lastCoborrowerName" );
+            Element lastName = createNewElement( doc, "field", "aCLastNm", "lastCoborrowerName" );
             newApplicant.appendChild( lastName );
-            Element dateOfBirth = createNewElement( doc, "field", "aBDob", "dateOfCoborrowerBirth" );
+            Element dateOfBirth = createNewElement( doc, "field", "aCDob", "dateOfCoborrowerBirth" );
             newApplicant.appendChild( dateOfBirth );
-            Element baseIncome = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome );
-            Element address = createNewElement( doc, "field", "aBAddr", "applicantCoborrowerAddress" );
+            Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
-            Element userSSN = createNewElement( doc, "field", "aBSsn", "userCoborrowerSSNnumber" );
+            Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
             newApplicant.appendChild( userSSN );
             Element alimonyName = createNewElement( doc, "field", "aAlimonyNm", "alimonyCoborrowerName" );
             newApplicant.appendChild( alimonyName );
             Element alimonyPayment = createNewElement( doc, "field", "aAlimonyPmt", "alimonyCoborrowerPayment" );
             newApplicant.appendChild( alimonyPayment );
-            Element baseIncome1 = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome1 = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome1 );
             Element jobExpenses = createNewElement( doc, "field", "aJobRelated1ExpenseDesc", "jobCoborrowerExpenses" );
             newApplicant.appendChild( jobExpenses );
             Element jobRelatedPayment = createNewElement( doc, "field", "aJobRelated1Pmt", "jobRelatedCoborrowerPayment" );
             newApplicant.appendChild( jobRelatedPayment );
-            Element applicantCity = createNewElement( doc, "field", "aBCity", "applicantCoborrowerCity" );
+            Element applicantCity = createNewElement( doc, "field", "aCCity", "applicantCoborrowerCity" );
             newApplicant.appendChild( applicantCity );
-            Element applicantState = createNewElement( doc, "field", "aBState", "applicantCoborrowerState" );
+            Element applicantState = createNewElement( doc, "field", "aCState", "applicantCoborrowerState" );
             newApplicant.appendChild( applicantState );
-            Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
+            Element applicantZip = createNewElement( doc, "field", "aCZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );
-            Element coBorrowerHomePhone = createNewElement( doc, "field", "aBHPhone", "applicationCoborrowerHomePhone" );
+            Element coBorrowerHomePhone = createNewElement( doc, "field", "aCHPhone", "applicationCoborrowerHomePhone" );
             newApplicant.appendChild( coBorrowerHomePhone );
-            Element applicationCoborrowerDecJudgment = createNewElement( doc, "field", "aBDecJudgment",
+            Element applicationCoborrowerDecJudgment = createNewElement( doc, "field", "aCDecJudgment",
                 "applicationCoborrowerDecJudgment" );
             newApplicant.appendChild( applicationCoborrowerDecJudgment );
-            Element applicationCoborrowerDecBankrupt = createNewElement( doc, "field", "aBDecBankrupt",
+            Element applicationCoborrowerDecBankrupt = createNewElement( doc, "field", "aCDecBankrupt",
                 "applicationCoborrowerDecBankrupt" );
             newApplicant.appendChild( applicationCoborrowerDecBankrupt );
-            Element applicationCoborrowerDecForeclosure = createNewElement( doc, "field", "aBDecForeclosure",
+            Element applicationCoborrowerDecForeclosure = createNewElement( doc, "field", "aCDecForeclosure",
                 "applicationCoborrowerDecForeclosure" );
             newApplicant.appendChild( applicationCoborrowerDecForeclosure );
-            Element applicationCoborrowerDecLawsuit = createNewElement( doc, "field", "aBDecLawsuit",
+            Element applicationCoborrowerDecLawsuit = createNewElement( doc, "field", "aCDecLawsuit",
                 "applicationCoborrowerDecLawsuit" );
             newApplicant.appendChild( applicationCoborrowerDecLawsuit );
-            Element applicationCoborrowerDecObligated = createNewElement( doc, "field", "aBDecObligated",
+            Element applicationCoborrowerDecObligated = createNewElement( doc, "field", "aCDecObligated",
                 "applicationCoborrowerDecObligated" );
             newApplicant.appendChild( applicationCoborrowerDecObligated );
-            Element applicationCoborrowerDecDelinquent = createNewElement( doc, "field", "aBDecDelinquent",
+            Element applicationCoborrowerDecDelinquent = createNewElement( doc, "field", "aCDecDelinquent",
                 "applicationCoborrowerDecDelinquent" );
             newApplicant.appendChild( applicationCoborrowerDecDelinquent );
-            Element applicationCoborrowerDecAlimony = createNewElement( doc, "field", "aBDecAlimony",
+            Element applicationCoborrowerDecAlimony = createNewElement( doc, "field", "aCDecAlimony",
                 "applicationCoborrowerDecAlimony" );
             newApplicant.appendChild( applicationCoborrowerDecAlimony );
-            Element applicationCoborrowerDecBorrowing = createNewElement( doc, "field", "aBDecBorrowing",
+            Element applicationCoborrowerDecBorrowing = createNewElement( doc, "field", "aCDecBorrowing",
                 "applicationCoborrowerDecBorrowing" );
             newApplicant.appendChild( applicationCoborrowerDecBorrowing );
-            Element applicationCoborrowerDecEndorser = createNewElement( doc, "field", "aBDecEndorser",
+            Element applicationCoborrowerDecEndorser = createNewElement( doc, "field", "aCDecEndorser",
                 "applicationCoborrowerDecEndorser" );
             newApplicant.appendChild( applicationCoborrowerDecEndorser );
-            Element applicationCoborrowerDecCitizen = createNewElement( doc, "field", "aBDecCitizen",
+            Element applicationCoborrowerDecCitizen = createNewElement( doc, "field", "aCDecCitizen",
                 "applicationCoborrowerDecCitizen" );
             newApplicant.appendChild( applicationCoborrowerDecCitizen );
-            Element applicationCoborrowerDecResidency = createNewElement( doc, "field", "aBDecResidency",
+            Element applicationCoborrowerDecResidency = createNewElement( doc, "field", "aCDecResidency",
                 "applicationCoborrowerDecResidency" );
             newApplicant.appendChild( applicationCoborrowerDecResidency );
-            Element applicationCoborrowerDecOcc = createNewElement( doc, "field", "aBDecOcc", "applicationCoborrowerDecOcc" );
+            Element applicationCoborrowerDecOcc = createNewElement( doc, "field", "aCDecOcc", "applicationCoborrowerDecOcc" );
             newApplicant.appendChild( applicationCoborrowerDecOcc );
-            Element applicationCoborrowerDecPastOwnedPropT = createNewElement( doc, "field", "aBDecPastOwnedPropT",
+            Element applicationCoborrowerDecPastOwnedPropT = createNewElement( doc, "field", "aCDecPastOwnedPropT",
                 "applicationCoborrowerDecPastOwnedPropT" );
             newApplicant.appendChild( applicationCoborrowerDecPastOwnedPropT );
-            Element applicationCoborrowerDecPastOwnedPropTitleT = createNewElement( doc, "field", "aBDecPastOwnedPropTitleT",
+            Element applicationCoborrowerDecPastOwnedPropTitleT = createNewElement( doc, "field", "aCDecPastOwnedPropTitleT",
                 "titleTApplicationCoborrowerDecPastOwnedProp" );
             newApplicant.appendChild( applicationCoborrowerDecPastOwnedPropTitleT );
-            Element applicationCoborrowerNoFurnish = createNewElement( doc, "field", "aBNoFurnish",
+            Element applicationCoborrowerNoFurnish = createNewElement( doc, "field", "aCNoFurnish",
                 "applicationCoborrowerNoFurnish" );
             newApplicant.appendChild( applicationCoborrowerNoFurnish );
-            Element applicationCoborrowerHispanicT = createNewElement( doc, "field", "aBHispanicT",
+            Element applicationCoborrowerHispanicT = createNewElement( doc, "field", "aCHispanicT",
                 "applicationCoborrowerHispanicT" );
             newApplicant.appendChild( applicationCoborrowerHispanicT );
-            Element applicationCoborrowerIsAmericanIndian = createNewElement( doc, "field", "aBIsAmericanIndian",
+            Element applicationCoborrowerIsAmericanIndian = createNewElement( doc, "field", "aCIsAmericanIndian",
                 "applicationCoborrowerIsAmericanIndian" );
             newApplicant.appendChild( applicationCoborrowerIsAmericanIndian );
-            Element applicationCoborrowerIsAsian = createNewElement( doc, "field", "aBIsAsian", "applicationCoborrowerIsAsian" );
+            Element applicationCoborrowerIsAsian = createNewElement( doc, "field", "aCIsAsian", "applicationCoborrowerIsAsian" );
             newApplicant.appendChild( applicationCoborrowerIsAsian );
-            Element applicationCoborrowerIsBlack = createNewElement( doc, "field", "aBIsBlack", "applicationCoborrowerIsBlack" );
+            Element applicationCoborrowerIsBlack = createNewElement( doc, "field", "aCIsBlack", "applicationCoborrowerIsBlack" );
             newApplicant.appendChild( applicationCoborrowerIsBlack );
             Element applicationCoborrowerIsPacificIslander = createNewElement( doc, "field", "aBIsPacificIslander",
                 "applicationCoborrowerIsPacificIslander" );
             newApplicant.appendChild( applicationCoborrowerIsPacificIslander );
-            Element applicationCoborrowerIsWhite = createNewElement( doc, "field", "aBIsWhite", "applicationCoborrowerIsWhite" );
+            Element applicationCoborrowerIsWhite = createNewElement( doc, "field", "aCIsWhite", "applicationCoborrowerIsWhite" );
             newApplicant.appendChild( applicationCoborrowerIsWhite );
-            Element applicationCoborrowerGender = createNewElement( doc, "field", "aBGender", "applicationCoborrowerGender" );
+            Element applicationCoborrowerGender = createNewElement( doc, "field", "aCGender", "applicationCoborrowerGender" );
             newApplicant.appendChild( applicationCoborrowerGender );
 
-            Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "abprimaryemplrnm",
+            Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "aCprimaryemplrnm",
                 "applicationCoborrowerEmplrName" );
             newApplicant.appendChild( applicationCoborrowerEmplrName );
             /*Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd",
                 "applicationCoborrowerEmploymentStartDate" );
             newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
             */
-            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "abprimaryemplmtlen",
+            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "aCprimaryemplmtlen",
                     "applicationCoborrowerEmploymentLength" );
                 newApplicant.appendChild( applicationCoborrowerEmploymentLength );
                 
-            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "abprimaryjobtitle",
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "aCprimaryjobtitle",
                 "applicationCoborrowerEmployementTitle" );
             newApplicant.appendChild( applicationCoborrowerEmployementTitle );
           
@@ -204,100 +204,100 @@ public class XMLProcessor
 
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );
-            Element firstName = createNewElement( doc, "field", "aBFirstNm", "firstCoborrowerName" );
+            Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
             newApplicant.appendChild( firstName );
-            Element middleName = createNewElement( doc, "field", "aBMidNm", "middleCoborrowerName" );
+            Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
             newApplicant.appendChild( middleName );
-            Element lastName = createNewElement( doc, "field", "aBLastNm", "lastCoborrowerName" );
+            Element lastName = createNewElement( doc, "field", "aCLastNm", "lastCoborrowerName" );
             newApplicant.appendChild( lastName );
-            Element dateOfBirth = createNewElement( doc, "field", "aBDob", "dateOfCoborrowerBirth" );
+            Element dateOfBirth = createNewElement( doc, "field", "aCDob", "dateOfCoborrowerBirth" );
             newApplicant.appendChild( dateOfBirth );
-            Element baseIncome = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome );
-            Element address = createNewElement( doc, "field", "aBAddr", "applicantCoborrowerAddress" );
+            Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
-            Element userSSN = createNewElement( doc, "field", "aBSsn", "userCoborrowerSSNnumber" );
+            Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
             newApplicant.appendChild( userSSN );
             Element alimonyName = createNewElement( doc, "field", "aAlimonyNm", "alimonyCoborrowerName" );
             newApplicant.appendChild( alimonyName );
             Element alimonyPayment = createNewElement( doc, "field", "aAlimonyPmt", "alimonyCoborrowerPayment" );
             newApplicant.appendChild( alimonyPayment );
-            Element baseIncome1 = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome1 = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome1 );
             Element jobExpenses = createNewElement( doc, "field", "aJobRelated1ExpenseDesc", "jobCoborrowerExpenses" );
             newApplicant.appendChild( jobExpenses );
             Element jobRelatedPayment = createNewElement( doc, "field", "aJobRelated1Pmt", "jobRelatedCoborrowerPayment" );
             newApplicant.appendChild( jobRelatedPayment );
-            Element applicantCity = createNewElement( doc, "field", "aBCity", "applicantCoborrowerCity" );
+            Element applicantCity = createNewElement( doc, "field", "aCCity", "applicantCoborrowerCity" );
             newApplicant.appendChild( applicantCity );
-            Element applicantState = createNewElement( doc, "field", "aBState", "applicantCoborrowerState" );
+            Element applicantState = createNewElement( doc, "field", "aCState", "applicantCoborrowerState" );
             newApplicant.appendChild( applicantState );
-            Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
+            Element applicantZip = createNewElement( doc, "field", "aCZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );
-            Element coBorrowerHomePhone = createNewElement( doc, "field", "aBHPhone", "applicationCoborrowerHomePhone" );
+            Element coBorrowerHomePhone = createNewElement( doc, "field", "aCHPhone", "applicationCoborrowerHomePhone" );
             newApplicant.appendChild( coBorrowerHomePhone );
 
-            Element applicationCoborrowerDecJudgment = createNewElement( doc, "field", "aBDecJudgment",
+            Element applicationCoborrowerDecJudgment = createNewElement( doc, "field", "aCDecJudgment",
                 "applicationCoborrowerDecJudgment" );
             newApplicant.appendChild( applicationCoborrowerDecJudgment );
-            Element applicationCoborrowerDecBankrupt = createNewElement( doc, "field", "aBDecBankrupt",
+            Element applicationCoborrowerDecBankrupt = createNewElement( doc, "field", "aCDecBankrupt",
                 "applicationCoborrowerDecBankrupt" );
             newApplicant.appendChild( applicationCoborrowerDecBankrupt );
-            Element applicationCoborrowerDecForeclosure = createNewElement( doc, "field", "aBDecForeclosure",
+            Element applicationCoborrowerDecForeclosure = createNewElement( doc, "field", "aCDecForeclosure",
                 "applicationCoborrowerDecForeclosure" );
             newApplicant.appendChild( applicationCoborrowerDecForeclosure );
-            Element applicationCoborrowerDecLawsuit = createNewElement( doc, "field", "aBDecLawsuit",
+            Element applicationCoborrowerDecLawsuit = createNewElement( doc, "field", "aCDecLawsuit",
                 "applicationCoborrowerDecLawsuit" );
             newApplicant.appendChild( applicationCoborrowerDecLawsuit );
-            Element applicationCoborrowerDecObligated = createNewElement( doc, "field", "aBDecObligated",
+            Element applicationCoborrowerDecObligated = createNewElement( doc, "field", "aCDecObligated",
                 "applicationCoborrowerDecObligated" );
             newApplicant.appendChild( applicationCoborrowerDecObligated );
-            Element applicationCoborrowerDecDelinquent = createNewElement( doc, "field", "aBDecDelinquent",
+            Element applicationCoborrowerDecDelinquent = createNewElement( doc, "field", "aCDecDelinquent",
                 "applicationCoborrowerDecDelinquent" );
             newApplicant.appendChild( applicationCoborrowerDecDelinquent );
-            Element applicationCoborrowerDecAlimony = createNewElement( doc, "field", "aBDecAlimony",
+            Element applicationCoborrowerDecAlimony = createNewElement( doc, "field", "aCDecAlimony",
                 "applicationCoborrowerDecAlimony" );
             newApplicant.appendChild( applicationCoborrowerDecAlimony );
-            Element applicationCoborrowerDecBorrowing = createNewElement( doc, "field", "aBDecBorrowing",
+            Element applicationCoborrowerDecBorrowing = createNewElement( doc, "field", "aCDecBorrowing",
                 "applicationCoborrowerDecBorrowing" );
             newApplicant.appendChild( applicationCoborrowerDecBorrowing );
-            Element applicationCoborrowerDecEndorser = createNewElement( doc, "field", "aBDecEndorser",
+            Element applicationCoborrowerDecEndorser = createNewElement( doc, "field", "aCDecEndorser",
                 "applicationCoborrowerDecEndorser" );
             newApplicant.appendChild( applicationCoborrowerDecEndorser );
-            Element applicationCoborrowerDecCitizen = createNewElement( doc, "field", "aBDecCitizen",
+            Element applicationCoborrowerDecCitizen = createNewElement( doc, "field", "aCDecCitizen",
                 "applicationCoborrowerDecCitizen" );
             newApplicant.appendChild( applicationCoborrowerDecCitizen );
-            Element applicationCoborrowerDecResidency = createNewElement( doc, "field", "aBDecResidency",
+            Element applicationCoborrowerDecResidency = createNewElement( doc, "field", "aCDecResidency",
                 "applicationCoborrowerDecResidency" );
             newApplicant.appendChild( applicationCoborrowerDecResidency );
-            Element applicationCoborrowerDecOcc = createNewElement( doc, "field", "aBDecOcc", "applicationCoborrowerDecOcc" );
+            Element applicationCoborrowerDecOcc = createNewElement( doc, "field", "aCDecOcc", "applicationCoborrowerDecOcc" );
             newApplicant.appendChild( applicationCoborrowerDecOcc );
-            Element applicationCoborrowerDecPastOwnedPropT = createNewElement( doc, "field", "aBDecPastOwnedPropT",
+            Element applicationCoborrowerDecPastOwnedPropT = createNewElement( doc, "field", "aCDecPastOwnedPropT",
                 "applicationCoborrowerDecPastOwnedPropT" );
             newApplicant.appendChild( applicationCoborrowerDecPastOwnedPropT );
-            Element applicationCoborrowerDecPastOwnedPropTitleT = createNewElement( doc, "field", "aBDecPastOwnedPropTitleT",
+            Element applicationCoborrowerDecPastOwnedPropTitleT = createNewElement( doc, "field", "aCDecPastOwnedPropTitleT",
                 "titleTApplicationCoborrowerDecPastOwnedProp" );
             newApplicant.appendChild( applicationCoborrowerDecPastOwnedPropTitleT );
 
-            Element applicationCoborrowerNoFurnish = createNewElement( doc, "field", "aBNoFurnish",
+            Element applicationCoborrowerNoFurnish = createNewElement( doc, "field", "aCNoFurnish",
                 "applicationCoborrowerNoFurnish" );
             newApplicant.appendChild( applicationCoborrowerNoFurnish );
-            Element applicationCoborrowerHispanicT = createNewElement( doc, "field", "aBHispanicT",
+            Element applicationCoborrowerHispanicT = createNewElement( doc, "field", "aCHispanicT",
                 "applicationCoborrowerHispanicT" );
             newApplicant.appendChild( applicationCoborrowerHispanicT );
-            Element applicationCoborrowerIsAmericanIndian = createNewElement( doc, "field", "aBIsAmericanIndian",
+            Element applicationCoborrowerIsAmericanIndian = createNewElement( doc, "field", "aCIsAmericanIndian",
                 "applicationCoborrowerIsAmericanIndian" );
             newApplicant.appendChild( applicationCoborrowerIsAmericanIndian );
-            Element applicationCoborrowerIsAsian = createNewElement( doc, "field", "aBIsAsian", "applicationCoborrowerIsAsian" );
+            Element applicationCoborrowerIsAsian = createNewElement( doc, "field", "aCIsAsian", "applicationCoborrowerIsAsian" );
             newApplicant.appendChild( applicationCoborrowerIsAsian );
-            Element applicationCoborrowerIsBlack = createNewElement( doc, "field", "aBIsBlack", "applicationCoborrowerIsBlack" );
+            Element applicationCoborrowerIsBlack = createNewElement( doc, "field", "aCIsBlack", "applicationCoborrowerIsBlack" );
             newApplicant.appendChild( applicationCoborrowerIsBlack );
-            Element applicationCoborrowerIsPacificIslander = createNewElement( doc, "field", "aBIsPacificIslander",
+            Element applicationCoborrowerIsPacificIslander = createNewElement( doc, "field", "aCIsPacificIslander",
                 "applicationCoborrowerIsPacificIslander" );
             newApplicant.appendChild( applicationCoborrowerIsPacificIslander );
-            Element applicationCoborrowerIsWhite = createNewElement( doc, "field", "aBIsWhite", "applicationCoborrowerIsWhite" );
+            Element applicationCoborrowerIsWhite = createNewElement( doc, "field", "aCIsWhite", "applicationCoborrowerIsWhite" );
             newApplicant.appendChild( applicationCoborrowerIsWhite );
-            Element applicationCoborrowerGender = createNewElement( doc, "field", "aBGender", "applicationCoborrowerGender" );
+            Element applicationCoborrowerGender = createNewElement( doc, "field", "aCGender", "applicationCoborrowerGender" );
             newApplicant.appendChild( applicationCoborrowerGender );
 
             /*
@@ -327,7 +327,7 @@ public class XMLProcessor
              * newApplicant.appendChild( applicationCoborrowerEmpCollection );
              */
 
-            Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "abprimaryemplrnm",
+            Element applicationCoborrowerEmplrName = createNewElement( doc, "field", "aCprimaryemplrnm",
                 "applicationCoborrowerEmplrName" );
             newApplicant.appendChild( applicationCoborrowerEmplrName );
             /*Element applicationCoborrowerEmploymentStartDate = createNewElement( doc, "field", "abprimaryempltstartd",
@@ -335,11 +335,11 @@ public class XMLProcessor
             newApplicant.appendChild( applicationCoborrowerEmploymentStartDate );
             */
             
-            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "abprimaryjobtitle",
+            Element applicationCoborrowerEmployementTitle = createNewElement( doc, "field", "aCprimaryjobtitle",
                 "applicationCoborrowerEmployementTitle" );
             newApplicant.appendChild( applicationCoborrowerEmployementTitle );
             
-            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "abprimaryemplmtlen",
+            Element applicationCoborrowerEmploymentLength = createNewElement( doc, "field", "aCprimaryemplmtlen",
                     "applicationCoborrowerEmploymentLength" );
                 newApplicant.appendChild( applicationCoborrowerEmploymentLength );
 
@@ -353,35 +353,35 @@ public class XMLProcessor
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITHOUT_SSN ) ) {
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );
-            Element firstName = createNewElement( doc, "field", "aBFirstNm", "firstCoborrowerName" );
+            Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
             newApplicant.appendChild( firstName );
-            Element middleName = createNewElement( doc, "field", "aBMidNm", "middleCoborrowerName" );
+            Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
             newApplicant.appendChild( middleName );
-            Element lastName = createNewElement( doc, "field", "aBLastNm", "lastCoborrowerName" );
+            Element lastName = createNewElement( doc, "field", "aCLastNm", "lastCoborrowerName" );
             newApplicant.appendChild( lastName );
-            Element dateOfBirth = createNewElement( doc, "field", "aBDob", "dateOfCoborrowerBirth" );
+            Element dateOfBirth = createNewElement( doc, "field", "aCDob", "dateOfCoborrowerBirth" );
             newApplicant.appendChild( dateOfBirth );
-            Element baseIncome = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome );
-            Element address = createNewElement( doc, "field", "aBAddr", "applicantCoborrowerAddress" );
+            Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
-            Element userSSN = createNewElement( doc, "field", "aBSsn", "userCoborrowerSSNnumber" );
+            Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
             newApplicant.appendChild( userSSN );
             Element alimonyName = createNewElement( doc, "field", "aAlimonyNm", "alimonyCoborrowerName" );
             newApplicant.appendChild( alimonyName );
             Element alimonyPayment = createNewElement( doc, "field", "aAlimonyPmt", "alimonyCoborrowerPayment" );
             newApplicant.appendChild( alimonyPayment );
-            Element baseIncome1 = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome1 = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome1 );
             Element jobExpenses = createNewElement( doc, "field", "aJobRelated1ExpenseDesc", "jobCoborrowerExpenses" );
             newApplicant.appendChild( jobExpenses );
             Element jobRelatedPayment = createNewElement( doc, "field", "aJobRelated1Pmt", "jobRelatedCoborrowerPayment" );
             newApplicant.appendChild( jobRelatedPayment );
-            Element applicantCity = createNewElement( doc, "field", "aBCity", "applicantCoborrowerCity" );
+            Element applicantCity = createNewElement( doc, "field", "aCCity", "applicantCoborrowerCity" );
             newApplicant.appendChild( applicantCity );
-            Element applicantState = createNewElement( doc, "field", "aBState", "applicantCoborrowerState" );
+            Element applicantState = createNewElement( doc, "field", "aCState", "applicantCoborrowerState" );
             newApplicant.appendChild( applicantState );
-            Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
+            Element applicantZip = createNewElement( doc, "field", "aCZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );
             loan.appendChild( newApplicant );
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_BORROWER_WITHOUT_SSN ) ) {
@@ -400,35 +400,35 @@ public class XMLProcessor
             credit.setAttribute( "experian", "experianCoborrowerStatus" );
             credit.setAttribute( "transunion", "transunionCoborrowerStatus" );
             newApplicant.appendChild( credit );
-            Element firstName = createNewElement( doc, "field", "aBFirstNm", "firstCoborrowerName" );
+            Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
             newApplicant.appendChild( firstName );
-            Element middleName = createNewElement( doc, "field", "aBMidNm", "middleCoborrowerName" );
+            Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
             newApplicant.appendChild( middleName );
-            Element lastName = createNewElement( doc, "field", "aBLastNm", "lastCoborrowerName" );
+            Element lastName = createNewElement( doc, "field", "aCLastNm", "lastCoborrowerName" );
             newApplicant.appendChild( lastName );
-            Element dateOfBirth = createNewElement( doc, "field", "aBDob", "dateOfCoborrowerBirth" );
+            Element dateOfBirth = createNewElement( doc, "field", "aCDob", "dateOfCoborrowerBirth" );
             newApplicant.appendChild( dateOfBirth );
-            Element baseIncome = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome );
-            Element address = createNewElement( doc, "field", "aBAddr", "applicantCoborrowerAddress" );
+            Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
             newApplicant.appendChild( address );
-            Element userSSN = createNewElement( doc, "field", "aBSsn", "userCoborrowerSSNnumber" );
+            Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
             newApplicant.appendChild( userSSN );
             Element alimonyName = createNewElement( doc, "field", "aAlimonyNm", "alimonyCoborrowerName" );
             newApplicant.appendChild( alimonyName );
             Element alimonyPayment = createNewElement( doc, "field", "aAlimonyPmt", "alimonyCoborrowerPayment" );
             newApplicant.appendChild( alimonyPayment );
-            Element baseIncome1 = createNewElement( doc, "field", "aBBaseI", "baseCoborrowerIncome" );
+            Element baseIncome1 = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome1 );
             Element jobExpenses = createNewElement( doc, "field", "aJobRelated1ExpenseDesc", "jobCoborrowerExpenses" );
             newApplicant.appendChild( jobExpenses );
             Element jobRelatedPayment = createNewElement( doc, "field", "aJobRelated1Pmt", "jobRelatedCoborrowerPayment" );
             newApplicant.appendChild( jobRelatedPayment );
-            Element applicantCity = createNewElement( doc, "field", "aBCity", "applicantCoborrowerCity" );
+            Element applicantCity = createNewElement( doc, "field", "aCCity", "applicantCoborrowerCity" );
             newApplicant.appendChild( applicantCity );
-            Element applicantState = createNewElement( doc, "field", "aBState", "applicantCoborrowerState" );
+            Element applicantState = createNewElement( doc, "field", "aCState", "applicantCoborrowerState" );
             newApplicant.appendChild( applicantState );
-            Element applicantZip = createNewElement( doc, "field", "aBZip", "applicantCoborrowerZipCode" );
+            Element applicantZip = createNewElement( doc, "field", "aCZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );          
             loan.appendChild( newApplicant );
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITH_SSN_BOTH ) ) {

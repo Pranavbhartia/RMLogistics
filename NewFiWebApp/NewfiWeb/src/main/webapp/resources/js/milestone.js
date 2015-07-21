@@ -619,6 +619,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									var lockedRateObj=JSON.parse(ob.workItem.stateInfo);
 									var lockExpDate = lockedRateObj.lockExpirationDate;
 									var lockedRate = lockedRateObj.lockedRate;
+									var lockedDataJSON = lockedRateObj.lockedData;
 									var txtRow2 = $('<div>').attr({
 										"class" : rightLeftClass + "-text" ,										
 										"data-text" : ob.workItem.workflowItemType,

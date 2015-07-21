@@ -1028,9 +1028,14 @@ function getSchedulerContainer(contxt, tempData) {
 				snoozeTime.setHours(dat.getHours());
 				snoozeTime.setMinutes(dat.getMinutes())
 				var message = $("#sch-msg-message").val();
+				//jira-699
+				 var regex = /^[a-zA-Z0-9-,]+(\s{0,1}[a-zA-Z-, ])*$/;
 				if (message == "") {
 					showErrorToastMessage(invalidMessage);
-				} else if (snoozeTime == "Invalid Date") {
+				} else if(!message.match(regex)){
+					//jira-699
+					showErrorToastMessage(invalidMessage);
+				}else if (snoozeTime == "Invalid Date") {
 					showErrorToastMessage(invalidDate);
 				} else {
 					var data = {};
