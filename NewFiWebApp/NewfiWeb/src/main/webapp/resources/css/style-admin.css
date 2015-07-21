@@ -462,14 +462,16 @@ display: block;
 	border-top: 1px #dcdcdc dashed;
 }
 .admin-download-btn {
-    font-family: 'opensanssemibold';
-    margin-right: 186px;
-      background: url(../images/download.png) no-repeat right;
-    margin-right: 125px;
-    height: 33px;
-    cursor: pointer;
-    z-index: -1;
+	font-family: 'opensanssemibold';
+	margin-right: 186px;
+	background: url(../images/download.png) no-repeat right;
+	padding-right: 45px; margin-right : 0;
+	height: 33px;
+	cursor: pointer;
+	z-index: -1;
+	margin-right: 0;
 }
+
 .admin-newfi-team-list-tr:nth-child(odd) {
 	min-height: 40px;
 	padding: 10px;
