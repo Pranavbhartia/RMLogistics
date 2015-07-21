@@ -1802,6 +1802,7 @@ input[type="button"]:focus, button:focus {
     background: #fff;
     border: 1px solid #ECECEC;
     border-radius: 0 0 3px 3px;
+    z-index: 999;/* jira-685 */
 }
 
 .filter-dropdown-item{
