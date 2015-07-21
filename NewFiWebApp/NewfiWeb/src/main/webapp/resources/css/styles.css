@@ -1867,6 +1867,7 @@ input[type="button"]:focus, button:focus {
 .leads-container-tr {
 	/* cursor: pointer; */
 	padding: 15px 5px 10px;
+	position: relative;
 }
 
 .leads-container-tr .cus-name,.leads-container-tr .leads-container-tc5,.leads-container-tr .leads-container-tc7{
@@ -5585,11 +5586,17 @@ a.session-login-btn {
 	font-family: 'OpenSans';
 	line-height: 13px;
 }
-.delCustClas{
+.delCustClas {
 	background: url(../images/user_del.png) no-repeat right 1px;
 	background-size: 20px;
 	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	right: 10px;
+	z-index: 2;
 }
+
 .home-container-adj {
 	min-height:100%;
 	margin-bottom:100px;
