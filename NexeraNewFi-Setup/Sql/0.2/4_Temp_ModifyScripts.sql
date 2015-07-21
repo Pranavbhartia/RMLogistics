@@ -151,3 +151,9 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=1;
 
 #Rajeswari : Removed Default template reference from everywrhe
 update newfi_schema.workflowtaskconfigmaster set params=null where id>0;
+	#For Numbero f year on job
+ALTER TABLE `newfi_schema`.`customeremploymentincome` 
+ ADD COLUMN `empl_len` DOUBLE(3,1) NULL DEFAULT 0 AFTER `job_title`;
+ALTER TABLE `newfi_schema`.`customerspouseemploymentincome` 
+ ADD COLUMN `empl_len` DOUBLE(3,1) NULL DEFAULT 0 AFTER `job_title`;
+
