@@ -102,11 +102,8 @@
 		<field id="sMonthlyPmt" />
 		<field id="sLpTemplateNm" />
 		<field id="sLpTemplateId" />
-		<field id="sBrokerLockOriginatorPriceNoteIR" />
+		<field id="sNoteIR" />
 		<field id="sLpTemplateNm" />
-		
-		
-		
 		<field id="sBrokerLockOriginatorPriceBrokComp1PcFee" />
 		<field id="sRejectDTime" />
 		<field id="sWithdrawnD" />
