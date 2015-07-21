@@ -4003,9 +4003,14 @@ function paintCustomerApplicationPageStep5() {
         .append(socialSecurityWrapper);
     var showNextBtn=true;
     if(lqbFileId){
-        if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true){
+    	
+        if(appUserDetails.isCoborrowerPresent != true){
             showNextBtn=false;
         }
+      //NEXNF-774
+        /*if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true){
+            showNextBtn=false;
+        }*/
     }
 
     if(showNextBtn){
