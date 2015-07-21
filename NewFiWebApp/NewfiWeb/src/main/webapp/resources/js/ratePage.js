@@ -521,7 +521,7 @@ function getRateAprRowCol(desc, rateDetail, aprDetail, rateid, aprId, containerI
     });
     
     var span=$('<span>').attr({
-		"class" : "mandatoryClass"
+		"class" : "rate-mandatoryClass"
 	}).html("*");
     
     if(containerId)
