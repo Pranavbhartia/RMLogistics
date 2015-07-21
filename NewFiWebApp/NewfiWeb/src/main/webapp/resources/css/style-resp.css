@@ -1449,8 +1449,13 @@
 
 	.reg-display-title-subtxt {
 		text-align: left;
-		width: 453px;
+		width: 300px;
 		font-size: 12px;
+		height: auto;
+		line-height: normal;
+	}
+	.delCustClas {
+		right: 0;
 	}
 }
 
