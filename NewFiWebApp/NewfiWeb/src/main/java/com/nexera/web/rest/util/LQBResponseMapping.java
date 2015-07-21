@@ -106,6 +106,16 @@ public class LQBResponseMapping {
 		case "sProRealETxMb":
 			teaserRateVo.setInterest901(loadResponseVO.getFieldValue());
 			break;
+		case "sTerm":
+			try{
+				int monthCount = Integer.parseInt(loadResponseVO
+				        .getFieldValue());
+				teaserRateVo.setYearData((monthCount / 12) + "");
+			
+			}catch(Exception e){
+				
+			}
+			break;
 
 		default:
 			break;

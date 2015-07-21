@@ -132,6 +132,7 @@
 		<field id="sGfeTotalEstimateSettlementCharge " />
 		<field id="sProHazIns " />
 		<field id="sProRealETxMb " />
+		<field id="sTerm" />
 		
 		<applicant>
 			<field id="aBFirstNm" />
