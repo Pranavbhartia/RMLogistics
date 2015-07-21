@@ -189,7 +189,7 @@ function userManagement(){
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "admin-dashboard-container",
-		"class" : "rp-agent-dashboard-admin"
+		"class" : "rp-agent-dashboard-admin rp-agent-dashboard"
 	});
 	
 	var agentDashboardErrorWrraper = $('<div>').attr({
@@ -382,7 +382,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	});
 
 	var downloadDiv=$('<div>').attr({
-	"class":"admin-download-btn",
+	"class":"admin-download-btn float-left",
 
 	}).html("&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Click to download csv").on('click',function(e){
 		window.open("https://s3-ap-southeast-1.amazonaws.com/newfi/static/Nexera-UserUploadTemplate.csv");
