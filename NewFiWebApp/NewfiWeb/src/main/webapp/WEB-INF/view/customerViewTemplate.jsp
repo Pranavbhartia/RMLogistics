@@ -157,10 +157,13 @@
 				//alert("hiii");
 				var fileName=$("#prof-image").val();
 				//console.log("fileName"+fileName);
-	            var status=validatePhotoExtention(fileName);
-	            //alert("status"+status);
-				if(status!=false){
-				initiateJcrop(this);}
+				if(fileName!=""){
+		            var status=validatePhotoExtention(fileName);
+		            //alert("status"+status);
+					if(status!=false){
+						initiateJcrop(this);
+					}
+				}
 			});
 			
 			$(document).on('keypress','input[name="zipCode"],input[name="propZipCode"]',function(e){
