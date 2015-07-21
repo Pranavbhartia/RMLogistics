@@ -1405,4 +1405,9 @@ function enablehowerEffect(){
 	$(document.getElementsByTagName('head')[0]).find("[id='howerCancellationclas']").remove();
 }
 
-
+function formatPercentage(value){
+	if(value.indexOf("%")>=0)
+		return value;
+	else
+		return value+" %";
+}

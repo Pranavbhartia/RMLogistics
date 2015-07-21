@@ -441,7 +441,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
    /* var interestRateRow=getLoanTableSummary("Interest Rate", val, "teaserRateId");*/
-    var interestRateCol = getRateAprRowCol("Rate / APR", val, rateVO.APR+ " %", "teaserRateId", "aprid");
+    var interestRateCol = getRateAprRowCol("Rate / APR", val, formatPercentage(rateVO.APR), "teaserRateId", "aprid");
     grp.append(interestRateCol);
 
 
@@ -761,7 +761,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
     
-    var interestRateCol = getRateAprRowCol("Rate / APR", val, rateVO.APR+ " %", "teaserRateId", "aprid");;
+    var interestRateCol = getRateAprRowCol("Rate / APR", val, formatPercentage(rateVO.APR), "teaserRateId", "aprid");;
     rightCol.append(interestRateCol);
     
 
@@ -818,8 +818,10 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         if(typeof(newfiObject)!=="undefined"&&teaserRateValHolder.teaserRate)
             buttonWrapper="";
-        else
-            buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
+        else{
+            if(appUserDetails.loan.lockStatus!="1")
+                buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
+        }
     }
     else if (teaserRateValHolder.teaserRate)
     {
