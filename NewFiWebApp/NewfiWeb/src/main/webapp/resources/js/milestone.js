@@ -620,7 +620,15 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									var lockExpDate = lockedRateObj.lockExpirationDate;
 									var lockedRate = lockedRateObj.lockedRate;
 									var lockedDataJSON = lockedRateObj.lockedData;
-									var aprValue = JSON.parse(lockedDataJSON).APR;
+									var aprValue = "";
+									if (lockedDataJSON)
+									{
+										var parsedJSON  = JSON.parse(lockedDataJSON);
+										if (parsedJSON != undefined && parsedJSON.APR)
+										{
+											aprValue = parsedJSON.APR;	
+										}
+									}
 									var rateAPRDisplay = "" + lockedRate + "/" + aprValue;
 									var txtRow2 = $('<div>').attr({
 										"class" : rightLeftClass + "-text" ,										
