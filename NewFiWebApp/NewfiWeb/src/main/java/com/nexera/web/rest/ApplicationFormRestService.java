@@ -237,6 +237,10 @@ public class ApplicationFormRestService {
 											                lqbTeaserRateVo,
 											                loadResponseVO);
 										}
+										lqbTeaserRateVo
+										        .setTeaserRate(loaAppFormVO
+										                .getLoan()
+										                .getLockedRate());
 										loaAppFormVO
 										        .getLoan()
 										        .setLockedRateData(
@@ -244,8 +248,13 @@ public class ApplicationFormRestService {
 										                        .toJson(lqbTeaserRateVo));
 										String loanAppFrm = gson
 										        .toJson(loaAppFormVO);
-										createApplication(loanAppFrm,
-										        httpServletRequest);
+										loanAppFormService
+										        .updatelockedLoanData(
+										                loaAppFormVO.getLoan()
+										                        .getId(),
+										                loaAppFormVO
+										                        .getLoan()
+										                        .getLockedRateData());
 									}
 								}
 							}

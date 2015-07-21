@@ -21,5 +21,11 @@ public interface LoanAppFormDao extends GenericDao {
 	public LoanAppForm findByLoan(Loan loan) ;
 	public ZipCodeLookup findByZipCode(String zipCode) throws HibernateException, Exception;
 
+	/**
+	 * @param loanId
+	 * @param lockedLoanData
+	 */
+	void updatelockedLoanData(Integer loanId, String lockedLoanData);
+
 
 }

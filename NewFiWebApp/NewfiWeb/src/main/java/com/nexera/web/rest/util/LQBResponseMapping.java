@@ -95,6 +95,17 @@ public class LQBResponseMapping {
 			teaserRateVo.setOwnersTitleInsurance1103(loadResponseVO
 			        .getFieldValue());
 			break;
+		case "sGfeTotalEstimateSettlementCharge":
+			teaserRateVo.setClosingCost(loadResponseVO
+			        .getFieldValue());
+			break;
+		case "sProHazIns":
+			teaserRateVo.setHazIns903(loadResponseVO
+			        .getFieldValue());
+			break;
+		case "sProRealETxMb":
+			teaserRateVo.setInterest901(loadResponseVO.getFieldValue());
+			break;
 
 		default:
 			break;

@@ -1411,3 +1411,10 @@ function formatPercentage(value){
 	else
 		return value+" %";
 }
+function showValidData(value){
+	if(typeof(value)==="undefined"){
+		return "-";
+	}
+	else
+		return value;
+}

@@ -597,5 +597,16 @@ public class LoanAppFormDaoImpl extends GenericDaoImpl implements
 		Hibernate.initialize(zipCodeLookup.getStateLookup());
 		return zipCodeLookup;
     }
-	
+
+	@Override
+	public void updatelockedLoanData(Integer loanId, String lockedLoanData) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.lockedRateData = :lockedLoanData WHERE loan.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("lockedLoanData", lockedLoanData);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
+
+	}
+
 }

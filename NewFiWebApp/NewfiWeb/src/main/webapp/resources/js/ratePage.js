@@ -431,7 +431,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var loanTypeRow=getLoanTableSummary("Loan Type", "Refinance", "loanType");
     grp.append(loanTypeRow);
 
-    var loanProgRow=getLoanTableSummary("Loan Program", rateVO.yearData +" Year Fixed", "loanprogramId");
+    var loanProgRow=getLoanTableSummary("Loan Program", showValidData(rateVO.yearData) +" Year Fixed", "loanprogramId");
     grp.append(loanProgRow);
     leftCol.append(grp);
     grp=$('<div>').attr({
@@ -765,7 +765,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     rightCol.append(interestRateCol);
     
 
-    var loanProgCol = getLoanSummaryRowRatePage("Loan Program" ,rateVO.yearData +" Year Fixed","loanprogramId");
+    var loanProgCol = getLoanSummaryRowRatePage("Loan Program" ,showValidData(rateVO.yearData) +" Year Fixed","loanprogramId");
     rightCol.append(loanProgCol);
     
     /*var interestRateCol = getLoanSummaryRowRatePage("APR" ,rateVO.APR +" %","aprid","","",true);
