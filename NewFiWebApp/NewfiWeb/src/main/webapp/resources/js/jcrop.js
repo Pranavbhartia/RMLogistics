@@ -215,7 +215,7 @@ function createUploadPhotoContent() {
 									showToastMessage(ProfileImageSuccessMessage);
 									
 								} else {
-
+                                    //NEXNF-695
 									if($("#cusProfPicID").hasClass('cus-img-icn-default')){
 										$("#cusProfPicID").removeClass('cus-img-icn-default');
 										$("#cusProfPicID").text('');
