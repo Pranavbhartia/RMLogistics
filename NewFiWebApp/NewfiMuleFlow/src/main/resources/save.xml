@@ -6,8 +6,7 @@
 		<field id="sProdRLckdDays ">ProdLckdDays</field>
 		<field id="sLAmtCalc">loanAmount</field>
 		<field id="sSpState">propertyState</field>
-		<field id="sSpCity">propertyCity</field>
-		<field id="sSpAddr">propertyStreetAddress</field>
+		<field id="sSpCity">propertyCity</field>		
 		<field id="sSpZip">propertyZip</field>
 		<field id="sApprVal">loanApprovedValue</field>
 		<field id="sSpAcqYr">propertyAcquiredYear</field>
