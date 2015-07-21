@@ -100,12 +100,17 @@
 	            retrieveState();
 	        }
 			
-			$(document).on('change', '#prof-image', function() {
+			$(document).on('change', '#prof-image', function(e) {
+				e.stopImmediatePropagation();
 				var fileName=$("#prof-image").val();
-	            var status=validatePhotoExtention(fileName);
-				if(status!=false){				
-				initiateJcrop(this);				
+				if(fileName!=""){
+					  var status=validatePhotoExtention(fileName);
+						if(status!=false){				
+							initiateJcrop(this);				
+						}
 				}
+	          
+				
 			});
 			
 			$('[data-toggle="tooltip"]').tooltip();   
