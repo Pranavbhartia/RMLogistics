@@ -216,6 +216,12 @@ function createUploadPhotoContent() {
 									
 								} else {
 
+									if($("#cusProfPicID").hasClass('cus-img-icn-default')){
+										$("#cusProfPicID").removeClass('cus-img-icn-default');
+										$("#cusProfPicID").text('');
+										$("#cusProfPicID").addClass('cus-img-icn');
+									}
+									
 									$("#cusProfPicID").css(
 											{
 												"background-image" : "url("
