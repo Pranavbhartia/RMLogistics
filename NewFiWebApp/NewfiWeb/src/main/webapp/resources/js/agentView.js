@@ -4417,6 +4417,7 @@ $(window).scroll(
 
 $(document).on('click', '.delCustClas', function(e) {
 	e.stopImmediatePropagation();
+	//NEXNF-701
 	if($('#cust-detail-wrapper').css('display')=="block"){
 		$('#cust-detail-wrapper').hide();
 	}
