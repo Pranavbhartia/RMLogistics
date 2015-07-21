@@ -620,13 +620,15 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									var lockExpDate = lockedRateObj.lockExpirationDate;
 									var lockedRate = lockedRateObj.lockedRate;
 									var lockedDataJSON = lockedRateObj.lockedData;
+									var aprValue = JSON.parse(lockedDataJSON).APR;
+									var rateAPRDisplay = "" + lockedRate + "/" + aprValue;
 									var txtRow2 = $('<div>').attr({
 										"class" : rightLeftClass + "-text" ,										
 										"data-text" : ob.workItem.workflowItemType,
 										"mileNotificationId":ob.workItem.id
 									});
 									txtRow2.html("Lock Expiration Date :"+lockExpDate);									
-									ob.stateInfoContainer.html(lockedRate);
+									ob.stateInfoContainer.html(rateAPRDisplay);
 									ob.stateInfoContainer.append(txtRow2);
 								}else
 								{																									
