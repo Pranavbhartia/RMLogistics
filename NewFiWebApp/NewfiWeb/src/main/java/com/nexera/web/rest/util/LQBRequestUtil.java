@@ -455,22 +455,19 @@ public class LQBRequestUtil {
 				hashmap.put("applicationCoborrowerEmployementTitle",
 				        loanAppFormVO.getCustomerSpouseEmploymentIncome()
 				                .get(0).getCustomerSpouseEmploymentIncome()
-				                .getJobTitle());
-				// hashmap.put(
-				// "applicationCoborrowerMontlyIncome",loanAppFormVO.getCustomerSpouseEmploymentIncome().get(0).getCustomerSpouseEmploymentIncome().getEmployedIncomePreTax());
-			/*	hashmap.put("applicationCoborrowerEmploymentStartDate",
-				        loanAppFormVO.getCustomerSpouseEmploymentIncome()
-				                .get(0).getCustomerSpouseEmploymentIncome()
-				                .getEmployedSince());*/
+				                .getJobTitle());				
 				hashmap.put("applicationCoborrowerEmploymentLength",
 				        loanAppFormVO.getCustomerSpouseEmploymentIncome()
 				                .get(0).getCustomerSpouseEmploymentIncome()
 				                .getEmploymentLength());
-
 			}
-
+			else
+			{
+				hashmap.put("applicationCoborrowerEmplrName", "");
+				hashmap.put("applicationCoborrowerEmployementTitle","");				
+				hashmap.put("applicationCoborrowerEmploymentLength","");
+			}
 		}
-
 		hashmap = getCoBorrowerGovernmentQuestion(hashmap, loanAppFormVO);
 		return hashmap;
 	}
