@@ -21,4 +21,10 @@ public interface LoanAppFormService {
 
 	public LoanAppFormVO getLoanAppFormByLoan(Loan loan);
 
+	/**
+	 * @param loanId
+	 * @param lockedLoanData
+	 */
+	void updatelockedLoanData(Integer loanId, String lockedLoanData);
+
 }

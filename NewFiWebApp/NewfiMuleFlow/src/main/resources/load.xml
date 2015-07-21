@@ -129,7 +129,11 @@
 		<field id="sCountyRtc" />
 		<field id="sHazInsRsrv" />
 		<field id="sOwnerTitleInsF " />
-
+		<field id="sGfeTotalEstimateSettlementCharge " />
+		<field id="sProHazIns " />
+		<field id="sProRealETxMb " />
+		<field id="sTerm" />
+		
 		<applicant>
 			<field id="aBFirstNm" />
 			<field id="aBLastNm" />

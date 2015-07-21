@@ -1286,9 +1286,8 @@ $('#app-right-panel').html("");
 				   }
 				   
 				  
-				   refinancedetails.secondMortageBalance = $('input[name="secondaryMortgageBalance"]').val();
+				   appUserDetails.refinancedetails.secondMortageBalance = $('input[name="secondaryMortgageBalance"]').val();
 				   
-				   appUserDetails.refinancedetails = refinancedetails;
 				  
 				   saveAndUpdateLoanAppForm(appUserDetails ,paintCustomerApplicationPageStep2);
 	
@@ -5625,8 +5624,8 @@ function getMutipleChoiceQuestion(quesText, options, name) {
     			//customerEnagagement[key] = event.data.option.value;			
     			//user.customerEnagagement = customerEnagagement;					
     			//appUserDetails.user = user;	
-    			refinancedetails.refinanceOption = event.data.option.value;
-    		    appUserDetails.refinancedetails = refinancedetails;	
+    			appUserDetails.refinancedetails.refinanceOption = event.data.option.value;
+    		    
     			
     			event.data.option.onselect();
     		});

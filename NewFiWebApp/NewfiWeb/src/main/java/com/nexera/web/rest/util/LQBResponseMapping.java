@@ -95,6 +95,27 @@ public class LQBResponseMapping {
 			teaserRateVo.setOwnersTitleInsurance1103(loadResponseVO
 			        .getFieldValue());
 			break;
+		case "sGfeTotalEstimateSettlementCharge":
+			teaserRateVo.setClosingCost(loadResponseVO
+			        .getFieldValue());
+			break;
+		case "sProHazIns":
+			teaserRateVo.setHazIns903(loadResponseVO
+			        .getFieldValue());
+			break;
+		case "sProRealETxMb":
+			teaserRateVo.setInterest901(loadResponseVO.getFieldValue());
+			break;
+		case "sTerm":
+			try{
+				int monthCount = Integer.parseInt(loadResponseVO
+				        .getFieldValue());
+				teaserRateVo.setYearData((monthCount / 12) + "");
+			
+			}catch(Exception e){
+				
+			}
+			break;
 
 		default:
 			break;

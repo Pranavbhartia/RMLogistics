@@ -431,7 +431,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var loanTypeRow=getLoanTableSummary("Loan Type", "Refinance", "loanType");
     grp.append(loanTypeRow);
 
-    var loanProgRow=getLoanTableSummary("Loan Program", rateVO.yearData +" Year Fixed", "loanprogramId");
+    var loanProgRow=getLoanTableSummary("Loan Program", showValidData(rateVO.yearData) +" Year Fixed", "loanprogramId");
     grp.append(loanProgRow);
     leftCol.append(grp);
     grp=$('<div>').attr({
@@ -441,7 +441,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
    /* var interestRateRow=getLoanTableSummary("Interest Rate", val, "teaserRateId");*/
-    var interestRateCol = getRateAprRowCol("Rate / APR", val, rateVO.APR+ " %", "teaserRateId", "aprid");
+    var interestRateCol = getRateAprRowCol("Rate / APR", val, formatPercentage(rateVO.APR), "teaserRateId", "aprid");
     grp.append(interestRateCol);
 
 
@@ -572,9 +572,14 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     var Insurance;
     var tax;
     if(teaserRateValHolder.teaserRate){
-        housePrice = parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.housePrice)));   
-        loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;    
-        downPayment = (housePrice-loanAmount);
+        housePrice = parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.housePrice))); 
+        if(typeof(newfiObject)!=="undefined"){
+            loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;
+            downPayment = (housePrice-loanAmount);
+        }else{
+            downPayment =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;
+            loanAmount = (housePrice-downPayment);
+        }
         Insurance =  parseFloat(removedDoller(removedComma(customerInputData.propertyInsuranceCost)));
         tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
     }else{
@@ -756,11 +761,11 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     if(rateVO.teaserRate)
         val=parseFloat(rateVO.teaserRate).toFixed(3)+" %";
     
-    var interestRateCol = getRateAprRowCol("Rate / APR", val, rateVO.APR+ " %", "teaserRateId", "aprid");;
+    var interestRateCol = getRateAprRowCol("Rate / APR", val, formatPercentage(rateVO.APR), "teaserRateId", "aprid");;
     rightCol.append(interestRateCol);
     
 
-    var loanProgCol = getLoanSummaryRowRatePage("Loan Program" ,rateVO.yearData +" Year Fixed","loanprogramId");
+    var loanProgCol = getLoanSummaryRowRatePage("Loan Program" ,showValidData(rateVO.yearData) +" Year Fixed","loanprogramId");
     rightCol.append(loanProgCol);
     
     /*var interestRateCol = getLoanSummaryRowRatePage("APR" ,rateVO.APR +" %","aprid","","",true);
@@ -813,8 +818,10 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
         ratePageSlider = getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn); 
         if(typeof(newfiObject)!=="undefined"&&teaserRateValHolder.teaserRate)
             buttonWrapper="";
-        else
-            buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
+        else{
+            if(appUserDetails.loan.lockStatus!="1")
+                buttonWrapper=getRatePageButtonContainer(hideCreateAccountBtn,inputCustomerDetails,teaserRate);
+        }
     }
     else if (teaserRateValHolder.teaserRate)
     {
@@ -976,7 +983,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
                 allowNegative:false
             }); 
             
-            if(key=="propLoanAmt"||key=="cashOut"||key=="loanBal")
+            if(key=="propLoanAmt"||key=="cashOut"||key=="loanBal"||key=="purchasePrice")
                 globalChangeContainer.flag=true;
             /*if(e.which == 27){
                 var prevVal = $(this).prev('.calculate-btn').text();

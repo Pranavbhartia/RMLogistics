@@ -1021,4 +1021,11 @@ public class LoanAppFormServiceImpl implements LoanAppFormService {
 		}
 	}
 
+	@Override
+	@Transactional
+	public void updatelockedLoanData(Integer loanId, String lockedLoanData) {
+		LOG.info("in update locked Loan Data..................");
+		loanAppFormDao.updatelockedLoanData(loanId, lockedLoanData);
+	}
+
 }
