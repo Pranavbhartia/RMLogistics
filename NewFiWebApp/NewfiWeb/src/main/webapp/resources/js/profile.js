@@ -621,7 +621,8 @@ function changePassword(){
 		}
 		var fistName=newfiObject.user.firstName;
 		var lastName=newfiObject.user.lastName;
-		var isSuccess=validatePassword($('#password').val(),$('#confirmpassword').val(),fistName,lastName,"password");
+		//NEXNF-736
+		var isSuccess=validatePassword($('#password').val(),$('#confirmpassword').val(),fistName,lastName,"password","","",true);
 		if(isSuccess){
 			$('#overlay-loader').show();
 			 $.ajax({
@@ -667,7 +668,7 @@ function changePassword(){
 	
 }
 
-function validatePassword(password,confirmPassword,firstName,lastName,elementID){
+function validatePassword(password,confirmPassword,firstName,lastName,elementID,verifyEmail,currentUserPassword,isInProfilePage){
 	
 	var regex=/(?=.*[a-z])(?=.*[A-Z])/;
 
@@ -725,6 +726,30 @@ function validatePassword(password,confirmPassword,firstName,lastName,elementID)
 			
 		}
 	}
+	//NEXNF-736
+	if(isInProfilePage){
+		var oldPassword=newfiObject.user.password;
+		if(oldPassword==password){
+			$('#password').next('.err-msg').html(passwordMatchingErrorMessage).show();
+			$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}else{
+			$('#password').next('.err-msg').hide();
+			$('#'+elementID).removeClass('ce-err-input');		
+		}
+	}
+	//NEXNF-736	
+	if(verifyEmail==""){
+		if(currentUserPassword==password){
+			$('#password').next('.err-msg').html(passwordMatchingErrorMessage).show();
+			$('#'+elementID).addClass('ce-err-input').show();
+			return false;
+		}else{
+			$('#password').next('.err-msg').hide();
+			$('#'+elementID).removeClass('ce-err-input');	
+			return true;
+		}
+	}	
 	return true;
 }
 

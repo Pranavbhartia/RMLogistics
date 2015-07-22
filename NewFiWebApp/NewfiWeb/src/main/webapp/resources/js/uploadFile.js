@@ -317,6 +317,8 @@ function showFileLink(uploadedItems) {
 						
 						$('#needDoc' + needId).addClass('doc-link-icn');
 						
+						$('#needDoc' + needId).attr('title','View File');
+						
 						
 						$('#needDoc' + needId)
 								.click(
@@ -366,6 +368,7 @@ function showFileLink(uploadedItems) {
 							$('#needDoc' + needId).removeClass('hide');
 							
 							$('#needDoc' + needId).addClass('doc-link-res');
+							$('#needDoc' + needId).attr('title','Restricted File');
 							$("#doc-uploaded-icn_" + needId).addClass("hide");
 						}
 					});

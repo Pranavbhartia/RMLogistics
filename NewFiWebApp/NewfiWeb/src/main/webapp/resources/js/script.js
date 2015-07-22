@@ -2473,25 +2473,34 @@ function getNeededDocRow(desc, needId, details) {
     var row = $('<div>').attr({
         "class": "needed-item-row clearfix"
     });
-    var leftImage = $('<div>').attr({
+/*    var leftImage = $('<div>').attr({
         "class": "list-item-icn float-left"
-    });
+    });*/
+    var docUploadImage = $("<div>").attr({
+        "class": "doc-uploaded-icn float-left",
+        "id" : "doc-uploaded-icn_"+needId,
+        "title" : "upload"
+    }).data("needId", needId).on("click", uploadDocument);
+    
     var rowDesc = $('<div>').attr({
         "class": "needed-item-desc float-left",
         "title" : details
     }).html(desc+"<span class='questionMark'>?</span>");
-    var docUploadImage = $("<div>").attr({
+    /*var docUploadImage = $("<div>").attr({
         "class": "doc-uploaded-icn float-left",
         "id" : "doc-uploaded-icn_"+needId
-    }).data("needId", needId).on("click", uploadDocument);
-    row.append(leftImage).append(rowDesc);
+    }).data("needId", needId).on("click", uploadDocument);*/
+/*    row.append(leftImage).append(rowDesc);*/
+   
     var docRemoveImage = $('<div>').attr({
         "class": "hide float-left",
-        "id": "needDoc" + needId
+        "id": "needDoc" + needId,
+        
     });
     
-    row.append(docUploadImage).append(docRemoveImage);
-    
+    row.append(docUploadImage).append(docRemoveImage).append(rowDesc);
+/*   
+    row.append(docUploadImage).append(docRemoveImage);*/
    
     
     return row;
