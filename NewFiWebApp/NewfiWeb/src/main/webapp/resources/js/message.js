@@ -1,34 +1,26 @@
-var updateErrorMessage="Something went wrong while update . Please try again later";
-var updateSuccessMessage="Succesfully updated";
-var passwordUpdateSuccessMessage="Password successfully updated";
-var errorMessage="Something went wrong";
-var message = "Invalid Entry";
-var ProfileImageSuccessMessage="Image uploaded succesfully";
-var invalidFileUploadedMessage="You must upload a file with csv extension.";
-
+/* All toast messages written*/
 //Messages in agenView.js
-var messageSaved="Message saved succesfully";//line 955
-var cannotSelectOldMessage="Cannot select old value";//line 1393
-var expiryDateExpected="Expiry Date Accepted.";//line 1422
-var problemSavingExpiryDate="Problem saving Expiry Date.";//line 1424
-var selectUserType="Please select a user type";//line 1525
-var messageToDeleteUser="Are you sure you want to delete the user?";//line 1999
-var firstNameEmptyMessage="First name cannot be empty";//line 2653
+var messageSaved="Message saved succesfully";
+var cannotSelectOldMessage="Cannot select old value";
+var expiryDateExpected="Expiry Date Accepted.";
+var problemSavingExpiryDate="Problem saving Expiry Date.";
+var selectUserType="Please select a user type";
+var messageToDeleteUser="Are you sure you want to delete the user?";
+var firstNameEmptyMessage="First name cannot be empty";
 var lastNameEmptyMessage="Last name cannot be empty";
 var emailEmptyMessage="Email ID cannot be empty";
-var companyNameEmptyMessage="Company name cannot be empty";//line 2758
+var companyNameEmptyMessage="Company name cannot be empty";
 var emailAddressEmptyMessage="Email address cannot be empty";
 var phoneEmptyMessage="Phone number cannot be empty";
-var userRemovalErrorMessage="An error occurred, kindly contact admin.";//line 3632
+var userRemovalErrorMessage="An error occurred, kindly contact admin.";
 var userRemoveSuccessMessage="User removed successfully";
-var userExsistErrorMessage="User already exists on the loan team.";//line 3730
-var userAddedToLoanTeamSuccessMessage="User added to loan team.";//line 3743
-var emailAldreadyExsist="Email already exists";//line 3892
+var userExsistErrorMessage="User already exists on the loan team.";
+var userAddedToLoanTeamSuccessMessage="User added to loan team.";
+var emailAldreadyExsist="Email already exists";
 var invalidMessage="Invalid Message";
 var invalidDate="Invalid Date";
 var enterMessage="Please enter a message";
 var errorMessageForZipcode="ZipCode cannot be empty";
-
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
@@ -37,6 +29,7 @@ var realtorDeleteSuccessMessage="Realtor deleted successfully";
 var loanMangerDeleteSuccessMessage="Loan manger deleted successfully";
 var uploadCsvErrorMessage="Problem while uploading csv.Please try again later";
 var invalidEmailErrorMessage="Email ID is not valid";
+var invalidFileUploadedMessage="You must upload a file with csv extension.";
 
 //Messages in profile.js
 var passwordFieldEmptyErrorMessage="should not be empty";
@@ -52,6 +45,12 @@ var invalidPhoneNumberMessage="Phone number not valid";
 var invalidZipCodeMessage="Zip Code not valid";
 var zipCodeEmptyMessage="Zipcode can not be empty";
 var passwordEmptyMessage="Password field cannot be empty";
+var ProfileImageSuccessMessage="Image uploaded succesfully";
+var updateErrorMessage="Something went wrong while update . Please try again later";
+var updateSuccessMessage="Succesfully updated";
+var passwordUpdateSuccessMessage="Password successfully updated";
+var errorMessage="Something went wrong";
+var passwordMatchingErrorMessage="New password should not be same as old password";
 
 //Messages in customer-application.js
 var yesyNoErrorMessage="Please answer all questions";
@@ -69,20 +68,15 @@ var ssnLengthErrorMessage="Please enter a valid ssn of 9-digit";
 var phoneNumberLegthErrorMessage="Please enter a valid phone number of 10-digit";
 var selectAccountType="Please select an account type";
 var selectAssestErrorMessage='If the assest information are not to be provided.Please select the above checkbox';
-
-
-
 var propertyValueErrorMessage="Property value can not be less than requested loan amount ";
 var changePasswordErrorMessage="Error while changing your password. Please try again later.";
 var messageToEnterValidEmail="Please enter valid email ID";
 var feildShouldNotBeZero="The answers of the questions should not be zero.";
+var message = "Invalid Entry";
 
 //Messages in buyAHome.js
 var downpaymentGreaterThanPurchase="Down payment should be less than purchase price.";
 var downpaymentThreePerLessThanPurchase="Down payment must be greater than 3% of purchase price.";
-
-
-
 
 //Messages in script.js
 var errorInCreateLoan="Error inside createLoan";
@@ -100,8 +94,6 @@ var zipCodeMessage="Please enter a valid 5-digit zipcode";
 var invalidStateZipCode="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
 var errorInrefinanceRates="error inside paintRefinanceSeeRates :";
 var incorrectEmailID="Incorrect Email ID";
-
-
 
 //Messages in common.js
 var tutorialStatusMessage="Error while updating tutorial status";
@@ -139,7 +131,6 @@ var completeYourLoanProfile="Please complete your Loan Profile";
 //var overlayMessage="Hang in there for just a quick minute,we want to give you the best options available";
 var overlayMessage="newfi is working on it";
 var overlayWaitMessage="This can take a minute,<br/> we are uploading your documents to our secure storage folder.";
-
 var noSutableProductFoundMessage="Sorry, We could not find suitable products for you!";
 var noProductMessage="We were unable to match you with the right program based on the information you provided.But don’t worry, your newfi Loan Advisor will contact you shortly to review your options.";
 //var noProductMessageInLockRatePage="<div class='contactInfoText'>We were unable to match you with the right program based on the information you provided. <br/>But don’t worry, if you call us at 888-316-3934 someone from the newfi team will review your options.";
@@ -152,9 +143,6 @@ function getNoProductMessageInLockRatePage(){
 	}
 	return errorText;
 }
-
-
-
 var zipcode_isnot_valid = "Zip code is not valid";
 var zipcode_isnot_approved ="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
 var zipcode_valid ="Valid ZipCode";

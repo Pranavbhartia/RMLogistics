@@ -1218,15 +1218,17 @@ input[type="button"]:focus, button:focus {
 }
 
 .needed-item-desc {
-	padding: 5px 10px;
+	/* padding: 5px 10px; */
+	padding: 5px 0px;
 	max-width: 60%;
 }
 
 .doc-uploaded-icn {
 	width: 40px;
 	height: 30px;
-	background: url('../images/doc-incoming.png') no-repeat center top;
-	cursor: pointer;
+	background: url('../images/doc-incoming.png') no-repeat left;
+/* 	cursor: pointer; */
+	cursor: help;
 }
 
 .doc-remove-icn {
@@ -1237,10 +1239,12 @@ input[type="button"]:focus, button:focus {
 }
 
 .doc-link-icn {
-	width: 20px;
+	/* width: 20px; */
+	width: 40px;
 	height: 30px;
-	background: url('../images/doc-icon.png') no-repeat center top;
-	cursor: pointer;
+	background: url('../images/doc-icon.png') no-repeat left;
+	/* cursor: pointer; */
+	cursor: help;
 }
 .doc-link-res {
 	width: 20px;

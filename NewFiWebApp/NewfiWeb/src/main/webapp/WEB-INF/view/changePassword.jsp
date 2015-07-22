@@ -134,7 +134,8 @@ $('#changePwdForm').submit(function(event){
 	var confirmPassword=$('#confirmpassword').val();
 	var firstName=currentUser.firstName;
 	var lastName=currentUser.lastName;
-	var isSuccess=validatePassword(password,confirmPassword,firstName,lastName,"email-container");
+	//NEXNF-736
+	var isSuccess=validatePassword(password,confirmPassword,firstName,lastName,"email-container",verifyEmail,currentUser.password);
 	showOverlay();
 	
 	if(isSuccess){
@@ -184,6 +185,7 @@ $(document).ready(function() {
     currentUser.firstName="${userVO.firstName}";
     currentUser.lastName="${userVO.lastName}";
     currentUser.userId= "${userVO.id}";
+    currentUser.password="${userVO.password}";//NEXNF-736
     verifyEmail = "${verifyEmailPath}";
     
     if(verifyEmail){
