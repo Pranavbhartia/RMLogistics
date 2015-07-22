@@ -353,6 +353,12 @@ public class XMLProcessor
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITHOUT_SSN ) ) {
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );
+            Element aCCoBorrowerExperianScore = createNewElement( doc, "field", "aCExperianScore", "800" );
+            Element aCCoBorrowerEquifax = createNewElement( doc, "field", "aCEquifaxScore", "800" );
+            Element aCCoBorrowerTransUnionScore = createNewElement( doc, "field", "aCTransUnionScore", "800" );
+            newApplicant.appendChild( aCCoBorrowerExperianScore );
+            newApplicant.appendChild( aCCoBorrowerEquifax );
+            newApplicant.appendChild( aCCoBorrowerTransUnionScore );
             Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
             newApplicant.appendChild( firstName );
             Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
