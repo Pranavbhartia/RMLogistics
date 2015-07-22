@@ -2651,6 +2651,11 @@ $(document).on('click', '#alert-notification-btn', function(e) {
     } else {
         	appendAlertNotificationPopup();
     }
+    //NEXNF-601
+    var length=$('#alert-notification-btn').find('#alert-popup-cont-wrapper').find('#alert-popup-wrapper').find('.alert-popup-row').length;
+    if(length==0){
+    	hideAlertNotificationPopup();
+    }
 });
 
 function showAlertNotificationPopup() {
