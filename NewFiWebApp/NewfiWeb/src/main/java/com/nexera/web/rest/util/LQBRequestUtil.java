@@ -360,7 +360,17 @@ public class LQBRequestUtil {
 				hashmap = getCoBorrowerCredit(hashmap);
 				condition = "coborrowerWithSSNBoth";
 			}
-
+			if (loanAppFormVO.getIsCoborrowerPresent() == true
+			        && loanAppFormVO.getIsSpouseOnLoan() == false
+			        && loanAppFormVO.getSsnProvided() == true
+			        && loanAppFormVO.getCbSsnProvided() == false) {
+				hashmap = appendCoBorrowerDetails(hashmap, loanAppFormVO);				
+				hashmap  = getBorrowerCredit(hashmap);
+				hashmap.put("userCoborrowerSSNnumber", "000000000");
+				hashmap.put("ApplicantCoBorrowerId", "000000000");				
+				hashmap = appendCBDefCredScore(hashmap);
+				condition = "coborrowerWithoutSSN";
+			}
 			if (loanAppFormVO.getIsCoborrowerPresent() == true
 			        && loanAppFormVO.getIsSpouseOnLoan() == false
 			        && loanAppFormVO.getSsnProvided() == false
@@ -374,6 +384,8 @@ public class LQBRequestUtil {
 				hashmap = appendCBDefCredScore(hashmap);
 				condition = "coborrowerWithoutSSNBoth";
 			}
+			
+			
 			HashMap<String, String> finalmap = new HashMap();
 			for (String key : hashmap.keySet()) {
 
