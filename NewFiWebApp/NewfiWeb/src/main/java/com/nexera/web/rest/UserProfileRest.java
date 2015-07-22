@@ -657,9 +657,13 @@ public class UserProfileRest {
 		}
 		catch (InvalidInputException e) {
 			LOG.error("Error while updataing the user datails ::", e);
-			return RestUtil.wrapObjectForFailure(null,
+			/*return RestUtil.wrapObjectForFailure(null,
 			       e.getMessage(),
-			       e.getMessage());
+			       e.getMessage());*/
+			//NEXNF-767
+			return RestUtil.wrapObjectForFailure(null,
+			        ErrorConstants.LQB_SAVE_FAILED,
+			        ErrorConstants.LQB_SAVE_FAILED);
 		}
 		catch (Exception e) {
 			LOG.error("Error while updataing the user datails ::", e);

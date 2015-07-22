@@ -636,10 +636,31 @@ function changePassword(){
 					success : function(data) {
 						$('#overlay-loader').hide();
 						showToastMessage(passwordUpdateSuccessMessage);
+						$('#overlay-toast').fadeIn("fast",function(){
+            				setTimeout(function(){
+            					$('#overlay-toast').fadeOut("fast");
+            				},100);
+            			    });
+            			  	if($('#overlay-toast-error-txt').html()!=""){
+            			  	$('#overlay-toast-error-txt').fadeIn("fast",function(){
+            					setTimeout(function(){
+            						$('#overlay-toast-error-txt').fadeOut("fast");
+            					},100);
+            				});
+            			  	}
+            			  	//NEXNF-737
+            			  	if(newfiObject.user.userRole.id!=1){
+            			  		window.location.href = newfiObject.baseUrl+"home.do#loan";
+            			  	}else{
+            			  		window.location.href = newfiObject.baseUrl+"home.do#myLoan/my-loan-progress";
+            			  	}
+            			  	
+            			  
 					},
 					error : function(error) {
 						$('#overlay-loader').hide();
 						showErrorToastMessage(updateErrorMessage);
+						
 					}
 				});
 		}

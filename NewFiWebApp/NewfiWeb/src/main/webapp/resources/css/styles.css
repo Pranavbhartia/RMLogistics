@@ -368,6 +368,7 @@ input[type="button"]:focus, button:focus {
 	background: url(../images/alert.png) no-repeat;
 	background-position: 10px center;
 	font-family: 'opensanssemibold';
+	word-wrap: break-word;/*NEXNF-700  */
 }
 
 .lp-alert-close-btn {
