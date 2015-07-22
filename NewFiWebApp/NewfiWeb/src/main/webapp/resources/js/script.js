@@ -2395,16 +2395,30 @@ function getFileDragAndDropContainer(loanEmailID) {
         "id": "file-upload-icn",
         "class": "file-upload-icn"
     });
+    //NEXNF-806
+/*    var textCont1 = $('<div>').attr({
+        "class": "file-upload-text-cont1"
+    }).html("Select Files to Upload/Drag and Drop Files");*/
     var textCont1 = $('<div>').attr({
         "class": "file-upload-text-cont1"
-    }).html("Select Files to Upload/Drag and Drop Files");
+    }).html("Select file(s) to <div class='upload-files' id='file-upload-icn'>upload</div> or drag and drop file(s) here.");
+    //NEXNF-806
+/*    var textCont1Mobile = $('<div>').attr({
+        "class": "file-upload-text-mobile"
+    }).html("Select Files to Upload");*/
     var textCont1Mobile = $('<div>').attr({
         "class": "file-upload-text-mobile"
-    }).html("Select Files to Upload");
+    }).html("Select File(s) to Upload");
+    //NEXNF-806
+/*    var textCont2 = $('<div>').attr({
+        "class": "file-upload-text-cont2"
+    }).html("or e-mail attachment to : "+loanEmailID);*/
     var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
-    }).html("or e-mail attachment to : "+loanEmailID);
-    return container.append(fileUploadIcn).append(textCont1).append(textCont1Mobile).append(textCont2);
+    }).html("You can also email files to : "+loanEmailID);
+    //NEXNF-806
+   /* return container.append(fileUploadIcn).append(textCont1Mobile).append(textCont2);*/
+    return container.append(textCont1).append(fileUploadIcn).append(textCont1Mobile).append(textCont2);
 }
 
 function getDocumentContainer() {
