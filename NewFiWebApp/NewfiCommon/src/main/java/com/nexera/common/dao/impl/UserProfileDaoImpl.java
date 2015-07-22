@@ -982,7 +982,9 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		Criteria criteria = session.createCriteria(User.class);
 
 		criteria.add(Restrictions.isNotNull("internalUserDetail"));
+		criteria.add(Restrictions.eq("status", 1));
 		criteria.createAlias("internalUserDetail", "userDetail");
+		
 		criteria.createAlias("userDetail.internaUserRoleMaster", "role");
 		criteria.add(Restrictions.eq("role.id",
 		        InternalUserRolesEum.SM.getRoleId()));
