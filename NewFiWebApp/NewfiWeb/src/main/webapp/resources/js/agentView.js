@@ -1670,61 +1670,11 @@ function appendCustomerLoanDetails(loanDetails) {
 	$('#center-panel-cont').append(wrapper);
 
 	// Append loan detail rows
-	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
+	
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	//jira-813
 	//appendLoanDetailsRow("Customer", "Edit", true);
 	appendLoanDetailsRow("Customer Profile", "Edit", true);
-
-	//jira-813
-	/*var text="Loan URL in LQB";*/
-	var text="Loan Number";
-	if (loanDetails.lqbInformationAvailable) {
-		appendLoanDetailsRow(text, loanDetails.lqbFileId,  true,
-				loanDetails.lqbUrl);
-	} else {
-		if(loanDetails.lqbUrl=="-"){
-			appendLoanDetailsRow(text,"-");
-		}else{
-			appendLoanDetailsRow(text,
-					"Click here to set your LQB credentials", true,
-					"#lp-loan-manager-profile");	
-		}
-		
-	}
-
-	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
-		appendLoanDetailsRow("Loan Amount", "$ "
-				+ loanDetails.loanDetail.loanAmount);
-	}
-	//jira-813
-/*	appendLoanDetailsRow("Lock Rate Details",
-			loanDetails.userLoanStatus.lockRate);*/
-	
-	appendLoanDetailsRow("Note Rate",
-			loanDetails.userLoanStatus.lockRate);
-	//jira-813
-/*	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);*/
-	
-	appendLoanDetailsRow("Lock Expiration", loanDetails.userLoanStatus);
-
-	//jira-813
-/*	appendLoanDetailsRow("Loan Progress", loanDetails.status);*/
-	//value needs to be changed to lqb staus
-	appendLoanDetailsRow("Loan Status", loanDetails.status);
-	if (loanDetails.creditReportUrl == undefined
-			|| loanDetails.creditReportUrl == "") {
-		loanDetails.userLoanStatus.creditInformation=checkCreditScore(loanDetails.userLoanStatus.creditInformation);
-		appendLoanDetailsRow("Credit",
-				loanDetails.userLoanStatus.creditInformation);
-	} else {
-		appendLoanDetailsRow("Credit Report",
-				loanDetails.userLoanStatus.creditInformation, true,
-				loanDetails.creditReportUrl);
-	}
-
-	// appendLoanDetailsRow("Credit Decision",
-	// loanDetails.userLoanStatus.creditDecission);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
 	if (loanDetails.userLoanStatus.loanPurpose == "Purchase") {
 		if (loanDetails.loanType.uploadedFiles != undefined) {
@@ -1790,8 +1740,65 @@ function appendCustomerLoanDetails(loanDetails) {
 		}
 
 	}
-
+	appendLoanDetailsRow("Loan Status", loanDetails.status);
+	var text="Loan Number";
+	if (loanDetails.lqbInformationAvailable) {
+		appendLoanDetailsRow(text, loanDetails.lqbFileId,  true,
+				loanDetails.lqbUrl);
+	} else {
+		if(loanDetails.lqbUrl=="-"){
+			appendLoanDetailsRow(text,"-");
+		}else{
+			appendLoanDetailsRow(text,
+					"Click here to set your LQB credentials", true,
+					"#lp-loan-manager-profile");	
+		}
+		
+	}
+	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
+	appendLoanDetailsRow("Note Rate",
+			loanDetails.userLoanStatus.lockRate);
+	appendLoanDetailsRow("Lock Expiration", loanDetails.userLoanStatus);
+	if (loanDetails.creditReportUrl == undefined
+			|| loanDetails.creditReportUrl == "") {
+		loanDetails.userLoanStatus.creditInformation=checkCreditScore(loanDetails.userLoanStatus.creditInformation);
+		appendLoanDetailsRow("Credit",
+				loanDetails.userLoanStatus.creditInformation);
+	} else {
+		appendLoanDetailsRow("Credit Report",
+				loanDetails.userLoanStatus.creditInformation, true,
+				loanDetails.creditReportUrl);
+	}
+	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
+		appendLoanDetailsRow("Loan Amount", "$ "
+				+ loanDetails.loanDetail.loanAmount);
+	}
 	appendCustomerEditProfilePopUp();
+	//jira-813
+	/*var text="Loan URL in LQB";*/
+	
+
+	
+	//jira-813
+/*	appendLoanDetailsRow("Lock Rate Details",
+			loanDetails.userLoanStatus.lockRate);*/
+	
+	
+	//jira-813
+/*	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);*/
+	
+	
+
+	//jira-813
+/*	appendLoanDetailsRow("Loan Progress", loanDetails.status);*/
+	//value needs to be changed to lqb staus
+	
+	
+
+	// appendLoanDetailsRow("Credit Decision",
+	// loanDetails.userLoanStatus.creditDecission);
+	
+	
 
 }
 
@@ -2463,7 +2470,7 @@ function confirmRemoveUser(textMessage, input, loanID,callback) {
 	$('#overlay-popup').show();
 }
 
-$(document).on('click', '#ld-customer .loan-detail-link', function(event) {
+$(document).on('click', '#ld-customer-profile .loan-detail-link', function(event) {
 
 	event.stopImmediatePropagation();
 	if ($('#cus-prof-popup').css("display") == "block") {
@@ -2508,7 +2515,7 @@ function appendCustomerEditProfilePopUp() {
 
 	popUpWrapper.append(header).append(container);
 
-	$('#ld-customer .loan-detail-link').append(popUpWrapper);
+	$('#ld-customer-profile .loan-detail-link').append(popUpWrapper);
 
 	appendCustomerProfEditRow("First Name", selectedUserDetail.firstName,
 			"firstNameID");
