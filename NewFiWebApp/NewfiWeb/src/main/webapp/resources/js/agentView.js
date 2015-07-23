@@ -1605,7 +1605,9 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	});
 	//NEXNF-744 changed from Initiated On
 	var text="";
-	text="Lead Submitted";
+	//text="Lead Submitted";
+	//jira-813
+	text="Opened";
 	var rowInitiatedOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
 	}).html(text);
@@ -1670,16 +1672,21 @@ function appendCustomerLoanDetails(loanDetails) {
 	// Append loan detail rows
 	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
-	appendLoanDetailsRow("Customer", "Edit", true);
+	//jira-813
+	//appendLoanDetailsRow("Customer", "Edit", true);
+	appendLoanDetailsRow("Customer Profile", "Edit", true);
 
+	//jira-813
+	/*var text="Loan URL in LQB";*/
+	var text="Loan Number";
 	if (loanDetails.lqbInformationAvailable) {
-		appendLoanDetailsRow("Loan URL in LQB", loanDetails.lqbFileId,  true,
+		appendLoanDetailsRow(text, loanDetails.lqbFileId,  true,
 				loanDetails.lqbUrl);
 	} else {
 		if(loanDetails.lqbUrl=="-"){
-			appendLoanDetailsRow("Loan URL in LQB","-");
+			appendLoanDetailsRow(text,"-");
 		}else{
-			appendLoanDetailsRow("Loan URL in LQB",
+			appendLoanDetailsRow(text,
 					"Click here to set your LQB credentials", true,
 					"#lp-loan-manager-profile");	
 		}
@@ -1690,12 +1697,21 @@ function appendCustomerLoanDetails(loanDetails) {
 		appendLoanDetailsRow("Loan Amount", "$ "
 				+ loanDetails.loanDetail.loanAmount);
 	}
-
-	appendLoanDetailsRow("Lock Rate Details",
+	//jira-813
+/*	appendLoanDetailsRow("Lock Rate Details",
+			loanDetails.userLoanStatus.lockRate);*/
+	
+	appendLoanDetailsRow("Note Rate",
 			loanDetails.userLoanStatus.lockRate);
-	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);
+	//jira-813
+/*	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);*/
+	
+	appendLoanDetailsRow("Lock Expiration", loanDetails.userLoanStatus);
 
-	appendLoanDetailsRow("Loan Progress", loanDetails.status);
+	//jira-813
+/*	appendLoanDetailsRow("Loan Progress", loanDetails.status);*/
+	//value needs to be changed to lqb staus
+	appendLoanDetailsRow("Loan Status", loanDetails.status);
 	if (loanDetails.creditReportUrl == undefined
 			|| loanDetails.creditReportUrl == "") {
 		loanDetails.userLoanStatus.creditInformation=checkCreditScore(loanDetails.userLoanStatus.creditInformation);
@@ -1830,8 +1846,17 @@ function appendLoanDetailsRow(label, value, isLink, linkUrl) {
 	}).html(label);
 	var rightCol = $('<div>').attr({
 		"class" : "av-loan-details-row-rc float-left"
-	}).html(value);
+	});
 
+	//jira-813
+	if(label=="Lock Expiration"){
+		value=value.lockExpiryDate;
+		if(value!=null){
+			value=$.datepicker.formatDate('mm/dd/yy', new Date(
+					value));
+		}		
+	}
+	rightCol.html(value);
 	if (isLink) {
 		rightCol.addClass('loan-detail-link');
 		if (linkUrl) {
