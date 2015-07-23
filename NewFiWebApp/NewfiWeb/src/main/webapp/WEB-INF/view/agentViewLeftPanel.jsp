@@ -10,7 +10,14 @@
 
 				<c:choose>
 					<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
+					<c:choose>
+					<c:when test="${userVO.internalUserDetail.internalUserRoleMasterVO.id eq 2}">
 						<div class="lp-txt2">Manager</div>
+					</c:when>
+					<c:otherwise>
+						<div class="lp-txt2">${userVO.internalUserDetail.internalUserRoleMasterVO.roleDescription }</div>
+					</c:otherwise>	
+					</c:choose>
 						<!--NEXNF-810  -->
 							<%-- <div class="lp-txt2">${userVO.internalUserDetail.internalUserRoleMasterVO.roleDescription }</div> --%>
 					</c:when>
