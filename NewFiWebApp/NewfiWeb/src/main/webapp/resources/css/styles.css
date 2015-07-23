@@ -5704,3 +5704,6 @@ p.toast-mess-style {
 	font-size: 15px;
   	font-family: opensansSemiBold;
 }
+.leads-container-row-adj {
+	padding:10px 15px;
+}

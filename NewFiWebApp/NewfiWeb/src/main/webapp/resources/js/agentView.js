@@ -506,6 +506,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			row.addClass('leads-container-row-last');
 		}
 
+		
 		var col1 = $('<div>').attr({
 			"class" : "leads-container-tc1 float-left clearfix"
 		});
@@ -779,7 +780,9 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 	var tableHeader = $('<div>').attr({
 		"class" : "leads-container-th leads-container-row clearfix"
 	});
-	
+	if(isLoanManager){
+		tableHeader.addClass('leads-container-row-adj');
+	}
 	//jira-661
 	if(isRealtor){
 		var thCol1 = $('<div>').attr({
