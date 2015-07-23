@@ -8,6 +8,9 @@ var mobileCarrierNames = [];
 var stateLists = [];
 var customerFetchCount=15;
 var currentElement="";
+var isSalesManager="";
+var isLoanManager="";
+var isRealtor="";
 
 LOAN_ENUM = {
 	ALL : "ALL",
@@ -220,7 +223,8 @@ function paintAgentDashboardRightPanel(data) {
 		"class" : "agent-customer-list-header-txt page-header-loan  float-left"
 	});
 
-	if (newfiObject.user.userRole.id == "4") {
+	//NEXNF-810
+	/*if (newfiObject.user.userRole.id == "4") {
 		leftCon.html("Loan List");
 	} else if (newfiObject.user.userRole.id != "4") {
 		if (newfiObject.user.userRole.id != "2"){
@@ -228,9 +232,12 @@ function paintAgentDashboardRightPanel(data) {
 		}else {
 			leftCon.html("Pipeline");//NEXNF-660
 		}
+		leftCon.html("Pipeline");
 		
-	}
-
+	}*/
+	 // jira-811,810
+	leftCon.html("Pipeline");
+	
 	var rightCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-rc float-right clearfix"
 	});
@@ -393,9 +400,10 @@ function appendAgentDashboardContainer() {
 		"class" : "cutomer-leads-wrapper"
 	});
 
-	var leadsHeader = $('<div>').attr({
+	//NEXNF-810
+/*	var leadsHeader = $('<div>').attr({
 		"class" : "agent-wrapper-header agent-wrapper-header-active"
-	}).html("Leads");
+	}).html("Leads");*/
 
 	var text=$('<div>').attr({
 		"class" : " cust-profile-url cust-profile-url-dash float-right"
@@ -414,7 +422,7 @@ function appendAgentDashboardContainer() {
 	
 	if(newfiObject.user.userRole.roleDescription=="Realtor"){
 		 text.append(emailInput);
-		 leadsHeader.append(text);
+		 //leadsHeader.append(text);
     
 	}
 
@@ -423,7 +431,8 @@ function appendAgentDashboardContainer() {
 		"class" : "agent-wrapper-container"
 	});
 
-	leadsWrapper.append(leadsHeader).append(leadsContainer);
+	/*leadsWrapper.append(leadsHeader).append(leadsContainer);*/
+	leadsWrapper.append(leadsContainer);
 
 	var inactiveWrapper = $('<div>').attr({
 		"class" : "cutomer-inactive-wrapper"
@@ -464,13 +473,21 @@ function checkCreditScore(creditScore){
 function appendCustomers(elementId, customers,skipDataClearing) {
 	if(newfiObject.user.userRole.id==2){
 		isRealtor=true;
-	}else{
-		isRealtor=false;
+	}else if(newfiObject.user.userRole.roleCd=="INTERNAL"){
+		//jira-811,810
+		if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==2){
+			isSalesManager=true;
+		}else if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==1){
+			isLoanManager=true;
+		}
+	
+	}else {
+		isSalesManager=true;
 	}
 	if(!skipDataClearing){
 		$('#' + elementId).html("");
 		
-		appendCustomerTableHeader(elementId,isRealtor);
+		appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanManager);
 	}
 	for (var i = 0; i < customers.length; i++) {
 
@@ -623,29 +640,55 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			if (customer.phone_no != null && customer.phone_no.trim() != "") {
 				phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
 			}
-
-			var col2 = $('<div>').attr({
+           // jira-811,810
+			var col2="";
+			if(isSalesManager){
+				//write a rest call
+				col2 = $('<div>').attr({
+					"class" : "leads-container-tc2 float-left"
+				}).html("-");
+			}else {
+				col2 = $('<div>').attr({
+					"class" : "leads-container-tc2 float-left"
+				}).html(phone_num);
+			}
+		/*	var col2 = $('<div>').attr({
 				"class" : "leads-container-tc2 float-left"
-			}).html(phone_num);
+			}).html(phone_num);*/
 
 			var col3 = $('<div>').attr({
 				"class" : "leads-container-tc3 float-left"
 			}).html(customer.purpose);
 
-			var col4 = $('<div>').attr({
+			 // jira-811,810
+			var col4="";
+			if(isLoanManager){
+				col2 = $('<div>').attr({
+					"class" : "leads-container-tc2 float-left"
+				}).html("-");
+			}else{
+				col4 = $('<div>').attr({
+					"class" : "leads-container-tc4 float-left"
+				}).html(customer.processor);
+			}
+		/*	var col4 = $('<div>').attr({
 				"class" : "leads-container-tc4 float-left"
-			}).html(customer.processor);
+			}).html(customer.processor)*/
 			var creditScore = customer.credit_score;
 			if (userIsRealtor())
 			{
 				creditScore = "-";
 			}
 			var addClickEvent=checkCreditScoreAval(creditScore);
-
+			 // jira-811,810
+			var	createdDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
+					customer.loanInitiatedOn));
 			var col5 = $('<div>').attr({
 				"class" : "leads-container-tc5 float-left"
-			}).html(creditScore);
-
+			}).html(createdDateStr);
+	/*		var col5 = $('<div>').attr({
+				"class" : "leads-container-tc5 float-left"
+			}).html(creditScore);*/
 			if(addClickEvent){
 				col5.bind("click",{"url":"rest/loan/creditReport/"+customer.loanID},function(e){
 					if($(e.target).hasClass('creditScoreClickableClass'))
@@ -654,11 +697,15 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 					window.open(url, '_blank');
 				})
 			}
-
+			 // jira-811,810
+			var	modifiedDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
+					customer.time));
 			var col6 = $('<div>').attr({
 				"class" : "leads-container-tc6 float-left"
-			}).html(customer.time);
-
+			}).html(modifiedDateStr);
+			/*var col6 = $('<div>').attr({
+				"class" : "leads-container-tc6 float-left"
+			}).html(customer.time)*/
 			var col7 = $('<div>').attr({
 				"class" : "leads-container-tc7 alert-col float-left"
 			}).bind(
@@ -720,7 +767,7 @@ function checkCreditScoreAval(creditScore){
 }
 
 // Function to append customer table header in agent dashboard
-function appendCustomerTableHeader(elementId,isRealtor) {
+function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanManager) {
 	
 	var tableHeader = $('<div>').attr({
 		"class" : "leads-container-th leads-container-row clearfix"
@@ -754,37 +801,44 @@ function appendCustomerTableHeader(elementId,isRealtor) {
 		}).html("Alert");
 
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6);
-	}else{
+	}else if(isSalesManager || isLoanManager){
+		//jira-811,810
 	var thCol1 = $('<div>').attr({
 		"class" : "leads-container-tc1 float-left"
-	}).html("Customer Name");
-
-	var thCol2 = $('<div>').attr({
-		"class" : "leads-container-tc2 float-left"
-	}).html("Phone<br/>No.");
+	}).html("Customer");
+	var thCol2;
+    if(isLoanManager){
+    	 thCol2 = $('<div>').attr({
+			"class" : "leads-container-tc2 float-left"
+		}).html("Phone");
+    }else{
+    	 thCol2 = $('<div>').attr({
+    		"class" : "leads-container-tc2 float-left"
+    	}).html("Loan Status");
+    }
 
 	var thCol3 = $('<div>').attr({
 		"class" : "leads-container-tc3 float-left"
 	}).html("Purpose");
 
-	var thCol4 = $('<div>').attr({
-		"class" : "leads-container-tc4 float-left"
-	});
-
-	if (newfiObject.user.internalUserDetail == undefined
-			|| newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName == "SM") {
-		thCol4.html("Loan Advisor");
-	} else {
-		thCol4.html("Processor");
+	var thCol4="";
+	if(isLoanManager){
+		 thCol4 = $('<div>').attr({
+			"class" : "leads-container-tc4 float-left"
+		}).html("Loan Status");
+	}else{
+		thCol4 = $('<div>').attr({
+			"class" : "leads-container-tc4 float-left"
+		}).html("Loan Advisor");
 	}
-
+	
 	var thCol5 = $('<div>').attr({
 		"class" : "leads-container-tc5 float-left"
-	}).html("Credit<br/>Score");
+	}).html("Opened");
 
 	var thCol6 = $('<div>').attr({
 		"class" : "leads-container-tc6 float-left"
-	}).html("Date/<br/>Time");
+	}).html("Last Action");
 
 	var thCol7 = $('<div>').attr({
 		"class" : "leads-container-tc7 float-left"
@@ -1551,7 +1605,9 @@ function appendCustomerDetailHeader(custHeaderDetails) {
 	});
 	//NEXNF-744 changed from Initiated On
 	var text="";
-	text="Lead Submitted";
+	//text="Lead Submitted";
+	//jira-813
+	text="Opened";
 	var rowInitiatedOnTitle = $('<div>').attr({
 		"class" : "cus-detail-rc-title float-left"
 	}).html(text);
@@ -1614,47 +1670,11 @@ function appendCustomerLoanDetails(loanDetails) {
 	$('#center-panel-cont').append(wrapper);
 
 	// Append loan detail rows
-	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
+	
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
-	appendLoanDetailsRow("Customer", "Edit", true);
-
-	if (loanDetails.lqbInformationAvailable) {
-		appendLoanDetailsRow("Loan URL in LQB", loanDetails.lqbFileId,  true,
-				loanDetails.lqbUrl);
-	} else {
-		if(loanDetails.lqbUrl=="-"){
-			appendLoanDetailsRow("Loan URL in LQB","-");
-		}else{
-			appendLoanDetailsRow("Loan URL in LQB",
-					"Click here to set your LQB credentials", true,
-					"#lp-loan-manager-profile");	
-		}
-		
-	}
-
-	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
-		appendLoanDetailsRow("Loan Amount", "$ "
-				+ loanDetails.loanDetail.loanAmount);
-	}
-
-	appendLoanDetailsRow("Lock Rate Details",
-			loanDetails.userLoanStatus.lockRate);
-	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);
-
-	appendLoanDetailsRow("Loan Progress", loanDetails.status);
-	if (loanDetails.creditReportUrl == undefined
-			|| loanDetails.creditReportUrl == "") {
-		loanDetails.userLoanStatus.creditInformation=checkCreditScore(loanDetails.userLoanStatus.creditInformation);
-		appendLoanDetailsRow("Credit",
-				loanDetails.userLoanStatus.creditInformation);
-	} else {
-		appendLoanDetailsRow("Credit Report",
-				loanDetails.userLoanStatus.creditInformation, true,
-				loanDetails.creditReportUrl);
-	}
-
-	// appendLoanDetailsRow("Credit Decision",
-	// loanDetails.userLoanStatus.creditDecission);
+	//jira-813
+	//appendLoanDetailsRow("Customer", "Edit", true);
+	appendLoanDetailsRow("Customer Profile", "Edit", true);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
 	if (loanDetails.userLoanStatus.loanPurpose == "Purchase") {
 		if (loanDetails.loanType.uploadedFiles != undefined) {
@@ -1720,8 +1740,65 @@ function appendCustomerLoanDetails(loanDetails) {
 		}
 
 	}
-
+	appendLoanDetailsRow("Loan Status", loanDetails.status);
+	var text="Loan Number";
+	if (loanDetails.lqbInformationAvailable) {
+		appendLoanDetailsRow(text, loanDetails.lqbFileId,  true,
+				loanDetails.lqbUrl);
+	} else {
+		if(loanDetails.lqbUrl=="-"){
+			appendLoanDetailsRow(text,"-");
+		}else{
+			appendLoanDetailsRow(text,
+					"Click here to set your LQB credentials", true,
+					"#lp-loan-manager-profile");	
+		}
+		
+	}
+	appendLoanDetailsRow("File Email", loanDetails.loanEmailId);
+	appendLoanDetailsRow("Note Rate",
+			loanDetails.userLoanStatus.lockRate);
+	appendLoanDetailsRow("Lock Expiration", loanDetails.userLoanStatus);
+	if (loanDetails.creditReportUrl == undefined
+			|| loanDetails.creditReportUrl == "") {
+		loanDetails.userLoanStatus.creditInformation=checkCreditScore(loanDetails.userLoanStatus.creditInformation);
+		appendLoanDetailsRow("Credit",
+				loanDetails.userLoanStatus.creditInformation);
+	} else {
+		appendLoanDetailsRow("Credit Report",
+				loanDetails.userLoanStatus.creditInformation, true,
+				loanDetails.creditReportUrl);
+	}
+	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
+		appendLoanDetailsRow("Loan Amount", "$ "
+				+ loanDetails.loanDetail.loanAmount);
+	}
 	appendCustomerEditProfilePopUp();
+	//jira-813
+	/*var text="Loan URL in LQB";*/
+	
+
+	
+	//jira-813
+/*	appendLoanDetailsRow("Lock Rate Details",
+			loanDetails.userLoanStatus.lockRate);*/
+	
+	
+	//jira-813
+/*	appendLoanDetailsRow("Lock Expiration Date", loanDetails.userLoanStatus);*/
+	
+	
+
+	//jira-813
+/*	appendLoanDetailsRow("Loan Progress", loanDetails.status);*/
+	//value needs to be changed to lqb staus
+	
+	
+
+	// appendLoanDetailsRow("Credit Decision",
+	// loanDetails.userLoanStatus.creditDecission);
+	
+	
 
 }
 
@@ -1776,8 +1853,17 @@ function appendLoanDetailsRow(label, value, isLink, linkUrl) {
 	}).html(label);
 	var rightCol = $('<div>').attr({
 		"class" : "av-loan-details-row-rc float-left"
-	}).html(value);
+	});
 
+	//jira-813
+	if(label=="Lock Expiration"){
+		value=value.lockExpiryDate;
+		if(value!=null){
+			value=$.datepicker.formatDate('mm/dd/yy', new Date(
+					value));
+		}		
+	}
+	rightCol.html(value);
 	if (isLink) {
 		rightCol.addClass('loan-detail-link');
 		if (linkUrl) {
@@ -2384,7 +2470,7 @@ function confirmRemoveUser(textMessage, input, loanID,callback) {
 	$('#overlay-popup').show();
 }
 
-$(document).on('click', '#ld-customer .loan-detail-link', function(event) {
+$(document).on('click', '#ld-customer-profile .loan-detail-link', function(event) {
 
 	event.stopImmediatePropagation();
 	if ($('#cus-prof-popup').css("display") == "block") {
@@ -2429,7 +2515,7 @@ function appendCustomerEditProfilePopUp() {
 
 	popUpWrapper.append(header).append(container);
 
-	$('#ld-customer .loan-detail-link').append(popUpWrapper);
+	$('#ld-customer-profile .loan-detail-link').append(popUpWrapper);
 
 	appendCustomerProfEditRow("First Name", selectedUserDetail.firstName,
 			"firstNameID");

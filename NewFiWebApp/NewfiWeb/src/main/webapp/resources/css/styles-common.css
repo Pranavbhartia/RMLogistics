@@ -438,3 +438,12 @@ a.cus-eng-succ-mess-email {
 	text-align: center;
   
 }
+
+.upload-files {
+	line-height: 20px;
+	font-size: 14px;
+	text-align: center;
+	display: inline;
+	color: #428bca;
+	cursor: pointer;
+}
