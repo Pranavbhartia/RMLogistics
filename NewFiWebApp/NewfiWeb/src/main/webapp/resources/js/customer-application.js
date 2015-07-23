@@ -3397,6 +3397,14 @@ function paintCustomerApplicationPageStep4a() {
 	    		}
 	    	}
 
+			if(quesDeclarationContxts[9].value =="No"){
+				permanentResidentAlien = quesDeclarationContxts[9].childContexts.No[0].value;
+				if(permanentResidentAlien ==""){
+					showErrorToastMessage(answerQuestionOne);
+					return false;
+				}
+			    
+			}
 	    	//End of validation
 	    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
 	    	isBankrupt =  quesDeclarationContxts[1].value;

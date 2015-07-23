@@ -974,6 +974,15 @@ function paintSpouseCustomerApplicationPageStep4a() {
 		    			return;
 		    		}
 		    	}
+		    	
+		    	if(quesDeclarationContxts[9].value =="No"){
+					permanentResidentAlien = quesDeclarationContxts[9].childContexts.No[0].value;
+					if(permanentResidentAlien ==""){
+						showErrorToastMessage(answerQuestionOne);
+						return false;
+					}
+				    
+				}
 		    	isOutstandingJudgments =  quesDeclarationContxts[0].value;
 		    	isBankrupt =  quesDeclarationContxts[1].value;
 		    	isPropertyForeclosed =  quesDeclarationContxts[2].value;
