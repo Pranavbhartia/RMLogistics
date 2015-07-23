@@ -663,8 +663,8 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			 // jira-811,810
 			var col4="";
 			if(isLoanManager){
-				col2 = $('<div>').attr({
-					"class" : "leads-container-tc2 float-left"
+				col4 = $('<div>').attr({
+					"class" : "leads-container-tc4 float-left"
 				}).html("-");
 			}else{
 				col4 = $('<div>').attr({
@@ -683,6 +683,9 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			 // jira-811,810
 			var	createdDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
 					customer.loanInitiatedOn));
+			if(createdDateStr==""){
+				createdDateStr="-";
+			}
 			var col5 = $('<div>').attr({
 				"class" : "leads-container-tc5 float-left"
 			}).html(createdDateStr);
@@ -700,6 +703,10 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			 // jira-811,810
 			var	modifiedDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
 					customer.time));
+			
+			if(modifiedDateStr==""){
+				modifiedDateStr="-";
+			}
 			var col6 = $('<div>').attr({
 				"class" : "leads-container-tc6 float-left"
 			}).html(modifiedDateStr);
