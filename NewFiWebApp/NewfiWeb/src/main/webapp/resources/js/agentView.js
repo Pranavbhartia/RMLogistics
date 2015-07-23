@@ -682,7 +682,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			}
 			var addClickEvent=checkCreditScoreAval(creditScore);
 			 // jira-811,810
-			var	createdDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
+			var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
 					customer.loanInitiatedOn));
 			if(createdDateStr==""){
 				createdDateStr="-";
@@ -702,7 +702,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				})
 			}
 			 // jira-811,810
-			var	modifiedDateStr = $.datepicker.formatDate('mm/dd/yy', new Date(
+			var	modifiedDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
 					customer.time));
 			
 			if(modifiedDateStr==""){
