@@ -1409,7 +1409,7 @@ function paintCustomerSpouseApplicationPageStep5() {
 		       var cbSsnProvided = $('.ce-option-checkbox').hasClass("ce-option-checked");
 		    	
 		       var questionOne=validateInput($('input[name="birthday"]'),$('input[name="birthday"]').val(),message);
-		       var questionTwo=validateInput($('input[name="phoneNumber"]'),$('input[name="phoneNumber"]').val(),message);
+		       var questionTwo=validateInput($('input[name="phoneNumber"]'),secPhoneNumber,message);
 		      
 		       if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 		    	   var isSuccess=validateInput($('input[name="ssn"]'),$('input[name="ssn"]').val(),message);
@@ -1420,9 +1420,17 @@ function paintCustomerSpouseApplicationPageStep5() {
 		       }else{
 		    	   if(!questionOne){
 		        	   return false;
-		           }else if(!questionTwo){
+		           }
+		    	   if(!questionTwo){
 		        	   return false;
-		           }else if(yearCount<0){
+		           }else{
+		        	   if(secPhoneNumber.length<10){
+			    			$('input[name="phoneNumber"]').next('.err-msg').html(phoneNumberLegthErrorMessage).show();
+			    			$('input[name="phoneNumber"]').addClass('ce-err-input').show();
+		    				return false;
+		    			}
+		           }
+		    	   if(yearCount<0){
 		        	   showErrorToastMessage(ageErrorMessage);
 		        	   return false;
 		           }
