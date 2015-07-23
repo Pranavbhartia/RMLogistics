@@ -10,7 +10,9 @@
 
 				<c:choose>
 					<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
-						<div class="lp-txt2">${userVO.internalUserDetail.internalUserRoleMasterVO.roleDescription }</div>
+						<div class="lp-txt2">Manager</div>
+						<!--NEXNF-810  -->
+							<%-- <div class="lp-txt2">${userVO.internalUserDetail.internalUserRoleMasterVO.roleDescription }</div> --%>
 					</c:when>
 
 					<c:otherwise>
@@ -36,7 +38,9 @@
 			</div>
 		</div> --%>
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
-			<!--  NEXNF-660--->
+			<div class="lp-item-header" id="lp-item-header"></div>
+			<!--NEXNF-810  -->
+			<%-- <!--  NEXNF-660--->
 			<c:choose>
 				<c:when test="${userVO.userRole.id eq 2 }">
 					<div class="lp-item-header">my pipeline</div>
@@ -44,7 +48,7 @@
 				<c:otherwise>
 					<div class="lp-item-header">my loans</div>
 				</c:otherwise>
-			</c:choose>
+			</c:choose> --%>
 			<div class="lp-item-body lp-agent-item2">
 				<div class="lp-item-body-row lp-item-body-top-row">
 				<!--  NEXNF-660--->
@@ -66,7 +70,9 @@
 			</div>
 		</div>
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-archives" onclick="paintAgentDashboard('archivesloans');">
-			<div class="lp-item-header">my archives</div>
+			<div class="lp-item-header" id="lp-item-header-archives"></div>
+			<!--NEXNF-810  -->
+			<!-- <div class="lp-item-header">my archives</div> -->
 			<div class="lp-item-body lp-agent-item3">
 			<c:choose>
 				<c:when test="${userVO.userRole.id eq 2 }">

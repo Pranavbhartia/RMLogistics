@@ -41,12 +41,9 @@
 		var newfi = ${newfi};
 		var baseUrl = "${baseUrl}";
 		$(document).ready(function() {
-       // $('#right-panel').css('min-height',window.innerHeight - 98 + 'px');
+      
         $('#right-panel').css('min-height','100%');	
-			/*var height=$('.home-container').height();
-			var footerHeight=$('.footer-wrapper').height();
-			height=footerHeight-height;
-			$('.footer-wrapper').css("bottom",height+ "px"); */
+		
 		$('#profilePhoneNumId').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 		$('.assigned-agent-contact').html(formatPhoneNumberToUsFormat($('#profilePhoneNumId').html()));
 			initialize(newfi,baseUrl);
@@ -59,6 +56,27 @@
 			if(newfiObject.user.userRole.id==2){
 				window.location.hash="#loan";
 			}
+			//NEXNF-810
+			if(newfi.user.userRole.id==2||newfiObject.user.userRole.id==4){
+				$('#lp-item-header').html('my pipeline');
+			}	else if(newfi.user.userRole.roleCd=="INTERNAL"){
+				if(newfi.user.internalUserDetail.internalUserRoleMasterVO.id==2){
+					$('#lp-item-header').html('pipeline');
+				}else {
+					$('#lp-item-header').html('my pipeline');
+				}
+			}
+			//NEXNF-810
+			if(newfi.user.userRole.roleCd=="INTERNAL"){
+				if(newfi.user.internalUserDetail.internalUserRoleMasterVO.id==2){
+					$('#lp-item-header-archives').html('archives');
+				}else {
+					$('#lp-item-header-archives').html('my archives');
+				}
+			}else {
+				$('#lp-item-header-archives').html('my archives');
+			}
+			
 			isAgentTypeDashboard = true;
 			paintAgentDashboard('myloans');
 			retrieveState();
