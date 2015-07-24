@@ -1090,7 +1090,7 @@ input[type="button"]:focus, button:focus {
 .upload-item-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 20px;
+	padding-left: 10px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
 	text-transform: capitalize;
@@ -1307,7 +1307,7 @@ input[type="button"]:focus, button:focus {
 	padding-left: 10px;	
 	font-size: 16px; 
 	font-family: 'opensanssemibold';
-	
+
 }
 
 
@@ -2090,10 +2090,10 @@ input[type="button"]:focus, button:focus {
 }
 
 .cus-detail-rc-title {
-	width: 50%;
+	width: 28%;
 	padding-right: 10px;
 	font-family: 'opensanssemibold';
-	text-align: right;
+	text-align: left;
 }
 
 .cus-detail-rc-value {
@@ -2105,14 +2105,14 @@ input[type="button"]:focus, button:focus {
 	height: 45px;
 	line-height: 45px;
 	margin-bottom: 20px;
-	padding-left: 20px;
+	padding-left: 10px;
 	background-color: #f5f9fc;
 	font-size: 16px;
 	font-family: 'opensanssemibold';
 }
 
 .av-loan-details-container {
-	padding: 10px 25px;
+	padding: 10px 25px 30px;
 }
 
 .av-loan-details-row {
@@ -2243,7 +2243,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .newfi-team-wrapper {
-	margin-bottom: 20px;
+	margin: 20px 0;
 	padding-bottom: 120px;
 }
 
@@ -2263,6 +2263,7 @@ input[type="button"]:focus, button:focus {
 	line-height: 40px;
 	padding-left: 5px;
 }
+
 
 .newfi-team-list-th-col1,.newfi-team-list-th-col2,.newfi-team-list-th-col3
 	{
@@ -3265,11 +3266,11 @@ input.calc-input {
 .loan-progress-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 20px;
-	margin-bottom: 20px;
-	text-transform: capitalize;
-	font-family: "opensanssemibold";
+	padding-left: 10px;
+	border-radius: 3px;
 	font-size: 16px;
+	margin-bottom: 20px;
+	font-family: 'opensanssemibold';
 
 }
 

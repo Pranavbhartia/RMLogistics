@@ -453,13 +453,44 @@ function paintConversations(conversations,showSM) {
 			"class" : "float-left"
 		});
 
+
 		var profName = $('<div>').attr({
 			"class" : "con-prof-name semi-bold"
 		}).html(data.createdUser.userName);
 
+		var createdDateStr = new Date(data.createdDate);
+		var month=createdDateStr.getMonth();
+		var date=createdDateStr.getDate();
+		var year=createdDateStr.getFullYear();
+		var hours=createdDateStr.getHours();
+		var min=createdDateStr.getMinutes();
+		if(createdDateStr.getMonth()<10){
+			month='0'+month;
+		}
+		if(createdDateStr.getDate()<10){
+			date='0'+createdDateStr.getDate();
+		}
+		if(createdDateStr.getHours()<10){
+			hours='0'+hours;
+		}
+		if(createdDateStr.getMinutes()<10){
+			min='0'+min;
+		}
+		var localDate=month+'-'+date+'-'+year;
+		 localDate=formatYearInDate(localDate);
+		 var time="";
+		if(createdDateStr.getHours()>12){
+			time="PM";
+		}else{
+			time="AM";
+		}
+		createdDateStr=localDate+" "+hours+':'+min+' '+time;
+	
+		
+		
 		var messageTime = $('<div>').attr({
 			"class" : "con-message-timestamp"
-		}).html(data.createdDate);
+		}).html(createdDateStr);
 
 		col2.append(profName).append(messageTime);
 

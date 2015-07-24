@@ -95,7 +95,7 @@ var applicationItemsList = [
 		                        "onselect" : paintMyIncome
 		                    },
 			                {
-							    "text":"Government Questions",
+							    "text":"Additional Questions",//portal updates 7.23
 				                 "onselect" : paintCustomerApplicationPageStep4a
 				             },
 				             {
@@ -3052,6 +3052,9 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
 
+	if(quesText.indexOf("select all that apply")>-1){
+		quesTextCont.addClass('ce-title-adj');
+	}
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
@@ -4908,10 +4911,12 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-rate-icon"
 	});*/
 
+   // var text="Choose your loan purpose";
+    var text="loan purpose";
 	var titleText = $('<div>').attr({
-		"class" : "ce-title",
+		"class" : "ce-title ce-title-adj capitalize",
 		"style":"text-align: left"
-	}).html("Choose your loan purpose");
+	}).html(text);
 
 	//$('#app-right-panel').append(rateIcon).append(titleText);
 	$('#app-right-panel').append(titleText);
@@ -5610,6 +5615,9 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
 
+	if(quesText=="Why do you want to refinance?"){
+		quesTextCont.addClass('ce-title-adj');
+	}
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
