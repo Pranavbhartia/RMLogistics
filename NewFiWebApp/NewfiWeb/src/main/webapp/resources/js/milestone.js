@@ -591,7 +591,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										});
 										txtRow1.addClass("cursor-pointer");
 									}
-									if(tempOb.status)
+									if( tempOb.status)
 									{
 										ob.stateInfoContainer.html(tempOb.status);
 									}
@@ -600,14 +600,13 @@ function getInternalEmployeeMileStoneContext( workItem) {
 							}
 							else if(
 									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"){								
-								if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 
-									
-									if(tempOb.status)
-									{
-										ob.stateInfoContainer.html(tempOb.status);
-									}
+									if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 	
+										var tempOb=JSON.parse(ob.workItem.stateInfo);
+										if(tempOb != undefined && tempOb.status)
+										{
+											ob.stateInfoContainer.html(tempOb.status);
+										}
 								}
-
 							}
 							else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 									ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
