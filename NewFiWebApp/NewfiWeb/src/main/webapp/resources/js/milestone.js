@@ -629,13 +629,13 @@ function getInternalEmployeeMileStoneContext( workItem) {
 											aprValue = parsedJSON.APR;	
 										}
 									}
-									var rateAPRDisplay = "" + lockedRate + "/" + aprValue;
+									var rateAPRDisplay = "" + lockedRate + " / " + aprValue;
 									var txtRow2 = $('<div>').attr({
 										"class" : rightLeftClass + "-text" ,										
 										"data-text" : ob.workItem.workflowItemType,
 										"mileNotificationId":ob.workItem.id
 									});
-									txtRow2.html("Lock Expiration Date :"+lockExpDate);									
+									txtRow2.html("Lock Expiration Date:"+lockExpDate);									
 									ob.stateInfoContainer.html(rateAPRDisplay);
 									ob.stateInfoContainer.append(txtRow2);
 								}else
