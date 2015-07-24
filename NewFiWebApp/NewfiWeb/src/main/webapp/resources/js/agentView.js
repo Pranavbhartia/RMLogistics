@@ -220,7 +220,7 @@ function paintAgentDashboardRightPanel(data) {
 		"class" : "agent-customer-list-header clearfix"
 	});
 	var leftCon = $('<div>').attr({
-		"class" : "agent-customer-list-header-txt page-header-loan  float-left"
+		"class" : "agent-customer-list-header-txt page-header-loan-dashboard  float-left"
 	});
 
 	//NEXNF-810

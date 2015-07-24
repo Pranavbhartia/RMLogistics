@@ -305,7 +305,16 @@ k}
 	font-size: 16px;
 
 }
-
+.page-header-loan-dashboard{
+	font-size: 16px;
+	font-family: 'opensanssemiBold';
+	margin-right: 5px;
+	white-space: nowrap;
+	line-height: 45px;
+	padding-left: 10px;
+	border-radius: 3px;
+	font-size: 16px;
+}
 .rate-btn-alertRate-header {
 	
 	font-size:14px;
