@@ -143,6 +143,9 @@ function getBuyHomeMutipleChoiceQuestion(quesText, options, name) {
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
 
+	if(quesText=="Living Situation"){
+		quesTextCont.addClass('ce-title-adj');
+	}
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
