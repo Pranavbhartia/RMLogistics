@@ -37,7 +37,7 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
 	public List<LoanMilestoneMaster> getMileStoneListForLoanStatus(){
 		List<LoanMilestoneMaster> mileStone=new ArrayList<LoanMilestoneMaster>(); 
 		
-		for(int i=0;i<8;i++){
+		for(int i=1;i<9;i++){
 			LoanMilestoneMaster master=new LoanMilestoneMaster();
 			master.setId(getMileStones(i).getMilestoneID());
 			mileStone.add(master);
