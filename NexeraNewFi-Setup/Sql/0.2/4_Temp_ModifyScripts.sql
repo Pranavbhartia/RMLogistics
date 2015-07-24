@@ -157,3 +157,5 @@ ALTER TABLE `newfi_schema`.`customeremploymentincome`
 ALTER TABLE `newfi_schema`.`customerspouseemploymentincome` 
  ADD COLUMN `empl_len` DOUBLE(3,1) NULL DEFAULT 0 AFTER `job_title`;
 
+#CHange System admin first name to newfi : 24 July
+UPDATE `newfi_schema`.`user` SET `first_name`='Newfi' WHERE `id`='1';
