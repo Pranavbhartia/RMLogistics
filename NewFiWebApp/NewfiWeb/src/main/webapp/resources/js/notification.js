@@ -885,3 +885,39 @@ function navigateToHash(e){
 	window.location.hash=hashLocation;
 	hideAlertNotificationPopup();
 }
+
+function updateNotificationView(){
+	if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
+		var ctx=newfiObject.contextHolder["notification"];
+		ctx.initContext(true);
+	}else{
+		if(typeof(selectedUserDetail)==="undefined"){
+			for(var key in newfiObject.contextHolder){
+				var ctx=newfiObject.contextHolder[key];
+				if(key=="notification"){
+					ctx.getLoanNotificationByType(function(ob) {
+						ob.populateLoanNotification();
+					});
+					ctx.getNotificationForUser();
+				}else{
+					ctx.getNotificationForLoan(function(ob){
+						ob.updateLoanListNotificationCount();
+					});
+				}
+			}
+		}else{
+			var ctx=newfiObject.contextHolder[selectedUserDetail.loanID+"-notification"];
+			ctx.getNotificationForLoan(function(ob) {
+				ob.populateLoanNotification();
+			});
+		}	
+	}
+}
+
+$(document).on('click', '.left-panel,.lp-t2-wrapper', function(e) {
+	try{
+		updateNotificationView();
+	}catch(exception){
+
+	}
+});
