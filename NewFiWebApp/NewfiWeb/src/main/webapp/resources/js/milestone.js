@@ -591,7 +591,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										});
 										txtRow1.addClass("cursor-pointer");
 									}
-									if(tempOb.status)
+									if( tempOb.status)
 									{
 										ob.stateInfoContainer.html(tempOb.status);
 									}
@@ -600,14 +600,13 @@ function getInternalEmployeeMileStoneContext( workItem) {
 							}
 							else if(
 									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"){								
-								if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 
-									
-									if(tempOb.status)
-									{
-										ob.stateInfoContainer.html(tempOb.status);
-									}
+									if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 	
+										var tempOb=JSON.parse(ob.workItem.stateInfo);
+										if(tempOb != undefined && tempOb.status)
+										{
+											ob.stateInfoContainer.html(tempOb.status);
+										}
 								}
-
 							}
 							else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 									ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
@@ -629,13 +628,13 @@ function getInternalEmployeeMileStoneContext( workItem) {
 											aprValue = parsedJSON.APR;	
 										}
 									}
-									var rateAPRDisplay = "" + lockedRate + "/" + aprValue;
+									var rateAPRDisplay = "" + lockedRate + " / " + aprValue;
 									var txtRow2 = $('<div>').attr({
 										"class" : rightLeftClass + "-text" ,										
 										"data-text" : ob.workItem.workflowItemType,
 										"mileNotificationId":ob.workItem.id
 									});
-									txtRow2.html("Lock Expiration Date :"+lockExpDate);									
+									txtRow2.html("Lock Expiration Date:"+lockExpDate);									
 									ob.stateInfoContainer.html(rateAPRDisplay);
 									ob.stateInfoContainer.append(txtRow2);
 								}else
