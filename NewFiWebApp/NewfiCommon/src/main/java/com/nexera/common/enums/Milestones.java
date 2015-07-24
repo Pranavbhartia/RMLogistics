@@ -35,7 +35,7 @@ public enum Milestones {
 		return mileStone;
 	}
 
-	public  Milestones getMileStone(String milestoneKey) {
+	public Milestones getMileStone(String milestoneKey) {
 		Milestones mileStone = Milestones.App1003;
 		for (Milestones ms : Milestones.values()) {
 			if (milestoneKey != null
@@ -49,16 +49,5 @@ public enum Milestones {
 
 	public int getMilestoneID() {
 		return milestoneID;
-	}
-	
-	public static  List<LoanMilestoneMaster> getMileStoneListForLoanStatus(){
-		List<LoanMilestoneMaster> mileStone=new ArrayList<LoanMilestoneMaster>(); 
-		LoanMilestoneMaster master=new LoanMilestoneMaster();
-		for(int i=0;i<8;i++){
-			master.setId(getMileStone(i).getMilestoneID());
-			mileStone.add(master);
-		}
-		return mileStone;
-	}
-
+	}	
 }
