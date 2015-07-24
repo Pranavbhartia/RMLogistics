@@ -535,6 +535,9 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
+	if(quesText.indexOf("select all that apply")>-1){
+		quesTextCont.addClass('ce-title-adj');
+	}
 	var applicationLocked=checkLqbFileId();
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"

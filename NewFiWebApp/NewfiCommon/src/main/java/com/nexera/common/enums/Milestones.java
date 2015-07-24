@@ -1,5 +1,10 @@
 package com.nexera.common.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.nexera.common.entity.LoanMilestoneMaster;
+
 public enum Milestones {
 	App1003(1, "1003"), AUSUW(2, "AUSUW"), QC(3, "QC"), LM_DECISION(4,
 	        "LM_DECISION"), DISCLOSURE(5, "DISCLOSURE"), APPRAISAL(6,
@@ -19,7 +24,7 @@ public enum Milestones {
 		this.milestoneKey = milestoneKey;
 	}
 
-	public Milestones getMileStone(int inputID) {
+	public static Milestones getMileStone(int inputID) {
 		Milestones mileStone = Milestones.App1003;
 		for (Milestones ms : Milestones.values()) {
 			if (ms.milestoneID == inputID) {
@@ -44,6 +49,5 @@ public enum Milestones {
 
 	public int getMilestoneID() {
 		return milestoneID;
-	}
-
+	}	
 }

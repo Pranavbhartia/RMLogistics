@@ -1418,3 +1418,15 @@ function showValidData(value){
 	else
 		return value;
 }
+
+function formatYearInDate(date){
+	
+	var local="";
+	if(typeof(local)!=undefined){
+		var local=date.split('-');
+		local[2]=local[2][2].concat(local[2][3]); 
+		local=local.join('-');
+		
+	}
+	return local;
+}

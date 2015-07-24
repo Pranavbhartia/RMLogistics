@@ -452,7 +452,13 @@ public class LoanServiceImpl implements LoanService {
 			for (Loan loan : loanList) {
 				LoanCustomerVO loanCustomerVO = this
 				        .buildLoanCustomerVoFromUser(loan);
+				LoanMilestone loan_status=getLqbLoanStatus(loan);
+				if(loan_status!=null){
+					loanCustomerVO.setLqbLoanStatus(loan_status.getComments());
+				}
+				
 				loanCustomerVoList.add(loanCustomerVO);
+				
 			}
 		}
 
@@ -462,7 +468,13 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
-
+	
+	private LoanMilestone getLqbLoanStatus(Loan loan){
+		
+		LoanMilestone loan_status=loanMilestoneDao.getLqbLoanStatus(loan);
+		return loan_status;
+		
+	}
 	/**
 	 * return loanCustomerVo from loan
 	 * 
@@ -1506,6 +1518,11 @@ public class LoanServiceImpl implements LoanService {
 				loanVO.setCreditReportUrl("");
 			}
 
+			//Check for loanLqbStatus
+			LoanMilestone lqbLoanStatus=getLqbLoanStatus(loan);
+			if(lqbLoanStatus!=null){
+				loanVO.setLqbLoanStatus(lqbLoanStatus.getComments());
+			}
 		}
 		return loanVO;
 	}

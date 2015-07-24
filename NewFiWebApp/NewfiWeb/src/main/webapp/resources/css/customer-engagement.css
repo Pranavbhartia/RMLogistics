@@ -76,7 +76,7 @@
 
 .ce-rp-ques-text {
 	font-family: 'opensanssemibold';
-	font-size: 16px;
+	font-size: 15px;
 	margin-bottom: 5px;
 }
 
@@ -375,4 +375,9 @@
 
 .choice-hover{
 	background: #F47521;
+}
+
+
+.ce-title-adj {
+	font-size: 18px;
 }

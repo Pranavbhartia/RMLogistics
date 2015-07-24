@@ -44,6 +44,7 @@ public class LoanVO implements Serializable {
 	private String setSenderDomain;
 	private String lockedRate;
 	private BigDecimal appFee;
+	private String lqbLoanStatus;
 
 	private int customerWorkflowID;
 	private int loanManagerWorkflowID;
@@ -456,5 +457,13 @@ public class LoanVO implements Serializable {
 
 	public void setRateLockRequested(Boolean rateLockRequested) {
 	    this.rateLockRequested = rateLockRequested;
+    }
+
+	public String getLqbLoanStatus() {
+	    return lqbLoanStatus;
+    }
+
+	public void setLqbLoanStatus(String lqbLoanStatus) {
+	    this.lqbLoanStatus = lqbLoanStatus;
     }
 }
