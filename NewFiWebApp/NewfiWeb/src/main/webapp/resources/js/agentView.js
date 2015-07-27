@@ -593,9 +593,14 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				"class" : "leads-container-tc3 leads-container-tc3-realtor float-left"
 			}).html(lockedClosingCost);//to be asked
 
+			var loan_status=customer.lqbLoanStatus;
+			if(loan_status==""||loan_status==null||loan_status==undefined){
+				loan_status="-";
+			}
+
 			var col4 = $('<div>').attr({
 				"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
-			}).html("-");
+			}).html(loan_status);
 			
 			var textCol4="";
 			if(customer.processor==""||customer.processor==null){
@@ -712,12 +717,15 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			}
 			 // jira-811,810
 			var date=customer.time.slice(0,10);
+			var time=customer.time.slice(11);
 			/*var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
 					customer.loanInitiatedOn));*/
 			var modifiedDateStr=formatYearInDate(date);
 			
 			if(modifiedDateStr==""){
 				modifiedDateStr="-";
+			}else {
+				modifiedDateStr =modifiedDateStr+"<br/>"+time;
 			}
 			var col6 = $('<div>').attr({
 				"class" : "leads-container-tc6 float-left"
@@ -789,7 +797,7 @@ function checkCreditScoreAval(creditScore){
 function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanManager) {
 	
 	var tableHeader = $('<div>').attr({
-		"class" : "leads-container-th leads-container-row clearfix"
+		"class" : "leads-container-th leads-container-row leads-container-row-th clearfix"
 	});
 	if(isLoanManager){
 		tableHeader.addClass('leads-container-row-adj');
@@ -819,7 +827,7 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 
 		var thCol6 = $('<div>').attr({
 			"class" : "leads-container-tc6 float-left"
-		}).html("Alert");
+		}).html("Alerts");
 
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6);
 	}else if(isSalesManager || isLoanManager){
@@ -863,7 +871,7 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 
 	var thCol7 = $('<div>').attr({
 		"class" : "leads-container-tc7 float-left"
-	}).html("Alert");
+	}).html("Alerts");
 
 	tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
 			.append(thCol4).append(thCol5).append(thCol6).append(thCol7);
@@ -4135,8 +4143,9 @@ function appendAddNeedsContainer() {
 	row3.append(row3Label).append(row3Input);
 	container.append(row1).append(row2).append(row3);
 
+	//NEXNF-836
 	var addNeedsBtn = $('<div>').attr({
-		"class" : "add-needs-btn",
+		"class" : "cep-button-color  add-needs-btn",
 		"onclick" : "saveCustomNeed()"
 	}).html("Add Needs");
 

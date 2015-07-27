@@ -342,7 +342,7 @@ function appendInitialNeedsListWrapper(){
 	
 	var savebtn = $('<div>').attr({
 		"id" : "saveNeedsButton",
-		"class" : "need-list-save-btn",
+		"class" : "cep-button-color need-list-save-btn",
 		"onclick": "saveLoanNeeds()"
 	}).html(saveBtnText);
 	

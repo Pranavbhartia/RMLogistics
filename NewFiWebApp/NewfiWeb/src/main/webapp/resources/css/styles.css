@@ -1696,6 +1696,7 @@ input[type="button"]:focus, button:focus {
 
 .leads-container-th>div {
 	font-size: 12px;
+	font-family : 'opensanssemibold';/* jira-834 */
 }
 
 .leads-container-tc1 {
@@ -1715,11 +1716,11 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-tc5 {
-	width: 138px;
+	width: 110px;
 }
 
 .leads-container-tc6 {
-	width: 90px;
+	width: 109px;
 }
 
 .leads-container-tc7 {
@@ -3271,6 +3272,7 @@ input.calc-input {
 	font-size: 16px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
+    text-transform: capitalize;
 
 }
 
@@ -5664,7 +5666,7 @@ a.session-login-btn {
 	width: 170px;
 }
 .leads-container-tc5-realtor {
-	width: 179px;
+	width: 160px;
 }
 .leads-container-tc6-realtor {
 	background: url(../images/alram_blue.png) no-repeat 20px 5px;
@@ -5707,4 +5709,7 @@ p.toast-mess-style {
 }
 .leads-container-row-adj {
 	padding:10px 15px;
+}
+.leads-container-row-th {
+    background-color: rgba(241, 241, 241, 0.66);
 }
