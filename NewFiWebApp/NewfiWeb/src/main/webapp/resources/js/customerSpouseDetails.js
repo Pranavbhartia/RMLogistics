@@ -1447,7 +1447,10 @@ function paintCustomerSpouseApplicationPageStep5() {
 		    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 		    		appUserDetails.cbSsnProvided = cbSsnProvided;
 		    		appUserDetails.customerSpouseDetail = customerDetailTemp;
-					saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));  
+					//saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));  
+
+					applicationFormSumbit(appUserDetails)
+
     	}else{
     		paintLockRatePage();
     		//applicationFormSumbit(appUserDetails);

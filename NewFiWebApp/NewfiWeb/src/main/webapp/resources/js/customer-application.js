@@ -3984,7 +3984,8 @@ function paintCustomerApplicationPageStep5() {
 		    		if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true){
 						saveAndUpdateLoanAppForm(appUserDetails,paintCustomerSpouseApplicationPageStep5);
 					}else{
-						 saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
+                        applicationFormSumbit(appUserDetails)
+						//saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
 					}
 		    		
 		    		
