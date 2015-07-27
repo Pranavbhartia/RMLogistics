@@ -777,6 +777,12 @@ function getCalculationFunctionForItem(key) {
 	return fun;
 }
 
+$(document).on("closingCostChange",function(){
+	var key=objectKeyMakerFunction(getClosingCostLabel("Total Estimated Closing Cost"))
+	var fun=getCalculationFunctionForItem(key);
+	$('#closingCostId').html(showValue(fun()));
+})
+
 function getRowHolderObject(container, value, key) {
 	var rw = {
 		container : container,
@@ -822,6 +828,7 @@ function getObContainer() {
 					keyObj.updateView();
 				}
 			}
+			$(document).trigger("closingCostChange");
 		}
 	};
 	return obj;
