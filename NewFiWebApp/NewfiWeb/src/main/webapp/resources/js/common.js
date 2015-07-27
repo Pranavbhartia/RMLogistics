@@ -770,6 +770,7 @@ function getCalculationFunctionForItem(key) {
 			
 			//var result = val1 + val2 + val3;
 			var result = val1 + val2;
+			$(document).trigger("closingCostChange",result);
 			return result;
 		};
 		break;
@@ -777,10 +778,8 @@ function getCalculationFunctionForItem(key) {
 	return fun;
 }
 
-$(document).on("closingCostChange",function(){
-	var key=objectKeyMakerFunction(getClosingCostLabel("Total Estimated Closing Cost"))
-	var fun=getCalculationFunctionForItem(key);
-	$('#closingCostId').html(showValue(fun()));
+$(document).on("closingCostChange",function(e,data){
+	setTimeout(function(){ $('#closingCostId').html(showValue(data)); }, 10);
 })
 
 function getRowHolderObject(container, value, key) {
@@ -828,7 +827,6 @@ function getObContainer() {
 					keyObj.updateView();
 				}
 			}
-			$(document).trigger("closingCostChange");
 		}
 	};
 	return obj;
