@@ -457,35 +457,72 @@ function paintConversations(conversations,showSM) {
 		var profName = $('<div>').attr({
 			"class" : "con-prof-name semi-bold"
 		}).html(data.createdUser.userName);
+		var createdDateStr="";
+		var month = "";
+		var date = "";
+		var year = "";
+		var hours = "";
+		var min = "";
+		var localDate = "";
+		var browser=navigator.userAgent.search("Firefox");
+		if(browser>-1){
+			createdDateStr=data.createdDate;
+			var complete_date=createdDateStr.slice(0,10);
+			var time=createdDateStr.slice(11);
+			complete_date=new Date(complete_date);
+			month =  complete_date.getMonth();
+			date = complete_date.getDate();
+			year = complete_date.getFullYear();
+			if(complete_date.getMonth()<10){
+				month='0'+month;
+			}
+			if(complete_date.getDate()<10){
+				date='0'+createdDateStr.getDate();
+			}
+			localDate=month+'-'+date+'-'+year;
+			localDate=formatYearInDate(localDate);
+			time=time.split(':');
+			hours = time[0];
+			min = time[1];
+			
+			if(hours > 12){
+				time="PM";
+			}else{
+				time="AM";
+			}
+			
+		}else {
+			createdDateStr = new Date(data.createdDate);
+			 month=createdDateStr.getMonth();
+			 date=createdDateStr.getDate();
+			 year=createdDateStr.getFullYear();
+			 hours=createdDateStr.getHours();
+			 min=createdDateStr.getMinutes();
+			if(createdDateStr.getMonth()<10){
+				month='0'+month;
+			}
+			if(createdDateStr.getDate()<10){
+				date='0'+createdDateStr.getDate();
+			}
+			if(createdDateStr.getHours()<10){
+				hours='0'+hours;
+			}
+			if(createdDateStr.getMinutes()<10){
+				min='0'+min;
+			}
+			 localDate=month+'-'+date+'-'+year;
+			 localDate=formatYearInDate(localDate);
+			 var time="";
+			if(createdDateStr.getHours()>12){
+				time="PM";
+			}else{
+				time="AM";
+			}
+			
+		}
 
-		var createdDateStr = new Date(data.createdDate);
-		var month=createdDateStr.getMonth();
-		var date=createdDateStr.getDate();
-		var year=createdDateStr.getFullYear();
-		var hours=createdDateStr.getHours();
-		var min=createdDateStr.getMinutes();
-		if(createdDateStr.getMonth()<10){
-			month='0'+month;
-		}
-		if(createdDateStr.getDate()<10){
-			date='0'+createdDateStr.getDate();
-		}
-		if(createdDateStr.getHours()<10){
-			hours='0'+hours;
-		}
-		if(createdDateStr.getMinutes()<10){
-			min='0'+min;
-		}
-		var localDate=month+'-'+date+'-'+year;
-		 localDate=formatYearInDate(localDate);
-		 var time="";
-		if(createdDateStr.getHours()>12){
-			time="PM";
-		}else{
-			time="AM";
-		}
+		
 		createdDateStr=localDate+" "+hours+':'+min+' '+time;
-	
 		
 		
 		var messageTime = $('<div>').attr({

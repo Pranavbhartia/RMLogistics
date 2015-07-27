@@ -614,7 +614,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	var showSave = false;
 	var documentContainer = getDocumentContainer();
 	var submitBtn = $("<div>").attr({
-		"class" : "submit-btn"
+		"class" : "cep-button-color submit-btn"
 	}).click(saveUserDocumentAssignments).html("Save");
 
 	var neededItemsWrapper = getNeedItemsWrapper(neededItemListObject);
