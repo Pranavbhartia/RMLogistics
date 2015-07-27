@@ -137,7 +137,7 @@ public class FileUploadRest {
 
 				CheckUploadVO checkUploadVO = uploadedFilesListService
 				        .uploadFile(file, contentType, userId, loanId,
-				                assignedBy, isAssignedToNeed, null);
+				                assignedBy, isAssignedToNeed, null,null);
 
 				// Integer fileSavedId =
 				// uploadedFilesListService.addUploadedFilelistObejct( file,
@@ -347,7 +347,7 @@ public class FileUploadRest {
 				checkFileUploaded = uploadedFilesListService.uploadFile(
 				        nexeraUtility.multipartToFile(multipartFile),
 				        multipartFile.getContentType(), userID, loanId,
-				        assignedBy, isAssignedToNeed, null);
+				        assignedBy, isAssignedToNeed, null,needId);
 			} catch (IllegalStateException | IOException e) {
 				// If file conversion or saving fails, set upload status to
 				// false.

@@ -13,6 +13,7 @@ public class NeedsListMasterVO implements Serializable {
 	private String needCategory;
 	private List<LoanNeedsListVO> loanNeedsList;
 	private UserVO modifiedBy;
+	private String uploadedTo;
 	public int getId() {
 		return id;
 	}
@@ -55,5 +56,11 @@ public class NeedsListMasterVO implements Serializable {
 	public void setModifiedBy(UserVO modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+	public String getUploadedTo() {
+	    return uploadedTo;
+    }
+	public void setUploadedTo(String uploadedTo) {
+	    this.uploadedTo = uploadedTo;
+    }
 
 }

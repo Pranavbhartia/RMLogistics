@@ -13,6 +13,7 @@ import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.json.JSONObject;
 
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.FileAssignmentMappingVO;
@@ -38,7 +39,7 @@ public interface UploadedFilesListService {
 	public List<File> downloadFileFromService(List<Integer> fileIds);
 
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
-	        Integer userId, Integer assignedBy) throws IOException,
+	        Integer userId, Integer assignedBy,Integer needId) throws IOException,
 	        COSVisitorException;
 
 	public Integer addUploadedFilelistObejct(File file, Integer loanId,
@@ -61,10 +62,10 @@ public interface UploadedFilesListService {
 
 	public CheckUploadVO uploadFile(File file, String contentType,
 	        Integer userId, Integer loanId, Integer assignedBy,
-	        Boolean isNeedAssigned, String fileName);
+	        Boolean isNeedAssigned, String fileName,Integer needId);
 
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
-	        Integer loanId, String createLQBVO, Boolean isNeedAssigned);
+	        Integer loanId, String createLQBVO, Boolean isNeedAssigned,Integer needId);
 
 	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
 	        throws IOException;
@@ -98,5 +99,7 @@ public interface UploadedFilesListService {
 
 	List<UploadedFilesListVO> buildUpdateFileVoList(
 	        List<UploadedFilesList> filesLists);
+	
+	public NeedsListMaster getNeedFromMaster(Integer needId);
 
 }
