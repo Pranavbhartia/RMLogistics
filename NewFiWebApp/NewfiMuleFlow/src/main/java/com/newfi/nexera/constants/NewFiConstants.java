@@ -21,6 +21,8 @@ public class NewFiConstants
 
     public static String CONSTANT_CONDITION_NO_CO_BORROWER_WITHOUT_SSN = "noCoBorrowerWithoutSSN";
 
+	public static String UPDATE_CONDITION = "updateCondition";
+
     public static String CONSTANT_CONDITION_NO_CO_BORROWER_WITH_SSN = "noCoBorrowerWithSSN";
 
     public static String CONSTANT_CONDITION_CO_BORROWER_IS_WIFE_WITH_SSN_BOTH = "coborrowerIsWifeWithSSNBoth";
