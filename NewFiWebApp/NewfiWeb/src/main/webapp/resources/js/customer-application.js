@@ -5716,7 +5716,32 @@ $.ajax({
 
                 if(data=="error"){
                     showErrorToastMessage(applicationNotSubmitted);
-                   }else{
+                }
+                else if(data.indexOf('status="Error"')>=0){
+                    var ie=checkIfIE();
+                    var status="";
+                    var message="Something Went Wrong";
+                    var result;
+                    if(ie){
+                        //this part of CODE not tested Need to be tested in IE
+                        xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+                        xmlDoc.async=false;
+                        result=xmlDoc.loadXML(data); 
+                    }else{
+                        var dom=new DOMParser(data)
+                        result=dom.parseFromString(data, "application/xml");
+                    }
+                    if(result){
+                        status=$(result.documentElement).attr("status");
+                        message=result.documentElement.childNodes[0].innerHTML;
+                    }
+                    if(status=="Error"){
+                        if(message.indexOf("HOUR_CUTOFF")>=0){
+                            message="Rates can be locked between : 08:30 AM PST - 04:00 PM PST";
+                        }
+                        showToastMessage(message);
+                    }
+                }else{
                 	   if(flag)
                 		{
                 		   changeSecondaryLeftPanel(3,true); 
