@@ -160,7 +160,7 @@ ALTER TABLE `newfi_schema`.`customerspouseemploymentincome`
 #Ranjitha : Addition of new_column for doctype
 ALTER TABLE `newfi_schema`.`needslistmaster` 
 ADD COLUMN `uploaded_to` VARCHAR(45) NULL AFTER `short_description`;
-[05:24:54 PM] ranjitha r: UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="DRIVER'S LICENSES" WHERE `id`='33';
+UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="DRIVER'S LICENSES" WHERE `id`='33';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="MORTGAGE STATEMENT" WHERE `id`='6';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="INSURANCE DEC PAGE" WHERE `id`='9';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="CONDO – HOA FEES/DUES" WHERE `id`='16';
@@ -168,3 +168,9 @@ UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="PAYSTUBS" WHERE `id`=
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="W-2S" WHERE `id`='18';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="PERSONAL TAX RETURNS" WHERE `id`='22';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="BANK STATEMENTS" WHERE `id`='28';
+
+#Ranjitha : Addition of new_column for doctype update
+UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`='CONDO - HOA FEES/DUES' WHERE `id`='16';
+UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`='PAYSTUBS' WHERE `id`='17';
+
+

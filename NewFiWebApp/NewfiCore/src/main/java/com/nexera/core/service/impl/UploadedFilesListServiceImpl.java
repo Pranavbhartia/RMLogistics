@@ -495,9 +495,27 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			JSONObject receivedResponse = lqbInvoker
 			        .invokeLqbService(uploadObject.toString());
 			LOG.info(" receivedResponse while uploading LQB Document : "
-			        + receivedResponse);
-
-			lqbResponseVO = parseLQBXMLResponse(receivedResponse);
+			        + receivedResponse.getString("responseMessage"));
+			
+			//Condition to check if there is any error in doctype
+			if(receivedResponse.getString("responseMessage").contains("Cannot find document type")){
+				LOG.info(" Error recived from LQB that document type not found hence changing the doc type to  INITIAL LOAN PACKAGE: "
+				        + receivedResponse);
+				lqbDocumentVO.setDocumentType(assignedFolder);
+				uploadObject = createUploadPdfDocumentJsonObject(
+				        WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT,
+				        lqbDocumentVO);
+				receivedResponse = lqbInvoker
+				        .invokeLqbService(uploadObject.toString());
+				lqbResponseVO = parseLQBXMLResponse(receivedResponse);
+				return lqbResponseVO;
+				
+			}
+			
+				lqbResponseVO = parseLQBXMLResponse(receivedResponse);
+			
+			
+			
 
 		}
 
