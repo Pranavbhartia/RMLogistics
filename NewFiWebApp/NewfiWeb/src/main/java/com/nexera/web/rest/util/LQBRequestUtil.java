@@ -422,6 +422,133 @@ public class LQBRequestUtil {
 
 	}
 
+	public JSONObject updateLoanAmount(String loanNumber,
+	        LoanAppFormVO loanAppFormVO,
+	        String sTicket) {
+		HashMap<String, String> hashmap = new HashMap();
+		try {
+			String condition = "";
+
+			String loanPurpose = "";
+
+			if ("PUR".equalsIgnoreCase(loanAppFormVO.getLoanType()
+			        .getLoanTypeCd())) {
+				loanPurpose = "0";
+				hashmap.put("loanPurchasePrice", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getPurchaseDetails().getHousePrice()));
+				hashmap.put("prodCashOut", "0");
+			} else if ("REF".equalsIgnoreCase(loanAppFormVO.getLoanType()
+			        .getLoanTypeCd())) {
+				// is it cashout
+				if (loanAppFormVO.getRefinancedetails() != null
+				        && ("REFCO").equalsIgnoreCase(loanAppFormVO
+				                .getRefinancedetails().getRefinanceOption())) {
+					loanPurpose = "2";
+					hashmap.put("loanPurchasePrice", Utils
+					        .unformatCurrencyField(loanAppFormVO
+					                .getPropertyTypeMaster()
+					                .getCurrentHomePrice()));
+
+					hashmap.put("prodCashOut", Utils
+					        .unformatCurrencyField(loanAppFormVO
+					                .getRefinancedetails().getCashTakeOut()));
+				} else {
+					loanPurpose = "1";
+					hashmap.put("loanPurchasePrice", Utils
+					        .unformatCurrencyField(loanAppFormVO
+					                .getPropertyTypeMaster()
+					                .getCurrentHomePrice()));
+					hashmap.put("prodCashOut", "0");
+				}
+			}
+
+			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
+			        .getDescription())) {
+				hashmap.put("loanApprovedValue", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getPurchaseDetails().getHousePrice()));
+			} else {
+				hashmap.put("loanApprovedValue", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getPropertyTypeMaster().getHomeWorthToday()));
+
+				hashmap.put("mortageRemaining", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getRefinancedetails()
+				                .getCurrentMortgageBalance()));
+			}
+
+			if ("Purchase".equalsIgnoreCase(loanAppFormVO.getLoanType()
+			        .getDescription())) {
+				hashmap.put("loanAmount", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getPurchaseDetails().getLoanAmount()));
+			} else {
+
+				hashmap.put("loanAmount", Utils
+				        .unformatCurrencyField(loanAppFormVO
+				                .getRefinancedetails()
+				                .getCurrentMortgageBalance()));
+
+				if ("REF".equalsIgnoreCase(loanAppFormVO.getLoanType()
+				        .getLoanTypeCd())) {
+					// is it cashout
+					if (loanAppFormVO.getRefinancedetails() != null
+					        && ("REFCO")
+					                .equalsIgnoreCase(loanAppFormVO
+					                        .getRefinancedetails()
+					                        .getRefinanceOption())) {
+						Float loanAmount = Float
+						        .parseFloat(Utils
+						                .unformatCurrencyField(loanAppFormVO
+						                        .getRefinancedetails()
+						                        .getCashTakeOut()))
+						        + Float.parseFloat(Utils
+						                .unformatCurrencyField(loanAppFormVO
+						                        .getRefinancedetails()
+						                        .getCurrentMortgageBalance()));
+						hashmap.put("loanAmount", loanAmount.toString());
+					}
+				}
+
+			}
+			HashMap<String, String> finalmap = new HashMap();
+			for (String key : hashmap.keySet()) {
+
+				String encodedValue = hashmap.get(key);
+				if (!key.equalsIgnoreCase("applicantEmailAddress")
+				        && null != hashmap.get(key))
+					encodedValue = URLEncoder.encode(hashmap.get(key))
+					        .replaceAll("[+]", " ");
+				finalmap.put(key, encodedValue);
+
+			}
+			JSONObject jsonObject = new JSONObject(finalmap);
+
+			JSONObject json = new JSONObject();
+			JSONObject jsonChild = new JSONObject();
+
+			jsonChild.put("condition", "updateCondition");
+			jsonChild.put("sLoanNumber", loanNumber);
+			jsonChild.put("sDataContentMap", jsonObject);
+			jsonChild.put("format", "0");
+			jsonChild.put("sTicket", sTicket);
+
+			json.put("opName", "Update");
+			json.put("loanVO", jsonChild);
+
+			LOG.debug("jsonMapObject Save operation" + json);
+
+			return json;
+
+		} catch (JSONException e) {
+			LOG.debug("JSONException ", e);
+			return null;
+		}
+
+	}
+
 	public String getYearsSpent(String purchaseTime) {
 		int yeardiff = 0;
 		int tempTime = 0;

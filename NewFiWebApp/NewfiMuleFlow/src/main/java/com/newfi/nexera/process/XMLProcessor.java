@@ -64,6 +64,29 @@ public class XMLProcessor
                     "applicantOccupancyType" );
             newApplicant.appendChild( applicationOccupancyType );
 
+		} else if (condition.equalsIgnoreCase(NewFiConstants.UPDATE_CONDITION)) {
+			LOG.debug("Loan Amount update");
+			// NodeList nodeToRemove = doc.getElementsByTagName("credit");
+			// nodeToRemove.item(0).getParentNode()
+			// .removeChild(nodeToRemove.item(0));
+
+			// NodeList newApplicantList =
+			// doc.getElementsByTagName("applicant");
+			// Node newApplicant = newApplicantList.item(0);
+			//
+			// Element aBExperianScore = createNewElement(doc, "field",
+			// "aBExperianScore", "applicantExperianScore");
+			// Element aBEquifax = createNewElement(doc, "field",
+			// "aBEquifaxScore", "applicantEquifaxScore");
+			// Element aBTransUnionScore = createNewElement(doc, "field",
+			// "aBTransUnionScore", "applicantTransUnionScore");
+			// newApplicant.appendChild(aBExperianScore);
+			// newApplicant.appendChild(aBEquifax);
+			// newApplicant.appendChild(aBTransUnionScore);
+			// Element applicationOccupancyType = createNewElement(doc, "field",
+			// "aOccT", "applicantOccupancyType");
+			// newApplicant.appendChild(applicationOccupancyType);
+
         } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_CO_BORROWER_WITH_SSN_BOTH ) ) {
             Element newApplicant = doc.createElement( "applicant" );
             newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );

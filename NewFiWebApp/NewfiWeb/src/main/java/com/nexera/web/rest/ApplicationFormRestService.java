@@ -614,7 +614,7 @@ public class ApplicationFormRestService {
 				if (loanNumber != null && !"".equalsIgnoreCase(loanNumber)) {
 
 					HashMap<String, String> map = invokeRest((lQBRequestUtil
-					        .saveLoan(loanNumber, loaAppFormVO, sTicket))
+					        .updateLoanAmount(loanNumber, loaAppFormVO, sTicket))
 					        .toString());
 					if (map.get("responseMessage") != null) {
 						response = map.get("responseMessage");
