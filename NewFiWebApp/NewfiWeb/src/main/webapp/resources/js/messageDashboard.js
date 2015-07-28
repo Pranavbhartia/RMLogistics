@@ -465,7 +465,8 @@ function paintConversations(conversations,showSM) {
 		var min = "";
 		var localDate = "";
 		var browser=navigator.userAgent.search("Firefox");
-		if(browser>-1){
+		var safari=navigator.userAgent.indexOf("Safari");
+		if(browser > -1||safari > -1){
 			createdDateStr=data.createdDate;
 			var complete_date=createdDateStr.slice(0,10);
 			var time=createdDateStr.slice(11);
