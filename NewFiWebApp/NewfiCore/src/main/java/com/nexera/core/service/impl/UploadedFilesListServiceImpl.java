@@ -496,9 +496,11 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			        .invokeLqbService(uploadObject.toString());
 			LOG.info(" receivedResponse while uploading LQB Document : "
 			        + receivedResponse.getString("responseMessage"));
+			LOG.info(" LQB response : "
+			        + receivedResponse);
 			
 			//Condition to check if there is any error in doctype
-			if(receivedResponse.getString("responseMessage").equalsIgnoreCase("Cannot find document type")){
+			if(receivedResponse.getString("responseMessage").contains("Cannot find document type")){
 				LOG.info(" Error recived from LQB that document type not found hence changing the doc type to  INITIAL LOAN PACKAGE: "
 				        + receivedResponse);
 				lqbDocumentVO.setDocumentType(assignedFolder);
