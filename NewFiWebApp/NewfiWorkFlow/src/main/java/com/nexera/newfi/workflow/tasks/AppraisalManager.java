@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.LoadConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
@@ -47,8 +48,10 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String returnStatus = "";
 		String mileStoneStatus = null;
-		//NEXNF-415 : Removing Appraisal email calls
-		if (status.equals(LoanStatus.appraisalAvailable)) {
+		// NEXNF-415 : Removing Appraisal email calls
+		if (LoanStatus.appraisalAvailable.equals(status)
+		        || String
+		                .valueOf(LoadConstants.LQB_APPRAISAL_ORDER).endsWith(status)) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.appraisalAvailable;
 			/*

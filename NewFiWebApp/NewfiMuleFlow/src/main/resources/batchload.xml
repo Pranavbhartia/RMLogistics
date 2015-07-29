@@ -107,6 +107,9 @@
 		<field id="sRateLockStatusT" />
 		<field id="sBrokerLockOriginatorPriceNoteIR" />
 		<field id="sBrokerLockOriginatorPriceBrokComp1PcFee" />
+		
+		<field id ="sApprRprtRd"/>
+		
 		<applicant>
 			<field id="aBFirstNm" />
 			<field id="aBLastNm" />
