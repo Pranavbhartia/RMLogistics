@@ -205,6 +205,8 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_PRE_QUAL_LETTER = "PRE_QUAL_LETTER_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_NEW_CUSTOMER_ALERT = "NEW_CUSTOMER_ALERT";
 	public static final String PURCHASE_CONTRACT = "Purchase Contract Including Addendums and Counter-offers";
+	public static final String TEMPLATE_KEY_NAME_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "DOCUMENT_TYPE_ASSIGNMENT_FAILURE";
+	
 
 	// Document type credit report.
 	public static final String LQB_DOC_TYPE_CR = "CREDIT REPORT";
@@ -287,6 +289,9 @@ public interface CommonConstants {
 	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
 	public static final String SUBJECT_TITLE_COMPANY = "Welcome to newfi as a Title Company";
 	public static final String SUBJECT_HOME_INSUR_COMPANY = "Welcome to newfi as a Home Insurance Company";
+	
+	public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "Document Type Lqb Assignment Failure";
+	
 
 	public static final String SUBJECT_RESET_PASSWORD = "Reset newfi Password";
 

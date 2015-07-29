@@ -173,4 +173,6 @@ UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="BANK STATEMENTS" WHER
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`='CONDO - HOA FEES/DUES' WHERE `id`='16';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`='PAYSTUBS' WHERE `id`='17';
 
-
+#Ranjitha : Addition of new template for doctype assign failure
+INSERT INTO `newfi_schema`.`template` (`key`, `description`, `sms_text`) VALUES ('DOCUMENT_TYPE_ASSIGNMENT_FAILURE', 'Document Type Lqb Assignment Failure', 'The file that was uploaded in newfi portal could not be assigned in LQB');
+UPDATE `newfi_schema`.`template` SET `modified_date`='2015-07-28 04:42:34', `value`='76629a49-9e65-4e54-8fd3-119a45e2cc97' WHERE `id`='45';
