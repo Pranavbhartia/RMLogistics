@@ -157,6 +157,7 @@ ALTER TABLE `newfi_schema`.`customeremploymentincome`
 ALTER TABLE `newfi_schema`.`customerspouseemploymentincome` 
  ADD COLUMN `empl_len` DOUBLE(3,1) NULL DEFAULT 0 AFTER `job_title`;
 
+
 #Ranjitha : Addition of new_column for doctype
 ALTER TABLE `newfi_schema`.`needslistmaster` 
 ADD COLUMN `uploaded_to` VARCHAR(45) NULL AFTER `short_description`;
@@ -168,3 +169,9 @@ UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="PAYSTUBS" WHERE `id`=
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="W-2S" WHERE `id`='18';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="PERSONAL TAX RETURNS" WHERE `id`='22';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="BANK STATEMENTS" WHERE `id`='28';
+
+
+
+#CHange System admin first name to newfi : 24 July
+UPDATE `newfi_schema`.`user` SET `first_name`='Newfi' WHERE `id`='1';
+
