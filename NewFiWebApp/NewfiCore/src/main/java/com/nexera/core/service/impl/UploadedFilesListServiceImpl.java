@@ -136,7 +136,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private LoanNeedListDao loanNeedListDAO;
-	
+
 	@Autowired
 	private NeedsDao needsDao;
 
@@ -275,8 +275,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	@Transactional
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
-	        Integer userId, Integer assignedBy,Integer needId) throws IOException,
-	        COSVisitorException, FatalException {
+	        Integer userId, Integer assignedBy, Integer needId)
+	        throws IOException, COSVisitorException, FatalException {
 
 		List<File> filePaths = downloadFileFromService(fileIds);
 
@@ -373,7 +373,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		uploadedFilesList.setS3ThumbPath(s3PathThumbNail);
 		uploadedFilesList.setAssignedBy(assignByUser);
 		uploadedFilesList.setUuidFileId(uuidValue);
-		uploadedFilesList.setTotalPages(splittedFiles.size());
+		if (splittedFiles != null) {
+			uploadedFilesList.setTotalPages(splittedFiles.size());
+		}
 		uploadedFilesList.setLqbFileID(lqbDocumentID);
 		uploadedFilesList.setIsMiscellaneous(true);
 		Integer fileSavedId = saveUploadedFile(uploadedFilesList);
@@ -422,7 +424,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				localFilePath = file.getAbsolutePath();
 				fileUpload = true;
 			}
-			
 
 			// Upload succesfull
 
@@ -434,7 +435,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 				// Send file to LQB
 				LQBResponseVO lqbResponseVO = createLQBVO(userId, data, loanId,
-				        uuidValue, isNeedAssigned, needId,file.getName());
+				        uuidValue, isNeedAssigned, needId, file.getName());
 				if (lqbResponseVO.getResult().equalsIgnoreCase("OK")) {
 					// TODO: Write logic to call LQB service to get the document
 					// ID.
@@ -487,13 +488,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO, Integer loanId, UserVO user,String fileName) {
+	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO,
+	        Integer loanId, UserVO user, String fileName) {
 		LQBResponseVO lqbResponseVO = null;
 		// TODO Auto-generated method stub
 
-		
 		if (lqbDocumentVO != null) {
-			String expectedDocType=lqbDocumentVO.getDocumentType();
+			String expectedDocType = lqbDocumentVO.getDocumentType();
 			JSONObject uploadObject = createUploadPdfDocumentJsonObject(
 			        WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT,
 			        lqbDocumentVO);
@@ -501,53 +502,63 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			        .invokeLqbService(uploadObject.toString());
 			LOG.info(" receivedResponse while uploading LQB Document : "
 			        + receivedResponse.getString("responseMessage"));
-			LOG.info(" LQB response : "
-			        + receivedResponse);
-			
-			//Condition to check if there is any error in doctype
-			if(receivedResponse.getString("responseMessage").contains("Cannot find document type")){
-				LOG.info(" Error recived from LQB that document type not found hence changing the doc type to  INITIAL LOAN PACKAGE: "
-				        + receivedResponse);
-				lqbDocumentVO.setDocumentType(assignedFolder);
-				uploadObject = createUploadPdfDocumentJsonObject(
-				        WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT,
-				        lqbDocumentVO);
-				receivedResponse = lqbInvoker
-				        .invokeLqbService(uploadObject.toString());
-				lqbResponseVO = parseLQBXMLResponse(receivedResponse);
-				LoanVO loan=loanService.getLoanByID(loanId);
-				//Send mail to internal users of loan team
-				if(loan!=null){
-					boolean isEmailSent = false;
-                    try {
-	                    isEmailSent = sendEmail(lqbDocumentVO,expectedDocType,loan,user,fileName);
-                    } catch (InvalidInputException | UndeliveredEmailException e) {
-                    	LOG.info(" The status of email sent to internal users regarding the doctype failure -------------"
-    					        + isEmailSent);
-                    	LOG.info(" Email w.r.t doctype failure could not be sent"+e.getMessage()+":::::::::::cause-"+e.getCause());
-                    }
-					
-				}else {
-					LOG.info(" Loan returned null------ no email is sent to internal users regarding the doc type failure -------------");
-					
+			LOG.info(" LQB response : " + receivedResponse);
+
+			// Condition to check if there is any error in doctype
+			if (receivedResponse != null
+			        && receivedResponse.getString("responseMessage") != null) {
+				if (receivedResponse.getString("responseMessage").contains(
+				        "Cannot find document type")) {
+					LOG.info(" Error recived from LQB that document type not found hence changing the doc type to  INITIAL LOAN PACKAGE: "
+					        + receivedResponse);
+					lqbDocumentVO.setDocumentType(assignedFolder);
+					uploadObject = createUploadPdfDocumentJsonObject(
+					        WebServiceOperations.OP_NAME_LOAN_UPLOAD_PDF_DOCUMENT,
+					        lqbDocumentVO);
+					receivedResponse = lqbInvoker.invokeLqbService(uploadObject
+					        .toString());
+					lqbResponseVO = parseLQBXMLResponse(receivedResponse);
+					LoanVO loan = loanService.getLoanByID(loanId);
+					// Send mail to internal users of loan team
+					if (loan != null) {
+						boolean isEmailSent = false;
+						try {
+							isEmailSent = sendEmailForDocumentTypeAssignFailure(lqbDocumentVO,
+							        expectedDocType, loan, user, fileName);
+						} catch (InvalidInputException
+						        | UndeliveredEmailException e) {
+							LOG.info(" The status of email sent to internal users regarding the doctype failure -------------"
+							        + isEmailSent);
+							LOG.info(" Email w.r.t doctype failure could not be sent"
+							        + e.getMessage()
+							        + ":::::::::::cause-"
+							        + e.getCause());
+						}
+
+					} else {
+						LOG.info(" Loan returned null------ no email is sent to internal users regarding the doc type failure -------------");
+
+					}
+
+					return lqbResponseVO;
+
 				}
-				
-				return lqbResponseVO;
-				
+			} else {
+				LOG.info(" response recived from LQB for file upload returned null "
+				        + receivedResponse);
 			}
-			
-				lqbResponseVO = parseLQBXMLResponse(receivedResponse);
-			
-			
-			
+
+			lqbResponseVO = parseLQBXMLResponse(receivedResponse);
 
 		}
 
 		return lqbResponseVO;
 	}
 
-	private boolean sendEmail(LQBDocumentVO lqbDocumentVO,String expectedDocType,LoanVO loan,UserVO user,String fileName) throws InvalidInputException, UndeliveredEmailException{
-		
+	private boolean sendEmailForDocumentTypeAssignFailure(LQBDocumentVO lqbDocumentVO,
+	        String expectedDocType, LoanVO loan, UserVO user, String fileName)
+	        throws InvalidInputException, UndeliveredEmailException {
+
 		String subject = CommonConstants.SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE;
 		EmailVO emailEntity = new EmailVO();
 
@@ -556,14 +567,17 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_DOCUMENT_TYPE_ASSIGNMENT_FAILURE);
 
-		Integer id=loan.getId();
+		Integer id = loan.getId();
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-filename-", new String[] { fileName });
-		substitutions.put("-lqbfileid-", new String[] { lqbDocumentVO.getsLoanNumber() });
+		substitutions.put("-lqbfileid-",
+		        new String[] { lqbDocumentVO.getsLoanNumber() });
 		substitutions.put("-loanid-", new String[] { id.toString() });
-		substitutions.put("-expecteddoctype-", new String[] { expectedDocType });
-		substitutions.put("-defaultdoctype-", new String[] { lqbDocumentVO.getDocumentType() });
+		substitutions
+		        .put("-expecteddoctype-", new String[] { expectedDocType });
+		substitutions.put("-defaultdoctype-",
+		        new String[] { lqbDocumentVO.getDocumentType() });
 		emailEntity.setSenderEmailId(user.getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
@@ -571,21 +585,19 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
-	    ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		ccList.add(user.getUsername() + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 
-	        sendEmailService.sendEmailForInternalUsersAndSM(emailEntity, loan.getId() ,
-	                template);
-	        
-      
-	        // TODO Auto-generated catch block
-        	//
-        	
-     
-		
+		sendEmailService.sendEmailForInternalUsersAndSM(emailEntity,
+		        loan.getId(), template);
+
+		// TODO Auto-generated catch block
+		//
+
 		return true;
-		
+
 	}
+
 	@Override
 	public LQBResponseVO createLQBVO(Integer usrId, byte[] bytes,
 	        Integer loanId, String uuidValue, Boolean isNeedAssigned,
@@ -603,8 +615,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			 */
 			if (needId != null) {
 				NeedsListMaster needsListMaster = getNeedFromMaster(needId);
-				//Check if it is a valid need
-				if(needsListMaster!=null){
+				// Check if it is a valid need
+				if (needsListMaster != null) {
 					if (isNeedAssigned) {
 						if (needsListMaster.getUploadedTo() == null) {
 							folderName = assignedFolder;
@@ -616,8 +628,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 						folderName = unAssignedFolder;
 					}
-				}else{
-					//For invalid needid
+				} else {
+					// For invalid needid
 					if (isNeedAssigned) {
 						folderName = assignedFolder;
 					} else {
@@ -645,7 +657,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			documentVO.setsLoanNumber(loanService.getLoanByID(loanId)
 			        .getLqbFileId());
 
-			lqbResponseVO = uploadDocumentInLandingQB(documentVO,loanId,user,fileName);
+			lqbResponseVO = uploadDocumentInLandingQB(documentVO, loanId, user,
+			        fileName);
 
 		} catch (Exception e) {
 
@@ -1132,9 +1145,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					if (filesList != null) {
 						fileIds.add(filesList.getId());
 					}
-					Integer needId=needMaster.getId();
+					Integer needId = needMaster.getId();
 					newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
-					        assignedBy,needId);
+					        assignedBy, needId);
 
 					for (Integer fileId : fileIds) {
 						deactivateFileUsingFileId(fileId);
@@ -1236,7 +1249,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	public NeedsListMaster getNeedFromMaster(Integer needId) {
 
-		NeedsListMaster masterData=needsDao.getNeed(needId);
+		NeedsListMaster masterData = needsDao.getNeed(needId);
 		return masterData;
 	}
 

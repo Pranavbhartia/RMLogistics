@@ -1208,7 +1208,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .needed-item-row {
-	line-height: 20px;
+	line-height: 15px;
+	padding: 5px 5px;
 }
 
 .list-item-icn {
@@ -1219,16 +1220,19 @@ input[type="button"]:focus, button:focus {
 
 .needed-item-desc {
 	/* padding: 5px 10px; */
-	padding: 5px 0px;
+	padding: 5px 0 5px 10px;
 	max-width: 60%;
+	/* white-space: nowrap; */
+	/* line-height: 20px; */
 }
 
 .doc-uploaded-icn {
-	width: 40px;
+	width: 27px;
 	height: 30px;
-	background: url('../images/doc-incoming.png') no-repeat left;
+	background: url('../images/doc-incoming.png') no-repeat center left;
 /* 	cursor: pointer; */
 	cursor: help;
+	background-size: 95%;
 }
 
 .doc-remove-icn {
@@ -1240,17 +1244,20 @@ input[type="button"]:focus, button:focus {
 
 .doc-link-icn {
 	/* width: 20px; */
-	width: 40px;
-	height: 30px;
-	background: url('../images/doc-icon.png') no-repeat left;
+	width: 27px;
+	height: 24px;
+	background: url('../images/file_view.png') no-repeat left;
 	/* cursor: pointer; */
 	cursor: help;
+    background-size: 85%;
 }
 .doc-link-res {
-	width: 20px;
-	height: 30px;
-	background: url('../images/Restricted.png') no-repeat center top;
+	width: 27px;
+	height: 24px;
+	background: url('../images/file_restricted_1.png') no-repeat center;
 	cursor: not-allowed;
+	background-size: 85%;
+	/* overflow: auto; */
 }
 
 .uploaded-items-header {
