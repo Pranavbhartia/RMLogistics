@@ -157,6 +157,7 @@ ALTER TABLE `newfi_schema`.`customeremploymentincome`
 ALTER TABLE `newfi_schema`.`customerspouseemploymentincome` 
  ADD COLUMN `empl_len` DOUBLE(3,1) NULL DEFAULT 0 AFTER `job_title`;
 
+
 #Ranjitha : Addition of new_column for doctype
 ALTER TABLE `newfi_schema`.`needslistmaster` 
 ADD COLUMN `uploaded_to` VARCHAR(45) NULL AFTER `short_description`;
@@ -169,6 +170,7 @@ UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="W-2S" WHERE `id`='18'
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="PERSONAL TAX RETURNS" WHERE `id`='22';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`="BANK STATEMENTS" WHERE `id`='28';
 
+
 #Ranjitha : Addition of new_column for doctype update
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`='CONDO - HOA FEES/DUES' WHERE `id`='16';
 UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`='PAYSTUBS' WHERE `id`='17';
@@ -176,3 +178,9 @@ UPDATE `newfi_schema`.`needslistmaster` SET `uploaded_to`='PAYSTUBS' WHERE `id`=
 #Ranjitha : Addition of new template for doctype assign failure
 INSERT INTO `newfi_schema`.`template` (`key`, `description`, `sms_text`) VALUES ('DOCUMENT_TYPE_ASSIGNMENT_FAILURE', 'Document Type Lqb Assignment Failure', 'The file that was uploaded in newfi portal could not be assigned in LQB');
 UPDATE `newfi_schema`.`template` SET `modified_date`='2015-07-28 04:42:34', `value`='76629a49-9e65-4e54-8fd3-119a45e2cc97' WHERE `id`='45';
+
+
+#CHange System admin first name to newfi : 24 July
+UPDATE `newfi_schema`.`user` SET `first_name`='Newfi' WHERE `id`='1';
+
+
