@@ -55,6 +55,8 @@ public class LqbInvoker {
 		LOGGER.debug("Time taken before invoking this rest call for teaser rate is "
 		        + date1);
 		JSONObject jsonObject = new JSONObject(returnedUser);
+		LOGGER.debug("jsonObject"
+		        + jsonObject);
 		return jsonObject;
 	}
 

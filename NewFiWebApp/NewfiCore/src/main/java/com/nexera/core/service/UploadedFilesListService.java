@@ -18,6 +18,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.FileAssignmentMappingVO;
 import com.nexera.common.vo.UploadedFilesListVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LQBDocumentVO;
 import com.nexera.common.vo.lqb.LQBResponseVO;
 import com.nexera.common.vo.lqb.LQBedocVO;
@@ -54,7 +55,7 @@ public interface UploadedFilesListService {
 
 	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID);
 
-	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO);
+	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO,Integer loanId,UserVO user,String fileName);
 
 	public CheckUploadVO uploadFileByEmail(InputStream stream, String content,
 	        Integer userId, Integer loanId, Integer assignedBy, String fileName)
@@ -65,7 +66,7 @@ public interface UploadedFilesListService {
 	        Boolean isNeedAssigned, String fileName,Integer needId);
 
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
-	        Integer loanId, String createLQBVO, Boolean isNeedAssigned,Integer needId);
+	        Integer loanId, String createLQBVO, Boolean isNeedAssigned,Integer needId,String fileName);
 
 	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
 	        throws IOException;
