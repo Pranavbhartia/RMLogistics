@@ -463,10 +463,12 @@ display: block;
 }
 .admin-download-btn {
     font-family: 'opensanssemibold';
-    margin-right: 186px;
-      background: url(../images/download.png) no-repeat right;
-    margin-right: 0;
-    padding-left: 45px;
+    /* margin-right: 117px; */
+      
+    background: url(../images/download.png) no-repeat right;
+    /* margin-right: 0; */
+    padding-left: 10px;
+    padding-right: 45px;
     height: 33px;
     cursor: pointer;
     z-index: -1;

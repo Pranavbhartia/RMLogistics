@@ -1208,7 +1208,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .needed-item-row {
-	line-height: 20px;
+	line-height: 15px;
+	padding: 5px 5px;
 }
 
 .list-item-icn {
@@ -1222,7 +1223,7 @@ input[type="button"]:focus, button:focus {
 	padding: 5px 0 5px 10px;
 	max-width: 60%;
 	/* white-space: nowrap; */
-	line-height: 15px;
+	/* line-height: 20px; */
 }
 
 .doc-uploaded-icn {
