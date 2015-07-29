@@ -193,6 +193,7 @@ public class ThreadManager implements Runnable {
 						String lockexpirationDate = null;
 						String lockedRate = null;
 						String docsoutDate = null;
+						String appraisalOrderedDate = null;
 						Milestones theMilestone = null;
 						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 						if (loadResponseList != null) {
@@ -225,6 +226,12 @@ public class ThreadManager implements Runnable {
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_DOCS_OUT)) {
 									if (loadResponseVO.getFieldValue() != null) {
 										docsoutDate = loadResponseVO
+										        .getFieldValue();
+									}
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_APPRAISAL_ORDERED)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										appraisalOrderedDate = loadResponseVO
 										        .getFieldValue();
 									}
 								}
@@ -265,6 +272,14 @@ public class ThreadManager implements Runnable {
 									        .getOrder());
 									saveLoanMilestone(loanMilestone);
 								}
+							}
+							if (appraisalOrderedDate != null) {
+								List<String> workflowItems = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
+								        .get(Milestones.APPRAISAL);
+								List<WorkflowItemExec> workflowItemsExecList = itemToExecute(
+								        workflowItems, workflowItemExecList);
+								putItemsIntoExecution(workflowItemsExecList,
+								        LoadConstants.LQB_APPRAISAL_ORDER);
 							}
 
 							LOSLoanStatus loanStatusID = null;
