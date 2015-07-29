@@ -296,6 +296,10 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			//Show Click To pay only if Disclosures are signed
 			status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
 		}
+		else
+		{
+			status = LoanStatus.APP_PAYMENT_CANT_PAY_YET;
+		}
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.APP_FEE.getMilestoneKey());
 		if (mileStone != null && mileStone.getComments() != null) {

@@ -44,4 +44,6 @@ public class LoanNeedListDaoImpl extends GenericDaoImpl implements
 
 		return (LoanNeedsList) criteria.uniqueResult();
 	}
+
+	
 }
