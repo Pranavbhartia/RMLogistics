@@ -634,7 +634,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										"data-text" : ob.workItem.workflowItemType,
 										"mileNotificationId":ob.workItem.id
 									});
-									txtRow2.html("Lock Expiration Date:"+lockExpDate);									
+									txtRow2.html("Lock Expiration Date: "+lockExpDate);									
 									ob.stateInfoContainer.html(rateAPRDisplay);
 									ob.stateInfoContainer.append(txtRow2);
 								}else

@@ -43,6 +43,7 @@ import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.dao.LoanNeedListDao;
+import com.nexera.common.dao.NeedsDao;
 import com.nexera.common.dao.UploadedFilesListDao;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.Loan;
@@ -133,6 +134,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Autowired
 	private LoanNeedListDao loanNeedListDAO;
+	
+	@Autowired
+	private NeedsDao needsDao;
 
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -269,7 +273,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	@Transactional
 	public Integer mergeAndUploadFiles(List<Integer> fileIds, Integer loanId,
-	        Integer userId, Integer assignedBy) throws IOException,
+	        Integer userId, Integer assignedBy,Integer needId) throws IOException,
 	        COSVisitorException, FatalException {
 
 		List<File> filePaths = downloadFileFromService(fileIds);
@@ -278,7 +282,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 		Boolean isAssignedToNeed = true;
 		CheckUploadVO checkUploadVO = uploadFile(newFile, "application/pdf",
-		        userId, loanId, assignedBy, isAssignedToNeed, null);
+		        userId, loanId, assignedBy, isAssignedToNeed, null, needId);
 		if (!checkUploadVO.getIsUploadSuccess()) {
 			throw new FatalException("Upload to LQB failed");
 		}
@@ -392,7 +396,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Transactional
 	public CheckUploadVO uploadFile(File file, String contentType,
 	        Integer userId, Integer loanId, Integer assignedBy,
-	        Boolean isNeedAssigned, String fileName) {
+	        Boolean isNeedAssigned, String fileName, Integer needId) {
 		String s3Path = null;
 
 		LOG.info("File content type  : " + contentType);
@@ -427,7 +431,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 				// Send file to LQB
 				LQBResponseVO lqbResponseVO = createLQBVO(userId, data, loanId,
-				        uuidValue, isNeedAssigned);
+				        uuidValue, isNeedAssigned, needId);
 				if (lqbResponseVO.getResult().equalsIgnoreCase("OK")) {
 					// TODO: Write logic to call LQB service to get the document
 					// ID.
@@ -502,17 +506,49 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 
 	@Override
 	public LQBResponseVO createLQBVO(Integer usrId, byte[] bytes,
-	        Integer loanId, String uuidValue, Boolean isNeedAssigned) {
+	        Integer loanId, String uuidValue, Boolean isNeedAssigned,
+	        Integer needId) {
 		UserVO user = userProfileService.findUser(usrId);
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		LQBResponseVO lqbResponseVO = null;
 		String folderName = null;
 		try {
 
-			if (isNeedAssigned) {
-				folderName = assignedFolder;
+			// Uploading documents to the specific folder in lqb
+			/*
+			 * if (isNeedAssigned) { folderName = assignedFolder; } else {
+			 * folderName = unAssignedFolder; }
+			 */
+			if (needId != null) {
+				NeedsListMaster needsListMaster = getNeedFromMaster(needId);
+				//Check if it is a valid need
+				if(needsListMaster!=null){
+					if (isNeedAssigned) {
+						if (needsListMaster.getUploadedTo() == null) {
+							folderName = assignedFolder;
+						} else {
+							folderName = needsListMaster.getUploadedTo();
+						}
+
+					} else {
+
+						folderName = unAssignedFolder;
+					}
+				}else{
+					//For invalid needid
+					if (isNeedAssigned) {
+						folderName = assignedFolder;
+					} else {
+						folderName = unAssignedFolder;
+					}
+				}
 			} else {
-				folderName = unAssignedFolder;
+
+				if (isNeedAssigned) {
+					folderName = assignedFolder;
+				} else {
+					folderName = unAssignedFolder;
+				}
 			}
 
 			// TODO: Hard coded value. Get it from DB.
@@ -607,7 +643,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				contentType = "image/tiff";
 
 			checkUploadVO = uploadFile(file, contentType, userId, loanId,
-			        assignedBy, isAssignedToNeed, fileName);
+			        assignedBy, isAssignedToNeed, fileName, null);
 
 			if (file.exists()) {
 				file.delete();
@@ -787,7 +823,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		List<String> restrictedDocTypes = utils.getRestrictedDocTypes();
 		for (LQBedocVO edoc : edocsList) {
 			// edoc.getFolder_name()
-			LOG.debug("Trying to upload file for Loan " + loan.getId()  + " Doc Type : "+ edoc.getDoc_type() + " Folder : " + edoc.getFolder_name());
+			LOG.debug("Trying to upload file for Loan " + loan.getId()
+			        + " Doc Type : " + edoc.getDoc_type() + " Folder : "
+			        + edoc.getFolder_name());
 			if (edoc.getDoc_type() != null
 			        && restrictedDocTypes.contains(edoc.getDoc_type()
 			                .toUpperCase())) {
@@ -1012,8 +1050,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					if (filesList != null) {
 						fileIds.add(filesList.getId());
 					}
+					Integer needId=needMaster.getId();
 					newFileRowId = mergeAndUploadFiles(fileIds, loanId, userId,
-					        assignedBy);
+					        assignedBy,needId);
 
 					for (Integer fileId : fileIds) {
 						deactivateFileUsingFileId(fileId);
@@ -1110,6 +1149,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		Map<Integer, FileAssignmentMappingVO> map = new HashMap<Integer, FileAssignmentMappingVO>();
 		map.put(loanNeed.getId(), new FileAssignmentMappingVO());
 		changeWorkItem(map, loanId);
+	}
+
+	@Override
+	public NeedsListMaster getNeedFromMaster(Integer needId) {
+
+		NeedsListMaster masterData=needsDao.getNeed(needId);
+		return masterData;
 	}
 
 }

@@ -27,6 +27,7 @@ public class NeedsListMaster implements Serializable {
 	private Boolean isCustom;
 	private List<LoanNeedsList> loanNeedsList;
 	private User modifiedBy;
+	private String uploadedTo;
 
 	public NeedsListMaster() {
 	}
@@ -39,6 +40,8 @@ public class NeedsListMaster implements Serializable {
 		need.setNeedCategory(category);
 		need.setModifiedDate(new Date());
 		need.setModifiedBy(user);
+		/*//to be chnaged
+		need.setUploadedTo(null);*/
 		return need;
 	}
 	@Id
@@ -137,5 +140,12 @@ public class NeedsListMaster implements Serializable {
 	public void setIsCustom(Boolean isCustom) {
 		this.isCustom = isCustom;
 	}
+	@Column(name = "uploaded_to")
+	public String getUploadedTo() {
+	    return uploadedTo;
+    }
+	public void setUploadedTo(String uploadedTo) {
+	    this.uploadedTo = uploadedTo;
+    }
 
 }

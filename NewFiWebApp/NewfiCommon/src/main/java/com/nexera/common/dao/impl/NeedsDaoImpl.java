@@ -197,4 +197,14 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		UploadedFilesList latestFile = filesLists.get(0);
 		return latestFile.getUuidFileId();
 	}
+	
+	@Override
+    public NeedsListMaster getNeed(Integer needId) {
+		NeedsListMaster needsListMaster;
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(NeedsListMaster.class);
+		criteria.add(Restrictions.eq("id", needId));		
+		needsListMaster =  (NeedsListMaster) criteria.uniqueResult();
+		return needsListMaster;
+    }
 }

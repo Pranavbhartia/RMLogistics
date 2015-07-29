@@ -95,7 +95,7 @@ var applicationItemsList = [
 		                        "onselect" : paintMyIncome
 		                    },
 			                {
-							    "text":"Government Questions",
+							    "text":"Additional Questions",//portal updates 7.23
 				                 "onselect" : paintCustomerApplicationPageStep4a
 				             },
 				             {
@@ -3052,6 +3052,9 @@ function paintCustomerApplicationPageStep3(quesText, options, name) {
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
 
+	if(quesText.indexOf("select all that apply")>-1){
+		quesTextCont.addClass('ce-title-adj');
+	}
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
@@ -3981,7 +3984,8 @@ function paintCustomerApplicationPageStep5() {
 		    		if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true){
 						saveAndUpdateLoanAppForm(appUserDetails,paintCustomerSpouseApplicationPageStep5);
 					}else{
-						 saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
+                        applicationFormSumbit(appUserDetails)
+						//saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));
 					}
 		    		
 		    		
@@ -4908,10 +4912,12 @@ function paintSelectLoanTypeQuestion() {
 		"class" : "ce-rate-icon"
 	});*/
 
+   // var text="Choose your loan purpose";
+    var text="loan purpose";
 	var titleText = $('<div>').attr({
-		"class" : "ce-title",
+		"class" : "ce-title ce-title-adj capitalize",
 		"style":"text-align: left"
-	}).html("Choose your loan purpose");
+	}).html(text);
 
 	//$('#app-right-panel').append(rateIcon).append(titleText);
 	$('#app-right-panel').append(titleText);
@@ -5610,6 +5616,9 @@ function getMutipleChoiceQuestion(quesText, options, name) {
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
 
+	if(quesText=="Why do you want to refinance?"){
+		quesTextCont.addClass('ce-title-adj');
+	}
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
 	});
@@ -5707,7 +5716,32 @@ $.ajax({
 
                 if(data=="error"){
                     showErrorToastMessage(applicationNotSubmitted);
-                   }else{
+                }
+                else if(data.indexOf('status="Error"')>=0){
+                    var ie=checkIfIE();
+                    var status="";
+                    var message="Something Went Wrong";
+                    var result;
+                    if(ie){
+                        //this part of CODE not tested Need to be tested in IE
+                        xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+                        xmlDoc.async=false;
+                        result=xmlDoc.loadXML(data); 
+                    }else{
+                        var dom=new DOMParser(data)
+                        result=dom.parseFromString(data, "application/xml");
+                    }
+                    if(result){
+                        status=$(result.documentElement).attr("status");
+                        message=result.documentElement.childNodes[0].innerHTML;
+                    }
+                    if(status=="Error"){
+                        if(message.indexOf("HOUR_CUTOFF")>=0){
+                            message="Rates can be locked between : 08:30 AM PST - 04:00 PM PST";
+                        }
+                        showToastMessage(message);
+                    }
+                }else{
                 	   if(flag)
                 		{
                 		   changeSecondaryLeftPanel(3,true); 

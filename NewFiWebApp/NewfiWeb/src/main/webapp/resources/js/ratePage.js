@@ -848,8 +848,6 @@ function paintRatePage(teaserRate, inputCustomerDetails,parentContainer,hideCrea
         parentContainer=$('#ce-refinance-cp');
     $(parentContainer).append(parentWrapper).append(closingCostWrapper).append(bottomText).append(linkForDisclosure);
     
-
-
     if(teaserRateValHolder.teaserRate&&typeof(newfiObject)==="undefined"){
         $(".lock-ratebottom-summary-clas").css("width", "664px");
     }else{

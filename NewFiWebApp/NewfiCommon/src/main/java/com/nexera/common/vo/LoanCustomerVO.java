@@ -21,6 +21,7 @@ public class LoanCustomerVO {
 	private String lqbFileId;
 	private String lockedRateData;
 	private String loanStatus;
+	private String lqbLoanStatus;
 	private List<AlertListVO> alerts;
 	private List<NotesVO> notes;
 	
@@ -223,6 +224,14 @@ public class LoanCustomerVO {
 
 	public void setLockedRateData(String lockedRateData) {
 	    this.lockedRateData = lockedRateData;
+    }
+
+	public String getLqbLoanStatus() {
+	    return lqbLoanStatus;
+    }
+
+	public void setLqbLoanStatus(String lqbLoanStatus) {
+	    this.lqbLoanStatus = lqbLoanStatus;
     }
 
 	

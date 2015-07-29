@@ -29,5 +29,7 @@ public interface NeedsDao extends GenericDao {
 	        NeedsListMaster needListMaster);
 
 	public String checkCreditReport(Integer loanID);
+	
+	public NeedsListMaster  getNeed(Integer needId);
 
 }

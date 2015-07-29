@@ -502,7 +502,7 @@ input[type="button"]:focus, button:focus {
 .rate-program-header,.loan-summary-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 5px;
+	/* padding-left: 5px; */
 	border-radius: 3px;
 	margin-bottom: 20px;
 }
@@ -1090,7 +1090,7 @@ input[type="button"]:focus, button:focus {
 .upload-item-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 20px;
+	padding-left: 10px;
 	margin-bottom: 20px;
 	font-family: 'opensanssemibold';
 	text-transform: capitalize;
@@ -1307,7 +1307,7 @@ input[type="button"]:focus, button:focus {
 	padding-left: 10px;	
 	font-size: 16px; 
 	font-family: 'opensanssemibold';
-	
+
 }
 
 
@@ -1696,6 +1696,7 @@ input[type="button"]:focus, button:focus {
 
 .leads-container-th>div {
 	font-size: 12px;
+	font-family : 'opensanssemibold';/* jira-834 */
 }
 
 .leads-container-tc1 {
@@ -1715,11 +1716,11 @@ input[type="button"]:focus, button:focus {
 }
 
 .leads-container-tc5 {
-	width: 138px;
+	width: 110px;
 }
 
 .leads-container-tc6 {
-	width: 90px;
+	width: 109px;
 }
 
 .leads-container-tc7 {
@@ -2090,10 +2091,10 @@ input[type="button"]:focus, button:focus {
 }
 
 .cus-detail-rc-title {
-	width: 50%;
+	width: 28%;
 	padding-right: 10px;
 	font-family: 'opensanssemibold';
-	text-align: right;
+	text-align: left;
 }
 
 .cus-detail-rc-value {
@@ -2105,7 +2106,7 @@ input[type="button"]:focus, button:focus {
 	height: 45px;
 	line-height: 45px;
 	margin-bottom: 20px;
-	padding-left: 20px;
+	padding-left: 10px;
 	background-color: #f5f9fc;
 	font-size: 16px;
 	font-family: 'opensanssemibold';
@@ -2243,7 +2244,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .newfi-team-wrapper {
-	margin-bottom: 20px;
+	margin: 20px 0;
 	padding-bottom: 120px;
 }
 
@@ -2263,6 +2264,7 @@ input[type="button"]:focus, button:focus {
 	line-height: 40px;
 	padding-left: 5px;
 }
+
 
 .newfi-team-list-th-col1,.newfi-team-list-th-col2,.newfi-team-list-th-col3
 	{
@@ -3265,11 +3267,12 @@ input.calc-input {
 .loan-progress-header {
 	line-height: 45px;
 	background-color: #f5f9fc;
-	padding-left: 20px;
-	margin-bottom: 20px;
-	text-transform: capitalize;
-	font-family: "opensanssemibold";
+	padding-left: 10px;
+	border-radius: 3px;
 	font-size: 16px;
+	margin-bottom: 20px;
+	font-family: 'opensanssemibold';
+    text-transform: capitalize;
 
 }
 
@@ -5663,7 +5666,7 @@ a.session-login-btn {
 	width: 170px;
 }
 .leads-container-tc5-realtor {
-	width: 179px;
+	width: 160px;
 }
 .leads-container-tc6-realtor {
 	background: url(../images/alram_blue.png) no-repeat 20px 5px;
@@ -5706,4 +5709,7 @@ p.toast-mess-style {
 }
 .leads-container-row-adj {
 	padding:10px 15px;
+}
+.leads-container-row-th {
+    background-color: rgba(241, 241, 241, 0.66);
 }

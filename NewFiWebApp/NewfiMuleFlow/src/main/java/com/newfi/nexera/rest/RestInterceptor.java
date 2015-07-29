@@ -65,7 +65,10 @@ public class RestInterceptor implements Callable
             || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION )
             || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
-        } else if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE ) ) {
+		} else if (restParameters.getOpName().equalsIgnoreCase(
+		        WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE)
+		        || restParameters.getOpName().equalsIgnoreCase(
+		                WebServiceOperations.OP_NAME_LOAN_UPDATE)) {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_SAVE );
         } else {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, restParameters.getOpName() );
@@ -242,6 +245,57 @@ public class RestInterceptor implements Callable
                     LOG.info( "Teaser Rate String after applying map " + teaserRateDefault );
                 }
                 inputParams[1] = teaserRateDefault;
+			} else if (restParameters.getOpName().equals(
+			        WebServiceOperations.OP_NAME_LOAN_UPDATE)) {
+				LOG.info("Operation Chosen Was Update ");
+				inputParams = new Object[4];
+				if (restParameters.getLoanVO().getsTicket() != null
+				        && !restParameters.getLoanVO().getsTicket()
+				                .equalsIgnoreCase("")) {
+					inputParams[0] = restParameters.getLoanVO().getsTicket();
+				} else {
+					inputParams[0] = NewFiManager.userTicket;
+				}
+				inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+
+				InputStream inputStream = getResource("update.xml");
+				LOG.info("InputStream of update.xml received "
+				        + inputParams.toString());
+				String condition = restParameters.getLoanVO().getCondition();
+				LOG.info("Condition passed by user for Save call " + condition);
+				if (condition == null || condition.equals("")) {
+				} else {
+					try {
+						file = xmlProcessor.parseXML(inputStream, condition);
+						if (file != null) {
+							LOG.info("File got created succesfully "
+							        + file.getName());
+							LOG.info("File got created succesfully "
+							        + file.getAbsolutePath());
+						} else {
+							LOG.error("Unable to create file");
+							throw new Exception("Unable to create file ");
+						}
+
+					} catch (SAXException e) {
+						LOG.error("Exception Caught " + e.getMessage());
+					} catch (ParserConfigurationException e) {
+						LOG.error("Exception Caught " + e.getMessage());
+					} catch (TransformerException e) {
+						LOG.error("Exception Caught " + e.getMessage());
+					}
+				}
+				String saveDefault = utils.readFileAsStringFromPath(file
+				        .getAbsolutePath());
+				LOG.info("Default save file created from condition passed by user "
+				        + saveDefault);
+				if (restParameters.getLoanVO().getsDataContentMap() != null) {
+					saveDefault = utils.applyMapOnString(restParameters
+					        .getLoanVO().getsDataContentMap(), saveDefault);
+					LOG.info("Save request object passed to lqb " + saveDefault);
+				}
+				inputParams[2] = saveDefault;
+				inputParams[3] = restParameters.getLoanVO().getFormat();
             } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_SAVE ) ) {
                 LOG.info( "Operation Chosen Was Save " );
                 inputParams = new Object[4];

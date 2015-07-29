@@ -770,12 +770,17 @@ function getCalculationFunctionForItem(key) {
 			
 			//var result = val1 + val2 + val3;
 			var result = val1 + val2;
+			$(document).trigger("closingCostChange",result);
 			return result;
 		};
 		break;
 	}
 	return fun;
 }
+
+$(document).on("closingCostChange",function(e,data){
+	setTimeout(function(){ $('#closingCostId').html(showValue(data)); }, 10);
+})
 
 function getRowHolderObject(container, value, key) {
 	var rw = {
@@ -1417,4 +1422,16 @@ function showValidData(value){
 	}
 	else
 		return value;
+}
+
+function formatYearInDate(date){
+	
+	var local="";
+	if(typeof(local)!=undefined){
+		var local=date.split('-');
+		local[2]=local[2][2].concat(local[2][3]); 
+		local=local.join('-');
+		
+	}
+	return local;
 }

@@ -107,11 +107,9 @@ public class ApplicationFormRestService {
 
 	@Autowired
 	NexeraUtility nexeraUtility;
-	
+
 	@Autowired
 	LQBResponseMapping lQBResponseMapping;
-	
-	
 
 	@Value("${cryptic.key}")
 	private String crypticKey;
@@ -179,26 +177,26 @@ public class ApplicationFormRestService {
 	@RequestMapping(value = "/fetchLockRateData/{loanID}", method = RequestMethod.GET)
 	public @ResponseBody String getLockRateData(@PathVariable int loanID,
 	        HttpServletRequest httpServletRequest) {
-		
+
 		LOG.debug("Inside method getLockRateData for loan " + loanID);
-		
+
 		/*
 		 * List<TeaserRateResponseVO> teaserRateList = new
 		 * ArrayList<TeaserRateResponseVO>(); ArrayList<LqbTeaserRateVo>
 		 * lqbTeaserRateVolist = new ArrayList<LqbTeaserRateVo>();
 		 */
 		Gson gson = new Gson();
-		
+
 		String status = null;
-		
+
 		LoanVO loanVO = loanService.getLoanByID(loanID);
 		Loan loan = new LoanAppFormVO().parseVOtoEntityLoan(loanVO);
 		LoanAppFormVO loaAppFormVO = loanAppFormService
 		        .getLoanAppFormByLoan(loan);
 		String lqbFileId = loanVO.getLqbFileId();
-		
+
 		if (loanVO != null && lqbFileId != null) {
-			
+
 			if (!loanVO.getLockStatus().equals("1")) {
 				LOG.debug("loan not locked...");
 				return gson.toJson(loaAppFormVO);
@@ -218,19 +216,25 @@ public class ApplicationFormRestService {
 					}
 					if (sTicket != null) {
 						LOG.debug("Token retrieved for loan manager" + sTicket);
-				
-						org.json.JSONObject loadOperationObject = nexeraUtility.createLoadJson(lqbFileId,sTicket);
+
+						org.json.JSONObject loadOperationObject = nexeraUtility
+						        .createLoadJson(lqbFileId, sTicket);
 						if (loadOperationObject != null) {
-							org.json.JSONObject loadJSONResponse = lqbInvoker.invokeLqbService(loadOperationObject.toString());
+							org.json.JSONObject loadJSONResponse = lqbInvoker
+							        .invokeLqbService(loadOperationObject
+							                .toString());
 							if (loadJSONResponse != null) {
-								if (!loadJSONResponse.isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
-									
-									String loadResponse = loadJSONResponse.getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-									loadResponse = nexeraUtility.removeBackSlashDelimiter(loadResponse);
+								if (!loadJSONResponse
+								        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+
+									String loadResponse = loadJSONResponse
+									        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+									loadResponse = nexeraUtility
+									        .removeBackSlashDelimiter(loadResponse);
 									List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
-									
+
 									if (loadResponseList != null) {
-										LqbTeaserRateVo lqbTeaserRateVo=new LqbTeaserRateVo();
+										LqbTeaserRateVo lqbTeaserRateVo = new LqbTeaserRateVo();
 										for (LoadResponseVO loadResponseVO : loadResponseList) {
 											lQBResponseMapping
 											        .setLqbTeaserRateVo(
@@ -281,17 +285,17 @@ public class ApplicationFormRestService {
 			LOG.error("Loan not found for this loanID " + loanID);
 			status = "Unable to fetch loan information";
 		}
-		
+
 		return gson.toJson(loaAppFormVO);
 	}
 
 	@RequestMapping(value = "/pullScore/{loanID}/{trimerge}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO getTrimergeScore(
-	        @PathVariable int loanID,  @PathVariable String trimerge) {
+	        @PathVariable int loanID, @PathVariable String trimerge) {
 		LOG.debug("Inside pullTrimergeScore");
-		boolean requestTrimerge= false;
-		if (trimerge!= null && trimerge.equalsIgnoreCase("Y")){
-			requestTrimerge= true;
+		boolean requestTrimerge = false;
+		if (trimerge != null && trimerge.equalsIgnoreCase("Y")) {
+			requestTrimerge = true;
 		}
 		String status = null;
 		LoanVO loanVO = loanService.getLoanByID(loanID);
@@ -359,15 +363,15 @@ public class ApplicationFormRestService {
 								}
 							}
 						}
-						if (userSSN != null && requestTrimerge && reportId ==null) {
+						if (userSSN != null && requestTrimerge
+						        && reportId == null) {
 							status = "Unable to find credit report for this user, hence cannot upgrade. Please contact your System Admin ";
-						}
-						else if (userSSN != null ) {							
+						} else if (userSSN != null) {
 							JSONObject requestObject = lQBRequestUtil
 							        .pullTrimergeCreditScore(
 							                loanVO.getLqbFileId(),
 							                loaAppFormVO, sTicket, userSSN,
-							                reportId,requestTrimerge);
+							                reportId, requestTrimerge);
 							if (requestObject != null) {
 								String response = "error";
 								HashMap<String, String> map = invokeRest(requestObject
@@ -434,9 +438,9 @@ public class ApplicationFormRestService {
 								}
 							}
 						} else if (userSSN == null) {
-								status = "Unable to fetch user  ssn number from lqb ";
-						} 													
-						
+							status = "Unable to fetch user  ssn number from lqb ";
+						}
+
 					}
 				} else {
 					status = "LQB Information Not Present";
@@ -509,17 +513,20 @@ public class ApplicationFormRestService {
 					}
 					LOG.debug("Save Loan Response is " + response);
 					if (null != loaAppFormVO.getLoan()
-					        && !loanNumber.equals("error")) {
+					        && !loanNumber.equals("error") && !response.contains("status=\"Error\"")) {
 						LoanVO loan = loaAppFormVO.getLoan();
 						loan.setLqbFileId(loanNumber);
 						String loanAppFrm = gson.toJson(loaAppFormVO);
 						createApplication(loanAppFrm, httpServletRequest);
 						loanCreatedNSaved = true;
 					}
+					if(response.contains("status=\"Error\"")){
+						lockRateData = response;
+					}
 
 					// Code for automating Needs List creation
 
-					if (response != null && !response.equalsIgnoreCase("error")) {
+					if (response != null && !response.equalsIgnoreCase("error") && !response.contains("status=\"Error\"")) {
 						try {
 							lockRateData = null;
 							Integer loanId = loaAppFormVO.getLoan().getId();
@@ -614,7 +621,7 @@ public class ApplicationFormRestService {
 				if (loanNumber != null && !"".equalsIgnoreCase(loanNumber)) {
 
 					HashMap<String, String> map = invokeRest((lQBRequestUtil
-					        .saveLoan(loanNumber, loaAppFormVO, sTicket))
+					        .updateLoanAmount(loanNumber, loaAppFormVO, sTicket))
 					        .toString());
 					if (map.get("responseMessage") != null) {
 						response = map.get("responseMessage");
@@ -680,17 +687,21 @@ public class ApplicationFormRestService {
 		try {
 
 			LOG.debug("appFormData is" + appFormData);
-			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,LoanAppFormVO.class);
-			
+			LoanAppFormVO loaAppFormVO = gson.fromJson(appFormData,
+			        LoanAppFormVO.class);
+
 			int loanId = loaAppFormVO.getLoan().getId();
 			LoanVO loanVO = loanService.getLoanByID(loanId);
-			if(null!= loanVO.getLockStatus() && loanVO.getLockStatus().equalsIgnoreCase("1")){
-				/* this is the case when lock status is 1 in the loan table and we have to by pass the below request*/
+			if (null != loanVO.getLockStatus()
+			        && loanVO.getLockStatus().equalsIgnoreCase("1")) {
+				/*
+				 * this is the case when lock status is 1 in the loan table and
+				 * we have to by pass the below request
+				 */
 				LOG.debug("Lock status is 1");
-				
-				
-			}else{
-				
+
+			} else {
+
 				String sTicket = lqbCacheInvoker.findSticket(loaAppFormVO);
 				if (sTicket != null) {
 					lockRateData = loadLoanRateData(loanNumber, sTicket);
@@ -700,7 +711,7 @@ public class ApplicationFormRestService {
 					return "Unable to generate authentication toke, please try after some time";
 				}
 			}
-			
+
 		} catch (Exception e) {
 			LOG.error(" fetchLockRatedata failed; " + loanNumber, e);
 			return "error while fetching locked rate, please try after some time";
@@ -753,19 +764,24 @@ public class ApplicationFormRestService {
 			json.put(CommonConstants.LOANVO, jsonChild);
 			LOG.debug("jsonMapObject load Loandata" + json);
 			try {
-				HashMap<String, String> lqbResponse = cacheableMethodInterface.cacheInvokeRest(loanNumber, json.toString());
+				HashMap<String, String> lqbResponse = cacheableMethodInterface
+				        .cacheInvokeRest(loanNumber, json.toString());
 				String responseMessage = "error";
-				
-				if (lqbResponse != null && lqbResponse.containsKey("responseMessage")) {
+
+				if (lqbResponse != null
+				        && lqbResponse.containsKey("responseMessage")) {
 					responseMessage = lqbResponse.get("responseMessage");
 				} else {
 					LOG.debug("Invalidating cache since response contains error");
-					cacheableMethodInterface.invalidateApplicationRateCache(loanNumber, json.toString());
+					cacheableMethodInterface.invalidateApplicationRateCache(
+					        loanNumber, json.toString());
 				}
-				teaserRateList = rateService.parseLqbResponse(retrievePricingDetails(responseMessage));
+				teaserRateList = rateService
+				        .parseLqbResponse(retrievePricingDetails(responseMessage));
 
 				String responseTime = "";
-				if (lqbResponse != null && lqbResponse.containsKey("responseTime")) {
+				if (lqbResponse != null
+				        && lqbResponse.containsKey("responseTime")) {
 					responseTime = lqbResponse.get("responseTime");
 				}
 

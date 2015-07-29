@@ -535,6 +535,9 @@ function paintSpouseCustomerApplicationPageStep3(quesText, options, name) {
 	var quesTextCont = $('<div>').attr({
 		"class" : "ce-rp-ques-text"
 	}).html(quesText);
+	if(quesText.indexOf("select all that apply")>-1){
+		quesTextCont.addClass('ce-title-adj');
+	}
 	var applicationLocked=checkLqbFileId();
 	var optionContainer = $('<div>').attr({
 		"class" : "ce-options-cont"
@@ -1444,7 +1447,10 @@ function paintCustomerSpouseApplicationPageStep5() {
 		    		//sessionStorage.loanAppFormData = JSON.parse(appUserDetails);
 		    		appUserDetails.cbSsnProvided = cbSsnProvided;
 		    		appUserDetails.customerSpouseDetail = customerDetailTemp;
-					saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));  
+					//saveAndUpdateLoanAppForm(appUserDetails,applicationFormSumbit(appUserDetails));  
+
+					applicationFormSumbit(appUserDetails)
+
     	}else{
     		paintLockRatePage();
     		//applicationFormSumbit(appUserDetails);
