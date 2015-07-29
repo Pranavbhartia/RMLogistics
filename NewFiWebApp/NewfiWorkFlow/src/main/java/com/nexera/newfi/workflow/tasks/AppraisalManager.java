@@ -8,11 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoadConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
@@ -50,8 +51,8 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 		String mileStoneStatus = null;
 		// NEXNF-415 : Removing Appraisal email calls
 		if (LoanStatus.appraisalAvailable.equals(status)
-		        || String
-		                .valueOf(LoadConstants.LQB_APPRAISAL_ORDER).endsWith(status)) {
+		        || String.valueOf(LoadConstants.LQB_APPRAISAL_ORDER).endsWith(
+		                status)) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LoanStatus.appraisalAvailable;
 			/*
@@ -64,8 +65,13 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 		}
 		if (mileStoneStatus != null) {
 			LOG.debug("Updating Milestone for Appraisal As  " + mileStoneStatus);
-			iWorkflowService.updateNexeraMilestone(loanId,
-			        Milestones.APPRAISAL.getMilestoneID(), mileStoneStatus);
+			Loan loan = new Loan(loanId);
+			LoanMilestone lm = loanService.findLoanMileStoneByLoan(loan,
+			        Milestones.APPRAISAL.getMilestoneKey());
+			if (lm == null) {
+				iWorkflowService.updateNexeraMilestone(loanId,
+				        Milestones.APPRAISAL.getMilestoneID(), mileStoneStatus);
+			}
 		}
 		return returnStatus;
 	}
