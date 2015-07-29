@@ -642,7 +642,17 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									ob.stateInfoContainer.html("Shop rates");									
 									$(ob.stateInfoContainer).addClass("cursor-pointer");
 								}
-							}else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
+							}
+							else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE"){
+								//var tempOb=JSON.parse(ob.workItem.stateInfo);
+								ob.stateInfoContainer.html(ob.workItem.stateInfo);
+								if (ob.workItem.stateInfo =="Disclosures Required")
+								{
+									$(ob.stateInfoContainer).removeClass("cursor-pointer");
+								}
+								
+							}
+							else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
 								ob.workItem.workflowItemType=="CREDIT_SCORE"){
 								if(ob.workItem.stateInfo){
 									txtRow1.bind("click", function(e) {
@@ -1793,6 +1803,10 @@ function milestoneChildEventHandler(event) {
 	else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE" || $(event.target).attr("data-text") == "APP_FEE_PAY_FOR" ) {
 		var workItemIDAppFee = $(event.target).attr("mileNotificationId");
 		if (workFlowContext.mileStoneContextList[workItemIDAppFee].workItem.status != NOT_STARTED )
+		{
+			return;
+		}
+		if (workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].stateInfoContainer.html() == "Disclosures required")
 		{
 			return;
 		}
