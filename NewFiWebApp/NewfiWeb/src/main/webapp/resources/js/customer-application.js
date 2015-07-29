@@ -573,7 +573,8 @@ function getApplicationTextQues(question) {
         optionCont.val(question.value);
     }
     if(applicationLocked){
-        $(optionCont).attr("readonly",true);
+        $(optionCont).attr("disabled","disabled");
+   
     }
 
     optionsContainer.append(optionCont).append(errFeild);
@@ -1940,7 +1941,8 @@ function getContextApplicationTextQues(contxt) {
         optionCont.val(contxt.value);
     }
     if(applicationLocked){
-        $(optionCont).attr("readonly",true);
+        //$(optionCont).attr("readonly",true);
+        $(optionCont).attr("disabled","disabled");
     }
 
     optionsContainer.append(optionCont).append(errFeild);
@@ -2470,7 +2472,8 @@ function getMultiTextQuestion(quesText, value) {
         inputBox4.attr("value", val);
     }
     if(applicationLocked)
-        $(inputBox4).attr("readonly",true);
+    	  $(inputBox4).attr("disabled","disabled");
+        //$(inputBox4).attr("readonly",true);
     quesTextCont4.append(inputBox4).append(appendErrorMessage());
     
 
@@ -2492,7 +2495,8 @@ function getMultiTextQuestion(quesText, value) {
         inputBox1.attr("value", val);
     }
     if(applicationLocked)
-        $(inputBox1).attr("readonly",true);
+    	$(inputBox1).attr("disabled","disabled");
+       // $(inputBox1).attr("readonly",true);
     quesTextCont1.append(inputBox1).append(appendErrorMessage());
     
     
@@ -2514,7 +2518,8 @@ function getMultiTextQuestion(quesText, value) {
         inputBox2.attr("value", val);
     }
     if(applicationLocked)
-        $(inputBox2).attr("readonly",true);
+    	$(inputBox2).attr("disabled","disabled");
+        //$(inputBox2).attr("readonly",true);
     quesTextCont2.append(inputBox2).append(appendErrorMessage());
     
     
@@ -2540,7 +2545,8 @@ function getMultiTextQuestion(quesText, value) {
         inputBox3.attr("value", val);
     }
     if(applicationLocked)
-        $(inputBox3).attr("readonly",true);
+    	$(inputBox3).attr("disabled","disabled");
+        //$(inputBox3).attr("readonly",true);
     quesTextCont3.append(inputBox3).append(appendErrorMessage());
 
    
@@ -2813,7 +2819,8 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"value" : val
     		});
             if(applicationLocked)
-                $(inputBox).attr("readonly",true);
+            	$(inputBox).attr("disabled","disabled");
+                //$(inputBox).attr("readonly",true);
     		optionContainer.append(inputBox).append(appendErrorMessage());
     		container.append(quesTextCont).append(optionContainer);
     		
@@ -2836,7 +2843,8 @@ function paintRefinanceSelfEmployed(divId,value) {
     			"value" : val
     		});
             if(applicationLocked)
-                $(inputBox1).attr("readonly",true);
+            	$(inputBox1).attr("disabled","disabled");
+               // $(inputBox1).attr("readonly",true);
     		optionContainer1.append(inputBox1).append(appendErrorMessage);
     		container1.append(quesTextCont1).append(optionContainer1);
     		
@@ -2931,7 +2939,8 @@ function paintRefinancePension(divId,value,name) {
     			"value": val
     		});
     	    if(applicationLocked)
-                $(inputBox).attr("readonly",true);
+    	    	$(inputBox).attr("disabled","disabled");
+                //$(inputBox).attr("readonly",true);
     		optionContainer.append(inputBox).append(errFeild);
     		container.append(quesTextCont).append(optionContainer);
     		wrapper.append(container);
@@ -4792,7 +4801,8 @@ function getMonthYearTextQuestionContext(contxt) {
             Math.abs($('input[name=' + contxt.name + ']').val());
         });
     }else{
-        $(optionCont).attr("readonly",true);
+       // $(optionCont).attr("readonly",true);
+    	$(optionCont).attr("disabled","disabled");
     }
 
 
@@ -5553,7 +5563,8 @@ function getTextQuestion(quesText, clickEvent, name) {
 	})
     var applicationLocked=checkLqbFileId();
     if(applicationLocked){
-        $(inputBox).attr("readonly",true);
+       // $(inputBox).attr("readonly",true);
+    	$(inputBox).attr("disabled","disabled");
         buttonText = next;
     }else{
         inputBox.on("load focus", function(e){
@@ -6316,8 +6327,10 @@ function getContextApplicationPercentageQues(contxt) {
     optionsContainer.append(optionCont).append(percentageComp).append(errFeild);
     $(optionCont).trigger("keyup")
     if(applicationLocked){
-        $(optionCont).attr("readonly",true);
-        $(percentageComp).attr("readonly",true);
+       /* $(optionCont).attr("readonly",true);
+        $(percentageComp).attr("readonly",true);*/
+        $(optionCont).attr("disabled","disabled");
+        $(percentageComp).attr("disabled","disabled");
     }
     return container.append(quesTextCont).append(optionsContainer);
 }
