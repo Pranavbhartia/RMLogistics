@@ -770,7 +770,11 @@ function getCalculationFunctionForItem(key) {
 			
 			//var result = val1 + val2 + val3;
 			var result = val1 + val2;
-			$(document).trigger("closingCostChange",result);
+
+			var val3 = getFloatValue(closingCostHolder["totEstResDepWthLen"]
+					.getValueForItem());
+			var closingCostChange=result+val3;
+			$(document).trigger("closingCostChange",closingCostChange);
 			return result;
 		};
 		break;

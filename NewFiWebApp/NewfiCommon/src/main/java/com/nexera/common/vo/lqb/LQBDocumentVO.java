@@ -8,6 +8,9 @@ public class LQBDocumentVO {
 	private String notes;
 	private String sDataContent ;
 	
+	private Integer loanId;
+	private String fileName;
+	
 	
 	
 	public String getsTicket() {
@@ -41,5 +44,17 @@ public class LQBDocumentVO {
 	public void setsLoanNumber(String sLoanNumber) {
 		this.sLoanNumber = sLoanNumber;
 	}
+	public Integer getLoanId() {
+	    return loanId;
+    }
+	public void setLoanId(Integer loanId) {
+	    this.loanId = loanId;
+    }
+	public String getFileName() {
+	    return fileName;
+    }
+	public void setFileName(String fileName) {
+	    this.fileName = fileName;
+    }
 	
 }
