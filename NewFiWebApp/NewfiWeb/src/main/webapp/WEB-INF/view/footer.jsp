@@ -36,7 +36,7 @@
 <script src="${initParam.resourcesPath}/resources/js/breadCrumb.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/template.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/jquery.zclip.js"></script>
-<script src="${initParam.resourcesPath}/resources/js/ZeroClipboard.swf"></script>
+<%-- <script src="${initParam.resourcesPath}/resources/js/ZeroClipboard.swf"></script> --%>
 <script src="${initParam.resourcesPath}/resources/js/jquery.zclip.min.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/numericInput.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/validation.js"></script>
