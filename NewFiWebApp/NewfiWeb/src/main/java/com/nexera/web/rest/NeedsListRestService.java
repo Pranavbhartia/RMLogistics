@@ -93,7 +93,8 @@ public class NeedsListRestService {
 	public @ResponseBody CommonResponseVO setCustomNeedsList(
 	        @RequestParam(required = true) String category,
 	        @RequestParam(required = true) String label,
-	        @RequestParam(required = true) String description) {
+	        @RequestParam(required = true) String description,
+	        @RequestParam(required = true) String lqbDocumentType) {
 		CommonResponseVO response = null;
 		try {
 			User user = null;
@@ -106,7 +107,7 @@ public class NeedsListRestService {
 				user.setId(1);
 			}
 			NeedsListMaster customNeed = NeedsListMaster.getCustomNeed(label,
-			        category, description, user);
+			        category, description, user,lqbDocumentType);
 			int needId = needsListService.saveCustomNeed(customNeed);
 			response = RestUtil.wrapObjectForSuccess(needId);
 		} catch (Exception e) {

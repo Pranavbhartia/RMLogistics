@@ -4141,7 +4141,21 @@ function appendAddNeedsContainer() {
 	});
 
 	row3.append(row3Label).append(row3Input);
-	container.append(row1).append(row2).append(row3);
+	
+	//TO capture lQB doc type for custom need
+	var row4 = $('<div>').attr({
+		"class" : "add-needs-input-row clearfix"
+	});
+	var row4Label = $('<div>').attr({
+		"class" : "add-needs-input-label float-left"
+	}).html("LQB Doc Type");
+	var row4Input = $('<input>').attr({
+		"id" : "lqb_need_doc_type",
+		"class" : "add-needs-input-edit float-left"
+	});
+	row4.append(row4Label).append(row4Input);
+	
+	container.append(row1).append(row2).append(row4).append(row3);
 
 	//NEXNF-836
 	var addNeedsBtn = $('<div>').attr({
@@ -4207,6 +4221,7 @@ function initializeDocTitleAutoComplete(searchData) {
 function clearAddNeedForm() {
 	$('#need_doc_title').val('');
 	$('#need_doc_desc').val('');
+	$('#lqb_need_doc_type').val('');
 }
 
 function appendDocumentToolTip() {
