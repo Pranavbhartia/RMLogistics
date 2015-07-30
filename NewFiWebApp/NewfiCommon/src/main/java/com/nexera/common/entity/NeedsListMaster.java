@@ -32,7 +32,7 @@ public class NeedsListMaster implements Serializable {
 	public NeedsListMaster() {
 	}
 	@Transient
-	public static NeedsListMaster getCustomNeed(String label,String category,String desc,User user){
+	public static NeedsListMaster getCustomNeed(String label,String category,String desc,User user,String lqbDocumentType){
 		NeedsListMaster need=new NeedsListMaster();
 		need.setDescription(desc);
 		need.setIsCustom(true);
@@ -40,8 +40,8 @@ public class NeedsListMaster implements Serializable {
 		need.setNeedCategory(category);
 		need.setModifiedDate(new Date());
 		need.setModifiedBy(user);
-		/*//to be chnaged
-		need.setUploadedTo(null);*/
+		//to be chnaged
+		need.setUploadedTo(lqbDocumentType);
 		return need;
 	}
 	@Id

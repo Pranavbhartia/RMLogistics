@@ -20,6 +20,7 @@ public class ManagerNeedVo{
 	private int loanId;
 	private int needType;
 	private Boolean isChecked;
+	private String lqbDocumentType;
 	
 	public ManagerNeedVo(NeedsListMaster needsList){
 		this.setDesc(needsList.getDescription());
@@ -27,6 +28,7 @@ public class ManagerNeedVo{
 		this.needCategory=needsList.getNeedCategory();
 		this.needType=needsList.getId();
 		this.isChecked=false;
+		this.lqbDocumentType=needsList.getUploadedTo();
 	}
 	
 	/**
@@ -120,6 +122,14 @@ public class ManagerNeedVo{
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+	public String getLqbDocumentType() {
+	    return lqbDocumentType;
+    }
+
+	public void setLqbDocumentType(String lqbDocumentType) {
+	    this.lqbDocumentType = lqbDocumentType;
+    }
 
 	
 

@@ -109,6 +109,7 @@ function getLoanNeedsManagerContext(loanId){
 			var category=($("#need_doc_type").val());
 			var label=$("#need_doc_title").val();
 			var desc=$("#need_doc_desc").val();
+			var lqb_desc = $("#lqb_need_doc_type").val();
 			if(label==""){
 				showErrorToastMessage(invalidDocumentTitle);
 			}else if(desc==""){
@@ -120,6 +121,7 @@ function getLoanNeedsManagerContext(loanId){
 				data.category=ob.mapNeedCategory(category);
 				data.label=label;
 				data.description=desc;
+				data.lqbDocumentType = lqb_desc;
 				var exist;
 				var categoryList=ob.customList[category];
 				if(categoryList){
