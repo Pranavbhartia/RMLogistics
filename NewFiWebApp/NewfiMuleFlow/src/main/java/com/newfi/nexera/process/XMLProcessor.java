@@ -414,7 +414,7 @@ public class XMLProcessor
             newApplicant.appendChild( applicantZip );
             loan.appendChild( newApplicant );
         } 
-        else if ( condition.equalsIgnoreCase("NEW" ) ) {
+        else if ( condition.equalsIgnoreCase(NewFiConstants.CONSTANT_CONDITION_BORROWER_WITHOUT_SSN_WIFE_WITH_SSN ) ) {
         	LOG.debug( "Need to remove ssn related info for borrower" );
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
