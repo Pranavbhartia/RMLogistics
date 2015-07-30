@@ -72,10 +72,10 @@ function getLoanNeedsManagerContext(loanId){
 					ob.customList.income.push(need);
 				    break;
 			    case "Other":
-			   		if(!ob.customList.Other){
-						ob.customList.Other=[];
+			   		if(!ob.customList.other){
+						ob.customList.other=[];
 					}
-					ob.customList.Other.push(need);
+					ob.customList.other.push(need);
 				    break;
 			}
 		},
@@ -106,7 +106,7 @@ function getLoanNeedsManagerContext(loanId){
 		saveCustomNeed:function(callback){
 			var ob=this;
 			var f_category=$("#need_doc_type").val();
-			var category=ob.mapNeedCategory($("#need_doc_type").val());
+			var category=($("#need_doc_type").val());
 			var label=$("#need_doc_title").val();
 			var desc=$("#need_doc_desc").val();
 			if(label==""){
