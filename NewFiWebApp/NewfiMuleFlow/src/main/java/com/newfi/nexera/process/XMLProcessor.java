@@ -413,7 +413,46 @@ public class XMLProcessor
             Element applicantZip = createNewElement( doc, "field", "aCZip", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( applicantZip );
             loan.appendChild( newApplicant );
-        } else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_BORROWER_WITHOUT_SSN ) ) {
+        } 
+        else if ( condition.equalsIgnoreCase(NewFiConstants.CONSTANT_CONDITION_BORROWER_WITHOUT_SSN_WIFE_WITH_SSN ) ) {
+        	LOG.debug( "Need to remove ssn related info for borrower" );
+            NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
+            nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
+            Element newApplicant = doc.createElement( "applicant" );
+            newApplicant.setAttribute( "id", "ApplicantCoBorrowerId" );           
+            Element firstName = createNewElement( doc, "field", "aCFirstNm", "firstCoborrowerName" );
+            newApplicant.appendChild( firstName );
+            Element middleName = createNewElement( doc, "field", "aCMidNm", "middleCoborrowerName" );
+            newApplicant.appendChild( middleName );
+            Element lastName = createNewElement( doc, "field", "aCLastNm", "lastCoborrowerName" );
+            newApplicant.appendChild( lastName );
+            Element dateOfBirth = createNewElement( doc, "field", "aCDob", "dateOfCoborrowerBirth" );
+            newApplicant.appendChild( dateOfBirth );
+            Element baseIncome = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
+            newApplicant.appendChild( baseIncome );
+            Element address = createNewElement( doc, "field", "aCAddr", "applicantCoborrowerAddress" );
+            newApplicant.appendChild( address );
+            Element userSSN = createNewElement( doc, "field", "aCSsn", "userCoborrowerSSNnumber" );
+            newApplicant.appendChild( userSSN );
+            Element alimonyName = createNewElement( doc, "field", "aAlimonyNm", "alimonyCoborrowerName" );
+            newApplicant.appendChild( alimonyName );
+            Element alimonyPayment = createNewElement( doc, "field", "aAlimonyPmt", "alimonyCoborrowerPayment" );
+            newApplicant.appendChild( alimonyPayment );
+            Element baseIncome1 = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
+            newApplicant.appendChild( baseIncome1 );
+            Element jobExpenses = createNewElement( doc, "field", "aJobRelated1ExpenseDesc", "jobCoborrowerExpenses" );
+            newApplicant.appendChild( jobExpenses );
+            Element jobRelatedPayment = createNewElement( doc, "field", "aJobRelated1Pmt", "jobRelatedCoborrowerPayment" );
+            newApplicant.appendChild( jobRelatedPayment );
+            Element applicantCity = createNewElement( doc, "field", "aCCity", "applicantCoborrowerCity" );
+            newApplicant.appendChild( applicantCity );
+            Element applicantState = createNewElement( doc, "field", "aCState", "applicantCoborrowerState" );
+            newApplicant.appendChild( applicantState );
+            Element applicantZip = createNewElement( doc, "field", "aCZip", "applicantCoborrowerZipCode" );
+            newApplicant.appendChild( applicantZip );
+            loan.appendChild( newApplicant );
+        } 
+        else if ( condition.equalsIgnoreCase( NewFiConstants.CONSTANT_CONDITION_BORROWER_WITHOUT_SSN ) ) {
             LOG.debug( "Need to remove ssn related info for borrower" );
             NodeList nodeToRemove = doc.getElementsByTagName( "credit" );
             nodeToRemove.item( 0 ).getParentNode().removeChild( nodeToRemove.item( 0 ) );
