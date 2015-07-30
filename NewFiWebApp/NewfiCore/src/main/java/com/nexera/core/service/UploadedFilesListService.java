@@ -55,7 +55,7 @@ public interface UploadedFilesListService {
 
 	public UploadedFilesList fetchUsingFileLQBDocId(String lqbDocID);
 
-	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO,Integer loanId,UserVO user,String fileName);
+	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO,UserVO user);
 
 	public CheckUploadVO uploadFileByEmail(InputStream stream, String content,
 	        Integer userId, Integer loanId, Integer assignedBy, String fileName)
