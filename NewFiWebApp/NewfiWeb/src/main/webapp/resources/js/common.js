@@ -746,8 +746,15 @@ function getCalculationFunctionForItem(key) {
 		var val4 = getFloatValue(closingCostHolder["hazInsReserve1002"].getValueForItem());
 			
 			
-	
+			
+
 			var result = val1 + val2 +val3 +val4;
+
+			var closingCostChange = getFloatValue(closingCostHolder["totEstimatedClosingCost"]
+					.getValueForItem());
+			closingCostChange=result+closingCostChange;
+			$(document).trigger("closingCostChange",closingCostChange);
+			
 			return result;
 		};
 		break;
@@ -768,13 +775,10 @@ function getCalculationFunctionForItem(key) {
 					.getValueForItem());
 			//var val3 = getFloatValue(closingCostHolder["totPrepaids"].getValueForItem());
 			
-			//var result = val1 + val2 + val3;
+			//var result = val1 + val2 + val3;	
 			var result = val1 + val2;
 
-			var val3 = getFloatValue(closingCostHolder["totEstResDepWthLen"]
-					.getValueForItem());
-			var closingCostChange=result+val3;
-			$(document).trigger("closingCostChange",closingCostChange);
+			
 			return result;
 		};
 		break;
