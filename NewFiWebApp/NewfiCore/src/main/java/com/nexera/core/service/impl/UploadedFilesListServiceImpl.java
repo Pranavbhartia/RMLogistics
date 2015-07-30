@@ -488,8 +488,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	@Override
-	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO,
-	        Integer loanId, UserVO user, String fileName) {
+	public LQBResponseVO uploadDocumentInLandingQB(LQBDocumentVO lqbDocumentVO,UserVO user) {
 		LQBResponseVO lqbResponseVO = null;
 		// TODO Auto-generated method stub
 
@@ -518,13 +517,13 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 					receivedResponse = lqbInvoker.invokeLqbService(uploadObject
 					        .toString());
 					lqbResponseVO = parseLQBXMLResponse(receivedResponse);
-					LoanVO loan = loanService.getLoanByID(loanId);
+					LoanVO loan = loanService.getLoanByID(lqbDocumentVO.getLoanId());
 					// Send mail to internal users of loan team
 					if (loan != null) {
 						boolean isEmailSent = false;
 						try {
 							isEmailSent = sendEmailForDocumentTypeAssignFailure(lqbDocumentVO,
-							        expectedDocType, loan, user, fileName);
+							        expectedDocType, loan, user);
 						} catch (InvalidInputException
 						        | UndeliveredEmailException e) {
 							LOG.info(" The status of email sent to internal users regarding the doctype failure -------------"
@@ -556,7 +555,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	}
 
 	private boolean sendEmailForDocumentTypeAssignFailure(LQBDocumentVO lqbDocumentVO,
-	        String expectedDocType, LoanVO loan, UserVO user, String fileName)
+	        String expectedDocType, LoanVO loan, UserVO user)
 	        throws InvalidInputException, UndeliveredEmailException {
 
 		String subject = CommonConstants.SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE;
@@ -570,7 +569,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		Integer id = loan.getId();
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
-		substitutions.put("-filename-", new String[] { fileName });
+		substitutions.put("-filename-", new String[] { lqbDocumentVO.getFileName() });
 		substitutions.put("-lqbfileid-",
 		        new String[] { lqbDocumentVO.getsLoanNumber() });
 		substitutions.put("-loanid-", new String[] { id.toString() });
@@ -656,9 +655,9 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			documentVO.setsDataContent(nexeraUtility.getContentFromFile(bytes));
 			documentVO.setsLoanNumber(loanService.getLoanByID(loanId)
 			        .getLqbFileId());
-
-			lqbResponseVO = uploadDocumentInLandingQB(documentVO, loanId, user,
-			        fileName);
+			documentVO.setFileName(fileName);
+			documentVO.setLoanId(loanId);
+			lqbResponseVO = uploadDocumentInLandingQB(documentVO, user);
 
 		} catch (Exception e) {
 
