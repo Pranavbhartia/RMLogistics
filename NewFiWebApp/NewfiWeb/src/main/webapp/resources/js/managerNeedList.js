@@ -245,7 +245,7 @@ function getLoanNeedsManagerContext(loanId){
 			this.selectedNeeds=checkboxesChecked;
 
 			if(callback){
-				callback();
+				callback(this);
 			}
 		},
 		saveSelectedNeedsList:function(callback){
@@ -259,7 +259,9 @@ function getLoanNeedsManagerContext(loanId){
 					showToastMessage(response.error.message);
 				}else{
 					showToastMessage(savesuccessfull);
-					window.location.reload();
+					setTimeout(function(){
+						window.location.reload();
+					}, 1000); 
 					if(callback){
 						callback(ob);
 					}
@@ -407,8 +409,8 @@ function getNeededDocumentRow(document){
 	return row.append(checkBox).append(docTitle);
 }
 function saveLoanNeeds(){
-	contxt.updateNeedsList(function(){
-		contxt.saveSelectedNeedsList();
+	contxt.updateNeedsList(function(ob){
+		ob.saveSelectedNeedsList();
 	});
 }
 function saveCustomNeed(){
