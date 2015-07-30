@@ -141,8 +141,8 @@ function appendSettingsDropDown(){
 	   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#");
 	   		container.append(templatesRow);
 	   		
-	   		var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","");
-	   		container.append(securitySettingsRow);			    		
+	   		/*var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","");
+	   		container.append(securitySettingsRow);	*/		    		
 		
     }	
 	 header.append(icondiv);
