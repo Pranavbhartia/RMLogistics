@@ -117,7 +117,7 @@ function getLoanNeedsManagerContext(loanId){
 				showErrorToastMessage(invalidDocumentType);
 			}else{
 				var data={};
-				data.category=category;
+				data.category=ob.mapNeedCategory(category);
 				data.label=label;
 				data.description=desc;
 				var exist;
