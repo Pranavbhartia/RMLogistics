@@ -9,6 +9,14 @@ $(document).on('mouseleave','.app-option-choice',function(){
 	$(this).removeClass('choice-hover');
 });
 
+$(document).on('mouseover','.ce-option',function(){
+	$(this).parent().find('.ce-option').removeClass('choice-hover');
+	$(this).addClass('choice-hover');
+});
+$(document).on('mouseleave','.ce-option',function(){
+	$(this).removeClass('choice-hover');
+});
+
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {
         type: question.type,
@@ -1085,7 +1093,11 @@ function progressBaar(num) {
             $("#progressBaarId_" + i).removeClass('ce-lp-in-progress').removeClass('ce-lp-complete').addClass('ce-lp-not-started');
             $('#stepNoId_' + i).html(i);
         }
-        sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
+        try {
+        	sessionStorage.refinaceData = JSON.stringify(refinanceTeaserRate);
+        } catch (error) {
+        	console.log(error);
+        }
         if(typeof(newfiObject)==='undefined'&&!historyPopStage){
             //window.location.hash="#CE-"+(num-1);
             if(window.location.hash!=("#CE-"+(num-1)))

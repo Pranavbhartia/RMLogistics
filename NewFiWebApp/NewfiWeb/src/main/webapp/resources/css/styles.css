@@ -1763,6 +1763,7 @@ input[type="button"]:focus, button:focus {
 .cus-name {
 	padding-left: 18px;
 	color: #428bca;
+	word-break: break-word;
 }
 
 .alert-col {
@@ -5609,6 +5610,7 @@ a.session-login-btn {
 	height: 20px;
 	position: absolute;
 	right: 10px;
+	top:17px;
 	z-index: 2;
 }
 
