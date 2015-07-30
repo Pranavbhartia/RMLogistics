@@ -357,7 +357,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true,true,true);
     rightCol.append(taxRow);    
 
-    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true,true);
+    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
     rightCol.append(totHousingPayment);
 
     
@@ -1302,7 +1302,7 @@ function teaseCalculation(inputCustomerDetails){
     
     $('#monthlyPaymentDifferenceId').text(showValue(monthlyPaymentDifference));
     $('#totalEstMonthlyPaymentId').text((showValue(totalEstMonthlyPaymentId)));
-    $('#totalEstMonthlyPaymentId').addClass('tax-Ins-clas');
+    /*$('#totalEstMonthlyPaymentId').addClass('tax-Ins-clas');*/
 }
 
 function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
