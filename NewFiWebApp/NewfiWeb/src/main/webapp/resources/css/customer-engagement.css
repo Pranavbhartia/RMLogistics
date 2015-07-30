@@ -336,7 +336,11 @@
     font-family: 'opensanssemibold';
 }
 
-.ce-option:hover,.ce-save-btn:hover {
+/* .ce-option:hover {
+	background: #F47521;
+} */
+
+.ce-save-btn:hover {
 	background: #F47521;
 }
 
@@ -374,7 +378,7 @@
 }
 
 .choice-hover{
-	background: #F47521;
+	background: #F47521 !important;
 }
 
 
