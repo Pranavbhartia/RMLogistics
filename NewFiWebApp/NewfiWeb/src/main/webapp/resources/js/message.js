@@ -30,6 +30,8 @@ var loanMangerDeleteSuccessMessage="Loan manger deleted successfully";
 var uploadCsvErrorMessage="Problem while uploading csv.Please try again later";
 var invalidEmailErrorMessage="Email ID is not valid";
 var invalidFileUploadedMessage="You must upload a file with csv extension.";
+var deleteSuccessMessage = "deleted successfully";
+var userDeletedSuccess = "User deleted successfully";
 
 //Messages in profile.js
 var passwordFieldEmptyErrorMessage="should not be empty";
