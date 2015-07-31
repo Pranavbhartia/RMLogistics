@@ -19,6 +19,7 @@
 						<div>Emeryville, CA 94608</div>
 						<div>510-844-4003</div>
 					</div>
+					
 				</div>
 			</div>
 			<div class="container body-header-container">
@@ -32,6 +33,7 @@
 							<div class="clearfix ">
 									<div class="float-left">
 										<div> Lending rates as of : <span id="folderCurrentTimeStamp"></span></div>
+										<div>Rates are subjected to change without notice</div>
 									</div>
 									<div class="float-right " >
 										<div class="print" onclick="window.print()" title="print"></div>
@@ -40,9 +42,20 @@
 										<div class="downloadExcel" onclick="downloadExcel()" title="print"></div>
 									</div>
 							</div>
+							
+					</div>
+					<div class="table-rate-new float-right">
+						<div class="rate-row">Locks Accepted:</div>
+						<div class="rate-row">M-F 8:30AM - 4:30PM</div>
+						<div class="rate-row empty-rate-row"></div>
+						<div class="rate-row">Fees:</div>
+						<div class="rate-row">Admin - $1050</div>
+						<div class="rate-row">Flood - $10</div>
 					</div>
 				</div>
+				
 			</div>
+			
 		</div>
 		<div class="body-wrapper">
 			<div id="main-container" class="main-container container"></div>

@@ -1848,7 +1848,11 @@ function optionClicked(element,ctx,option,value,skipCondition){
     	}
 	}
 	if(ctx.name=="coBorrowerAddressNew")
-		addStateCityZipLookUp();
+		{
+		   
+			addStateCityZipLookUp();
+		}
+		
 }
 
 
@@ -2770,12 +2774,22 @@ $('body').on('keypress',"input[name='startWorking']",function(evt){
 	 var charCode = (evt.which) ? evt.which : evt.keyCode;
 	 if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46)
 	    return false;
-	 
-	 if($(this).val().length >=4){
+	 var value=$(this).val();
+	 if(value.indexOf('.') >= 0){
+		 if($(this).val().length > 3){
 
-         return false;
+	         return false;
+		 }
+	 }else {
+		 if($(this).val().length > 2){
+
+	         return false;
+		 }
 	 }
-});
+
+	
+	
+	 });
 $('body').on('focus',"input[name='ssn']",function(){
 	
 	$(this).mask("999-99-9999");
