@@ -1516,6 +1516,7 @@ if(customerZip!="" && customerSpouseZip!=""){
                 options: [{
                     text: "Yes",
                     callBack:addStateCityZipLookUp,
+                    initFunction:initAddress,
                     addQuestions:[{
                         type: "desc",
                         text: "Co-borrower's first name",
@@ -1534,6 +1535,7 @@ if(customerZip!="" && customerSpouseZip!=""){
                         	text:"Yes"
                         },{
                         	text: "No",
+                        	initFunction:initAddress,
                         	 addQuestions:[{
                                  type: "desc",
                                  text: "Co-borrower's state",
@@ -1577,6 +1579,7 @@ if(customerZip!="" && customerSpouseZip!=""){
                 }, {
                     text: "No",
                     callBack:addStateCityZipLookUp,
+                	initFunction:initAddress,
                     addQuestions:[{
                         type: "desc",
                         text: "Co-borrower's first name",
@@ -1595,6 +1598,7 @@ if(customerZip!="" && customerSpouseZip!=""){
                         	text: "Yes"
                         },{
                         	text: "No",
+                        	 initFunction:initAddress,
                         	 addQuestions:[{
                                  type: "desc",
                                  text: "Co-borrower's state",
@@ -1791,7 +1795,12 @@ if(customerZip!="" && customerSpouseZip!=""){
     addStateCityZipLookUp();
     
 }
+function initAddress(){
+	appUserDetails.customerSpouseDetail.state=null;
+	appUserDetails.customerSpouseDetail.city=null;
+	appUserDetails.customerSpouseDetail.zip= null;
 
+}
 function getContextApplicationYesNoQues(contxt) {
     var container = $('<div>').attr({
         "class": "app-ques-wrapper"
@@ -1822,6 +1831,9 @@ function getContextApplicationYesNoQues(contxt) {
             optionCont.bind("click",{"contxt":contxt,"value":option.text,"option":option},function(event){
             	var ctx=event.data.contxt;
             	var opt=event.data.option;
+            	if(opt.initFunction){
+        			opt.initFunction();
+        		}
             	var val=event.data.value;
             	optionClicked($(this),ctx,opt,val);
             });
@@ -1848,10 +1860,7 @@ function optionClicked(element,ctx,option,value,skipCondition){
     	}
 	}
 	if(ctx.name=="coBorrowerAddressNew")
-		{
-		   
-			addStateCityZipLookUp();
-		}
+		addStateCityZipLookUp();
 		
 }
 
@@ -5532,6 +5541,9 @@ function getContextApplicationYesNoQuesCEP(contxt) {
         	var ctx=event.data.contxt;
         	var opt=event.data.option;
         	var val=event.data.value;
+        	if(opt.initFunction){
+    			opt.initFunction();
+    		}
         	optionClicked($(this),ctx,opt,val);
         });
         
