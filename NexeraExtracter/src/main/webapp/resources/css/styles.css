@@ -462,3 +462,15 @@ table.adjuster-table {
 .price-table-td-adjust-height:first-child:after {
 	height:28px;
 }
+.table-rate-new {
+	line-height: normal;
+	padding-bottom: 10px;
+}
+.rate-row {
+    border: 1px solid;
+    padding: 0 10px;
+}
+
+.empty-rate-row {
+	padding: 9px 2px;
+}
