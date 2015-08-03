@@ -344,11 +344,15 @@ function getLoanPersonalInfoContainer(user) {
 	if(user.internalUserStateMappingVOs == undefined){
 		//licensesRow.addClass('hide');
 	}
-	
+	//NEXNF-853
+/*	var saveBtn = $('<div>').attr({
+		"class" : "prof-btn prof-save-btn cep-button-color",
+		"onclick" : "updateLMDetails()"
+	}).html("Save");*/
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "updateLMDetails()"
-	}).html("Save");
+	}).html("Update");
 	container.append(saveBtn);
 	return container;
 }
@@ -965,11 +969,15 @@ function getCustPersonalInfoContainer(user) {
     
 	var checkBox=getCheckStatus(user);
 	formWrapper.append(checkBox);
-				
+	//NEXNF-853		
+/*	var saveBtn = $('<div>').attr({
+		"class" : "prof-btn prof-save-btn cep-button-color",
+		"onclick" : "updateUserDetails()"
+	}).html("Save");*/
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "updateUserDetails()"
-	}).html("Save");
+	}).html("Update");
 	formWrapper.append(saveBtn);
 	
 	return container.append(formWrapper);
