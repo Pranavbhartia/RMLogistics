@@ -4092,7 +4092,7 @@ function paintLockRatePage(){
     });
 }
 
-
+//NEXNF-835
 $('body').on('click', '.ce-option-checkbox',function(event) {
 	 var lqbFileId = checkLqbFileId();
 		if(lqbFileId){
