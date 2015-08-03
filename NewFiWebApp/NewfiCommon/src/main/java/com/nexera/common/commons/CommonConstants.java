@@ -290,8 +290,8 @@ public interface CommonConstants {
 	public static final String SUBJECT_TITLE_COMPANY = "Welcome to newfi as a Title Company";
 	public static final String SUBJECT_HOME_INSUR_COMPANY = "Welcome to newfi as a Home Insurance Company";
 	
-	public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "Document Type Lqb Assignment Failure";
-	
+/*	public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "Document Type Lqb Assignment Failure";*/
+	public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "NEWFI ALERT: Unassigned Document";
 
 	public static final String SUBJECT_RESET_PASSWORD = "Reset newfi Password";
 
