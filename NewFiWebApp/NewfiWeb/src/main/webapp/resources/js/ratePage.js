@@ -357,7 +357,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true,true,true);
     rightCol.append(taxRow);    
 
-    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true);
+    var totHousingPayment = getLoanSummaryLastRow("Estimated<br/> Housing Payment", showValue(totalEstMonthlyPayment),"totalEstMonthlyPaymentId",true,true);
     rightCol.append(totHousingPayment);
 
     
@@ -1077,7 +1077,16 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
         });
     }
     
-    
+	if(!teaserRateValHolder.teaserRate){
+	    	 if(key!="downPayment"){
+	    		 inputBox = $('<div>').attr({
+	    			 "id":inputElementId,
+	    	         "value":showValue(val),
+	    	    	}).html(showValue(val));
+	    	 }
+	    
+	    	
+	    }
     col2.append(inputBox);
     
     if(key=="Insurance" && !teaserRateValHolder.teaserRate){
@@ -1087,6 +1096,9 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
             
             saveTaxAndInsurance();
         });
+        if(!teaserRateValHolder.teaserRate){
+        	saveBtn.addClass('hide');
+        }
         container.append(col1).append(col2.append(saveBtn));
     }
     else if(key=="purchasePrice"||key=="cashOut"){
@@ -1105,6 +1117,9 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
             }
             
         });
+        if(!teaserRateValHolder.teaserRate){
+        	saveBtn.addClass('hide');
+        }
         container.append(col1).append(col2.append(saveBtn));
     }else if(key=="propLoanAmt"){
         var saveBtn = $('<div>').attr({
@@ -1120,6 +1135,9 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
                 }
             }
         });
+        if(!teaserRateValHolder.teaserRate){
+        	saveBtn.addClass('hide');
+        }
         container.append(col1).append(col2.append(saveBtn));
     }else
         container.append(col1).append(col2);
@@ -1145,12 +1163,15 @@ function getDwnPayComponent(value,inputElementId){
             precision:0,
             allowNegative:false
         });
+        
         /* this is the piece of code to retrict user put special charector*/
         restrictSpecialChar(undefined,$('#'+inputElementId));
     });
+
     globalChangeContainer.dwnVal=showValue(value);
     var percentageComp = $('<input>').attr({
-    	"class": "loan-summary-sub-col-detail dwn-percentage"
+    	"class": "loan-summary-sub-col-detail dwn-percentage",
+    	
     }).attr('maxlength','2');;
     
     optionCont.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"val":true},
@@ -1164,10 +1185,10 @@ function getDwnPayComponent(value,inputElementId){
                 percentageUpdateEventListener(e);
                 globalChangeContainer.flag=true;
                 globalChangeContainer.dwnVal=showValue(dwnPmntVal);
-                $("#loanAmount").html(loanAmt);
+               // $("#loanAmount").html(loanAmt);
             }
         })
-    percentageComp.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"percentage":true},
+        percentageComp.bind("keyup",{"valComp":optionCont,"percentComp":percentageComp,"percentage":true},
         function(e){
             this.value = this.value.replace(/[^0-9]/g,'')
             percentageUpdateEventListener(e);
@@ -1175,12 +1196,15 @@ function getDwnPayComponent(value,inputElementId){
             var purchaseAmt=getFloatValue(getpurchaseValue());
             var dwnPmntVal=getFloatValue($(e.data.valComp).val());
             var loanAmt=showValue(purchaseAmt-dwnPmntVal);
-            $("#loanAmount").html(loanAmt);
+            //$("#loanAmount").html(loanAmt);
         })
-
+        if(!teaserRateValHolder.teaserRate){
+        	optionCont.attr('disabled','disabled');
+        	percentageComp.attr('disabled','disabled');
+        }
     optionsContainer.append(optionCont).append(percentageComp);
     setTimeout(function(){ $(optionCont).trigger("keyup");globalChangeContainer.flag=false; }, 500);
-    
+ 
     return optionsContainer;
 }
 function getTeaserRateData(){

@@ -33,7 +33,8 @@
 							<div class="clearfix ">
 									<div class="float-left">
 										<div> Lending rates as of : <span id="folderCurrentTimeStamp"></span></div>
-										<div>Rates are subjected to change without notice</div>
+										<div>Rates are subject to change without notice</div>
+										<div class="rates-text-three">standard conforming >= $275k receives .25 better in ysp!</div>
 									</div>
 									<div class="float-right " >
 										<div class="print" onclick="window.print()" title="print"></div>
@@ -41,17 +42,22 @@
 									<div class="float-right " >
 										<div class="downloadExcel" onclick="downloadExcel()" title="print"></div>
 									</div>
+									<br /><br />
+									<div class="table-rate-new float-right">
+										<div class="float-left">
+											<div class="rate-row">Locks Accepted:</div>
+											<div class="rate-row">Fees:</div>
+										</div>	
+										<div class="float-right">							
+											<div class="rate-row">M-F 8:30AM - 4:30PM</div>
+											<div class="rate-row">Admin - $1050</div>
+											<div class="rate-row">Flood - $10</div>
+										</div>
+									</div>
 							</div>
 							
 					</div>
-					<div class="table-rate-new float-right">
-						<div class="rate-row">Locks Accepted:</div>
-						<div class="rate-row">M-F 8:30AM - 4:30PM</div>
-						<div class="rate-row empty-rate-row"></div>
-						<div class="rate-row">Fees:</div>
-						<div class="rate-row">Admin - $1050</div>
-						<div class="rate-row">Flood - $10</div>
-					</div>
+					
 				</div>
 				
 			</div>
