@@ -6391,8 +6391,13 @@ function getContextApplicationPercentageQues(contxt) {
     return container.append(quesTextCont).append(optionsContainer);
 }
 function getpurchaseValue(){
+	
     if($("#firstInput").length>0){
-        return $('#firstInput').val();
+    	if(!teaserRateValHolder.teaserRate){
+    		 return $('#firstInput').html();
+    	}else{
+    		 return $('#firstInput').val();
+    	}       
     }else if($('input[name="homeWorthToday"]').length>0){
         return $('input[name="homeWorthToday"]').val();
     }else if($('input[name="housePrice"]').length>0){
