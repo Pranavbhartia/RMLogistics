@@ -9,6 +9,7 @@ var customerBankAccountDetails = new Object();
 var customerRetirementAccountDetails = new Object();
 var customerOtherAccountDetails = new Object();
 
+
 //customerDetail.customerSpouseDetail = customerSpouseDetail;
 //customerDetail.customerEmploymentIncome = customerEmploymentIncome;
 //customerDetail.customerBankAccountDetails = customerBankAccountDetails;
@@ -1796,9 +1797,12 @@ if(customerZip!="" && customerSpouseZip!=""){
     
 }
 function initAddress(){
-	appUserDetails.customerSpouseDetail.state=null;
-	appUserDetails.customerSpouseDetail.city=null;
-	appUserDetails.customerSpouseDetail.zip= null;
+	if(appUserDetails.customerSpouseDetail!=undefined){
+		appUserDetails.customerSpouseDetail.state=null;
+		appUserDetails.customerSpouseDetail.city=null;
+		appUserDetails.customerSpouseDetail.zip= null;
+	}
+	
 
 }
 function getContextApplicationYesNoQues(contxt) {
@@ -4031,6 +4035,8 @@ function paintCustomerApplicationPageStep5() {
 		    		  showErrorToastMessage(yesyNoErrorMessage);
 		    	}
     	}else{
+    		
+    		
     		// when click on next button
     		if(appUserDetails.isSpouseOnLoan == true || appUserDetails.isCoborrowerPresent == true){
 				paintCustomerSpouseApplicationPageStep5();
@@ -4085,6 +4091,30 @@ function paintLockRatePage(){
         }
     });
 }
+
+
+$('body').on('click', '.ce-option-checkbox',function(event) {
+	 var lqbFileId = checkLqbFileId();
+		if(lqbFileId){
+			var borrowerSSNStatus = appUserDetails.ssnProvided;
+			var coborrowerSSNstatus = appUserDetails.cbSsnProvided;	
+			if(borrowerSSNStatus || coborrowerSSNstatus){
+				 $('.ce-option-checkbox').addClass('ce-option-checked');
+				 $('.ss-ques-wrapper').show();
+				 event.stopPropagation();
+				 return false;
+			 }
+			else if (!borrowerSSNStatus || !coborrowerSSNstatus){
+				 $('.ce-option-checkbox').removeClass('ce-option-checked');
+				 $('.ss-ques-wrapper').hide();
+				 event.stopPropagation();			
+				 return false;
+			 }
+		}
+	
+
+   
+});
 
 function applicationFormSumbit(appUserDetails){
 	//paintLockRate(lqbData, appUserDetails);
