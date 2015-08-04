@@ -50,8 +50,8 @@ public class EMailSender extends NexeraWorkflowTask implements
 			        LoanStatus.sysEduMessage);
 			objectMap.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
 			        CommonConstants.TEMPLATE_KEY_NAME_GET_TO_KNOW_NEWFI);
-			sendEmailForCustomer(objectMap,
-			        CommonConstants.SUBJECT_GETTING_TO_KNOW_NEWFI);
+			/*sendEmailForCustomer(objectMap,
+			        CommonConstants.SUBJECT_GETTING_TO_KNOW_NEWFI);*/
 			/* makeANote(loanId, LoanStatus.sysEduMessage) */;
 		}
 		return WorkItemStatus.COMPLETED.getStatus();
