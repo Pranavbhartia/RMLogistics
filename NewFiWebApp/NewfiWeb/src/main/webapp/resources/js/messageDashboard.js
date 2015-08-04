@@ -478,7 +478,7 @@ function paintConversations(conversations,showSM) {
 				month='0'+month;
 			}
 			if(complete_date.getDate()<10){
-				date='0'+createdDateStr.getDate();
+				date='0'+date;
 			}
 			localDate=month+'-'+date+'-'+year;
 			localDate=formatYearInDate(localDate);
@@ -503,7 +503,7 @@ function paintConversations(conversations,showSM) {
 				month='0'+month;
 			}
 			if(createdDateStr.getDate()<10){
-				date='0'+createdDateStr.getDate();
+				date='0'+date;
 			}
 			if(createdDateStr.getHours()<10){
 				hours='0'+hours;
@@ -514,7 +514,7 @@ function paintConversations(conversations,showSM) {
 			 localDate=month+'-'+date+'-'+year;
 			 localDate=formatYearInDate(localDate);
 			 var time="";
-			if(createdDateStr.getHours()>12){
+			if(hours > 12){
 				time="PM";
 			}else{
 				time="AM";
