@@ -61,6 +61,7 @@ import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
@@ -753,7 +754,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@SuppressWarnings("unused")
 	@Override
 	@Transactional
-	public void deleteUser(UserVO userVO) throws Exception {
+	public boolean deleteUser(UserVO userVO) throws Exception {
 
 		User user = User.convertFromVOToEntity(userVO);
 
@@ -770,7 +771,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR),
 			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR);
 		}
-
+		return canUserBeDeleted;
 	}
 
 	@Override
@@ -1937,7 +1938,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(loaAppFormVO.getUser().getUsername()
-		        + CommonConstants.SENDER_EMAIL_ID);
+			        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 
 		sendEmailService.sendEmailForTeam(emailEntity, loaAppFormVO.getLoan()
@@ -1947,8 +1948,56 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
+	
 	public void updateInternalUserDetails(InternalUserDetail internalUserDetail) {
 		userProfileDao.update(internalUserDetail);
 	}
+
+	@Override
+	@Transactional
+    public boolean deleteUserEntries(UserVO userVO) throws Exception {
+		boolean isSuccess = false;
+
+		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
+		//TO change status in loanTeam
+		//LoanVO loanVO=loanService.getActiveLoanOfUser(userVO);
+		boolean loanTeamStatus = false;
+			
+			List<Loan> loans=loanService.getLoansOfUserFromLoanTeam(userVO);
+			if(loans!=null){
+				for(Loan loan:loans){
+					LoanVO loanVO=new LoanVO();
+					loanVO=Loan.convertFromEntityToVO(loan);
+					
+					loanTeamStatus = loanService.removeFromLoanTeam(loanVO, userVO);
+					
+				}
+			}else {
+				LOG.info("the current user has no loans in loan team");
+			}	
+
+						
+			LOG.info("To delete/change the user status to -1 in internaluser table......................");
+			
+			boolean isInternalUserDeleted = false;
+			//TO change the status of user in internal user table
+			if (userVO.getUserRole().getId() == UserRolesEnum.INTERNAL
+			        .getRoleId()) {
+				isInternalUserDeleted = deleteUser(userVO);				
+
+			}
+		
+		LOG.info("To delete/change the user status to -1 in user table......................");
+		//TO change status in user table
+		userVO.setStatus(-1);
+		Integer result = updateUserStatus(userVO);
+
+		if (result > 0 || loanTeamStatus || isInternalUserDeleted) {
+			LOG.info("User deleted successfully"+userVO.getUserRole().getRoleDescription());
+			isSuccess = true;
+		}
+		
+	    return isSuccess;
+    }
 
 }

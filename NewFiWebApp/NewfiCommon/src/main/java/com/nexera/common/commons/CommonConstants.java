@@ -26,6 +26,8 @@ public interface CommonConstants {
 
 	// Active status of a user
 	public static final Integer STATUS_ACTIVE = 1;
+	
+	public static final Integer STATUS_IS_DELETE = -1;
 
 	public static final Integer PAGINATION_SIZE = 5;
 

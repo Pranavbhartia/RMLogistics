@@ -2208,4 +2208,12 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.saveOrUpdate(user);
 	}
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Loan> getLoansOfUserFromLoanTeam(UserVO user) {
+		List<Loan> loanList=loanDao.getLoansOfUserFromLoanTeam(user);
+		
+	    return loanList;
+    }
+
 }
