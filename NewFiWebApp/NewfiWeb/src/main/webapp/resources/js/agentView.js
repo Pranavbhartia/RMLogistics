@@ -1279,7 +1279,7 @@ function appendTakeNoteContainer(customer) {
 	});
 
 	var col1Btn = $('<div>').attr({
-		"class" : "msg-btn-submit float-right"
+		"class" : "msg-btn-submit msg-btn-submit-adj float-right"
 	}).html("Save");
 	col1.append(col1Btn);
 	col1Btn.bind("click", {
@@ -2142,6 +2142,7 @@ function paintUserNameDropDown(values, hideAddUser) {
 
 	if (values != undefined && values.length > 0) {
 		for (var i = 0; i < values.length; i++) {
+
 			var value = values[i];
 			var dropDownRow = $('<div>')
 					.attr({

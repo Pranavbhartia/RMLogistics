@@ -209,5 +209,7 @@ public interface LoanService {
 	 * @param loanId
 	 */
 	void markLoanDeleted(int loanId);
+	
+	public int updateStatusInLoanTeam(UserVO user);
 
 }

@@ -2208,4 +2208,13 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.saveOrUpdate(user);
 	}
 
+	@Override
+	@Transactional
+    public int updateStatusInLoanTeam(UserVO userVO) {
+	    // TODO Auto-generated method stub
+		User user=User.convertFromVOToEntity(userVO);
+		int rows = loanDao.updateStatusInLoanTeam(user);
+	    return rows;
+    }
+
 }

@@ -1966,6 +1966,10 @@ input[type="button"]:focus, button:focus {
 	cursor: pointer;
 }
 
+.msg-btn-submit-adj {
+	padding: 0 16.5px;
+}
+
 .note-msg-textbox {
 	width: 100%;
 	height: 190px;

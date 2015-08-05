@@ -141,4 +141,6 @@ public interface LoanDao extends GenericDao {
 	 */
 	List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
 	        int[] loanProgressStatusIds, int startLimit, int endLimit);
+	
+	public int updateStatusInLoanTeam(User user);
 }

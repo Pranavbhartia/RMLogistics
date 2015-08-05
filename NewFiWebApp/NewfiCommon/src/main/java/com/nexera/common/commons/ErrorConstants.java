@@ -32,4 +32,7 @@ public interface ErrorConstants {
 	public static final String UPLOADFILEFAILEDCODE = "501";
 
 	public static final String UPLOADFILEFAILEDMESSAGE = "Error while assigning document";
+	
+	public static final String USER_STATUS_INACTIVE = "Your account has been inactivated.Please contact newfi for reactivation.";
+	
 }
