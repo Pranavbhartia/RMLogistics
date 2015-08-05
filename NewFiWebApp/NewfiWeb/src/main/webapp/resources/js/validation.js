@@ -143,7 +143,7 @@ function validateInputsOfMyIncomePage(element,inputVal,message,offset){
 			$(element).removeClass('ce-err-input');
 			
 			if( name=="startWorking"){
-					 if(inputVal.length > 3 || inputVal.length <= 2){
+					 if(inputVal.length > 4 || inputVal.length <= 2){
 						 $(element).next('.err-msg').html(message).show();
 						 $(element).addClass('ce-err-input').show();
 						 return false;

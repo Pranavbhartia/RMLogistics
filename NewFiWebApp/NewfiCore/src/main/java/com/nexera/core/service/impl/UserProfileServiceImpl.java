@@ -1962,7 +1962,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		//TO change status in loanTeam
 		//LoanVO loanVO=loanService.getActiveLoanOfUser(userVO);
 		int rows ;
-				
+		userVO.setStatus(0);	
 		rows = loanService.updateStatusInLoanTeam(userVO);
 		
 		if(rows == 0){
