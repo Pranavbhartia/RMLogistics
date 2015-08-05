@@ -994,7 +994,7 @@ function getInputElmentRow(key,desc, val,inputElementId,appUserDetails,container
             
             //
             
-            updateElementsOnSlide(globalChangeContainer.ratVo);
+            updateElementsOnSlide(globalChangeContainer.ratVo,undefined,true);
             /*var taxesTemp = 0;
             if($('#calTaxID2').val() !="" )
              taxesTemp = parseFloat(removedDoller(removedComma($('#calTaxID2').val())));        
@@ -1225,7 +1225,7 @@ function getTeaserRateData(){
         }
     }
 }
-function updateElementsOnSlide(rateVO,year){
+function updateElementsOnSlide(rateVO,year,skipClosingCostUpdation){
     var customerInputData=getTeaserRateData();
     $('#aprid').html(rateVO.APR +" %");
     $('#closingCostId').html(showValue(rateVO.closingCost));
@@ -1262,7 +1262,8 @@ function updateElementsOnSlide(rateVO,year){
 
     }
     teaseCalculation(customerInputData);
-    updateOnSlide(rateVO);
+    if(!skipClosingCostUpdation)
+        updateOnSlide(rateVO);
 }
 
 function teaseCalculation(inputCustomerDetails){
