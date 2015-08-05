@@ -1015,21 +1015,15 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return loan;
 	}
 
-	@SuppressWarnings("unchecked")
-    @Override
-    public List<Loan> getLoansOfUserFromLoanTeam(UserVO user) {
+	@Override
+    public int updateStatusInLoanTeam(User user) {
 		Session session = sessionFactory.getCurrentSession();
-		Criteria criteria = session.createCriteria(LoanTeam.class);
-		criteria.add(Restrictions.eq("user", User.convertFromVOToEntity(user)));
-		List<LoanTeam> loans = (List<LoanTeam>) criteria.list();
-		List<Loan> loans2=new ArrayList<Loan>();
-		for(LoanTeam loanTeam:loans){
-			Hibernate.initialize(loanTeam.getLoan());
-			loans2.add(loanTeam.getLoan());
-		}
-		
-		return loans2;
-
+		String hql = "UPDATE LoanTeam loan set loan.active = :status  WHERE user = :user";
+		Query query = session.createQuery(hql);
+		query.setParameter("status", false);
+		query.setParameter("user", user);
+		int rows=query.executeUpdate();
+	    return rows;
     }
 
 }

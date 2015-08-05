@@ -1961,38 +1961,30 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
 		//TO change status in loanTeam
 		//LoanVO loanVO=loanService.getActiveLoanOfUser(userVO);
-		boolean loanTeamStatus = false;
+		int rows ;
+				
+		rows = loanService.updateStatusInLoanTeam(userVO);
+		
+		if(rows == 0){
+			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
+		}
 			
-			List<Loan> loans=loanService.getLoansOfUserFromLoanTeam(userVO);
-			if(loans!=null){
-				for(Loan loan:loans){
-					LoanVO loanVO=new LoanVO();
-					loanVO=Loan.convertFromEntityToVO(loan);
-					
-					loanTeamStatus = loanService.removeFromLoanTeam(loanVO, userVO);
-					
-				}
-			}else {
-				LOG.info("the current user has no loans in loan team");
-			}	
+		LOG.info("To delete/change the user status to -1 in internaluser table......................");
+		
+		boolean isInternalUserDeleted = false;
+		//TO change the status of user in internal user table
+		if (userVO.getUserRole().getId() == UserRolesEnum.INTERNAL
+		        .getRoleId()) {
+			isInternalUserDeleted = deleteUser(userVO);				
 
-						
-			LOG.info("To delete/change the user status to -1 in internaluser table......................");
-			
-			boolean isInternalUserDeleted = false;
-			//TO change the status of user in internal user table
-			if (userVO.getUserRole().getId() == UserRolesEnum.INTERNAL
-			        .getRoleId()) {
-				isInternalUserDeleted = deleteUser(userVO);				
-
-			}
+		}
 		
 		LOG.info("To delete/change the user status to -1 in user table......................");
 		//TO change status in user table
 		userVO.setStatus(-1);
 		Integer result = updateUserStatus(userVO);
 
-		if (result > 0 || loanTeamStatus || isInternalUserDeleted) {
+		if (result > 0 || rows > 0 || isInternalUserDeleted) {
 			LOG.info("User deleted successfully"+userVO.getUserRole().getRoleDescription());
 			isSuccess = true;
 		}

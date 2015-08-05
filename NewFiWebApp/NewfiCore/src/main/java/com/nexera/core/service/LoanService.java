@@ -210,6 +210,6 @@ public interface LoanService {
 	 */
 	void markLoanDeleted(int loanId);
 	
-	public List<Loan> getLoansOfUserFromLoanTeam(UserVO user);
+	public int updateStatusInLoanTeam(UserVO user);
 
 }
