@@ -8,6 +8,9 @@ var mobileCarrierConstants=[];
 var userRole="Customer";
 var loggedInUser ;
 var nmlsAdded = false;
+
+var oldlqbUserName = "" ;
+var oldlqbPassword = "";
 //var userStates=[];
 $(document).on('click',function(e){
 	if($('#add-licence-popup').css("display") == "block"){
@@ -256,6 +259,10 @@ function getPasswordInfoContainer(){
 }
 
 function getLoanLqbInfoContainer(user){
+	
+	 oldlqbUserName = user.internalUserDetail.lqbUsername;
+	 oldlqbPassword = user.internalUserDetail.lqbPassword;
+	 
 	var container = $('<div>').attr({
 		"class" : "loan-personal-info-container"
 	});
@@ -568,20 +575,18 @@ function getLoanManager(user){
 function updateLqbLMDetails(){
 	var userProfileJson = new Object();
 	userProfileJson.id = $("#userid").val();
+
 	var internalUserDetail = new Object();
 	internalUserDetail.id = internalUserDetailId;
 	internalUserDetail.lqbUsername = $("#lqb_userName").val();
 	internalUserDetail.lqbPassword = $("#lqb_userPassword").val();
-	
-	if(internalUserDetail.lqbPassword  == "" ){
-		
-		$('#lqb_userPassword').next('.err-msg').html(passwordEmptyMessage).show();
-		$('#lqb_userPassword').addClass('ce-err-input').show();
-		return false;
-	}else{
-		$('#lqb_userPassword').next('.err-msg').hide();
-		$('#lqb_userPassword').removeClass('ce-err-input');
+
+	if(oldlqbUserName!="" && oldlqbPassword!=""){
+		if(oldlqbUserName == internalUserDetail.lqbUsername && oldlqbPassword == internalUserDetail.lqbPassword){
+			return false;
+		}
 	}
+	
 	userProfileJson.internalUserDetail=internalUserDetail;
 	console.info("userProfileJson:"+userProfileJson);
 	$('#overlay-loader').show();

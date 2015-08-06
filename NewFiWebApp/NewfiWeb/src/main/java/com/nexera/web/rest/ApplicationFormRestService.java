@@ -571,16 +571,28 @@ public class ApplicationFormRestService {
 			LOG.error("lockRateData failed ", e);
 			lockRateData = "error";
 		}
-		if ((lockRateData == null || lockRateData.equals("error") || lockRateData
+	/*	if ((lockRateData == null || lockRateData.equals("error") || lockRateData
 		        .equals("")) && loanCreatedNSaved) {
 			// code to send mail to user and loan manager
 			if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
-				loanService.sendNoproductsAvailableEmail(loaAppFormVO.getLoan()
+				loanService.sendApplicationSubmitConfirmationMail(loaAppFormVO.getLoan()
 				        .getId());
 				// messageServiceHelper.generatePrivateMessage(loaAppFormVO
 				// .getLoan().getId(), LoanStatus.ratesLocked, utils
 				// .getLoggedInUser(), false);
 			}
+		}*/
+		boolean sendMailToLM = false;
+		if ((lockRateData == null || lockRateData.equals("error") || lockRateData
+		        .equals("")) && loanCreatedNSaved) {
+			sendMailToLM = true;
+			}
+		if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
+			loanService.sendApplicationSubmitConfirmationMail(loaAppFormVO.getLoan()
+			        .getId(),sendMailToLM);
+			// messageServiceHelper.generatePrivateMessage(loaAppFormVO
+			// .getLoan().getId(), LoanStatus.ratesLocked, utils
+			// .getLoggedInUser(), false);
 		}
 		return lockRateData;
 

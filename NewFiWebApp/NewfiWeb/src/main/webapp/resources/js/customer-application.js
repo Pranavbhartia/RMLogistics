@@ -2106,13 +2106,13 @@ function paintMyIncome() {
 	if(lqbFileId){
 		buttonText = next;
 	}
-   
+	
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function(event) {
     	 var isStatus=[];
     	if($(this).html()!=next){
-    	       
+    		
     	        
   	    	/*if($('.ce-option-checkbox[value=0]').hasClass('app-option-checked')){
     	    		isStatus.push( $('.ce-option-checkbox[value='+0+']'));
@@ -2139,6 +2139,9 @@ function paintMyIncome() {
     	        	showErrorToastMessage(selectAnyOne);
     	        	return false;
     	        }
+    	        
+    	       
+    	        
     	       /*var isChecked=[];
 				if($('.ce-option-checkbox').hasClass('myassets')){
 					if($('.ce-option-checkbox.myassets').hasClass('app-option-checked')){
@@ -2201,6 +2204,7 @@ function paintMyIncome() {
 	            EmployedIncomePreTax = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="beforeTax"]').val();
 	            EmployedAt = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="workPlace"]').val();
 	            EmploymentLength = $(this).find('.ce-ques-wrapper').find('.ce-options-cont').find('.ce-rp-ques-text').find('input[name="startWorking"]').val();
+	           
 	            
 	            customerEmploymentIncome1.id  = id;
 	            customerEmploymentIncome1.employedIncomePreTax = EmployedIncomePreTax;
@@ -2784,25 +2788,39 @@ $('body').on('keypress',"input[name='startLivingTime']",function(e){
 	});
 //portal updates 7.16
 $('body').on('keypress',"input[name='startWorking']",function(evt){
+
 	 var charCode = (evt.which) ? evt.which : evt.keyCode;
-	 if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46)
-	    return false;
-	 var value=$(this).val();
-	 if(value.indexOf('.') >= 0){
-		 if($(this).val().length > 3){
-
-	         return false;
-		 }
+	 if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46){
+		$("input[name='startWorking']").parent().find('.err-msg').html(message).show();
+		$("input[name='startWorking']").addClass('ce-err-input').show(); 
+		return false;
 	 }else {
-		 if($(this).val().length > 2){
+		 $("input[name='startWorking']").parent().find('.err-msg').hide();
+		 $("input[name='startWorking']").removeClass('ce-err-input');	
+	 }
+	    
+	 var value=$(this).val();
+	 if(value!=""){
+		 if(value.indexOf('.') >= 0){
+			 var val=value.split('.');
+			 if(val[1].length > 0){
+				 
+				 return false;
+			 }
+			 if($(this).val().length > 3){
 
-	         return false;
+		         return false;
+			 }
+		 }else {
+			 if($(this).val().length > 2){
+
+		         return false;
+			 }
 		 }
 	 }
-
 	
 	
-	 });
+ });
 $('body').on('focus',"input[name='ssn']",function(){
 	
 	$(this).mask("999-99-9999");

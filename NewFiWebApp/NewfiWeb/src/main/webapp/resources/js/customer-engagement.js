@@ -1,21 +1,7 @@
 //JavaScript functions for customer engagement pages
 var isNoProductFound=false;
 var historyPopStage=false;
-$(document).on('mouseover','.app-option-choice',function(){
-	$(this).parent().find('.app-option-choice').removeClass('choice-hover');
-	$(this).addClass('choice-hover');
-});
-$(document).on('mouseleave','.app-option-choice',function(){
-	$(this).removeClass('choice-hover');
-});
 
-$(document).on('mouseover','.ce-option',function(){
-	$(this).parent().find('.ce-option').removeClass('choice-hover');
-	$(this).addClass('choice-hover');
-});
-$(document).on('mouseleave','.ce-option',function(){
-	$(this).removeClass('choice-hover');
-});
 
 function getQuestionContextCEP(question, parentContainer) {
     var contxt = {

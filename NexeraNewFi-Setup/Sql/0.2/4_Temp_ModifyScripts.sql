@@ -183,4 +183,5 @@ UPDATE `newfi_schema`.`template` SET `modified_date`='2015-07-28 04:42:34', `val
 #CHange System admin first name to newfi : 24 July
 UPDATE `newfi_schema`.`user` SET `first_name`='Newfi' WHERE `id`='1';
 
-
+#Ranjitha : update template no products found
+UPDATE `newfi_schema`.`template` SET `key`='APPLICATION_SUBMIT_CONFIRMATION', `description`='newfi Application Confirmation ', `sms_text`='Your newfi application has been submitted.' WHERE `id`='15';

@@ -31,6 +31,12 @@
 				<%-- <div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber }</div> --%>
 			</div>
 		</div>
+		<!-- jira- 858-->
+		<c:choose>
+			<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
+				<div class="lp-item lp-item-quick-quote" id="lp-quick-quote" onclick="">Quick Quote</div>
+			</c:when>
+		</c:choose>
 		<%-- <div class="lp-item lp-item-agent clearfix" id="lp-work-on-loan" onclick="paintAgentDashboard('workloans');">
 			<div class="lp-item-header">work on your loan</div>
 			<div class="lp-item-body lp-agent-item1">
@@ -44,7 +50,7 @@
 				</div>
 			</div>
 		</div> --%>
-		<div class="lp-item lp-item-agent clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
+		<div class="lp-item lp-item-agent lp-item-adj clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
 			<div class="lp-item-header" id="lp-item-header"></div>
 			<!--NEXNF-810  -->
 			<%-- <!--  NEXNF-660--->
