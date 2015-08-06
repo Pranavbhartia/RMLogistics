@@ -626,17 +626,17 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										if (parsedJSON != undefined && parsedJSON.APR)
 										{
 											aprValue = parsedJSON.APR;	
+											
 										}
 									}
-									var rateAPRDisplay = "" + lockedRate + " / " + aprValue;
-									var txtRow2 = $('<div>').attr({
-										"class" : rightLeftClass + "-text" ,										
-										"data-text" : ob.workItem.workflowItemType,
-										"mileNotificationId":ob.workItem.id
-									});
-									txtRow2.html("Lock Expiration Date: "+lockExpDate);									
-									ob.stateInfoContainer.html(rateAPRDisplay);
-									ob.stateInfoContainer.append(txtRow2);
+									if (aprValue == "" || getFloatValue(aprValue) == 0){
+										fetchAPRFromLockRateData(selectedUserDetail.loanID,lockedRate,lockExpDate,ob,rightLeftClass);		
+									}
+									else{
+										printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass);
+									}
+										
+								
 								}else
 								{																									
 									ob.stateInfoContainer.html("Shop rates");									
@@ -2352,4 +2352,33 @@ function mapNotificationToMilestone(notificationType){
 				return "TEAM_STATUS";
 		
 	}
+}
+function printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass){
+	var rateAPRDisplay = "" + lockedRate + " / " + aprValue;
+	var txtRow2 = $('<div>').attr({
+		"class" : rightLeftClass + "-text" ,										
+		"data-text" : ob.workItem.workflowItemType,
+		"mileNotificationId":ob.workItem.id
+	});
+	txtRow2.html("Lock Expiration Date: "+lockExpDate);									
+	ob.stateInfoContainer.html(rateAPRDisplay);
+	ob.stateInfoContainer.append(txtRow2);
+}
+function fetchAPRFromLockRateData(loanid,lockedRate,lockExpDate,ob,rightLeftClass){
+	var data={}
+	var pullAPRData = "rest/application/fetchLockRateData/"+loanid;
+
+	ajaxRequest(pullAPRData,"GET","json",data,function(response){
+		if(response.error){
+			showToastMessage(response.error.message);
+		}else{
+			var result=response.resultObject;
+			var aprValue = "";
+			if(response.loan.lockedRateData&&response.loan.lockedRateData.APR){
+				aprValue = response.loan.lockedRateData.APR;
+			}
+			printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass);
+		}
+		
+	});
 }
