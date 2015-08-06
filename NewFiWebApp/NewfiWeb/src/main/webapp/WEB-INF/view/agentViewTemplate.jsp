@@ -73,6 +73,7 @@
 				}else {
 					$('#lp-item-header-archives').html('my archives');
 				}
+				$('#lp-my-loans').addClass('lp-item-adj');
 			}else {
 				$('#lp-item-header-archives').html('my archives');
 			}
