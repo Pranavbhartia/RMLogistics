@@ -185,3 +185,63 @@ UPDATE `newfi_schema`.`user` SET `first_name`='Newfi' WHERE `id`='1';
 
 #Ranjitha : update template no products found
 UPDATE `newfi_schema`.`template` SET `key`='APPLICATION_SUBMIT_CONFIRMATION', `description`='newfi Application Confirmation ', `sms_text`='Your newfi application has been submitted.' WHERE `id`='15';
+
+
+#Rajeswari : For Appraisal Milestones : Sub milestones
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `is_last_task`, `priority`, `parent_workflow_item_master`, `display_order`, `remind`) VALUES ('42', 'APPRAISAL_ORDERED', 'Ordered', '1', '2015-08-05 15:43:49', '-1', '2015-08-05 15:43:49', '0', '0', '18', '19', '1');
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `is_last_task`, `priority`, `parent_workflow_item_master`, `display_order`, `remind`) VALUES ('43', 'APPRAISAL_ORDERED_VIEW', 'Ordered', '2', '2015-08-05 15:43:49', '-1', '2015-08-05 15:43:49', '0', '0', '34', '14', '1');
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`=NULL WHERE `id`='18';
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='43' WHERE `id`='42';
+
+
+
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('36', 'com.nexera.newfi.workflow.tasks.AppraisalOrderManager');
+
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('37', 'com.nexera.newfi.workflow.customer.tasks.AppraisalOrderDisplayManager');
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `workflow_task`='36' WHERE `id`='42';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `workflow_task`='37' WHERE `id`='43';
+
+
+
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `is_last_task`, `priority`, `parent_workflow_item_master`, `display_order`, `remind`) VALUES ('44', 'APPRAISAL_RECEIVED', 'Received', '1', '2015-08-05 15:43:49', '-1', '2015-08-05 15:43:49', '0', '0', '18', '19', '1');
+
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `is_last_task`, `priority`, `parent_workflow_item_master`, `display_order`, `remind`) VALUES ('45', 'APPRAISAL_RECEIVED_VIEW', 'Received', '2', '2015-08-05 15:43:49', '-1', '2015-08-05 15:43:49', '0', '0', '34', '14', '1');
+
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='45' WHERE `id`='44';
+
+
+
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('38', 'com.nexera.newfi.workflow.tasks.AppraisalReceiptManager');
+
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('39', 'com.nexera.newfi.workflow.customer.tasks.AppraisalReceiptDisplayManager');
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `workflow_task`='38' WHERE `id`='44';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `workflow_task`='39' WHERE `id`='45';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `clickable`='0' WHERE `id`='43';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `clickable`='0' WHERE `id`='42';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `clickable`='0' WHERE `id`='44';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `clickable`='0' WHERE `id`='45';
+
+
+
+
+
