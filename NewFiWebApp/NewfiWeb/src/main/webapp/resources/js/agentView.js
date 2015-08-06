@@ -3175,6 +3175,7 @@ function appendCreateUserPopup() {
 	popUpWrapper.append(header).append(container);
 	$('#add-member-sel').append(popUpWrapper);
 
+
 	appendCreateUserPopupFirstName();
 	appendCreateUserPopupLastName();
 	// TODO-decide what needs to be saved for internal users and realtors
@@ -3201,16 +3202,16 @@ function appendCreateUserPopup() {
 
 				if (user.firstName == "") {
 					//showErrorToastMessage(firstNameEmptyMessage);
-					 $('#create-user-first-name').next('.admin-err-msg').html(firstNameEmptyMessage).show();
+					 $('#create-user-first-name').next('.err-msg').html(firstNameEmptyMessage).show();
 					 $('#create-user-first-name').addClass('ce-err-input').show();
 					return false;
 				}else{
-					 $('#create-user-first-name').next('.admin-err-msg').hide();
+					 $('#create-user-first-name').next('.err-msg').hide();
 					 $('#create-user-first-name').removeClass('ce-err-input');
 				} 
 				if (user.lastName == "") {
 					//showErrorToastMessage(lastNameEmptyMessage);
-					$('#create-user-last-name').next('.admin-err-msg').html(lastNameEmptyMessage).show();
+					$('#create-user-last-name').next('.err-msg').html(lastNameEmptyMessage).show();
 					$('#create-user-last-name').addClass('ce-err-input').show();
 					return false;
 				}else{
@@ -3219,23 +3220,23 @@ function appendCreateUserPopup() {
 				} 
 				if (user.emailId == "") {
 					//showErrorToastMessage(emailEmptyMessage);
-					$('#create-user-emailId').next('.admin-err-msg').html(emailEmptyMessage).show();
+					$('#create-user-emailId').next('.err-msg').html(emailEmptyMessage).show();
 					$('#create-user-emailId').addClass('ce-err-input').show();
 					return false;
 				}else{
-					$('#create-user-emailId').next('.admin-err-msg').hide();
+					$('#create-user-emailId').next('.err-msg').hide();
 					$('#create-user-emailId').removeClass('ce-err-input');
 				} 
 				if(user.emailId!="")
 				{var validationStatus=emailValidation(user.emailId);
 			      if(validationStatus){
 			    	  $('#create-user-emailId').val('');	
-			    	  $('#create-user-emailId').next('.admin-err-msg').html(invalidEmailErrorMessage).show();
+			    	  $('#create-user-emailId').next('.err-msg').html(invalidEmailErrorMessage).show();
 			    	  $('#create-user-emailId').addClass('err-input').focus();
 				  
 				  return false;
 				  }else{
-					  $('#create-user-emailId').next('.admin-err-msg').hide();
+					  $('#create-user-emailId').next('.err-msg').hide();
 					  $('#create-user-emailId').removeClass('err-input');
 				  }
 			      
@@ -3267,6 +3268,7 @@ $(document).click(function() {
 	if ($('#create-user-popup').css("display") == "block") {
 		hideCreateUserPopup();
 	}
+	
 });
 
 $(document).click(function() {
@@ -3820,11 +3822,27 @@ function showCreateUserPopup() {
 
 function hideCreateUserPopup() {
 	$('#create-user-popup').hide();
+	
+	//To remove validation
+	$('#create-user-first-name').next('.err-msg').hide();
+	$('#create-user-first-name').removeClass('ce-err-input');
+
+
+	$('#create-user-last-name').next('.err-msg').hide();
+	$('#create-user-last-name').removeClass('ce-err-input');
+
+
+	$('#create-user-emailId').next('.err-msg').hide();
+	$('#create-user-emailId').removeClass('ce-err-input');
+
+
+	$('#create-user-emailId').next('.err-msg').hide();
+	$('#create-user-emailId').removeClass('ce-err-input');
 }
 
 function appendCreateUserPopupFirstName() {
 	var ErrMessage = $('<div>').attr({
-		"class" : "admin-err-msg loan-type hide"
+		"class" : "err-msg loan-type hide"
 	});
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
@@ -3843,7 +3861,7 @@ function appendCreateUserPopupFirstName() {
 
 function appendCreateUserPopupLastName() {
 	var ErrMessage = $('<div>').attr({
-		"class" : "admin-err-msg loan-type hide"
+		"class" : "err-msg loan-type hide"
 	});
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
@@ -3925,7 +3943,7 @@ function appendCreateUserPopupZip() {
 
 function appendCreateUserPopupEmail() {
 	var ErrMessage = $('<div>').attr({
-		"class" : "admin-err-msg loan-type hide"
+		"class" : "err-msg loan-type hide"
 	});
 	var row = $('<div>').attr({
 		"class" : "create-user-popup-cont clearfix float-left"
