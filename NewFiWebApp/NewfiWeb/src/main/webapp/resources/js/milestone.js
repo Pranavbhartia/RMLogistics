@@ -630,10 +630,10 @@ function getInternalEmployeeMileStoneContext( workItem) {
 										}
 									}
 									if (aprValue == "" || getFloatValue(aprValue) == 0){
-										fetchAPRFromLockRateData(selectedUserDetail.loanID,lockedRate,lockExpDate,ob);		
+										fetchAPRFromLockRateData(selectedUserDetail.loanID,lockedRate,lockExpDate,ob,rightLeftClass);		
 									}
 									else{
-										printAPRdetails(lockedRate,aprValue,lockExpDate,ob);
+										printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass);
 									}
 										
 								
@@ -2353,7 +2353,7 @@ function mapNotificationToMilestone(notificationType){
 		
 	}
 }
-function printAPRdetails(lockedRate,aprValue,lockExpDate,ob){
+function printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass){
 	var rateAPRDisplay = "" + lockedRate + " / " + aprValue;
 	var txtRow2 = $('<div>').attr({
 		"class" : rightLeftClass + "-text" ,										
@@ -2364,7 +2364,7 @@ function printAPRdetails(lockedRate,aprValue,lockExpDate,ob){
 	ob.stateInfoContainer.html(rateAPRDisplay);
 	ob.stateInfoContainer.append(txtRow2);
 }
-function fetchAPRFromLockRateData(loanid,lockedRate,lockExpDate,ob){
+function fetchAPRFromLockRateData(loanid,lockedRate,lockExpDate,ob,rightLeftClass){
 	var data={}
 	var pullAPRData = "rest/application/fetchLockRateData/"+loanid;
 
@@ -2377,7 +2377,7 @@ function fetchAPRFromLockRateData(loanid,lockedRate,lockExpDate,ob){
 			if(response.loan.lockedRateData&&response.loan.lockedRateData.APR){
 				aprValue = response.loan.lockedRateData.APR;
 			}
-			printAPRdetails(lockedRate,aprValue,lockExpDate,ob);
+			printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass);
 		}
 		
 	});
