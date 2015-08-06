@@ -151,10 +151,17 @@ var errorMessage = "${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}";
 	</div>
 	<jsp:include page="login-inline-footer.jsp"></jsp:include>
 </body>
+
 <script>
 	$(document).ready(function(){
 		adjustLoginContainer();
 		
+		if("${status_error}"!="" && "${status_error}"!=undefined && "${status_error}"!=null){
+	        $("#errorMessage").text("${status_error}");
+			$("#errorMessage").show(); 
+
+		}
+
 		$(window).resize(function(){
 			adjustLoginContainer();
 			adjustInlineFooter();

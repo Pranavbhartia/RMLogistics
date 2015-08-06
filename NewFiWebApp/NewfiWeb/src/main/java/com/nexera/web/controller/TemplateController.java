@@ -311,12 +311,16 @@ public class TemplateController extends DefaultController {
 			if (userDetail == null) {
 				// Re direct to error page
 				throw new InvalidInputException("Invalid URL");
-			} else {
+			} else if(userDetail.getStatus() == -1){
+				mav.addObject("status_error", ErrorConstants.USER_STATUS_INACTIVE);
+				mav.setViewName("login");
+			}else {
 				// Show him the change password page and auto login him
 				UserVO userVO = User.convertFromEntityToVO(userDetail);
 				mav.addObject("userVO", userVO);
 				mav.setViewName("changePassword");
 			}
+			
 		} catch (InvalidInputException invalid) {
 			// Stay on same page
 			mav.addObject("error", ErrorConstants.LINK_EXPIRED_ERROR);

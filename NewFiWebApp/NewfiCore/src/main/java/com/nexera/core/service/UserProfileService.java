@@ -61,7 +61,7 @@ public interface UserProfileService {
 	public User createNewUser(UserVO userVO) throws InvalidInputException,
 	        UndeliveredEmailException, FatalException;
 
-	public void deleteUser(UserVO userVO) throws Exception;
+	public boolean deleteUser(UserVO userVO) throws Exception;
 
 	public User findUserByMail(String userMailAddress);
 
@@ -152,4 +152,7 @@ public interface UserProfileService {
 
 	public void sendContactAlert(UserVO user) throws InvalidInputException,
 	        UndeliveredEmailException;
+	
+	public boolean deleteUserEntries(UserVO userVO) throws Exception;
 }
+

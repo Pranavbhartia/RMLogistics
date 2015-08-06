@@ -26,6 +26,8 @@ public interface CommonConstants {
 
 	// Active status of a user
 	public static final Integer STATUS_ACTIVE = 1;
+	
+	public static final Integer STATUS_IS_DELETE = -1;
 
 	public static final Integer PAGINATION_SIZE = 5;
 
@@ -167,7 +169,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_NOT_YET_COMPLETED = "APPLICATION_NOT_YET_COMPLETED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_NOT_YET_COMPLETED_3 = "APPLICATION_NOT_YET_COMPLETED_3_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_FINISHED = "APPLICATION_FINISHED_TEMPLATE_ID";
-	public static final String TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE = "NO_PRODUCTS_AVAILABLE_TEMPLATE_ID";
+/*	public static final String TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE = "NO_PRODUCTS_AVAILABLE_TEMPLATE_ID";*/
 	public static final String TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER = "NO_PRODUCTS_AVAILABLE_LOAN_MANAGER_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_FILE_INACTIVITY = "FILE_INACTIVITY_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_CREDIT_INFO = "CREDIT_INFO_TEMPLATE_ID";
@@ -206,6 +208,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_NEW_CUSTOMER_ALERT = "NEW_CUSTOMER_ALERT";
 	public static final String PURCHASE_CONTRACT = "Purchase Contract Including Addendums and Counter-offers";
 	public static final String TEMPLATE_KEY_NAME_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "DOCUMENT_TYPE_ASSIGNMENT_FAILURE";
+	public static final String TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION = "APPLICATION_SUBMIT_CONFIRMATION";
 	
 
 	// Document type credit report.
@@ -294,6 +297,8 @@ public interface CommonConstants {
 	public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "NEWFI ALERT: Unassigned Document";
 
 	public static final String SUBJECT_RESET_PASSWORD = "Reset newfi Password";
+	
+	public static final String SUBJECT_APPLICATION_SUBMIT_COMFIRMATION = "newfi Application Confirmation";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
 
@@ -343,6 +348,7 @@ public interface CommonConstants {
 	public static final String ZIPCODE_ISNOT_VALID = "Zip code is not valid";
 	public static final String ZIPCODE_ISNOT_APPROVED ="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
 	public static final String ZIPCODE_VALID ="Valid ZipCode";
+
 
 	
 	

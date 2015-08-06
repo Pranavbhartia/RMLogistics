@@ -1784,14 +1784,17 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public void sendNoproductsAvailableEmail(Integer loanId) {
+	public void sendApplicationSubmitConfirmationMail(Integer loanId,boolean sendMailToLM) {
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		LoanVO loan = getLoanByID(loanId);
 		if (loan != null) {
+			//JIRA-860
+	/*		Template template = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);*/
 			Template template = templateService
-			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION);
 			// We create the substitutions map
 			Map<String, String[]> substitutions = new HashMap<String, String[]>();
 			substitutions.put("-name-", new String[] { loan.getUser()
@@ -1806,7 +1809,9 @@ public class LoanServiceImpl implements LoanService {
 				                + CommonConstants.SENDER_EMAIL_ID);
 			}
 			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-			emailEntity.setSubject("No Products Available");
+			//jira-680
+			/*emailEntity.setSubject("No Products Available");*/
+			emailEntity.setSubject(CommonConstants.SUBJECT_APPLICATION_SUBMIT_COMFIRMATION);
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(template.getValue());
 			List<String> ccList = new ArrayList<String>();
@@ -1824,64 +1829,65 @@ public class LoanServiceImpl implements LoanService {
 				LOG.error("Mail send failed--" + e);
 			}
 
-			EmailVO loanManagerEmailEntity = new EmailVO();
-			Template loanManagerTemplate = templateService
-			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
-			// We create the substitutions map
-			Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
-			loanManagerSubstitutions.put("-customername-", new String[] { loan
-			        .getUser().getFirstName() });
-			if (loan.getUser() != null) {
-				loanManagerEmailEntity.setSenderEmailId(loan.getUser()
-				        .getUsername() + CommonConstants.SENDER_EMAIL_ID);
-			} else {
+			if(sendMailToLM){
+				EmailVO loanManagerEmailEntity = new EmailVO();
+				Template loanManagerTemplate = templateService
+				        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
+				// We create the substitutions map
+				Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
+				loanManagerSubstitutions.put("-customername-", new String[] { loan
+				        .getUser().getFirstName() });
+				if (loan.getUser() != null) {
+					loanManagerEmailEntity.setSenderEmailId(loan.getUser()
+					        .getUsername() + CommonConstants.SENDER_EMAIL_ID);
+				} else {
+					loanManagerEmailEntity
+					        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+					                + CommonConstants.SENDER_EMAIL_ID);
+				}
+				loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
+				loanManagerEmailEntity.setSubject("No Products Available");
+
 				loanManagerEmailEntity
-				        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
-				                + CommonConstants.SENDER_EMAIL_ID);
-			}
-			loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
-			loanManagerEmailEntity.setSubject("No Products Available");
+				        .setTemplateId(loanManagerTemplate.getValue());
 
-			loanManagerEmailEntity
-			        .setTemplateId(loanManagerTemplate.getValue());
-
-			String loanManagerUsername = null;
-			String loanManagerName = null;
-			LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
-			for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
-				if (loanTeam.getUser() != null) {
-					if (loanTeam.getUser().getInternalUserDetail() != null) {
-						if (loanTeam.getUser().getInternalUserDetail()
-						        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
-						        .getRoleId()) {
-							loanManagerUsername = loanTeam.getUser()
-							        .getUsername();
-							loanManagerName = loanTeam.getUser().getFirstName()
-							        + " " + loanTeam.getUser().getLastName();
+				String loanManagerUsername = null;
+				String loanManagerName = null;
+				LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
+				for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
+					if (loanTeam.getUser() != null) {
+						if (loanTeam.getUser().getInternalUserDetail() != null) {
+							if (loanTeam.getUser().getInternalUserDetail()
+							        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+							        .getRoleId()) {
+								loanManagerUsername = loanTeam.getUser()
+								        .getUsername();
+								loanManagerName = loanTeam.getUser().getFirstName()
+								        + " " + loanTeam.getUser().getLastName();
+							}
 						}
 					}
 				}
-			}
 
-			loanManagerSubstitutions.put("-name-",
-			        new String[] { loanManagerName });
-			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
-			List<String> loanManagerccList = new ArrayList<String>();
-			if (loanManagerUsername != null) {
-				loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
-				        + "-" + loanManagerUsername + "-" + loan.getId()
-				        + CommonConstants.SENDER_EMAIL_ID);
+				loanManagerSubstitutions.put("-name-",
+				        new String[] { loanManagerName });
+				loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
+				List<String> loanManagerccList = new ArrayList<String>();
+				if (loanManagerUsername != null) {
+					loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
+					        + "-" + loanManagerUsername + "-" + loan.getId()
+					        + CommonConstants.SENDER_EMAIL_ID);
 
-				loanManagerEmailEntity.setCCList(loanManagerccList);
-			}
-
-			try {
-				sendEmailService.sendEmailForLoanManagers(
-				        loanManagerEmailEntity, loanId, loanManagerTemplate);
-			} catch (InvalidInputException e) {
-				LOG.error("Mail send failed--" + e);
-			} catch (UndeliveredEmailException e) {
-				LOG.error("Mail send failed--" + e);
+					loanManagerEmailEntity.setCCList(loanManagerccList);
+				}
+				try {
+					sendEmailService.sendEmailForLoanManagers(
+					        loanManagerEmailEntity, loanId, loanManagerTemplate);
+				} catch (InvalidInputException e) {
+					LOG.error("Mail send failed--" + e);
+				} catch (UndeliveredEmailException e) {
+					LOG.error("Mail send failed--" + e);
+				}
 			}
 		}
 	}
@@ -1892,9 +1898,13 @@ public class LoanServiceImpl implements LoanService {
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
+/*
+		Template template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);*/
 
 		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION);
+		
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { userVO.getFirstName() + " "
@@ -2207,5 +2217,14 @@ public class LoanServiceImpl implements LoanService {
 		user.setStatus(-1);
 		loanDao.saveOrUpdate(user);
 	}
+
+	@Override
+	@Transactional
+    public int updateStatusInLoanTeam(UserVO userVO) {
+	    // TODO Auto-generated method stub
+		User user=User.convertFromVOToEntity(userVO);
+		int rows = loanDao.updateStatusInLoanTeam(user);
+	    return rows;
+    }
 
 }

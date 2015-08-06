@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.dao.UserProfileDao;
 import com.nexera.common.entity.CustomerDetail;
@@ -312,6 +313,10 @@ public class UserProfileDaoImpl extends GenericDaoImpl implements
 		        && user.getInternalUserDetail().getInternaUserRoleMaster() != null) {
 			searchQuery += " and (internalUserDetail IS NULL OR (internalUserDetail.internaUserRoleMaster=:internaUserRoleMaster))";
 		}
+
+		searchQuery += " and status=" + CommonConstants.STATUS_ACTIVE;
+
+		
 		int MAX_RESULTS = 50;
 		Query query = session.createQuery(searchQuery);
 

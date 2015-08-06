@@ -171,7 +171,7 @@ public interface LoanService {
 
 	public void sendApplicationFinishedEmail(Loan loan);
 
-	public void sendNoproductsAvailableEmail(Integer loanId);
+	public void sendApplicationSubmitConfirmationMail(Integer loanId, boolean sendMailToLM);
 
 	public void createAlertForAgentAddition(int loanId);
 
@@ -209,5 +209,7 @@ public interface LoanService {
 	 * @param loanId
 	 */
 	void markLoanDeleted(int loanId);
+	
+	public int updateStatusInLoanTeam(UserVO user);
 
 }

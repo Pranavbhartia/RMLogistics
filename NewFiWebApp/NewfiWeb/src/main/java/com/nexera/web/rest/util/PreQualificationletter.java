@@ -34,6 +34,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -350,7 +351,7 @@ public class PreQualificationletter {
 				                .getInternalUserRoleMasterVO()
 				        && user.getInternalUserDetail()
 				                .getInternalUserRoleMasterVO().getRoleName()
-				                .equalsIgnoreCase("LM")) {
+				                .equalsIgnoreCase("LM") && user.getStatus()!= CommonConstants.STATUS_IS_DELETE) {
 					/* this user would be either realtor or LM */
 					internalUser = user;
 

@@ -1015,4 +1015,23 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return loan;
 	}
 
+	@Override
+    public int updateStatusInLoanTeam(User user) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE LoanTeam loan set loan.active = :status  WHERE user = :user";
+		Query query = session.createQuery(hql);
+		boolean status = false;
+		if(user.getStatus() == CommonConstants.STATUS_ACTIVE){
+			status = true;
+		}else if(user.getStatus() == CommonConstants.STATUS_INACTIVE){
+			status = false;
+		}else if(user.getStatus() == CommonConstants.STATUS_IS_DELETE){
+			status = false;
+		}
+		query.setParameter("status",status);
+		query.setParameter("user", user);
+		int rows=query.executeUpdate();
+	    return rows;
+    }
+
 }

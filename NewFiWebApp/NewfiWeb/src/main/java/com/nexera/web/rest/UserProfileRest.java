@@ -33,6 +33,7 @@ import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.PropertyFileReader;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.MobileCarriersEnum;
@@ -49,6 +50,7 @@ import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.InternalUserDetailVO;
 import com.nexera.common.vo.InternalUserRoleMasterVO;
 import com.nexera.common.vo.InternalUserStateMappingVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.UpdatePasswordVO;
 import com.nexera.common.vo.UserRoleVO;
 import com.nexera.common.vo.UserVO;
@@ -577,8 +579,8 @@ public class UserProfileRest {
 	@RequestMapping(value = "/deleteUser/{userId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO deleteUser(
 	        @PathVariable Integer userId) {
-
-		LOG.info("Delete user with user id : " + userId);
+		
+	/*	LOG.info("Delete user with user id : " + userId);
 		CommonResponseVO response = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 		try {
@@ -611,6 +613,31 @@ public class UserProfileRest {
 		} catch (Exception e) {
 			LOG.error("error and message is : " + e.getMessage());
 
+			error.setMessage(e.getMessage());
+			response.setError(error);
+		}
+		return response;*/
+		LOG.info("Delete user with user id : " + userId);
+		CommonResponseVO response = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		try {
+			
+			UserVO userVO = userProfileService.findUser(userId);
+			boolean isSuccess = userProfileService.deleteUserEntries(userVO);
+			if (isSuccess) {				
+				response.setResultObject(userVO);				
+			} else {
+				error.setMessage("Error while deletion.Please try again later");
+				response.setError(error);
+			}
+		} catch (InputValidationException e) {
+			LOG.error("error and message is : " + e.getDebugMessage());
+			error.setMessage(e.getDebugMessage());
+			response.setError(error);
+			e.getDebugMessage();
+
+		} catch (Exception e) {
+			LOG.error("error and message is : " + e.getMessage());
 			error.setMessage(e.getMessage());
 			response.setError(error);
 		}
