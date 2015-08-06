@@ -461,3 +461,22 @@ a.cus-eng-succ-mess-email {
 	color: #428bca;
 	cursor: pointer;
 }
+
+.lp-item-quick-quote {
+    height: 40px;      
+    margin: 5px auto;      
+    clear: both;      
+    display: block;            
+    line-height: 40px;      
+    color: #fff;      
+    background-color: #F47521;      
+    border: 1px #fff solid;      
+    border-radius: 3px;      
+    text-align: center;      
+    font-size: 15px;      
+    width: 211px;
+}
+
+.lp-item-adj {
+	border-top: 1px solid #dcdcdc;
+}
