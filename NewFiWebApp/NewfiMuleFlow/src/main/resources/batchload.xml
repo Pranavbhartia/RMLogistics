@@ -109,6 +109,7 @@
 		<field id="sBrokerLockOriginatorPriceBrokComp1PcFee" />
 		
 		<field id ="sApprRprtRd"/>
+		<field id ="sApprRprtOd"/> 
 		
 		<applicant>
 			<field id="aBFirstNm" />

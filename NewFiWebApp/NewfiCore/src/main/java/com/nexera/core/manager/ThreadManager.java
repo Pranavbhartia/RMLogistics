@@ -194,6 +194,7 @@ public class ThreadManager implements Runnable {
 						String lockedRate = null;
 						String docsoutDate = null;
 						String appraisalOrderedDate = null;
+						String appraisalReceivedDate = null;
 						Milestones theMilestone = null;
 						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 						if (loadResponseList != null) {
@@ -232,6 +233,12 @@ public class ThreadManager implements Runnable {
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_APPRAISAL_ORDERED)) {
 									if (loadResponseVO.getFieldValue() != null) {
 										appraisalOrderedDate = loadResponseVO
+										        .getFieldValue();
+									}
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_APPRAISAL_RECEIVED)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										appraisalReceivedDate = loadResponseVO
 										        .getFieldValue();
 									}
 								}
@@ -274,14 +281,21 @@ public class ThreadManager implements Runnable {
 								}
 							}
 							if (appraisalOrderedDate != null) {
-								List<String> workflowItems = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
-								        .get(Milestones.APPRAISAL);
+								List<String> workflowItems = WorkflowConstants.STATUS_WF_ITEM_LOOKUP
+								        .get(LoadConstants.LQB_APPRAISAL_ORDER);
 								List<WorkflowItemExec> workflowItemsExecList = itemToExecute(
 								        workflowItems, workflowItemExecList);
 								putItemsIntoExecution(workflowItemsExecList,
 								        LoadConstants.LQB_APPRAISAL_ORDER);
 							}
-
+							if (appraisalReceivedDate != null) {
+								List<String> workflowItems = WorkflowConstants.STATUS_WF_ITEM_LOOKUP
+								        .get(LoadConstants.LQB_APPRAISAL_RECEIVED);
+								List<WorkflowItemExec> workflowItemsExecList = itemToExecute(
+								        workflowItems, workflowItemExecList);
+								putItemsIntoExecution(workflowItemsExecList,
+								        LoadConstants.LQB_APPRAISAL_RECEIVED);
+							}
 							LOSLoanStatus loanStatusID = null;
 							if (currentLoanStatus == -1) {
 								LOGGER.error("Invalid/No status received from LQB ");

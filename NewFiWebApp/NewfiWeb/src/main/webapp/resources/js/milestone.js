@@ -157,7 +157,7 @@ var workFlowContext = {
 			}else{
 				var parent=JSON.parse(JSON.stringify(currentWorkItem))
 				var childList=[];
-				for(var j=i+1;j<tempList.length;j++){
+				for(var j=0;j<tempList.length;j++){
 					var currChild= tempList[j];
 					if(currChild.parentWorkflowItemExec){
 						if(currChild.parentWorkflowItemExec.id==parent.id){
@@ -492,11 +492,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 				data.userID=workFlowContext.customer.id;
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}			
-			else if (ob.workItem.workflowItemType=="VIEW_APPRAISAL"||ob.workItem.workflowItemType=="APPRAISAL_STATUS")
-			{
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				
-			}
+			
 			else if (ob.workItem.workflowItemType == "MANAGE_TEAM") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.OTHURL="rest/workflow/execute/"+ob.mileStoneId;
@@ -577,8 +573,8 @@ function getInternalEmployeeMileStoneContext( workItem) {
 									progressBarCont.append(progressBar).append(progressBarTxt);
 									ob.stateInfoContainer.append(progressBarCont);
 								}
-							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||									 
-									ob.workItem.workflowItemType == "APPRAISAL_STATUS"){								
+							}else if(ob.workItem.workflowItemType == "DISCLOSURE_STATUS"									 
+									){								
 								if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 
 									txtRow1.bind("click", function(e) {
 										milestoneChildEventHandler(e);
@@ -599,7 +595,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 
 							}
 							else if(
-									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" || ob.workItem.workflowItemType == "VIEW_APPRAISAL"){								
+									ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY" ){								
 									if(ob.workItem.stateInfo){ // State info will be an object that contains the file URL and the status 	
 										var tempOb=JSON.parse(ob.workItem.stateInfo);
 										if(tempOb != undefined && tempOb.status)

@@ -42,7 +42,7 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		LOG.debug("Execute Appraisal Manager " + objectMap);
-		String subject = null;
+
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		int loanId = Integer.parseInt(objectMap.get(
@@ -78,9 +78,8 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		int loanId = Integer.parseInt(inputMap.get(
-		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		return iWorkflowService.getRenderInfoForAppraisal(loanId);
+
+		return null;
 	}
 
 	@Override
@@ -93,30 +92,6 @@ public class AppraisalManager extends NexeraWorkflowTask implements
 	public String invokeAction(HashMap<String, Object> inputMap) {
 		// Do Nothing
 		return null;
-	}
-
-	@Override
-	public Map<String, String[]> doTemplateSubstitutions(
-	        Map<String, String[]> substitutions,
-	        HashMap<String, Object> objectMap) {
-		if (substitutions == null) {
-			substitutions = new HashMap<String, String[]>();
-		}
-		LoanVO loanVO = loanService.getLoanByID(Integer.parseInt(objectMap.get(
-		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-		if (loanVO != null) {
-			LoanTypeMasterVO loanTypeMasterVO = loanVO.getLoanType();
-			if (loanTypeMasterVO != null) {
-				if (loanTypeMasterVO.getLoanTypeCd().equalsIgnoreCase(
-				        LoanTypeMasterEnum.PUR.name())) {
-
-				} else if (loanTypeMasterVO.getLoanTypeCd().equalsIgnoreCase(
-				        LoanTypeMasterEnum.REF.name())) {
-
-				}
-			}
-		}
-		return substitutions;
 	}
 
 	@Override
