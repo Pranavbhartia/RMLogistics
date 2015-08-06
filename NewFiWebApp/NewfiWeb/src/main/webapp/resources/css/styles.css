@@ -2397,7 +2397,7 @@ input[type="button"]:focus, button:focus {
 .prof-cust-save-btn {
 	width: 150px;
 	height: 40px;
-	margin: 0 auto;
+	margin: 5px auto;
 	line-height: 40px;
 	text-align: center;
 	text-transform: uppercase;
@@ -2466,7 +2466,7 @@ input[type="button"]:focus, button:focus {
 
 .create-user-popup-cont {
 	width: 50%;
-	/* height: 50px; */
+	height: 50px;
 	line-height: 40px;
 	margin: 10px 0;
 }
