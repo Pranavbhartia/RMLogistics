@@ -143,16 +143,20 @@ function validateInputsOfMyIncomePage(element,inputVal,message,offset){
 			$(element).removeClass('ce-err-input');
 			
 			if( name=="startWorking"){
-					 if(inputVal.length > 4 || inputVal.length <= 2){
+					 if(inputVal.length > 4){
 						 $(element).next('.err-msg').html(message).show();
 						 $(element).addClass('ce-err-input').show();
 						 return false;
-					 }else{
+					 }else if(inputVal >= 100){
+						 $(element).next('.err-msg').html(message).show();
+						 $(element).addClass('ce-err-input').show();
+						 return false;
+					 }else {						 					 
 						 $(element).next('.err-msg').hide();
 						 $(element).removeClass('ce-err-input');
-
 					 }
-				 }
+				
+			 }
 
 			return true;
 		}
