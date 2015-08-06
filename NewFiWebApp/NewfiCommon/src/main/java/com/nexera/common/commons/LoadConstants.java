@@ -57,6 +57,7 @@ public class LoadConstants
     public static Integer LQB_STATUS_LOAN_WEB_CONSUMER = 14;
     
     public static Integer LQB_APPRAISAL_ORDER = 101;
+    public static Integer LQB_APPRAISAL_RECEIVED = 102;
 
 
     //Constants Related to Date Time Fields 

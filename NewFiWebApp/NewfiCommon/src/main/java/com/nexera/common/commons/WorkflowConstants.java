@@ -54,9 +54,11 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_CLOSURE_DISPLAY = "VIEW_CLOSING";
 	public static final String WORKFLOW_ITEM_AUS_STATUS = "AUS_STATUS";
 
-	public static final String WORKFLOW_ITEM_APPRAISAL_STATUS = "APPRAISAL_STATUS";
-	public static final String WORKFLOW_ITEM_VIEW_APPRAISAL = "VIEW_APPRAISAL";
-
+	public static final String WORKFLOW_ITEM_APPRAISAL_ORDERED = "APPRAISAL_ORDERED";
+	public static final String WORKFLOW_ITEM_APPRAISAL_ORDERED_VIEW = "APPRAISAL_ORDERED_VIEW";
+	public static final String WORKFLOW_ITEM_APPRAISAL_RECEIVED = "APPRAISAL_RECEIVED";
+	public static final String WORKFLOW_ITEM_APPRAISAL_RECEIVED_VIEW = "APPRAISAL_RECEIVED_VIEW";
+	
 	public static final String WORKFLOW_ITEM_APP_FEE = "APP_FEE";
 	public static final String WORKFLOW_ITEM_APP_EDU = "APP_EDU";
 
@@ -66,7 +68,8 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_CUST_ITEM_NEEDS_STATUS = "VIEW_NEEDS";
 	public static final HashMap<LOSLoanStatus, WorkItemMilestoneInfo> LQB_STATUS_MILESTONE_LOOKUP = new HashMap<LOSLoanStatus, WorkItemMilestoneInfo>();;
 
-	public static final HashMap<Milestones, List<String>> MILESTONE_WF_ITEM_LOOKUP = new HashMap<Milestones, List<String>>();;
+	public static final HashMap<Integer,List<String>> STATUS_WF_ITEM_LOOKUP = new HashMap<Integer, List<String>>();
+	public static final HashMap<Milestones, List<String>> MILESTONE_WF_ITEM_LOOKUP = new HashMap<Milestones, List<String>>();
 	private static final HashMap<LOSLoanStatus, List<Integer>> MILESTONE_ORDER_LOOKUP = new HashMap<LOSLoanStatus, List<Integer>>();;
 
 	public static final List<Integer> LQB_MONITOR_LIST = new ArrayList<Integer>(
@@ -147,6 +150,10 @@ public class WorkflowConstants {
 	
 	static {
 
+		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_APPRAISAL_ORDER,new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_APPRAISAL_ORDERED)));
+		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_APPRAISAL_RECEIVED,new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_APPRAISAL_RECEIVED)));
 		MILESTONE_WF_ITEM_LOOKUP.put(
 		        Milestones.App1003,
 		        new ArrayList<String>(Arrays
@@ -164,8 +171,8 @@ public class WorkflowConstants {
 		MILESTONE_WF_ITEM_LOOKUP.put(
 		        Milestones.APPRAISAL,
 		        new ArrayList<String>(Arrays.asList(
-		                WORKFLOW_ITEM_APPRAISAL_STATUS,
-		                WORKFLOW_ITEM_VIEW_APPRAISAL)));
+		                WORKFLOW_ITEM_APPRAISAL_ORDERED,
+		                WORKFLOW_ITEM_APPRAISAL_ORDERED_VIEW)));
 		MILESTONE_WF_ITEM_LOOKUP.put(Milestones.UW, new ArrayList<String>(
 		        Arrays.asList(WORKFLOW_ITEM_UW_STATUS, WORKFLOW_ITEM_VIEW_UW)));
 		MILESTONE_WF_ITEM_LOOKUP.put(

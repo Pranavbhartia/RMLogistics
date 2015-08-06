@@ -1185,8 +1185,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Disclsoure_Available
 			        || MasterNeedsEnum.getNeedReference(needListItem
 			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Signed_Disclosure
-			        || MasterNeedsEnum.getNeedReference(needListItem
-			                .getNeedsListMaster().getId()) == MasterNeedsEnum.Appraisal_Report) {
+			        ) {
 				changeItemStatus(loanID,
 				        MasterNeedsEnum.getNeedReference(needListItem
 				                .getNeedsListMaster().getId()));
@@ -1210,10 +1209,7 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 		} else if (masterNeed == MasterNeedsEnum.Signed_Disclosure) {
 			masterNeedKey = WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS;
 			statusToBeSent = LoanStatus.disclosureSigned;
-		} else if (masterNeed == MasterNeedsEnum.Appraisal_Report) {
-			masterNeedKey = WorkflowConstants.WORKFLOW_ITEM_APPRAISAL_STATUS;
-			statusToBeSent = LoanStatus.appraisalAvailable;
-		}
+		} 
 		if (masterNeedKey != null) {
 			WorkflowItemMaster workflowItemMaster = workflowService
 			        .getWorkflowByType(masterNeedKey);
