@@ -50,7 +50,7 @@
 				</div>
 			</div>
 		</div> --%>
-		<div class="lp-item lp-item-agent lp-item-adj clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
+		<div class="lp-item lp-item-agent clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
 			<div class="lp-item-header" id="lp-item-header"></div>
 			<!--NEXNF-810  -->
 			<%-- <!--  NEXNF-660--->
