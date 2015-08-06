@@ -7,6 +7,22 @@ var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\")
 var zipcodeRegex = /^\d{5}$/;
 var phoneRegex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
 
+$(document).on('mouseover','.app-option-choice',function(){
+	$(this).parent().find('.app-option-choice').removeClass('choice-hover');
+	$(this).addClass('choice-hover');
+});
+$(document).on('mouseleave','.app-option-choice',function(){
+	$(this).removeClass('choice-hover');
+});
+
+$(document).on('mouseover','.ce-option',function(){
+	$(this).parent().find('.ce-option').removeClass('choice-hover');
+	$(this).addClass('choice-hover');
+});
+$(document).on('mouseleave','.ce-option',function(){
+	$(this).removeClass('choice-hover');
+});
+
 function removeToastMessage(){
 
 	    	if($('#overlay-toast-txt').html()!=""){
@@ -1116,8 +1132,9 @@ function restrictChar(name){
 	$('input[name="'+name+'"]').bind('keypress', function (e) {
 	   
 	    var k = e.which;
-	    var ok = k >= 48 && k <= 57; // 0-9
-
+	    var ok = k >= 48 && k <= 57|| // 0-9
+	    k==8 ||//to allow to delte
+	    k==46;//to allow backspace
 	    if (!ok) {
 	        e.preventDefault();
 	        return false;
