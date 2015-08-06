@@ -5607,14 +5607,14 @@ a.session-login-btn {
 	line-height: 13px;
 }
 .delCustClas {
-	background: url(../images/user_del.png) no-repeat right 1px;
+	background: url(../images/user_del.png) no-repeat right center;
 	background-size: 20px;
 	cursor: pointer;
 	width: 20px;
 	height: 20px;
 	position: absolute;
 	right: 10px;
-	top:17px;
+	top:20px;
 	z-index: 2;
 }
 
