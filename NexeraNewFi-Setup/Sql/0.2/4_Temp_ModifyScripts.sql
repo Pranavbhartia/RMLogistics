@@ -245,3 +245,47 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `clickable`='0' WHERE `id`='45';
 
 
 
+#Rajeswari : For Closure
+
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('40', 'com.nexera.newfi.workflow.tasks.ClosureStatusManager');
+
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('41', 'com.nexera.newfi.workflow.customer.tasks.ClosureStatusDisplayManager');
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('46', 'CLOSURE_DOCS_ORDERED', 'Docs Ordered', '40', '1', '2015-08-06 15:43:49', '-1', '2015-08-05 15:43:49', '-1', '0', '0', '21', '0', '22', '1');
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('47', 'CLOSURE_DOCS_TITLE', 'Docs In Title', '40', '1', '2015-08-06 15:43:49', '-1', '2015-08-05 15:43:49', '-1', '0', '0', '21', '0', '23', '1');
+
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('48', 'CLOSURE_FUNDED', 'Funded', '40', '1', '2015-08-06 15:43:49', '-1', '2015-08-05 15:43:49', '-1', '0', '0', '21', '0', '24', '1');
+
+
+
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('49', 'CLOSURE_DOCS_ORDERED_DISPLAY', 'Docs Ordered', '41', '2', '2015-08-06 15:43:49', '-1', '2015-08-05 15:43:49', '-1', '0', '0', '36', '0', '22', '1');
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('50', 'CLOSURE_DOCS_TITLE_DISPLAY', 'Docs In Title', '41', '2', '2015-08-06 15:43:49', '-1', '2015-08-05 15:43:49', '-1', '0', '0', '36', '0', '23', '1');
+
+
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('51', 'CLOSURE_FUNDED_DISPLAY', 'Funded', '41', '2', '2015-08-06 15:43:49', '-1', '2015-08-05 15:43:49', '-1', '0', '0', '36', '0', '24', '1');
+
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`=NULL WHERE `id`='21';
+
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='49' WHERE `id`='46';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='50' WHERE `id`='47';
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='51' WHERE `id`='48';
+
+
+
+
+
