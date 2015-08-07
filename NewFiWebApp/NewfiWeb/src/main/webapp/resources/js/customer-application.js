@@ -2106,7 +2106,11 @@ function paintMyIncome() {
 	if(lqbFileId){
 		buttonText = next;
 	}
-	
+	if(!lqbFileId){
+	 	restrictSpecialChar("startWorking");
+    	restrictChar("startWorking");
+		
+	}
     var saveAndContinueButton = $('<div>').attr({
         "class": "cep-button-color ce-save-btn"
     }).html(buttonText).on('click', function(event) {
@@ -3735,10 +3739,18 @@ function paintCustomerApplicationPageStep4a() {
 		    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 		    		
 		    	}else{
-		    		if(ethnicity==undefined && race==undefined && sex==undefined){
+		    		if(ethnicity == undefined || ethnicity == ""){
 			    		showErrorToastMessage(yesyNoErrorMessage);
 			    		return false;
 			    	} 
+		    		if(race == "" || race == undefined){
+		    			showErrorToastMessage(yesyNoErrorMessage);
+			    		return false;
+		    		}
+		    		if(sex == "" || sex == undefined){
+		    			showErrorToastMessage(yesyNoErrorMessage);
+			    		return false;
+		    		}
 		    		
 		    	}
 		    	//govQues =appUserDetails.governmentquestion;
