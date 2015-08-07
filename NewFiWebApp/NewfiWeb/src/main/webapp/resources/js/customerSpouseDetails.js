@@ -1244,10 +1244,19 @@ function paintSpouseCustomerApplicationPageStep4b(){
 			    	if($('.ce-option-checkbox').hasClass("ce-option-checked")){
 			    		
 			    	}else{
-			    		if(ethnicity==undefined && race==undefined && sex==undefined){
+
+			    		if(ethnicity == undefined || ethnicity == ""){
 				    		showErrorToastMessage(yesyNoErrorMessage);
 				    		return false;
 				    	} 
+			    		if(race == "" || race == undefined){
+			    			showErrorToastMessage(yesyNoErrorMessage);
+				    		return false;
+			    		}
+			    		if(sex == "" || sex == undefined){
+			    			showErrorToastMessage(yesyNoErrorMessage);
+				    		return false;
+			    		}
 			    	}
 			    	appUserDetails.spouseGovernmentQuestions.ethnicity = ethnicity;
 			    	appUserDetails.spouseGovernmentQuestions.race = race;

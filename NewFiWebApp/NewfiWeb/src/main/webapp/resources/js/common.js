@@ -22,6 +22,13 @@ $(document).on('mouseover','.ce-option',function(){
 $(document).on('mouseleave','.ce-option',function(){
 	$(this).removeClass('choice-hover');
 });
+$(document).on('mouseover','.cep-button-color',function(){
+	$(this).parent().find('.app-option-choice').removeClass('choice-hover');
+	$(this).addClass('choice-hover');
+});
+$(document).on('mouseleave','.cep-button-color',function(){
+	$(this).removeClass('choice-hover');
+});
 
 function removeToastMessage(){
 
