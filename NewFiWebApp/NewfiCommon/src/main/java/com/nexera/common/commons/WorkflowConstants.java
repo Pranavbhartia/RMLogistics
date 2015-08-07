@@ -39,7 +39,6 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_TEAM_STATUS = "TEAM_STATUS";
 	public static final String WORKFLOW_ITEM_SYSTEM_EDU = "SYSTEM_EDU";
 	public static final String WORKFLOW_ITEM_RATES_EDU = "RATES_EDU";
-	public static final String WORKFLOW_ITEM_QC_STATUS = "QC_STATUS";
 	public static final String WORKFLOW_ITEM_PROFILE_INFO = "PROFILE_INFO";
 	public static final String WORKFLOW_ITEM_NEEDS_STATUS = "NEEDS_STATUS";
 	public static final String WORKFLOW_ITEM_NEEDS_EDU = "NEEDS_EDU";
@@ -52,7 +51,6 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_COMM_EDU = "COMM_EDU";
 	public static final String WORKFLOW_ITEM_CLOSURE_STATUS = "CLOSURE_STATUS";
 	public static final String WORKFLOW_ITEM_CLOSURE_DISPLAY = "VIEW_CLOSING";
-	public static final String WORKFLOW_ITEM_AUS_STATUS = "AUS_STATUS";
 
 	public static final String WORKFLOW_ITEM_APPRAISAL_ORDERED = "APPRAISAL_ORDERED";
 	public static final String WORKFLOW_ITEM_APPRAISAL_ORDERED_VIEW = "APPRAISAL_ORDERED_VIEW";

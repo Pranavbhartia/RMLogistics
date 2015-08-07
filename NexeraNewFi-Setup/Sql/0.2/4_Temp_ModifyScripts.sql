@@ -286,6 +286,11 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='50' WHERE `id`='47'
 UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='51' WHERE `id`='48';
 
 
-
+#Himanshu Matta - NEXNF-864 - Remove QC, AUS and Loan Manager Decision
+delete from loanturnaroundtime where workflow_item_id in (12, 13, 39);
+delete from milestoneturnaroundtime where workflow_item_id in (12,13,39);
+delete from workflowitemexec where workflow_item_master in (12,13,39);
+delete from workflowitemmaster where workflow_item_type in ('AUS_STATUS','QC_STATUS','LOAN_MANAGER_DECISION') and workflow_master = 1;
+delete from workflowtaskconfigmaster where id in (5,15,14);
 
 
