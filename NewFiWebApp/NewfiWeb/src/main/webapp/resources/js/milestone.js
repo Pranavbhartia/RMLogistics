@@ -293,12 +293,6 @@ var workFlowContext = {
 	getItemToAppendTo: function(newLine,inline,workflowItem){
 		if(workflowItem.workflowItemType=="CREDIT_SCORE"){
 			return inline;
-		}else if(workflowItem.workflowItemType=="AUS_STATUS"){
-			return inline;
-		}else if(workflowItem.workflowItemType=="QC_STATUS"){
-			return inline;
-		}else if(workflowItem.workflowItemType=="LOAN_MANAGER_DECISION"){
-			return inline;
 		}
 		return newLine;
 	},
@@ -319,8 +313,6 @@ var workFlowContext = {
 				"1003_COMPLETE" : { active : "ms-icn-application-fee-app-status"	, inactive : "m-not-started ms-icn-application-fee-app-status"	},
 				CREDIT_BUREAU : { active : "ms-icn-credit-status"	, inactive : "m-not-started ms-icn-credit-status"	},
 				CREDIT_SCORE : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-				AUS_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
-				QC_STATUS : { active : "ms-icn-application-fee"	, inactive : "m-not-started ms-icn-application-fee"	},
 				NEEDS_STATUS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
 				VIEW_NEEDS : { active : "ms-icn-initial-need-list"	, inactive : "m-not-started ms-icn-initial-need-list"	},
 				TEAM_STATUS : { active : "ms-icn-team"	, inactive : "m-not-started ms-icn-team"	},
@@ -517,10 +509,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 				data.userID=workFlowContext.customer.id;
 				data.loanID = workFlowContext.loanId;
 			}
-			else if(ob.workItem.workflowItemType=="LOAN_MANAGER_DECISION"){
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
-				data.loanID = workFlowContext.loanId;
-			}
+			
 			
 			
 			itemToAppendTo.append(txtRow1);
@@ -1529,12 +1518,6 @@ function addClicableClassToElement(element,workflowItem){
 		case "VIEW_NEEDS":
 			$(element).addClass("cursor-pointer");
 			break;
-		case "QC_STATUS":
-			$(element).addClass("cursor-pointer");
-			break;
-		case "LOAN_MANAGER_DECISION":
-			$(element).addClass("cursor-pointer");
-			break;
 		case "CONNECT_ONLINE_APP":
 			$(element).addClass("cursor-pointer");
 			break;
@@ -1637,10 +1620,6 @@ function appendMilestoneItem(workflowItem, childList) {
 				"data-text" : childList[index].workflowItemType
 			}).html(childList[index].displayContent);
 			childRow.append(childSpan);
-			if(childList[index].workflowItemType == "QC_STATUS"  && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == LOAN_MANAGER)
-			{
-				continue;
-			}
 			childRow.attr("WFchild",true);
 			childSpan.attr("WFchild",true);
 			childSpan.bind("click", function(e) {
@@ -1749,10 +1728,6 @@ function milestoneChildEventHandler(event) {
 	 	}else{
 	 		window.location.hash="#myLoan/lock-my-rate"	
 	 	}		
-	}else if ($(event.target).attr("data-text") == "LOAN_MANAGER_DECISION") {
-	 	event.stopPropagation();
-	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!=COMPLETED)
-			appendLoanStatusPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	}
 	else if ($(event.target).attr("data-text") == "CONTACT_YOUR_LA") {
 	 	event.stopPropagation();
@@ -1775,11 +1750,6 @@ function milestoneChildEventHandler(event) {
 					}
 			},false);
 	 	}
-	}
-	else if ($(event.target).attr("data-text") == "QC_STATUS") {
-	 	event.stopPropagation();
-	 	if(workFlowContext.mileStoneContextList[$(event.target).attr("mileNotificationId")].workItem.status!=COMPLETED)
-			appendQCPopup($(event.target),$(event.target).attr("mileNotificationId"));
 	}
 	else if ($(event.target).attr("data-text") == "APP_FEE" ) {
 	 	event.stopPropagation();
@@ -1877,7 +1847,6 @@ function removeAllPopups(){
 	removeLoanManagerPopup();
 	removeLoanStatusPopup();
 	removeAppFeeEditPopup();
-	removeQCPopup();
 	removeNotificationPopup();
 }
 
@@ -2016,92 +1985,7 @@ function removeLoanStatusPopup() {
 	$('#loan-status-popup').remove();
 }
 
-function appendQCPopup(element,milestoneId) {
-	
-	var offset = $(element).offset();
-	
-	var wrapper = $('<div>').attr({
-		"id" : "qc-popup",
-		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
-	}).css({
-		"left" : offset.left,
-		"top" : offset.top+42
-	});
-	
-	var header = $('<div>').attr({
-		"class" : "popup-header"
-	}).html("QC Status");
-	
-	var container = $('<div>').attr({
-		"class" : "popup-container"
-	});
-	
-	
-	
-	var note = $('<textarea>').attr({
-		"class" : "popup-textbox",
-		"placeholder" : "Add a comment"
-	});
-	
-	var submitBtn = $('<div>').attr({
-		"class" : "popup-save-btn float-left"
-	}).html("Save").bind('click',{"container":wrapper,"comment":note,"milestoneId":milestoneId},function(event){
-		event.stopPropagation();
-		var comment=event.data.comment.val();
-		var milestoneId=event.data.milestoneId;
-		if(comment){
-			var url="rest/workflow/invokeaction/"+milestoneId;
-			var data={};
-			data["EMAIL_RECIPIENT"]=newfiObject.user.emailId;
-			data["EMAIL_TEMPLATE_NAME"]="90d97262-7213-4a3a-86c6-8402a1375416";
-			data["EMAIL_RECIPIENT_NAME"]=newfiObject.user.displayName;
-			data["userID"]=newfiObject.user.id;
-			data["loanID"]=workFlowContext.loanId;
-			data["workflowItemExecId"]=milestoneId;
-			data["comment"]=comment;
-			data["userID"]=newfiObject.user.id;
-	 		ajaxRequest(
-				url,
-				"POST",
-				"json",
-				JSON.stringify(data),
-				function(response) {
-					if (response.error) {
-						showErrorToastMessage(response.error.message)
-					}else{
-						var contxt=workFlowContext.mileStoneContextList[milestoneId]
-						contxt.updateMilestoneView("3")
-						removeQCPopup();
-					}
-			},false);
-		}else{
-			showErrorToastMessage(selectAnOption);
-		}
-	});
-	
 
-	var cancelBtn = $('<div>').attr({
-		"class" : "popup-save-btn float-right"
-	}).html("Cancel").bind('click',function(event){
-		event.stopPropagation();
-		removeQCPopup();
-	});
-	var btnContainer = $('<div>').attr({
-        "class": "milestone-qc-btn-container"
-    });
-    btnContainer.append(submitBtn).append(cancelBtn);
-	container.append(note).append(btnContainer);
-	
-	wrapper.append(header).append(container);
-	wrapper.bind("click",function(e){
-		e.stopPropagation();
-	})
-	$('body').append(wrapper);
-}
-
-function removeQCPopup() {
-	$('#qc-popup').remove();
-}
 function appendAppFeeEditPopup(element,milestoneId) {
 	removeAppFeeEditPopup();
 	var offset = $(element).offset();
