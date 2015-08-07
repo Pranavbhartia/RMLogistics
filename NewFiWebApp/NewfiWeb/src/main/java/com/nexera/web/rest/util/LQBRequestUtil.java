@@ -825,14 +825,17 @@ public class LQBRequestUtil {
 			                .getPropertyTitleStatus()));
 			hashmap.put("applicantNoFurnish", loanAppFormVO
 			        .getGovernmentquestion().getSkipOptionalQuestion() + "");
-			hashmap.put("applicantHispanicT", getEthnicityEnum(loanAppFormVO
-			        .getGovernmentquestion().getEthnicity()));
-			hashmap = getBorrowerRace(hashmap, loanAppFormVO);
-			if ("male".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()
-			        .getSex()))
-				hashmap.put("applicantGender", "1");
-			else
-				hashmap.put("applicantGender", "2");
+			if(!(loanAppFormVO
+			        .getGovernmentquestion().getSkipOptionalQuestion())){
+				hashmap.put("applicantHispanicT", getEthnicityEnum(loanAppFormVO
+				        .getGovernmentquestion().getEthnicity()));
+				hashmap = getBorrowerRace(hashmap, loanAppFormVO);
+				if ("male".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()
+				        .getSex()))
+					hashmap.put("applicantGender", "1");
+				else
+					hashmap.put("applicantGender", "2");
+			}
 		}
 
 		return hashmap;
@@ -910,6 +913,36 @@ public class LQBRequestUtil {
 		return hashmap;
 	}
 
+	HashMap<String, String> getCoBorrowerRace(HashMap<String, String> hashmap,
+	        LoanAppFormVO loanAppFormVO) {
+
+		hashmap.put("applicationCoborrowerIsAmericanIndian", "false");
+		hashmap.put("applicationCoborrowerIsAsian", "false");
+		hashmap.put("applicationCoborrowerIsBlack", "false");
+		hashmap.put("applicationCoborrowerIsPacificIslander", "false");
+		hashmap.put("applicationCoborrowerIsWhite", "false");
+
+		if ("americanIndian".equalsIgnoreCase(loanAppFormVO
+		        .getSpouseGovernmentQuestions().getRace()))
+			hashmap.put("applicationCoborrowerIsAmericanIndian", "true");
+		else if ("nativeHawaiian".equalsIgnoreCase(loanAppFormVO
+		        .getSpouseGovernmentQuestions().getRace()))
+			hashmap.put("applicationCoborrowerIsPacificIslander", "true");
+		else if ("black".equalsIgnoreCase(loanAppFormVO.getSpouseGovernmentQuestions()
+		        .getRace()))
+			hashmap.put("applicationCoborrowerIsBlack", "true");
+		else if ("white".equalsIgnoreCase(loanAppFormVO.getSpouseGovernmentQuestions()
+		        .getRace()))
+			hashmap.put("applicationCoborrowerIsWhite", "true");
+		else if ("asian".equalsIgnoreCase(loanAppFormVO.getSpouseGovernmentQuestions()
+		        .getRace()))
+			hashmap.put("applicationCoborrowerIsWhite", "true");
+		else
+			return hashmap;
+
+		return hashmap;
+	}
+	
 	String returnYesNo(boolean key) {
 		if (key)
 			return "Yes";
@@ -951,6 +984,7 @@ public class LQBRequestUtil {
 			hashmap.put("applicationCoborrowerDecCitizen",
 			        returnYesNo(loanAppFormVO.getSpouseGovernmentQuestions()
 			                .isUSCitizen()));
+		
 			if (loanAppFormVO.getSpouseGovernmentQuestions().isUSCitizen() == false) {
 				hashmap.put("applicationCoborrowerDecResidency",
 				        returnYesNo(loanAppFormVO
@@ -973,15 +1007,19 @@ public class LQBRequestUtil {
 			hashmap.put("applicationCoborrowerNoFurnish", loanAppFormVO
 			        .getSpouseGovernmentQuestions().getSkipOptionalQuestion()
 			        + "");
-			hashmap.put("applicantHispanicT", getEthnicityEnum(loanAppFormVO
-			        .getSpouseGovernmentQuestions().getEthnicity()));
-			hashmap = getBorrowerRace(hashmap, loanAppFormVO);
-			if ("male".equalsIgnoreCase(loanAppFormVO.getGovernmentquestion()
-			        .getSex()))
-				hashmap.put("applicationCoborrowerGender", "1");
-			else {
-				hashmap.put("applicationCoborrowerGender", "2");
+			if(!(loanAppFormVO
+			        .getSpouseGovernmentQuestions().getSkipOptionalQuestion())){
+				hashmap.put("applicationCoborrowerHispanicT", getEthnicityEnum(loanAppFormVO
+				        .getSpouseGovernmentQuestions().getEthnicity()));
+				hashmap = getCoBorrowerRace(hashmap, loanAppFormVO);
+				if ("male".equalsIgnoreCase(loanAppFormVO.getSpouseGovernmentQuestions()
+				        .getSex()))
+					hashmap.put("applicationCoborrowerGender", "1");
+				else {
+					hashmap.put("applicationCoborrowerGender", "2");
+				}
 			}
+		
 
 		}
 
