@@ -16,11 +16,11 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<cxf:configuration name="CXF_AUTH_Configuration"
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
-	<http:connector name="HttpConnector" clientSoTimeout="300000"
+	<http:connector name="HttpConnector" clientSoTimeout="120000"
 		cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
-		receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="300000"
-		socketSoLinger="0" validateConnections="true" keepSendSocketOpen="true"
-		keepAlive="true">
+		receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
+		socketSoLinger="0" validateConnections="true" 
+		>
 		<reconnect />
 	</http:connector>
 	<spring:beans>
@@ -35,7 +35,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<flow name="NexeraAuthMuleFlowFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8181/authCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
-			responseTimeout="300000" keepAlive="true">
+			responseTimeout="120000">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="authenticationRestInterceptor" />
@@ -61,7 +61,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://edocs.lendingqb.com/los/webservice/authservice.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000" 
 					connector-ref="NoSessionConnector">
 					<logger message="Payload is #[message]" level="INFO" />
 					<message-properties-transformer>
@@ -85,7 +85,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/Authservice.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />

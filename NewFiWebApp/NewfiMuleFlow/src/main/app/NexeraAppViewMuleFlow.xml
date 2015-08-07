@@ -24,7 +24,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<flow name="NexeraAppViewMuleFlow" doc:name="NexeraAppViewMuleFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8383/appViewCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
-			responseTimeout="300000" keepAlive="true" >
+			responseTimeout="120000" >
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="appViewRestInterceptor" />
@@ -43,7 +43,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000" 
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -61,7 +61,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000" 
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -79,7 +79,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -97,7 +97,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST"
 					address="https://webservices.lendingqb.com/los/webservice/AppView.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
