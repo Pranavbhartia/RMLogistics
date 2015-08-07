@@ -26,7 +26,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<flow name="NexeraLoanMuleFlowFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
-			responseTimeout="300000" keepAlive="true">
+			responseTimeout="120000">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
@@ -46,7 +46,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<logger level="INFO" doc:name="Logger" message="#[message]" />
 				</https:outbound-endpoint>
@@ -62,7 +62,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -80,7 +80,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -98,7 +98,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -131,7 +131,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -148,7 +148,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -165,7 +165,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -182,7 +182,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
@@ -199,7 +199,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://webservices.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 				</https:outbound-endpoint>
 			</when>
@@ -214,7 +214,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 				<https:outbound-endpoint exchange-pattern="request-response"
 					method="POST" address="https://edocs.lendingqb.com/los/webservice/Loan.asmx"
-					doc:name="HTTP" responseTimeout="300000" keepAlive="true"
+					doc:name="HTTP" responseTimeout="120000"
 					connector-ref="NoSessionConnector">
 					<message-properties-transformer>
 						<delete-message-property key="cookies" />
