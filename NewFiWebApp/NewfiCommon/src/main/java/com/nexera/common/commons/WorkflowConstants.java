@@ -301,9 +301,25 @@ public class WorkflowConstants {
 		        .put(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING,
 		                new WorkItemMilestoneInfo(
 		                        Milestones.UW,
-		                        MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
+		                        STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID()),
 		                        MILESTONE_ORDER_LOOKUP
 		                                .get(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING)));
+		
+		LQB_STATUS_MILESTONE_LOOKUP
+        .put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED,
+                new WorkItemMilestoneInfo(
+                        Milestones.UW,
+                        STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID()),
+                        MILESTONE_ORDER_LOOKUP
+                                .get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED)));
+		
+		LQB_STATUS_MILESTONE_LOOKUP
+        .put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED,
+                new WorkItemMilestoneInfo(
+                        Milestones.UW,
+                        STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID()),
+                        MILESTONE_ORDER_LOOKUP
+                                .get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED)));
 
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,
@@ -346,12 +362,7 @@ public class WorkflowConstants {
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED)));
 
-		LQB_STATUS_MILESTONE_LOOKUP.put(
-		        LOSLoanStatus.LQB_STATUS_LOAN_DENIED,
-		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
-		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
-		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED)));
+		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
