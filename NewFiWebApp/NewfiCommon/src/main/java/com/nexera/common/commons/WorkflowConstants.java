@@ -35,6 +35,15 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_UW_STATUS = "UW_STATUS";
 	public static final String WORKFLOW_ITEM_VIEW_UW = "VIEW_UW";
 	public static final String WORKFLOW_ITEM_MANAGE_TEAM = "MANAGE_TEAM";
+	
+	public static final String WORKFLOW_ITEM_UW_SUBMITTED = "UW_SUBMITTED";
+	public static final String WORKFLOW_ITEM_UW_REVIEWED = "UW_REVIEWED";
+	public static final String WORKFLOW_ITEM_UW_APPROVED = "UW_APPROVED";
+	
+	public static final String WORKFLOW_ITEM_UW_SUBMITTED_DISPLAY = "UW_SUBMITTED_DISPLAY";
+	public static final String WORKFLOW_ITEM_UW_REVIEWED_DISPLAY = "UW_REVIEWED_DISPLAY";
+	public static final String WORKFLOW_ITEM_UW_APPROVED_DISPLAT = "UW_APPROVED_DISPLAT";
+	
 
 	public static final String WORKFLOW_ITEM_TEAM_STATUS = "TEAM_STATUS";
 	public static final String WORKFLOW_ITEM_SYSTEM_EDU = "SYSTEM_EDU";
@@ -172,6 +181,18 @@ public class WorkflowConstants {
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_CLOSURE_FUNDED)));
 		
+		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_UW_SUBMITTED)));
+		
+		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_UW_REVIEWED)));
+		
+		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_UW_REVIEWED)));
+	
+		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_UW_APPROVED)));
+		
 		MILESTONE_WF_ITEM_LOOKUP.put(
 		        Milestones.App1003,
 		        new ArrayList<String>(Arrays
@@ -191,8 +212,7 @@ public class WorkflowConstants {
 		        new ArrayList<String>(Arrays.asList(
 		                WORKFLOW_ITEM_APPRAISAL_ORDERED,
 		                WORKFLOW_ITEM_APPRAISAL_ORDERED_VIEW)));
-		MILESTONE_WF_ITEM_LOOKUP.put(Milestones.UW, new ArrayList<String>(
-		        Arrays.asList(WORKFLOW_ITEM_UW_STATUS, WORKFLOW_ITEM_VIEW_UW)));
+
 		MILESTONE_WF_ITEM_LOOKUP.put(
 		        Milestones.LOAN_CLOSURE,
 		        new ArrayList<String>(Arrays.asList(
