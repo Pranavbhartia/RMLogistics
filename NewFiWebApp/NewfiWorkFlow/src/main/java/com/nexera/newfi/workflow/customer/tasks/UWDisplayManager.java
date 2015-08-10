@@ -31,18 +31,7 @@ public class UWDisplayManager implements IWorkflowTaskExecutor {
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		try {
-			LOG.debug("Inside method renderStateInfo");
-			Loan loan = new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
-			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
-			        Milestones.UW.getMilestoneKey());
-			return mileStone.getComments().toString();
-		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			return "";
-		}
+		return null;
 	}
 
 	@Override

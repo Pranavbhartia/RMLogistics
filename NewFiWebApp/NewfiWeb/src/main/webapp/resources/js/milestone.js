@@ -461,11 +461,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 					milestoneChildEventHandler(e);
 				});
 			}
-			else if (ob.workItem.workflowItemType=="UW_STATUS")
-			{
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				
-			}			
+					
 			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
 			{
 				data.loanID = workFlowContext.loanId;

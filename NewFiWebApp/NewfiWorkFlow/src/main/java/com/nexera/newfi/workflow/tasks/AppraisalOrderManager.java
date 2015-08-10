@@ -43,7 +43,7 @@ public class AppraisalOrderManager extends NexeraWorkflowTask implements
 			Loan loan = new Loan(loanId);
 			LoanMilestone lm = loanService.findLoanMileStoneByLoan(loan,
 			        Milestones.APPRAISAL.getMilestoneKey());
-			if (lm == null) {
+			if (lm == null || ( lm != null && !mileStoneStatus.equals(lm.getComments()))) {
 				iWorkflowService.updateNexeraMilestone(loanId,
 				        Milestones.APPRAISAL.getMilestoneID(), mileStoneStatus);
 			}
