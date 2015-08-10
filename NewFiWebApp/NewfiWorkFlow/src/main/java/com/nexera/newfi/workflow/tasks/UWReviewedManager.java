@@ -4,13 +4,14 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
-
+@Component
 public class UWReviewedManager implements IWorkflowTaskExecutor{
 	@Autowired
 	private LoanService loanService;

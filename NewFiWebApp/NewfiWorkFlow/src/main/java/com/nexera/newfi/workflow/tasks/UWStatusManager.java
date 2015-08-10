@@ -2,9 +2,12 @@ package com.nexera.newfi.workflow.tasks;
 
 import java.util.HashMap;
 
+import org.springframework.stereotype.Component;
+
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
+@Component
 public class UWStatusManager extends NexeraWorkflowTask implements
         IWorkflowTaskExecutor {
 
