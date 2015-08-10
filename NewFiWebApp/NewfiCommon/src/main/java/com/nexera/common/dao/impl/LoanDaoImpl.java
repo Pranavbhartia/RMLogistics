@@ -361,6 +361,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			criteria.setProjection(Projections.projectionList().add(
 			        Projections.groupProperty("loan.id")));
 			criteria.addOrder(Order.desc("loan.modifiedDate"));
+			criteria.add(Restrictions.eq("active", true));
 			// If the user is Sales manager, retrieve all loans
 			parseUserModel = (User) this.load(User.class,
 			        parseUserModel.getId());
