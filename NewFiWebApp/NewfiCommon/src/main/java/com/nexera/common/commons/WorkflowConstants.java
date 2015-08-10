@@ -354,14 +354,6 @@ public class WorkflowConstants {
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_OUT)));
 		
-
-		LQB_STATUS_MILESTONE_LOOKUP.put(
-		        LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED,
-		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
-		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
-		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED)));
-
 		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN,
