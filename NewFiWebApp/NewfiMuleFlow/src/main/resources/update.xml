@@ -1,0 +1,9 @@
+<LOXmlFormat version="1.0">
+	<loan>
+		<field id="sPurchPrice">loanPurchasePrice</field>
+		<field id="sLAmtCalc">loanAmount</field>
+		<field id="sApprVal">loanApprovedValue</field>
+		<field id="sSpLien">mortageRemaining</field>
+		
+	</loan>
+</LOXmlFormat>
