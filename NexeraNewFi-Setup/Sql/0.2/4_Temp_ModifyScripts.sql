@@ -294,3 +294,41 @@ delete from workflowitemmaster where workflow_item_type in ('AUS_STATUS','QC_STA
 delete from workflowtaskconfigmaster where id in (5,15,14);
 
 
+
+
+#Rajeswari : For UW : Sub Milestones
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('42', 'com.nexera.newfi.workflow.tasks.UWSubmittedManager');
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('43', 'com.nexera.newfi.workflow.tasks.UWReviewedManager');
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('44', 'com.nexera.newfi.workflow.tasks.UWApprovedManager');
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('45', 'com.nexera.newfi.workflow.customer.tasks.UWSubmittedDisplayManager');
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('46', 'com.nexera.newfi.workflow.customer.tasks.UWReviewedDisplayManager');
+INSERT INTO `newfi_schema`.`workflowtaskconfigmaster` (`id`, `class`) VALUES ('47', 'com.nexera.newfi.workflow.customer.tasks.UWApprovedDisplayManager');
+
+
+
+#Remove onSuccess on parent.
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`=NULL WHERE `id`='20';
+
+
+#For LM
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('52', 'UW_SUBMITTED', 'Submitted', '42', '1', '2015-08-10 15:43:49', '-1', '2015-08-10 15:43:49', '-1', '0', '0', '20', '0', '25', '1');
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('53', 'UW_REVIEWED', 'Reviewed', '43', '1', '2015-08-10 15:43:49', '-1', '2015-08-10 15:43:49', '-1', '0', '0', '20', '0', '26', '1');
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('54', 'UW_APPROVED', 'Approved', '44', '1', '2015-08-10 15:43:49', '-1', '2015-08-10 15:43:49', '-1', '0', '0', '20', '0', '27', '1');
+
+
+#For Customer
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('55', 'UW_SUBMITTED_DISPLAY', 'Submitted', '45', '2', '2015-08-10 15:43:49', '-1', '2015-08-10 15:43:49', '-1', '0', '0', '35', '0', '25', '1');
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('56', 'UW_REVIEWED_DISPLAY', 'Reviewed', '46', '2', '2015-08-10 15:43:49', '-1', '2015-08-10 15:43:49', '-1', '0', '0', '35', '0', '26', '1');
+
+INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `description`, `workflow_task`, `workflow_master`, `created_date`, `created_by`, `modified_date`, `modified_by`, `is_last_task`, `priority`, `parent_workflow_item_master`, `clickable`, `display_order`, `remind`) VALUES ('57', 'UW_APPROVED_DISPLAY', 'Approved', '47', '2', '2015-08-10 15:43:49', '-1', '2015-08-10 15:43:49', '-1', '0', '0', '35', '0', '27', '1');
+
+#OnSuccess
+
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='55' WHERE `id`='53';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='56' WHERE `id`='54';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='57' WHERE `id`='55';
+
+
