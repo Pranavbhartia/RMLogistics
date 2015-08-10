@@ -143,7 +143,7 @@ INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `
 #Rajeswari : Remove Loan Advisor
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`=NULL WHERE `id`='1';
-update workflowitemexec set on_success_item = NULL where workflow_item_master=1
+update workflowitemexec set on_success_item = NULL where workflow_item_master=1;
 DELETE FROM `newfi_schema`.`workflowitemmaster` WHERE `id`='42';
 DELETE FROM `newfi_schema`.`workflowitemexec` WHERE  workflow_item_master= '42';
 DELETE FROM `newfi_schema`.`workflowtaskconfigmaster` WHERE `id`='34';
