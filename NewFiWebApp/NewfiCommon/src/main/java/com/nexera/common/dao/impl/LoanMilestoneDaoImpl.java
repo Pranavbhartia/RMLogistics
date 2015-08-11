@@ -1,6 +1,7 @@
 package com.nexera.common.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -23,6 +24,7 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
     public LoanMilestone getLqbLoanStatus(Loan loan) {
 		Session session = sessionFactory.getCurrentSession();
 		String hql = "from LoanMilestone where loan= :loan and loanMilestoneMaster IN ( :loanMilestoneMaster) order by statusUpdateTime desc, order desc";
+		
 		Query qry = session.createQuery(hql);
 		qry.setParameter("loan", loan);		
 		qry.setParameterList("loanMilestoneMaster",getMileStoneListForLoanStatus());
@@ -34,19 +36,30 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
 
 	   
     }
-	public List<LoanMilestoneMaster> getMileStoneListForLoanStatus(){
+	private List<LoanMilestoneMaster> getMileStoneListForLoanStatus(){
 		List<LoanMilestoneMaster> mileStone=new ArrayList<LoanMilestoneMaster>(); 
-		
-		for(int i=1;i<9;i++){
-			LoanMilestoneMaster master=new LoanMilestoneMaster();
-			master.setId(getMileStones(i).getMilestoneID());
-			mileStone.add(master);
+		int[] myIntArray = {Milestones.QC.getMilestoneID(),Milestones.LM_DECISION.getMilestoneID(),Milestones.OTHER.getMilestoneID(),Milestones.APP_FEE.getMilestoneID()};
+		List<Milestones> list = getAllMileStones();
+		int index = 0;
+			for(int i=1;i<=list.size();i++){		
+				if(i != myIntArray[index]){
+					LoanMilestoneMaster master=new LoanMilestoneMaster();
+					master.setId(getMileStones(i).getMilestoneID());
+					mileStone.add(master);					
+				}else {
+					if(index < 3){
+						index++;
+					}
+					
+				}
+				
+
 		}
 		return mileStone;
 	}
 
 	
-	public Milestones getMileStones(int inputID) {
+	private Milestones getMileStones(int inputID) {
 		Milestones mileStone = Milestones.App1003;
 		for (Milestones ms : Milestones.values()) {
 			if (ms.getMilestoneID() == inputID) {
@@ -55,6 +68,13 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
 			}
 		}
 		return mileStone;
+	}
+	
+	private List<Milestones> getAllMileStones(){
+		
+		List<Milestones> milestones = Arrays.asList(Milestones.values());		
+		return milestones;
+
 	}
 
 }

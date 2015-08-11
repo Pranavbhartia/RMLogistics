@@ -211,5 +211,8 @@ public interface LoanService {
 	void markLoanDeleted(int loanId);
 	
 	public int updateStatusInLoanTeam(UserVO user);
+	
+	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
+	        String comments);
 
 }

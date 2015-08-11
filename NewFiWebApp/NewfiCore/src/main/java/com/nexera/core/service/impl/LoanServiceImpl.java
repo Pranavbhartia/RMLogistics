@@ -412,12 +412,13 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
 
-		// Get declined , withdrawn and closed loans this user has access to.
+		// Get declined , withdrawn , closed and delete loans this user has access to.
 		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
 		        this.parseUserModel(userVO), new int[] {
 		                LoanProgressStatusMasterEnum.SMCLOSED.getStatusId(),
 		                LoanProgressStatusMasterEnum.WITHDRAWN.getStatusId(),
-		                LoanProgressStatusMasterEnum.DECLINED.getStatusId() });
+		                LoanProgressStatusMasterEnum.DECLINED.getStatusId(),
+		                LoanProgressStatusMasterEnum.DELETED.getStatusId()});
 
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
@@ -472,6 +473,10 @@ public class LoanServiceImpl implements LoanService {
 	private LoanMilestone getLqbLoanStatus(Loan loan){
 		
 		LoanMilestone loan_status=loanMilestoneDao.getLqbLoanStatus(loan);
+		if(loan_status!=null){
+			LOG.info("Loan milestone master id......................................."+loan_status.getLoanMilestoneMaster().getId());
+		}
+		
 		return loan_status;
 		
 	}
@@ -2226,5 +2231,29 @@ public class LoanServiceImpl implements LoanService {
 		int rows = loanDao.updateStatusInLoanTeam(user);
 	    return rows;
     }
+	
+	@Override
+	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
+	        String comments) {
+		LOG.debug("Inside method upadteNexeraMilestone ");
+		String status = null;
+		try {
+			Loan loan = new Loan(loanId);
+			LoanMilestone mileStone = new LoanMilestone();
+			mileStone.setLoan(loan);
+			LoanMilestoneMaster loanMilestoneMaster = new LoanMilestoneMaster();
+			loanMilestoneMaster.setId(masterMileStoneId);
+			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
+			mileStone.setComments(comments);
+			mileStone.setStatusUpdateTime(new Date());
+			LOG.debug("Saving milestone in database ");
+			saveLoanMilestone(mileStone);
+			status = WorkItemStatus.COMPLETED.getStatus();
+			return status;
+		} catch (Exception e) {
+			LOG.error("Exception caught " + e.getMessage());
+			return status;
+		}
+	}
 
 }

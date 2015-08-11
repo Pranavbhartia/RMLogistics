@@ -48,7 +48,7 @@ public class UWApprovedManager extends NexeraWorkflowTask implements
 			        Milestones.UW.getMilestoneKey());
 			if (lm == null
 			        || (lm != null && !mileStoneStatus.equals(lm.getComments()))) {
-				iWorkflowService.updateNexeraMilestone(loanId,
+				loanService.updateNexeraMilestone(loanId,
 				        Milestones.UW.getMilestoneID(), mileStoneStatus);
 			}
 		}
