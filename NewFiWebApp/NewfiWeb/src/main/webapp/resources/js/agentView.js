@@ -1281,7 +1281,7 @@ function appendTakeNoteContainer(customer) {
 	});
 
 	var col1Btn = $('<div>').attr({
-		"class" : "msg-btn-submit msg-btn-submit-adj float-right"
+		"class" : "msg-btn-submit float-right"
 	}).html("Save");
 	col1.append(col1Btn);
 	col1Btn.bind("click", {
