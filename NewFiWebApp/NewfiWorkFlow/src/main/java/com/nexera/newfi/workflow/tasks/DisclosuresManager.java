@@ -89,7 +89,7 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		if (mileStoneStatus != null) {
 			LOG.debug("Updating MS entries for " + loanId
 			        + " mileStoneStatus as " + mileStoneStatus);
-			iWorkflowService.updateNexeraMilestone(loanId,
+			loanService.updateNexeraMilestone(loanId,
 			        Milestones.DISCLOSURE.getMilestoneID(), mileStoneStatus);
 		}
 		if (flag) {

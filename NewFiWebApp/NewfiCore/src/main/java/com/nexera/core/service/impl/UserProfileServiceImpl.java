@@ -25,6 +25,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.lang.StringUtils;
+import org.aspectj.weaver.NewFieldTypeMunger;
 import org.hibernate.HibernateException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,14 +63,18 @@ import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.DisplayMessageType;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -118,6 +123,7 @@ import com.nexera.workflow.vo.WorkflowVO;
 public class UserProfileServiceImpl implements UserProfileService,
         InitializingBean {
 
+	
 	@Autowired
 	private UserProfileDao userProfileDao;
 
@@ -170,6 +176,8 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private ApplicationContext applicationContext;
+	
+
 
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
@@ -766,10 +774,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userProfileDao.updateInternalUserDetail(user);
 
 		} else {
+			String userType = userVO.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleDescription();
+			
 			throw new InputValidationException(new GenericErrorCode(
 			        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
-			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR),
-			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR);
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR+userType+" has active loans"),
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR+userType+" has active loans");
 		}
 		return canUserBeDeleted;
 	}
@@ -1978,12 +1988,33 @@ public class UserProfileServiceImpl implements UserProfileService,
 			isInternalUserDeleted = deleteUser(userVO);				
 
 		}
-		
+
 		LOG.info("To delete/change the user status to -1 in user table......................");
 		//TO change status in user table
 		userVO.setStatus(-1);
 		Integer result = updateUserStatus(userVO);
 
+		//Marking the loan status as DELETE in loanmilestone master
+		if(result > 0){
+			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
+			if(loanVO!=null){
+				  Loan loan = new Loan(loanVO.getId());
+				   LoanMilestone lm = loanService.findLoanMileStoneByLoan(loan,
+				           Milestones.DELETE.getMilestoneKey());
+				   if (lm == null) {
+				    loanService.updateNexeraMilestone(loanVO.getId(),
+				            Milestones.DELETE.getMilestoneID(),Milestones.DELETE.getMilestoneKey());
+				   }
+				   LoanProgressStatusMaster progressStatusMaster = new LoanProgressStatusMaster();
+				   progressStatusMaster.setId(LoanProgressStatusMasterEnum.DELETED.getStatusId());
+				   loan.setLoanProgressStatus(progressStatusMaster);
+				   loanService.saveLoanProgress(loan.getId(),progressStatusMaster);
+				  }
+			}else {
+				LOG.info("There was an error while deletion of user and  no of rows returned is 0............"+result);
+			}
+				 
+		
 		if (result > 0 || rows > 0 || isInternalUserDeleted) {
 			LOG.info("User deleted successfully"+userVO.getUserRole().getRoleDescription());
 			isSuccess = true;

@@ -12,9 +12,6 @@ public interface IWorkflowService {
 
 	public String updateLMReminder(CreateReminderVo createReminderVo);
 
-	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
-	        String comments);
-
 	public String getNexeraMilestoneComments(int loanId, Milestones milestone);
 
 	public void sendReminder(CreateReminderVo createReminderVo,

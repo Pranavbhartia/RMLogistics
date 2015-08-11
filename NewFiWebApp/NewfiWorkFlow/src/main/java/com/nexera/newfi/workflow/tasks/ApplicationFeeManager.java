@@ -296,7 +296,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				// And change the status of the workItem to Over Due;
 				LOG.info("The previous Milestone was completed .. So creating this Milestone"
 				        + LoanStatus.APP_PAYMENT_OVERDUE);
-				iWorkflowService.updateNexeraMilestone(loanId,
+				loanService.updateNexeraMilestone(loanId,
 				        Milestones.APP_FEE.getMilestoneID(),
 				        LoanStatus.APP_PAYMENT_OVERDUE);
 			}

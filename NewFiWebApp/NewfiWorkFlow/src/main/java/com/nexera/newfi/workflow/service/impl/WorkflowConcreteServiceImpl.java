@@ -186,30 +186,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		sendReminder(createReminderVo, currMilestone, prevMilestone);
 	}
 
-	@Override
-	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
-	        String comments) {
-		LOG.debug("Inside method upadteNexeraMilestone ");
-		String status = null;
-		try {
-			Loan loan = new Loan(loanId);
-			LoanMilestone mileStone = new LoanMilestone();
-			mileStone.setLoan(loan);
-			LoanMilestoneMaster loanMilestoneMaster = new LoanMilestoneMaster();
-			loanMilestoneMaster.setId(masterMileStoneId);
-			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
-			mileStone.setComments(comments);
-			mileStone.setStatusUpdateTime(new Date());
-			LOG.debug("Saving milestone in database ");
-			loanService.saveLoanMilestone(mileStone);
-			status = WorkItemStatus.COMPLETED.getStatus();
-			return status;
-		} catch (Exception e) {
-			LOG.error("Exception caught " + e.getMessage());
-			return status;
-		}
-	}
-
+	
 	@Override
 	public String getNexeraMilestoneComments(int loanId, Milestones milestone) {
 		String comments = null;
