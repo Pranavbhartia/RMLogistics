@@ -2790,41 +2790,20 @@ $('body').on('keypress',"input[name='startLivingTime']",function(e){
         }
 
 	});
-//portal updates 7.16
-$('body').on('keypress',"input[name='startWorking']",function(evt){
+$('body').on('keydown',"input[name='startWorking']",function(evt)
+{
+	var browser=navigator.userAgent.search("Firefox");
+	var safari=navigator.userAgent.indexOf("Safari");
+	if(browser > -1||safari > -1){
+		var k = (evt.which) ? evt.which : evt.keyCode;  
+	    if(k == 8){
+	    	$('input[name="startWorking"]').val('');
+	    	return false;
+	    }
+	}
+ 
+});
 
-	 var charCode = (evt.which) ? evt.which : evt.keyCode;
-	 if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46){
-		$("input[name='startWorking']").parent().find('.err-msg').html(message).show();
-		$("input[name='startWorking']").addClass('ce-err-input').show(); 
-		return false;
-	 }else {
-		 $("input[name='startWorking']").parent().find('.err-msg').hide();
-		 $("input[name='startWorking']").removeClass('ce-err-input');	
-	 }
-	    
-	 var value=$(this).val();
-	 if(value!=""){
-		 if(value.indexOf('.') >= 0){
-			 var val=value.split('.');
-			 if(val[1].length > 0){
-				 
-				 return false;
-			 }
-			 if($(this).val().length > 3){
-
-		         return false;
-			 }
-		 }else {
-			 if($(this).val().length > 2){
-
-		         return false;
-			 }
-		 }
-	 }
-	
-	
- });
 $('body').on('focus',"input[name='ssn']",function(){
 	
 	$(this).mask("999-99-9999");
