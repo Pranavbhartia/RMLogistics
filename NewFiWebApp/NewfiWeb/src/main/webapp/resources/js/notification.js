@@ -268,7 +268,7 @@ function getNotificationContext(loanId, userId) {
 			var alertTime = '';
 
 			if (notification.remindOn)
-				alertTime = "<div class = 'not-btn-sus'>"+getTimeElapsedString(notification.remindOn)+"</div>";
+				alertTime = "<div class = 'notification-time'>"+getTimeElapsedString(notification.remindOn)+"</div>";
 			var notificationEle=$('<div>').attr({
 					"class" : "lp-alert-item-container clearfix",
 					"id" : "LNID"+ notification.id
