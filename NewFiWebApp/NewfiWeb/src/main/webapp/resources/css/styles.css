@@ -2257,7 +2257,8 @@ input[type="button"]:focus, button:focus {
 
 .newfi-team-wrapper {
 	margin: 20px 0;
-	padding-bottom: 120px;
+	/* padding-bottom: 120px; */
+	padding-bottom: 180px;
 }
 
 .newfi-team-header {

@@ -20,7 +20,8 @@ LOAN_ENUM = {
 	IN_PROGRESS : "IN PROGRESS",
 	CLOSED : "CLOSED",
 	WITHDRAWN : "WITHDRAWN",
-	DECLINED : "DECLINED"
+	DECLINED : "DECLINED",
+	DELETE : "DELETE"
 };
 
 $(document).on('click',"#cus-prof-popup",function(){
@@ -300,11 +301,11 @@ function paintAgentDashboardRightPanel(data) {
 		"id" : "filter-drop-down",
 		"class" : "filter-wrapper hide"
 	});
-	var dropDownItemArray;
+	var dropDownItemArray="";
 	if (currentLoanType == "myloans") {
 		dropDownItemArray = [ "ALL", "NEW_LOAN", "IN_PROGRESS" ];
 	} else if (currentLoanType == "archivesloans") {
-		dropDownItemArray = [ "ALL", "CLOSED", "WITHDRAWN", "DECLINED" ];
+		dropDownItemArray = [ "ALL", "CLOSED", "WITHDRAWN", "DECLINED","DELETE"];
 	}
 
 	for (var i = 0; i < dropDownItemArray.length; i++) {
@@ -595,9 +596,10 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 
 			var loan_status=customer.lqbLoanStatus;
 			if(loan_status==""||loan_status==null||loan_status==undefined){
+				
 				loan_status="-";
 			}
-
+			
 			var col4 = $('<div>').attr({
 				"class" : "leads-container-tc4 leads-container-tc4-realtor float-left"
 			}).html(loan_status);

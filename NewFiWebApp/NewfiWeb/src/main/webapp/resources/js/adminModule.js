@@ -819,6 +819,19 @@ function getAdminTeamListTableRow(user) {
 		
 		});
 
+		var canBeDeleted = false;
+		if(user.userRole.label == "Internal"){
+			if(user.internalUserDetail.internalUserRoleMasterVO.roleName == "SM"){
+				canBeDeleted = false;
+			}else {
+				canBeDeleted = true;
+			}
+		}else if(user.userRole.id==4){
+			canBeDeleted = false;
+		}else {
+			canBeDeleted = true;
+		}
+		 
 		userDelIcn.click(function(e) {
 			var userID = $(this).attr("userid");
 			e.stopImmediatePropagation();
@@ -834,7 +847,7 @@ function getAdminTeamListTableRow(user) {
 				}
 			}
 		}*/
-		if(user.userRole.id!=4){
+		if(canBeDeleted){
 			trCol5.append(userDelIcn);
 		}
 		

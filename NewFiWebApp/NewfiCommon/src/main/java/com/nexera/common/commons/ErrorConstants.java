@@ -2,7 +2,8 @@ package com.nexera.common.commons;
 
 public interface ErrorConstants {
 
-	public static final String LOAN_MANAGER_DELETE_ERROR = "Cannot Delete: loan advisor has active loans";
+	public static final String LOAN_MANAGER_DELETE_ERROR = "Cannot Delete: ";
+
 
 	public static final String FORGET_PASSWORD_USER_EMPTY = "We�re sorry, the email you entered does not exist.";
 
