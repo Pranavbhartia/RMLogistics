@@ -488,6 +488,7 @@ function redirectToGettingToKnowLastPage() {
 		//NEXNF-635 changed the text Complete My Application to Application
 		//portal updates 7.16 changed the text Application to Complete Application 
 			removedKnwoNewFi = true;
+            updateNotificationView();
 			finishedTutorial(newfiObject.applicationKnowNewfi,"home.do#myLoan/my-application");
 	        newfiObject.applicationKnowNewfi=undefined;
 
