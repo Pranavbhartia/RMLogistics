@@ -1845,9 +1845,23 @@ input[type="button"]:focus, button:focus {
 	background-color: #fafafa;
 }
 
-.alert-txt {
+/* .alert-txt {
 	min-height: 20px;
     word-break: break-word;
+} */
+
+.alert-txt {
+    min-height: 20px;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-height: 23px;
+    max-height: 100px;
+    cursor: help;
 }
 
 .alerts-count {
@@ -1901,8 +1915,8 @@ input[type="button"]:focus, button:focus {
 	padding: 15px 5px 10px;
 	position: relative;
 }
-
-.leads-container-tr .cus-name,.leads-container-tr .leads-container-tc5,.leads-container-tr .leads-container-tc7{
+/* .leads-container-tr .leads-container-tc5 */
+.leads-container-tr .cus-name,.leads-container-tr .leads-container-tc7{
 	cursor: pointer;
 }
 
@@ -2002,7 +2016,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .alert-container-lc {
-	max-width: 80%;
+	/* max-width: 80%; */
+	max-width: 65%;
 }
 
 .alert-edit-btn {

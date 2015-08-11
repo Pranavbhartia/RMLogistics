@@ -690,12 +690,12 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 		/*	var col4 = $('<div>').attr({
 				"class" : "leads-container-tc4 float-left"
 			}).html(customer.processor)*/
-			var creditScore = customer.credit_score;
+/*			var creditScore = customer.credit_score;
 			if (userIsRealtor())
 			{
 				creditScore = "-";
-			}
-			var addClickEvent=checkCreditScoreAval(creditScore);
+			}*/
+/*			var addClickEvent=checkCreditScoreAval(creditScore);*/
 			 // jira-811,810
 			var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
 					customer.loanInitiatedOn));
@@ -709,14 +709,14 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 	/*		var col5 = $('<div>').attr({
 				"class" : "leads-container-tc5 float-left"
 			}).html(creditScore);*/
-			if(addClickEvent){
+			/*if(addClickEvent){
 				col5.bind("click",{"url":"rest/loan/creditReport/"+customer.loanID},function(e){
 					if($(e.target).hasClass('creditScoreClickableClass'))
 						return;
 					var url=e.data.url;
 					window.open(url, '_blank');
 				})
-			}
+			}*/
 			 // jira-811,810
 			var date=customer.time.slice(0,10);
 			var time=customer.time.slice(11);
@@ -954,7 +954,8 @@ function appendRecentAlertContainer(alerts, contxt, existingWrapper) {
 				"class" : "alert-container-lc float-left"
 			});
 			var alertTxt = $('<div>').attr({
-				"class" : "alert-txt"
+				"class" : "alert-txt",
+				"title" : alertData
 			}).html(alertData);
 			addClickHandlerToNotification(alertTxt,alerts[i]);
 			var alertBtnRow = $('<div>').attr({
