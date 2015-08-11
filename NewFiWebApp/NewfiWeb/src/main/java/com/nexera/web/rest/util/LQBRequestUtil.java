@@ -813,7 +813,7 @@ public class LQBRequestUtil {
 				hashmap.put("applicantDecResidency", returnYesNo(loanAppFormVO
 				        .getGovernmentquestion().getPermanentResidentAlien()));
 			} else {
-				hashmap.put("applicationCoborrowerDecResidency", "No");
+				hashmap.put("applicantDecResidency", "No");
 			}
 			hashmap.put("applicantDecOcc", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isOccupyPrimaryResidence()));
