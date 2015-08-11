@@ -362,13 +362,30 @@ input[type="button"]:focus, button:focus {
 	font-size: 11px;
 }
 
-.lp-alert-item {
+/* .lp-alert-item {
 	width: 190px;
 	padding: 10px 20px 10px 40px;
 	background: url(../images/alert.png) no-repeat;
 	background-position: 10px center;
 	font-family: 'opensanssemibold';
-	word-wrap: break-word;/*NEXNF-700  */
+	word-wrap: break-word;NEXNF-700 
+} */
+
+.lp-alert-item {
+    width: 90%;
+    padding: 5px 10px 5px 36px;
+    background: url(../images/alert.png) no-repeat;
+    background-position: 10px center;
+    font-family: 'opensanssemibold';
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 23px;
+    max-height: 100px;
+    cursor: help;
 }
 
 .lp-alert-close-btn {
@@ -1830,6 +1847,7 @@ input[type="button"]:focus, button:focus {
 
 .alert-txt {
 	min-height: 20px;
+    word-break: break-word;
 }
 
 .alerts-count {
@@ -4123,6 +4141,7 @@ input.calc-input {
 
 .alert-popup-txt {
 	line-height: 20px;
+    word-break: break-word; 
 }
 
 .alert-popup-time {
