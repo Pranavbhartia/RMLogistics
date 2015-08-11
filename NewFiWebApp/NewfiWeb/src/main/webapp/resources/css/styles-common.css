@@ -480,3 +480,8 @@ a.cus-eng-succ-mess-email {
 .lp-item-adj {
 	border-top: 1px solid #dcdcdc;
 }
+
+.not-btn-sus {
+	width: 90%;
+	padding-left: 36px;
+}

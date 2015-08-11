@@ -192,9 +192,13 @@ function getNotificationContext(loanId, userId) {
 		populateLoanNotification : function(callback) {
 			var ob = this;
 			ob.clearLoanNotificationArea(ob);
+			var count=0;
 			for (var i = 0; i < ob.loanNotificationList.length; i++) {
+				count++;
 				var notification = ob.loanNotificationList[i];
 				ob.paintLoanNotification(notification);
+				if(count==3)
+					break;
 			}
 			$("#alertHeder").html(ob.headerText);
 			if (callback) {
@@ -249,6 +253,8 @@ function getNotificationContext(loanId, userId) {
 			var closebtn = (notification.dismissable == true ? '<div class="lp-alert-close-btn float-right" onclick="removeNotification(\'LNID'
 					+ notification.id + '\')"></div>'
 					: '');
+
+			
 			var customerName = "";
 			if (notification.loanID != 0 && selectedUserDetail
 					&& notification.loanID == selectedUserDetail.loanID) {
@@ -262,15 +268,20 @@ function getNotificationContext(loanId, userId) {
 			var alertTime = '';
 
 			if (notification.remindOn)
-				alertTime = ":  <font size='1'>"+getTimeElapsedString(notification.remindOn)+"</font>";
+				alertTime = "<div class = 'not-btn-sus'>"+getTimeElapsedString(notification.remindOn)+"</div>";
 			var notificationEle=$('<div>').attr({
 					"class" : "lp-alert-item-container clearfix",
 					"id" : "LNID"+ notification.id
 				})
-			var innerEle='<div class="lp-alert-item float-left">'
+		/*	var innerEle='<div class="lp-alert-item float-left">'
 									+ notification.content + customerName + alertTime
-									+ '</div>' + closebtn 
+									+ '</div>' + closebtn */
+			var mess=notification.content;
+			var innerEle='<div class="lp-alert-item float-left" title="'+mess+'">'
+									+ notification.content + customerName 
+									+ '</div>' + closebtn + alertTime
 			notificationEle.append(innerEle);
+
 			/*var notificationEle='<div class="lp-alert-item-container clearfix" id="LNID'
 									+ notification.id
 									+ '">'</div>'*/
@@ -474,6 +485,7 @@ function getNotificationContext(loanId, userId) {
 								if(ctx.workItem.status!="3")
 									ctx.updateMilestoneView("1");
 							}
+							updateNotificationView();
 						}
 
 					});
@@ -729,7 +741,8 @@ function getAlertNotificationRow(notification, contxt) {
 	});
 
 	var alertTxt = $('<div>').attr({
-		"class" : "alert-popup-txt"
+		"class" : "alert-popup-txt",
+		"title" : notification.content
 	}).html(notification.content);
 
 	var customerName = $('<div>').attr({
