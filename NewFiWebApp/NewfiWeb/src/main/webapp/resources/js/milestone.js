@@ -2236,7 +2236,7 @@ function printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass){
 		"data-text" : ob.workItem.workflowItemType,
 		"mileNotificationId":ob.workItem.id
 	});
-	txtRow2.html("Lock Expiration Date: "+lockExpDate);									
+	txtRow2.html("Lock Expiration : "+lockExpDate);									
 	ob.stateInfoContainer.html(rateAPRDisplay);
 	ob.stateInfoContainer.append(txtRow2);
 }
