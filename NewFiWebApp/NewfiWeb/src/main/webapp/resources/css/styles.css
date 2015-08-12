@@ -1644,6 +1644,7 @@ input[type="button"]:focus, button:focus {
 
 .lp-agent-item3 {
 	background: url(../images/agent_lp_3.png) no-repeat 5px center;
+    height: 23px;
 }
 
 .lp-item-active .lp-agent-item1 {
@@ -1656,6 +1657,7 @@ input[type="button"]:focus, button:focus {
 
 .lp-item-active .lp-agent-item3 {
 	background: url(../images/agent_lp_active_3.png) no-repeat 5px center;
+    height: 23px;
 }
 
 

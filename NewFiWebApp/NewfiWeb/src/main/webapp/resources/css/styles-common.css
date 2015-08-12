@@ -485,3 +485,13 @@ a.cus-eng-succ-mess-email {
 	width: 90%;
 	padding-left: 36px;
 }
+
+.lp-item-body-top-row-adj {
+	display: block;
+	font-family: 'opensanssemiBold';
+}
+
+.lp-my-archives,.lp-my-loan {
+    padding: 20px 5px;
+    
+}

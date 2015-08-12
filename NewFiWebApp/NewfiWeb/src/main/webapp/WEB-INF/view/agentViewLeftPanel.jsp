@@ -51,7 +51,7 @@
 			</div>
 		</div> --%>
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-loans" onclick="paintAgentDashboard('myloans');">
-			<div class="lp-item-header" id="lp-item-header"></div>
+			<div class="lp-item-header hide" id="lp-item-header"></div>
 			<!--NEXNF-810  -->
 			<%-- <!--  NEXNF-660--->
 			<c:choose>
@@ -71,19 +71,29 @@
 							<span>Transactions</span>
 						</c:when>
 						<c:otherwise>
+						<div class="lp-item-body-row lp-item-body-top-row lp-item-body-top-row-adj hide" id="internal-usr-loan-label">
+						MY PIPELINE
+					</div>
+					
+					</c:otherwise>
+<%-- 						<c:otherwise>
 							<span id="lp-new-loans">${progressVO.newLoans }</span> 
 							<span>New loans</span>
-						</c:otherwise>
+						</c:otherwise> --%>
 					</c:choose>
 				</div>
+				<c:choose>
+						<c:when test="${userVO.userRole.id eq 2 }">
 				<div class="lp-item-body-row">
 					<span id="lp-in-progress">${progressVO.inProgress }</span> <span>
 						In Progress</span>
-				</div>
+				</div> 
+				</c:when>
+				</c:choose>
 			</div>
 		</div>
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-archives" onclick="paintAgentDashboard('archivesloans');">
-			<div class="lp-item-header" id="lp-item-header-archives"></div>
+			<div class="lp-item-header hide" id="lp-item-header-archives"></div>
 			<!--NEXNF-810  -->
 			<!-- <div class="lp-item-header">my archives</div> -->
 			<div class="lp-item-body lp-agent-item3">
@@ -96,7 +106,10 @@
 					</div>
 				</c:when>
 				<c:otherwise>
-					<div class="lp-item-body-row lp-item-body-top-row">
+				<div class="lp-item-body-row lp-item-body-top-row hide" id="internal-usr-label">
+						MY ARCHIVES
+					</div>
+					<%-- <div class="lp-item-body-row lp-item-body-top-row">
 						<span id="lp-closed">${progressVO.closed }</span> <span>
 							Closed</span>
 					</div>
@@ -107,7 +120,7 @@
 					<div class="lp-item-body-row">
 						<span id="lp-declined">${progressVO.declined }</span> <span>
 							Declined</span>
-					</div>
+					</div> --%>
 				</c:otherwise>
 			</c:choose>
 			</div>

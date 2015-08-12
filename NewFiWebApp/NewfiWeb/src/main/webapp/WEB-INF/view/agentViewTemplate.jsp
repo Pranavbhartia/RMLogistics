@@ -58,24 +58,32 @@
 			}
 			//NEXNF-810
 			if(newfi.user.userRole.id==2||newfiObject.user.userRole.id==4){
+				$('#lp-item-header').show();
 				$('#lp-item-header').html('my pipeline');
 			}	else if(newfi.user.userRole.roleCd=="INTERNAL"){
-				if(newfi.user.internalUserDetail.internalUserRoleMasterVO.id==2){
+				/* if(newfi.user.internalUserDetail.internalUserRoleMasterVO.id==2){
 					$('#lp-item-header').html('pipeline');
 				}else {
 					$('#lp-item-header').html('my pipeline');
-				}
+				} */
+				$('#internal-usr-loan-label').show();
+				$('#lp-my-loans').addClass('lp-item-body-top-row-adj');
+				$('#lp-my-loans').addClass('lp-my-loan');
 			}
 			//NEXNF-810
 			if(newfi.user.userRole.roleCd=="INTERNAL"){
-				if(newfi.user.internalUserDetail.internalUserRoleMasterVO.id==2){
+				/* if(newfi.user.internalUserDetail.internalUserRoleMasterVO.id==2){
 					$('#lp-item-header-archives').html('archives');
 				}else {
 					$('#lp-item-header-archives').html('my archives');
-				}
+				} */
+				$('#internal-usr-label').show();
 				$('#lp-my-loans').addClass('lp-item-adj');
+				$('#lp-my-archives').addClass('lp-my-archives');
 			}else {
+				$('#lp-item-header-archives').show();
 				$('#lp-item-header-archives').html('my archives');
+				
 			}
 			
 			isAgentTypeDashboard = true;

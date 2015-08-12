@@ -11,6 +11,8 @@ var currentElement="";
 var isSalesManager="";
 var isLoanManager="";
 var isRealtor="";
+var isArchivedLoans = "";
+
 
 LOAN_ENUM = {
 	ALL : "ALL",
@@ -160,6 +162,7 @@ function getDashboardRightPanel() {
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
 				if(startLimit==0){
+					isArchivedLoans = false;
 					paintAgentDashboardRightPanel(response);
 				}else{
 					appendCustomers("leads-container", customerData.customers,true);
@@ -196,6 +199,7 @@ function getDashboardRightPanelForMyLoans(loanType) {
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
 				newfiObject.fetchLock=undefined;
 				if(startLimit==0){
+					isArchivedLoans = false;
 					paintAgentDashboardRightPanel(response);
 				}else{
 					if(response.resultObject&&response.resultObject.customers){
@@ -211,6 +215,7 @@ function getDashboardRightPanelForMyLoans(loanType) {
 // ajax call to get dashboard for archive loans
 function getDashboardRightPanelForArchivesLoans(loanType) {
 	var userID = newfiObject.user.id;
+	isArchivedLoans = true;
 	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET",
 			"json", {}, paintAgentDashboardRightPanel);
 }
@@ -236,8 +241,15 @@ function paintAgentDashboardRightPanel(data) {
 		leftCon.html("Pipeline");
 		
 	}*/
-	 // jira-811,810
-	leftCon.html("Pipeline");
+	//NEXNF-877
+	if(!isArchivedLoans){
+		 // jira-811,810
+		leftCon.html("Pipeline");
+	}else {
+		leftCon.html("Archives");
+	}
+	
+	
 	
 	var rightCon = $('<div>').attr({
 		"class" : "agent-customer-list-header-rc float-right clearfix"
@@ -1708,8 +1720,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	// appendLoanDetailsRow("Single Sign On", "6872604", true);
 	//jira-813
 	//appendLoanDetailsRow("Customer", "Edit", true);
-	appendLoanDetailsRow("Customer Profile", "Edit", true);
-	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
+	
 	//portal updates 7.23
 /*	if (loanDetails.userLoanStatus.loanPurpose == "Purchase") {
 		if (loanDetails.loanType.uploadedFiles != undefined) {
@@ -1779,7 +1790,21 @@ function appendCustomerLoanDetails(loanDetails) {
 	}*/
 	//appendLoanDetailsRow("Loan Status", loanDetails.status);
 	//jira-813
+	appendLoanDetailsRow("Customer Profile", "Edit", true);
 	appendLoanDetailsRow("Loan Status", loanDetails.lqbLoanStatus);
+	var ltvData = "-";
+	if(loanDetails.lockedRateData){
+		try{
+			ltvData = JSON.parse(loanDetails.lockedRateData);
+			ltvData = ltvData.yearData+" - year";
+		}catch(e){
+			ltvData = "-";
+		}
+		
+	}
+	appendLoanDetailsRow("LTV",ltvData);
+	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
+	
 	var text="Loan Number";
 	if (loanDetails.lqbInformationAvailable) {
 		appendLoanDetailsRow(text, loanDetails.lqbFileId,  true,
