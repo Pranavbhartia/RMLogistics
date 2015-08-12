@@ -362,13 +362,30 @@ input[type="button"]:focus, button:focus {
 	font-size: 11px;
 }
 
-.lp-alert-item {
+/* .lp-alert-item {
 	width: 190px;
 	padding: 10px 20px 10px 40px;
 	background: url(../images/alert.png) no-repeat;
 	background-position: 10px center;
 	font-family: 'opensanssemibold';
-	word-wrap: break-word;/*NEXNF-700  */
+	word-wrap: break-word;NEXNF-700 
+} */
+
+.lp-alert-item {
+    width: 90%;
+    padding: 5px 10px 5px 36px;
+    background: url(../images/alert.png) no-repeat;
+    background-position: 10px center;
+    font-family: 'opensanssemibold';
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 23px;
+    max-height: 100px;
+    cursor: help;
 }
 
 .lp-alert-close-btn {
@@ -1469,7 +1486,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .conversation-container-child {
-	padding: 20px;
+	padding: 20px 10px;
 	border-bottom: 1px #d4d4d4 solid;
 	background-color: #fafcfe;
 }
@@ -1828,8 +1845,23 @@ input[type="button"]:focus, button:focus {
 	background-color: #fafafa;
 }
 
-.alert-txt {
+/* .alert-txt {
 	min-height: 20px;
+    word-break: break-word;
+} */
+
+.alert-txt {
+    min-height: 20px;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-height: 23px;
+    max-height: 100px;
+    cursor: help;
 }
 
 .alerts-count {
@@ -1883,8 +1915,8 @@ input[type="button"]:focus, button:focus {
 	padding: 15px 5px 10px;
 	position: relative;
 }
-
-.leads-container-tr .cus-name,.leads-container-tr .leads-container-tc5,.leads-container-tr .leads-container-tc7{
+/* .leads-container-tr .leads-container-tc5 */
+.leads-container-tr .cus-name,.leads-container-tr .leads-container-tc7{
 	cursor: pointer;
 }
 
@@ -1984,7 +2016,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .alert-container-lc {
-	max-width: 80%;
+	/* max-width: 80%; */
+	max-width: 65%;
 }
 
 .alert-edit-btn {
@@ -4123,6 +4156,7 @@ input.calc-input {
 
 .alert-popup-txt {
 	line-height: 20px;
+    word-break: break-word; 
 }
 
 .alert-popup-time {

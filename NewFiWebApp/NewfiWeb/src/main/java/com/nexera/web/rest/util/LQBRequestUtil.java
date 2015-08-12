@@ -289,7 +289,7 @@ public class LQBRequestUtil {
 			        .getAddressStreet()
 			        || "".equalsIgnoreCase(loanAppFormVO.getUser()
 			                .getCustomerDetail().getAddressStreet())) {
-				hashmap.put("applicantAddress", "undisclosed");
+				hashmap.put("applicantAddress", "");
 			} else {
 				hashmap.put("applicantAddress", loanAppFormVO.getUser()
 				        .getCustomerDetail().getAddressStreet());
@@ -608,8 +608,7 @@ public class LQBRequestUtil {
 			        .getCustomerSpouseDetail().getSpouseDateOfBirth())));
 			hashmap.put("baseCoborrowerIncome",
 			        CalculateCoborrowerBaseIncome(loanAppFormVO));
-			hashmap.put("applicantCoborrowerAddress", loanAppFormVO
-			        .getCustomerSpouseDetail().getStreetAddress());
+			hashmap.put("applicantCoborrowerAddress","");
 			hashmap.put("applicantCoborrowerCity", loanAppFormVO
 			        .getCustomerSpouseDetail().getCity());
 			hashmap.put("applicantCoborrowerState", loanAppFormVO
@@ -684,8 +683,7 @@ public class LQBRequestUtil {
 			        .getCustomerSpouseDetail().getSpouseDateOfBirth())));
 			hashmap.put("baseCoborrowerIncome",
 			        CalculateCoborrowerBaseIncome(loanAppFormVO));
-			hashmap.put("applicantCoborrowerAddress", loanAppFormVO
-			        .getCustomerSpouseDetail().getStreetAddress());
+			hashmap.put("applicantCoborrowerAddress", "");
 			hashmap.put("applicantCoborrowerCity", loanAppFormVO
 			        .getCustomerSpouseDetail().getCity());
 			hashmap.put("applicantCoborrowerState", loanAppFormVO
@@ -813,7 +811,7 @@ public class LQBRequestUtil {
 				hashmap.put("applicantDecResidency", returnYesNo(loanAppFormVO
 				        .getGovernmentquestion().getPermanentResidentAlien()));
 			} else {
-				hashmap.put("applicationCoborrowerDecResidency", "No");
+				hashmap.put("applicantDecResidency", "No");
 			}
 			hashmap.put("applicantDecOcc", returnYesNo(loanAppFormVO
 			        .getGovernmentquestion().isOccupyPrimaryResidence()));
@@ -1050,7 +1048,7 @@ public class LQBRequestUtil {
 		        .getAddressStreet()
 		        || "".equalsIgnoreCase(loanAppFormVO.getUser()
 		                .getCustomerDetail().getAddressStreet())) {
-			hashmap.put("applicantAddress", "undisclosed");
+			hashmap.put("applicantAddress", "");
 		} else {
 			hashmap.put("applicantAddress", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressStreet());
