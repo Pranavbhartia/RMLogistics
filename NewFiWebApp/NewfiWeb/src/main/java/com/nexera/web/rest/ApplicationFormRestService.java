@@ -583,17 +583,27 @@ public class ApplicationFormRestService {
 			}
 		}*/
 		boolean sendMailToLM = false;
-		if ((lockRateData == null || lockRateData.equals("error") || lockRateData
-		        .equals("")) && loanCreatedNSaved) {
-			sendMailToLM = true;
+		if (loanCreatedNSaved) {
+			if ((lockRateData == null || lockRateData.equals("error") || lockRateData
+			        .equals("")) && loanCreatedNSaved) {
+				sendMailToLM = true;
 			}
-		if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
 			loanService.sendApplicationSubmitConfirmationMail(loaAppFormVO.getLoan()
 			        .getId(),sendMailToLM);
-			// messageServiceHelper.generatePrivateMessage(loaAppFormVO
-			// .getLoan().getId(), LoanStatus.ratesLocked, utils
-			// .getLoggedInUser(), false);
 		}
+		
+		// if ((lockRateData == null || lockRateData.equals("error") ||
+		// lockRateData
+		// .equals("")) && loanCreatedNSaved) {
+		// sendMailToLM = true;
+		// }
+		// if (loaAppFormVO != null && loaAppFormVO.getLoan() != null) {
+		// loanService.sendApplicationSubmitConfirmationMail(loaAppFormVO.getLoan()
+		// .getId(),sendMailToLM);
+		// // messageServiceHelper.generatePrivateMessage(loaAppFormVO
+		// // .getLoan().getId(), LoanStatus.ratesLocked, utils
+		// // .getLoggedInUser(), false);
+		// }
 		return lockRateData;
 
 	}
