@@ -571,7 +571,7 @@ function appendDataToNewfiTeamWrapperForAdmin(data){
 		 var users = data.resultObject;
 		  
 		   var tableRow = getAdminTeamListTableRow(users);
-		   var teamContainer = $(".admin-newfi-team-container").append(tableRow);
+		   var teamContainer = $(".admin-newfi-team-wrapper .admin-newfi-team-container").append(tableRow);
 		   EmptyTheFormFeildsInUM();
 		   showToastMessage(userCreationSuccessMessage);
 	}else{
@@ -608,6 +608,9 @@ function appendAdminPopUpDetails(title,elementID){
 }
 
 function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
+	if($('.admin-newfi-team-wrapper').length > 0){
+		$('.admin-newfi-team-wrapper').remove();
+	}
 	var users = userDetails;	
 	var wrapper = $('<div>').attr({
 		"class" : "admin-newfi-team-wrapper"
@@ -664,12 +667,12 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
             }
     	}		    
 	}
-    if(searchUser){
+    /*if(searchUser){
     	wrapper.append(container);
     }else{
     	wrapper.append(header).append(container);
-    }
-	
+    }*/
+    wrapper.append(header).append(container);
 	$('#admin-dashboard-container').append(wrapper);
 
 }
@@ -1330,8 +1333,8 @@ function showSettingsPopup(){
 function hideSettingsPopup(){
 
 	$('#alert-popup-wrapper-settings').hide();
-	
 }
+	
 
 function hideAdminUserCreatePopUp(){
 	
