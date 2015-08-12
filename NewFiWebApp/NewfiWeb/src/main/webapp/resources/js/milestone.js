@@ -877,14 +877,10 @@ function showRealtorHeaderSteps(){
 	msStep = workFlowContext.milestoneStepsLookup["VIEW_APPRAISAL"];
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 2, "Appraisal Received");
 	container.append(stepElement);	
-	var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
-	var loanApprovedLMStatusRep = "0";
-	if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
-	{
-		loanApprovedLMStatusRep = COMPLETED;
-	}
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
-	container.append(stepElement);	
+	
+	var msStep = workFlowContext.milestoneStepsLookup["UW_APPROVED_DISPLAY"]; 
+	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Loan Approved");
+	container.append(stepElement);
 	
 	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
 	var docsOutLMStatusRep = "0";
@@ -2244,10 +2240,10 @@ function fetchAPRFromLockRateData(loanid,lockedRate,lockExpDate,ob,rightLeftClas
 		if(response.error){
 			showToastMessage(response.error.message);
 		}else{
-			var result=response.resultObject;
+			var result=response;
 			var aprValue = "";
-			if(response.loan.lockedRateData&&response.loan.lockedRateData.APR){
-				aprValue = response.loan.lockedRateData.APR;
+			if(response.loan.lockedRateData&&response.loan.lockedRateData&&response.loan.lockedRateData!=""){
+				aprValue = JSON.parse(response.loan.lockedRateData).APR;
 			}
 			printAPRdetails(lockedRate,aprValue,lockExpDate,ob,rightLeftClass);
 		}
