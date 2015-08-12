@@ -189,9 +189,12 @@ public class WorkflowConstants {
 		
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_UW_REVIEWED)));
-	
+		
+		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_UW_REVIEWED)));
+			
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_UW_APPROVED)));
+                .asList(WORKFLOW_ITEM_UW_APPROVED, WORKFLOW_ITEM_UW_REVIEWED )));
 		
 		MILESTONE_WF_ITEM_LOOKUP.put(
 		        Milestones.App1003,
@@ -327,6 +330,7 @@ public class WorkflowConstants {
 		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.App1003),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED)));
+		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
 		        new WorkItemMilestoneInfo(Milestones.UW,
@@ -396,12 +400,16 @@ public class WorkflowConstants {
 		                        null,
 		                        MILESTONE_ORDER_LOOKUP
 		                                .get(LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING)));
-
-		LQB_STATUS_MILESTONE_LOOKUP.put(
-		        LOSLoanStatus.LQB_STATUS_APPROVED,
-		        new WorkItemMilestoneInfo(Milestones.LOAN_APPROVED, null,
-		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_APPROVED)));
+		
+		LQB_STATUS_MILESTONE_LOOKUP
+        .put(LOSLoanStatus.LQB_STATUS_APPROVED,
+                new WorkItemMilestoneInfo(
+                        Milestones.UW,
+                        STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID()),
+                        MILESTONE_ORDER_LOOKUP
+                                .get(LOSLoanStatus.LQB_STATUS_APPROVED)));
+		
+		
 		LQB_STATUS_MILESTONE_LOOKUP
 		        .put(LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW,
 		                new WorkItemMilestoneInfo(
