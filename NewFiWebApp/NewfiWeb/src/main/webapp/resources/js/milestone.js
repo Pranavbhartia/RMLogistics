@@ -831,7 +831,18 @@ function showProgressHeaderSteps(){
 	container.append(stepElement);	
 	
 	var msStep = workFlowContext.milestoneStepsLookup["UW_APPROVED_DISPLAY"]; 
-	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Loan Approved");
+	if (typeof msStep == 'undefined'){
+		var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
+		var loanApprovedLMStatusRep = "0";
+		if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
+		{
+			loanApprovedLMStatusRep = COMPLETED;
+		}
+		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
+	}
+	else{
+		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Loan Approved");
+	}
 	container.append(stepElement);
 	
 	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
@@ -879,7 +890,18 @@ function showRealtorHeaderSteps(){
 	container.append(stepElement);	
 	
 	var msStep = workFlowContext.milestoneStepsLookup["UW_APPROVED_DISPLAY"]; 
-	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Loan Approved");
+	if (typeof msStep == 'undefined'){
+		var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
+		var loanApprovedLMStatusRep = "0";
+		if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
+		{
+			loanApprovedLMStatusRep = COMPLETED;
+		}
+		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
+	}
+	else{
+		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Loan Approved");
+	}
 	container.append(stepElement);
 	
 	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
