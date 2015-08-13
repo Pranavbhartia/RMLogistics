@@ -523,10 +523,10 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 		var col1 = $('<div>').attr({
 			"class" : "leads-container-tc1 float-left clearfix"
 		});
-		if(newfiObject.user.userRole.id==2){
+	/*	if(newfiObject.user.userRole.id==2){
 			row.addClass('leads-container-row-realtor');
 			col1.addClass('leads-container-tc1-realtor');
-		}
+		}*/
 		var onlineStatus = $('<div>').attr({
 			"class" : "onl-status-icn float-left"
 		});
@@ -819,10 +819,10 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 	//jira-661
 	if(isRealtor){
 		var thCol1 = $('<div>').attr({
-			"class" : "leads-container-tc1 leads-container-tc1-realtor float-left"
+			"class" : "leads-container-tc1 float-left"
 		}).html("Customer");
 		
-		tableHeader.addClass('leads-container-row-realtor');
+		//tableHeader.addClass('leads-container-row-realtor');
 		var thCol2 = $('<div>').attr({
 			"class" : "leads-container-tc2 leads-container-tc2-realtor float-left"
 		}).html("Address");
@@ -840,7 +840,7 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 		}).html("Loan Advisor");
 
 		var thCol6 = $('<div>').attr({
-			"class" : "leads-container-tc6 float-left"
+			"class" : "leads-container-tc6 leads-container-tc6-realtor-header float-left"
 		}).html("Alerts");
 
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6);
@@ -4637,10 +4637,6 @@ $(document).on('click', '.delCustClas', function(e) {
 		        } else {
 		            if(response.resultObject=="Success"){
 		            	$(parentComponent).remove();
-		            	if(callback)
-		            		callback();    
-		            }else{
-		                 
 		            }
 		        }
 		    });
