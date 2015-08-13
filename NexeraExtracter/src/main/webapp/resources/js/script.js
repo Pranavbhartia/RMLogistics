@@ -611,7 +611,7 @@ function getLTVTable6(isFNMAArm) {
 	}else{
 		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
 		                   [ "Loan amount <$100k", "0.75" ] ,
-		                   [ "Loan Amount >= $275k Standard Conforming Only", "-0.25" ]
+		                   [ "Loan Amount >= $300k Standard Conforming Only", "-0.25" ]
 		                   ];
 	}
 	
