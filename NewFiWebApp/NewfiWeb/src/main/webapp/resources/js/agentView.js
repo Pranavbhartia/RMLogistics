@@ -4637,7 +4637,8 @@ $(document).on('click', '.delCustClas', function(e) {
 		        } else {
 		            if(response.resultObject=="Success"){
 		            	$(parentComponent).remove();
-		                callback();    
+		            	if(callback)
+		            		callback();    
 		            }else{
 		                 
 		            }
