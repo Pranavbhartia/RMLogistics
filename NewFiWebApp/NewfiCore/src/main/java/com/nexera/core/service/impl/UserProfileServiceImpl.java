@@ -1967,18 +1967,25 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Transactional
     public boolean deleteUserEntries(UserVO userVO) throws Exception {
 		boolean isSuccess = false;
-
 		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
-		//TO change status in loanTeam
-		//LoanVO loanVO=loanService.getActiveLoanOfUser(userVO);
 		int rows ;
 		userVO.setStatus(0);	
-		rows = loanService.updateStatusInLoanTeam(userVO);
+		rows = loanService.updateStatusInLoanTeam(User.convertFromVOToEntity(userVO));
 		
 		if(rows == 0){
 			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
 		}
-			
+
+		LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
+		if(loanVO!=null){
+			  Loan loan = new Loan(loanVO.getId());
+
+			  loanService.markLoanDeleted(loan.getId());
+			  isSuccess = true;
+			  
+
+		}
+		
 		LOG.info("To delete/change the user status to -1 in internaluser table......................");
 		
 		boolean isInternalUserDeleted = false;
@@ -1988,14 +1995,29 @@ public class UserProfileServiceImpl implements UserProfileService,
 			isInternalUserDeleted = deleteUser(userVO);				
 
 		}
+		if (isInternalUserDeleted && isSuccess) {
+			LOG.info("User deleted successfully"+userVO.getUserRole().getRoleDescription());
+			isSuccess = true;
+		}
+		/*
+		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
+		int rows ;
+		userVO.setStatus(0);	
+		rows = loanService.updateStatusInLoanTeam(userVO);
+		
+		if(rows == 0){
+			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
+		}*/
+			
+		
 
 		LOG.info("To delete/change the user status to -1 in user table......................");
 		//TO change status in user table
-		userVO.setStatus(-1);
-		Integer result = updateUserStatus(userVO);
+/*		userVO.setStatus(-1);
+		Integer result = updateUserStatus(userVO);*/
 
 		//Marking the loan status as DELETE in loanmilestone master
-		if(result > 0){
+		/*if(result > 0){
 			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
 			if(loanVO!=null){
 				  Loan loan = new Loan(loanVO.getId());
@@ -2009,6 +2031,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 				   progressStatusMaster.setId(LoanProgressStatusMasterEnum.DELETED.getStatusId());
 				   loan.setLoanProgressStatus(progressStatusMaster);
 				   loanService.saveLoanProgress(loan.getId(),progressStatusMaster);
+				 
 				  }
 			}else {
 				LOG.info("There was an error while deletion of user and  no of rows returned is 0............"+result);
@@ -2018,9 +2041,9 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (result > 0 || rows > 0 || isInternalUserDeleted) {
 			LOG.info("User deleted successfully"+userVO.getUserRole().getRoleDescription());
 			isSuccess = true;
-		}
+		}*/
 		
-	    return isSuccess;
-    }
-
+		
+		  return isSuccess;
+	}
 }

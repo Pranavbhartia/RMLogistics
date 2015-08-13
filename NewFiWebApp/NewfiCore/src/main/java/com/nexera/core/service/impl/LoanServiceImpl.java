@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2197,8 +2198,22 @@ public class LoanServiceImpl implements LoanService {
 		        .load(LoanProgressStatusMaster.class,
 		                LoanProgressStatusMasterEnum.DELETED.getStatusId());
 		loan.setLoanProgressStatus(loanProgressStatusMaster);
-		loanDao.saveOrUpdate(loan);
+		loanDao.saveOrUpdate(loan);		
+		
+		//TODO-to mark the loan as deleted in loan milestone table
+		LoanMilestone lm = findLoanMileStoneByLoan(loan,
+		           Milestones.DELETE.getMilestoneKey());
+		   if (lm == null) {
+			   LOG.info("updating the milestone in loanmile stone table to delete");
+		    updateNexeraMilestone(loan.getId(),
+		            Milestones.DELETE.getMilestoneID(),Milestones.DELETE.getMilestoneKey());
+		   }
+
 		User user = loan.getUser();
+		
+		//TODO-mark the loan inactive in loanteam
+	    updateStatusInLoanTeam(userProfileService.findUserByMail(user.getEmailId()));
+	    
 		String updatedEmail = "deletedEmail-" + user.getEmailId();
 		boolean userFound = true;
 		int count = 0;
@@ -2206,12 +2221,14 @@ public class LoanServiceImpl implements LoanService {
 
 			try {
 				User userVo = userProfileService.findUserByMail(updatedEmail);
+			
 				if (userVo != null) {
 					updatedEmail = "deletedEmail" + count + "-"
 					        + user.getEmailId();
 					count++;
 				} else {
 					userFound = false;
+					
 				}
 			} catch (DatabaseException e) {
 				// TODO Auto-generated catch block
@@ -2225,9 +2242,8 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-    public int updateStatusInLoanTeam(UserVO userVO) {
+    public int updateStatusInLoanTeam(User user) {
 	    // TODO Auto-generated method stub
-		User user=User.convertFromVOToEntity(userVO);
 		int rows = loanDao.updateStatusInLoanTeam(user);
 	    return rows;
     }

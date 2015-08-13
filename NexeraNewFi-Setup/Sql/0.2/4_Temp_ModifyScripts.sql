@@ -333,3 +333,5 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='57' WHERE `id`='54'
 
 #Ranjitha insertion of new milestone (not lqb)
 INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('14', 'DELETE', 'delete', '1');
+#Ranjitha query to make the loan_progess_status_master DELETE for old test loans
+update newfi_schema.loan  set loan_progress_status_master=8 where user in(select id from newfi_schema.user where email_id like "deletedEmail%") ;
