@@ -2210,10 +2210,7 @@ public class LoanServiceImpl implements LoanService {
 		   }
 
 		User user = loan.getUser();
-		
-		//TODO-mark the loan inactive in loanteam
-	    updateStatusInLoanTeam(userProfileService.findUserByMail(user.getEmailId()));
-	    
+    
 		String updatedEmail = "deletedEmail-" + user.getEmailId();
 		boolean userFound = true;
 		int count = 0;
@@ -2242,8 +2239,9 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-    public int updateStatusInLoanTeam(User user) {
+    public int updateStatusInLoanTeam(UserVO userVO) {
 	    // TODO Auto-generated method stub
+		User user = User.convertFromVOToEntity(userVO);
 		int rows = loanDao.updateStatusInLoanTeam(user);
 	    return rows;
     }

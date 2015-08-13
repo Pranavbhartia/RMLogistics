@@ -1970,7 +1970,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
 		int rows ;
 		userVO.setStatus(0);	
-		rows = loanService.updateStatusInLoanTeam(User.convertFromVOToEntity(userVO));
+		rows = loanService.updateStatusInLoanTeam(userVO);
 		
 		if(rows == 0){
 			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);

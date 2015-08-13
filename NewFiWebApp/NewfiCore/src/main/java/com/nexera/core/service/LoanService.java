@@ -13,7 +13,6 @@ import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
-import com.nexera.common.entity.User;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -211,7 +210,7 @@ public interface LoanService {
 	 */
 	void markLoanDeleted(int loanId);
 	
-	public int updateStatusInLoanTeam(User user);
+	public int updateStatusInLoanTeam(UserVO user);
 	
 	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
 	        String comments);
