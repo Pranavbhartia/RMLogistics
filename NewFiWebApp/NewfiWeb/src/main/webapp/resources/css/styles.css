@@ -1644,6 +1644,7 @@ input[type="button"]:focus, button:focus {
 
 .lp-agent-item3 {
 	background: url(../images/agent_lp_3.png) no-repeat 5px center;
+    height: 23px;
 }
 
 .lp-item-active .lp-agent-item1 {
@@ -1656,6 +1657,7 @@ input[type="button"]:focus, button:focus {
 
 .lp-item-active .lp-agent-item3 {
 	background: url(../images/agent_lp_active_3.png) no-repeat 5px center;
+    height: 23px;
 }
 
 
@@ -5693,15 +5695,11 @@ a.session-login-btn {
 }
 
 .leads-container-row-realtor>div {
-	padding-left: 25px;
-}
-
-.leads-container-tc1-realtor {
-	width: 170px;
+	padding-left: 5px;
 }
 
 .leads-container-tc2-realtor {
-  	width: 164px;
+  	width: 147px;
 }
 
 .leads-container-tc3-realtor {
@@ -5712,13 +5710,17 @@ a.session-login-btn {
 	width: 170px;
 }
 .leads-container-tc5-realtor {
-	width: 160px;
+	width: 161px;
 }
 .leads-container-tc6-realtor {
-	background: url(../images/alram_blue.png) no-repeat 20px 5px;
+	background: url(../images/alram_blue.png) no-repeat 0px 5px;
 	cursor: pointer;
+	width: 70px;
 }
 
+.leads-container-tc6-realtor-header {
+	width: 70px;
+}
 .loan-summary-col-desc-adj {
 	line-height: 20px;
 }

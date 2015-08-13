@@ -34,7 +34,7 @@
 									<div class="float-left">
 										<div> Lending rates as of : <span id="folderCurrentTimeStamp"></span></div>
 										<div>Rates are subject to change without notice</div>
-										<div class="rates-text-three">standard conforming >= $275k receives .25 better in ysp!</div>
+										<div class="rates-text-three">standard conforming >= $300k receives .25 better in ysp!</div>
 									</div>
 									<div class="float-right " >
 										<div class="print" onclick="window.print()" title="print"></div>

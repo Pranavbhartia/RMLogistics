@@ -289,7 +289,7 @@ public class LQBRequestUtil {
 			        .getAddressStreet()
 			        || "".equalsIgnoreCase(loanAppFormVO.getUser()
 			                .getCustomerDetail().getAddressStreet())) {
-				hashmap.put("applicantAddress", "");
+				hashmap.put("applicantAddress", "undisclosed");
 			} else {
 				hashmap.put("applicantAddress", loanAppFormVO.getUser()
 				        .getCustomerDetail().getAddressStreet());
@@ -608,7 +608,7 @@ public class LQBRequestUtil {
 			        .getCustomerSpouseDetail().getSpouseDateOfBirth())));
 			hashmap.put("baseCoborrowerIncome",
 			        CalculateCoborrowerBaseIncome(loanAppFormVO));
-			hashmap.put("applicantCoborrowerAddress","");
+			hashmap.put("applicantCoborrowerAddress","undisclosed");
 			hashmap.put("applicantCoborrowerCity", loanAppFormVO
 			        .getCustomerSpouseDetail().getCity());
 			hashmap.put("applicantCoborrowerState", loanAppFormVO
@@ -683,7 +683,7 @@ public class LQBRequestUtil {
 			        .getCustomerSpouseDetail().getSpouseDateOfBirth())));
 			hashmap.put("baseCoborrowerIncome",
 			        CalculateCoborrowerBaseIncome(loanAppFormVO));
-			hashmap.put("applicantCoborrowerAddress", "");
+			hashmap.put("applicantCoborrowerAddress", "undisclosed");
 			hashmap.put("applicantCoborrowerCity", loanAppFormVO
 			        .getCustomerSpouseDetail().getCity());
 			hashmap.put("applicantCoborrowerState", loanAppFormVO
@@ -1048,7 +1048,7 @@ public class LQBRequestUtil {
 		        .getAddressStreet()
 		        || "".equalsIgnoreCase(loanAppFormVO.getUser()
 		                .getCustomerDetail().getAddressStreet())) {
-			hashmap.put("applicantAddress", "");
+			hashmap.put("applicantAddress", "undisclosed");
 		} else {
 			hashmap.put("applicantAddress", loanAppFormVO.getUser()
 			        .getCustomerDetail().getAddressStreet());
