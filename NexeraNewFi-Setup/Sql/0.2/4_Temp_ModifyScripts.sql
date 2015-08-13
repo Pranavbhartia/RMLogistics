@@ -327,9 +327,9 @@ INSERT INTO `newfi_schema`.`workflowitemmaster` (`id`, `workflow_item_type`, `de
 
 #OnSuccess
 
-UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='55' WHERE `id`='53';
-UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='56' WHERE `id`='54';
-UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='57' WHERE `id`='55';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='55' WHERE `id`='52';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='56' WHERE `id`='53';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='57' WHERE `id`='54';
 
 #Ranjitha insertion of new milestone (not lqb)
 INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('14', 'DELETE', 'delete', '1');
