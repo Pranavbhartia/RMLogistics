@@ -440,7 +440,7 @@ public class XMLProcessor
             newApplicant.appendChild( coborrowerCity );
             Element coborrowerState = createNewElement( doc, "field", "aCState ", "applicantCoborrowerState" );
             newApplicant.appendChild( coborrowerState );
-            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZip" );
+            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( coborrowerZip );
 
             Element coBorrowerHomePhone = createNewElement( doc, "field", "aCHPhone", "applicationCoborrowerHomePhone" );
@@ -588,7 +588,7 @@ public class XMLProcessor
             newApplicant.appendChild( coborrowerCity );
             Element coborrowerState = createNewElement( doc, "field", "aCState ", "applicantCoborrowerState" );
             newApplicant.appendChild( coborrowerState );
-            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZip" );
+            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( coborrowerZip );
 
             Element coBorrowerHomePhone = createNewElement( doc, "field", "aCHPhone", "applicationCoborrowerHomePhone" );
@@ -685,7 +685,7 @@ public class XMLProcessor
             newApplicant.appendChild( coborrowerCity );
             Element coborrowerState = createNewElement( doc, "field", "aCState ", "applicantCoborrowerState" );
             newApplicant.appendChild( coborrowerState );
-            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZip" );
+            Element coborrowerZip = createNewElement( doc, "field", "aCZip ", "applicantCoborrowerZipCode" );
             newApplicant.appendChild( coborrowerZip );
             Element baseIncome = createNewElement( doc, "field", "aCBaseI", "baseCoborrowerIncome" );
             newApplicant.appendChild( baseIncome );
