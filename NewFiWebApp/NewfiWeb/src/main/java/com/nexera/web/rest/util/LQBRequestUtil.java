@@ -613,7 +613,7 @@ public class LQBRequestUtil {
 			        .getCustomerSpouseDetail().getCity());
 			hashmap.put("applicantCoborrowerState", loanAppFormVO
 			        .getCustomerSpouseDetail().getState());
-			hashmap.put("applicantCoborrowerZip", loanAppFormVO
+			hashmap.put("applicantCoborrowerZipCode", loanAppFormVO
 			        .getCustomerSpouseDetail().getZip());
 			hashmap.put("userCoborrowerSSNnumber", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseSsn());
@@ -689,7 +689,7 @@ public class LQBRequestUtil {
 			hashmap.put("applicantCoborrowerState", loanAppFormVO
 			        .getCustomerSpouseDetail().getState());
 			hashmap.put("applicantCoborrowerZipCode", loanAppFormVO
-			        .getCustomerSpouseDetail().getCity());
+			        .getCustomerSpouseDetail().getZip());
 			hashmap.put("userCoborrowerSSNnumber", loanAppFormVO
 			        .getCustomerSpouseDetail().getSpouseSsn());
 			hashmap.put("ApplicantCoBorrowerId", loanAppFormVO
