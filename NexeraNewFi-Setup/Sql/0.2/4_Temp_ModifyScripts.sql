@@ -335,3 +335,8 @@ UPDATE `newfi_schema`.`workflowitemmaster` SET `on_success`='57' WHERE `id`='54'
 INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('14', 'DELETE', 'delete', '1');
 #Ranjitha query to make the loan_progess_status_master DELETE for old test loans
 update newfi_schema.loan  set loan_progress_status_master=8 where user in(select id from newfi_schema.user where email_id like "deletedEmail%") ;
+
+#Himanshu - Updating previous loans, so that it get available in archive loans.
+UPDATE newfi_schema.loan set loan_progress_status_master = 5 where id in (select loan from newfi_schema.loanmilestone where milestone = 8 and comments = 'FUNDED');
+UPDATE newfi_schema.loan set loan_progress_status_master = 7 where id in (select loan from newfi_schema.loanmilestone where milestone = 7 and comments = 'DENIED');
+UPDATE newfi_schema.loan set loan_progress_status_master = 6 where id in (select loan from newfi_schema.loanmilestone where milestone = 8 and comments = 'WITHDRAWN');

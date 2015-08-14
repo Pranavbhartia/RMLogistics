@@ -16,8 +16,10 @@ import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -72,6 +74,10 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			displayMessage = LoanStatus.loanWithdrawnMessage;
 			subject = CommonConstants.SUBJECT_LOAN_WITHDRAWN;
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
+			int loanId = Integer.parseInt(objectMap.get(
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
+			        LoanProgressStatusMasterEnum.WITHDRAWN));
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED
 		                .getLosStatusID()))) {

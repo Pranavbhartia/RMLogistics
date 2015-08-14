@@ -1,6 +1,7 @@
 package com.nexera.common.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
@@ -143,4 +144,9 @@ public interface LoanDao extends GenericDao {
 	        int[] loanProgressStatusIds, int startLimit, int endLimit);
 	
 	public int updateStatusInLoanTeam(User user);
+	
+	
+	public void updateLoanModifiedDate(int loanId, Date modifiedDate);
+	
+	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus);
 }
