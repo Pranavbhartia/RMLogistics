@@ -1,10 +1,5 @@
 package com.nexera.common.enums;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.nexera.common.entity.LoanMilestoneMaster;
 
 public enum Milestones {
 	App1003(1, "1003"), AUSUW(2, "AUSUW"), QC(3, "QC"), LM_DECISION(4,

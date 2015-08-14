@@ -86,9 +86,12 @@ public class WorkflowConstants {
 
 	public static final List<Integer> LQB_MONITOR_LIST = new ArrayList<Integer>(
 	        Arrays.asList(
+	        		LOSLoanStatus.LQB_STATUS_LOAN_OPEN.getLosStatusID(),
 	        		LOSLoanStatus.LQB_STATUS_PRE_QUAL.getLosStatusID(),
+	        		LOSLoanStatus.LQB_STATUS_PROCESSING.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),
@@ -501,7 +504,7 @@ public class WorkflowConstants {
 		// IGNORE LIST
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LEAD_NEW,
-		        new WorkItemMilestoneInfo(Milestones.OTHER, null,
+		        new WorkItemMilestoneInfo(Milestones.App1003, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LEAD_NEW)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
@@ -521,14 +524,14 @@ public class WorkflowConstants {
 		                        .get(LOSLoanStatus.LQB_STATUS_LEAD_OTHER)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_OPEN,
-		        new WorkItemMilestoneInfo(Milestones.OTHER, null,
+		        new WorkItemMilestoneInfo(Milestones.App1003, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_OPEN)));
 
 		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_REGISTERED,
-		        new WorkItemMilestoneInfo(Milestones.OTHER, null,
+		        new WorkItemMilestoneInfo(Milestones.App1003, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_REGISTERED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
@@ -538,7 +541,7 @@ public class WorkflowConstants {
 		                        .get(LOSLoanStatus.LQB_STATUS_PRE_PROCESSING)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_PROCESSING,
-		        new WorkItemMilestoneInfo(Milestones.OTHER, null,
+		        new WorkItemMilestoneInfo(Milestones.App1003, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_PROCESSING)));
 
