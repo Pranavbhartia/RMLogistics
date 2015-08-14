@@ -853,18 +853,10 @@ function showProgressHeaderSteps(){
 	}
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Ready");
 	container.append(stepElement);	
-
 	
-	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
-	var fundedStatus = msStep.stateInfo;
-	var fundedStatusRep = "0";
-	if (fundedStatus && fundedStatus == "Funded")
-	{
-		fundedStatusRep = COMPLETED;
-	}
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(fundedStatusRep, 5, "Funded");
-	container.append(stepElement);	
-	
+	msStep = workFlowContext.milestoneStepsLookup["CLOSURE_FUNDED_DISPLAY"];
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
+	container.append(stepElement);		
 	return container;
 }
 
@@ -912,17 +904,10 @@ function showRealtorHeaderSteps(){
 	}
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Out");
 	container.append(stepElement);	
-
 	
-	msStep = workFlowContext.milestoneStepsLookup["VIEW_CLOSING"];
-	var fundedStatus = msStep.stateInfo;
-	var fundedStatusRep = "0";
-	if (fundedStatus && fundedStatus == "Funded")
-	{
-		fundedStatusRep = COMPLETED;
-	}
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(fundedStatusRep, 5, "Funded");
-	container.append(stepElement);	
+	msStep = workFlowContext.milestoneStepsLookup["CLOSURE_FUNDED_DISPLAY"];
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
+	container.append(stepElement);		
 	
 	return container;
 }
