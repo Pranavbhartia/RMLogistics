@@ -44,8 +44,9 @@
     /* width: 150px; */
     width: 130px;
     height: 35px;
+    padding: 10px 0;
     padding-left: 10px;
-    line-height: 35px;
+    line-height: 15px;
     border: 1px solid #dcdcdc;
     border-radius: 3px;
     background: #fafafa;
