@@ -492,12 +492,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 			}
-			else if (ob.workItem.workflowItemType=="VIEW_CLOSING")
-			{
-				data.loanID = workFlowContext.loanId;
-				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
-				
-			}else if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
+			else if(ob.workItem.workflowItemType=="MANAGE_APP_STATUS"){
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID = workFlowContext.loanId;
 			}else if(ob.workItem.workflowItemType=="MANAGE_PROFILE"){
