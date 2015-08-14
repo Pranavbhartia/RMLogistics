@@ -1085,7 +1085,8 @@ function getSchedulerContainer(contxt, tempData) {
 		$popup.click(function() {
 			return false;
 		});
-	});
+	}).mask('00/00/0000');
+	
 	datePicker.append(datePickerBox);
 	var timerPicker = $('<div>').attr({
 		"id" : "sch-msg-time-picker",
@@ -1755,7 +1756,8 @@ function appendCustomerLoanDetails(loanDetails) {
 				"placeholder" : "MM/DD/YYYY",
 				"value" : expiryDate,
 				"id" : "purchaseDocumentExpiryDate",
-				"onchange" : "updatePurchaseDocumentExpiryDate()"
+				"onchange" : "updatePurchaseDocumentExpiryDate()",
+				"data-date-end-date" : "0d"
 			}).datepicker({
 				orientation : "top auto",
 				minDate : today,
@@ -2624,7 +2626,8 @@ function appendCustomerEditProfilePopUp() {
 		"id" : "dobID"
 	}).datepicker({
 		orientation : "top auto",
-		autoclose : true
+		autoclose : true,
+		endDate : new Date()
 	}).on('show', function(e) {
 		var $popup = $('.datepicker');
 		$popup.click(function() {
@@ -2635,10 +2638,11 @@ function appendCustomerEditProfilePopUp() {
 	row.append(label).append(dobInput).append(appendErrorMessage());
 	$('#cus-prof-container').append(row);
 
-	$("#dobID").addClass('prof-form-input date-picker').datepicker({
+	/*$("#dobID").addClass('prof-form-input date-picker').datepicker({
 		orientation : "top auto",
-		autoclose : true
-	});
+		autoclose : true,
+		endDate : new Date()
+	});*/
 	appendCustomerProfEditRow("Primary Phone", selectedUserDetail.phoneNo,
 			"primaryPhoneID");
 	$('#emailIdID').attr("readonly", true)

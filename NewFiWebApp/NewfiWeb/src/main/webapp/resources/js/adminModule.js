@@ -1273,7 +1273,7 @@ function appendInputsOfFormFeild(question){
 					"placeholder":question.placeholder,
 					"value":question.value,
 					"id":question.id,
-					
+					"data-date-end-date" : "0d"
 				}).datepicker({
 					orientation : "top auto",
 					autoclose : true,
