@@ -504,7 +504,7 @@ public class WorkflowConstants {
 		// IGNORE LIST
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LEAD_NEW,
-		        new WorkItemMilestoneInfo(Milestones.OTHER, null,
+		        new WorkItemMilestoneInfo(Milestones.App1003, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LEAD_NEW)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
