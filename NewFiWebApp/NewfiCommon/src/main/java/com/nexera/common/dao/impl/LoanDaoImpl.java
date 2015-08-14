@@ -810,6 +810,30 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		query.executeUpdate();
 		session.flush();
 	}
+	
+	@Override
+	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus){
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.lockExpirationDate = :LOCK_EXPIRATION_DATE, loan.lockedRate = :LOCKED_RATE, loan.lockStatus = :LOCK_STATUS WHERE loan.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("LOCK_EXPIRATION_DATE", lockExpirationDate);
+		query.setParameter("LOCKED_RATE", lockedRate);
+		query.setParameter("LOCK_STATUS", lockStatus);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
+		session.flush();
+	}
+	
+	@Override
+	public void updateLoanModifiedDate(int loanId, Date modifiedDate){
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.modifiedDate = :MODIFIED_DATE WHERE loan.id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("MODIFIED_DATE", modifiedDate);
+		query.setParameter("ID", loanId);
+		query.executeUpdate();
+		session.flush();
+	}
 
 	@Override
 	public LoanNeedsList fetchLoanNeedsByFileId(UploadedFilesList uploadFileList) {
@@ -954,7 +978,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		Query query = session.createQuery(hql);
 		query.setParameter("PROGRESS", loanProgressValue);
 		query.setParameter("ID", loanId);
-		query.executeUpdate();
+		query.executeUpdate();		
 	}
 
 	@Override

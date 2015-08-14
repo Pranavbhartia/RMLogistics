@@ -246,16 +246,15 @@ public class ThreadManager implements Runnable {
 							}
 
 							if (lockStatus != null) {
+								Date date = null;
+								String lockedRateCheck = null;
 								if (lockexpirationDate != null) {
-									Date date = parseStringIntoDate(lockexpirationDate);
-									loan.setLockExpirationDate(date);
+									date = parseStringIntoDate(lockexpirationDate);
 								}
 								if (lockedRate != null) {
-									loan.setLockedRate(lockedRate);
-
+									lockedRateCheck = lockedRate;
 								}
-								loan.setLockStatus(lockStatus);
-								loanService.updateLoan(loan);
+								loanService.updateLoanLockDetails(loan.getId(), date, lockedRateCheck, lockStatus);
 							}
 							if (docsoutDate != null) {
 								LoanMilestoneMaster lmMaster = getLoanMilestoneMasterBasedOnMilestone(Milestones.DOCS_OUT);
@@ -908,8 +907,7 @@ public class ThreadManager implements Runnable {
 
 	private void updateLastModifiedTimeForThisLoan(Loan loan) {
 		LOGGER.debug("Inside method updateLastModifiedTimeForThisLoan ");
-		loan.setModifiedDate(new Date());
-		loanService.updateLoan(loan);
+		loanService.updateLoanModifiedDate(loan.getId(), new Date());
 	}
 
 	private Boolean invokeUnderwritingCondition(Loan loan, int format) {

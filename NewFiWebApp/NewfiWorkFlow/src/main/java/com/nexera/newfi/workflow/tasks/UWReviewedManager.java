@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.entity.LoanProgressStatusMaster;
+import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
 import com.nexera.workflow.enums.WorkItemStatus;
@@ -25,6 +28,10 @@ public class UWReviewedManager implements IWorkflowTaskExecutor{
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// Do Nothing
+		int loanId = Integer.parseInt(objectMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
+		        LoanProgressStatusMasterEnum.DECLINED));
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
 

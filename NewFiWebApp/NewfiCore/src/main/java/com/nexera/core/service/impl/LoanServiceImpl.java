@@ -2269,5 +2269,17 @@ public class LoanServiceImpl implements LoanService {
 			return status;
 		}
 	}
+	
+	@Override
+	@Transactional
+	public void updateLoanModifiedDate(int loanId, Date modifiedDate){
+		loanDao.updateLoanModifiedDate(loanId, modifiedDate);
+	}
+	
+	@Override
+	@Transactional
+	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus){
+		loanDao.updateLoanLockDetails(loanId, lockExpirationDate, lockedRate, lockStatus);
+	}
 
 }

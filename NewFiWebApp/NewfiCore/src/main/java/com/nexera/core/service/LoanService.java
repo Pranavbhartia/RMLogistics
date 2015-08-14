@@ -1,6 +1,7 @@
 package com.nexera.core.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -214,5 +215,8 @@ public interface LoanService {
 	
 	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
 	        String comments);
+
+	public void updateLoanModifiedDate(int loanId, Date modifiedDate);
+	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus);
 
 }
