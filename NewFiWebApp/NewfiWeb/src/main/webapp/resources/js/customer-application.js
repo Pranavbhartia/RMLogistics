@@ -2595,7 +2595,8 @@ $('body').on('focus',"input[name='startLivingTime'] ,input[name='purchaseTime'],
     	    autoclose : true,
     		maxDate: 0,
     		defaultDate:'',
-    	    constrainInput: false
+    	    constrainInput: false,
+    	    endDate : new Date()
         }).on('changeDate',function(e){
         	e.stopImmediatePropagation();
         	e.preventDefault();
@@ -2748,7 +2749,7 @@ $('body').on('focus',"input[name='birthday']",function(){
 			maxDate: 0,
 			defaultDate:'',
 			placeholder : "MM/DD/YYYY",
-			
+			endDate : new Date()
 		});
     }
 });

@@ -1263,15 +1263,14 @@ function getDOBRow(user) {
 		"placeholder" : "MM/DD/YYYY",
 		"value" : dob,
 		"id" : "dateOfBirthId",
-		
+		"data-date-end-date" : "0d"
 	}).datepicker({
 				orientation : "top auto",
 				autoclose : true,
 				maxDate: new Date() ,
 				changeMonth: true,
-				changeYear: true
-
-		
+				changeYear: true,
+				endDate : new Date()
 	});
 	
 	var errMessage = $('<div>').attr({
@@ -2782,7 +2781,8 @@ function editProfileInformation(user) {
 	comRow.find('.form-detail-edit').find('input').addClass('date-picker')
 			.attr("placeholder", "MM/DD/YYYY").datepicker({
 				orientation : "top auto",
-				autoclose : true
+				autoclose : true,
+				endDate : new Date()
 			});
 	nonEmptyValuesContainer.append(comRow);
 
