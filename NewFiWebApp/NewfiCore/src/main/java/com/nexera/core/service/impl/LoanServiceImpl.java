@@ -64,6 +64,7 @@ import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanDetailVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
@@ -418,8 +419,8 @@ public class LoanServiceImpl implements LoanService {
 		        this.parseUserModel(userVO), new int[] {
 		                LoanProgressStatusMasterEnum.SMCLOSED.getStatusId(),
 		                LoanProgressStatusMasterEnum.WITHDRAWN.getStatusId(),
-		                LoanProgressStatusMasterEnum.DECLINED.getStatusId(),
-		                LoanProgressStatusMasterEnum.DELETED.getStatusId()});
+		                LoanProgressStatusMasterEnum.DECLINED.getStatusId()
+		              });
 
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
@@ -1485,6 +1486,13 @@ public class LoanServiceImpl implements LoanService {
 			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
 			loanVO.getLoanType().setUploadedFiles(
 			        uploadedFilesListService.buildUpdateFileVo(file));
+			/*LoanAppForm appForm = loanAppFormService.findByLoan(loan);
+			LoanDetailVO detailVO = new LoanDetailVO();
+			if(appForm.getPurchaseDetails().getLoanAmount() != null){
+				detailVO.setLoanAmount(Double.parseDouble(appForm.getPurchaseDetails().getLoanAmount()));
+				loanVO.setLoanDetail(detailVO);
+			}*/
+			
 		}
 
 		if (loanVO != null) {
