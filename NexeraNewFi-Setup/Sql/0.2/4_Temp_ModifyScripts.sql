@@ -343,7 +343,7 @@ UPDATE newfi_schema.loan set loan_progress_status_master = 6 where id in (select
 
 #Ranjitha-addition of two columns for LTV calculation
 ALTER TABLE `newfi_schema`.`loan` 
-ADD COLUMN `appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
+ADD COLUMN `lqb_appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
 
 ALTER TABLE `newfi_schema`.`loan` 
-ADD COLUMN `loan_amount` DOUBLE NULL AFTER `appraised_val`;
+ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `appraised_val`;

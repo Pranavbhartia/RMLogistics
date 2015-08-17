@@ -149,4 +149,6 @@ public interface LoanDao extends GenericDao {
 	public void updateLoanModifiedDate(int loanId, Date modifiedDate);
 	
 	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus);
+	
+	public Integer updateLQBAmounts(Loan loan);
 }

@@ -1804,10 +1804,12 @@ function appendCustomerLoanDetails(loanDetails) {
 		}
 		
 	}*/
+	
+	var loanPurposeArray = ["Purchase","Refinance"];
 	try{
 		if(loanDetails.userLoanStatus.loanPurpose){
-			
-			if(loanDetails.userLoanStatus.loanPurpose == "Purchase"){
+
+			if(loanDetails.userLoanStatus.loanPurpose == loanPurposeArray[0]){
 				
 				if(loanDetails.loanAmount){
 					ltvData = '$'+loanDetails.loanAmount;
@@ -1815,7 +1817,7 @@ function appendCustomerLoanDetails(loanDetails) {
 				}else {
 					ltvData = "-";
 				}
-			}else {
+			}else if(loanDetails.userLoanStatus.loanPurpose == loanPurposeArray[1]){
 				if(loanDetails.loanAmount && loanDetails.appraisedValue){
 					ltvData = (loanDetails.loanAmount/loanDetails.appraisedValue);
 					
@@ -1826,6 +1828,8 @@ function appendCustomerLoanDetails(loanDetails) {
 					ltvData = "-";
 				}
 				
+			}else {
+				ltvData = "-";
 			}
 		
 		

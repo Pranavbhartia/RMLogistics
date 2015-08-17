@@ -299,6 +299,13 @@ public class LoanServiceImpl implements LoanService {
 		loan.setName(loanVO.getName());
 		loan.setIsBankConnected(loanVO.getIsBankConnected());
 		loan.setLockStatus(loanVO.getLockStatus());
+		if(loanVO.getAppraisedValue()!=null){
+			loan.setAppraisedValue(loanVO.getAppraisedValue());
+		}
+		if(loanVO.getLoanAmount()!=null){
+			loan.setLoanAmount(loanVO.getLoanAmount());
+		}
+		
 		return loan;
 
 	}
@@ -771,6 +778,12 @@ public class LoanServiceImpl implements LoanService {
 			// loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
 			loan.setLockedRate(loanVO.getLockedRate());
+			if(loanVO.getAppraisedValue()!=null){
+				loan.setAppraisedValue(loanVO.getAppraisedValue());
+			}
+			if(loanVO.getLoanAmount()!=null){
+				loan.setLoanAmount(loanVO.getLoanAmount());
+			}
 		} catch (Exception e) {
 
 			LOG.error("Error in parse loan model", e);
@@ -2286,5 +2299,11 @@ public class LoanServiceImpl implements LoanService {
 	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus){
 		loanDao.updateLoanLockDetails(loanId, lockExpirationDate, lockedRate, lockStatus);
 	}
+
+	@Override
+    public Integer updateLQBAmounts(Loan loan) {
+	    Integer rows = loanDao.updateLQBAmounts(loan);
+	    return rows;
+    }
 
 }
