@@ -34,6 +34,7 @@ import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -1485,13 +1486,7 @@ public class LoanServiceImpl implements LoanService {
 			UploadedFilesList file = needListService
 			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
 			loanVO.getLoanType().setUploadedFiles(
-			        uploadedFilesListService.buildUpdateFileVo(file));
-			/*LoanAppForm appForm = loanAppFormService.findByLoan(loan);
-			LoanDetailVO detailVO = new LoanDetailVO();
-			if(appForm.getPurchaseDetails().getLoanAmount() != null){
-				detailVO.setLoanAmount(Double.parseDouble(appForm.getPurchaseDetails().getLoanAmount()));
-				loanVO.setLoanDetail(detailVO);
-			}*/
+			        uploadedFilesListService.buildUpdateFileVo(file));			
 			
 		}
 
@@ -1538,6 +1533,8 @@ public class LoanServiceImpl implements LoanService {
 				loanVO.setLqbLoanStatus(lqbLoanStatus.getComments());
 			}
 		}
+		
+		
 		return loanVO;
 	}
 

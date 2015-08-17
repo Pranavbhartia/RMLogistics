@@ -1795,7 +1795,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Customer Profile", "Edit", true);
 	appendLoanDetailsRow("Loan Status", loanDetails.lqbLoanStatus);
 	var ltvData = "-";
-	if(loanDetails.lockedRateData){
+	/*if(loanDetails.lockedRateData){
 		try{
 			ltvData = JSON.parse(loanDetails.lockedRateData);
 			ltvData = ltvData.yearData+" - year";
@@ -1803,7 +1803,38 @@ function appendCustomerLoanDetails(loanDetails) {
 			ltvData = "-";
 		}
 		
+	}*/
+	try{
+		if(loanDetails.userLoanStatus.loanPurpose){
+			
+			if(loanDetails.userLoanStatus.loanPurpose == "Purchase"){
+				
+				if(loanDetails.loanAmount){
+					ltvData = '$'+loanDetails.loanAmount;
+					ltvData = ltvData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+				}else {
+					ltvData = "-";
+				}
+			}else {
+				if(loanDetails.loanAmount && loanDetails.appraisedValue){
+					ltvData = (loanDetails.loanAmount/loanDetails.appraisedValue);
+					
+				}else if(loanDetails.loanAmount){
+					ltvData = '$'+loanDetails.loanAmount;
+					ltvData = ltvData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+				}else {
+					ltvData = "-";
+				}
+				
+			}
+		
+		
+		}
+	}catch(e){
+		ltvData = "-";
 	}
+	
+	
 	appendLoanDetailsRow("LTV",ltvData);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
 	
@@ -1835,10 +1866,10 @@ function appendCustomerLoanDetails(loanDetails) {
 				loanDetails.userLoanStatus.creditInformation, true,
 				loanDetails.creditReportUrl);
 	}
-	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
+/*	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
 		appendLoanDetailsRow("Loan Amount", "$ "
 				+ loanDetails.loanDetail.loanAmount);
-	}
+	}*/
 	appendCustomerEditProfilePopUp();
 	//jira-813
 	/*var text="Loan URL in LQB";*/
