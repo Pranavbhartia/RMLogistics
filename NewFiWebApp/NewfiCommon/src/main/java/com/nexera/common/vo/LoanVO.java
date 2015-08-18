@@ -61,6 +61,10 @@ public class LoanVO implements Serializable {
 	private Boolean rateLockRequested;
 
 	private String userZipCode;
+	private Double loanAmount;
+	private Double appraisedValue;
+	private String purchaseValue;
+
 
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
@@ -466,4 +470,30 @@ public class LoanVO implements Serializable {
 	public void setLqbLoanStatus(String lqbLoanStatus) {
 	    this.lqbLoanStatus = lqbLoanStatus;
     }
+
+	public Double getAppraisedValue() {
+	    return appraisedValue;
+    }
+
+	public void setAppraisedValue(Double appraisedValue) {
+	    this.appraisedValue = appraisedValue;
+    }
+
+	public Double getLoanAmount() {
+	    return loanAmount;
+    }
+
+	public void setLoanAmount(Double loanAmount) {
+	    this.loanAmount = loanAmount;
+    }
+
+	public String getPurchaseValue() {
+	    return purchaseValue;
+    }
+
+	public void setPurchaseValue(String purchaseValue) {
+	    this.purchaseValue = purchaseValue;
+    }
+
+
 }

@@ -1083,4 +1083,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	    return rows;
     }
 
+	@Override
+    public Integer updateLQBAmounts(Loan loan) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.lqbLoanAmount = :lqbLoanAmount AND loan.lqbAppraisedValue = :lqbAppraisedValue  WHERE loan.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("lqbLoanAmount",loan.getLoanAmount());
+		query.setParameter("lqbAppraisedValue", loan.getAppraisedValue());
+		query.setParameter("id", loan.getId());
+		int rows=query.executeUpdate();
+	    return rows;
+    }
+
 }

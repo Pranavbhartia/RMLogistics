@@ -71,6 +71,8 @@ public class Loan implements Serializable {
 	private String lockedRateData;
 	private Date lockExpirationDate;
 	private Boolean rateLockRequested;
+	private Double lqbLoanAmount;
+	private Double lqbAppraisedValue;
 
 	@Column(name = "bank_connected", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -504,9 +506,16 @@ public class Loan implements Serializable {
 		loanVo.setLockStatus(loan.getLockStatus());
 		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
 		loanVo.setLockedRate(loan.getLockedRate());
+		if(loan.getLoanAmount()!=null){
+			loanVo.setLoanAmount(loan.getLoanAmount());
+		}
+		if(loan.getAppraisedValue()!=null){
+			loanVo.setAppraisedValue(loan.getAppraisedValue());
+		}
 		return loanVo;
 	}
 
+	
 	private static LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
 		if (detail == null)
 			return null;
@@ -583,6 +592,24 @@ public class Loan implements Serializable {
 
 	public void setRateLockRequested(Boolean rateLockRequested) {
 	    this.rateLockRequested = rateLockRequested;
+    }
+
+	@Column(name = "lqb_loan_amount")
+	public Double getLoanAmount() {
+	    return lqbLoanAmount;
+    }
+
+	public void setLoanAmount(Double loanAmount) {
+	    this.lqbLoanAmount = loanAmount;
+    }
+
+	@Column(name = "lqb_appraised_val")
+	public Double getAppraisedValue() {
+	    return lqbAppraisedValue;
+    }
+
+	public void setAppraisedValue(Double appraisedValue) {
+	    this.lqbAppraisedValue = appraisedValue;
     }
 
 }

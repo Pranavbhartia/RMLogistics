@@ -57,8 +57,11 @@ public class UWApprovedManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String closureDate = iWorkflowService.getUWMilestoneDates(loanId,
+		        LOSLoanStatus.LQB_STATUS_APPROVED);
+		return closureDate;
 	}
 
 	@Override

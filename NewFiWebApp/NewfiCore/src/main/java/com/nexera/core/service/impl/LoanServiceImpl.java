@@ -33,6 +33,7 @@ import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -63,6 +64,7 @@ import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
+import com.nexera.common.vo.LoanDetailVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
@@ -72,6 +74,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.NotificationVO;
+import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -296,6 +299,13 @@ public class LoanServiceImpl implements LoanService {
 		loan.setName(loanVO.getName());
 		loan.setIsBankConnected(loanVO.getIsBankConnected());
 		loan.setLockStatus(loanVO.getLockStatus());
+		if(loanVO.getAppraisedValue()!=null){
+			loan.setAppraisedValue(loanVO.getAppraisedValue());
+		}
+		if(loanVO.getLoanAmount()!=null){
+			loan.setLoanAmount(loanVO.getLoanAmount());
+		}
+		
 		return loan;
 
 	}
@@ -417,8 +427,8 @@ public class LoanServiceImpl implements LoanService {
 		        this.parseUserModel(userVO), new int[] {
 		                LoanProgressStatusMasterEnum.SMCLOSED.getStatusId(),
 		                LoanProgressStatusMasterEnum.WITHDRAWN.getStatusId(),
-		                LoanProgressStatusMasterEnum.DECLINED.getStatusId(),
-		                LoanProgressStatusMasterEnum.DELETED.getStatusId()});
+		                LoanProgressStatusMasterEnum.DECLINED.getStatusId()
+		              });
 
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
@@ -768,6 +778,12 @@ public class LoanServiceImpl implements LoanService {
 			// loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
 			loan.setLockedRate(loanVO.getLockedRate());
+			if(loanVO.getAppraisedValue()!=null){
+				loan.setAppraisedValue(loanVO.getAppraisedValue());
+			}
+			if(loanVO.getLoanAmount()!=null){
+				loan.setLoanAmount(loanVO.getLoanAmount());
+			}
 		} catch (Exception e) {
 
 			LOG.error("Error in parse loan model", e);
@@ -1490,7 +1506,8 @@ public class LoanServiceImpl implements LoanService {
 			UploadedFilesList file = needListService
 			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
 			loanVO.getLoanType().setUploadedFiles(
-			        uploadedFilesListService.buildUpdateFileVo(file));
+			        uploadedFilesListService.buildUpdateFileVo(file));			
+			
 		}
 
 		if (loanVO != null) {
@@ -1536,6 +1553,22 @@ public class LoanServiceImpl implements LoanService {
 				loanVO.setLqbLoanStatus(lqbLoanStatus.getComments());
 			}
 		}
+		
+		LoanAppForm appForm = loanAppFormService.findByLoan(loan);
+		if(appForm !=  null){
+			if(appForm.getPurchaseDetails().getHousePrice()!=null){
+				loanVO.setPurchaseValue(appForm.getPurchaseDetails().getHousePrice());
+			}
+			if(appForm.getPropertyTypeMaster().getHomeWorthToday()!=null){
+				PropertyTypeMasterVO masterVO = new PropertyTypeMasterVO();
+				masterVO.setHomeWorthToday(appForm.getPropertyTypeMaster().getHomeWorthToday());
+				loanVO.setPropertyType(masterVO);
+			}
+			
+			
+		}
+		
+		
 		return loanVO;
 	}
 
@@ -2173,7 +2206,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	// Checks if Credit Score is available for all 3 bureaus and all are NOT 800
-	private boolean isCreditScoreValid(CustomerDetail customerDetail) {
+	public boolean isCreditScoreValid(CustomerDetail customerDetail) {
 		boolean creditScoreValid = false;
 		// All 3 are available but all are 800
 		if (customerDetail.getEquifaxScore() != null
@@ -2287,5 +2320,11 @@ public class LoanServiceImpl implements LoanService {
 	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus){
 		loanDao.updateLoanLockDetails(loanId, lockExpirationDate, lockedRate, lockStatus);
 	}
+
+	@Override
+    public Integer updateLQBAmounts(Loan loan) {
+	    Integer rows = loanDao.updateLQBAmounts(loan);
+	    return rows;
+    }
 
 }

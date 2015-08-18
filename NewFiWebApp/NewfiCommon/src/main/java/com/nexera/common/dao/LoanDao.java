@@ -150,6 +150,9 @@ public interface LoanDao extends GenericDao {
 	public void updateLoanLockDetails(int loanId, Date lockExpirationDate,
 	        String lockedRate, String lockStatus);
 
+	public Integer updateLQBAmounts(Loan loan);
+
 	public LoanMilestone findLoanMileStoneByCriteria(
 	        LoanMilestone loanMilestoneCriteria);
+
 }
