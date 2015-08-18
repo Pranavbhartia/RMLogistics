@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -29,6 +30,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -275,6 +278,27 @@ public String getDateAndTimeForDisplay(Date date){
 		Gson gson = new Gson();
 		String jsonString = gson.toJson(map);
 		return jsonString;
+	}
+	
+	public static Map<String, Object> convertJsonToMap(String jsonString) {
+		if (jsonString != null) {
+			LOG.debug("Inside method convertJsonToMap ");
+			ObjectMapper mapper = new ObjectMapper();
+			TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
+			};
+			HashMap<String, Object> map = null;
+			try {
+				map = mapper.readValue(jsonString, typeRef);
+			} catch (JsonParseException e) {
+				LOG.error("JsonParseException " + e.getMessage());
+			} catch (JsonMappingException e) {
+				LOG.error("JsonMappingException " + e.getMessage());
+			} catch (IOException e) {
+				LOG.error("IOException " + e.getMessage());
+			}
+			return map;
+		}
+		return null;
 	}
 
 	public String generateMessageIdFromAddress(String mongoMessageId, int loanId) {
