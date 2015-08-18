@@ -249,7 +249,9 @@ public interface CommonConstants {
 
 	public static final String SUBJECT_YOUR_APPLICATION_FEE_DUE = "Your Application Fee Due";
 
-	public static final String SUBJECT_APPLICATION_FEE_PAID = "Application Fee Paid";
+	/*public static final String SUBJECT_APPLICATION_FEE_PAID = "Application Fee Paid";*/
+	
+	public static final String SUBJECT_APPLICATION_FEE_PAID = "Appraisal Fee Paid";
 
 	public static final String SUBJECT_APPLICATION_FEE_PENDING = "Application Fee Pending";
 
