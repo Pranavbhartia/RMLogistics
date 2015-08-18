@@ -342,6 +342,14 @@ UPDATE newfi_schema.loan set loan_progress_status_master = 7 where id in (select
 UPDATE newfi_schema.loan set loan_progress_status_master = 6 where id in (select loan from newfi_schema.loanmilestone where milestone = 8 and comments = 'WITHDRAWN');
 
 
+#Ranjitha-addition of two columns for LTV calculation
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `lqb_appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
+
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `appraised_val`;
+
+
 # Rajeswari : Clean up Credit Child Milestones - to make parent Credit as GREEN is credit screen is GREEN.
 # UnCheck Safe mode before running this. 
 #Needed to be run only once to take care of old loans.

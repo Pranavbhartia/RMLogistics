@@ -1795,7 +1795,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	appendLoanDetailsRow("Customer Profile", "Edit", true);
 	appendLoanDetailsRow("Loan Status", loanDetails.lqbLoanStatus);
 	var ltvData = "-";
-	if(loanDetails.lockedRateData){
+	/*if(loanDetails.lockedRateData){
 		try{
 			ltvData = JSON.parse(loanDetails.lockedRateData);
 			ltvData = ltvData.yearData+" - year";
@@ -1803,7 +1803,49 @@ function appendCustomerLoanDetails(loanDetails) {
 			ltvData = "-";
 		}
 		
+	}*/
+	
+	var loanPurposeArray = ["Purchase","Refinance"];
+	try{
+		if(loanDetails.userLoanStatus.loanPurpose){
+
+			if(loanDetails.userLoanStatus.loanPurpose == loanPurposeArray[0]){
+				
+				if(loanDetails.loanAmount && loanDetails.purchaseValue){
+					var purchase = loanDetails.purchaseValue;
+					if(purchase.indexOf('$') > -1){
+						var arr = purchase.split('$');
+						loanDetails.purchaseValue = arr;
+					}
+					ltvData = loanDetails.loanAmount/loanDetails.purchaseValue;
+					ltvData = ltvData*100+'%';
+				}else {
+					ltvData = "-";
+				}
+			}else if(loanDetails.userLoanStatus.loanPurpose == loanPurposeArray[1]){
+				if(loanDetails.loanAmount && loanDetails.propertyType.homeWorthToday){
+					var propertyValue = loanDetails.propertyType.homeWorthToday;
+					if(propertyValue.indexOf('$') > -1){
+						var arr = propertyValue.split('$');
+						loanDetails.propertyType.homeWorthToday = arr;
+					}
+					ltvData = (loanDetails.loanAmount/loanDetails.propertyType.homeWorthToday);
+					ltvData = ltvData*100+'%';
+				}else {
+					ltvData = "-";
+				}
+				
+			}else {
+				ltvData = "-";
+			}
+		
+		
+		}
+	}catch(e){
+		ltvData = "-";
 	}
+	
+	
 	appendLoanDetailsRow("LTV",ltvData);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
 	
@@ -1835,10 +1877,10 @@ function appendCustomerLoanDetails(loanDetails) {
 				loanDetails.userLoanStatus.creditInformation, true,
 				loanDetails.creditReportUrl);
 	}
-	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
+/*	if (loanDetails.loanDetail && loanDetails.loanDetail.loanAmount) {
 		appendLoanDetailsRow("Loan Amount", "$ "
 				+ loanDetails.loanDetail.loanAmount);
-	}
+	}*/
 	appendCustomerEditProfilePopUp();
 	//jira-813
 	/*var text="Loan URL in LQB";*/

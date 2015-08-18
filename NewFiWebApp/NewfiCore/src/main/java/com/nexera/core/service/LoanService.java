@@ -219,7 +219,7 @@ public interface LoanService {
 
 	public void updateLoanModifiedDate(int loanId, Date modifiedDate);
 	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus);
-	
 	public boolean isCreditScoreValid(CustomerDetail customerDetail);
+	public Integer updateLQBAmounts(Loan loan);
 
 }
