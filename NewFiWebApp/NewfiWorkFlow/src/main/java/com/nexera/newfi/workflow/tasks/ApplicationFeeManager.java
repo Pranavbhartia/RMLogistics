@@ -170,7 +170,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				substitutions.put("-message-", ary);
 				
 				substitutions.put("-customername-",new String[] { loanVO.getUser().getFirstName()+" "+loanVO.getUser().getLastName() });
-				substitutions.put("-newfiloannumber-", new String[] { loanVO.getLqbFileId()});
+				substitutions.put("-newfiloannumber-", new String[] { loanVO.getId()});
 
 				for (String key : objectMap.keySet()) {
 					ary = new String[1];
