@@ -196,6 +196,8 @@ public class ThreadManager implements Runnable {
 						String docsoutDate = null;
 						String appraisalOrderedDate = null;
 						String appraisalReceivedDate = null;
+						String loanApprValue = null;
+						String loanAmount = null;
 						Milestones theMilestone = null;
 						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 						if (loadResponseList != null) {
@@ -242,10 +244,33 @@ public class ThreadManager implements Runnable {
 										appraisalReceivedDate = loadResponseVO
 										        .getFieldValue();
 									}
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAN_APPR_VALUE)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										loanApprValue = loadResponseVO
+										        .getFieldValue();
+									}
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAN_AMOUNT)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										loanAmount = loadResponseVO
+										        .getFieldValue();
+									}
 								}
 
 							}
-
+							if (loanAmount != null) {
+								Loan updateLoan = new Loan(loan.getId());
+								updateLoan.setLoanAmount(Double
+								        .parseDouble(loanAmount));
+								loanService.updateLQBAmounts(updateLoan);
+							}
+							if (loanApprValue != null) {
+								Loan updateLoan = new Loan(loan.getId());
+								updateLoan.setAppraisedValue(Double
+								        .parseDouble(loanApprValue));
+								loanService.updateLQBAmounts(updateLoan);
+							}
 							if (lockStatus != null) {
 								Date date = null;
 								String lockedRateCheck = null;
@@ -255,7 +280,8 @@ public class ThreadManager implements Runnable {
 								if (lockedRate != null) {
 									lockedRateCheck = lockedRate;
 								}
-								loanService.updateLoanLockDetails(loan.getId(), date, lockedRateCheck, lockStatus);
+								loanService.updateLoanLockDetails(loan.getId(),
+								        date, lockedRateCheck, lockStatus);
 							}
 							if (docsoutDate != null) {
 								LoanMilestoneMaster lmMaster = getLoanMilestoneMasterBasedOnMilestone(Milestones.DOCS_OUT);
@@ -534,9 +560,10 @@ public class ThreadManager implements Runnable {
 		LOGGER.debug("Fetch Credit Score For This Loan ");
 		if (loan.getLqbFileId() != null) {
 			CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
-			boolean creditScoreValid = loanService.isCreditScoreValid(customerDetail);
+			boolean creditScoreValid = loanService
+			        .isCreditScoreValid(customerDetail);
 			// Using invokeLQB field to check whether loan is modified or not
-			if(invokeLQB && !creditScoreValid){
+			if (invokeLQB && !creditScoreValid) {
 				if (!fetchCreditScore(loan)) {
 					success = false;
 				}
