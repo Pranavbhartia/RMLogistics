@@ -168,6 +168,9 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO)
 				        .toString();
 				substitutions.put("-message-", ary);
+				
+				substitutions.put("-customername-",new String[] { loanVO.getUser().getFirstName()+" "+loanVO.getUser().getLastName() });
+				substitutions.put("-newfiloannumber-", new String[] { loanVO.getLqbFileId()});
 
 				for (String key : objectMap.keySet()) {
 					ary = new String[1];
