@@ -356,3 +356,11 @@ and wg.parent_workflow_item_master =  wf1.id)) as wf2 set wf.status=3 where wf.i
 #Appraisal Fee : instead of Application Fee
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Appraisal Fee' WHERE `id`='17';
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Appraisal Fee' WHERE `id`='32';
+
+-#Ranjitha-addition of two columns for LTV calculation
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `lqb_appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
+
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `appraised_val`;
+
