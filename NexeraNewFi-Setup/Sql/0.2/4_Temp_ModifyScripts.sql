@@ -362,5 +362,5 @@ ALTER TABLE `newfi_schema`.`loan`
 ADD COLUMN `lqb_appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
 
 ALTER TABLE `newfi_schema`.`loan` 
-ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `appraised_val`;
+ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `lqb_appraised_val`;
 
