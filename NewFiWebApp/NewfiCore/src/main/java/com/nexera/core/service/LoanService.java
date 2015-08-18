@@ -172,7 +172,8 @@ public interface LoanService {
 
 	public void sendApplicationFinishedEmail(Loan loan);
 
-	public void sendApplicationSubmitConfirmationMail(Integer loanId, boolean sendMailToLM);
+	public void sendApplicationSubmitConfirmationMail(Integer loanId,
+	        boolean sendMailToLM);
 
 	public void createAlertForAgentAddition(int loanId);
 
@@ -210,13 +211,18 @@ public interface LoanService {
 	 * @param loanId
 	 */
 	void markLoanDeleted(int loanId);
-	
+
 	public int updateStatusInLoanTeam(UserVO user);
-	
+
 	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
 	        String comments);
 
 	public void updateLoanModifiedDate(int loanId, Date modifiedDate);
-	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus);
+
+	public void updateLoanLockDetails(int loanId, Date lockExpirationDate,
+	        String lockedRate, String lockStatus);
+
+	public LoanMilestone findLoanMileStoneByCriteria(
+	        LoanMilestone searchCriteria);
 
 }

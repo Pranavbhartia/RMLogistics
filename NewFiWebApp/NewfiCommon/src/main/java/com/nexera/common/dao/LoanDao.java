@@ -142,11 +142,14 @@ public interface LoanDao extends GenericDao {
 	 */
 	List<Loan> retrieveLoanByProgressStatus(User parseUserModel,
 	        int[] loanProgressStatusIds, int startLimit, int endLimit);
-	
+
 	public int updateStatusInLoanTeam(User user);
-	
-	
+
 	public void updateLoanModifiedDate(int loanId, Date modifiedDate);
-	
-	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus);
+
+	public void updateLoanLockDetails(int loanId, Date lockExpirationDate,
+	        String lockedRate, String lockStatus);
+
+	public LoanMilestone findLoanMileStoneByCriteria(
+	        LoanMilestone loanMilestoneCriteria);
 }
