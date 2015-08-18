@@ -351,3 +351,8 @@ where  wf1.workflow_item_master=10 and  wf1.status=1
 and  wf1.id = 
 (select parent_workflow_item_master  from newfi_schema.workflowitemexec wg where wg.workflow_item_master=11 and wg.status = 3 
 and wg.parent_workflow_item_master =  wf1.id)) as wf2 set wf.status=3 where wf.id=wf2.id and wf.workflow_item_master=10 and  wf.status=1 ;
+
+
+#Appraisal Fee : instead of Application Fee
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Appraisal Fee' WHERE `id`='17';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Appraisal Fee' WHERE `id`='32';
