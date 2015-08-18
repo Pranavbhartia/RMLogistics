@@ -375,7 +375,8 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		LoanMilestone lm = loanService
 		        .findLoanMileStoneByCriteria(searchCriteria);
 		if (lm != null && lm.getStatusUpdateTime() != null) {
-			milestoneDate = String.valueOf(lm.getStatusUpdateTime());
+			milestoneDate = String.valueOf(utils.getMMDDForDisplay(lm
+			        .getStatusUpdateTime()));
 		}
 		return milestoneDate;
 	}

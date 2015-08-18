@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.LoanProgressStatusMaster;
+import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
@@ -21,7 +23,7 @@ public class UWReviewedManager implements IWorkflowTaskExecutor{
 	@Autowired
 	private ApplicationContext applicationContext;
 	@Autowired
-	WorkflowService workflowService;
+	private IWorkflowService iWorkflowService;
 	@Autowired
 	private NotificationService notificationService;
 
@@ -37,8 +39,11 @@ public class UWReviewedManager implements IWorkflowTaskExecutor{
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// Do Nothing
-		return null;
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String closureDate = iWorkflowService.getUWMilestoneDates(loanId,
+		        LOSLoanStatus.LQB_STATUS_APPROVED);
+		return closureDate;
 	}
 
 	@Override

@@ -291,7 +291,7 @@ var workFlowContext = {
 		}
 	},
 	getItemToAppendTo: function(newLine,inline,workflowItem){
-		if(workflowItem.workflowItemType=="CREDIT_SCORE"){
+		if(workflowItem.workflowItemType=="CREDIT_SCORE" ){
 			return inline;
 		}
 		return newLine;
@@ -501,7 +501,14 @@ function getInternalEmployeeMileStoneContext( workItem) {
 				data.loanID = workFlowContext.loanId;
 			}
 			
-			
+			else if (ob.workItem.workflowItemType == "UW_SUBMITTED" || ob.workItem.workflowItemType =="UW_REVIEWED" || 
+					ob.workItem.workflowItemType == "UW_APPROVED" || ob.workItem.workflowItemType == "UW_SUBMITTED_DISPLAY" ||
+					ob.workItem.workflowItemType =="UW_REVIEWED_DISPLAY" || ob.workItem.workflowItemType == "UW_APPROVED_DISPLAY")
+			{
+					data.loanID = workFlowContext.loanId;
+					ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
+					$(ob.stateInfoContainer).addClass("cursor-pointer");
+			}
 			
 			itemToAppendTo.append(txtRow1);
 			if(ajaxURL&&ajaxURL!=""){

@@ -50,10 +50,10 @@ public class Utils {
 
 	@Value("${unprotected.urls}")
 	private String unProtectedUrls;
-	
+
 	@Value("${restricted.folders}")
 	private String restrictedFolders;
-	
+
 	@Value("${restricted.doc.types}")
 	private String restrictedDocTypes;
 
@@ -125,15 +125,15 @@ public class Utils {
 		}
 		return null;
 	}
-    
-	public String getDateAndTimeForUserDashboard(Date date){
-		
+
+	public String getDateAndTimeForUserDashboard(Date date) {
+
 		Integer offSetFromUser = getOffsetFromUserObject();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
 		Date localeDate = null;
 		try {
 			dateFormat.setTimeZone(TimeZone.getTimeZone(GMT));
-            
+
 			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
 			localeDate = new Date(date.getTime() - offset);
 			return dateFormat.format(localeDate);
@@ -142,17 +142,31 @@ public class Utils {
 			LOG.error("Exception Caught " + e.getMessage());
 		}
 		return null;
-		
+
 	}
-	
-public String getDateAndTimeForDisplay(Date date){
-		
+
+	public String getMMDDForDisplay(Date date) {
+		DateFormat format = new SimpleDateFormat("MM-dd");
+		try {
+			String stringdate = format.format(date);
+
+			return stringdate;
+		} catch (Exception e) {
+			LOG.error("Exception Caught in getdatefordisplay method"
+			        + e.getMessage());
+		}
+		return null;
+
+	}
+
+	public String getDateAndTimeForDisplay(Date date) {
+
 		Integer offSetFromUser = getOffsetFromUserObject();
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yy");
 		Date localeDate = null;
 		try {
 			dateFormat.setTimeZone(TimeZone.getTimeZone(GMT));
-            
+
 			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
 			localeDate = new Date(date.getTime() - offset);
 			return dateFormat.format(localeDate);
@@ -161,8 +175,9 @@ public String getDateAndTimeForDisplay(Date date){
 			LOG.error("Exception Caught " + e.getMessage());
 		}
 		return null;
-		
+
 	}
+
 	public Date getDateInUserLocale(Date date) {
 
 		Integer offSetFromUser = getOffsetFromUserObject();
@@ -279,7 +294,7 @@ public String getDateAndTimeForDisplay(Date date){
 		String jsonString = gson.toJson(map);
 		return jsonString;
 	}
-	
+
 	public static Map<String, Object> convertJsonToMap(String jsonString) {
 		if (jsonString != null) {
 			LOG.debug("Inside method convertJsonToMap ");
@@ -409,7 +424,7 @@ public String getDateAndTimeForDisplay(Date date){
 		}
 		return unprotectedUrls;
 	}
-	
+
 	public List<String> getRestrictedFolders() {
 
 		String[] restrictedFoldersArray = restrictedFolders.split(",");
@@ -431,6 +446,7 @@ public String getDateAndTimeForDisplay(Date date){
 		}
 		return restrictedDocTypes;
 	}
+
 	/*
 	 * public static void main(String[] args) { String a ="$100,2313";
 	 * BigDecimal myBigNum = new BigDecimal(unformatCurrencyField(a));

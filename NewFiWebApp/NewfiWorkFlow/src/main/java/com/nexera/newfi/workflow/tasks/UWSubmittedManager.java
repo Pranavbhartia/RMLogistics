@@ -6,20 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NotificationService;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
-import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
 
 @Component
-public class UWSubmittedManager implements IWorkflowTaskExecutor{
+public class UWSubmittedManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private LoanService loanService;
 	@Autowired
 	private ApplicationContext applicationContext;
 	@Autowired
-	WorkflowService workflowService;
+	IWorkflowService iworkflowService;
 	@Autowired
 	private NotificationService notificationService;
 
@@ -31,8 +33,11 @@ public class UWSubmittedManager implements IWorkflowTaskExecutor{
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// Do Nothing
-		return null;
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String closureDate = iworkflowService.getUWMilestoneDates(loanId,
+		        LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING);
+		return closureDate;
 	}
 
 	@Override
@@ -47,7 +52,7 @@ public class UWSubmittedManager implements IWorkflowTaskExecutor{
 	}
 
 	private void dismissSystemEduNotification(HashMap<String, Object> objectMap) {
-		
+
 	}
 
 	@Override
