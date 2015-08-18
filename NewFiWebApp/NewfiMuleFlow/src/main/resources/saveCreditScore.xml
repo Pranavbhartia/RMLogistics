@@ -4,13 +4,7 @@
 			<credit craid="creditCardId" requestType="UPGRADE" loginName="LOGIN_NAME"
 				password="PASSWORD" equifax="equifaxStatus" experian="experianStatus"
 				transunion="transunionStatus" reportId="report_id" />
-			<field id="aBFirstNm">firstName</field>
-			<field id="aBLastNm">lastName</field>
-			<field id="aBAddr">applicantAddress</field>
-			<field id="aBSsn">userSSNnumber</field>
-			<field id="aBCity">applicantCity</field>
-			<field id="aBState">applicantState</field>
-			<field id="aBZip">applicantZipCode</field>
+			
 		</applicant>
 	</loan>
 </LOXmlFormat>

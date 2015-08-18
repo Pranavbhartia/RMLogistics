@@ -1029,30 +1029,11 @@ public class LQBRequestUtil {
 	        String reportId, boolean requestTrimerge) {
 
 		HashMap<String, String> hashmap = new HashMap<>();
-		hashmap.put("applicantId", loanAppFormVO.getUser().getCustomerDetail()
-		        .getSsn());
+		hashmap.put("applicantId", ssnNumber);
 		if (reportId != null && requestTrimerge) {
 			hashmap.put("report_id", reportId);
 		}
-		hashmap.put("firstName", loanAppFormVO.getLoan().getUser()
-		        .getFirstName());
-		hashmap.put("lastName", loanAppFormVO.getLoan().getUser().getLastName());
-		hashmap.put("userSSNnumber", ssnNumber);
-		hashmap.put("applicantCity", loanAppFormVO.getUser()
-		        .getCustomerDetail().getAddressCity());
-		hashmap.put("applicantState", loanAppFormVO.getUser()
-		        .getCustomerDetail().getAddressState());
-		hashmap.put("applicantZipCode", loanAppFormVO.getUser()
-		        .getCustomerDetail().getAddressZipCode());
-		if (null == loanAppFormVO.getUser().getCustomerDetail()
-		        .getAddressStreet()
-		        || "".equalsIgnoreCase(loanAppFormVO.getUser()
-		                .getCustomerDetail().getAddressStreet())) {
-			hashmap.put("applicantAddress", "undisclosed");
-		} else {
-			hashmap.put("applicantAddress", loanAppFormVO.getUser()
-			        .getCustomerDetail().getAddressStreet());
-		}
+		
 		if (requestTrimerge) {
 			hashmap = saveTrimergeStatus(hashmap);
 		} else {
