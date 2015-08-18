@@ -2200,7 +2200,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	// Checks if Credit Score is available for all 3 bureaus and all are NOT 800
-	private boolean isCreditScoreValid(CustomerDetail customerDetail) {
+	public boolean isCreditScoreValid(CustomerDetail customerDetail) {
 		boolean creditScoreValid = false;
 		// All 3 are available but all are 800
 		if (customerDetail.getEquifaxScore() != null

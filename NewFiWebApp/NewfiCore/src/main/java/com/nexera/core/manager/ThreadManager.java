@@ -73,6 +73,7 @@ import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
+import com.nexera.core.service.impl.LoanServiceImpl;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.CreditScoreXMLHandler;
 import com.nexera.core.utility.LoadXMLHandler;
@@ -532,8 +533,13 @@ public class ThreadManager implements Runnable {
 
 		LOGGER.debug("Fetch Credit Score For This Loan ");
 		if (loan.getLqbFileId() != null) {
-			if (!fetchCreditScore(loan)) {
-				success = false;
+			CustomerDetail customerDetail = loan.getUser().getCustomerDetail();
+			boolean creditScoreValid = loanService.isCreditScoreValid(customerDetail);
+			// Using invokeLQB field to check whether loan is modified or not
+			if(invokeLQB && !creditScoreValid){
+				if (!fetchCreditScore(loan)) {
+					success = false;
+				}
 			}
 		}
 

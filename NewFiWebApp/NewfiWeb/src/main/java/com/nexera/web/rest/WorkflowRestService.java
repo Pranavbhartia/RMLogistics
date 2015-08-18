@@ -41,6 +41,7 @@ import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.web.rest.util.RestUtil;
+import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.engine.EngineTrigger;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.utils.Util;
@@ -296,7 +297,18 @@ public class WorkflowRestService {
 		try {
 			EngineTrigger engineTrigger = applicationContext
 			        .getBean(EngineTrigger.class);
-			workflowService.saveParamsInExecTable(workflowId, params);
+			String finalJsonParams = params;
+			WorkflowItemExec workflowItemExec = workflowService.getWorkflowExecById(workflowId);
+			String existingParams = workflowItemExec.getParams();
+			if (existingParams != null && existingParams != ""){
+				Map<String, Object> existingMapParams = Utils.convertJsonToMap(existingParams);
+				Map<String, Object> newMapParams = Utils.convertJsonToMap(params);
+				Map<String, Object> finalParams = new HashMap<String, Object>();
+				finalParams.putAll(existingMapParams);
+				finalParams.putAll(newMapParams);
+				finalJsonParams = Utils.convertMapToJson(finalParams);
+			}
+			workflowService.saveParamsInExecTable(workflowId, finalJsonParams);
 			String result = engineTrigger.getRenderStateInfoOfItem(workflowId);
 			response = RestUtil.wrapObjectForSuccess(result);
 		} catch (Exception e) {
