@@ -23,6 +23,7 @@ import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
@@ -186,7 +187,6 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		sendReminder(createReminderVo, currMilestone, prevMilestone);
 	}
 
-	
 	@Override
 	public String getNexeraMilestoneComments(int loanId, Milestones milestone) {
 		String comments = null;
@@ -208,10 +208,9 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		UserVO user = userProfileService.findUser(userID);
 		if (user != null) {
 			if (user.getCustomerDetail() != null) {
-				creditDisplay = utils
-				        .constrtClickableCreditScore(CustomerDetail
-				        .convertFromVOToEntity(user.getCustomerDetail()),
-				        user.getDefaultLoanId());
+				creditDisplay = utils.constrtClickableCreditScore(
+				        CustomerDetail.convertFromVOToEntity(user
+				                .getCustomerDetail()), user.getDefaultLoanId());
 			}
 		}
 		return creditDisplay;
@@ -267,14 +266,14 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		// signed.
 		LoanMilestone disclosureMS = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.DISCLOSURE.getMilestoneKey());
-		
-		if (disclosureMS != null && disclosureMS.getComments()!=null && disclosureMS.getComments().equals(LoanStatus.disclosureSigned))
-		{
-			//Show Click To pay only if Disclosures are signed
+
+		if (disclosureMS != null
+		        && disclosureMS.getComments() != null
+		        && disclosureMS.getComments().equals(
+		                LoanStatus.disclosureSigned)) {
+			// Show Click To pay only if Disclosures are signed
 			status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
-		}
-		else
-		{
+		} else {
 			status = LoanStatus.APP_PAYMENT_CANT_PAY_YET;
 		}
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
@@ -361,5 +360,23 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		        status);
 		return utils.getJsonStringOfMap(map);
 
+	}
+
+	@Override
+	public String getUWMilestoneDates(int loanID, LOSLoanStatus loanStatus) {
+		String milestoneDate = "";
+		Loan loan = new Loan(loanID);
+		LoanMilestone searchCriteria = new LoanMilestone();
+		searchCriteria.setLoan(loan);
+		LoanMilestoneMaster lmMaster = new LoanMilestoneMaster();
+		lmMaster.setName(Milestones.UW.getMilestoneKey());
+		searchCriteria.setLoanMilestoneMaster(lmMaster);
+		searchCriteria.setComments(loanStatus.getDisplayStatus());
+		LoanMilestone lm = loanService
+		        .findLoanMileStoneByCriteria(searchCriteria);
+		if (lm != null && lm.getStatusUpdateTime() != null) {
+			milestoneDate = String.valueOf(lm.getStatusUpdateTime());
+		}
+		return milestoneDate;
 	}
 }

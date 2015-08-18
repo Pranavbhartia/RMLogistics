@@ -726,6 +726,30 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		}
 		return latestMS;
 	}
+	
+	@Override
+	public LoanMilestone findLoanMileStoneByCriteria(
+			LoanMilestone loanMilestoneCriteria) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria masterCriteria = session
+		        .createCriteria(LoanMilestoneMaster.class);
+		masterCriteria.add(Restrictions.eq("name", loanMilestoneCriteria.getLoanMilestoneMaster().getName()));
+		LoanMilestoneMaster loanMilestoneMaster = (LoanMilestoneMaster) masterCriteria
+		        .uniqueResult();
+		Criteria criteria = session.createCriteria(LoanMilestone.class);
+		criteria.add(Restrictions.eq("loan", loanMilestoneCriteria.getLoan()));
+		criteria.add(Restrictions
+		        .eq("loanMilestoneMaster", loanMilestoneMaster));
+		criteria.add(Restrictions.eq("comments", loanMilestoneCriteria.getComments()));
+		criteria.addOrder(Order.desc("order"));
+		criteria.addOrder(Order.desc("id"));
+		List<LoanMilestone> milestones = criteria.list();
+		LoanMilestone latestMS = null;
+		if (milestones.size() > 0) {
+			latestMS = milestones.get(0);
+		}
+		return latestMS;
+	}
 
 	@Override
 	public List<Loan> getAllActiveLoan() {

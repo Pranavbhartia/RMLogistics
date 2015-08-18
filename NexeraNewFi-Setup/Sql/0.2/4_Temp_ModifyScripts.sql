@@ -342,14 +342,6 @@ UPDATE newfi_schema.loan set loan_progress_status_master = 7 where id in (select
 UPDATE newfi_schema.loan set loan_progress_status_master = 6 where id in (select loan from newfi_schema.loanmilestone where milestone = 8 and comments = 'WITHDRAWN');
 
 
-#Ranjitha-addition of two columns for LTV calculation
-ALTER TABLE `newfi_schema`.`loan` 
-ADD COLUMN `lqb_appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
-
-ALTER TABLE `newfi_schema`.`loan` 
-ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `appraised_val`;
-
-
 # Rajeswari : Clean up Credit Child Milestones - to make parent Credit as GREEN is credit screen is GREEN.
 # UnCheck Safe mode before running this. 
 #Needed to be run only once to take care of old loans.
@@ -359,3 +351,16 @@ where  wf1.workflow_item_master=10 and  wf1.status=1
 and  wf1.id = 
 (select parent_workflow_item_master  from newfi_schema.workflowitemexec wg where wg.workflow_item_master=11 and wg.status = 3 
 and wg.parent_workflow_item_master =  wf1.id)) as wf2 set wf.status=3 where wf.id=wf2.id and wf.workflow_item_master=10 and  wf.status=1 ;
+
+
+#Appraisal Fee : instead of Application Fee
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Appraisal Fee' WHERE `id`='17';
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Appraisal Fee' WHERE `id`='32';
+
+-#Ranjitha-addition of two columns for LTV calculation
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `lqb_appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
+
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `appraised_val`;
+

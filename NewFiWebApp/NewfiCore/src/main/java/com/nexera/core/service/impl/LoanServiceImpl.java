@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1234,6 +1233,13 @@ public class LoanServiceImpl implements LoanService {
 	        String loanMilestoneMAsterName) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMAsterName);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public LoanMilestone findLoanMileStoneByCriteria(LoanMilestone searchCriteria) {
+		return loanDao.findLoanMileStoneByCriteria(searchCriteria);
+	}
+
 
 	@Override
 	@Transactional(readOnly = true)
