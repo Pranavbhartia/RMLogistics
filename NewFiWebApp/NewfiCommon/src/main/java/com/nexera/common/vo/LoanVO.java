@@ -63,6 +63,8 @@ public class LoanVO implements Serializable {
 	private String userZipCode;
 	private Double loanAmount;
 	private Double appraisedValue;
+	private String purchaseValue;
+
 
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
@@ -484,4 +486,14 @@ public class LoanVO implements Serializable {
 	public void setLoanAmount(Double loanAmount) {
 	    this.loanAmount = loanAmount;
     }
+
+	public String getPurchaseValue() {
+	    return purchaseValue;
+    }
+
+	public void setPurchaseValue(String purchaseValue) {
+	    this.purchaseValue = purchaseValue;
+    }
+
+
 }

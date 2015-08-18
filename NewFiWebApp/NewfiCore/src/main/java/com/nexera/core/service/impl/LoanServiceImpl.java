@@ -75,6 +75,7 @@ import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.NotificationVO;
+import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -1545,6 +1546,20 @@ public class LoanServiceImpl implements LoanService {
 			if(lqbLoanStatus!=null){
 				loanVO.setLqbLoanStatus(lqbLoanStatus.getComments());
 			}
+		}
+		
+		LoanAppForm appForm = loanAppFormService.findByLoan(loan);
+		if(appForm !=  null){
+			if(appForm.getPurchaseDetails().getHousePrice()!=null){
+				loanVO.setPurchaseValue(appForm.getPurchaseDetails().getHousePrice());
+			}
+			if(appForm.getPropertyTypeMaster().getHomeWorthToday()!=null){
+				PropertyTypeMasterVO masterVO = new PropertyTypeMasterVO();
+				masterVO.setHomeWorthToday(appForm.getPropertyTypeMaster().getHomeWorthToday());
+				loanVO.setPropertyType(masterVO);
+			}
+			
+			
 		}
 		
 		

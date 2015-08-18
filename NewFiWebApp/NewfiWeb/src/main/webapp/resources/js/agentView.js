@@ -1811,19 +1811,26 @@ function appendCustomerLoanDetails(loanDetails) {
 
 			if(loanDetails.userLoanStatus.loanPurpose == loanPurposeArray[0]){
 				
-				if(loanDetails.loanAmount){
-					ltvData = '$'+loanDetails.loanAmount;
-					ltvData = ltvData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+				if(loanDetails.loanAmount && loanDetails.purchaseValue){
+					var purchase = loanDetails.purchaseValue;
+					if(purchase.indexOf('$') > -1){
+						var arr = purchase.split('$');
+						loanDetails.purchaseValue = arr;
+					}
+					ltvData = loanDetails.loanAmount/loanDetails.purchaseValue;
+					ltvData = ltvData*100+'%';
 				}else {
 					ltvData = "-";
 				}
 			}else if(loanDetails.userLoanStatus.loanPurpose == loanPurposeArray[1]){
-				if(loanDetails.loanAmount && loanDetails.appraisedValue){
-					ltvData = (loanDetails.loanAmount/loanDetails.appraisedValue);
-					
-				}else if(loanDetails.loanAmount){
-					ltvData = '$'+loanDetails.loanAmount;
-					ltvData = ltvData.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+				if(loanDetails.loanAmount && loanDetails.propertyType.homeWorthToday){
+					var propertyValue = loanDetails.propertyType.homeWorthToday;
+					if(propertyValue.indexOf('$') > -1){
+						var arr = propertyValue.split('$');
+						loanDetails.propertyType.homeWorthToday = arr;
+					}
+					ltvData = (loanDetails.loanAmount/loanDetails.propertyType.homeWorthToday);
+					ltvData = ltvData*100+'%';
 				}else {
 					ltvData = "-";
 				}
