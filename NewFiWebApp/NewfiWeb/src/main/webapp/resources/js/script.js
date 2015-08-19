@@ -629,7 +629,8 @@ function paintProfileCompleteStep2(user) {
     $('#center-panel-cont').append(topHeader).append(formContainer);
 }
 
-function getCompletYourApplicationHeader() {
+function getCompletYourApplicationHeader(isQuickQuote,qTitle) {
+
     var parent = $('<div>').attr({
         "class": "complete-application-wrapper"
     });
@@ -638,9 +639,17 @@ function getCompletYourApplicationHeader() {
     /*var header = $('<div>').attr({
         "class": "complete-application-header"
     }).html("Complete My Loan Profile");*/
+    var title = "";
+    var newClass = "";
+    if(isQuickQuote){
+    	title = qTitle;
+    	newClass = "quick-quote-header"
+    }else {
+    	title = "Loan Application";
+    }
     var header = $('<div>').attr({
-        "class": "complete-application-header"
-    }).html("Loan Application");//Changed from Complete My Application to Complete Application
+        "class": "complete-application-header "+newClass
+    }).html(title);//Changed from Complete My Application to Complete Application
   //Changed from Complete Application to loan application
     
     return parent.append(header);

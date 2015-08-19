@@ -475,6 +475,7 @@ a.cus-eng-succ-mess-email {
     text-align: center;      
     font-size: 15px;      
     width: 211px;
+    cursor: pointer;
 }
 
 .lp-item-adj {
@@ -494,4 +495,174 @@ a.cus-eng-succ-mess-email {
 .lp-my-archives,.lp-my-loan {
     padding: 20px 5px;
     
+}
+
+.quick-quote-header {
+    margin-left: 10px;
+}
+
+.quick-quote-col {
+    height: 40px;      
+    margin: 10px 25px;            
+    display: block;            
+    line-height: 40px;      
+    color: #fff;      
+    background-color: rgba(24, 72, 141, 0.9);      
+    border: 1px #fff solid;      
+    border-radius: 3px;      
+    text-align: center;      
+    font-size: 16px;      
+    width: 161px;
+    cursor: pointer;
+}
+
+.quick-quote-button-section {
+    width: 635px;
+    margin: 0 auto;
+    padding: 10px 0;
+    border: 1px solid #dcdcdc;
+    background-color: #fafafa;
+}
+
+.quick-quote-row-LHS {
+    font-family: openSans;
+    font-size: 14px;
+    text-align: left;
+    width: 185px;
+    padding: 0 0px 0 20px;
+    line-height: 40px;
+}
+
+.quick-quote-row {
+    width: 419px;
+    margin: 20px auto;
+}
+
+.quick-quote-row-RHS {
+    font-family: openSans;
+    font-size: 14px;
+    width: 55%;      
+    text-align: left;
+    height: 40px;            
+    padding-left: 15px;      
+    background-color: #fafafa !important;      
+    border: 1px #E2E2E2 solid;      
+    border-radius: 3%;
+    line-height: 40px;
+}
+
+.quick-quote-button[isSelected="true"] {
+    background: #F47521;
+}
+
+.quick-quote-question-section-LHS {
+    /* border: 1px solid #dcdcdc; */
+    margin: 10px 20px;
+    min-height: 140px;
+}
+
+.quick-quote-question-section {
+    margin: 20px 10px;
+    min-height: auto;
+}
+
+.quick-quote-question-section-RHS {
+    /* border: 1px solid #dcdcdc; */
+    margin: 10px 20px;
+    min-height: 140px;
+}
+
+.quick-quote-row-LHS-adj {
+	line-height: 20px;
+}
+
+.quick-qoute-btn {
+    height: 40px;      
+    margin: 25px auto;      
+    display: block;      
+    line-height: 40px;      
+    color: #fff;      
+    background-color: rgba(24, 72, 141, 0.9);      
+    border: 1px #fff solid;      
+    border-radius: 3px;      
+    text-align: center;      
+    font-size: 16px;      
+    width: 161px;      
+    cursor: pointer;
+}
+
+.quick-quote-option-selected {
+    height: 40px;      
+    padding-left: 10px;      
+    line-height: 35px;      
+    border: 1px solid #dcdcdc;      
+    border-radius: 3px;      
+    background: url(../images/down-arrow.png) no-repeat right center;            
+    font-size: 14px;      
+    cursor: pointer;            
+    overflow: hidden;      
+    text-overflow: ellipsis;      
+    white-space: nowrap;      
+    padding-right: 20px;      
+    text-transform: inherit;
+}
+
+.quick-quote-dropdown-cont {
+    position: absolute;      
+    width: 229px;      
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid #dcdcdc;      
+    border-radius: 3px;      
+    background: #fff;      
+    margin: 42px 0 0 186px;
+}
+
+.quick-quote-option-sel {
+    min-height: 30px;      
+    padding: 10px 0 5px 10px;      
+    line-height: normal;      
+    font-size: 14px;      
+    cursor: pointer;
+}
+
+.quick-quote-yesno-container {
+    position: relative;
+    width: 100%;
+}
+
+
+.quick-quote-yes-no-container {
+    display: inline-block;      
+    width: 75px;      
+    height: 30px;      
+    line-height: 30px;      
+    margin-top: 10px;      
+    text-align: center;      
+    margin-right: 10px;      
+    color: #fff;      
+    background: #6c9f2e;      
+    border-radius: 3px;      
+    font-size: 14px;      
+    text-transform: capitalize;      
+    cursor: pointer;
+}
+
+.month-year-row-adj {
+    width: 100px;
+}
+
+.month-year-drop-down-row {
+    width: 100px;
+    background: url(../images/down-arrow.png) no-repeat right center;
+    cursor: pointer;
+}
+
+.quick-quote-text {
+    margin: 5px;
+}
+
+.quick-quote-dropdown-cont-adj {
+    width: 100px;
+    margin-left: 313px;
 }
