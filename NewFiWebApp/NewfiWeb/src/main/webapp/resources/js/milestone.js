@@ -224,6 +224,13 @@ var workFlowContext = {
 					if(response.resultObject[key]!=""){
 						var contxt=workFlowContext.mileStoneContextList[key];
 						contxt.updateMilestoneView(response.resultObject[key]);
+						//condition checking HERE
+						if (contxt.workItem.workflowItemType == "MANAGE_APP_FEE" || contxt.workItem.workflowItemType == "APP_FEE")
+						{
+							contxt.getStateInfo();
+						}
+
+
 					}
 				}
 			}
@@ -399,45 +406,64 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			var data = {};
 			data.milestoneId=ob.mileStoneId;
 			var floatClass="";
-			if(rightLeftClass.indexOf("rc")>=0){
-				floatClass="";
+			
+			var txtRow1;
+			var itemAlreadyPresent = false;
+			if(itemToAppendTo){
+				if(rightLeftClass.indexOf("rc")>=0){
+					floatClass="";
+				}else{
+					floatClass="float-right"
+				}
+				txtRow1 = $('<span>').attr({
+					"class" : rightLeftClass + "-text "+floatClass,
+					"mileNotificationId" : ob.workItem.id,
+					"data-text" : ob.workItem.workflowItemType
+				});
+				ob.stateInfoContainer=txtRow1;
+				itemToAppendTo.append(txtRow1);				
 			}else{
-				floatClass="float-right"
+				itemAlreadyPresent = true;
+				txtRow1=ob.stateInfoContainer;
+				if(txtRow1.hasClass("milestone-lc"))
+					rightLeftClass="milestone-lc";
+				else
+					rightLeftClass="milestone-rc";				
 			}
-			var txtRow1 = $('<span>').attr({
-				"class" : rightLeftClass + "-text "+floatClass,
-				"mileNotificationId" : ob.workItem.id,
-				"data-text" : ob.workItem.workflowItemType
-			});
+			
 			var ajaxURL = "";
 			data.loanID=workFlowContext.loanId;
 			//need to move this logic to a different function
-			ob.stateInfoContainer=txtRow1;
+			
 			if (ob.workItem.workflowItemType=="INITIAL_CONTACT")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Schedule An Alert";
-				$(ob.stateInfoContainer).addClass("cursor-pointer");
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
+				if(itemAlreadyPresent){
+					$(ob.stateInfoContainer).addClass("cursor-pointer");
+					txtRow1.bind("click", function(e) {
+						milestoneChildEventHandler(e)
+					});
+				}
 			}
 			else if (ob.workItem.workflowItemType=="CONTACT_YOUR_LA")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "";				
 				$(ob.stateInfoContainer).addClass("cursor-pointer");
-				txtRow1.addClass("cursor-pointer");
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e)
-				});
+				if(itemAlreadyPresent){
+					txtRow1.addClass("cursor-pointer");
+					txtRow1.bind("click", function(e) {
+						milestoneChildEventHandler(e)
+					});
+				}
 			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
 				data.loanID=workFlowContext.loanId;
 				data.userID = newfiObject.user.id;		
-				callback = showLQBInfo;		
+				callback = showLQBInfo;
 				$(ob.stateInfoContainer).addClass("cursor-pointer");	
 			} 			
 			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
@@ -457,9 +483,11 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE" )
 			{				
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				txtRow1.bind("click", function(e) {
-					milestoneChildEventHandler(e);
-				});
+				if(itemAlreadyPresent){
+					txtRow1.bind("click", function(e) {
+						milestoneChildEventHandler(e);
+					});
+				}
 			}
 					
 			else if (ob.workItem.workflowItemType=="CLOSURE_STATUS")
@@ -510,7 +538,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 					$(ob.stateInfoContainer).addClass("cursor-pointer");
 			}
 			
-			itemToAppendTo.append(txtRow1);
+			
 			if(ajaxURL&&ajaxURL!=""){
 				ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
 					function(response) {
@@ -689,38 +717,43 @@ function attachCursorPointerClassToElement(element){
 
 function showAppFee (itemToAppendTo,workItem)
 {
-	rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
-	var txtRow2 = $('<div>').attr({
-		"class" : rightLeftClass + "-text" ,
-		"id":workItem.id+"fee",
-		"data-text" : workItem.workflowItemType,
-		"mileNotificationId":workItem.id
-	});
-	if(workItem.stateInfo){
-		var tempOb=JSON.parse(workItem.stateInfo);
-		if(tempOb.status){
-			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.html(tempOb.status);	
-			workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.addClass("cursor-pointer");
-			if (workItem.status == NOT_STARTED)
-			{				
-				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("data-text",workItem.workflowItemType+ "_PAY_FOR");
-				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.bind("click", function(e) {
-					milestoneChildEventHandler(e);
-				});						
+	
+		rightLeftClass = getContainerLftRghtClass($("#WF"+workItem.id));
+		var txtRow2 = $('<div>').attr({
+			"class" : rightLeftClass + "-text" ,
+			"id":workItem.id+"fee",
+			"data-text" : workItem.workflowItemType,
+			"mileNotificationId":workItem.id
+		});
+		if(workItem.stateInfo){
+			var tempOb=JSON.parse(workItem.stateInfo);
+			if(tempOb.status){
+				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.html(tempOb.status);	
+				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.addClass("cursor-pointer");
+				if (workItem.status == NOT_STARTED)
+				{				
+					workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("data-text",workItem.workflowItemType+ "_PAY_FOR");
+					workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.bind("click", function(e) {
+						milestoneChildEventHandler(e);
+					});						
+				}
 			}
-		}	
-		itemToAppendTo.append(txtRow2);	
-		if(tempOb.appfee)
-		{
-			txtRow2.html("$"+tempOb.appfee);					
+			if (itemToAppendTo)
+			{
+				itemToAppendTo.append(txtRow2);
+			}
+			if(tempOb.appfee)
+			{
+				txtRow2.html("$"+tempOb.appfee);					
+			}
+				
 		}
-			
-	}
-	if( newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
-			&& workItem.status == NOT_STARTED)
-	{
-		itemToAppendTo.append(getAppFeeEdit(workItem));
-	}
+		if( itemToAppendTo && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
+				&& workItem.status == NOT_STARTED)
+		{ 
+			itemToAppendTo.append(getAppFeeEdit(workItem));
+		}
+	
 }
 function paintNeedsInfo(itemToAppendTo,workItem)
 {

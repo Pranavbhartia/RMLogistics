@@ -257,7 +257,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 			        WorkItemStatus.STARTED.getStatus());
 			return WorkItemStatus.STARTED.getStatus();
 		}
-		return null;
+		return WorkItemStatus.NOT_STARTED.getStatus();
 	}
 
 	@Override
