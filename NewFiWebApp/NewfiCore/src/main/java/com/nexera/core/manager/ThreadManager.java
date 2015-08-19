@@ -568,7 +568,7 @@ public class ThreadManager implements Runnable {
 			boolean creditScoreValid = loanService
 			        .isCreditScoreValid(customerDetail);
 			// Using invokeLQB field to check whether loan is modified or not
-			if (invokeLQB && !creditScoreValid) {
+			if (customerDetail.getTransunionScore() == null || (invokeLQB && !creditScoreValid)) {
 				if (!fetchCreditScore(loan)) {
 					success = false;
 				}
