@@ -738,10 +738,10 @@ public class LoanAppFormVO implements Serializable {
 		loan.setLockedRateData(loanVO.getLockedRateData());
 		loan.setUser(User.convertFromVOToEntity(this.getUser()));
 		if(loanVO.getAppraisedValue()!=null){
-			loan.setAppraisedValue(loanVO.getAppraisedValue());
+			loan.setLqbAppraisedValue(loanVO.getAppraisedValue());
 		}
 		if(loanVO.getLoanAmount()!=null){
-			loan.setLoanAmount(loanVO.getLoanAmount());
+			loan.setLqbLoanAmount(loanVO.getLoanAmount());
 		}
 		if (null != loanVO.getLockStatus())
 			loan.setLockStatus(loanVO.getLockStatus());
