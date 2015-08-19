@@ -2286,6 +2286,7 @@ public class LoanServiceImpl implements LoanService {
     }
 	
 	@Override
+	@Transactional
 	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
 	        String comments) {
 		LOG.debug("Inside method upadteNexeraMilestone ");

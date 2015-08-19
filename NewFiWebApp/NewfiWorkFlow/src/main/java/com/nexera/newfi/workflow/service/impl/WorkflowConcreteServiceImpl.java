@@ -11,9 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
@@ -379,5 +381,67 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			        .getStatusUpdateTime()));
 		}
 		return milestoneDate;
+	}
+
+	@Override
+	@Transactional
+	public void cleanupDisclosureMilestones(int loanID) {
+		LoanVO loanVO = loanService.getLoanByID(loanID);
+		int wfExecID = loanVO.getLoanManagerWorkflowID();
+		WorkflowExec workflowExec = new WorkflowExec();
+		workflowExec.setId(wfExecID);
+		WorkflowItemMaster workflowItemMaster = workflowService
+		        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_DISCLOSURE_STATUS);
+
+		WorkflowItemExec workItemRef = workflowService
+		        .getWorkflowItemExecByType(workflowExec, workflowItemMaster);
+		String statusToCheckOrInsert = null;
+		if (workItemRef.getStatus()
+		        .equals(WorkItemStatus.COMPLETED.getStatus())) {
+			statusToCheckOrInsert = LoanStatus.disclosureAvail;
+			LoanMilestone lm = loanService
+			        .findLoanMileStoneByCriteria(getSearchCriteria(loanID,
+			                statusToCheckOrInsert));
+			// Make an entry for Available if already Doesnt exist
+			if (lm == null) {
+				loanService.updateNexeraMilestone(loanID,
+				        Milestones.DISCLOSURE.getMilestoneID(),
+				        statusToCheckOrInsert);
+			}
+			statusToCheckOrInsert = LoanStatus.disclosureSigned;
+			// Make an entry for Signed if already doesnt exist
+			lm = loanService.findLoanMileStoneByCriteria(getSearchCriteria(
+			        loanID, statusToCheckOrInsert));
+			if (lm == null) {
+				loanService.updateNexeraMilestone(loanID,
+				        Milestones.DISCLOSURE.getMilestoneID(),
+				        statusToCheckOrInsert);
+			}
+
+		}
+		if (workItemRef.getStatus().equals(WorkItemStatus.STARTED.getStatus())) {
+			statusToCheckOrInsert = LoanStatus.disclosureAvail;
+			LoanMilestone lm = loanService
+			        .findLoanMileStoneByCriteria(getSearchCriteria(loanID,
+			                statusToCheckOrInsert));
+			// Make an entry for Available if already Doesnt exist
+			if (lm == null) {
+				loanService.updateNexeraMilestone(loanID,
+				        Milestones.DISCLOSURE.getMilestoneID(),
+				        statusToCheckOrInsert);
+			}
+		}
+
+	}
+
+	private LoanMilestone getSearchCriteria(int loanID, String comments) {
+		Loan loan = new Loan(loanID);
+		LoanMilestone searchCriteria = new LoanMilestone();
+		searchCriteria.setLoan(loan);
+		LoanMilestoneMaster lmMaster = new LoanMilestoneMaster();
+		lmMaster.setName(Milestones.DISCLOSURE.getMilestoneKey());
+		searchCriteria.setLoanMilestoneMaster(lmMaster);
+		searchCriteria.setComments(comments);
+		return searchCriteria;
 	}
 }
