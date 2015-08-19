@@ -261,14 +261,19 @@ public class ThreadManager implements Runnable {
 							}
 							if (loanAmount != null) {
 								Loan updateLoan = new Loan(loan.getId());
-								updateLoan.setLoanAmount(Double
-								        .parseDouble(loanAmount));
+								updateLoan.setLqbLoanAmount(Double
+								        .parseDouble(formatAmount(loanAmount)));
+								updateLoan.setLqbAppraisedValue(loan
+								        .getLqbAppraisedValue());
 								loanService.updateLQBAmounts(updateLoan);
 							}
 							if (loanApprValue != null) {
 								Loan updateLoan = new Loan(loan.getId());
-								updateLoan.setAppraisedValue(Double
-								        .parseDouble(loanApprValue));
+								updateLoan
+								        .setLqbAppraisedValue(Double
+								                .parseDouble(formatAmount(loanApprValue)));
+								updateLoan.setLqbLoanAmount(loan
+								        .getLqbLoanAmount());
 								loanService.updateLQBAmounts(updateLoan);
 							}
 							if (lockStatus != null) {
@@ -649,6 +654,11 @@ public class ThreadManager implements Runnable {
 		WorkItemMilestoneInfo wItemMSInfo = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
 		        .get(loanStatusID);
 		return wItemMSInfo;
+	}
+
+	private String formatAmount(String str) {
+		String repl = str.replaceAll("(?<=\\d),(?=\\d)|\\$", "");
+		return repl;
 	}
 
 	private void putItemsIntoExecution(List<WorkflowItemExec> itemsToExecute,

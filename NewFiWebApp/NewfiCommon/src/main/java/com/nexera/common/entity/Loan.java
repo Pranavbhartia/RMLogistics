@@ -506,16 +506,15 @@ public class Loan implements Serializable {
 		loanVo.setLockStatus(loan.getLockStatus());
 		loanVo.setSetSenderDomain(CommonConstants.SENDER_DOMAIN);
 		loanVo.setLockedRate(loan.getLockedRate());
-		if(loan.getLoanAmount()!=null){
-			loanVo.setLoanAmount(loan.getLoanAmount());
+		if (loan.getLqbLoanAmount() != null) {
+			loanVo.setLoanAmount(loan.getLqbLoanAmount());
 		}
-		if(loan.getAppraisedValue()!=null){
-			loanVo.setAppraisedValue(loan.getAppraisedValue());
+		if (loan.getLqbAppraisedValue() != null) {
+			loanVo.setAppraisedValue(loan.getLqbAppraisedValue());
 		}
 		return loanVo;
 	}
 
-	
 	private static LoanDetailVO buildLoanDetailVO(LoanDetail detail) {
 		if (detail == null)
 			return null;
@@ -587,29 +586,29 @@ public class Loan implements Serializable {
 
 	@Column(name = "rate_lock_requested")
 	public Boolean getRateLockRequested() {
-	    return rateLockRequested;
-    }
+		return rateLockRequested;
+	}
 
 	public void setRateLockRequested(Boolean rateLockRequested) {
-	    this.rateLockRequested = rateLockRequested;
-    }
+		this.rateLockRequested = rateLockRequested;
+	}
 
 	@Column(name = "lqb_loan_amount")
-	public Double getLoanAmount() {
-	    return lqbLoanAmount;
-    }
+	public Double getLqbLoanAmount() {
+		return lqbLoanAmount;
+	}
 
-	public void setLoanAmount(Double loanAmount) {
-	    this.lqbLoanAmount = loanAmount;
-    }
+	public void setLqbLoanAmount(Double lqbLoanAmount) {
+		this.lqbLoanAmount = lqbLoanAmount;
+	}
 
 	@Column(name = "lqb_appraised_val")
-	public Double getAppraisedValue() {
-	    return lqbAppraisedValue;
-    }
+	public Double getLqbAppraisedValue() {
+		return lqbAppraisedValue;
+	}
 
-	public void setAppraisedValue(Double appraisedValue) {
-	    this.lqbAppraisedValue = appraisedValue;
-    }
+	public void setLqbAppraisedValue(Double lqbAppraisedValue) {
+		this.lqbAppraisedValue = lqbAppraisedValue;
+	}
 
 }
