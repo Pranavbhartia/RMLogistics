@@ -57,9 +57,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 			                LoanStatus.disclosureSigned)) {
 				// Show Click To pay only if Disclosures are signed
 				status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
-			}
-			else
-			{
+			} else {
 				status = LoanStatus.APP_PAYMENT_CANT_PAY_YET;
 			}
 			LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,
@@ -79,8 +77,14 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 		LOG.debug("Inside method checkStatus");
 		String returnStatus = null;
 		Loan loan = new Loan();
-		loan.setId(Integer.parseInt(inputMap.get(
-		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+		int loanID = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		loan.setId(loanID);
+		// Fall Back Code:
+		// If Disclosures is Signed and if no MS entry is made : make it here to
+		// fix the issue
+		// in NEXNF900
+		iWorkflowService.cleanupDisclosureMilestones(loanID);
 		int workflowItemExecutionId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,

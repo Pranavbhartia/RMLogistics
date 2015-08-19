@@ -19,6 +19,8 @@ import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanApplicationFee;
+import com.nexera.common.entity.LoanMilestone;
+import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -152,25 +154,32 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        .findByLoan(loanVO);
 				String appFee = "";
 				if (loanApplicationFee != null) {
-					 
-					appFee = "$"+String.valueOf(String.format("%.2f", loanApplicationFee.getFee()));
+
+					appFee = "$"
+					        + String.valueOf(String.format("%.2f",
+					                loanApplicationFee.getFee()));
 				}
 
 				substitutions.put("-amount-", new String[] { appFee });
 				String paymentDate = "";
 				if (loanApplicationFee != null
 				        && loanApplicationFee.getPaymentDate() != null) {
-					paymentDate = String.valueOf(utils.getDateAndTimeForDisplay(loanApplicationFee
-					        .getPaymentDate()));
+					paymentDate = String.valueOf(utils
+					        .getDateAndTimeForDisplay(loanApplicationFee
+					                .getPaymentDate()));
 				}
 				substitutions.put("-date-", new String[] { paymentDate });
 				ary[0] = objectMap.get(
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO)
 				        .toString();
 				substitutions.put("-message-", ary);
-				
-				substitutions.put("-customername-",new String[] { loanVO.getUser().getFirstName()+" "+loanVO.getUser().getLastName() });
-				substitutions.put("-newfiloannumber-", new String[] { Integer.toString(loanVO.getId())});
+
+				substitutions.put("-customername-", new String[] { loanVO
+				        .getUser().getFirstName()
+				        + " "
+				        + loanVO.getUser().getLastName() });
+				substitutions.put("-newfiloannumber-",
+				        new String[] { Integer.toString(loanVO.getId()) });
 
 				for (String key : objectMap.keySet()) {
 					ary = new String[1];
@@ -213,10 +222,16 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		// Batch will take care to update the WorkflowItem as correct status
 		// Keeping it for an additional fall back - but not required
 		LOG.info("Checking Status for Application Fee Manager" + inputMap);
-		EngineTrigger engineTrigger = applicationContext
-		        .getBean(EngineTrigger.class);
+		// Fall Back Code:
+		// If Disclosures is Signed and if no MS entry is made : make it here to
+		// fix the issue
+		// in NEXNF900
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		iWorkflowService.cleanupDisclosureMilestones(loanID);
+		EngineTrigger engineTrigger = applicationContext
+		        .getBean(EngineTrigger.class);
+
 		LoanVO loanVO = new LoanVO(loanID);
 		LoanApplicationFee loanApplicationFee = transactionService
 		        .findByLoan(loanVO);

@@ -32,4 +32,6 @@ public interface IWorkflowService {
 	public String getDisclosureURL(int loanID, MasterNeedsEnum needItem);
 	
 	public String getUWMilestoneDates (int loanID, LOSLoanStatus loanStatus);
+	
+	public void cleanupDisclosureMilestones (int loanID);
 }
