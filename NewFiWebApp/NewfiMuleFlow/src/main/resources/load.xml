@@ -133,6 +133,7 @@
 		<field id="sProHazIns " />
 		<field id="sProRealETxMb " />
 		<field id="sTerm" />
+		<field id="sLtvR"/>
 		
 		<applicant>
 			<field id="aBFirstNm" />

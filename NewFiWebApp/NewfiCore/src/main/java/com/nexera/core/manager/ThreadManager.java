@@ -199,6 +199,7 @@ public class ThreadManager implements Runnable {
 						String loanApprValue = null;
 						String loanAmount = null;
 						Milestones theMilestone = null;
+						String ltv = null;
 						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
 						if (loadResponseList != null) {
 							for (LoadResponseVO loadResponseVO : loadResponseList) {
@@ -257,6 +258,13 @@ public class ThreadManager implements Runnable {
 										        .getFieldValue();
 									}
 								}
+								else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LTV)) {
+									if (loadResponseVO.getFieldValue() != null) {
+										ltv = loadResponseVO
+										        .getFieldValue();
+									}
+								}
 
 							}
 							if (loanAmount != null) {
@@ -275,6 +283,11 @@ public class ThreadManager implements Runnable {
 								updateLoan.setLqbLoanAmount(loan
 								        .getLqbLoanAmount());
 								loanService.updateLQBAmounts(updateLoan);
+							}
+							if (ltv != null )//&& loan.getltv() == null)
+							{
+								//update Loan for LTV
+								LOGGER.info("Updating LTV for loan " + loan.getId());
 							}
 							if (lockStatus != null) {
 								Date date = null;
