@@ -284,10 +284,14 @@ public class ThreadManager implements Runnable {
 								        .getLqbLoanAmount());
 								loanService.updateLQBAmounts(updateLoan);
 							}
-							if (ltv != null )//&& loan.getltv() == null)
+							if (ltv != null && loan.getLtv() == null)
 							{
 								//update Loan for LTV
 								LOGGER.info("Updating LTV for loan " + loan.getId());
+								Loan updateLoan = new Loan(loan.getId());
+								updateLoan.setLtv(Double
+								        .parseDouble(formatAmount(ltv)));
+								loanService.updateLtv(updateLoan);
 							}
 							if (lockStatus != null) {
 								Date date = null;
@@ -670,7 +674,7 @@ public class ThreadManager implements Runnable {
 	}
 
 	private String formatAmount(String str) {
-		String repl = str.replaceAll("(?<=\\d),(?=\\d)|\\$", "");
+		String repl = str.replaceAll("(?<=\\d),(?=\\d)|\\$|\\%", "");
 		return repl;
 	}
 

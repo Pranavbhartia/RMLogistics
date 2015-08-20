@@ -364,3 +364,7 @@ ADD COLUMN `lqb_appraised_val` DOUBLE NULL AFTER `rate_lock_requested`;
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `lqb_appraised_val`;
 
+#Ranjitha addition of column for ltv data
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `ltv` DOUBLE(5,2) NULL AFTER `lqb_loan_amount`;
+

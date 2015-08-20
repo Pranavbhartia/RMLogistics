@@ -743,6 +743,10 @@ public class LoanAppFormVO implements Serializable {
 		if(loanVO.getLoanAmount()!=null){
 			loan.setLqbLoanAmount(loanVO.getLoanAmount());
 		}
+		
+		if(loanVO.getLtv() != null){
+			loan.setLtv(loanVO.getLtv());
+		}
 		if (null != loanVO.getLockStatus())
 			loan.setLockStatus(loanVO.getLockStatus());
 		return loan;
