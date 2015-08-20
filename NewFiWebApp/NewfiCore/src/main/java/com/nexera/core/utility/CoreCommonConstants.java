@@ -58,6 +58,7 @@ public interface CoreCommonConstants {
 	
 	public static String SOAP_XML_LOAN_APPR_VALUE = "sApprVal";
 	public static String SOAP_XML_LOAN_AMOUNT = "sLAmtCalc";
+	public static String SOAP_XML_LTV =  "sLtvR";
 
 	// Borrower Credit Score Constants
 	public static String SOAP_XML_BORROWER_EQUIFAX_SCORE = "aBEquifaxScore";
