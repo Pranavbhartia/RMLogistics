@@ -305,7 +305,9 @@ public class LoanServiceImpl implements LoanService {
 		if(loanVO.getLoanAmount()!=null){
 			loan.setLqbLoanAmount(loanVO.getLoanAmount());
 		}
-		
+		if(loanVO.getLtv() != null){
+			loan.setLtv(loanVO.getLtv());
+		}
 		return loan;
 
 	}
@@ -783,6 +785,10 @@ public class LoanServiceImpl implements LoanService {
 			}
 			if(loanVO.getLoanAmount()!=null){
 				loan.setLqbLoanAmount(loanVO.getLoanAmount());
+			}
+			
+			if(loanVO.getLtv() != null){
+				loan.setLtv(loanVO.getLtv());
 			}
 		} catch (Exception e) {
 
@@ -2327,6 +2333,13 @@ public class LoanServiceImpl implements LoanService {
     public Integer updateLQBAmounts(Loan loan) {
 	    Integer rows = loanDao.updateLQBAmounts(loan);
 	    return rows;
+    }
+
+	@Override
+	@Transactional
+    public Integer updateLtv(Loan laon) {
+	   Integer rows = loanDao.updateLtv(laon);
+	   return rows;
     }
 
 }

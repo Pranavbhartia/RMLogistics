@@ -14,6 +14,7 @@ var isRealtor="";
 var isArchivedLoans = "";
 
 
+
 LOAN_ENUM = {
 	ALL : "ALL",
 	NEW_PROSPECT : "NEW PROSPECT",
@@ -1793,8 +1794,7 @@ function appendCustomerLoanDetails(loanDetails) {
 	//appendLoanDetailsRow("Loan Status", loanDetails.status);
 	//jira-813
 	appendLoanDetailsRow("Customer Profile", "Edit", true);
-	appendLoanDetailsRow("Loan Status", loanDetails.lqbLoanStatus);
-	var ltvData = "-";
+	appendLoanDetailsRow("Loan Status", loanDetails.lqbLoanStatus);	
 	/*if(loanDetails.lockedRateData){
 		try{
 			ltvData = JSON.parse(loanDetails.lockedRateData);
@@ -1805,7 +1805,7 @@ function appendCustomerLoanDetails(loanDetails) {
 		
 	}*/
 	
-	var loanPurposeArray = ["Purchase","Refinance"];
+	/*var loanPurposeArray = ["Purchase","Refinance"];
 	try{
 		if(loanDetails.userLoanStatus.loanPurpose){
 
@@ -1844,8 +1844,11 @@ function appendCustomerLoanDetails(loanDetails) {
 	}catch(e){
 		ltvData = "-";
 	}
-	
-	
+	*/
+	var ltvData = "-";
+	if(loanDetails.ltv){
+		ltvData = loanDetails.ltv+"%";
+	}
 	appendLoanDetailsRow("LTV",ltvData);
 	appendLoanDetailsRow("Loan Purpose", loanDetails.userLoanStatus.loanPurpose);
 	

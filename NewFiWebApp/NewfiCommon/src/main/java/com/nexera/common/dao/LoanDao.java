@@ -154,5 +154,7 @@ public interface LoanDao extends GenericDao {
 
 	public LoanMilestone findLoanMileStoneByCriteria(
 	        LoanMilestone loanMilestoneCriteria);
+	
+	public Integer updateLtv(Loan laon);
 
 }

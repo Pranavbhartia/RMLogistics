@@ -64,6 +64,7 @@ public class LoanVO implements Serializable {
 	private Double loanAmount;
 	private Double appraisedValue;
 	private String purchaseValue;
+	private Double ltv;
 
 
 	public int getCustomerWorkflowID() {
@@ -493,6 +494,14 @@ public class LoanVO implements Serializable {
 
 	public void setPurchaseValue(String purchaseValue) {
 	    this.purchaseValue = purchaseValue;
+    }
+
+	public Double getLtv() {
+	    return ltv;
+    }
+
+	public void setLtv(Double ltv) {
+	    this.ltv = ltv;
     }
 
 

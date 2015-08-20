@@ -1095,4 +1095,15 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	    return rows;
     }
 
+	@Override
+    public Integer updateLtv(Loan loan) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.ltv = :ltv WHERE loan.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("ltv",loan.getLtv());
+		query.setParameter("id", loan.getId());
+		int rows=query.executeUpdate();
+	    return rows;
+    }
+
 }

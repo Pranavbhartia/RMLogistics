@@ -229,5 +229,7 @@ public interface LoanService {
 
 	public LoanMilestone findLoanMileStoneByCriteria(
 	        LoanMilestone searchCriteria);
+	
+	public Integer updateLtv(Loan laon);
 
 }
