@@ -292,7 +292,7 @@ function paintDataSection(option,isDefault){
 	var quickQoute = $('<div>').attr({
 		"class" : "cep-button-color quick-qoute-btn clearfix ",
 		"id" : "quick-qoute-btn-id"
-	}).html("Next");
+	}).html("Get Quote");
 	
 	
 	for(var i=0;i<option.length;i++){
