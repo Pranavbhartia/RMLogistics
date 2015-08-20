@@ -816,8 +816,9 @@ function paintCustomerInfo ()
 			"class" : "loan-progress-header"
 		}).html("loan progress");
 	 
-	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();	
-	var subTextInfo ="Below is a detailed list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, please reach out to the newfi team with questions.";
+	var progressHeader = getCustomerMilestoneLoanProgressHeaderBar();
+	var subTextInfo = "";
+	//var subTextInfo ="Below is a detailed list of your loan progress to date.  Click any link below to work on that portion of the loan.  Focus on the links in orange as they are the most critical items at this time.  As always, please reach out to the newfi team with questions.";
 	if (userIsRealtor())
 	{
 		subTextInfo = "newfi understands the importance of getting your transaction closed within the contract date with as little effort possible and with great communication along the way. So we have given you visibility to exactly where your client is in the newfi process and if you have any questions along the way, pelase contact your newfi Loan Advisor.";
