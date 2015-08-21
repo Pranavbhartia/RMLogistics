@@ -441,24 +441,22 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "Schedule An Alert";
-				if(itemAlreadyPresent){
+				
 					$(ob.stateInfoContainer).addClass("cursor-pointer");
 					txtRow1.bind("click", function(e) {
 						milestoneChildEventHandler(e)
 					});
-				}
+				
 			}
 			else if (ob.workItem.workflowItemType=="CONTACT_YOUR_LA")
 			{
 				ajaxURL = "";
 				ob.workItem.stateInfo = "";				
-				$(ob.stateInfoContainer).addClass("cursor-pointer");
-				if(itemAlreadyPresent){
+				$(ob.stateInfoContainer).addClass("cursor-pointer");				
 					txtRow1.addClass("cursor-pointer");
 					txtRow1.bind("click", function(e) {
 						milestoneChildEventHandler(e)
-					});
-				}
+					});				
 			}
 			else if (ob.workItem.workflowItemType=="1003_COMPLETE")
 			{
