@@ -672,9 +672,6 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			documentVO.setFileName(fileName);
 			documentVO.setLoanId(loanId);
 			lqbResponseVO = uploadDocumentInLandingQB(documentVO, user);
-			if(lqbResponseVO == null){
-				
-			}
 
 		/*} catch(MuleException e){
 			

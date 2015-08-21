@@ -352,12 +352,7 @@ public class FileUploadRest {
 			} catch (IllegalStateException | IOException e) {
 				// If file conversion or saving fails, set upload status to
 				// false.
-				
-				//check if type of exception is muleexception 
-				/*if(muleexcetpion is true){
-					return new Gson().toJson(RestUtil.wrapObjectForFailure(null, "418",
-					        "Mule not working"));
-				}*/
+
 				checkFileUploaded.setIsUploadSuccess(false);
 			}
 
