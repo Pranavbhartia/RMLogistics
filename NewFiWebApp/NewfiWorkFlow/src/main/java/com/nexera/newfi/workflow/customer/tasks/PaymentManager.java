@@ -75,7 +75,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	@Override
 	public String checkStatus(HashMap<String, Object> inputMap) {
 		LOG.debug("Inside method checkStatus");
-		String returnStatus = null;
+		String returnStatus = WorkItemStatus.NOT_STARTED.getStatus();
 		Loan loan = new Loan();
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
