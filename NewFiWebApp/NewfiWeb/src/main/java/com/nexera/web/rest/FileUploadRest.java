@@ -35,6 +35,7 @@ import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.ServiceCodes;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
@@ -351,6 +352,7 @@ public class FileUploadRest {
 			} catch (IllegalStateException | IOException e) {
 				// If file conversion or saving fails, set upload status to
 				// false.
+
 				checkFileUploaded.setIsUploadSuccess(false);
 			}
 
@@ -366,7 +368,11 @@ public class FileUploadRest {
 					needsListService.createOrDismissNeedsAlert(loanId);
 				}
 
-			} else {
+			} else if(!checkFileUploaded.getIsUploadSuccess() && checkFileUploaded.getCode() != null && checkFileUploaded.getCode() == ServiceCodes.MULE_SERVICE.getServiceID()){
+				unsupportedFile.add(multipartFile.getOriginalFilename());
+				unsupportedFile.add(checkFileUploaded.getCode().toString());
+				
+			}else {
 				unsupportedFile.add(multipartFile.getOriginalFilename());
 			}
 

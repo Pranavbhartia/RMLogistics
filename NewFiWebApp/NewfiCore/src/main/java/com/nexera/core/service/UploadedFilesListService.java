@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.exception.MuleException;
 import com.nexera.common.vo.CheckUploadVO;
 import com.nexera.common.vo.FileAssignmentMappingVO;
 import com.nexera.common.vo.UploadedFilesListVO;
@@ -66,7 +67,7 @@ public interface UploadedFilesListService {
 	        Boolean isNeedAssigned, String fileName,Integer needId);
 
 	public LQBResponseVO createLQBVO(Integer userID, byte[] bytes,
-	        Integer loanId, String createLQBVO, Boolean isNeedAssigned,Integer needId,String fileName);
+	        Integer loanId, String createLQBVO, Boolean isNeedAssigned,Integer needId,String fileName) throws IOException, Exception, MuleException;
 
 	public LQBResponseVO fetchLQBDocument(LQBDocumentVO lqbDocumentVO)
 	        throws IOException;

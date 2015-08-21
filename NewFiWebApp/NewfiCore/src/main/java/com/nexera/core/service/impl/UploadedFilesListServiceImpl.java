@@ -36,6 +36,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WebServiceMethodParameters;
@@ -54,8 +55,12 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.MasterNeedsEnum;
+import com.nexera.common.enums.ServiceCodes;
+import com.nexera.common.exception.ErrorCode;
 import com.nexera.common.exception.FatalException;
+import com.nexera.common.exception.GenericErrorCode;
 import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.MuleException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.AssignedUserVO;
 import com.nexera.common.vo.CheckUploadVO;
@@ -469,7 +474,14 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				nexeraUtility.deleteFileFolderFromLocalDirectory(file);
 			}
 
-		} catch (Exception e) {
+		} catch(MuleException e){
+			nexeraUtility.deleteFileFolderFromLocalDirectory(file);
+			LOG.error(" Exception uploading s3 :  ", e);
+			checkVo.setIsUploadSuccess(false);
+			int serviceID = e.getErrorCode().getServiceId();
+			checkVo.setCode(serviceID);
+			return checkVo;
+		}catch (Exception e) {
 
 			nexeraUtility.deleteFileFolderFromLocalDirectory(file);
 			LOG.error(" Exception uploading s3 :  ", e);
@@ -499,10 +511,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			        lqbDocumentVO);
 			JSONObject receivedResponse = lqbInvoker
 			        .invokeLqbService(uploadObject.toString());
-			LOG.info(" receivedResponse while uploading LQB Document : "
-			        + receivedResponse.getString("responseMessage"));
-			LOG.info(" LQB response : " + receivedResponse);
 
+			if(receivedResponse == null){
+				throw new MuleException(new GenericErrorCode(
+				        ServiceCodes.MULE_SERVICE.getServiceID(),
+				        "Mule returned null"),"Mule returned null");
+			}
 			// Condition to check if there is any error in doctype
 			if (receivedResponse != null
 			        && receivedResponse.getString("responseMessage") != null) {
@@ -600,12 +614,12 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 	@Override
 	public LQBResponseVO createLQBVO(Integer usrId, byte[] bytes,
 	        Integer loanId, String uuidValue, Boolean isNeedAssigned,
-	        Integer needId, String fileName) {
+	        Integer needId, String fileName) throws IOException, Exception,MuleException {
 		UserVO user = userProfileService.findUser(usrId);
 		LQBDocumentVO documentVO = new LQBDocumentVO();
 		LQBResponseVO lqbResponseVO = null;
 		String folderName = null;
-		try {
+		/*try {*/
 
 			// Uploading documents to the specific folder in lqb
 			/*
@@ -659,12 +673,15 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 			documentVO.setLoanId(loanId);
 			lqbResponseVO = uploadDocumentInLandingQB(documentVO, user);
 
-		} catch (Exception e) {
+		/*} catch(MuleException e){
+			
+			
+		}catch (Exception e) {
 
 			// TODO Auto-generated catch block
 			LOG.info("Exception in uploadDocumentInLandingQB : Saving exception in error table");
 			throw new FatalException("LendinQB Exception");
-		}
+		}*/
 
 		LOG.info("Assignment : uploadDocumentInLandingQB " + documentVO);
 		return lqbResponseVO;
