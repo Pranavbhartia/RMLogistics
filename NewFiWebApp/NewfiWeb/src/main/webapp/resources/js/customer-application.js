@@ -767,10 +767,10 @@ function paintCustomerApplicationPageStep1a() {
 	    	var cityStatus=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
 	    	var zipcodeStatus=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 	    	/*var isSuccess=validateInput($('input[name="streetAddress"]'),$('input[name="streetAddress"]').val(),message);*/
-			var stateValidation=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),yesyNoErrorMessage);
+			var stateValidation=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),stateErrorMessage);
 	   
 	    	if(!stateValidation){
-	    		showErrorToastMessage(yesyNoErrorMessage);
+	    		showErrorToastMessage(stateErrorMessage);
 	    		return false;
 	    	}
 	    	if(!cityStatus){
@@ -6250,12 +6250,12 @@ function validateCoBorowerInformation(questionList){
 			return false;
 		}else{
 			if(questionList.childContexts.Yes[0].childContexts.Yes[2].value !="Yes"){
-				var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
+				var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),stateErrorMessage);
 				var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
 				var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('input[name="coBorrowerZipCode"]').val(),message);
 				
 				if(!question3){
-			    	showErrorToastMessage(yesyNoErrorMessage);
+			    	showErrorToastMessage(stateErrorMessage);
 					return false;
 					
 				}
@@ -6282,12 +6282,12 @@ function validateCoBorowerInformation(questionList){
 			return false;
 		}else{
 			if(quesContxts[0].childContexts.Yes[0].childContexts.No[2].value !="Yes"){
-				var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),message);
+				var question3=validateInput($('input[name="coBorrowerState"]'),$('input[name="coBorrowerState"]').val(),stateErrorMessage);
 				var question4=validateInput($('input[name="coBorrowerCity"]'),$('input[name="coBorrowerCity"]').val(),message);
 				var question5=validateInput($('input[name="coBorrowerZipCode"]'),$('input[name="coBorrowerZipCode"]').val(),message);
 				
 				if(!question3){
-			    	showErrorToastMessage(yesyNoErrorMessage);
+			    	showErrorToastMessage(stateErrorMessage);
 					return false;
 					
 				}
