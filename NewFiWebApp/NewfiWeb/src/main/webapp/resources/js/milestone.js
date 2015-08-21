@@ -140,10 +140,12 @@ var workFlowContext = {
 		ob.mileStoneStatusLookup = {};
 		for ( stepNo = 0; stepNo < ob.mileStoneStatuses.length; stepNo++)
 		{
+			var milestoneObj ;			
 			var loanMilestone = ob.mileStoneStatuses[stepNo];
-			var loanMilestoneName = loanMilestone.loanMilestoneMaster.name;
-			var loanMilestoneStatus = loanMilestone.status;
-			ob.mileStoneStatusLookup[loanMilestoneName]=loanMilestoneStatus;
+			var loanMilestoneName = loanMilestone.loanMilestoneMaster.name;			
+			milestoneObj.status = loanMilestone.status;
+			milestoneObj.comments=loanMilestone.comments;
+			ob.mileStoneStatusLookup[loanMilestoneName]=milestoneObj;
 		}
 	},
 	structureParentChild:function(){
@@ -661,6 +663,10 @@ function getInternalEmployeeMileStoneContext( workItem) {
 								{
 									$(ob.stateInfoContainer).removeClass("cursor-pointer");
 								}
+								else
+								{
+									attachCursorPointerClassToElement(ob.stateInfoContainer);
+								}
 								
 							}
 							else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
@@ -733,9 +739,12 @@ function showAppFee (itemToAppendTo,workItem)
 				if (workItem.status == NOT_STARTED)
 				{				
 					workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("data-text",workItem.workflowItemType+ "_PAY_FOR");
-					workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.bind("click", function(e) {
-						milestoneChildEventHandler(e);
-					});						
+					if (itemToAppendTo)
+					{
+						workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.bind("click", function(e) {
+							milestoneChildEventHandler(e);
+						});
+					}
 				}
 			}
 			if (itemToAppendTo)
@@ -866,31 +875,50 @@ function showProgressHeaderSteps(){
 	container.append(stepElement);	
 	
 	var msStep = workFlowContext.milestoneStepsLookup["UW_APPROVED_DISPLAY"]; 
-	if (typeof msStep == 'undefined'){
-		var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
-		var loanApprovedLMStatusRep = "0";
+	var loanAppStatus = "0";
+	if (msStep){
+		loanAppStatus  = msStep.status;
+		
+	}
+	else if (workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"]){
+		var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"].status;		
 		if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
-		{
-			loanApprovedLMStatusRep = COMPLETED;
-		}
-		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
-	}
-	else{
-		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Loan Approved");
-	}
+		{			
+			loanAppStatus = COMPLETED;
+		}		
+	}	
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanAppStatus, 3, "Loan Approved");
 	container.append(stepElement);
-	
-	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
 	var docsOutLMStatusRep = "0";
-	if (docsOutLMStatus && docsOutLMStatus == "5")
+	if (workFlowContext.mileStoneStatusLookup["DOCS_OUT"])
 	{
-		docsOutLMStatusRep = COMPLETED;
+		var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"].status;
+		
+		if (docsOutLMStatus && docsOutLMStatus == "5")
+		{
+			docsOutLMStatusRep = COMPLETED;
+		}
 	}
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Ready");
 	container.append(stepElement);	
 	
 	msStep = workFlowContext.milestoneStepsLookup["CLOSURE_FUNDED_DISPLAY"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
+	var closingFundedStatus = "0";
+	if (msStep)
+	{
+		closingFundedStatus = msStep.status;
+	}
+	else if( workFlowContext.mileStoneStatusLookup["LOAN_CLOSURE"])
+	{
+		var closingLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_CLOSURE"].status;
+		var closingLMComments = workFlowContext.mileStoneStatusLookup["LOAN_CLOSURE"].comments;
+		if (closingLMStatus && closingLMComments == "Funded")
+		{
+			closingFundedStatus = COMPLETED;
+		}
+	}
+	
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(closingFundedStatus, 5, "Funded");
 	container.append(stepElement);		
 	return container;
 }
@@ -903,11 +931,15 @@ function showRealtorHeaderSteps(){
 		return;
 	}
 	var msStep = workFlowContext.milestoneStepsLookup["MANAGE_APP_STATUS"];	
-	var preApprovedStatus = workFlowContext.mileStoneStatusLookup["PRE_QUAL"];
 	var preApprovedStatusRep = "0";
-	if (preApprovedStatus && preApprovedStatus == "1")
+	if (workFlowContext.mileStoneStatusLookup["PRE_QUAL"])
 	{
-		preApprovedStatusRep = COMPLETED;
+		var preApprovedStatus = workFlowContext.mileStoneStatusLookup["PRE_QUAL"].status;
+		
+		if (preApprovedStatus && preApprovedStatus == "1")
+		{
+			preApprovedStatusRep = COMPLETED;
+		}
 	}
 	var stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(preApprovedStatusRep, 1, "Pre Approved");
 	container.append(stepElement);	
@@ -917,31 +949,50 @@ function showRealtorHeaderSteps(){
 	container.append(stepElement);	
 	
 	var msStep = workFlowContext.milestoneStepsLookup["UW_APPROVED_DISPLAY"]; 
-	if (typeof msStep == 'undefined'){
-		var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"];
-		var loanApprovedLMStatusRep = "0";
+	var loanAppStatus = "0";
+	if (msStep){
+		loanAppStatus = msStep.status;
+	}
+	else if (workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"]){
+		var loanApprovedLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_APPROVED"].status;		
 		if (loanApprovedLMStatus && loanApprovedLMStatus == "4")
 		{
-			loanApprovedLMStatusRep = COMPLETED;
-		}
-		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanApprovedLMStatusRep, 3, "Loan Approved");
+			loanAppStatus = COMPLETED;
+		}		
 	}
-	else{
-		stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 3, "Loan Approved");
-	}
+
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(loanAppStatus, 3, "Loan Approved");
 	container.append(stepElement);
-	
-	var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"];
 	var docsOutLMStatusRep = "0";
-	if (docsOutLMStatus && docsOutLMStatus == "5")
+	if (workFlowContext.mileStoneStatusLookup["DOCS_OUT"])
 	{
-		docsOutLMStatusRep = COMPLETED;
+		var docsOutLMStatus = workFlowContext.mileStoneStatusLookup["DOCS_OUT"].status;
+		
+		if (docsOutLMStatus && docsOutLMStatus == "5")
+		{
+			docsOutLMStatusRep = COMPLETED;
+		}
 	}
 	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(docsOutLMStatusRep, 4, "Docs Out");
 	container.append(stepElement);	
 	
 	msStep = workFlowContext.milestoneStepsLookup["CLOSURE_FUNDED_DISPLAY"];
-	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(msStep.status, 5, "Funded");
+	var closingFundedStatus = "0";
+	if (msStep)
+	{
+		closingFundedStatus = msStep.status;
+	}
+	else if ( workFlowContext.mileStoneStatusLookup["LOAN_CLOSURE"])
+	{
+		var closingLMStatus = workFlowContext.mileStoneStatusLookup["LOAN_CLOSURE"].status;
+		var closingLMComments = workFlowContext.mileStoneStatusLookup["LOAN_CLOSURE"].comments;
+		if (closingLMStatus && closingLMComments && closingLMComments == "Funded")
+		{
+			closingFundedStatus = COMPLETED;
+		}
+	}
+	
+	stepElement  = getCustomerMilestoneLoanProgressHeaderBarStep(closingFundedStatus, 5, "Funded");
 	container.append(stepElement);		
 	
 	return container;
