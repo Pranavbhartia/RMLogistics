@@ -2,7 +2,9 @@ package com.nexera.common.enums;
 
 public enum ServiceCodes {
 
-	USER_PROFILE_SERVICE(4);
+	USER_PROFILE_SERVICE(4),MULE_SERVICE(5);
+	
+	
 	private int serviceID;
 
 	ServiceCodes(int serviceId) {

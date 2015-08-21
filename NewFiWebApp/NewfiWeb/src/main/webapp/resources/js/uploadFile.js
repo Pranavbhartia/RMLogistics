@@ -663,6 +663,7 @@ function createDropZone(needID) {
 		}
 
 		var unSupportedFile = new Array();
+		var isMuleDown = false;
 
 		var myDropZone = new Dropzone(
 				"#drop-zone",
@@ -692,7 +693,6 @@ function createDropZone(needID) {
 							showDialogPopup("User Session ",
 									"Sorry, we were unable to upload the file. Please try later.",
 									function() {
-										window.location.reload();
 										return false;
 									});
 							return false;
@@ -701,6 +701,9 @@ function createDropZone(needID) {
 							unSupportedFile.push(response[0]);
 						}
 
+						if(response[1] != undefined){
+							isMuleDown = true;
+						}
 					},
 					dragenter : function() {
 						$('#file-upload-icn').addClass('file-upload-hover-icn');
@@ -717,14 +720,29 @@ function createDropZone(needID) {
 
 						var list = $("<div>");
 						for (i in unSupportedFile) {
-							list.append("<p>").append(unSupportedFile[i]);
+								list.append("<p>").append(unSupportedFile[i]);													
 						}
-						if (unSupportedFile.length > 0) {
+						if(isMuleDown){
+							showDialogPopup("Connection Issuse","Could not upload now - try again later",									
+									function() {
+										return false;
+									});
+						}else if(!isMuleDown && unSupportedFile.length > 0){
 							showDialogPopup("Unsupported File", list,
 									function() {
 										return false;
 									});
 						}
+		/*				if (unSupportedFile.length > 0) {
+							
+									showDialogPopup("Unsupported File", list[i],
+											function() {
+												return false;
+											});
+							
+							
+							
+						}*/
 						unSupportedFile = new Array();
 						console.info(unSupportedFile);
 						$('#overlay-loader').hide();
