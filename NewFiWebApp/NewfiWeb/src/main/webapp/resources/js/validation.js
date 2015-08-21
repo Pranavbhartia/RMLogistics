@@ -321,7 +321,7 @@ function phoneNumberValidation(phoneNo,customerStatus,elementId){
 
 function currentlyLivingValidation(){
 	
-	var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),yesyNoErrorMessage);
+	var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),stateErrorMessage);
 	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
 	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);		    			    	
@@ -377,7 +377,7 @@ function currentlyLivingValidation(){
 		
 	}else{
 		var propertQuestionOne=validateInput($('input[name="propCity"]'),$('input[name="propCity"]').val(),message);
-		var propertQuestionThree=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),yesyNoErrorMessage);
+		var propertQuestionThree=validateInput($('input[name="propState"]'),$('input[name="propState"]').val(),stateErrorMessage);
     	/*var propertQuestionfour=validateInput($('input[name="propStreetAddress"]'),$('input[name="propStreetAddress"]').val(),message);*/
     	
     	if(!propertQuestionOne){

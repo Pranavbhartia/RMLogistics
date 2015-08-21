@@ -138,9 +138,9 @@ function createUploadPhotoContent() {
 	}).html("Save");
 	btnSaveDiv
 			.click(function() {
-                showOverlay();
+				$('#overlay-loader').show();             
 				var canvas = $('#pu-img')[0];
-				$("#popup-overlay").hide();
+				$("#popup-overlay").hide();				
 				var dataurl = canvas.src;
 				$('#pu-img').attr('src', dataurl);
 
@@ -187,7 +187,7 @@ function createUploadPhotoContent() {
 							cache : false,
 							data : formData,
 							success : function(data) {
-								hideOverlay();
+								$('#overlay-loader').hide();
 								console.log('URL from S3:' + data);
 								if (data == null || data.trim() == '') {
 									showErrorToastMessage(uploadFailed);
@@ -196,7 +196,7 @@ function createUploadPhotoContent() {
 								if (checkIfSafari()) {
 									window.location.reload(true);
 								}
-								if (newfiObject.user.id == userid) {
+									if (newfiObject.user.id == userid) {
 									newfiObject.user.photoImageUrl = data;
 									$("#myProfilePicture").css(
 											{
@@ -211,6 +211,8 @@ function createUploadPhotoContent() {
 														+ data + ")",
 												"background-size" : "cover"
 											});							
+									
+								
 									
 									showToastMessage(ProfileImageSuccessMessage);
 									
@@ -248,17 +250,20 @@ function createUploadPhotoContent() {
 														+ data + ")",
 												"background-size" : "cover"
 									});
+									
+									
 									showToastMessage(ProfileImageSuccessMessage);
 								}
 								//
 							},
 							complete : function() {
 								// alert('cpmplte');
-								hideOverlay();
+								$('#overlay-loader').hide();
+								//window.location.reload();
 							},
 							error : function(e) {
 								// alert('error');
-								hideOverlay();
+								$('#overlay-loader').hide();
 							}
 						});
 			});
