@@ -47,11 +47,11 @@
 				<div class="err-text1">OOPS!!!That was not supposed to happen.</div>
 				<p class="label-txt" style="">We apologize for the inconvenience</p>
 				<p class="label-txt">Click the link below to be redirected to the home page.</p><br>  
-				<div class="" name="Login" value="Login" onclick="window.location='https://www.newfi.com/NewfiWeb'" style="
+				<div class="" name="Login" value="Login" onclick="window.location='https://www.newfi.com/NewfiWeb/'" style="
                  width: 150px;    height: 40px;    line-height: 40px;    font-size: 16px;    color: #fff;    background-color: #6c9f2e;    border-radius: 3px;    text-align: center;    text-transform: capitalize;    cursor: pointer;    font-family: 'opensanssemibold'; margin: 0 auto;
                  margin-top: 15px;margin-bottom: 15px;">Home</div>
 				<div class="copy-right">
-					<p>If problem persists, please send quick message to <a href="#"><u>support@newfi.com</u></a> and tell<br> us what you did to get this error page, so we can get it fixed.</p>
+					<p>If problem persists, please send quick message to <a href="mailto:support@newfi.com" target="_top"><u>support@newfi.com</u></a> and tell<br> us what you did to get this error page, so we can get it fixed.</p>
 				</div>
    			</div>
 			<!--End-Cotent------>
@@ -69,7 +69,7 @@ $(document).ready(function(){
 		height=height-headerHeight;
 		$('.content').css("height",height+ "px");
 		$('#footer-wrapper').show();
-	
+	    var url=
 	
 	
 });
