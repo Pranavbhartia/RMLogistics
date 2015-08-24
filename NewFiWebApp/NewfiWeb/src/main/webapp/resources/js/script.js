@@ -631,9 +631,6 @@ function paintProfileCompleteStep2(user) {
 
 function getCompletYourApplicationHeader(isQuickQuote,qTitle) {
 
-    var parent = $('<div>').attr({
-        "class": "complete-application-wrapper"
-    });
 
     //NEXNF-637
     /*var header = $('<div>').attr({
@@ -641,17 +638,33 @@ function getCompletYourApplicationHeader(isQuickQuote,qTitle) {
     }).html("Complete My Loan Profile");*/
     var title = "";
     var newClass = "";
+    var rightHeaderIcon = "";
+    var addClass = "";
     if(isQuickQuote){
     	title = qTitle;
-    	newClass = "quick-quote-header"
-    }else {
+    	if(qTitle=="Quote Details"){
+    		newClass = "quick-quote-details-header";
+    		rightHeaderIcon = $('<div>').attr({
+    			"class" : "header-down-icn float-right",
+    			"id" : "quick-quote-header-down-icn"
+    		});
+    		addClass = "quick-quote-details";
+    	}else{
+    		newClass = "quick-quote-header";
+    	}
+    	
+    }else{
     	title = "Loan Application";
     }
+
+    var parent = $('<div>').attr({
+        "class": "complete-application-wrapper "+addClass
+    });
     var header = $('<div>').attr({
         "class": "complete-application-header "+newClass
     }).html(title);//Changed from Complete My Application to Complete Application
   //Changed from Complete Application to loan application
-    
+    header.append(rightHeaderIcon);
     return parent.append(header);
 }
 

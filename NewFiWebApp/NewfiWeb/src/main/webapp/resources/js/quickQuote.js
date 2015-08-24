@@ -4,12 +4,14 @@ buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 
 /*JSON structure for painting the form feild on click of loantype button*/
 
+//JSON for purchase type
 var purchaseType = [{
 	loanType : "PUR",
+	formId : "quick-quote-purchase-form"
 	
 },{
 	question : "Payment for rent<br />(If renting) :",
-	id : "rentPerMonth",
+	id : "rentPerMonth", 
 	column : 0
 },{
 	question : "Desired<br />purchase price :",
@@ -58,7 +60,8 @@ var purchaseType = [{
 //JSON for refinanace lower monthly payment
 var refinanceLowerMonthlyPayment = [{
 	loanType : "REF",
-	refinanceOption : "REFLMP"//to change
+	refinanceOption : "REFLMP",
+	formId : "quick-quote-refinance-lower-mortage-form"
 },{
 	question : "Current mortgage balance :",
 	id : "currentMortgageBalance",
@@ -118,12 +121,13 @@ var refinanceLowerMonthlyPayment = [{
 	/*column : 0,*/
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly"
-},];
+}];
 
 //JSON for refinanace cashout
 var refinanceCashOut = [{
 	loanType : "REF",
-	refinanceOption : "REFCO"//to change
+	refinanceOption : "REFCO",
+	formId : "quick-quote-refinanace-cash-out-form"
 },{
 	question : "Cash to be taken out :",
 	id : "cashTakeOut",
@@ -178,14 +182,16 @@ var refinanceCashOut = [{
 },{
 	question : "Property taxes :",
 	id : "propertyTaxesPaid",
-/*		column : 0,*/
-	type : "month/year"
+	/*column : 0,*/
+	type : "month/year",
+	monthYearId : "propTaxMonthlyOryearly"
 },{
 	question : "Homeowners<br />insurance :",
 	id : "annualHomeownersInsurance",
 	/*column : 0,*/
-	type : "month/year"
-},];
+	type : "month/year",
+	monthYearId : "propInsMonthlyOryearly"
+}];
 
 //END
 
@@ -209,7 +215,7 @@ function loadQuickQoutePage(){
 	});
 	
 	var teaserRateContainer = $('<div>').attr({
-		"class" : "ce-cp float-left",
+		"class" : "quick-quote-teaser-rate-container float-left",
 		"id" : "ce-refinance-cp"
 	});
 	
@@ -220,9 +226,6 @@ function loadQuickQoutePage(){
 	wrapper.append(teaserRateContainer);
 	agentDashboardMainContainer.append(wrapper);
 	$('#right-panel').append(agentDashboardMainContainer);
-	
-	
-
 }
 
 /*Entry point for painting quick quote page*/
@@ -344,7 +347,7 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	    if(!parentContainer)
 	        parentContainer=$('#ce-refinance-cp');
 	    $(parentContainer).append(parentWrapper).append(closingCostWrapper).append(bottomText).append(linkForDisclosure);
-	    
+	    $(parentContainer).show();
 	    if(teaserRateValHolder.teaserRate&&typeof(newfiObject)==="undefined"){
 	        $(".lock-ratebottom-summary-clas").css("width", "664px");
 	    }else{
@@ -937,8 +940,9 @@ function processBuyHomeUnderQuickQuote(){
 	buyHomeRefinanceRate.purchaseDetails.loanAmount = (getFloatValue($('input[id="homeWorthToday"]').val()) -getFloatValue($('input[id="currentMortgageBalance"]').val()));
 	buyHomeRefinanceRate.purchaseDetails.rentPerMonth = $('input[id="rentPerMonth"]').val();
 	buyHomeRefinanceRate.rentPerMonth = $('input[id="rentPerMonth"]').val();
-	paintBuyHomeTeaserRateUnderQuickQuote("",buyHomeRefinanceRate);
 	processCommonParameters();
+	paintBuyHomeTeaserRateUnderQuickQuote("",buyHomeRefinanceRate);
+
 }
 
 function processRateAndTermUnderQuickQuote(){
@@ -948,8 +952,9 @@ function processRateAndTermUnderQuickQuote(){
 	buyHomeRefinanceRate.annualHomeownersInsurance = $('input[id="annualHomeownersInsurance"]').val();
 	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
 	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	processCommonParameters();
+	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
+	
 }
 
 function processCashOutUnderQuickQuote(){
@@ -960,20 +965,31 @@ function processCashOutUnderQuickQuote(){
 	buyHomeRefinanceRate.annualHomeownersInsurance = $('input[id="annualHomeownersInsurance"]').val();
 	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
 	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	processCommonParameters();
+	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
+	
 }
 
 
 function paintDataSection(option,isDefault){
 
-	if($('.quick-quote-question-section').length > 0){
-		$('.quick-quote-question-section').remove();
+	if($('.complete-application-wrapper').length > 0){
+		$('.complete-application-wrapper.quick-quote-details').remove();
 	}
+	if( $('.quick-quote-teaser-rate-container').length > 0){
+		$('.quick-quote-teaser-rate-container').hide();
+	}
+    var header = getCompletYourApplicationHeader(true,"Quote Details");
+
 	var questionSection = $('<div>').attr({
-		"class" : "quick-quote-question-section clearfix"
+		"class" : "quick-quote-question-section hide clearfix"
 	});
+	$(questionSection).toggle();
 	
+	var form = $('<form>').attr({
+		"class" : "clearfix",
+		"id":option[0].formId
+	});
 	var sectionLHS = $('<div>').attr({
 		"class" : "quick-quote-question-section-LHS float-left"
 	});
@@ -989,9 +1005,9 @@ function paintDataSection(option,isDefault){
 		"class" : "cep-button-color quick-qoute-btn clearfix ",
 		"id" : "quick-qoute-btn-id"
 	}).html("Get Quote").on('click', function(){
-		
+		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
 		buyHomeRefinanceRate.loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
-		
+
 		if(buyHomeRefinanceRate.loanType == "PUR"){
 			processBuyHomeUnderQuickQuote();
 		}
@@ -1050,7 +1066,8 @@ function paintDataSection(option,isDefault){
 				rowRHS = $('<input>').attr({
 					"class" : "quick-quote-row-RHS float-left",
 					"value" : "",
-					"id" : option[i].id
+					"id" : option[i].id,
+					"name" : option[i].id
 				});
 			} 
 			
@@ -1068,11 +1085,13 @@ function paintDataSection(option,isDefault){
 				sectionRHS.append(divMainRow);
 			}
 	}
-		questionSection.append(sectionLHS).append(sectionRHS).append(sectionThree).append(loanType);
-		 $('#quick-quote-container-id').append(questionSection);
+		form.append(sectionLHS).append(sectionRHS).append(sectionThree).append(loanType);
+		questionSection.append(form).append(quickQoute);
+		header.append(questionSection);
+		$('#quick-quote-container-id').append(header);
 		
 	}
-	 $('#quick-quote-container-id').after(quickQoute);
+	/* $('#quick-quote-container-id').after(quickQoute);*/
 }
 
 
@@ -1084,8 +1103,10 @@ function appendDropdown(options){
 	var row = $('<div>').attr({
 		"class" : "quick-quote-row-RHS  quick-quote-option-selected float-left",
 		"id" : options.id,
-		"value" : ""
-	}).html("Select One").on('click', function(e) {
+		"name" :options.id,
+		"value" : "",
+		"placeholder" : "Select One"
+	}).html("").on('click', function(e) {
     	e.stopPropagation();
     	$('.quick-quote-dropdown-cont').hide();
         $(this).parent().find('.quick-quote-dropdown-cont').toggle();
@@ -1176,6 +1197,7 @@ function appendMonthYearQuestion(option){
 	var input = $('<input>').attr({
 		"class" : "quick-quote-row-RHS month-year-row-adj float-left",
 		"id" : option.id,
+		"name" :option.id,
 		"value" : ""
 	});
 	
@@ -1221,3 +1243,14 @@ function appendMonthYearQuestion(option){
 	 dropDownContainer.append(year).append(month);
 	 return mainDiv.append(input).append(input).append(text).append(monthYearInput).append(dropDownContainer);
 }
+
+
+$('body').on('click','#quick-quote-header-down-icn',function(e){
+	e.stopImmediatePropagation();
+	if($('.quick-quote-question-section').css("display") == "block"){		
+		$('.quick-quote-question-section').hide();		
+	}else{
+		$('.quick-quote-question-section').show();
+	}
+	
+});
