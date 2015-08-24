@@ -627,19 +627,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 	}
 
 	private List<String> getRecepientsList(String recepientEmailID2) {
-		List<String> unprotectedUrls = new ArrayList<String>();
+		List<String> recepientsEmailList = new ArrayList<String>();
 		if(recepientEmailID2.length() > 1){
-			String[] unprotectedUrlsArray = recepientEmailID2.split(",");
+			String[] recepientsEmailArray = recepientEmailID2.split(",");
 
 		
-			for (String url : unprotectedUrlsArray) {
-				unprotectedUrls.add(url);
+			for (String emailID : recepientsEmailArray) {
+				recepientsEmailList.add(emailID);
 			}
 			
 		}else {
-			unprotectedUrls.add(recepientEmailID2);
+			recepientsEmailList.add(recepientEmailID2);
 		}
-		return unprotectedUrls;
+		return recepientsEmailList;
 	    
     }
 
