@@ -187,6 +187,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Value("${profile.url}")
 	private String baseUrl;
+	
+	@Value("${recepients}")
+	private String recepientEmailID;
+	
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
 
@@ -602,17 +606,42 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
-		EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+/*		EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
 		emailRecipientVO.setEmailID("info@newfi.com");
+		recipients.add(emailRecipientVO);*/
 		EmailRecipientVO emailRecipientVO1 = new EmailRecipientVO();
-		emailRecipientVO1.setEmailID("pat@newfi.com");
-		recipients.add(emailRecipientVO);
-		recipients.add(emailRecipientVO1);
-		emailEntity.setRecipients(recipients);
+		//emailRecipientVO1.setEmailID("pat@newfi.com");//to take from property file
+		List<String> receipientList = new ArrayList<String>();
+		receipientList = getRecepientsList(recepientEmailID);
+		for(String recepient:receipientList){
+			emailRecipientVO1 = new EmailRecipientVO();
+			emailRecipientVO1.setEmailID(recepient);	
+			recipients.add(emailRecipientVO1);
+		}		
+		
+		//recipients.add(emailRecipientVO1);
+		//emailEntity.setRecipients(recipients);
 		emailEntity.setBody("---");
 		sendEmailService.sendMail(emailEntity, true);
 
 	}
+
+	private List<String> getRecepientsList(String recepientEmailID2) {
+		List<String> unprotectedUrls = new ArrayList<String>();
+		if(recepientEmailID2.length() > 1){
+			String[] unprotectedUrlsArray = recepientEmailID2.split(",");
+
+		
+			for (String url : unprotectedUrlsArray) {
+				unprotectedUrls.add(url);
+			}
+			
+		}else {
+			unprotectedUrls.add(recepientEmailID2);
+		}
+		return unprotectedUrls;
+	    
+    }
 
 	private void sendNewUserAlertEmail(User user, Integer loanID)
 	        throws InvalidInputException, UndeliveredEmailException {
