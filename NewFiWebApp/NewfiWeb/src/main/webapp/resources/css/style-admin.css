@@ -422,7 +422,9 @@ display: block;
 }
 
 .admin-newfi-team-list-th {
-	line-height: 45px;
+	line-height: 15px;
+	padding: 15px 0;
+	padding-left: 15px;
 	margin-top: 10px;
 	border-top: 1px #cecece dashed;
 	background-color: #fcfcfc;
@@ -436,23 +438,77 @@ display: block;
 }
 
 .admin-newfi-team-list-th-col1 {
-	margin-left: 41px;
+	/* margin-left: 41px; */
 }
 
 .admin-newfi-team-list-th-col2 {
-	margin-left: 128px;
+	/* margin-left: 128px; */
 }
 
 .admin-newfi-team-list-th-col3 {
-	margin-left: 118px;
+	/* margin-left: 118px; */
 }
 
 .admin-newfi-team-list-th-col4 {
-	margin-left: 220px;
+	/* margin-left: 220px; */
 }
 
 .admin-newfi-team-list-th-col5 {
-	margin-left: 122px;
+	/* margin-left: 122px; */
+}
+
+.no-click-col{
+	cursor: initial;
+	color: rgb(47, 54, 61);
+}
+
+.admin-newfi-team-list-th-col1,
+.admin-newfi-team-list-tr-col1 {
+	width: 22%;
+	padding-left: 5px;
+}
+
+.admin-newfi-team-list-tr-col1 {
+	color:#428bca;
+	cursor:pointer;
+	text-transform: capitalize;
+}
+
+.admin-newfi-team-list-th-col2,
+.admin-newfi-team-list-tr-col2 {
+	width: 18%;
+	padding-left: 5px;
+	word-break: break-word;
+}
+
+.admin-newfi-team-list-th-col3,
+.admin-newfi-team-list-tr-col3 {
+	width: 28%;
+	padding-left: 5px;
+	word-break: break-all;
+}
+
+.admin-newfi-team-list-th-col4,
+.admin-newfi-team-list-tr-col4 {
+	width: 22%;
+	padding-left: 5px;
+	height: 20px;
+}
+
+.admin-newfi-team-list-th-col5,
+.admin-newfi-team-list-tr-col5 {
+	width: 10%;
+	padding-left: 5px;
+	height: 24px;
+}
+
+.admin-newfi-team-list-th-col6,
+.admin-newfi-team-list-tr-col6 {
+	width: 22%;
+}
+
+.admin-newfi-team-list-tr-col6 {
+	width: 15%;
 }
 
 .admin-newfi-team-list-tr {
@@ -475,42 +531,8 @@ display: block;
 }
 .admin-newfi-team-list-tr:nth-child(odd) {
 	min-height: 40px;
-	padding: 10px;
-	padding-left: 15px;
 	border-top: 1px #dcdcdc dashed;
 	background: rgba(245, 249, 245, 0.22);
-}
-
-.admin-newfi-team-list-tr-col1 {
-	width: 22%;
-	margin-left: 24px;
-	color:#428bca;
-	cursor:pointer;
-}
-.no-click-col{
-	cursor: initial;
-	color: rgb(47, 54, 61);
-}
-.admin-newfi-team-list-tr-col2 {
-	width: 20%;
-}
-
-.admin-newfi-team-list-tr-col3 {
-	width: 28%;
-}
-
-.admin-newfi-team-list-tr-col4 {
-	width: 19%;
-	height: 24px;
-}
-
-.admin-newfi-team-list-tr-col5 {
-	width: 6%;
-	height: 20px;
-}
-
-.admin-newfi-team-list-tr-col6 {
-	width: 15%;
 }
 
 .admin-label-radio-active,.admin-label-radio-in-active {
@@ -640,6 +662,19 @@ display: block;
 .admin-row-adj {
 	width: 30%;
 }
+
+.temp-form-input-cont {
+	padding: 0 10px;
+}
+
+.temp-col2 {
+	width: 35%
+}
+
+.temp-col3 {
+	width: 45%;
+}
+
 @media ( max-width : 1062px) {
 	.create-turn-around-label {
 		width: 150px !important;
