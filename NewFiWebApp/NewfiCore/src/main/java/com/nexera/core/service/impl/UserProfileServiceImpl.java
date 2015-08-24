@@ -189,7 +189,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 	private String baseUrl;
 	
 	@Value("${recepients}")
-	private String recepientEmailID;
+	private String ids;
 	
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
@@ -612,7 +612,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		EmailRecipientVO emailRecipientVO1 = new EmailRecipientVO();
 		//emailRecipientVO1.setEmailID("pat@newfi.com");//to take from property file
 		List<String> receipientList = new ArrayList<String>();
-		receipientList = getRecepientsList(recepientEmailID);
+		receipientList = getRecepientsList(ids);
 		for(String recepient:receipientList){
 			emailRecipientVO1 = new EmailRecipientVO();
 			emailRecipientVO1.setEmailID(recepient);	
