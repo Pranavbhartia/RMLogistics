@@ -666,3 +666,13 @@ a.cus-eng-succ-mess-email {
     width: 100px;
     margin-left: 313px;
 }
+
+.quick-quote-details-header {
+    margin: 20px 0 0 10px;
+
+}
+
+.quick-quote-teaser-rate-container {
+    margin: 20px 10px;
+    width: 99%;
+}
