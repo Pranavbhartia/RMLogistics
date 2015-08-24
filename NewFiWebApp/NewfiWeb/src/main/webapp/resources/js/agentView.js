@@ -1129,7 +1129,7 @@ function getSchedulerContainer(contxt, tempData) {
 				snoozeTime.setMinutes(dat.getMinutes())
 				var message = $("#sch-msg-message").val();
 				//jira-699
-				 var regex = /^[a-zA-Z0-9-,]+(\s{0,1}[a-zA-Z-, ])*$/;
+				 var regex = /^[a-zA-Z0-9-,]+([a-zA-Z-0-9-, ])*$/;
 				if (message == "") {
 					showErrorToastMessage(invalidMessage);
 				} else if(!message.match(regex)){
