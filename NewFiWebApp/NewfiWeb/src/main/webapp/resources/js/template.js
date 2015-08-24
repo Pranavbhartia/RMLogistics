@@ -116,11 +116,11 @@ function populateTemplate() {
 	}).html(name);
 
 	var rowCol2 = $('<div>').attr({
-		"class" : "prof-form-rc float-left"
+		"class" : "prof-form-rc temp-col2 float-left"
 	});
 
 	var inputCont = $('<div>').attr({
-		"class" : "prof-form-input-cont"
+		"class" : "temp-form-input-cont"
 	});
 	
 	var emailInput = $('<input>').attr({
@@ -132,10 +132,10 @@ function populateTemplate() {
 	inputCont.append(emailInput);
 	rowCol2.append(inputCont);
 	var rowCol3 = $('<div>').attr({
-			"class" : "prof-form-rc float-left "
+			"class" : "prof-form-rc temp-col3 float-left "
 	});
 	var col3Cont = $('<div>').attr({
-			"class" : "prof-form-input-cont"
+			"class" : "temp-form-input-cont"
 	});
 	
 	var smsInput = $('<input>').attr({

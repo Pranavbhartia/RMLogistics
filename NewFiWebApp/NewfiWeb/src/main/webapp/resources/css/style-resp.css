@@ -471,6 +471,19 @@
 	.ce-refinance-wrapper .rt-slider {
 		width: 95% !important;
 	}
+	.template-column-val {
+		display: block;
+		width: 100%;
+		min-height: 20px;
+		margin-bottom: 5px;
+		padding-left: 15px;
+	}
+	.temp-col2 {
+		width: 45%;
+	}
+	.temp-col3 {
+		width: 55%;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
