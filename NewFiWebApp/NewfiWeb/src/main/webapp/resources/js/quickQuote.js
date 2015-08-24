@@ -4,7 +4,6 @@ buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 
 /*JSON structure for painting the form feild on click of loantype button*/
 
-//JSON for purchase type
 var purchaseType = [{
 	loanType : "PUR",
 	
@@ -68,12 +67,8 @@ var refinanceLowerMonthlyPayment = [{
 	question : "Current mortgage payment :",
 	id : "currentMortgagePayment",
 	column : 1
-},/*{
-	question : "Payment entered above includes property taxes and/or homeowners insurance?",
-	id : "isIncludeTaxes",
-	column : 1,
-	type : "yesNo"
-},*/{
+},
+{
 	question : "Home worth today :",
 	id : "homeWorthToday",
 	column : 0
@@ -141,12 +136,8 @@ var refinanceCashOut = [{
 	question : "Current mortgage payment :",
 	id : "currentMortgagePayment",
 	column : 0
-},/*{
-	question : "Payment entered above includes property taxes and/or homeowners insurance?",
-	id : "isIncludeTaxes",
-	column : 1,
-	type : "yesNo"
-},*/{
+},
+{
 	question : "Home worth today :",
 	id : "homeWorthToday",
 	column : 1
@@ -305,16 +296,9 @@ function paintFixYourRatePageCEPUnderQuickQuote(teaserRate, inputCustomerDetails
 }
 
 function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn,isViaEngagementPath) {
-
-	   // var quesTxt = "Programs and Rates";
 	    var container = $('<div>').attr({
 	        "class": "ce-rate-main-container"
 	    });
-	/*    var quesTextCont = $('<div>').attr({
-	        "class": "ce-rp-ques-text"
-	    }).html(quesTxt);*/
-	    // alert(JSON.stringify(refinanceTeaserRate));
-	    //container.append(quesTextCont);
 	    $(parentContainer).html(container);
 
 	    var teaserRate =  modifiedLQBJsonResponse(teaserRate);
@@ -354,9 +338,7 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	    
 	    var loanSummaryWrapper = getLoanSummaryWrapperUnderQuickQuote(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
 	    var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
-	    
-	  //  $('#center-panel-cont').append(loanSummaryWrapper).append(closingCostWrapper);
-
+	 
 	    parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper);
 	    
 	    if(!parentContainer)
@@ -457,7 +439,6 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     if(isNaN(getFloatValue(Insurance)))
         Insurance="";
     var isIncludeTaxes=teaserRateValHolder.teaserRate==true?customerInputData.isIncludeTaxes:customerInputData.refinancedetails.includeTaxes;
-    //this logic needs modification
     var investment = (Insurance + tax);
     if(isIncludeTaxes =="Yes"||isIncludeTaxes ==true){
         
@@ -542,7 +523,6 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true,true,true);
     rightCol.append(taxRow);
 
-    //var taxRow = getInputElmentRowUnderQuickQuote("Insurance","Insurance",showValue(Insurance),"CalInsuranceID2",customerInputData,"insContainerId");
     var taxRow = getLoanSummaryRowRatePage("Insurance" ,showValue(Insurance),"CalInsuranceID2","insContainerId",true,true,true);
     rightCol.append(taxRow);    
 
@@ -795,42 +775,8 @@ function getInputElmentRowUnderQuickQuote(key,desc, val,inputElementId,appUserDe
         container.append(col1).append(col2.append(saveBtn));
     }
     else if(key=="purchasePrice"||key=="cashOut"){
-//        var saveBtn = $('<div>').attr({
-//            "class" : "cep-button-color-orange sm-save-btn"//removed float-right for NEXNF-632
-//        }).html("update").on('click',{"path":undefined},function(e){
-//            var flag=globalChangeContainer.flag;
-//            if(flag){
-//                amt = $('#firstInput').val();
-//                amt1 = $('#secondInput').val();
-//              
-//                if(teaserRateValHolder.teaserRate)
-//                  modifiyTeaserRate(amt,amt1);
-//                else
-//                  modifiyLockRateLoanAmt(amt,amt1);
-//            }
-//            
-//        });
-//        if(!teaserRateValHolder.teaserRate){
-//        	saveBtn.addClass('hide');
-//        }
         container.append(col1).append(col2);
     }else if(key=="propLoanAmt"){
-//        var saveBtn = $('<div>').attr({
-//            "class" : "cep-button-color-orange sm-save-btn"//removed float-right for NEXNF-632
-//        }).html("update").on('click',{},function(){
-//            var flag=globalChangeContainer.flag;
-//            if(flag){
-//                amt = $('#loanAmount').val();
-//                if(teaserRateValHolder.teaserRate){
-//                    modifiyTeaserRate(amt);
-//                }else{
-//                    modifiyLockRateLoanAmt(amt);
-//                }
-//            }
-//        });
-//        if(!teaserRateValHolder.teaserRate){
-//        	saveBtn.addClass('hide');
-//        }
         container.append(col1).append(col2);
     }else
         container.append(col1).append(col2);
@@ -861,15 +807,9 @@ function paintBuyHomeTeaserRateUnderQuickQuote(parentContainer, teaserRateData, 
         	hideOverlay();
             clearOverlayMessage();
             if((data.error||data==""||data=="error")&&typeof(newfiObject)==='undefined'){
-               // var quesTxt = "Let us Contact You";
                 var container = $('<div>').attr({
                     "class": "ce-rate-main-container"
                 });
-               /* var quesTextCont = $('<div>').attr({
-                    "class": "ce-rp-ques-text letUsContactCenter"
-                }).html(quesTxt);*/
-                // alert(JSON.stringify(refinanceTeaserRate));
-                //container.append(quesTextCont);
                 $(parentContainer).html(container);
                 var errorText=getNoProductMessageInLockRatePage();
                 if(typeof(newfiObject)==='undefined')
@@ -888,9 +828,6 @@ function paintBuyHomeTeaserRateUnderQuickQuote(parentContainer, teaserRateData, 
                     $(parentContainer).append(mainContainer);
                 return
             }
-            // var teaserRate = data;
-            // paintteaserRate(data);
-            //paintFixYourRatePageCEP(JSON.parse(data), refinanceTeaserRate);
             
             var ob;
             try{
@@ -942,11 +879,7 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
                 var container = $('<div>').attr({
                     "class": "ce-rate-main-container"
                 });
-             /*   var quesTextCont = $('<div>').attr({
-                    "class": "ce-rp-ques-text letUsContactCenter"
-                }).html(quesTxt);*/
-                // alert(JSON.stringify(refinanceTeaserRate));
-               // container.append(quesTextCont);
+          
                 $(parentContainer).html(container);
                 var errorText=getNoProductMessageInLockRatePage();
                 if(typeof(newfiObject)==='undefined')
@@ -954,16 +887,9 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
                 	teaserRateValHolder.leadCustomer=true;
                 }
                 var mainContainer = paintApplyNow(teaserRateData,undefined,true);
-                //6.12 Portal testing and Updates
-                /* var createAccBtn= $('<div>').attr({
-                    "class": "rate-btn createAccButton"
-                }).html("Provide your contact information").on('click', function() {
-                    var mainContainer = paintApplyNow(teaserRateData);
-                    $('#ce-main-container').html(mainContainer);
-                });*/
+     
                 $(parentContainer).append(errorText);
                 if(typeof(newfiObject)==='undefined')
-                    /*$(parentContainer).append(createAccBtn);*/
                     $(parentContainer).append(mainContainer);
                 return
             }
@@ -980,12 +906,10 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
                 responseTime="";
                 console.log("Invalid Data");
             }
-            
-
-           // alert('createLoan data is '+data)
+           
             paintFixYourRatePageCEPUnderQuickQuote(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
             clearOverlayMessage();
-           /* }*/
+       
               
              
         },
@@ -999,53 +923,48 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
     
 }
 
+function processCommonParameters(){
+	buyHomeRefinanceRate.propertyType = $('div[id="propertyType"]').attr('value');
+	buyHomeRefinanceRate.residenceType = $('div[id="residenceType"]').attr('value');
+	buyHomeRefinanceRate.homeWorthToday = $('input[id="homeWorthToday"]').val();
+	buyHomeRefinanceRate.currentMortgageBalance = $('input[id="currentMortgageBalance"]').val();
+	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
+}
 
-function paintBuyHomeUnderQuickQuote(){
+function processBuyHomeUnderQuickQuote(){
 	buyHomeRefinanceRate.livingSituation = "renting";
 	buyHomeRefinanceRate.purchaseDetails.housePrice = $('input[id="homeWorthToday"]').val();
 	buyHomeRefinanceRate.purchaseDetails.loanAmount = (getFloatValue($('input[id="homeWorthToday"]').val()) -getFloatValue($('input[id="currentMortgageBalance"]').val()));
 	buyHomeRefinanceRate.purchaseDetails.rentPerMonth = $('input[id="rentPerMonth"]').val();
 	buyHomeRefinanceRate.rentPerMonth = $('input[id="rentPerMonth"]').val();
-	buyHomeRefinanceRate.homeWorthToday = $('input[id="homeWorthToday"]').val();
-	buyHomeRefinanceRate.currentMortgageBalance = $('input[id="currentMortgageBalance"]').val();
-	buyHomeRefinanceRate.propertyType = $('div[id="propertyType"]').attr('value');
-	buyHomeRefinanceRate.residenceType = $('div[id="residenceType"]').attr('value');
-	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
 	paintBuyHomeTeaserRateUnderQuickQuote("",buyHomeRefinanceRate);
+	processCommonParameters();
 }
 
-function paintRateAndTermUnderQuickQuote(){
-	buyHomeRefinanceRate.currentMortgageBalance = $('input[id="currentMortgageBalance"]').val();
+function processRateAndTermUnderQuickQuote(){
 	buyHomeRefinanceRate.currentMortgagePayment = $('input[id="currentMortgagePayment"]').val();
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
 	buyHomeRefinanceRate.propertyTaxesPaid = $('input[id="propertyTaxesPaid"]').val();
 	buyHomeRefinanceRate.annualHomeownersInsurance = $('input[id="annualHomeownersInsurance"]').val();
 	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
 	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-	buyHomeRefinanceRate.homeWorthToday = $('input[id="homeWorthToday"]').val();
-	buyHomeRefinanceRate.propertyType = $('div[id="propertyType"]').attr('value');
-	buyHomeRefinanceRate.residenceType = $('div[id="residenceType"]').attr('value');
-	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
+	processCommonParameters();
 }
 
-function paintCashOutUnderQuickQuote(){
+function processCashOutUnderQuickQuote(){
 	buyHomeRefinanceRate.cashTakeOut = $('input[id="cashTakeOut"]').val();
-	buyHomeRefinanceRate.currentMortgageBalance = $('input[id="currentMortgageBalance"]').val();
 	buyHomeRefinanceRate.currentMortgagePayment = $('input[id="currentMortgagePayment"]').val();
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes"
 	buyHomeRefinanceRate.propertyTaxesPaid = $('input[id="propertyTaxesPaid"]').val();
 	buyHomeRefinanceRate.annualHomeownersInsurance = $('input[id="annualHomeownersInsurance"]').val();
 	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
 	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-	buyHomeRefinanceRate.homeWorthToday = $('input[id="homeWorthToday"]').val();
-	buyHomeRefinanceRate.propertyType = $('div[id="propertyType"]').attr('value');
-	buyHomeRefinanceRate.residenceType = $('div[id="residenceType"]').attr('value');
-	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
+	processCommonParameters();
 }
 
-/*Function which paint form feild elements on click of button*/
+
 function paintDataSection(option,isDefault){
 
 	if($('.quick-quote-question-section').length > 0){
@@ -1074,15 +993,15 @@ function paintDataSection(option,isDefault){
 		buyHomeRefinanceRate.loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
 		
 		if(buyHomeRefinanceRate.loanType == "PUR"){
-			paintBuyHomeUnderQuickQuote();
+			processBuyHomeUnderQuickQuote();
 		}
 		else{
 			buyHomeRefinanceRate.refinanceOption = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
 			if(buyHomeRefinanceRate.refinanceOption == "REFLMP"){
-				paintRateAndTermUnderQuickQuote();
+				processRateAndTermUnderQuickQuote();
 			}
 			else{
-				paintCashOutUnderQuickQuote();
+				processCashOutUnderQuickQuote();
 			}
 		}		
 	});
@@ -1179,7 +1098,6 @@ function appendDropdown(options){
 	 var optionCont ="";
 	   for (var i = 0; i < options.list.length; i++) {
 	        var option = options.list[i];
-	       // alert('option value is   '+ option.value);
 	         optionCont = $('<div>').attr({
 	                "class": "quick-quote-option-sel",
 	                "value" : "",
