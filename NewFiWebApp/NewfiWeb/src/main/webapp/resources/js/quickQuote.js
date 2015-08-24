@@ -233,20 +233,20 @@ function getSectionOneOfQuickQuote(){
 	var buttonList = [{
 		"title" : "Purchase",
 		"data" : purchaseType,
-		"className" : "quick-quote-col col-one  float-left",
+		"className" : "quick-quote-col  float-left",
 		"id" : "quick-quote-one-id"
 	
 	},
 	{
 		"title" : "Rate & Term",
 		"data" : refinanceLowerMonthlyPayment,
-		"className" : "quick-quote-col col-two float-left",
+		"className" : "quick-quote-col float-left",
 		"id" : "quick-quote-two-id"
 	},
 	{
 		"title" : "Cash-out",
 		"data" : refinanceCashOut,
-		"className" : "quick-quote-col col-three float-left",
+		"className" : "quick-quote-col float-left",
 		"id" : "quick-quote-three-id"
 	}];
 	var mainContainer = $('<div>').attr({		
