@@ -2022,7 +2022,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
 		        .getRoleId()) {			
 			LOG.info("To delete/change the realtor status to -1 in user table......................"+userVO.getId());
-			userVO.setStatus(-1);
+			userVO.setStatus(CommonConstants.STATUS_IS_DELETE);
 			rowsReturned = updateUserStatus(userVO);
 			if(rowsReturned > 0){
 				isSuccess = true;
@@ -2035,7 +2035,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		        .getRoleId()) {			
 			LOG.info("To delete/change the user status to -1 in internaluser table......................"+userVO.getId());
 			isInternalUserDeleted = deleteUser(userVO);
-			userVO.setStatus(-1);
+			userVO.setStatus(CommonConstants.STATUS_IS_DELETE);
 			rowsReturned = updateUserStatus(userVO);	
 			if(isInternalUserDeleted && rowsReturned > 0){
 				isSuccess = true;
