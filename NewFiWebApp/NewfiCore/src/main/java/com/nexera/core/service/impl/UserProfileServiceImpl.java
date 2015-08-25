@@ -1997,13 +1997,6 @@ public class UserProfileServiceImpl implements UserProfileService,
     public boolean deleteUserEntries(UserVO userVO) throws Exception {
 		boolean isSuccess = false;
 
-		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
-		int rows ;
-		userVO.setStatus(0);	
-		rows = loanService.updateStatusInLoanTeam(userVO);		
-		if(rows == 0){
-			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
-		}
 		
 		
 		if(userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()){			
@@ -2041,6 +2034,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 				isSuccess = true;
 			}
 		}
+		
+		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
+		int rows ;
+		userVO.setStatus(0);	
+		rows = loanService.updateStatusInLoanTeam(userVO);		
+		if(rows == 0){
+			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
+		}
+		
 		return isSuccess;
 	}
 }
