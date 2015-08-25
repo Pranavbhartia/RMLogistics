@@ -35,7 +35,7 @@
 	<bean id="taskExecutor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="2" />
-		<property name="maxPoolSize" value="5" />
+		<property name="maxPoolSize" value="1" />
 		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
 	</bean>
 	<bean id="logAspect" class="com.nexera.core.aop.NexeraAspect" />
@@ -82,7 +82,7 @@
 	<bean id="cronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="complexJobDetail" />
-		<property name="cronExpression" value="0 0/5 * * * ?" />
+		<property name="cronExpression" value="0 0/15 * * * ?" />
 	</bean>
 
 	<!-- Scheduler factory bean to glue together jobDetails and triggers to 

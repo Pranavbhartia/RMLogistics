@@ -572,6 +572,12 @@ public class ThreadManager implements Runnable {
 		if (loan.getLqbFileId() != null) {
 			LOGGER.debug("Fetching Docs for this loan ");
 			fetchDocsForThisLoan(loan);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				LOGGER.error("Exception while sleeping for loanId: "+loan.getId()+", Exception is: "+e.getMessage());
+			}
 		}
 
 		LOGGER.debug("Fetching underwriting conditions for this loan ");
