@@ -892,7 +892,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		Criteria criteria = session.createCriteria(LoanTeam.class);
 		criteria.add(Restrictions.eq("user.id", user.getId()));
-		criteria.add(Restrictions.eq("active", Boolean.TRUE));
+		criteria.add(Restrictions.eq("active",true));
 		
 		List<LoanTeam> loanList = criteria.list();
 		if (loanList == null || loanList.isEmpty()) {
