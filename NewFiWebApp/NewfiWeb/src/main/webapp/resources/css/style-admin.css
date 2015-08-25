@@ -457,11 +457,6 @@ display: block;
 	/* margin-left: 122px; */
 }
 
-.no-click-col{
-	cursor: initial;
-	color: rgb(47, 54, 61);
-}
-
 .admin-newfi-team-list-th-col1,
 .admin-newfi-team-list-tr-col1 {
 	width: 22%;
@@ -509,6 +504,11 @@ display: block;
 
 .admin-newfi-team-list-tr-col6 {
 	width: 15%;
+}
+
+.no-click-col{
+	cursor: initial;
+	color: rgb(47, 54, 61);
 }
 
 .admin-newfi-team-list-tr {
