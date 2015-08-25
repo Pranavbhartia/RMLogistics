@@ -1996,83 +1996,51 @@ public class UserProfileServiceImpl implements UserProfileService,
 	@Transactional
     public boolean deleteUserEntries(UserVO userVO) throws Exception {
 		boolean isSuccess = false;
+
 		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
 		int rows ;
 		userVO.setStatus(0);	
-		rows = loanService.updateStatusInLoanTeam(userVO);
-		
+		rows = loanService.updateStatusInLoanTeam(userVO);		
 		if(rows == 0){
 			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
 		}
-
-		LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
-		if(loanVO!=null){
-			  Loan loan = new Loan(loanVO.getId());
-
-			  loanService.markLoanDeleted(loan.getId());
-			  isSuccess = true;
-			  
-
+		
+		
+		if(userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()){			
+			LOG.info("To mark the loan as deleted and change the custoomer status to inactive in user table..........................."+userVO.getId());
+			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
+			if(loanVO!=null){
+				  Loan loan = new Loan(loanVO.getId());
+				  loanService.markLoanDeleted(loan.getId());
+				  isSuccess = true;
+                  LOG.info("Status returned after marking loan as deleted......................userid"+userVO.getId()+":::::staus returned::::"+isSuccess);
+			}
 		}
 		
-		LOG.info("To delete/change the user status to -1 in internaluser table......................");
+		//To update realtor status in realtor table
+		Integer rowsReturned;
+		if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
+		        .getRoleId()) {			
+			LOG.info("To delete/change the realtor status to -1 in user table......................"+userVO.getId());
+			userVO.setStatus(CommonConstants.STATUS_IS_DELETE);
+			rowsReturned = updateUserStatus(userVO);
+			if(rowsReturned > 0){
+				isSuccess = true;
+			}			
+		}
 		
 		boolean isInternalUserDeleted = false;
 		//TO change the status of user in internal user table
 		if (userVO.getUserRole().getId() == UserRolesEnum.INTERNAL
-		        .getRoleId()) {
-			isInternalUserDeleted = deleteUser(userVO);				
-
-		}
-		if (isInternalUserDeleted && isSuccess) {
-			LOG.info("User deleted successfully"+userVO.getUserRole().getRoleDescription());
-			isSuccess = true;
-		}
-		/*
-		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
-		int rows ;
-		userVO.setStatus(0);	
-		rows = loanService.updateStatusInLoanTeam(userVO);
-		
-		if(rows == 0){
-			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
-		}*/
-			
-		
-
-		LOG.info("To delete/change the user status to -1 in user table......................");
-		//TO change status in user table
-/*		userVO.setStatus(-1);
-		Integer result = updateUserStatus(userVO);*/
-
-		//Marking the loan status as DELETE in loanmilestone master
-		/*if(result > 0){
-			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
-			if(loanVO!=null){
-				  Loan loan = new Loan(loanVO.getId());
-				   LoanMilestone lm = loanService.findLoanMileStoneByLoan(loan,
-				           Milestones.DELETE.getMilestoneKey());
-				   if (lm == null) {
-				    loanService.updateNexeraMilestone(loanVO.getId(),
-				            Milestones.DELETE.getMilestoneID(),Milestones.DELETE.getMilestoneKey());
-				   }
-				   LoanProgressStatusMaster progressStatusMaster = new LoanProgressStatusMaster();
-				   progressStatusMaster.setId(LoanProgressStatusMasterEnum.DELETED.getStatusId());
-				   loan.setLoanProgressStatus(progressStatusMaster);
-				   loanService.saveLoanProgress(loan.getId(),progressStatusMaster);
-				 
-				  }
-			}else {
-				LOG.info("There was an error while deletion of user and  no of rows returned is 0............"+result);
+		        .getRoleId()) {			
+			LOG.info("To delete/change the user status to -1 in internaluser table......................"+userVO.getId());
+			isInternalUserDeleted = deleteUser(userVO);
+			userVO.setStatus(CommonConstants.STATUS_IS_DELETE);
+			rowsReturned = updateUserStatus(userVO);	
+			if(isInternalUserDeleted && rowsReturned > 0){
+				isSuccess = true;
 			}
-				 
-		
-		if (result > 0 || rows > 0 || isInternalUserDeleted) {
-			LOG.info("User deleted successfully"+userVO.getUserRole().getRoleDescription());
-			isSuccess = true;
-		}*/
-		
-		
-		  return isSuccess;
+		}
+		return isSuccess;
 	}
 }

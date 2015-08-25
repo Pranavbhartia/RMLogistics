@@ -579,44 +579,7 @@ public class UserProfileRest {
 	@RequestMapping(value = "/deleteUser/{userId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO deleteUser(
 	        @PathVariable Integer userId) {
-		
-	/*	LOG.info("Delete user with user id : " + userId);
-		CommonResponseVO response = new CommonResponseVO();
-		ErrorVO error = new ErrorVO();
-		try {
-			UserVO userVO = userProfileService.findUser(userId);
-			if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER
-			        .getRoleId()||userVO.getUserRole().getId() == UserRolesEnum.REALTOR
-					        .getRoleId()) {
 
-				userVO.setStatus(-1);
-				Integer result = userProfileService.updateUserStatus(userVO);
-				if (result > 0) {
-					response.setResultObject(userVO);
-				} else {
-					error.setMessage("Error while deletion.Please try again later");
-					response.setError(error);
-				}
-
-			} else {
-				userProfileService.deleteUser(userVO);
-				response.setResultObject(userVO);
-			}
-
-		} catch (InputValidationException e) {
-			LOG.error("error and message is : " + e.getDebugMessage());
-
-			error.setMessage(e.getDebugMessage());
-			response.setError(error);
-			e.getDebugMessage();
-
-		} catch (Exception e) {
-			LOG.error("error and message is : " + e.getMessage());
-
-			error.setMessage(e.getMessage());
-			response.setError(error);
-		}
-		return response;*/
 		LOG.info("Delete user with user id : " + userId);
 		CommonResponseVO response = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
