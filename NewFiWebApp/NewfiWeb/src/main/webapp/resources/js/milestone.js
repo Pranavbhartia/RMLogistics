@@ -140,7 +140,7 @@ var workFlowContext = {
 		ob.mileStoneStatusLookup = {};
 		for ( stepNo = 0; stepNo < ob.mileStoneStatuses.length; stepNo++)
 		{
-			var milestoneObj ;			
+			var milestoneObj ={};			
 			var loanMilestone = ob.mileStoneStatuses[stepNo];
 			var loanMilestoneName = loanMilestone.loanMilestoneMaster.name;			
 			milestoneObj.status = loanMilestone.status;
