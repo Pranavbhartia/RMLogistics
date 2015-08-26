@@ -23,7 +23,7 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
 	@Override
     public LoanMilestone getLqbLoanStatus(Loan loan) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "from LoanMilestone where loan= :loan and loanMilestoneMaster IN ( :loanMilestoneMaster) order by statusUpdateTime desc, order desc";
+		String hql = "from LoanMilestone where loan= :loan and loanMilestoneMaster IN ( :loanMilestoneMaster) order by statusInsertTime desc, statusUpdateTime desc, order desc";
 		
 		Query qry = session.createQuery(hql);
 		qry.setParameter("loan", loan);		
