@@ -916,14 +916,16 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				boolean otherUserPresent = false;
 				for (LoanTeam activeTeam : activeTeamList) {
 					if (activeTeam.getUser().getInternalUserDetail() != null) {
+						LOG.debug("the active Team is " + activeTeam.getUser().getId());
 						if (activeTeam.getUser().getInternalUserDetail()
 						        .getInternaUserRoleMaster().getId() == UserRolesEnum.LM
 						        .getRoleId()) {
-							if (activeTeam.getUser().getId() != user.getId()
+							if (!activeTeam.getUser().getId().equals(user.getId())
 							        && activeTeam.getUser().getStatus() == 1
 							        && activeTeam.getUser()
 							                .getInternalUserDetail()
 							                .getActiveInternal() == ActiveInternalEnum.ACTIVE) {
+								LOG.debug("the other active LM in team  is " + activeTeam.getUser().getId());
 								otherUserPresent = true;
 							}
 						}
