@@ -529,8 +529,9 @@ a.cus-eng-succ-mess-email {
     font-size: 14px;
     text-align: left;
     width: 185px;
-    padding: 0 0px 0 20px;
-    line-height: 40px;
+    padding: 0 20px;
+    line-height: 35px;
+    height: 35px;
 }
 
 .quick-quote-row {
@@ -541,14 +542,14 @@ a.cus-eng-succ-mess-email {
 .quick-quote-row-RHS {
     font-family: openSans;
     font-size: 14px;
-    width: 55%;      
+    width: 38%;      
     text-align: left;
-    height: 40px;            
+    height: 35px;            
     padding-left: 15px;      
     background-color: #fafafa !important;      
     border: 1px #E2E2E2 solid;      
     border-radius: 3%;
-    line-height: 40px;
+    line-height: 35px;
 }
 
 .quick-quote-button[isSelected="true"] {
@@ -557,18 +558,18 @@ a.cus-eng-succ-mess-email {
 
 .quick-quote-question-section-LHS {
     /* border: 1px solid #dcdcdc; */
-    margin: 10px 20px;
+    margin: 10px;
     min-height: 140px;
 }
 
 .quick-quote-question-section {
-    margin: 20px 10px;
+    margin: 20px 30px;
     min-height: auto;
 }
 
 .quick-quote-question-section-RHS {
     /* border: 1px solid #dcdcdc; */
-    margin: 10px 20px;
+    margin: 10px;
     min-height: 140px;
 }
 
@@ -592,7 +593,7 @@ a.cus-eng-succ-mess-email {
 }
 
 .quick-quote-option-selected {
-    height: 40px;      
+    height: 35px;      
     padding-left: 10px;      
     line-height: 35px;      
     border: 1px solid #dcdcdc;      
@@ -637,7 +638,7 @@ a.cus-eng-succ-mess-email {
     width: 75px;      
     height: 30px;      
     line-height: 30px;      
-    margin-top: 10px;      
+    margin-top: 4px;      
     text-align: center;      
     margin-right: 10px;      
     color: #fff;      
@@ -675,4 +676,30 @@ a.cus-eng-succ-mess-email {
 .quick-quote-teaser-rate-container {
     margin: 20px 10px;
     width: 99%;
+}
+
+.quick-quote-dwn-payment {
+	width: 110px;
+}
+
+.quick-quote-dwn-percentage {
+    width: 50px;
+    padding-left: 5px;
+    background: url(../images/percentagesy.png) no-repeat 35px #fafafa;
+    background-size: 12px;
+    margin-right: 10px;
+    text-align: right;
+    padding-right: 17px;
+    font-size: 14px;
+    height: 35px;
+    background-color: #fafafa !important;
+    border: 1px #E2E2E2 solid;
+    border-radius: 3%;
+    line-height: 35px;
+}
+
+.err-msg-quick-quote {
+    width: 48px;
+    margin: 0 auto;
+    white-space: nowrap;
 }
