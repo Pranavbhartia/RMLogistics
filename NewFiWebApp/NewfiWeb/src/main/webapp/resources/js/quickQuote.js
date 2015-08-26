@@ -1077,11 +1077,11 @@ function paintDataSection(option,isDefault){
 	}).html("Get Quote").on('click', function(){
 		var loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
 		var refinanceType = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
-	/*	var status = validateForm(loanType,refinanceType);
+		var status = validateForm(loanType,refinanceType);
 		
 		if(!status){
 			return false;
-		}*/
+		}
 		
 		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
 		buyHomeRefinanceRate.loanType = loanType;
@@ -1246,7 +1246,8 @@ function appendYesNoQuestion(option){
 	
 	var mainDiv = $('<div>').attr({
 		"class":"quick-quote-yesno-container",
-		"id" : option.id
+		"id" : option.id,
+		"value" : ""
 	});
 	
 	var yesContent = $('<div>').attr({
@@ -1267,7 +1268,9 @@ function appendYesNoQuestion(option){
 			"isSelected" : true,
 			"value" : $(this).html()
 		});
-		
+		$(mainDiv).attr({
+			"value" : $(this).html()
+		});
 		
 	});
 
@@ -1289,7 +1292,9 @@ function appendYesNoQuestion(option){
 			"isSelected" : true,
 			"value" : $(this).html()
 		});
-		
+		$(mainDiv).attr({
+			"value" : $(this).html()
+		});
 		
 	});
 	
