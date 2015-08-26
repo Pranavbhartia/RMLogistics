@@ -995,10 +995,22 @@ function processBuyHomeUnderQuickQuote(){
 function processRateAndTermUnderQuickQuote(){
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
-	buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
-	buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
-	buyHomeRefinanceRate.propTaxMonthlyOryearly = parseFloat(removedDoller(removedComma($('input[id="propTaxMonthlyOryearly"]').val())));  
-	buyHomeRefinanceRate.propInsMonthlyOryearly = parseFloat(removedDoller(removedComma( $('input[id="propInsMonthlyOryearly"]').val())));
+	
+	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+		}
+		
+	}
+	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		}
+	}
 	processCommonParameters();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	
@@ -1008,10 +1020,21 @@ function processCashOutUnderQuickQuote(){
 	buyHomeRefinanceRate.cashTakeOut = parseFloat(removedDoller(removedComma($('input[id="cashTakeOut"]').val())));
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
-	buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val())));
-	buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma($('input[id="annualHomeownersInsurance"]').val())));
-	buyHomeRefinanceRate.propTaxMonthlyOryearly = parseFloat(removedDoller(removedComma($('input[id="propTaxMonthlyOryearly"]').val()))); 
-	buyHomeRefinanceRate.propInsMonthlyOryearly = parseFloat(removedDoller(removedComma( $('input[id="propInsMonthlyOryearly"]').val())));
+	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+		}
+		
+	}
+	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		}
+	}
 	processCommonParameters();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	
@@ -1131,7 +1154,7 @@ function paintDataSection(option,isDefault){
 					"id" : option[i].id,
 					"name" : option[i].id
 				}).on("load focus", function(e){
-					if($(this).attr("name") != "zipCode" || $(this).attr("name") != "months"){
+					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "months"){
 						$(this).maskMoney({
 			    			thousands:',',
 			    			decimal:'.',
