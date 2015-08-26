@@ -485,6 +485,12 @@ function validateForm(loanType,refinanceType){
 		}
 		if(!zipCode){
 			return false;
+		}else{
+    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+       		    return false;
+       	 }
 		}
 	}else if(refinanceType == REFINANACE_CASH_OUT){
 		var firstFeild = validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
@@ -535,6 +541,12 @@ function validateForm(loanType,refinanceType){
 		}
 		if(!zipCode){
 			return false;
+		}else{
+    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+       		    return false;
+       	 }
 		}
 		var yesNoValue = $('#impound').attr("value");
 		if(yesNoValue == ""){
@@ -587,6 +599,12 @@ function validateForm(loanType,refinanceType){
 		}
 		if(!zipCode){
 			return false;
+		}else{
+    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+       		    return false;
+       	 }
 		}
 		var yesNoValue = $('#impound').attr("value");
 		if(yesNoValue == ""){
