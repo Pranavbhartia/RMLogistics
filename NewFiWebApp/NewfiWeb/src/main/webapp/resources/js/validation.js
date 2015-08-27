@@ -23,7 +23,9 @@ function appendErrorMessage(newClass){
 function validateInput(element,inputVal,message){
 		
 	var name=$(element).attr('name');
-	var height=$(element).offset().top-100;
+	if(element != undefined){
+		var height=$(element).offset().top-100;
+	}
 
 	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""){
 	
@@ -328,7 +330,8 @@ function currentlyLivingValidation(){
 	var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),stateErrorMessage);
 	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
-	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);		    			    	
+	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
+
 	/*var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);*/
 	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 	if($('input[name="rentPerMonth"]').length>0){
@@ -494,7 +497,6 @@ function validateForm(loanType,refinanceType){
 		}
 	}else if(refinanceType == REFINANACE_CASH_OUT){
 		var firstFeild = validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
-		var secondFeild = validateInput($('input[name="currentMortgagePayment"]'),$('input[name="currentMortgagePayment"]').val(),message);
 		var thirdFeild = validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);
 		var fourthFeild = validateInput($('input[name="cashTakeOut"]'),$('input[name="cashTakeOut"]').val(),message);				
 		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
@@ -521,9 +523,6 @@ function validateForm(loanType,refinanceType){
 		
 		
 		if(!firstFeild){
-			return false;
-		}
-		if(!secondFeild){
 			return false;
 		}
 
@@ -556,34 +555,23 @@ function validateForm(loanType,refinanceType){
 		if($('#impound').attr("value") == "Yes"){
 			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
 			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
-			var propTaxMonthlyOryearly = validateQuickQuote($('#propTaxMonthlyOryearly'),$('#propTaxMonthlyOryearly').val(),message);
-			var propInsMonthlyOryearly = validateQuickQuote($('#propInsMonthlyOryearly'),$('#propInsMonthlyOryearly').val(),message);
+		
 			if(!propertyTaxesPaid){
 				return false;
 			}
 			if(!annualHomeownersInsurance){
 				return false;
 			}
-			if(!propTaxMonthlyOryearly){
-				return false;
-			}
-			if(!propInsMonthlyOryearly){
-				return false;
-			}
 		}
 		
 	}else if(refinanceType == REFINANACE_LOWER_MORTGAGE_PAYMENT){
 		var firstFeild = validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
-		var secondFeild = validateInput($('input[name="currentMortgagePayment"]'),$('input[name="currentMortgagePayment"]').val(),message);
 		var thirdFeild = validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);		
 		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
 		var propertyType = validateQuickQuote($('#propertyType'),$('#propertyType').html(),message);
 		var zipCode = validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
 
 		if(!firstFeild){
-			return false;
-		}
-		if(!secondFeild){
 			return false;
 		}
 
@@ -614,20 +602,14 @@ function validateForm(loanType,refinanceType){
 		if($('#impound').attr("value") == "Yes"){
 			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
 			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
-			var propTaxMonthlyOryearly = validateQuickQuote($('#propTaxMonthlyOryearly'),$('#propTaxMonthlyOryearly').val(),message);
-			var propInsMonthlyOryearly = validateQuickQuote($('#propInsMonthlyOryearly'),$('#propInsMonthlyOryearly').val(),message);
+
 			if(!propertyTaxesPaid){
 				return false;
 			}
 			if(!annualHomeownersInsurance){
 				return false;
 			}
-			if(!propTaxMonthlyOryearly){
-				return false;
-			}
-			if(!propInsMonthlyOryearly){
-				return false;
-			}
+
 		}
 	}
 	
