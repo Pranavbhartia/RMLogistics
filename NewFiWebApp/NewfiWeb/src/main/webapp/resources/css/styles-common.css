@@ -610,7 +610,7 @@ a.cus-eng-succ-mess-email {
 
 .quick-quote-dropdown-cont {
     position: absolute;      
-    width: 229px;      
+    width: 158px;      
     height: auto;
     margin: 0 auto;
     border: 1px solid #dcdcdc;      
@@ -706,4 +706,19 @@ a.cus-eng-succ-mess-email {
 
 .profile-header-dwn-icon {
 	margin: 5px 0;
+}
+
+.month-adj {
+	width: 100px;
+	margin: 0 5px;
+}
+
+.quick-quote-yes-btn {
+    margin: 10px 12px 10px 0;
+    padding-left: 20px;
+}
+
+.quick-quote-no-btn {
+    margin: 10px 10px;
+    padding-left: 20px;
 }
