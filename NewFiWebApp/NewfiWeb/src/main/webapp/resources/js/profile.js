@@ -289,7 +289,7 @@ function getLoanLqbInfoContainer(user){
 	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn cep-button-color",
-		"onclick" : "updateLqbLMDetails()updateLqbLMDetails()"
+		"onclick" : "updateLqbLMDetails()"
 	}).html("Update");
 	container.append(saveBtn);
 	return container;
