@@ -14,14 +14,22 @@ var purchaseType = [{
 	formId : "quick-quote-purchase-form"
 	
 },{
+	question : "First Name",
+	id : "firstName",
+	column : 0
+},{
+	question : "Last Name",
+	id : "lastName",
+	column : 1
+},{
 	question : "Purchase price",
 	id : "homeWorthToday",
 	column : 0
-},{
+},/*{
 	question : "Payment for rent<br />(If renting)",
 	id : "rentPerMonth", 
 	column : 1
-},{
+},*/{
 	question : "Down payment",
 	id : "currentMortgageBalance",
 	type : "percentage",
@@ -30,15 +38,16 @@ var purchaseType = [{
 },{
 	question : "Property use",
 	id : "residenceType",
-	 column : 1,
+    column : 1,
+    dropDownId : "residence_type_id",
 	 list: [{
-            text: "Primary residence",
+            text: "Primary",
             value: "0"
         }, {
-            text: "Vacation/Second home",
+            text: "Second",
             value: "1"
         }, {
-            text: "Investment property",
+            text: "Investment",
             value: "2"
         }],
         selected: ""
@@ -49,9 +58,10 @@ var purchaseType = [{
 },{
 	question : "Property type",
 	id : "propertyType",
+	dropDownId : "property_type_id",
 	column : 1,
 	list : [{
-		text: "Single family residence",
+		text: "Single family",
         value: "0"
     }, {
         text: "Condo",
@@ -67,24 +77,24 @@ var purchaseType = [{
 	type : "yesNo",
 	column : 0,
 },{
-	question : "Property taxes",
+	question : "Property taxes<br />(annual)",
 	id : "propertyTaxesPaid",
 	column : 1,
 	type : "month/year",
 	monthYearId : "propTaxMonthlyOryearly",
 	addClass : "hide"
 },{
-	question : "Homeowners<br />insurance",
+	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly",
 	addClass : "hide"
-},{
+}/*,{
 	question : "Months",
 	id : "months",
 	column : 0,
-}];
+}*/];
 
 //JSON for refinanace lower monthly payment
 var refinanceLowerMonthlyPayment = [{
@@ -92,14 +102,22 @@ var refinanceLowerMonthlyPayment = [{
 	refinanceOption : REFINANACE_LOWER_MORTGAGE_PAYMENT,
 	formId : "quick-quote-refinance-lower-mortage-form"
 },{
+	question : "First Name",
+	id : "firstName",
+	column : 0
+},{
+	question : "Last Name",
+	id : "lastName",
+	column : 1
+},{
 	question : "Current balance",
 	id : "currentMortgageBalance",
 	column : 0
-},{
+},/*{
 	question : "Current payment",
 	id : "currentMortgagePayment",
 	column : 1
-},
+},*/
 {
 	question : "Current value",
 	id : "homeWorthToday",
@@ -107,9 +125,10 @@ var refinanceLowerMonthlyPayment = [{
 },{
 	question : "Property type",
 	id : "propertyType",
+	dropDownId : "property_type_id",
 	column : 1,
 	list : [{
-		text: "Single family residence",
+		text: "Single family",
         value: "0"
     }, {
         text: "Condo",
@@ -122,17 +141,18 @@ var refinanceLowerMonthlyPayment = [{
 },{
 	question : "Property use",
 	id : "residenceType",
+	dropDownId : "residence_type_id",
 	 column : 1,
 	 list: [{
-            text: "Primary residence",
-            value: "0"
-        }, {
-            text: "Vacation/Second home",
-            value: "1"
-        }, {
-            text: "Investment property",
-            value: "2"
-        }],
+         text: "Primary",
+         value: "0"
+     }, {
+         text: "Second",
+         value: "1"
+     }, {
+         text: "Investment",
+         value: "2"
+     }],
         selected: ""
 },{
 	 question : "Zip code",
@@ -144,23 +164,19 @@ var refinanceLowerMonthlyPayment = [{
 	type : "yesNo",
 	column : 0,
 },{
-	question : "Property taxes",
+	question : "Property taxes<br />(annual)",
 	id : "propertyTaxesPaid",
 	column : 1,
 	type : "month/year",
 	monthYearId : "propTaxMonthlyOryearly",
 	addClass : "hide"
 },{
-	question : "Homeowners<br />insurance",
+	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly",
 	addClass : "hide"
-},{
-	question : "Months",
-	id : "months",
-	column : 0,
 }];
 
 //JSON for refinanace cashout
@@ -169,23 +185,32 @@ var refinanceCashOut = [{
 	refinanceOption : REFINANACE_CASH_OUT,
 	formId : "quick-quote-refinanace-cash-out-form"
 },{
+	question : "First Name",
+	id : "firstName",
+	column : 0
+},{
+	question : "Last Name",
+	id : "lastName",
+	column : 1
+},{
 	question : "Current balance",
 	id : "currentMortgageBalance",
 	column : 0
-},{
+},/*{
 	question : "Current payment",
 	id : "currentMortgagePayment",
 	column : 1
-},{
+},*/{
 	question : "Current value",
 	id : "homeWorthToday",
 	column : 0
 },{
 	question : "Property type",
 	id : "propertyType",
+	dropDownId : "property_type_id",
 	column : 1,
 	list : [{
-		text: "Single family residence",
+		text: "Single family",
         value: "0"
     }, {
         text: "Condo",
@@ -203,45 +228,42 @@ var refinanceCashOut = [{
 {
 	question : "Property use",
 	id : "residenceType",
+	dropDownId : "residence_type_id",
 	 column : 1,
 	 list: [{
-            text: "Primary residence",
-            value: "0"
-        }, {
-            text: "Vacation/Second home",
-            value: "1"
-        }, {
-            text: "Investment property",
-            value: "2"
-        }],
+         text: "Primary",
+         value: "0"
+     }, {
+         text: "Second",
+         value: "1"
+     }, {
+         text: "Investment",
+         value: "2"
+     }],
         selected: ""
 },{
 	 question : "Zip code",
 	 id : "zipCode",
-	 column : 0
+	 column : 1
 },{
 	question : "Impounds",
 	id : "impound",
 	type : "yesNo",
 	column : 0,
 },{
-	question : "Property taxes",
+	question : "Property taxes<br />(annual)",
 	id : "propertyTaxesPaid",
 	column : 1,
 	type : "month/year",
 	monthYearId : "propTaxMonthlyOryearly",
 	addClass : "hide"
 },{
-	question : "Homeowners<br />insurance",
+	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly",
 	addClass : "hide"
-},{
-	question : "Months",
-	id : "months",
-	column : 0,
 }];
 
 //END
@@ -1154,7 +1176,7 @@ function paintDataSection(option,isDefault){
 					"id" : option[i].id,
 					"name" : option[i].id
 				}).on("load focus", function(e){
-					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "months"){
+					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "firstName" && $(this).attr("name") != "lastName"){
 						$(this).maskMoney({
 			    			thousands:',',
 			    			decimal:'.',
@@ -1214,7 +1236,8 @@ function appendDropdown(options){
 
 	
 	 var dropDownContainer = $('<div>').attr({
-	        "class": "quick-quote-dropdown-cont hide"
+	        "class": "quick-quote-dropdown-cont hide",
+	        "id" : options.dropDownId
 	    });
 	 var optionCont ="";
 	   for (var i = 0; i < options.list.length; i++) {
@@ -1251,17 +1274,17 @@ function appendYesNoQuestion(option){
 	});
 	
 	var yesContent = $('<div>').attr({
-		"class":"cep-button-color quick-quote-yes-no-container float-left",
+		"class":"quick-quote-yes-btn radio-btn float-left",
 		"id":"quick-quote-yes-container-id",
 		"isSelected":""
 	}).html("Yes").bind('click',function(e){
 		e.stopImmediatePropagation();
 		$('div[id="quick-quote-monthYear"]').show();
 		
-		if($('#quick-quote-no-container-id').hasClass('quick-quote-button')){			
-			$('#quick-quote-no-container-id').removeClass('quick-quote-button');
+		if($('#quick-quote-no-container-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-no-container-id').removeClass('radio-btn-selected');
 		}
-		$(this).addClass('quick-quote-button');
+		$(this).addClass('radio-btn-selected');
 		$(this).attr('value',$(this).html());
 		
 		$(this).attr({
@@ -1275,7 +1298,7 @@ function appendYesNoQuestion(option){
 	});
 
 	var noContent = $('<div>').attr({
-		"class":"cep-button-color quick-quote-yes-no-container float-left",
+		"class":"quick-quote-no-btn radio-btn float-left",
 		"id":"quick-quote-no-container-id",
 		"isSelected":""
 	}).html("No").bind('click',function(e){
@@ -1283,10 +1306,10 @@ function appendYesNoQuestion(option){
 		e.stopImmediatePropagation();
 		$('div[id="quick-quote-monthYear"]').hide();
 		
-		if($('#quick-quote-yes-container-id').hasClass('quick-quote-button')){			
-			$('#quick-quote-yes-container-id').removeClass('quick-quote-button');
+		if($('#quick-quote-yes-container-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-yes-container-id').removeClass('radio-btn-selected');
 		}
-		$(this).addClass('quick-quote-button');
+		$(this).addClass('radio-btn-selected');
 
 		$(this).attr({
 			"isSelected" : true,
@@ -1310,7 +1333,7 @@ function appendMonthYearQuestion(option){
 		"id" : "quick-quote-monthyear-container-id"
 	});
 	
-	var input = $('<input>').attr({
+	var rowLHS = $('<input>').attr({
 		"class" : "quick-quote-row-RHS month-year-row-adj float-left",
 		"id" : option.id,
 		"name" :option.id,
@@ -1328,7 +1351,16 @@ function appendMonthYearQuestion(option){
 		//restrictChar(contxt.name);
 	});
 	
-	var text = $('<div>').attr({
+	var rowRHS = $('<input>').attr({
+		"class" : "quick-quote-row-RHS month-adj float-left",
+		"id" : "impound_month",
+		"name" :"impound_month",
+		"value" : "",
+		"placeholder" : "months"
+	});
+	
+	return mainDiv.append(rowLHS).append(rowRHS);
+	/*var text = $('<div>').attr({
 		"class" : "quick-quote-text float-left"
 	}).html("per");
 	
@@ -1368,9 +1400,10 @@ function appendMonthYearQuestion(option){
 	 });
 
 	 dropDownContainer.append(year).append(month);
-	 return mainDiv.append(input).append(input).append(text).append(monthYearInput).append(dropDownContainer);
+	 return mainDiv.append(input).append(input).append(text).append(monthYearInput).append(dropDownContainer);*/
 }
 
+/*Function to append downpayment row*/
 function appendDownPaymentFeild(option){
 	
 	var mainDiv = $('<div>').attr({
@@ -1397,12 +1430,17 @@ function appendDownPaymentFeild(option){
 	return mainDiv.append(rowLHS).append(rowRHS);
 }
 
+/*To expand and collapse Quote Details*/
 $('body').on('click','#quick-quote-header-down-icn',function(e){
-	e.stopImmediatePropagation();
-	if($('.quick-quote-question-section').css("display") == "block"){		
-		$('.quick-quote-question-section').hide();		
-	}else{
-		$('.quick-quote-question-section').show();
+	$('.quick-quote-question-section').toggle();	
+});
+
+$(document).click(function(){
+	if($('#residence_type_id').css("display") == "block"){
+		$('#residence_type_id').toggle();
+	}
+	if($('#property_type_id').css("display") == "block"){
+		$('#property_type_id').toggle();
 	}
 	
 });
