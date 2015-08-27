@@ -168,6 +168,12 @@ function LoanPersonalInfoWrapper(user) {
 		//included that of customer css
 		"class" : "cust-personal-info-header"
 	}).html("LQB Information");
+	
+	var downIcon = $('<div>').attr({
+		"class" : "header-down-icn profile-header-dwn-icon float-right",
+		"id" : "profile-dwn-icon"
+	});
+	lqbHeader.append(downIcon);
 	if(!userIsRealtor()){
 		if(newfiObject.user.userRole.id!=4){
 			var lqbContainer = getLoanLqbInfoContainer(user);
@@ -202,7 +208,11 @@ function appendChangePasswordContainer(userDetails){
 		"class" : "cust-personal-info-header"
 	}).html("Change Password");
 
-	
+	var downIcon = $('<div>').attr({
+		"class" : "header-down-icn profile-header-dwn-icon float-right",
+		"id" : "change-password-dwn-icon"
+	});
+	lqbHeader.append(downIcon);
 	
 	var lqbContainer = getPasswordInfoContainer(user);
 	
@@ -229,7 +239,8 @@ function appendChangePasswordContainer(userDetails){
 function getPasswordInfoContainer(){
 
 	var container = $('<div>').attr({
-		"class" : "loan-personal-info-container"
+		"class" : "loan-personal-info-container hide",
+		"id" : "change-password-container-id"
 	});
 
 	//NEXNF-725
@@ -264,7 +275,8 @@ function getLoanLqbInfoContainer(user){
 	 oldlqbPassword = user.internalUserDetail.lqbPassword;
 	 
 	var container = $('<div>').attr({
-		"class" : "loan-personal-info-container"
+		"class" : "loan-personal-info-container hide",
+		"id" : "lqb-information-container-id"
 	});
 
 	var uploadRow = getLqbRow("User Name",user.internalUserDetail.lqbUsername,"lqb_userName");
@@ -277,7 +289,7 @@ function getLoanLqbInfoContainer(user){
 	
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn cep-button-color",
-		"onclick" : "updateLqbLMDetails()"
+		"onclick" : "updateLqbLMDetails()updateLqbLMDetails()"
 	}).html("Update");
 	container.append(saveBtn);
 	return container;
@@ -600,6 +612,7 @@ function updateLqbLMDetails(){
 			dataType : "json",
 			success : function(data) {
 				$('#overlay-loader').hide();
+				$('#lqb-information-container-id').toggle();
 				if(data.error!=null){
 					showErrorToastMessage(data.error.message);
 				}else{
@@ -645,6 +658,7 @@ function changePassword(){
 					cache:false,
 					success : function(data) {
 						$('#overlay-loader').hide();
+						$('#change-password-container-id').toggle();
 						showToastMessage(passwordUpdateSuccessMessage);
 						$('#overlay-toast').fadeIn("fast",function(){
             				setTimeout(function(){
@@ -3132,3 +3146,12 @@ function deleteStateLicenseMapping(statelicensemapping){
 	 
 	    });
 }
+
+//jira-927
+$('body').on('click','#profile-dwn-icon',function(e){
+	$('#lqb-information-container-id').toggle();
+});
+//jira-927
+$('body').on('click','#change-password-dwn-icon',function(e){
+	$('#change-password-container-id').toggle();
+});
