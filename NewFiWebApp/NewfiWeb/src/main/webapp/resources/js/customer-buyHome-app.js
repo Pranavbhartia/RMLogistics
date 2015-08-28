@@ -323,7 +323,7 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	var zipCode = $('input[name="zipCode"]').val();
 		    	var livingSince = $('input[name="startLivingTime"]').val();
 		    	var monthlyRent =  $('input[name="rentPerMonth"]').val();
-		    	var isSellYourhome = quesContxts[5].value;
+		    	var isSellYourhome = quesContxts[4].value;
 		    			    	
 		    	/*var propAddress= $('input[name="propStreetAddress"]').val();*/
 		    	var propState = $('input[name="propState"]').val();
@@ -334,7 +334,10 @@ function paintCustomerApplicationPurchasePageStep1a() {
 		    	if(!isStatus){
 		    		return false;
 		    	}
-		    	
+		    	if(isSellYourhome == "" || isSellYourhome == undefined){
+		    		showErrorToastMessage(answerQuestionOne);
+		    		return false;
+		    	}
 		    	/*End of validation*/
 
 		    	ajaxRequest("rest/states/zipCode", "GET", "json", {"zipCode":propZipCode}, function(response) {
