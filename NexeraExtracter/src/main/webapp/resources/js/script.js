@@ -833,8 +833,10 @@ function getMammothAdjusters() {
 
 	var table3 = getMammothARMAdjustersTable1();
 	var table4 = getMammothARMAdjustersTable2();
-
-	armAdjusterRow.append(table3).append(table4);
+	var table5 = getMammothARMAdjustersTable3();
+	
+	
+	armAdjusterRow.append(table3).append(table4).append(table5);
 
 	armAdjusterCont.append(armAdjusterHeader).append(armAdjusterRow);
 
@@ -894,7 +896,8 @@ function getMammothFixedAdjustersTable2() {
 			[ "Refinance - Cash-out", ".500" ], 
 			[ "2 Unit", ".500" ], 
 			[ "Second Home", ".500" ],
-			[ "Non-CA State Adjuster", "(.250)" ] 
+			[ "Non-CA State Adjuster", "(.250)" ] ,
+			[ "Escrow Walver Fee", "0.125" ] 
 	];
 
 	var tableRowCont = $('<div>').attr({
@@ -912,6 +915,21 @@ function getMammothFixedAdjustersTable2() {
 
 }
 
+function getMammothARMAdjustersTable3(){
+	
+	var tableArray = [ "Escrow Walver Fee", "0.125"];
+	
+    var mainDiv = $('<div>').attr({
+    	"class" : "ltv-table-container float-left mammoth-table5"
+    });
+	var tableRowCont = $('<div>').attr({
+		"class" : "price-tr-wrapper"
+	});
+	
+	var tableRow = getLTVTableRow(tableArray);
+    tableRowCont.append(tableRow);
+    return mainDiv.append(tableRowCont);
+}
 function getMammothARMAdjustersTable1() {
 	var tableCont = $('<div>').attr({
 		"class" : "ltv-table-container float-left mammoth-table3"
