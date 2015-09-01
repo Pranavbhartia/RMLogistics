@@ -2868,6 +2868,11 @@ input.calc-input {
 
 .prof-form-input-cont{
 	float: left;
+	margin: 0 10px;
+}
+
+.prof-form-input-cont:first-child {
+    margin-left: 0;
 }
 
 /*Error messages*/

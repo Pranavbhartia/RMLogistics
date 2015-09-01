@@ -368,3 +368,7 @@ ADD COLUMN `lqb_loan_amount` DOUBLE NULL AFTER `lqb_appraised_val`;
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `ltv` DOUBLE(5,2) NULL AFTER `lqb_loan_amount`;
 
+#Himanshu - additon of column for status insert time
+ALTER TABLE `newfi_schema`.`loanmilestone` 
+ADD COLUMN `status_insert_time` DATETIME NULL COMMENT '' AFTER `milestone_order`;
+
