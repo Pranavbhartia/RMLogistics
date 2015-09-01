@@ -7,10 +7,14 @@ function appendMessage(data){
 }
 
 
-function appendErrorMessage(){
+function appendErrorMessage(newClass){
 	
+	var addClearfix = "";
+	if(newClass){
+		addClearfix = "clearfix";
+	}
 	var ErrMessage = $('<div>').attr({
-		"class" : "err-msg hide"
+		"class" : addClearfix+" err-msg hide "+newClass
 	});
 	
 	return ErrMessage;
@@ -19,7 +23,9 @@ function appendErrorMessage(){
 function validateInput(element,inputVal,message){
 		
 	var name=$(element).attr('name');
-	var height=$(element).offset().top-100;
+	if(element != undefined){
+		var height=$(element).offset().top-100;
+	}
 
 	if($('input[name="' + name + '"]').val() == undefined || $('input[name="' + name + '"]').val() == ""){
 	
@@ -324,7 +330,8 @@ function currentlyLivingValidation(){
 	var stateValidation=validateInput($('input[name="state"]'),$('input[name="state"]').val(),stateErrorMessage);
 	var questionOne=validateInput($('input[name="city"]'),$('input[name="city"]').val(),message);
 	var questionTwo=validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),message);
-	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);		    			    	
+	var questionThree=validateInput($('input[name="startLivingTime"]'),$('input[name="startLivingTime"]').val(),message);
+
 	/*var addressValidation=validateInput($('input[name="addressStreet"]'),$('input[name="addressStreet"]').val(),message);*/
 	var propertQuestionTwo=validateInput($('input[name="propZipCode"]'),$('input[name="propZipCode"]').val(),zipCodeMessage);
 	if($('input[name="rentPerMonth"]').length>0){
@@ -428,4 +435,184 @@ function validateFormFeildInReferalRegistration(){
 		return false;
 	} */
 	return true;
+}
+
+function validateQuickQuote(element,inputVal,message){
+	var id=$(element).attr('id');
+	//var height=$(element).offset().top-100;
+
+	if(inputVal == undefined || inputVal == ""){
+	
+			$('#'+id).parent().parent().find('.err-msg').html(message).show();
+			$('#'+id).addClass('ce-err-input').show();
+			return false;
+	}else{
+		if(inputVal == "$0" || inputVal == 0){
+			if(name!="zipCode"){
+				$('#'+id).parent().parent().find('.err-msg').html(feildShouldNotBeZero).show();
+				$('#'+id).addClass('ce-err-input').show();
+				return false;
+			}			
+		}else{
+			$('#'+id).parent().parent().find('.err-msg').hide();
+			$('#'+id).removeClass('ce-err-input');			
+			
+		}
+		
+	}
+	
+	return true;
+	
+}
+function validateForm(loanType,refinanceType){
+
+	
+	if(loanType == PURCHASE){
+		var firstFeild = validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);
+		var secondFeild = validateQuickQuote($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
+		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
+		var propertyType = validateQuickQuote($('#propertyType'),$('#propertyType').html(),message);
+		var zipCode = validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
+		if(!firstFeild){
+			return false;
+		}
+		if(!secondFeild){
+			return false;
+		}
+
+		if(!residenceType){
+			return false;
+		}
+		if(!propertyType){
+			return false;
+		}
+		if(!zipCode){
+			return false;
+		}else{
+    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+       		    return false;
+       	 }
+		}
+	}else if(refinanceType == REFINANACE_CASH_OUT){
+		var firstFeild = validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
+		var thirdFeild = validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);
+		var fourthFeild = validateInput($('input[name="cashTakeOut"]'),$('input[name="cashTakeOut"]').val(),message);				
+		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
+		var propertyType = validateQuickQuote($('#propertyType'),$('#propertyType').html(),message);
+		var zipCode = validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
+		if($('#impound').attr("value") == "Yes"){
+			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
+			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
+			var propTaxMonthlyOryearly = validateQuickQuote($('#propTaxMonthlyOryearly'),$('#propTaxMonthlyOryearly').val(),message);
+			var propInsMonthlyOryearly = validateQuickQuote($('#propInsMonthlyOryearly'),$('#propInsMonthlyOryearly').val(),message);
+			if(!propertyTaxesPaid){
+				return false;
+			}
+			if(!annualHomeownersInsurance){
+				return false;
+			}
+			if(!propTaxMonthlyOryearly){
+				return false;
+			}
+			if(!propInsMonthlyOryearly){
+				return false;
+			}
+		}
+		
+		
+		if(!firstFeild){
+			return false;
+		}
+
+		if(!thirdFeild){
+			return false;
+		}
+		if(!fourthFeild){
+			return false;
+		}
+		if(!residenceType){
+			return false;
+		}
+		if(!propertyType){
+			return false;
+		}
+		if(!zipCode){
+			return false;
+		}else{
+    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+       		    return false;
+       	 }
+		}
+		var yesNoValue = $('#impound').attr("value");
+		if(yesNoValue == ""){
+			showErrorToastMessage(answerQuestionOne);
+			return false;
+		}
+		if($('#impound').attr("value") == "Yes"){
+			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
+			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
+		
+			if(!propertyTaxesPaid){
+				return false;
+			}
+			if(!annualHomeownersInsurance){
+				return false;
+			}
+		}
+		
+	}else if(refinanceType == REFINANACE_LOWER_MORTGAGE_PAYMENT){
+		var firstFeild = validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
+		var thirdFeild = validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);		
+		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
+		var propertyType = validateQuickQuote($('#propertyType'),$('#propertyType').html(),message);
+		var zipCode = validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
+
+		if(!firstFeild){
+			return false;
+		}
+
+		if(!thirdFeild){
+			return false;
+		}
+		
+		if(!residenceType){
+			return false;
+		}
+		if(!propertyType){
+			return false;
+		}
+		if(!zipCode){
+			return false;
+		}else{
+    		if($('input[name="zipCode"]').val().length >5 ||$('input[name="zipCode"]').val().length < 5){
+    			$('input[name="zipCode"]').next('.err-msg').html(zipCodeMessage).show();
+    			$('input[name="zipCode"]').addClass('ce-err-input').show();
+       		    return false;
+       	 }
+		}
+		var yesNoValue = $('#impound').attr("value");
+		if(yesNoValue == ""){
+			showErrorToastMessage(answerQuestionOne);
+			return false;
+		}
+		if($('#impound').attr("value") == "Yes"){
+			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
+			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
+
+			if(!propertyTaxesPaid){
+				return false;
+			}
+			if(!annualHomeownersInsurance){
+				return false;
+			}
+
+		}
+	}
+	
+	return true;
+
 }

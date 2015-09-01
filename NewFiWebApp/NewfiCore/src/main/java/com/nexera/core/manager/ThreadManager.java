@@ -694,6 +694,16 @@ public class ThreadManager implements Runnable {
 				        currentLoanStatus, workflowItemExec.getId()));
 				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
 				        params);
+				
+				List<WorkflowItemExec> childWorkflowItemExecList = workflowService
+				        .getWorkflowItemListByParentWorkflowExecItem(workflowItemExec);
+				for(WorkflowItemExec workitem: childWorkflowItemExecList){
+					String chilldParams = Utils.convertMapToJson(getParamsBasedOnStatus(
+					        currentLoanStatus, workitem.getId()));
+					workflowService.saveParamsInExecTable(workitem.getId(),
+							chilldParams);
+				}
+				
 				EngineTrigger engineTrigger = applicationContext
 				        .getBean(EngineTrigger.class);
 				engineTrigger.startWorkFlowItemExecution(workflowItemExec
@@ -1261,6 +1271,7 @@ public class ThreadManager implements Runnable {
 		loanMilestone.setStatus(String.valueOf(currentLoanStatus));
 		loanMilestone.setComments(loanStatus.getDisplayStatus());
 		loanMilestone.setOrder(loanStatus.getOrder());
+		loanMilestone.setStatusInsertTime(new Date());
 		saveLoanMilestone(loanMilestone);
 
 	}

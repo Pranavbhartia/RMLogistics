@@ -482,3 +482,11 @@ table.adjuster-table {
     color: red;
     font-family: 'opensanssemibold';
 }
+
+.mammoth-table5 {
+	padding: 20px;
+}
+
+.mammoth-table5 .price-table-td:first-child {
+	width:135px;
+}

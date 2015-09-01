@@ -1,32 +1,67 @@
 var count = 0;
 var buyHomeRefinanceRate = new Object();
 buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
+var PURCHASE = "PUR";
+var REFINANACE = "REF";
+var REFINANACE_LOWER_MORTGAGE_PAYMENT = "REFLMP";
+var REFINANACE_CASH_OUT = "REFCO";
 
 /*JSON structure for painting the form feild on click of loantype button*/
 
 //JSON for purchase type
 var purchaseType = [{
-	loanType : "PUR",
+	loanType : PURCHASE,
 	formId : "quick-quote-purchase-form"
 	
 },{
-	question : "Payment for rent<br />(If renting) :",
-	id : "rentPerMonth", 
+	question : "First Name",
+	id : "firstName",
 	column : 0
 },{
-	question : "Desired<br />purchase price :",
-	id : "homeWorthToday",
+	question : "Last Name",
+	id : "lastName",
 	column : 1
 },{
-	question : "Down payment :",
-	id : "currentMortgageBalance",
+	question : "Purchase price",
+	id : "homeWorthToday",
 	column : 0
+},/*{
+	question : "Payment for rent<br />(If renting)",
+	id : "rentPerMonth", 
+	column : 1
+},*/{
+	question : "Down payment",
+	id : "currentMortgageBalance",
+	type : "percentage",
+	column : 0
+	
 },{
-	question : "Property type :",
+	question : "Property use",
+	id : "residenceType",
+    column : 1,
+    dropDownId : "residence_type_id",
+	 list: [{
+            text: "Primary",
+            value: "0"
+        }, {
+            text: "Second",
+            value: "1"
+        }, {
+            text: "Investment",
+            value: "2"
+        }],
+        selected: ""
+},{
+	 question : "Zip code",
+	 "id": "zipCode",
+	 column : 0
+},{
+	question : "Property type",
 	id : "propertyType",
+	dropDownId : "property_type_id",
 	column : 1,
 	list : [{
-		text: "Single family residence",
+		text: "Single family",
         value: "0"
     }, {
         text: "Condo",
@@ -37,50 +72,63 @@ var purchaseType = [{
 	}],  
   selected: ""
 },{
-	question : "Property use :",
-	id : "residenceType",
-	 column : 0,
-	 list: [{
-            text: "Primary residence",
-            value: "0"
-        }, {
-            text: "Vacation/Second home",
-            value: "1"
-        }, {
-            text: "Investment property",
-            value: "2"
-        }],
-        selected: ""
+	question : "Impounds",
+	id : "impound",
+	type : "yesNo",
+	column : 0,
 },{
-	 question : "Zip Code :",
-	 "id": "zipCode",
-	 column : 1
-}];
+	question : "Property taxes<br />(annual)",
+	id : "propertyTaxesPaid",
+	column : 1,
+	type : "month/year",
+	monthYearId : "propTaxMonthlyOryearly",
+	addClass : "hide"
+},{
+	question : "Homeowners<br />(annual)",
+	id : "annualHomeownersInsurance",
+	column : 1,
+	type : "month/year",
+	monthYearId : "propInsMonthlyOryearly",
+	addClass : "hide"
+}/*,{
+	question : "Months",
+	id : "months",
+	column : 0,
+}*/];
 
 //JSON for refinanace lower monthly payment
 var refinanceLowerMonthlyPayment = [{
-	loanType : "REF",
-	refinanceOption : "REFLMP",
+	loanType : REFINANACE,
+	refinanceOption : REFINANACE_LOWER_MORTGAGE_PAYMENT,
 	formId : "quick-quote-refinance-lower-mortage-form"
 },{
-	question : "Current mortgage balance :",
-	id : "currentMortgageBalance",
+	question : "First Name",
+	id : "firstName",
 	column : 0
 },{
-	question : "Current mortgage payment :",
+	question : "Last Name",
+	id : "lastName",
+	column : 1
+},{
+	question : "Current balance",
+	id : "currentMortgageBalance",
+	column : 0
+},/*{
+	question : "Current payment",
 	id : "currentMortgagePayment",
 	column : 1
-},
+},*/
 {
-	question : "Home worth today :",
+	question : "Current value",
 	id : "homeWorthToday",
 	column : 0
 },{
-	question : "Property type :",
+	question : "Property type",
 	id : "propertyType",
+	dropDownId : "property_type_id",
 	column : 1,
 	list : [{
-		text: "Single family residence",
+		text: "Single family",
         value: "0"
     }, {
         text: "Condo",
@@ -91,66 +139,78 @@ var refinanceLowerMonthlyPayment = [{
 	}],
   selected: ""
 },{
-	question : "Property use :",
+	question : "Property use",
 	id : "residenceType",
-	 column : 0,
+	dropDownId : "residence_type_id",
+	 column : 1,
 	 list: [{
-            text: "Primary residence",
-            value: "0"
-        }, {
-            text: "Vacation/Second home",
-            value: "1"
-        }, {
-            text: "Investment property",
-            value: "2"
-        }],
+         text: "Primary",
+         value: "0"
+     }, {
+         text: "Second",
+         value: "1"
+     }, {
+         text: "Investment",
+         value: "2"
+     }],
         selected: ""
 },{
-	 question : "Zip Code",
+	 question : "Zip code",
 	 id : "zipCode",
-	 column : 1
+	 column : 0
 },{
-	question : "Property taxes :",
+	question : "Impounds",
+	id : "impound",
+	type : "yesNo",
+	column : 0,
+},{
+	question : "Property taxes<br />(annual)",
 	id : "propertyTaxesPaid",
-	/*column : 0,*/
+	column : 1,
 	type : "month/year",
-	monthYearId : "propTaxMonthlyOryearly"
+	monthYearId : "propTaxMonthlyOryearly",
+	addClass : "hide"
 },{
-	question : "Homeowners<br />insurance :",
+	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
-	/*column : 0,*/
+	column : 1,
 	type : "month/year",
-	monthYearId : "propInsMonthlyOryearly"
+	monthYearId : "propInsMonthlyOryearly",
+	addClass : "hide"
 }];
 
 //JSON for refinanace cashout
 var refinanceCashOut = [{
-	loanType : "REF",
-	refinanceOption : "REFCO",
+	loanType : REFINANACE,
+	refinanceOption : REFINANACE_CASH_OUT,
 	formId : "quick-quote-refinanace-cash-out-form"
 },{
-	question : "Cash to be taken out :",
-	id : "cashTakeOut",
+	question : "First Name",
+	id : "firstName",
 	column : 0
 },{
-	question : "Current mortgage balance :",
+	question : "Last Name",
+	id : "lastName",
+	column : 1
+},{
+	question : "Current balance",
 	id : "currentMortgageBalance",
-	column : 1
-},{
-	question : "Current mortgage payment :",
-	id : "currentMortgagePayment",
 	column : 0
-},
-{
-	question : "Home worth today :",
-	id : "homeWorthToday",
+},/*{
+	question : "Current payment",
+	id : "currentMortgagePayment",
 	column : 1
+},*/{
+	question : "Current value",
+	id : "homeWorthToday",
+	column : 0
 },{
-	question : "Property type :",
+	question : "Property type",
 	id : "propertyType",
-	column : 0,
+	dropDownId : "property_type_id",
+	column : 1,
 	list : [{
-		text: "Single family residence",
+		text: "Single family",
         value: "0"
     }, {
         text: "Condo",
@@ -161,36 +221,49 @@ var refinanceCashOut = [{
 	}],
   selected: ""
 },{
-	question : "Property use :",
+	question : "Cash out",
+	id : "cashTakeOut",
+	column : 0
+},
+{
+	question : "Property use",
 	id : "residenceType",
+	dropDownId : "residence_type_id",
 	 column : 1,
 	 list: [{
-            text: "Primary residence",
-            value: "0"
-        }, {
-            text: "Vacation/Second home",
-            value: "1"
-        }, {
-            text: "Investment property",
-            value: "2"
-        }],
+         text: "Primary",
+         value: "0"
+     }, {
+         text: "Second",
+         value: "1"
+     }, {
+         text: "Investment",
+         value: "2"
+     }],
         selected: ""
 },{
-	 question : "Zip Code :",
+	 question : "Zip code",
 	 id : "zipCode",
-	 column : 0
+	 column : 1
 },{
-	question : "Property taxes :",
+	question : "Impounds",
+	id : "impound",
+	type : "yesNo",
+	column : 0,
+},{
+	question : "Property taxes<br />(annual)",
 	id : "propertyTaxesPaid",
-	/*column : 0,*/
+	column : 1,
 	type : "month/year",
-	monthYearId : "propTaxMonthlyOryearly"
+	monthYearId : "propTaxMonthlyOryearly",
+	addClass : "hide"
 },{
-	question : "Homeowners<br />insurance :",
+	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
-	/*column : 0,*/
+	column : 1,
 	type : "month/year",
-	monthYearId : "propInsMonthlyOryearly"
+	monthYearId : "propInsMonthlyOryearly",
+	addClass : "hide"
 }];
 
 //END
@@ -595,9 +668,7 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
         tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTypeMaster.propertyTaxesPaid)));
      
     }
-    
-    
-     
+
     if(isNaN(getFloatValue(tax))){
         tax="";
 
@@ -670,10 +741,6 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
     var estHousngPaymnt = getLoanSummaryLastRow("Estimated<br/>Housing Payment", showValue(totEstHousingPayment) ,"totalEstMonthlyPaymentId",true);
     rightCol.append(estHousngPaymnt);
 
-
-
-
-    
     wrapper.append(container);
     
     parentWrapper.append(wrapper)/*.append(bottomRow)*/;
@@ -929,42 +996,67 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
 function processCommonParameters(){
 	buyHomeRefinanceRate.propertyType = $('div[id="propertyType"]').attr('value');
 	buyHomeRefinanceRate.residenceType = $('div[id="residenceType"]').attr('value');
-	buyHomeRefinanceRate.homeWorthToday = $('input[id="homeWorthToday"]').val();
-	buyHomeRefinanceRate.currentMortgageBalance = $('input[id="currentMortgageBalance"]').val();
+	buyHomeRefinanceRate.homeWorthToday = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
+	buyHomeRefinanceRate.currentMortgageBalance = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
 }
 
 function processBuyHomeUnderQuickQuote(){
 	buyHomeRefinanceRate.livingSituation = "renting";
-	buyHomeRefinanceRate.purchaseDetails.housePrice = $('input[id="homeWorthToday"]').val();
-	buyHomeRefinanceRate.purchaseDetails.loanAmount = (getFloatValue($('input[id="homeWorthToday"]').val()) -getFloatValue($('input[id="currentMortgageBalance"]').val()));
-	buyHomeRefinanceRate.purchaseDetails.rentPerMonth = $('input[id="rentPerMonth"]').val();
-	buyHomeRefinanceRate.rentPerMonth = $('input[id="rentPerMonth"]').val();
+	buyHomeRefinanceRate.purchaseDetails.housePrice = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))); 
+	buyHomeRefinanceRate.purchaseDetails.loanAmount = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))) - parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
+	buyHomeRefinanceRate.purchaseDetails.rentPerMonth = parseFloat(removedDoller(removedComma($('input[id="rentPerMonth"]').val()))); 
+	if($('input[id="rentPerMonth"]').val() != ""){
+		buyHomeRefinanceRate.rentPerMonth = parseFloat(removedDoller(removedComma($('input[id="rentPerMonth"]').val()))); 
+	}	
 	processCommonParameters();
 	paintBuyHomeTeaserRateUnderQuickQuote("",buyHomeRefinanceRate);
 
 }
 
 function processRateAndTermUnderQuickQuote(){
-	buyHomeRefinanceRate.currentMortgagePayment = $('input[id="currentMortgagePayment"]').val();
+	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
-	buyHomeRefinanceRate.propertyTaxesPaid = $('input[id="propertyTaxesPaid"]').val();
-	buyHomeRefinanceRate.annualHomeownersInsurance = $('input[id="annualHomeownersInsurance"]').val();
-	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
-	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+	
+	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+		}
+		
+	}
+	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		}
+	}
 	processCommonParameters();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	
 }
 
 function processCashOutUnderQuickQuote(){
-	buyHomeRefinanceRate.cashTakeOut = $('input[id="cashTakeOut"]').val();
-	buyHomeRefinanceRate.currentMortgagePayment = $('input[id="currentMortgagePayment"]').val();
-	buyHomeRefinanceRate.isIncludeTaxes = "Yes"
-	buyHomeRefinanceRate.propertyTaxesPaid = $('input[id="propertyTaxesPaid"]').val();
-	buyHomeRefinanceRate.annualHomeownersInsurance = $('input[id="annualHomeownersInsurance"]').val();
-	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
-	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+	buyHomeRefinanceRate.cashTakeOut = parseFloat(removedDoller(removedComma($('input[id="cashTakeOut"]').val())));
+	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
+	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
+	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+		}
+		
+	}
+	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
+			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		}
+	}
 	processCommonParameters();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	
@@ -1005,8 +1097,16 @@ function paintDataSection(option,isDefault){
 		"class" : "cep-button-color quick-qoute-btn clearfix ",
 		"id" : "quick-qoute-btn-id"
 	}).html("Get Quote").on('click', function(){
+		var loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
+		var refinanceType = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
+		var status = validateForm(loanType,refinanceType);
+		
+		if(!status){
+			return false;
+		}
+		
 		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
-		buyHomeRefinanceRate.loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
+		buyHomeRefinanceRate.loanType = loanType;
 
 		if(buyHomeRefinanceRate.loanType == "PUR"){
 			processBuyHomeUnderQuickQuote();
@@ -1061,6 +1161,13 @@ function paintDataSection(option,isDefault){
 				
 				rowRHS = appendMonthYearQuestion(option[i]);
 				
+				$(divMainRow).addClass(option[i].addClass);
+				$(divMainRow).attr({
+					"id" : "quick-quote-monthYear"
+				});
+				
+			}else if(option[i].type == "percentage"){
+				rowRHS = appendDownPaymentFeild(option[i]);
 			}else {
 				
 				rowRHS = $('<input>').attr({
@@ -1068,20 +1175,35 @@ function paintDataSection(option,isDefault){
 					"value" : "",
 					"id" : option[i].id,
 					"name" : option[i].id
-				});
+				}).on("load focus", function(e){
+					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "firstName" && $(this).attr("name") != "lastName"){
+						$(this).maskMoney({
+			    			thousands:',',
+			    			decimal:'.',
+			    			allowZero:true,
+			    			prefix: '$',
+			    		    precision:0,
+			    		    allowNegative:false
+			    		});
+			    		/* this is the piece of code to retrict user put special charector*/
+			    		//restrictChar($(this).attr("name"));
+					}
+		    		
+		    	});
 			} 
 			
 			var question = option[i].question;
 			if(question.length >= 23){
 				rowLHS.addClass('quick-quote-row-LHS-adj');
 			}
-			divMainRow.append(rowLHS).append(rowRHS);
+			
+			divMainRow.append(rowLHS).append(rowRHS).append(appendErrorMessage("err-msg-quick-quote"));
 			
 			if(option[i].column == 0){
 				sectionLHS.append(divMainRow);
-			}else if(option[i].type == "month/year"){
+			}/*else if(option[i].type == "month/year"){
 				sectionThree.append(divMainRow);
-			}else if(option[i].column == 1 && option[i].type == undefined){
+			}*/else if(option[i].column == 1){
 				sectionRHS.append(divMainRow);
 			}
 	}
@@ -1114,7 +1236,8 @@ function appendDropdown(options){
 
 	
 	 var dropDownContainer = $('<div>').attr({
-	        "class": "quick-quote-dropdown-cont hide"
+	        "class": "quick-quote-dropdown-cont hide",
+	        "id" : options.dropDownId
 	    });
 	 var optionCont ="";
 	   for (var i = 0; i < options.list.length; i++) {
@@ -1146,40 +1269,56 @@ function appendYesNoQuestion(option){
 	
 	var mainDiv = $('<div>').attr({
 		"class":"quick-quote-yesno-container",
-		"id" : option.id
+		"id" : option.id,
+		"value" : ""
 	});
 	
 	var yesContent = $('<div>').attr({
-		"class":"cep-button-color quick-quote-yes-no-container float-left",
+		"class":"quick-quote-yes-btn radio-btn float-left",
 		"id":"quick-quote-yes-container-id",
 		"isSelected":""
 	}).html("Yes").bind('click',function(e){
-		if($('#quick-quote-no-container-id').hasClass('quick-quote-button')){			
-			$('#quick-quote-no-container-id').removeClass('quick-quote-button');
+		e.stopImmediatePropagation();
+		$('div[id="quick-quote-monthYear"]').show();
+		
+		if($('#quick-quote-no-container-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-no-container-id').removeClass('radio-btn-selected');
 		}
-		$(this).addClass('quick-quote-button');
+		$(this).addClass('radio-btn-selected');
 		$(this).attr('value',$(this).html());
 		
 		$(this).attr({
 			"isSelected" : true,
 			"value" : $(this).html()
 		});
+		$(mainDiv).attr({
+			"value" : $(this).html()
+		});
+		
 	});
 
 	var noContent = $('<div>').attr({
-		"class":"cep-button-color quick-quote-yes-no-container float-left",
+		"class":"quick-quote-no-btn radio-btn float-left",
 		"id":"quick-quote-no-container-id",
 		"isSelected":""
 	}).html("No").bind('click',function(e){
-		if($('#quick-quote-yes-container-id').hasClass('quick-quote-button')){			
-			$('#quick-quote-yes-container-id').removeClass('quick-quote-button');
+		
+		e.stopImmediatePropagation();
+		$('div[id="quick-quote-monthYear"]').hide();
+		
+		if($('#quick-quote-yes-container-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-yes-container-id').removeClass('radio-btn-selected');
 		}
-		$(this).addClass('quick-quote-button');
+		$(this).addClass('radio-btn-selected');
 
 		$(this).attr({
 			"isSelected" : true,
 			"value" : $(this).html()
 		});
+		$(mainDiv).attr({
+			"value" : $(this).html()
+		});
+		
 	});
 	
 	return mainDiv.append(yesContent).append(noContent);
@@ -1190,18 +1329,38 @@ function appendYesNoQuestion(option){
 function appendMonthYearQuestion(option){
 	
 	var mainDiv = $('<div>').attr({
-		"class" : "quick-quote-monthyear-container",
+		"class" : "quick-quote-monthyear-container ",
 		"id" : "quick-quote-monthyear-container-id"
 	});
 	
-	var input = $('<input>').attr({
+	var rowLHS = $('<input>').attr({
 		"class" : "quick-quote-row-RHS month-year-row-adj float-left",
 		"id" : option.id,
 		"name" :option.id,
 		"value" : ""
+	}).on("load focus", function(e){
+		$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});
+		/* this is the piece of code to retrict user put special charector*/
+		//restrictChar(contxt.name);
 	});
 	
-	var text = $('<div>').attr({
+	var rowRHS = $('<input>').attr({
+		"class" : "quick-quote-row-RHS month-adj float-left",
+		"id" : "impound_month",
+		"name" :"impound_month",
+		"value" : "",
+		"placeholder" : "months"
+	});
+	
+	return mainDiv.append(rowLHS).append(rowRHS);
+	/*var text = $('<div>').attr({
 		"class" : "quick-quote-text float-left"
 	}).html("per");
 	
@@ -1241,16 +1400,47 @@ function appendMonthYearQuestion(option){
 	 });
 
 	 dropDownContainer.append(year).append(month);
-	 return mainDiv.append(input).append(input).append(text).append(monthYearInput).append(dropDownContainer);
+	 return mainDiv.append(input).append(input).append(text).append(monthYearInput).append(dropDownContainer);*/
 }
 
+/*Function to append downpayment row*/
+function appendDownPaymentFeild(option){
+	
+	var mainDiv = $('<div>').attr({
+		"class" : "float-left"
+	});
+	
+	var rowLHS = $('<input>').attr({
+		"class" : "quick-quote-row-RHS quick-quote-dwn-payment float-left",
+		"id" : option.id,
+		"name" : option.id
+	});
+	
+	var rowRHS = $('<input>').attr({
+		"class" : "quick-quote-dwn-percentage float-left",
+		"name": option.id
+	}).attr('maxlength','2');
+	rowLHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"val":true,"contxt":option},percentageUpdateEventListener)
+	rowRHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"percentage":true,"contxt":option},
+        	function(e){
+        		this.value = this.value.replace(/[^0-9]/g,'')
+        		percentageUpdateEventListener(e);
+        	})
+    $(rowLHS).trigger("keyup");
+	return mainDiv.append(rowLHS).append(rowRHS);
+}
 
+/*To expand and collapse Quote Details*/
 $('body').on('click','#quick-quote-header-down-icn',function(e){
-	e.stopImmediatePropagation();
-	if($('.quick-quote-question-section').css("display") == "block"){		
-		$('.quick-quote-question-section').hide();		
-	}else{
-		$('.quick-quote-question-section').show();
+	$('.quick-quote-question-section').toggle();	
+});
+
+$(document).click(function(){
+	if($('#residence_type_id').css("display") == "block"){
+		$('#residence_type_id').toggle();
+	}
+	if($('#property_type_id').css("display") == "block"){
+		$('#property_type_id').toggle();
 	}
 	
 });
