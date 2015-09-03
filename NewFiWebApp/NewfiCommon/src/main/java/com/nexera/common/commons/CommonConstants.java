@@ -209,7 +209,7 @@ public interface CommonConstants {
 	public static final String PURCHASE_CONTRACT = "Purchase Contract Including Addendums and Counter-offers";
 	public static final String TEMPLATE_KEY_NAME_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "DOCUMENT_TYPE_ASSIGNMENT_FAILURE";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION = "APPLICATION_SUBMIT_CONFIRMATION";
-	
+	public static final String TEMPLATE_KEY_NAME_PURCHASE_PDF = "QUICK_QUOTE_PDF";
 
 	// Document type credit report.
 	public static final String LQB_DOC_TYPE_CR = "CREDIT REPORT";
@@ -329,6 +329,7 @@ public interface CommonConstants {
 	public static final String STICKET = "sTicket";
 
 	public static final String PRE_QUALIFICATION_LETTER = "Pre-Qualification letter";
+	public static final String PURCHASE_LETTER = "Purchase PDF";
 	public static final String SUBJECT_NEW_LOAN_ALERT = "NEWFI ALERT: New Lead";
 	public static final String EXTRA_DOCUMENT = "Extra";
 
@@ -344,6 +345,7 @@ public interface CommonConstants {
 	public static final String LOANPURPOSE = "2";
 
 	public static final String FILE_NAME_PREQUAL_LETTER = "newfi pre-qualification.pdf";
+	public static final String FILE_NAME_PURCHASE_PDF = "purchaseQuickQuote.pdf";
 	public static final String DEFAULT_CREDIT_SCORE = "800";
 	public static final String[] allowedStates = { "CA", "OR", "WA" };
 	
