@@ -1,5 +1,6 @@
 package com.nexera.web.rest;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.amazonaws.services.ec2.model.transform.PurchaseReservedInstancesOfferingResultStaxUnmarshaller;
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
@@ -45,6 +47,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
@@ -67,6 +70,7 @@ import com.nexera.web.rest.util.ApplicationPathUtil;
 import com.nexera.web.rest.util.LQBRequestUtil;
 import com.nexera.web.rest.util.LQBResponseMapping;
 import com.nexera.web.rest.util.PreQualificationletter;
+import com.nexera.web.rest.util.PurchaseUnderQuickQuotePDF;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -119,6 +123,9 @@ public class ApplicationFormRestService {
 
 	@Autowired
 	private PreQualificationletter preQualificationletter;
+	
+	@Autowired
+	private PurchaseUnderQuickQuotePDF purchaseUnderQuickQuotePDF;
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -608,6 +615,24 @@ public class ApplicationFormRestService {
 
 	}
 
+	@RequestMapping(value = "/sendPurchasePdfUnderQuickQuote", method = RequestMethod.POST)
+	public CommonResponseVO sendPurchasePdfUnderQuickQuote(String loanPurchaseDetailsUnderQuickQuote,
+			HttpServletRequest httpServletRequest) {
+
+		Gson gson = new Gson();
+		CommonResponseVO responseVO = null;
+		GeneratePdfVO generatePdfVO = gson.fromJson(loanPurchaseDetailsUnderQuickQuote,
+		        GeneratePdfVO.class);
+		try {
+			ByteArrayOutputStream byteResponse = purchaseUnderQuickQuotePDF.sendPurchasePdf(generatePdfVO, httpServletRequest);
+			responseVO = RestUtil.wrapObjectForSuccess("success");
+		} catch (Exception e) {
+
+			LOG.error("Error in generating purchase pdf under quick quote: ", e);
+		}
+		return responseVO;
+	}
+	
 	@RequestMapping(value = "/sendPreQualiticationLatter", method = RequestMethod.POST)
 	public CommonResponseVO sendPreQualificationLatter(String appFormData,
 	        String rateDataSet, HttpServletRequest httpServletRequest) {

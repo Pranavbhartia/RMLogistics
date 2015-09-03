@@ -224,7 +224,7 @@ public class SendGridEmailServiceImpl implements SendGridEmailService,
 				        .getAttachmentStream();
 				InputStream inputStream = new ByteArrayInputStream(
 				        arrayOutputStream.toByteArray());
-				email.addAttachment(CommonConstants.FILE_NAME_PREQUAL_LETTER,
+				email.addAttachment(emailEntity.getFileName(),
 				        inputStream);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
