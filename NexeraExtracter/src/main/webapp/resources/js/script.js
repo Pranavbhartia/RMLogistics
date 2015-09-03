@@ -1174,8 +1174,8 @@ function getCascaseAdjusterTable4() {
 	var row2 = "<tr><th>Jumbo State Tier</th>"
 			+ "<th>Eligible States</th><th></th></tr>";
 
-	var tableData = [ [ "1", "CA", "(0.120)" ], [ "3", "WA", "(0.030)" ],
-			[ "4", "OR", "0.020" ] ];
+	var tableData = [ [ "1", "CA", ".120" ], [ "3", "WA", ".030" ],
+			[ "4", "OR", "(.020)" ] ];
 
 	var dataRows = getCascadeTableDataRows(tableData);
 
