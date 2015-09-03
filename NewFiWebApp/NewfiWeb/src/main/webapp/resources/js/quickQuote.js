@@ -4,7 +4,6 @@ buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
 var lqbTeaserRateUnderQuickQuote = new Object();
 var inputCustmerDetailUnderQuickQuote = new Object();
-loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
 loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote=inputCustmerDetailUnderQuickQuote;
 var PURCHASE = "PUR";
 var REFINANACE = "REF";
@@ -1242,9 +1241,11 @@ function paintBuyHomeTeaserRateUnderQuickQuote(parentContainer, teaserRateData, 
             var ob;
             try{
                 ob=JSON.parse(data);
+                loanPurchaseDetailsUnderQuickQuote.isRate = true;
             }catch(exception){
                 ob={};
                 console.log("Invalid Data");
+                loanPurchaseDetailsUnderQuickQuote.isRate = false;
             }
             paintFixYourRatePageCEPUnderQuickQuote(ob, teaserRateData, parentContainer, hideCreateAccountBtn);
             loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote = teaserRateData;
@@ -1309,6 +1310,7 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
             var ob;
             try{
                 ob=JSON.parse(data);
+                loanPurchaseDetailsUnderQuickQuote.isRate = true;
                 if(ob.length>0){
                     responseTime=ob[0].responseTime;
             }
@@ -1316,9 +1318,11 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
                 ob={};
                 responseTime="";
                 console.log("Invalid Data");
+                loanPurchaseDetailsUnderQuickQuote.isRate = false;
             }
            
             paintFixYourRatePageCEPUnderQuickQuote(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
+            loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote = teaserRateData;
             clearOverlayMessage();
        
               
@@ -1342,6 +1346,13 @@ function processCommonParameters(){
 	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
 	loanPurchaseDetailsUnderQuickQuote.firstName = $('input[id="firstName"]').val();
 	loanPurchaseDetailsUnderQuickQuote.lastName = $('input[id="lastName"]').val();
+	
+	loanPurchaseDetailsUnderQuickQuote = "";
+	lqbTeaserRateUnderQuickQuote = "";
+	loanPurchaseDetailsUnderQuickQuote = new Object();
+	lqbTeaserRateUnderQuickQuote = new Object();
+	loanPurchaseDetailsUnderQuickQuote.isRate = false;
+	loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
 }
 
 function processBuyHomeUnderQuickQuote(){
@@ -1354,6 +1365,8 @@ function processBuyHomeUnderQuickQuote(){
 	}	
 	processCommonParameters();
 	paintBuyHomeTeaserRateUnderQuickQuote("",buyHomeRefinanceRate);
+	
+
 
 }
 
