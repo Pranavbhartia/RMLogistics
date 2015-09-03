@@ -559,7 +559,8 @@ public class EmailProcessor implements Runnable {
 					if (disposition != null
 					        && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
 						if (!bodyPart.getFileName().equalsIgnoreCase(
-						        CommonConstants.FILE_NAME_PREQUAL_LETTER)) {
+						        CommonConstants.FILE_NAME_PREQUAL_LETTER) && !bodyPart.getFileName().startsWith(
+								        CommonConstants.FILE_NAME_PURCHASE_PDF) ) {
 							LOGGER.debug("This mail contains attachment ");
 							DataHandler dataHandler = bodyPart.getDataHandler();
 							String content = dataHandler.getContentType();
