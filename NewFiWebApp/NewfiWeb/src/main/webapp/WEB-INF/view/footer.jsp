@@ -1,5 +1,6 @@
 <script src="${initParam.resourcesPath}/resources/js/jquery-2.1.3.min.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/jquery-ui.js"></script>
+<script src="${initParam.resourcesPath}/resources/js/jquery.validate.min.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/bootstrap.min.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/dropzone.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/bootstrap-datepicker.js"></script>
@@ -43,7 +44,7 @@
 <script src="${initParam.resourcesPath}/resources/js/message.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/ratePage.js"></script>
 <script src="${initParam.resourcesPath}/resources/js/quickQuote.js"></script>
-<!-- <script src="${initParam.resourcesPath}/resources/js/include/masked-input.js"></script> -->
+
 <div id="dialog" >
 </div>
 <script>
