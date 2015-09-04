@@ -2,7 +2,6 @@ package com.nexera.web.rest.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -42,25 +41,18 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.codec.Base64.OutputStream;
-import com.mongodb.io.ByteStream;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.InternalUserRolesEum;
-import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.GeneratePdfVO;
-import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailVO;
-import com.nexera.core.batchprocessor.LoanBatchProcessor;
 import com.nexera.core.service.SendEmailService;
-import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
-import com.nexera.web.rest.util.GeneratePdfForQuickQuote.CustomCell;
-import com.nexera.web.rest.util.PreQualificationletter.HeaderFooterPageEvent;
+import com.nexera.core.service.impl.S3FileUploadServiceImpl;
 
 @Component
 public class GeneratePdfForQuickQuote {
@@ -77,6 +69,11 @@ public class GeneratePdfForQuickQuote {
 	@Autowired
 	private TemplateService templateService;
 	
+	@Autowired
+	private S3FileUploadServiceImpl s3FileUploadService;
+
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(GeneratePdfForQuickQuote.class);
     private Document document;
     private PdfWriter writer;
     public GeneratePdfForQuickQuote() {
@@ -181,25 +178,23 @@ public class GeneratePdfForQuickQuote {
         float[] imageTablecolumnWidths = {1f, 2f, 3f};
         imageTable.setWidths(imageTablecolumnWidths);
         imageTable.setWidthPercentage(100.0f);
+        byte[] bytes = null ;
+        Image profileImage = null;
         try{
-        	user = userProfileService.findUser(generatePdfVO.getUserId());
-        	 String profilePicPath = "";
-        	if(user.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleDescription() == InternalUserRolesEum.LM.getName()){
-        		 profilePicPath = basePath + File.separator + "resources"
+        	File file = null;
+
+    		String absoluteFilePath = "";
+        	if(user.getPhotoImageUrl() != null){
+        		 bytes = s3FileUploadService.getInputStreamOfFile(user.getPhotoImageUrl());
+        		 profileImage = Image.getInstance(bytes);
+        	}else{
+        		absoluteFilePath = basePath + File.separator + "resources"
           		        + File.separator + "images" + File.separator
-          		        + "LA_1.png";
+          		        + "profilePDF1.png";
+     		     file = new File(absoluteFilePath);
+     		     profileImage = Image.getInstance(file.getAbsolutePath());
         	}
-        	else{
-        		 profilePicPath = basePath + File.separator + "resources"
-           		        + File.separator + "images" + File.separator
-           		        + "SM_1.png";
-        	}
-        	
-        	 File fileToPic = new File(profilePicPath);
-        Image profileImage = Image.getInstance(fileToPic.getAbsolutePath());
-        
-       
-        profileImage.scaleAbsolute(200f, 200f);
+        profileImage.scaleAbsolute(200f, 200f);	
         float w = profileImage.getScaledWidth();
         float h = profileImage.getScaledHeight();
         PdfTemplate t = writer.getDirectContent().createTemplate(200, 200);
@@ -1110,7 +1105,6 @@ public class GeneratePdfForQuickQuote {
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(userVo.getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
-		ccList.add("himanshu.matta@raremile.com");
 		emailEntity.setCCList(ccList);
 		sendEmailService.sendEmailForCustomer(emailEntity, userVo, template);
 

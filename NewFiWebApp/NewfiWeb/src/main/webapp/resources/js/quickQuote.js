@@ -372,7 +372,7 @@ function paintButtonSection(option){
 }
 
 function sendPurchasePdfUnderQuickQuote(){
-	
+	$('#overlay-loader').show();  
 	$.ajax({
 		
 		url:"rest/application/sendPurchasePdfUnderQuickQuote",
@@ -381,9 +381,12 @@ function sendPurchasePdfUnderQuickQuote(){
 		dataType:"application/pdf",
 		cache:false,
 		success:function(data){
+			$('#overlay-loader').hide();  
 			showToastMessage("PDF sent to your email.");
 		},
 		error:function(data){
+			$('#overlay-loader').hide();  
+			
 			if(data.status != 200)
 			{
 				showErrorToastMessage("Error");
@@ -426,8 +429,12 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	        "class": "quick-quote-header-pdf float-right",
 	        "id" : "quick-quote-generate-pdf"
 	    }).html('Save as PDF');
-	    
-	    ratePageHeader.append(ratePageHeaderCol1).append(ratePageHeaderCol2);
+	    if(loanPurchaseDetailsUnderQuickQuote.isRate){
+	    	 ratePageHeader.append(ratePageHeaderCol1).append(ratePageHeaderCol2);
+	    }else {
+	    	 ratePageHeader.append(ratePageHeaderCol1);
+	    }
+	   
 	    var ratePageSlider="";
 	    var bottomText="";
 	    var buttonWrapper="";
