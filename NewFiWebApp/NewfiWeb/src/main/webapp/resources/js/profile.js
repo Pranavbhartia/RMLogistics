@@ -96,27 +96,19 @@ function getUserProfileDataLM() {
 
 function LoanPersonalInfoWrapper(user) {
 
-/* 	 var wrapper = $('<div>').attr({
-		"class" : "cust-personal-info-wrapper"
-	});  */
-	loggedInUser = user;
-	var wrapper = $('<div>').attr({
-		"class" : "loan-personal-info-wrapper"
-	});
-	//NEXNF-664
-/*	var text="";
-	
-	if(newfiObject.user.userRole.id==2){
-		text="My Profile";
-	}else{
-		text="Personal Information";
+	if($('#loan-profile-id').length > 0){
+		$('#loan-profile-id').remove();
 	}
-	*/
-	//NEXNF-711
+	loggedInUser = user;
+	
+	var wrapper = $('<div>').attr({
+		"class" : "loan-personal-info-wrapper",
+		"id" : "loan-profile-id"
+	});
+
 	var text="My Profile";
 	
 	var header = $('<div>').attr({
-		//included that of customer css
 		"class" : "cust-personal-info-header"
 	}).html(text);
 
@@ -159,9 +151,13 @@ function LoanPersonalInfoWrapper(user) {
 	wrapper.append(header).append(container);
 	$('#loan-profile-main-container').append(wrapper);
 	
-	
+	if($('#loan-profile-lqb-wrapper').length > 0){
+		$('#loan-profile-lqb-wrapper').remove();
+	}
+
 	var lqbWrapper = $('<div>').attr({
-		"class" : "loan-personal-info-wrapper"
+		"class" : "loan-personal-info-wrapper",
+		"id" : "loan-profile-lqb-wrapper"
 	});
 
 	var lqbHeader = $('<div>').attr({
@@ -199,8 +195,13 @@ function validateBirthDate(dateOfBirth){
 }
 function appendChangePasswordContainer(userDetails){
 
+	if($('#loan-profile-change-password-id').length > 0){
+		$('#loan-profile-change-password-id').remove();
+	}
+	
 	var lqbWrapper = $('<div>').attr({
-		"class" : "loan-personal-info-wrapper"
+		"class" : "loan-personal-info-wrapper",
+		"id" : "loan-profile-change-password-id"
 	});
 
 	var lqbHeader = $('<div>').attr({
@@ -297,9 +298,14 @@ function getLoanLqbInfoContainer(user){
 
 
 function getLoanPersonalInfoContainer(user) {
+	
+	if($('#loan-profile-info-id').length > 0){
+		$('#loan-profile-info-id').remove();
+	}
 
 	var container = $('<div>').attr({
-		"class" : "loan-personal-info-container"
+		"class" : "loan-personal-info-container",
+		"id" : "loan-profile-info-id"
 	});
 
 	var uploadRow = getCustomerUploadPhotoRow(user);
@@ -308,17 +314,8 @@ function getLoanPersonalInfoContainer(user) {
 	var nameRow = getCustomerNameFormRow(user);
 	container.append(nameRow);
 
-//	var DOBRow = getDOBRow(user);
-//	container.append(DOBRow);
-
 	var priEmailRow = getPriEmailRow(user);
 	container.append(priEmailRow);
-	
-	//NEXNF-664
-	/*var assignManager=getLoanManager(user);
-	if(user.userRole.id==2){
-		container.append(assignManager);	
-	}*/
 
 	if(newfiObject.user.userRole.id==2){
 		isRealtor=true;
@@ -326,19 +323,16 @@ function getLoanPersonalInfoContainer(user) {
 	var phone1Row = getPhone1RowLM(user,isRealtor);
 	container.append(phone1Row);
 	
-	//jira-714
 	var carrierInfo="";
 	if(isRealtor){
 		carrierInfo = getCarrierDropdown(user,isRealtor);
 		container.append(carrierInfo);
 	}
 	
-	
-   // added check box 
 	var checkBox=getCheckStatus(user);
 	container.append(checkBox);
 	var stateRow = getManagerStateRow(user);
-	//NEXNF-664
+
 	if(user.userRole.id!=2){
 	container.append(stateRow);
 	}
@@ -355,19 +349,11 @@ function getLoanPersonalInfoContainer(user) {
 	}
  	
 	var licensesRow = getLicensesRow(user);
-	//NEXNF-664
+
 	if(user.userRole.id!=2){
 		container.append(licensesRow);
 	}
-	
-	if(user.internalUserStateMappingVOs == undefined){
-		//licensesRow.addClass('hide');
-	}
-	//NEXNF-853
-/*	var saveBtn = $('<div>').attr({
-		"class" : "prof-btn prof-save-btn cep-button-color",
-		"onclick" : "updateLMDetails()"
-	}).html("Save");*/
+
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "updateLMDetails()"
@@ -879,7 +865,6 @@ function updateLMDetails() {
             				});
             			  	}
             			  	hideOverlay();
-            			//showLoanManagerProfilePage();
             			window.location.href = newfiObject.baseUrl+"home.do#loan";
                     }else{
                     	
@@ -942,6 +927,10 @@ function customerPersonalInfoWrapper(user) {
 }
 
 function getCustPersonalInfoContainer(user) {
+	
+	if($('.cust-personal-info-container').length > 0){
+		$('.cust-personal-info-container').remove();
+	}
 
 	var container = $('<div>').attr({
 		"class" : "cust-personal-info-container"
@@ -966,11 +955,6 @@ function getCustPersonalInfoContainer(user) {
 	var secEmailRow = getSecEmailRow(user);
 	formWrapper.append(secEmailRow);
 
-	/*
-	 * var streetAddrRow = getStreetAddrRow(user);
-	 * container.append(streetAddrRow);
-	 */
-	
 	var stateRow = getStateRow(user);
 	formWrapper.append(stateRow);
 	
@@ -988,11 +972,7 @@ function getCustPersonalInfoContainer(user) {
     
 	var checkBox=getCheckStatus(user);
 	formWrapper.append(checkBox);
-	//NEXNF-853		
-/*	var saveBtn = $('<div>').attr({
-		"class" : "prof-btn prof-save-btn cep-button-color",
-		"onclick" : "updateUserDetails()"
-	}).html("Save");*/
+
 	var saveBtn = $('<div>').attr({
 		"class" : "prof-btn prof-save-btn cep-button-color",
 		"onclick" : "updateUserDetails()"
