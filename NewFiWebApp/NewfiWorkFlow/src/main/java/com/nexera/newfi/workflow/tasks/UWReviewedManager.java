@@ -36,10 +36,14 @@ public class UWReviewedManager implements IWorkflowTaskExecutor{
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		if (status != null){
-			if (!status.equals(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID() + "")){
+			if (!(status.equals(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID() + ""))){
 				loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
-				        LoanProgressStatusMasterEnum.DECLINED));
+				        LoanProgressStatusMasterEnum.DECLINED));	
 			}
+		}
+		else{
+			loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
+			        LoanProgressStatusMasterEnum.DECLINED));
 		}
 		return WorkItemStatus.COMPLETED.getStatus();
 	}
