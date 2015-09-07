@@ -329,7 +329,7 @@ public interface CommonConstants {
 	public static final String STICKET = "sTicket";
 
 	public static final String PRE_QUALIFICATION_LETTER = "Pre-Qualification letter";
-	public static final String PURCHASE_LETTER = "Purchase PDF";
+	public static final String PURCHASE_LETTER = "Quick Quote PDF";
 	public static final String SUBJECT_NEW_LOAN_ALERT = "NEWFI ALERT: New Lead";
 	public static final String EXTRA_DOCUMENT = "Extra";
 

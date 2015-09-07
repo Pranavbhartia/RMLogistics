@@ -4,6 +4,8 @@ buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
 var lqbTeaserRateUnderQuickQuote = new Object();
 var inputCustmerDetailUnderQuickQuote = new Object();
+loanPurchaseDetailsUnderQuickQuote.isRate = false;
+loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
 loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote=inputCustmerDetailUnderQuickQuote;
 var PURCHASE = "PUR";
 var REFINANACE = "REF";
@@ -1354,12 +1356,6 @@ function processCommonParameters(){
 	loanPurchaseDetailsUnderQuickQuote.firstName = $('input[id="firstName"]').val();
 	loanPurchaseDetailsUnderQuickQuote.lastName = $('input[id="lastName"]').val();
 	
-	loanPurchaseDetailsUnderQuickQuote = "";
-	lqbTeaserRateUnderQuickQuote = "";
-	loanPurchaseDetailsUnderQuickQuote = new Object();
-	lqbTeaserRateUnderQuickQuote = new Object();
-	loanPurchaseDetailsUnderQuickQuote.isRate = false;
-	loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
 }
 
 function processBuyHomeUnderQuickQuote(){

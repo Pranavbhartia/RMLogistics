@@ -40,11 +40,11 @@ public class GeneratePdfVO implements Serializable{
 		this.loanProgram = loanProgram;
 	}
 
-	public TeaserRateVO getLoanPurchaseDetailsUnderQuickQuote() {
+	public TeaserRateVO getInputCustmerDetailUnderQuickQuote() {
 		return inputCustmerDetailUnderQuickQuote;
 	}
 
-	public void setLoanPurchaseDetailsUnderQuickQuote(TeaserRateVO inputCustmerDetailUnderQuickQuote) {
+	public void setInputCustmerDetailUnderQuickQuote(TeaserRateVO inputCustmerDetailUnderQuickQuote) {
 		this.inputCustmerDetailUnderQuickQuote = inputCustmerDetailUnderQuickQuote;
 	}
 
