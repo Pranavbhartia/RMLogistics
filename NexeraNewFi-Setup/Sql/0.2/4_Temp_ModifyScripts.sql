@@ -372,3 +372,5 @@ ADD COLUMN `ltv` DOUBLE(5,2) NULL AFTER `lqb_loan_amount`;
 ALTER TABLE `newfi_schema`.`loanmilestone` 
 ADD COLUMN `status_insert_time` DATETIME NULL COMMENT '' AFTER `milestone_order`;
 
+#Ranjitha - New template addition for application confirmation
+INSERT INTO `newfi_schema`.`template` (`key`, `description`, `modified_date`, `value`, `sms_text`) VALUES ('APPLICATION_SUBMIT_CONFIRMATION_FOR_INTERNAL_USERS', 'Application Submit Confirmation for IU', '2015-09-07 11:55:34', '6a04c478-85c5-4c9b-8148-595cd0d044dc', 'Application submit confirmation');
