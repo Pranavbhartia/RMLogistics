@@ -2,6 +2,7 @@ package com.nexera.web.rest.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.itextpdf.text.Annotation;
@@ -41,18 +43,26 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.codec.Base64.OutputStream;
+import com.mongodb.io.ByteStream;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.GeneratePdfVO;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.email.EmailVO;
+import com.nexera.core.batchprocessor.LoanBatchProcessor;
 import com.nexera.core.service.SendEmailService;
+import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.web.rest.util.GeneratePdfForQuickQuote.CustomCell;
+
 
 @Component
 public class GeneratePdfForQuickQuote {
@@ -68,6 +78,9 @@ public class GeneratePdfForQuickQuote {
 	
 	@Autowired
 	private TemplateService templateService;
+	
+	@Value("${profile.url}")
+	private String baseUrl;
 	
 	@Autowired
 	private S3FileUploadServiceImpl s3FileUploadService;
@@ -206,6 +219,7 @@ public class GeneratePdfForQuickQuote {
         clipped.scalePercent(30);
        
         cell = new PdfPCell(clipped, false);
+        cell.setPaddingTop(5f);
         cell.setBorder(PdfPCell.NO_BORDER);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setRowspan(2);
@@ -217,17 +231,27 @@ public class GeneratePdfForQuickQuote {
         	e.printStackTrace();
         }
       
+        String firstName = user.getFirstName();
+        String lastName = user.getLastName();
+        String phoneNumber = user.getPhoneNumber();
+        if (firstName == null)
+        	firstName = "N/A";
+        if (lastName == null)
+        	lastName = "N/A";
+        if (phoneNumber == null)
+        	phoneNumber = "N/A";
+ 
         cell = new PdfPCell();
-        cell.addElement(new Phrase(user.getFirstName()+" "+user.getLastName()+"\nSenior Loan Advisor\nNMLS ID 123456\n"+user.getPhoneNumber(), fontWithBigSize));
-        cell.addElement(new Phrase(user.getEmailId(), emailIdFont));
+        cell.addElement(new Phrase(" "+firstName+" "+lastName+"\n Senior Loan Advisor\n NMLS ID 123456\n "+phoneNumber, fontWithBigSize));
+        cell.addElement(new Phrase(" "+user.getEmailId(), emailIdFont));
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
         DateFormat fmt = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         String todaysDate = fmt.format(new Date());
-        String firstName = generatePdfVO.getFirstName();
-        String lastName = generatePdfVO.getLastName();
-        cell = new PdfPCell(new Phrase("Loan Summary Prepared for "+firstName+" "+lastName+"\n\n    "+todaysDate,boldFontWithBigSize));
+        String customerFirstName = generatePdfVO.getFirstName();
+        String customerLastName = generatePdfVO.getLastName();
+        cell = new PdfPCell(new Phrase("Loan Summary Prepared for "+customerFirstName+" "+customerLastName+"\n\n    "+todaysDate,boldFontWithBigSize));
          
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_CENTER);
@@ -235,7 +259,7 @@ public class GeneratePdfForQuickQuote {
         imageTable.addCell(cell);
    
         
-        cell = new PdfPCell(new Phrase("\nNewfi\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize));
+        cell = new PdfPCell(new Phrase("\n Newfi\n 2200 Powell St, Suite 340\n Emeryville, CA 94608\n NMLS ID 1231327",fontWithBigSize));
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
@@ -247,7 +271,7 @@ public class GeneratePdfForQuickQuote {
 
  
         Image buttonImage = Image.getInstance(imageFilePathLocation.getAbsolutePath());
-        buttonImage.setAnnotation(new Annotation(5, 5, 5, 5,  "http://www.newfi.com")); 
+        buttonImage.setAnnotation(new Annotation(5, 5, 5, 5,  baseUrl)); 
      
         buttonImage.scaleAbsolute(130f, 40f);
    
@@ -305,7 +329,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
         
-        String loanType = generatePdfVO.getLoanPurchaseDetailsUnderQuickQuote().getLoanType();
+        String loanType = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getLoanType();
         if (loanType.equals("PUR"))
         	cell = new PdfPCell(new Phrase("Purchase",font));
         else if(loanType.equals("REF"))
@@ -329,7 +353,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
         
-        String propertyType = generatePdfVO.getLoanPurchaseDetailsUnderQuickQuote().getPropertyType();
+        String propertyType = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getPropertyType();
         if(propertyType.equals("0"))
         	cell = new PdfPCell(new Phrase("Single family",font));
         else if(propertyType.equals("1"))
@@ -343,7 +367,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
         
-        String propertyUse = generatePdfVO.getLoanPurchaseDetailsUnderQuickQuote().getResidenceType();
+        String propertyUse = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getResidenceType();
         if(propertyUse.equals("0"))
         	cell = new PdfPCell(new Phrase("Primary residence",font));
         else if(propertyUse.equals("1"))
@@ -355,14 +379,17 @@ public class GeneratePdfForQuickQuote {
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
       
-        String purchasePrice = generatePdfVO.getLoanPurchaseDetailsUnderQuickQuote().getPurchaseDetails().getHousePrice();
-        String loanAmount = generatePdfVO.getLoanPurchaseDetailsUnderQuickQuote().getPurchaseDetails().getLoanAmount();
+        String purchasePrice = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getPurchaseDetails().getHousePrice();
+        String loanAmount = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getPurchaseDetails().getLoanAmount();
+   
+        cell = new PdfPCell(new Phrase("\n"));
+        cell.setColspan(2);
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+        firstTable.addCell(cell);
+        
         if (loanType.equals("PUR"))
         {
-	        cell = new PdfPCell(new Phrase("\n"));
-	        cell.setColspan(2);
-	        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
-	        firstTable.addCell(cell);
+	        
 	        cell = new PdfPCell(new Phrase("  "+"Purchase price",font));
 	        cell.setBorder(Rectangle.LEFT);
 	        firstTable.addCell(cell);
@@ -388,8 +415,13 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
         
-        
-        cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmount),font));
+        if (loanType.equals("PUR")){
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmount),font));
+        }
+        else{
+        	String loanAmountDuringRefinance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getCurrentMortgageBalance();
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmountDuringRefinance),font));
+        }
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
@@ -399,8 +431,8 @@ public class GeneratePdfForQuickQuote {
 	        cell.setBorder(Rectangle.LEFT);
 	        firstTable.addCell(cell);
 	        
-	        
-	        cell = new PdfPCell(new Phrase(addDollarAndComma(purchasePrice),font));
+	        String homeWorthTodayDuringRefinance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getHomeWorthToday();
+	        cell = new PdfPCell(new Phrase(addDollarAndComma(homeWorthTodayDuringRefinance),font));
 	        cell.setBorder(Rectangle.RIGHT);
 	        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 	        firstTable.addCell(cell);
@@ -480,7 +512,16 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         seventhTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase(addDollarAndComma(purchasePrice),font));
+        
+        
+        if (loanType.equals("PUR")){
+        	  cell = new PdfPCell(new Phrase(addDollarAndComma(purchasePrice),font));
+        }
+        else {
+        	String homeWorthToday = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getHomeWorthToday();
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(homeWorthToday),font));
+        }
+      
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         seventhTable.addCell(cell);
@@ -1103,6 +1144,7 @@ public class GeneratePdfForQuickQuote {
 															generatePdfVO.getLastName()+".pdf");
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
+		ccList.add(userVo.getEmailId());
 		ccList.add(userVo.getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
