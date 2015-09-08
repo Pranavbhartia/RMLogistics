@@ -21,6 +21,7 @@ var invalidMessage="Invalid Message";
 var invalidDate="Invalid Date";
 var enterMessage="Please enter a message";
 var errorMessageForZipcode="ZipCode cannot be empty";
+var multipleInvalidEntries = "Invalid Entries";
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
