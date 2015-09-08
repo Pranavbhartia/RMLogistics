@@ -1467,7 +1467,7 @@ function paintDataSection(option,isDefault){
 		if(!status){
 			return false;
 		}
-		
+		removeToastMessage();
 		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
 		buyHomeRefinanceRate.loanType = loanType;
 
