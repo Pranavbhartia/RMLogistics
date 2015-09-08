@@ -242,8 +242,8 @@ public class GeneratePdfForQuickQuote {
         	phoneNumber = "N/A";
  
         cell = new PdfPCell();
-        cell.addElement(new Phrase(" "+firstName+" "+lastName+"\n Senior Loan Advisor\n NMLS ID 123456\n "+phoneNumber, fontWithBigSize));
-        cell.addElement(new Phrase(" "+user.getEmailId(), emailIdFont));
+        cell.addElement(new Phrase("  "+firstName+" "+lastName+"\n  Senior Loan Advisor\n  NMLS ID 123456\n  "+phoneNumber, fontWithBigSize));
+        cell.addElement(new Phrase("  "+user.getEmailId(), emailIdFont));
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
@@ -259,7 +259,7 @@ public class GeneratePdfForQuickQuote {
         imageTable.addCell(cell);
    
         
-        cell = new PdfPCell(new Phrase("\n Newfi\n 2200 Powell St, Suite 340\n Emeryville, CA 94608\n NMLS ID 1231327",fontWithBigSize));
+        cell = new PdfPCell(new Phrase("\n  Newfi\n  2200 Powell St, Suite 340\n  Emeryville, CA 94608\n  NMLS ID 1231327",fontWithBigSize));
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
@@ -309,7 +309,7 @@ public class GeneratePdfForQuickQuote {
         firstTableCell.setPaddingRight(8);
         firstTableCell.setRowspan(4);
         PdfPTable firstTable = new PdfPTable(2);
-        float[] firstTablecolumnWidths = {4f, 1f};
+        float[] firstTablecolumnWidths = {3f, 1f};
         firstTable.setWidths(firstTablecolumnWidths);
         firstTable.setWidthPercentage(100.0f);
         
@@ -481,7 +481,7 @@ public class GeneratePdfForQuickQuote {
         firstTable.addCell(cell);
         
         PdfPTable seventhTable = new PdfPTable(2);
-        float[] seventhTablecolumnWidths = {4f, 1f};
+        float[] seventhTablecolumnWidths = {3f, 1f};
         seventhTable.setWidths(seventhTablecolumnWidths);
         seventhTable.setWidthPercentage(100.0f);
     
@@ -896,6 +896,7 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
+        cell.setBackgroundColor(lightBlue); 
         thirdTable.addCell(cell);
         
         String totEstThdPtyCst = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstThdPtyCst();
