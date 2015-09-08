@@ -4,6 +4,8 @@ buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
 var lqbTeaserRateUnderQuickQuote = new Object();
 var inputCustmerDetailUnderQuickQuote = new Object();
+loanPurchaseDetailsUnderQuickQuote.isRate = false;
+loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
 loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote=inputCustmerDetailUnderQuickQuote;
 var PURCHASE = "PUR";
 var REFINANACE = "REF";
@@ -1354,12 +1356,6 @@ function processCommonParameters(){
 	loanPurchaseDetailsUnderQuickQuote.firstName = $('input[id="firstName"]').val();
 	loanPurchaseDetailsUnderQuickQuote.lastName = $('input[id="lastName"]').val();
 	
-	loanPurchaseDetailsUnderQuickQuote = "";
-	lqbTeaserRateUnderQuickQuote = "";
-	loanPurchaseDetailsUnderQuickQuote = new Object();
-	lqbTeaserRateUnderQuickQuote = new Object();
-	loanPurchaseDetailsUnderQuickQuote.isRate = false;
-	loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
 }
 
 function processBuyHomeUnderQuickQuote(){
@@ -1381,19 +1377,21 @@ function processRateAndTermUnderQuickQuote(){
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
 	
-	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
-		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
-		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+	if($('div[id="impound"]').attr('value') == 'Yes'){
+		if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+			buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+			buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+	
+			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/getFloatValue(buyHomeRefinanceRate.propTaxMonthlyOryearly);
+			
+			
 		}
-		
-	}
-	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
-		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
-		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+			buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+			buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+			
+			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/getFloatValue(buyHomeRefinanceRate.propInsMonthlyOryearly);
+			
 		}
 	}
 	processCommonParameters();
@@ -1405,19 +1403,21 @@ function processCashOutUnderQuickQuote(){
 	buyHomeRefinanceRate.cashTakeOut = parseFloat(removedDoller(removedComma($('input[id="cashTakeOut"]').val())));
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
-	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
-		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
-		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+	if($('div[id="impound"]').attr('value') == 'Yes'){
+		if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+			buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+			buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+			
+			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/getFloatValue(buyHomeRefinanceRate.propTaxMonthlyOryearly);
+			
+			
 		}
-		
-	}
-	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
-		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
-		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+			buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+			buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+			
+			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/getFloatValue(buyHomeRefinanceRate.propInsMonthlyOryearly);
+			
 		}
 	}
 	processCommonParameters();
@@ -1467,7 +1467,7 @@ function paintDataSection(option,isDefault){
 		if(!status){
 			return false;
 		}
-		
+		removeToastMessage();
 		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
 		buyHomeRefinanceRate.loanType = loanType;
 
@@ -1716,8 +1716,8 @@ function appendMonthYearQuestion(option){
 	
 	var rowRHS = $('<input>').attr({
 		"class" : "quick-quote-row-RHS month-adj float-left",
-		"id" : "impound_month",
-		"name" :"impound_month",
+		"id" : option.monthYearId,
+		"name" :option.monthYearId,
 		"value" : "",
 		"placeholder" : "months"
 	});
