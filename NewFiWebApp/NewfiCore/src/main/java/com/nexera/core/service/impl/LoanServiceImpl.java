@@ -1870,6 +1870,7 @@ public class LoanServiceImpl implements LoanService {
 			        + CommonConstants.SENDER_EMAIL_ID);
 
 			emailEntity.setCCList(ccList);
+			
 			try {
 
 				sendEmailService.sendEmailForCustomer(emailEntity, loanId,
@@ -1879,13 +1880,20 @@ public class LoanServiceImpl implements LoanService {
 			} catch (UndeliveredEmailException e) {
 				LOG.error("Mail send failed--" + e);
 			}
-
+			
+			LOG.info("Send Application Submit Status mail to internal users of loan team.................................");
+			
+			EmailVO loanManagerEmailEntity = new EmailVO();
+			Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
+			Template loanManagerTemplate = new Template();
 			if(sendMailToLM){
-				EmailVO loanManagerEmailEntity = new EmailVO();
-				Template loanManagerTemplate = templateService
+				
+				LOG.info("Send no products mail to internal users of loan team...................");
+				
+			    loanManagerTemplate = templateService
 				        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
 				// We create the substitutions map
-				Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
+				
 				loanManagerSubstitutions.put("-customername-", new String[] { loan
 				        .getUser().getFirstName() });
 				if (loan.getUser() != null) {
@@ -1897,51 +1905,81 @@ public class LoanServiceImpl implements LoanService {
 					                + CommonConstants.SENDER_EMAIL_ID);
 				}
 				loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
-				loanManagerEmailEntity.setSubject("No Products Available");
+				loanManagerEmailEntity.setSubject(CommonConstants.SUBJECT_NO_PRODUCTS);
 
 				loanManagerEmailEntity
 				        .setTemplateId(loanManagerTemplate.getValue());
+								
+			}else{
+				Integer loanID = loan.getId();
+				LOG.info("Send confirmation mail to internal users of loan team........................");
+				
+			    loanManagerTemplate = templateService
+					        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_AAPLICATION_SUBMIT_CONFIRMATION_FOR_INTERNAL_USERS);
 
-				String loanManagerUsername = null;
-				String loanManagerName = null;
-				LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
-				for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
-					if (loanTeam.getUser() != null) {
-						if (loanTeam.getUser().getInternalUserDetail() != null) {
-							if (loanTeam.getUser().getInternalUserDetail()
-							        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
-							        .getRoleId()) {
-								loanManagerUsername = loanTeam.getUser()
-								        .getUsername();
-								loanManagerName = loanTeam.getUser().getFirstName()
-								        + " " + loanTeam.getUser().getLastName();
-							}
-						}
+				loanManagerSubstitutions.put("-customerName-", new String[] { loan
+				        .getUser().getFirstName()+" "+ loan
+				        .getUser().getLastName()});
+				loanManagerSubstitutions.put("-LQBnumber-", new String[] { loan.getLqbFileId()
+				        });
+				loanManagerSubstitutions.put("-loanID-", new String[] { loanID.toString()
+		        });
+				
+				if (loan.getUser() != null) {
+					loanManagerEmailEntity.setSenderEmailId(loan.getUser()
+					        .getUsername() + CommonConstants.SENDER_EMAIL_ID);
+				} else {
+					loanManagerEmailEntity
+					        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+					                + CommonConstants.SENDER_EMAIL_ID);
+				}
+				loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
+				loanManagerEmailEntity.setSubject(CommonConstants.SUBJECT_NEW_LOAN_SUBMISSION_ALERT);
+
+				loanManagerEmailEntity
+				        .setTemplateId(loanManagerTemplate.getValue());
+	
+		}
+			
+		String loanManagerUsername = null;
+		String loanManagerName = null;
+		LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
+		for (LoanTeamVO loanTeam : loanTeamList.getLoanTeamList()) {
+			if (loanTeam.getUser() != null) {
+				if (loanTeam.getUser().getInternalUserDetail() != null) {
+					if (loanTeam.getUser().getInternalUserDetail()
+					        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+					        .getRoleId()) {
+						loanManagerUsername = loanTeam.getUser()
+						        .getUsername();
+						loanManagerName = loanTeam.getUser().getFirstName()
+						        + " " + loanTeam.getUser().getLastName();
 					}
-				}
-
-				loanManagerSubstitutions.put("-name-",
-				        new String[] { loanManagerName });
-				loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
-				List<String> loanManagerccList = new ArrayList<String>();
-				if (loanManagerUsername != null) {
-					loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
-					        + "-" + loanManagerUsername + "-" + loan.getId()
-					        + CommonConstants.SENDER_EMAIL_ID);
-
-					loanManagerEmailEntity.setCCList(loanManagerccList);
-				}
-				try {
-					sendEmailService.sendEmailForLoanManagers(
-					        loanManagerEmailEntity, loanId, loanManagerTemplate);
-				} catch (InvalidInputException e) {
-					LOG.error("Mail send failed--" + e);
-				} catch (UndeliveredEmailException e) {
-					LOG.error("Mail send failed--" + e);
 				}
 			}
 		}
+
+		loanManagerSubstitutions.put("-name-",
+		        new String[] { loanManagerName });
+		loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
+		List<String> loanManagerccList = new ArrayList<String>();
+		if (loanManagerUsername != null) {
+			loanManagerccList.add(CommonConstants.SENDER_DEFAULT_USER_NAME
+			        + "-" + loanManagerUsername + "-" + loan.getId()
+			        + CommonConstants.SENDER_EMAIL_ID);
+
+			loanManagerEmailEntity.setCCList(loanManagerccList);
+		}
+		try {
+			sendEmailService.sendEmailForLoanManagers(
+			        loanManagerEmailEntity, loanId, loanManagerTemplate);
+		} catch (InvalidInputException e) {
+			LOG.error("Mail send failed--" + e);
+		} catch (UndeliveredEmailException e) {
+			LOG.error("Mail send failed--" + e);
+		}
 	}
+}
 
 	@Override
 	@Transactional(readOnly = true)
