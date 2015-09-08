@@ -473,6 +473,14 @@ function validateForm(loanType,refinanceType){
 		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
 		var propertyType = validateQuickQuote($('#propertyType'),$('#propertyType').html(),message);
 		var zipCode = validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
+		var firstName = validateInput($('input[name="firstName"]'),$('input[name="firstName"]').val(),message);
+		var lastName = validateInput($('input[name="lastName"]'),$('input[name="lastName"]').val(),message);
+		if(!firstName){
+			return false;
+		}
+		if(!lastName){
+			return false;
+		}
 		if(!firstFeild){
 			return false;
 		}
@@ -520,7 +528,14 @@ function validateForm(loanType,refinanceType){
 				return false;
 			}
 		}
-		
+		var firstName = validateInput($('input[name="firstName"]'),$('input[name="firstName"]').val(),message);
+		var lastName = validateInput($('input[name="lastName"]'),$('input[name="lastName"]').val(),message);
+		if(!firstName){
+			return false;
+		}
+		if(!lastName){
+			return false;
+		}
 		
 		if(!firstFeild){
 			return false;
@@ -570,7 +585,14 @@ function validateForm(loanType,refinanceType){
 		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
 		var propertyType = validateQuickQuote($('#propertyType'),$('#propertyType').html(),message);
 		var zipCode = validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
-
+		var firstName = validateInput($('input[name="firstName"]'),$('input[name="firstName"]').val(),message);
+		var lastName = validateInput($('input[name="lastName"]'),$('input[name="lastName"]').val(),message);
+		if(!firstName){
+			return false;
+		}
+		if(!lastName){
+			return false;
+		}
 		if(!firstFeild){
 			return false;
 		}

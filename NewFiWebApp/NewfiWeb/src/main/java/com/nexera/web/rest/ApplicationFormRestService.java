@@ -67,10 +67,11 @@ import com.nexera.core.utility.LoadXMLHandler;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
+import com.nexera.web.rest.util.GeneratePdfForQuickQuote;
 import com.nexera.web.rest.util.LQBRequestUtil;
 import com.nexera.web.rest.util.LQBResponseMapping;
 import com.nexera.web.rest.util.PreQualificationletter;
-import com.nexera.web.rest.util.PurchaseUnderQuickQuotePDF;
+import com.nexera.web.rest.util.GeneratePdfForQuickQuote;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -125,7 +126,7 @@ public class ApplicationFormRestService {
 	private PreQualificationletter preQualificationletter;
 	
 	@Autowired
-	private PurchaseUnderQuickQuotePDF purchaseUnderQuickQuotePDF;
+	private GeneratePdfForQuickQuote generatePdfForQuickQuote;
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -624,7 +625,7 @@ public class ApplicationFormRestService {
 		GeneratePdfVO generatePdfVO = gson.fromJson(loanPurchaseDetailsUnderQuickQuote,
 		        GeneratePdfVO.class);
 		try {
-			ByteArrayOutputStream byteResponse = purchaseUnderQuickQuotePDF.sendPurchasePdf(generatePdfVO, httpServletRequest);
+			ByteArrayOutputStream byteResponse = generatePdfForQuickQuote.sendPurchasePdf(generatePdfVO, httpServletRequest);
 			responseVO = RestUtil.wrapObjectForSuccess("success");
 		} catch (Exception e) {
 
