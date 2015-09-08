@@ -437,19 +437,25 @@ function validateFormFeildInReferalRegistration(){
 	return true;
 }
 
-function validateQuickQuote(element,inputVal,message){
+function validateQuickQuote(element,inputVal,message,isRemoveClearfix){
 	var id=$(element).attr('id');
 	//var height=$(element).offset().top-100;
 
 	if(inputVal == undefined || inputVal == ""){
 	
 			$('#'+id).parent().parent().find('.err-msg').html(message).show();
+			if(isRemoveClearfix){
+				$('#'+id).parent().parent().find('.err-msg').removeClass("clearfix");
+			}			
 			$('#'+id).addClass('ce-err-input').show();
 			return false;
 	}else{
 		if(inputVal == "$0" || inputVal == 0){
 			if(name!="zipCode"){
 				$('#'+id).parent().parent().find('.err-msg').html(feildShouldNotBeZero).show();
+				if(isRemoveClearfix){
+					$('#'+id).parent().parent().find('.err-msg').removeClass("clearfix");
+				}	
 				$('#'+id).addClass('ce-err-input').show();
 				return false;
 			}			
@@ -502,6 +508,29 @@ function validateForm(loanType,refinanceType){
     			$('input[name="zipCode"]').addClass('ce-err-input').show();
        		    return false;
        	 }
+    		var yesNoValue = $('#impound').attr("value");
+    		if(yesNoValue == ""){
+    			showErrorToastMessage(answerQuestionOne);
+    			return false;
+    		}
+    		if($('#impound').attr("value") == "Yes"){
+    			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message,true);
+    			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message,true);
+    			var propTaxMonthlyOryearly = validateQuickQuote($('#propTaxMonthlyOryearly'),$('#propTaxMonthlyOryearly').val(),message,true);
+    			var propInsMonthlyOryearly = validateQuickQuote($('#propInsMonthlyOryearly'),$('#propInsMonthlyOryearly').val(),message,true);
+    			if(!propertyTaxesPaid){
+    				return false;
+    			}
+    			if(!annualHomeownersInsurance){
+    				return false;
+    			}
+    			if(!propTaxMonthlyOryearly){
+    				return false;
+    			}
+    			if(!propInsMonthlyOryearly){
+    				return false;
+    			}
+    		}
 		}
 	}else if(refinanceType == REFINANACE_CASH_OUT){
 		var firstFeild = validateInput($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
@@ -510,24 +539,7 @@ function validateForm(loanType,refinanceType){
 		var residenceType = validateQuickQuote($('#residenceType'),$('#residenceType').html(),message);
 		var propertyType = validateQuickQuote($('#propertyType'),$('#propertyType').html(),message);
 		var zipCode = validateInput($('input[name="zipCode"]'),$('input[name="zipCode"]').val(),zipCodeMessage);
-		if($('#impound').attr("value") == "Yes"){
-			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
-			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
-			var propTaxMonthlyOryearly = validateQuickQuote($('#propTaxMonthlyOryearly'),$('#propTaxMonthlyOryearly').val(),message);
-			var propInsMonthlyOryearly = validateQuickQuote($('#propInsMonthlyOryearly'),$('#propInsMonthlyOryearly').val(),message);
-			if(!propertyTaxesPaid){
-				return false;
-			}
-			if(!annualHomeownersInsurance){
-				return false;
-			}
-			if(!propTaxMonthlyOryearly){
-				return false;
-			}
-			if(!propInsMonthlyOryearly){
-				return false;
-			}
-		}
+		
 		var firstName = validateInput($('input[name="firstName"]'),$('input[name="firstName"]').val(),message);
 		var lastName = validateInput($('input[name="lastName"]'),$('input[name="lastName"]').val(),message);
 		if(!firstName){
@@ -568,13 +580,20 @@ function validateForm(loanType,refinanceType){
 			return false;
 		}
 		if($('#impound').attr("value") == "Yes"){
-			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
-			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
-		
+			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message,true);
+			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message,true);
+			var propTaxMonthlyOryearly = validateQuickQuote($('#propTaxMonthlyOryearly'),$('#propTaxMonthlyOryearly').val(),message,true);
+			var propInsMonthlyOryearly = validateQuickQuote($('#propInsMonthlyOryearly'),$('#propInsMonthlyOryearly').val(),message,true);
 			if(!propertyTaxesPaid){
 				return false;
 			}
 			if(!annualHomeownersInsurance){
+				return false;
+			}
+			if(!propTaxMonthlyOryearly){
+				return false;
+			}
+			if(!propInsMonthlyOryearly){
 				return false;
 			}
 		}
@@ -622,16 +641,22 @@ function validateForm(loanType,refinanceType){
 			return false;
 		}
 		if($('#impound').attr("value") == "Yes"){
-			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message);
-			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message);
-
+			var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),message,true);
+			var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),message,true);
+			var propTaxMonthlyOryearly = validateQuickQuote($('#propTaxMonthlyOryearly'),$('#propTaxMonthlyOryearly').val(),message,true);
+			var propInsMonthlyOryearly = validateQuickQuote($('#propInsMonthlyOryearly'),$('#propInsMonthlyOryearly').val(),message,true);
 			if(!propertyTaxesPaid){
 				return false;
 			}
 			if(!annualHomeownersInsurance){
 				return false;
 			}
-
+			if(!propTaxMonthlyOryearly){
+				return false;
+			}
+			if(!propInsMonthlyOryearly){
+				return false;
+			}
 		}
 	}
 	
