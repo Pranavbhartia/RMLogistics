@@ -28,6 +28,10 @@
                 <param-value>${static.baseurl}</param-value>
         </context-param>
 
+<context-param>
+                <param-name>trackingID</param-name>
+                <param-value>${analytics.tracking.id}</param-value>
+        </context-param>
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>
