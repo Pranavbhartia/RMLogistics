@@ -277,6 +277,8 @@ var refinanceCashOut = [{
 
 //Function which loads the contents
 function loadQuickQoutePage(){
+	ga('set', 'page', '/quick-quote');
+	ga('send', 'pageview');
 	loanPurchaseDetailsUnderQuickQuote.userId = newfiObject.user.id;
 	$('#right-panel').html('');
 	$('.lp-right-arrow').remove();

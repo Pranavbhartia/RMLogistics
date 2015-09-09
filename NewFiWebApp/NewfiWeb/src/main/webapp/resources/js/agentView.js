@@ -26,7 +26,12 @@ LOAN_ENUM = {
 	DECLINED : "DECLINED",
 	DELETE : "DELETE"
 };
-
+var trackingID  = "${initParam.trackingID}";
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', trackingID, 'auto');
 $(document).on('click',"#cus-prof-popup",function(){
 
 	if($('#state-dropdown-wrapper').css("display") == "block"){
@@ -115,6 +120,8 @@ function getAgentSecondaryLeftNavStep(step, text) {
 }
 
 function paintAgentDashboard(loanType) {
+	ga('set', 'page', '/agent-dashboard');
+	ga('send', 'pageview');
 	scrollToTop();
 	selectedUserDetail = undefined;
 	$('.lp-right-arrow').remove();
@@ -1521,8 +1528,12 @@ function changeAgentSecondaryLeftPanel(elementId) {
 	// Check the id and paint the corresponding right panel
 	if (elementId == "lp-step0") {
 		doPagination = true;
+		ga('set', 'page', '/messages');
+		ga('send', 'pageview');
 		showAgentMessageDashboard();
 	} else if (elementId == "lp-step1") {
+		ga('set', 'page', '/application-page');
+		ga('send', 'pageview');
 		var userId = selectedUserDetail.userID;
 		getAppDetailsForUser(userId, function() {
 			paintCustomerApplicationPage();
@@ -1532,25 +1543,35 @@ function changeAgentSecondaryLeftPanel(elementId) {
 		if (userIsRealtor()) {
 			return false;
 		}
+		ga('set', 'page', '/loan-detail');
+		ga('send', 'pageview');
 		getLoanDetails(selectedUserDetail.loanID);
 	} else if (elementId == "lp-step3") {
 		var userId=selectedUserDetail.userID;
         getAppDetailsForUser(userId,function(appUserDetailsTemp){
         	  $('#overlay-loader').show();
             var LQBFileId=appUserDetailsTemp.loan.lqbFileId;
-            if(LQBFileId){
+            ga('set', 'page', '/rates-page');
+			ga('send', 'pageview');
+            if(LQBFileId){            	
                 paintFixYourRatePage();
             }else{
-                //code to Paint teaser rate page
+                //code to Paint teaser rate page            	
                 paintTeaserRatePageBasedOnLoanType(appUserDetailsTemp);
             }
         });
 	} else if (elementId == "lp-step4") {
+		ga('set', 'page', '/needs-page');
+		ga('send', 'pageview');
 		paintAgentNeedsListPage();
 	} else if (elementId == "lp-step5") {
 		if (userIsRealtor()) {
+			ga('set', 'page', '/realtor-loan-progress');
+			ga('send', 'pageview');
 			paintCustomerLoanProgressPage();
 		} else {
+			ga('set', 'page', '/loan-progress');
+			ga('send', 'pageview');
 			paintAgentLoanProgressPage();
 		}
 
