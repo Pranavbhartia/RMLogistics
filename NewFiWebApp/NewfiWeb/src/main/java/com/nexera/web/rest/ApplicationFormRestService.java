@@ -61,6 +61,7 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.QuoteService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.LoadXMLHandler;
@@ -127,6 +128,9 @@ public class ApplicationFormRestService {
 	
 	@Autowired
 	private GeneratePdfForQuickQuote generatePdfForQuickQuote;
+	
+	@Autowired
+	private QuoteService quoteService;
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -625,11 +629,18 @@ public class ApplicationFormRestService {
 		GeneratePdfVO generatePdfVO = gson.fromJson(loanPurchaseDetailsUnderQuickQuote,
 		        GeneratePdfVO.class);
 		try {
-			ByteArrayOutputStream byteResponse = generatePdfForQuickQuote.sendPurchasePdf(generatePdfVO, httpServletRequest);
+			String s3Path = generatePdfForQuickQuote.sendPurchasePdf(generatePdfVO, httpServletRequest);
+			if(s3Path != "" && s3Path != null){
+				generatePdfVO.setPdfUrl(s3Path);
+			}
+				
+			boolean status = quoteService.addQuoteDetails(generatePdfVO);
+			if(!status)
+				LOG.error("Error in inserting quick quote details: ");
 			responseVO = RestUtil.wrapObjectForSuccess("success");
 		} catch (Exception e) {
 
-			LOG.error("Error in generating purchase pdf under quick quote: ", e);
+			LOG.error("Error in generating quote pdf or inserting quote details, under quick quote: ", e);
 		}
 		return responseVO;
 	}

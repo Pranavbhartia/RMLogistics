@@ -158,7 +158,11 @@
 				 $('.lp-item-body.lp-agent-item2').addClass('append-home-icon');
 			 } */
 			 //NEXNF-744
+			 
 			 $('.lp-item-body.lp-agent-item2').addClass('append-home-icon');
+
+			 $("#icn-my-leads").removeClass('append-home-icon');
+			 $("#icn-my-leads").addClass('append-leads-icn');
 
 			 $('#footer-wrapper').show();
 		});

@@ -733,3 +733,25 @@ a.cus-eng-succ-mess-email {
     color: #428bca;
     cursor: pointer;
 }
+
+.leads-col-2 {
+    width: 200px;
+}
+
+.leads-row-2 {
+    width: 200px;
+}
+
+.leads-row-3,.leads-row-1 {
+    width: 180px;
+}
+
+.leads-col-1,.leads-col-3,.leads-col-4{
+    width: 180px;
+}
+.leads-row-5 {
+    background: url(../images/pdf.png) no-repeat 40px center;
+    height: 25px;
+    background-size: 20%;
+    cursor: pointer;
+}

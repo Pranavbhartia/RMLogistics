@@ -14,7 +14,9 @@ public class GeneratePdfVO implements Serializable{
 	private Integer userId;
 	private String firstName;
 	private String lastName;
-	
+	private String emailId;
+	private String phoneNo;
+	private String pdfUrl;
 	
 	public Integer getUserId() {
 		return userId;
@@ -72,5 +74,30 @@ public class GeneratePdfVO implements Serializable{
 		this.lastName = lastName;
 	}
 
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	public String getPdfUrl() {
+		return pdfUrl;
+	}
+
+	public void setPdfUrl(String pdfUrl) {
+		this.pdfUrl = pdfUrl;
+	}
+
+	
 	
 }

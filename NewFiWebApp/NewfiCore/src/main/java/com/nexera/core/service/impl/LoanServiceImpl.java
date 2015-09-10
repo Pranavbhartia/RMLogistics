@@ -61,6 +61,7 @@ import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CustomerDetailVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
+import com.nexera.common.vo.LeadsDashBoardVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -75,6 +76,7 @@ import com.nexera.common.vo.LoansProgressStatusVO;
 import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
+import com.nexera.common.vo.QuoteDetailsVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -2380,4 +2382,38 @@ public class LoanServiceImpl implements LoanService {
 	   return rows;
     }
 
+	@Override
+	 @Transactional(readOnly = true)
+	 public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
+	         String startLimit, String endLimit) {
+	  int startLimt = Integer.parseInt(startLimit);
+	  int endLimt = startLimt + 15;
+	  if(endLimit!=null){
+	   endLimt= Integer.parseInt(endLimit);
+	  }
+	  // Get new prospect and lead loans this user has access to.
+	  List<QuoteDetailsVO> loanList = loanDao
+	          .retrieveLoanForMyLeads(
+	                  this.parseUserModel(userVO),startLimt, endLimt);
+	  
+	  LeadsDashBoardVO dashBoardVO = new LeadsDashBoardVO();
+	  dashBoardVO.setQuoteDetails(loanList);
+
+	  return dashBoardVO;
+	 }
+	
+	 @Override
+	 @Transactional(readOnly = true)
+	 public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO) {
+
+	  // Get new prospect and lead loans this user has access to.
+	  List<QuoteDetailsVO> loanList = loanDao
+	          .retrieveLoanForMyLeads(
+	                  this.parseUserModel(userVO));
+	  
+	  LeadsDashBoardVO dashboardVO = new LeadsDashBoardVO();
+	  dashboardVO.setQuoteDetails(loanList);
+	  return dashboardVO;
+	 }
+	
 }
