@@ -26,6 +26,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
+import com.nexera.common.vo.LeadsDashBoardVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -76,6 +77,29 @@ public class LoanRestService {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanRestService.class);
 
+	
+	// TODO-move this to User profile rest service
+	 @RequestMapping(value = "/retrieveDashboardForMyLeads/{userID}")
+	 public @ResponseBody CommonResponseVO retrieveDashboardForMyLeads(
+	         @PathVariable Integer userID,
+	         @RequestParam(required = false) String startlimit,
+	         @RequestParam(required = false) String count) {
+	  UserVO user = new UserVO();
+	  user.setId(userID);
+	  CommonResponseVO commonResponseVO = null;
+	  if (startlimit != null) {
+	   LeadsDashBoardVO responseVO = loanService
+	           .retrieveDashboardForMyLeads(user, startlimit, count);
+	   commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+	  } else {
+	   LeadsDashBoardVO responseVO = loanService
+	           .retrieveDashboardForMyLeads(user);
+	   commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+	  }
+
+	  return commonResponseVO;
+	 }
+	
 	@RequestMapping(value = "/create", method = RequestMethod.PUT)
 	public @ResponseBody String createUser(@RequestBody String loanVOStr) {
 

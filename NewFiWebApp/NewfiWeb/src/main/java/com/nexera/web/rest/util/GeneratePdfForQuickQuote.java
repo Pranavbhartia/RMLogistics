@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.itextpdf.text.Annotation;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -46,6 +47,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.codec.Base64.OutputStream;
 import com.mongodb.io.ByteStream;
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.UserRolesEnum;
@@ -61,6 +63,7 @@ import com.nexera.core.service.SendGridEmailService;
 import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.impl.S3FileUploadServiceImpl;
+import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.GeneratePdfForQuickQuote.CustomCell;
 
 
@@ -74,7 +77,16 @@ public class GeneratePdfForQuickQuote {
 	private UserProfileService userProfileService;
 	
 	@Autowired
+	private S3FileUploadServiceImpl s3FileUploadServiceImpl;
+	
+	@Autowired
+	protected Utils utils;
+	
+	@Autowired
 	private SendEmailService sendEmailService;
+	
+	@Autowired
+	private NexeraUtility nexeraUtility;
 	
 	@Autowired
 	private TemplateService templateService;
@@ -89,6 +101,7 @@ public class GeneratePdfForQuickQuote {
 	        .getLogger(GeneratePdfForQuickQuote.class);
     private Document document;
     private PdfWriter writer;
+    private static String basePath;
     public GeneratePdfForQuickQuote() {
     }
 
@@ -98,20 +111,43 @@ public class GeneratePdfForQuickQuote {
 		}
 
 		public void onEndPage(PdfWriter writer, Document document) {
+		
+			String homeIconPath = basePath + File.separator + "resources"
+			        + File.separator + "images" + File.separator
+			        + "footer_home.png";
+			
+			File file = new File(homeIconPath);
+		        Image image = null;
+				try {
+					image = Image.getInstance(file.getAbsolutePath());
+				} catch (BadElementException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		      image.scaleAbsolute(16f, 10f);// image width,height
+			
 			Rectangle page = document.getPageSize();
 			PdfPTable foot = new PdfPTable(1);
-			PdfPCell footCell = new PdfPCell(
-			        new Phrase(
-			                "",
-			                FontFactory.getFont(FontFactory.HELVETICA, 6,
-			                        Font.BOLDITALIC)));
-			footCell.setBorder(0);
-			footCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			foot.addCell(footCell);
-			footCell = new PdfPCell(new Phrase(
-			        "Newfi dba of Nexera Holding LLC  | NMLS ID 1231327  |  Equal Housing Lender",
-			        FontFactory.getFont(FontFactory.HELVETICA, 6,
-			                Font.BOLDITALIC)));
+//			PdfPCell footCell = new PdfPCell(
+//			        new Phrase(
+//			                "",
+//			                FontFactory.getFont("Calibri", 6,
+//			                        Font.BOLDITALIC)));
+//			footCell.setBorder(0);
+//			footCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+//			foot.addCell(footCell);
+			
+			Phrase p = new Phrase();
+			p.add(new Chunk("Newfi dba of Nexera Holding LLC  | NMLS ID 1231327  |  ",FontFactory.getFont("Calibri", 6,Font.BOLD)));
+			p.add(new Chunk(image, 0, 0));
+			p.add(new Chunk("  Equal Housing Lender",FontFactory.getFont(FontFactory.HELVETICA, 6,Font.BOLD)));
+			
+			PdfPCell footCell = new PdfPCell(p);
+			
+//			footCell = new PdfPCell(new Phrase(
+//			        "Newfi dba of Nexera Holding LLC  | NMLS ID 1231327  |  Equal Housing Lender",
+//			        FontFactory.getFont("Calibri", 6,
+//			                Font.BOLD)));
 
 			footCell.setBorder(0);
 			footCell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -152,22 +188,30 @@ public class GeneratePdfForQuickQuote {
 		DecimalFormat formatter = new DecimalFormat("$#,###.00");
 		return formatter.format(amount);
     }
+    
+    public String removeDollarAndComma(String number){
+    	return number.replaceAll("(?<=\\d),(?=\\d)|\\$|\\%", "");
+    }
+    
+    public String phoneNumberFormating(String phoneNumber)
+    {
+    	return phoneNumber.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3");
+    }
 
     public void generatePdf(GeneratePdfVO generatePdfVO, HttpServletRequest httpServletRequest, ByteArrayOutputStream byteOutput,UserVO user) throws DocumentException, IOException {
     	Paragraph logoParagraph = new Paragraph();
     	Paragraph horizontalLine = new Paragraph();
         Paragraph paragraph = new Paragraph();
         Paragraph imageParagraph = new Paragraph();
-        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 7);
-        Font fontWithBigSize = new Font(Font.FontFamily.TIMES_ROMAN, 8);
-        Font emailIdFont = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.UNDERLINE);
+        Font font = FontFactory.getFont("Calibri", 7);
+        Font fontWithBigSize = FontFactory.getFont("Calibri", 8);
+        Font emailIdFont = FontFactory.getFont("Calibri", 8, Font.UNDERLINE);
         emailIdFont.setColor(BaseColor.BLUE);
-        Font boldFont = new Font(Font.FontFamily.TIMES_ROMAN  , 7, Font.BOLD);
-        Font boldFontWithBigSize = new Font(Font.FontFamily.TIMES_ROMAN  , 9, Font.BOLD);
+        Font boldFont = FontFactory.getFont("Calibri", 7, Font.BOLD);
+        Font boldFontWithBigSize = FontFactory.getFont("Calibri", 9, Font.BOLD);
         PdfPCell cell = null;
-        @SuppressWarnings("deprecation")
-		String basePath = httpServletRequest.getRealPath("/");
-  
+     
+		 
         try{
         String absoluteFilePath = "";
 		absoluteFilePath = basePath + File.separator + "resources"
@@ -221,7 +265,7 @@ public class GeneratePdfForQuickQuote {
         cell = new PdfPCell(clipped, false);
         cell.setPaddingTop(5f);
         cell.setBorder(PdfPCell.NO_BORDER);
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setRowspan(2);
         imageTable.addCell(cell);
 
@@ -238,12 +282,14 @@ public class GeneratePdfForQuickQuote {
         	firstName = "N/A";
         if (lastName == null)
         	lastName = "N/A";
+      
         if (phoneNumber == null)
         	phoneNumber = "N/A";
- 
+        else
+        	phoneNumber = phoneNumberFormating(phoneNumber);
         cell = new PdfPCell();
-        cell.addElement(new Phrase("  "+firstName+" "+lastName+"\n  Senior Loan Advisor\n  NMLS ID 123456\n  "+phoneNumber, fontWithBigSize));
-        cell.addElement(new Phrase("  "+user.getEmailId(), emailIdFont));
+        cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID 123456\n"+phoneNumber, fontWithBigSize));
+        cell.addElement(new Phrase(user.getEmailId(), emailIdFont));
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
@@ -259,14 +305,14 @@ public class GeneratePdfForQuickQuote {
         imageTable.addCell(cell);
    
         
-        cell = new PdfPCell(new Phrase("\n  Newfi\n  2200 Powell St, Suite 340\n  Emeryville, CA 94608\n  NMLS ID 1231327",fontWithBigSize));
+        cell = new PdfPCell(new Phrase("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize));
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
         String imageFilePath = "";
 		imageFilePath = basePath + File.separator + "resources"
 		        + File.separator + "images" + File.separator
-		        + "rsz_button.png";
+		        + "apply_button.png";
         File imageFilePathLocation = new File(imageFilePath);
 
  
@@ -292,7 +338,8 @@ public class GeneratePdfForQuickQuote {
         cell.setColspan(2);
         cell.setBorder(Rectangle.TOP);
         cell.setBorderWidth(2f); 
-        cell.setBorderColor(BaseColor.BLUE);
+        BaseColor newfiBlue = WebColors.getRGBColor("#14498f");
+        cell.setBorderColor(newfiBlue);
         horizontalLineTable.addCell(cell);
         horizontalLine.add(Chunk.NEWLINE);
         horizontalLine.add(horizontalLineTable);
@@ -414,24 +461,24 @@ public class GeneratePdfForQuickQuote {
         cell = new PdfPCell(new Phrase("  "+"Loan Amount",font));
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
-        
+        String loanAmountDuringRefinance="";
         if (loanType.equals("PUR")){
         	cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmount),font));
         }
         else{
-        	String loanAmountDuringRefinance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getCurrentMortgageBalance();
+        	loanAmountDuringRefinance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getCurrentMortgageBalance();
         	cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmountDuringRefinance),font));
         }
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
-        
+        String homeWorthTodayDuringRefinance="";
         if (!loanType.equals("PUR")){
 	        cell = new PdfPCell(new Phrase("  "+"Estimated Home Value",font));
 	        cell.setBorder(Rectangle.LEFT);
 	        firstTable.addCell(cell);
 	        
-	        String homeWorthTodayDuringRefinance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getHomeWorthToday();
+	        homeWorthTodayDuringRefinance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getHomeWorthToday();
 	        cell = new PdfPCell(new Phrase(addDollarAndComma(homeWorthTodayDuringRefinance),font));
 	        cell.setBorder(Rectangle.RIGHT);
 	        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -442,8 +489,17 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
         
-        Float loanToValue = (Float.parseFloat(loanAmount) / Float.parseFloat(purchasePrice) ) * 100;
-        cell = new PdfPCell(new Phrase(loanToValue+"%",font));
+        Float loanToValue;
+        if (loanType.equals("PUR")){
+        	loanToValue = (Float.parseFloat(loanAmount) / Float.parseFloat(purchasePrice) ) * 100;
+        }
+        else{
+        	 loanToValue = (Float.parseFloat(loanAmountDuringRefinance) / Float.parseFloat(homeWorthTodayDuringRefinance) ) * 100;
+        }
+        
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        cell = new PdfPCell(new Phrase(df.format(loanToValue)+"%",font));
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
@@ -469,15 +525,22 @@ public class GeneratePdfForQuickQuote {
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
         cell = new PdfPCell(new Phrase("  "+"Loan term - months",font));
-        cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM);
+        cell.setBorder(Rectangle.LEFT );
         firstTable.addCell(cell);
-        
+        String monthLoanProgram="";
+        if (loanProgram != null){
         String[] getYear = loanProgram.split("-");
-        Integer monthLoanProgram = Integer.parseInt(getYear[0]) * 12; 
-        cell = new PdfPCell(new Phrase(""+monthLoanProgram,font));
-        cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
+        monthLoanProgram = ""+Integer.parseInt(getYear[0]) * 12; 
+        }
+        cell = new PdfPCell(new Phrase(monthLoanProgram,font));
+        cell.setBorder(Rectangle.RIGHT);
     
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        firstTable.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("\n"));
+        cell.setColspan(2);
+        cell.setBorder(Rectangle.RIGHT | Rectangle.LEFT | Rectangle.BOTTOM);
         firstTable.addCell(cell);
         
         PdfPTable seventhTable = new PdfPTable(2);
@@ -522,6 +585,12 @@ public class GeneratePdfForQuickQuote {
         	cell = new PdfPCell(new Phrase(addDollarAndComma(homeWorthToday),font));
         }
       
+        String totEstimatedClosingCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstimatedClosingCost();
+        if(totEstimatedClosingCost != null){
+        totEstimatedClosingCost = removeDollarAndComma(totEstimatedClosingCost);
+       
+        }
+        
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         seventhTable.addCell(cell);
@@ -530,8 +599,19 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM);
         seventhTable.addCell(cell);
         
+        //totEstimatedClosingCost
+        
         String estimatingClosingCost = "0";
-        cell = new PdfPCell(new Phrase(addDollarAndComma(estimatingClosingCost),font));
+        
+        if (Float.parseFloat(totEstimatedClosingCost) >= 1){
+        	estimatingClosingCost = totEstimatedClosingCost;
+        }
+        
+        if(estimatingClosingCost.equals("0"))
+        	cell = new PdfPCell(new Phrase(estimatingClosingCost,font));
+        else
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(estimatingClosingCost),font));
+        
         cell.setPaddingBottom(5f);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -542,6 +622,10 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         seventhTable.addCell(cell);
         
+        if (!loanType.equals("PUR")){
+        	purchasePrice = homeWorthTodayDuringRefinance;
+        }
+        	
         Float totalCashInvestment = Float.parseFloat(estimatingClosingCost) + Float.parseFloat(purchasePrice);
         cell = new PdfPCell(new Phrase(addDollarAndComma(""+totalCashInvestment),font));
         cell.setBorder(Rectangle.RIGHT);
@@ -563,7 +647,16 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingTop(5f);
         cell.setBorder(Rectangle.LEFT);
         seventhTable.addCell(cell);
-        cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmount),font));
+        if (loanType.equals("PUR")){
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmount),font));
+        }
+        else{
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmountDuringRefinance),font));
+        }
+        
+        String TotEstLenCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstLenCost();
+        
+//        cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmount),font));
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         seventhTable.addCell(cell);
@@ -572,12 +665,19 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM);
         seventhTable.addCell(cell);
         
-        String totEstimatedClosingCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstimatedClosingCost();
-        if(totEstimatedClosingCost != null){
-        totEstimatedClosingCost = totEstimatedClosingCost.replaceAll("(?<=\\d),(?=\\d)|\\$|\\%", "");
        
+        String lenderCredit = "0";
+        if(Float.parseFloat(removeDollarAndComma(TotEstLenCost)) < 0 ){
+        	lenderCredit = TotEstLenCost;
         }
-        cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost),font));
+        
+        if(lenderCredit.equals("0")){
+        	cell = new PdfPCell(new Phrase(lenderCredit,font));
+        }	
+        else{
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(lenderCredit),font));
+        }
+        
         cell.setPaddingBottom(5f);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -588,7 +688,10 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         seventhTable.addCell(cell);
         
-        Float totalCredits = Float.parseFloat(totEstimatedClosingCost) + Float.parseFloat(loanAmount);
+        if (!loanType.equals("PUR")){
+        	loanAmount = loanAmountDuringRefinance;
+        }
+        Float totalCredits = Float.parseFloat(lenderCredit) + Float.parseFloat(loanAmount);
         cell = new PdfPCell(new Phrase(addDollarAndComma(""+totalCredits),font));
         cell.setPaddingTop(5f);
         cell.setBorder(Rectangle.RIGHT);
@@ -641,9 +744,15 @@ public class GeneratePdfForQuickQuote {
         seventhTable.addCell(cell);
         
         String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
-        cell = new PdfPCell(new Phrase("  "+"Cash reserves for pre-paids/escrows     "+totEstResDepWthLen,font));
-        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
-        cell.setColspan(2);
+        cell = new PdfPCell(new Phrase("  Cash reserves for pre-paids/escrows",font));
+        cell.setBorder(Rectangle.LEFT);
+        //cell.setColspan(2);
+        seventhTable.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase(totEstResDepWthLen,boldFont));
+        cell.setPaddingTop(5f);
+        cell.setBorder(Rectangle.RIGHT);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         seventhTable.addCell(cell);
         
         cell = new PdfPCell(new Phrase(""));
@@ -653,7 +762,7 @@ public class GeneratePdfForQuickQuote {
      
         firstTableCell.addElement(firstTable);
         firstTableCell.addElement(Chunk.NEWLINE);
-        firstTableCell.addElement(Chunk.NEWLINE);
+       // firstTableCell.addElement(Chunk.NEWLINE);
         firstTableCell.addElement(seventhTable);
         mainTable.addCell(firstTableCell);
         
@@ -728,18 +837,30 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setBorder(Rectangle.TOP | Rectangle.BOTTOM | Rectangle.LEFT);
+        cell.setBackgroundColor(lightBlue);
         secondTable.addCell(cell);
    //     TotEstLenCost
         
-        String TotEstLenCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstLenCost();
+        
         cell = new PdfPCell(new Phrase(TotEstLenCost,font));
         cell.setPaddingTop(4); cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBackgroundColor(lightBlue);
         cell.setBorder(Rectangle.TOP | Rectangle.BOTTOM | Rectangle.RIGHT);
         secondTable.addCell(cell);
   
+        cell = new PdfPCell(new Phrase("",font));
+        cell.setColspan(2);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        secondTable.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("",font));
+        cell.setColspan(2);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        secondTable.addCell(cell);
+        
         secondTableCell.addElement(secondTable);
-        secondTableCell.addElement(Chunk.NEWLINE);
+       // secondTableCell.addElement(Chunk.NEWLINE);
         mainTable.addCell(secondTableCell);
        
         
@@ -904,13 +1025,23 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBackgroundColor(lightBlue);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
         thirdTable.addCell(cell);
         
   
-        thirdTableCell.addElement(thirdTable);
-        thirdTableCell.addElement(Chunk.NEWLINE);
+        cell = new PdfPCell(new Phrase("",font));
+        cell.setColspan(2);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        thirdTable.addCell(cell);
         
+        cell = new PdfPCell(new Phrase("",font));
+        cell.setColspan(2);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        thirdTable.addCell(cell);
+        
+        
+        thirdTableCell.addElement(thirdTable);    
         mainTable.addCell(thirdTableCell);
         
      // Fourth table
@@ -936,8 +1067,17 @@ public class GeneratePdfForQuickQuote {
         cell.setBackgroundColor(lightBlue); 
         fourthTable.addCell(cell);
      
+        cell = new PdfPCell(new Phrase("",font));
+        cell.setColspan(2);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        fourthTable.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("",font));
+        cell.setColspan(2);
+        cell.setBorder(PdfPCell.NO_BORDER);
+        fourthTable.addCell(cell);
+        
         fourthTableCell.addElement(fourthTable);
-        fourthTableCell.addElement(Chunk.NEWLINE);
         mainTable.addCell(fourthTableCell);
         
      // Fifth table
@@ -1038,6 +1178,7 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
+        cell.setBackgroundColor(lightBlue); 
         fifthTable.addCell(cell);
         
       //  String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
@@ -1045,6 +1186,7 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cell.setBackgroundColor(lightBlue); 
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
         fifthTable.addCell(cell);
        
@@ -1063,7 +1205,7 @@ public class GeneratePdfForQuickQuote {
     		        + "footerForPdf.jpg";
             File fileFooterImageForPdf = new File(footerImageForPdf);
             Image footerPdfImage = Image.getInstance(fileFooterImageForPdf.getAbsolutePath());
-            footerPdfImage.scaleAbsolute(520f, 50f);// image width,height
+            footerPdfImage.scaleAbsolute(520f, 40f);// image width,height
           //  footerPdfImage.setAbsolutePosition(210f, 780f);    
             document.add(footerPdfImage);
     }
@@ -1099,25 +1241,55 @@ public class GeneratePdfForQuickQuote {
          cb.restoreState();
           }
       }
-    public ByteArrayOutputStream sendPurchasePdf(GeneratePdfVO generatePdfVO, HttpServletRequest request)
+    public String sendPurchasePdf(GeneratePdfVO generatePdfVO, HttpServletRequest request)
     {
     	ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
     	openPdf(byteArrayOutputStream);
+    	String s3Path = "";
+    	basePath = request.getRealPath("/");
     	try {
     		    UserVO user = userProfileService.findUser(generatePdfVO.getUserId());
     		    generatePdf(generatePdfVO, request, byteArrayOutputStream,user);
     		    closePdf();
+    		    s3Path = writeAndUploadFile(byteArrayOutputStream);
     			sendPurchasePdfEmail(user,byteArrayOutputStream,generatePdfVO );
     			//byteArrayOutputStream.close();
-    	        
  
     	} catch (Exception ex) {
     		LOGGER.error("Error in generating purchase pdf under quick quote:", ex);
     	}
-    	 return byteArrayOutputStream; 
+    	finally{
+    		return s3Path; 
+    	}
+    	 
     }
     
-    
+    public String writeAndUploadFile(ByteArrayOutputStream byteOutStream) throws IOException{
+    	 FileOutputStream outStream = null; 
+    	 String s3Path = "";
+    	 try {  
+    		 
+    		File dir = new File(nexeraUtility.tomcatDirectoryPath()
+ 			        + File.separator + nexeraUtility.randomStringOfLength());
+ 			if (!dir.exists()) {
+ 				dir.mkdirs();
+ 			}
+ 			
+ 			String filePathDest = dir.getAbsolutePath() + File.separator
+			        + utils.randomNumber()+ ".pdf";
+    		 
+    	   outStream = new FileOutputStream(filePathDest);  
+    	   byteOutStream.writeTo(outStream);    	   
+    	   File fileLocal = new File(filePathDest);
+    	   s3Path = s3FileUploadServiceImpl.uploadToS3(fileLocal, "Quote_PDF",
+			        "quote_pdf_");
+    	 } catch (IOException e) {  
+    	   e.printStackTrace();  
+    	 } finally {  
+    	   outStream.close();  
+    	   return s3Path;
+    	 } 
+    }
 	
 	public void sendPurchasePdfEmail(UserVO userVo,
 	        ByteArrayOutputStream byteArrayOutputStream,GeneratePdfVO generatePdfVO)
