@@ -329,7 +329,9 @@ function paintAgentDashboardRightPanel(data,isLeads) {
 		$(this).parent().find('.search-icn').show();
 	});
 
-	searchCon.append(searchInputBox).append(searchIcon);
+	
+		  searchCon.append(searchInputBox).append(searchIcon);
+
 
 	var filterText = $('<div>').attr({
 		"class" : "filter-text float-left"
@@ -388,8 +390,12 @@ function paintAgentDashboardRightPanel(data,isLeads) {
 	}
 
 	filter.append(dropDownWrapper);
-
-	rightCon.append(searchCon).append(filterText).append(filter);
+    if(!isLeads){
+		rightCon.append(searchCon).append(filterText).append(filter);
+	}else {
+		rightCon.append(searchCon);
+	}
+	
 
 	header.append(leftCon).append(rightCon);
 	$('#agent-dashboard-container').append(header);
@@ -770,10 +776,11 @@ function appendCustomers(elementId, customers,skipDataClearing,isLeads) {
 					"class" : "leads-container-tc4 leads-row-4 float-left"
 				}).html(createdDateStr);
 				
-				col5 = $('<div>').attr({
-					"class" : "leads-container-tc5 leads-row-5 float-left"
+				var col5 = $('<div>').attr({
+					"class" : "leads-container-tc5 leads-row-5 float-left",
+					"name" : customer.pdfUrl
 				}).bind("click",function(){
-					window.open(customer.pdfUrl);
+					window.open($(this).attr("name"));
 				
 				});
 				
@@ -843,7 +850,7 @@ function appendCustomers(elementId, customers,skipDataClearing,isLeads) {
 			if(createdDateStr==""){
 				createdDateStr="-";
 			}
-			var col5 = $('<div>').attr({
+		var col5 = $('<div>').attr({
 				"class" : "leads-container-tc5 float-left"
 			}).html(createdDateStr);
 	/*		var col5 = $('<div>').attr({
@@ -1042,11 +1049,11 @@ function appendTableHeader(elementId){
 		var thCol4="";
 			 thCol4 = $('<div>').attr({
 				"class" : "leads-container-tc4 leads-col-4 float-left"
-			}).html("Created On");
+			}).html("Created");
 		
 		var thCol5 = $('<div>').attr({
 			"class" : "leads-container-tc5 leads-col-5 float-left"
-		}).html("Pdf of Quote");
+		}).html("Quote");
 
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
 				.append(thCol4).append(thCol5);

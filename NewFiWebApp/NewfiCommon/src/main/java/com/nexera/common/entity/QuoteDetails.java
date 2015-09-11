@@ -34,6 +34,7 @@ public class QuoteDetails implements Serializable{
 
 	
 	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}

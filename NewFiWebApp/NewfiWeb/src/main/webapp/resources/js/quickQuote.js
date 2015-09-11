@@ -812,10 +812,10 @@ function getLoanSummaryWrapperUnderQuickQuote(teaserRate, inputCustomerDetails,h
     } 
     var loanDescription;
     var loanClosingCost;
-    if (loanTypeText == "REF") {
-        loanDescription=getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInputData);
-    } else if (loanTypeText == "PUR") {
+    if (loanTypeText == "PUR") {
         loanDescription=getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInputData);
+    } else {
+        loanDescription=getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInputData);
     }
     var parentWrapper = $('<div>').attr({
         "class": "loan-summary-wrapper"
@@ -959,15 +959,16 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
         leftCol.append(proposedLoanAmtCol);
     }
     
-        var currentMortgagePayment = getLoanSummaryLastRow("Current<br/> Mortgage Payment", showValue(monthlyPayment),"monthlyPaymentId",true,true);
-        rightCol.append(currentMortgagePayment);
-        var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId",undefined,true);
-        rightCol.append(monthlyDiff);
+      //  var currentMortgagePayment = getLoanSummaryLastRow("Current<br/> Mortgage Payment", showValue(monthlyPayment),"monthlyPaymentId",true,true);
+     //   rightCol.append(currentMortgagePayment);
+    //   var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId",undefined,true);
+     //   rightCol.append(monthlyDiff);
 
 
     var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment),true);
+    if($('div[id="impound"]').attr('value') == 'Yes'){
     rightCol.append(toggletaxComponent);
-
+    }
     var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true,true,true);
     rightCol.append(taxRow);
 
