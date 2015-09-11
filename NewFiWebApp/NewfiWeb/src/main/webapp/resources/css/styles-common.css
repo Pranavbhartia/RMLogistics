@@ -534,14 +534,14 @@ a.cus-eng-succ-mess-email {
 }
 
 .quick-quote-row {
-    width: 419px;
+    width: 498px;
     margin: 20px auto;
 }
 
 .quick-quote-row-RHS {
     font-family: openSans;
     font-size: 14px;
-    width: 38%;      
+    width: 43%;      
     text-align: left;
     height: 35px;            
     padding-left: 15px;      
@@ -559,9 +559,11 @@ a.cus-eng-succ-mess-email {
     /* border: 1px solid #dcdcdc; */
     margin: 10px;
     min-height: 140px;
+    width: 45%;
 }
 
 .quick-quote-question-section {
+    width: 100%;
     margin: 20px 30px;
     min-height: auto;
 }
@@ -570,6 +572,7 @@ a.cus-eng-succ-mess-email {
     /* border: 1px solid #dcdcdc; */
     margin: 10px;
     min-height: 140px;
+    width: 45%;
 }
 
 .quick-quote-row-LHS-adj {
@@ -609,7 +612,7 @@ a.cus-eng-succ-mess-email {
 
 .quick-quote-dropdown-cont {
     position: absolute;      
-    width: 158px;      
+    width: 211px;      
     height: auto;
     margin: 0 auto;
     border: 1px solid #dcdcdc;      
@@ -649,7 +652,7 @@ a.cus-eng-succ-mess-email {
 }
 
 .month-year-row-adj {
-    width: 100px;
+    width: 90px;
 }
 
 .month-year-drop-down-row {
@@ -678,13 +681,13 @@ a.cus-eng-succ-mess-email {
 }
 
 .quick-quote-dwn-payment {
-	width: 110px;
+	width: 145px;
 }
 
 .quick-quote-dwn-percentage {
-    width: 50px;
+    width: 69px;
     padding-left: 5px;
-    background: url(../images/percentagesy.png) no-repeat 35px #fafafa;
+    background: url(../images/percentagesy.png) no-repeat #fafafa right;
     background-size: 12px;
     margin-right: 10px;
     text-align: right;
@@ -698,9 +701,8 @@ a.cus-eng-succ-mess-email {
 }
 
 .err-msg-quick-quote {
-    width: 48px;
+    width: 126px;
     margin: 0 auto;
-    white-space: nowrap;
 }
 
 .profile-header-dwn-icon {
@@ -708,7 +710,7 @@ a.cus-eng-succ-mess-email {
 }
 
 .month-adj {
-	width: 100px;
+	width: 51px;
 	margin: 0 5px;
 }
 
@@ -724,14 +726,18 @@ a.cus-eng-succ-mess-email {
 
 .quick-quote-header-pdf {
     font-family: 'opensanssemiBold';
-    margin-right: 10px;
+    margin-right: 5px;
     white-space: nowrap;
-    line-height: 45px;
+    line-height: 30px;
     padding-left: 10px;
-    border-radius: 3px;
-    font-size: 16px;
     color: #428bca;
     cursor: pointer;
+    width: 120px;
+    font-size: 15px;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 3px;
+    border: 1px solid #428bca;
 }
 
 .leads-col-2 {
@@ -755,3 +761,7 @@ a.cus-eng-succ-mess-email {
     background-size: 20%;
     cursor: pointer;
 }
+.quick-quote-rhs-label{
+	font-size: 14px;
+    padding: 0 5px;
+}    
