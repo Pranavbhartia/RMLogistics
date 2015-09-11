@@ -26,11 +26,11 @@ var purchaseType = [{
 },{
 	question : "Last Name",
 	id : "lastName",
-	column : 0
+	column : 1
 },{
 	question : "Email",
 	id : "emailID",
-	column : 1
+	column : 0
 },{
 	question : "Phone No",
 	id : "primaryPhoneID",
@@ -122,11 +122,11 @@ var refinanceLowerMonthlyPayment = [{
 },{
 	question : "Last Name",
 	id : "lastName",
-	column : 0
+	column : 1
 },{
 	question : "Email",
 	id : "emailID",
-	column : 1
+	column : 0
 },{
 	question : "Phone No",
 	id : "primaryPhoneID",
@@ -213,11 +213,11 @@ var refinanceCashOut = [{
 },{
 	question : "Last Name",
 	id : "lastName",
-	column : 0
+	column : 1
 },{
 	question : "Email",
 	id : "emailID",
-	column : 1
+	column : 0
 },{
 	question : "Phone No",
 	id : "primaryPhoneID",
@@ -309,7 +309,7 @@ function loadQuickQoutePage(){
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "quick-quote-dashboard-container",
-		"class" : "rp-agent-dashboard"
+		"class" : "rp-agent-dashboard quick-quote-agent-dashboard"
 	});
 	var wrapper = $('<div>').attr({
 		"class" : "quick-quote-wrapper"
@@ -1745,15 +1745,18 @@ function appendMonthYearQuestion(option){
 		//restrictChar(contxt.name);
 	});
 	
+	var rowRHSLabel = $('<div>').attr({
+		"class" : "quick-quote-rhs-label float-left",
+		"maxlength": '2'
+	}).html("Impound<br />months");
 	var rowRHS = $('<input>').attr({
 		"class" : "quick-quote-row-RHS month-adj float-left",
 		"id" : option.monthYearId,
 		"name" :option.monthYearId,
-		"value" : "",
-		"placeholder" : "months"
+		"value" : ""
 	});
 	
-	return mainDiv.append(rowLHS).append(rowRHS);
+	return mainDiv.append(rowLHS).append(rowRHSLabel).append(rowRHS);
 	/*var text = $('<div>').attr({
 		"class" : "quick-quote-text float-left"
 	}).html("per");
@@ -1808,7 +1811,21 @@ function appendDownPaymentFeild(option){
 		"class" : "quick-quote-row-RHS quick-quote-dwn-payment float-left",
 		"id" : option.id,
 		"name" : option.id
-	});
+	}).on("load focus", function(e){
+	
+			$(this).maskMoney({
+    			thousands:',',
+    			decimal:'.',
+    			allowZero:true,
+    			prefix: '$',
+    		    precision:0,
+    		    allowNegative:false
+    		});
+    		/* this is the piece of code to retrict user put special charector*/
+    		//restrictChar($(this).attr("name"));
+		
+		
+	});;
 	
 	var rowRHS = $('<input>').attr({
 		"class" : "quick-quote-dwn-percentage float-left",
