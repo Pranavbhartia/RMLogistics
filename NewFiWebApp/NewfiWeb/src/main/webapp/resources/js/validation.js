@@ -478,9 +478,29 @@ function validateForm(loanType,refinanceType){
 	var phoneNo = validateInput($('input[name="primaryPhoneID"]'),$('input[name="primaryPhoneID"]').val(),message);
 	if(!firstName){
 		return false;
+	}else {
+		var name = $('input[name="firstName"]').val();
+		if(name.length > 45){
+			$('input[name="firstName"]').parent().find('.err-msg').html(message).show();
+			$('input[name="firstName"]').addClass('ce-err-input').show();
+			return false;
+		}else {
+			$('input[name="firstName"]').parent().find('.err-msg').hide();
+			$('input[name="firstName"]').removeClass('ce-err-input');	
+		}
 	}
 	if(!lastName){
 		return false;
+	}else {
+		var name = $('input[name="lastName"]').val();
+		if(name.length > 45){
+			$('input[name="lastName"]').parent().find('.err-msg').html(message).show();
+			$('input[name="lastName"]').addClass('ce-err-input').show();
+			return false;
+		}else {
+			$('input[name="lastName"]').parent().find('.err-msg').hide();
+			$('input[name="lastName"]').removeClass('ce-err-input');	
+		}
 	}
 	if(!emailID){
 		return false;

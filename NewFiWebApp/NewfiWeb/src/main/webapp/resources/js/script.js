@@ -8,6 +8,7 @@ var flagKnowNewFi=true;
 var flagToShowCompletPro = true;
 var rateLockRequestedFlag = false;
 var closedialog;
+var totalEstimatedClosingCosts = new Object();
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);
