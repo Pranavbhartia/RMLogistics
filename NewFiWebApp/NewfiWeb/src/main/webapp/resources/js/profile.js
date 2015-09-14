@@ -1968,7 +1968,7 @@ function stateListCallBack(response) {
 		stateList = response.resultObject;
 	}
 }
-var allowedStateArray=["CA", "OR" , "WA"];
+var allowedStateArray=["CA", "OR" , "WA", "CO"];
 function filterAllowedStates(){
 	var filteredList=[];
 	for(var i=0;i<stateList.length;i++){
