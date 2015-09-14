@@ -1,4 +1,4 @@
-###Anoop: Cleared all delta modification
+﻿###Anoop: Cleared all delta modification
 
 
 #Rajeswari 5th June - For LQB Ticket
@@ -372,5 +372,12 @@ ADD COLUMN `ltv` DOUBLE(5,2) NULL AFTER `lqb_loan_amount`;
 ALTER TABLE `newfi_schema`.`loanmilestone` 
 ADD COLUMN `status_insert_time` DATETIME NULL COMMENT '' AFTER `milestone_order`;
 
+#Himanshu - Template for quick quote
+INSERT INTO `newfi_schema`.`template` (`id`, `key`, `description`, `modified_date`, `value`, `sms_text`) VALUES ('48', 'QUICK_QUOTE_PDF', 'Template for Quick Quote PDF', '2015-09-02 12:53:34', '05c9808c-aa81-4c35-8582-daf679c2a35e', 'Quick Quote sent as PDF');
+
 #Ranjitha - New template addition for application confirmation
 INSERT INTO `newfi_schema`.`template` (`key`, `description`, `modified_date`, `value`, `sms_text`) VALUES ('APPLICATION_SUBMIT_CONFIRMATION_FOR_INTERNAL_USERS', 'Application Submit Confirmation for IU', '2015-09-07 11:55:34', '6a04c478-85c5-4c9b-8148-595cd0d044dc', 'Application submit confirmation');
+
+#Himanshu - Adding new table for saving quick quote
+CREATE TABLE newfi_schema.`quotedetails` (`id` int(11) NOT NULL AUTO_INCREMENT,  `prospect_first_name` varchar(45) DEFAULT NULL,  `prospect_last_name` varchar(45) DEFAULT NULL,  `emailid` varchar(75) DEFAULT NULL,  `phoneno` varchar(20) DEFAULT NULL,  `prospect_username` varchar(45) DEFAULT NULL, `internal_user_id` int(11) DEFAULT NULL,  `lqb_rate_json` text, `input_details_json` text,  `rateandapr` varchar(75) DEFAULT NULL,  `loanprogram` varchar(75) DEFAULT NULL,  `pdf_url` text,  `created_date` datetime DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
