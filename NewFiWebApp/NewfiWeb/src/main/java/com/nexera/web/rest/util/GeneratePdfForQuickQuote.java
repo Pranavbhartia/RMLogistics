@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.itextpdf.text.Anchor;
 import com.itextpdf.text.Annotation;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -196,6 +197,8 @@ public class GeneratePdfForQuickQuote {
         emailIdFont.setColor(BaseColor.BLUE);
         Font boldFont = FontFactory.getFont("Calibri", 7, Font.BOLD);
         Font boldFontWithBigSize = FontFactory.getFont("Calibri", 9, Font.BOLD);
+        Font footerFont = FontFactory.getFont("Calibri", 6);
+        Font boldFooterFont = FontFactory.getFont("Calibri", 6, Font.BOLD);
         PdfPCell cell = null;
      
 		 
@@ -276,10 +279,15 @@ public class GeneratePdfForQuickQuote {
         	phoneNumber = phoneNumberFormating(phoneNumber);
         cell = new PdfPCell();
         cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID 123456\n"+phoneNumber, fontWithBigSize));
-        cell.addElement(new Phrase(user.getEmailId(), emailIdFont));
+
+        Paragraph para= new Paragraph();
+        Anchor anchor = new Anchor(user.getEmailId(), emailIdFont);
+        anchor.setReference("mailto:"+user.getEmailId());
+        para.add(anchor);
+        cell.addElement(para);
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
-        
+ 
         DateFormat fmt = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         String todaysDate = fmt.format(new Date());
         String customerFirstName = generatePdfVO.getFirstName();
@@ -795,7 +803,7 @@ public class GeneratePdfForQuickQuote {
         
         
         
-        PdfPCell cellOne = new PdfPCell(new Phrase("  "+"Lender Fee",boldFont));
+        PdfPCell cellOne = new PdfPCell(new Phrase("  "+"Lender Fee",font));
         cellOne.setPaddingTop(4);
         cellOne.setPaddingBottom(4); 
         CustomCell border1 = app.new CustomCell();       
@@ -816,7 +824,7 @@ public class GeneratePdfForQuickQuote {
         secondTable.addCell(cellTwo);
         
         
-        cell = new PdfPCell(new Phrase("  "+"Your cost or credit based on rate selected",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Your cost or credit based on rate selected",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setBorder(Rectangle.LEFT);
@@ -838,8 +846,11 @@ public class GeneratePdfForQuickQuote {
         secondTable.addCell(cell);
    //     TotEstLenCost
         
+        if(TotEstLenCost.contains("$"))
+        	cell = new PdfPCell(new Phrase(TotEstLenCost,font));
+        else
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(TotEstLenCost),font));
         
-        cell = new PdfPCell(new Phrase(TotEstLenCost,font));
         cell.setPaddingTop(4); cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBackgroundColor(lightBlue);
@@ -882,7 +893,7 @@ public class GeneratePdfForQuickQuote {
         thirdTable.addCell(cell);
         
   
-        cell = new PdfPCell(new Phrase("  "+"Appraisal Fee",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Appraisal Fee",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell border4 = app.new CustomCell();       
@@ -901,7 +912,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         thirdTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("  "+"Credit Report",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Credit Report",font));
         cell.setPaddingTop(4); cell.setPaddingBottom(4);
         CustomCell border6 = app.new CustomCell();       
         cell.setCellEvent(border6);
@@ -917,7 +928,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         thirdTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("  "+"Flood Certification",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Flood Certification",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell border8 = app.new CustomCell();       
@@ -936,7 +947,7 @@ public class GeneratePdfForQuickQuote {
         thirdTable.addCell(cell);
         
         
-        cell = new PdfPCell(new Phrase("  "+"Wire Fee",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Wire Fee",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell border12 = app.new CustomCell();       
@@ -954,7 +965,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         thirdTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("  "+"Lenders Title Insurance",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Lenders Title Insurance",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell border14 = app.new CustomCell();       
@@ -973,7 +984,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         thirdTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("  "+"Closing/Escrow Fee",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Closing/Escrow Fee",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell border16 = app.new CustomCell();       
@@ -992,7 +1003,7 @@ public class GeneratePdfForQuickQuote {
         thirdTable.addCell(cell);
         
     
-        cell = new PdfPCell(new Phrase("  "+"Recording Fee",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Recording Fee",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell border18 = app.new CustomCell();       
@@ -1057,7 +1068,10 @@ public class GeneratePdfForQuickQuote {
         fourthTable.addCell(cell);
         
        // String totEstimatedClosingCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstimatedClosingCost();
-        cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost), font));
+        if(totEstimatedClosingCost.contains("("))
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost), font));
+        else
+        	cell = new PdfPCell(new Phrase("("+addDollarAndComma(totEstimatedClosingCost)+")", font));
         cell.setPaddingTop(4); cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
@@ -1097,7 +1111,7 @@ public class GeneratePdfForQuickQuote {
         fifthTable.addCell(cell);
         
    
-        cell = new PdfPCell(new Phrase("  "+"Interest",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Interest",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell borderFT1 = app.new CustomCell();       
@@ -1115,7 +1129,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         fifthTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("  "+"Homeowners Insurance",boldFont));
+        cell = new PdfPCell(new Phrase("  "+"Homeowners Insurance",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         CustomCell borderFT3 = app.new CustomCell();       
@@ -1134,7 +1148,7 @@ public class GeneratePdfForQuickQuote {
         fifthTable.addCell(cell);
         
         cell = new PdfPCell();
-        cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 2 Months",boldFont));
+        cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 2 Months",font));
         cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
         cell.setPaddingTop(4);
         cell.setPaddingBottom(4);
@@ -1154,7 +1168,7 @@ public class GeneratePdfForQuickQuote {
         fifthTable.addCell(cell);
         
         cell = new PdfPCell();
-        cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 2 Months",boldFont));
+        cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 2 Months",font));
         cell.addElement(new Phrase("  "+"Provided you have 6 months of remaining coverage",font));
         cell.addElement(new Phrase("  "+"Note: Taxes for 1st and 2nd installments must be paid or",font));
         cell.addElement(new Phrase("  "+"will be collected at closing.",font));
@@ -1195,16 +1209,15 @@ public class GeneratePdfForQuickQuote {
         paragraph.add(mainTable);
         document.add(paragraph);
         document.add(horizontalLine);
+        document.add(new Phrase("RATE QUOTE ASSUMPTIONS\n", boldFooterFont));
+        document.add(new Phrase(""
+                + "Rate displayed are subject to change. On adjustable-rate loans, interest rates are subject to potential increases over the life of the loan, once the initial"
+                + "fixed-rate period expires. Rates, loan products & fees subject to change without notice. Your rate and term may vary. If you do not lock in a rate when you"
+                + "apply, your rate at closing may differ from the rate in effect when you applied. Subject to underwriting approval, Not all applicants will be approved, Full"
+                + "documentation & property insurance required. Loan secured by a lien against your poperty. Consolidating or refinancing debts may increase the time and/or the finance"
+                + "charges/total loan amount needed to repay your debt. Trems, conditions & restrictions apply."
+                + "\nCall newfi for details at 888-316-3934.",footerFont));
         
-        
-        String footerImageForPdf = basePath + File.separator + "resources"
-    		        + File.separator + "images" + File.separator
-    		        + "footerForPdf.jpg";
-            File fileFooterImageForPdf = new File(footerImageForPdf);
-            Image footerPdfImage = Image.getInstance(fileFooterImageForPdf.getAbsolutePath());
-            footerPdfImage.scaleAbsolute(520f, 40f);// image width,height
-          //  footerPdfImage.setAbsolutePosition(210f, 780f);    
-            document.add(footerPdfImage);
     }
     
     public class CustomCell implements PdfPCellEvent {
