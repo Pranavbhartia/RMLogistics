@@ -15,6 +15,7 @@ import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,7 @@ import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.QuoteDetailsVO;
+import com.nexera.common.vo.SortingLoanListVO;
 import com.nexera.common.vo.UserVO;
 
 @Component
@@ -356,6 +358,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 		try {
 			List<Loan> loanListForUser = new ArrayList<Loan>();
+			Integer[] progressStatus = new Integer[loanProgressStatusIds.length];
+			for (int i = 0; i < loanProgressStatusIds.length; i++) {
+				progressStatus[i] = Integer.valueOf(loanProgressStatusIds[i]);
+			}
 			
 			Session session = sessionFactory.getCurrentSession();
 			Criteria criteria = session.createCriteria(LoanTeam.class);
@@ -363,6 +369,8 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			criteria.setProjection(Projections.projectionList().add(
 			        Projections.groupProperty("loan.id")));
 			criteria.addOrder(Order.desc("loan.modifiedDate"));
+			criteria.createAlias("loan.loanProgressStatus", "loanProgressStatus");
+			criteria.add(Restrictions.in("loanProgressStatus.id", progressStatus));
 			// If the user is Sales manager, retrieve all loans
 			parseUserModel = (User) this.load(User.class,
 			        parseUserModel.getId());
@@ -380,21 +388,21 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			criteria.setFirstResult(startLimit);
 			criteria.setMaxResults(endLimit);
 			List<Integer> loanTeamList = criteria.list();
-			List<Integer> loanIdList = new ArrayList<Integer>();
-			int i = 0;
+/*			List<Integer> loanIdList = new ArrayList<Integer>();
+			int i = 0;*/
 			if (loanTeamList != null) {
 				for (Integer loanTeam : loanTeamList) {
 
 					Loan loan = (Loan) session.get(Loan.class, loanTeam);
-					if (loanIdList.contains(loan.getId())) {
+					/*if (loanIdList.contains(loan.getId())) {
 						continue;
 					}
 
 					if (checkIfIdIsInList(loan.getLoanProgressStatus().getId(),
-					        loanProgressStatusIds)) {
+					        loanProgressStatusIds)) {*/
 						loanListForUser.add(loan);
-						loanIdList.add(loan.getId());
-					}
+						/*loanIdList.add(loan.getId());
+					}*/
 
 				}
 			}
@@ -1127,12 +1135,12 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	    if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
 	            .getInternalUserDetail().getInternaUserRoleMaster()
 	            .getId()) {
-	     criteria.add(Restrictions.eq("active", true));
-	     criteria.add(Restrictions.eq("user.id",
+	     criteria.add(Restrictions.eq("quoteCompositeKey.internalUserId",
 	             parseUserModel.getId()));
 	    }
 	   } else {
-	    criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+		   criteria.add(Restrictions.eq("quoteCompositeKey.internalUserId",
+		             parseUserModel.getId()));
 	   }
 	   criteria.setFirstResult(startLimit);
 	   criteria.setMaxResults(endLimit);
@@ -1179,5 +1187,91 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	           hibernateException);
 	  }
 	 }
+	
+	@Override
+    public List<Loan> getSortedLoanList(SortingLoanListVO list) {
+		try{
+			Session session = sessionFactory.getCurrentSession();
+			List<Loan> loanListForUser = new ArrayList<Loan>();
+			Integer[] progressStatus = new Integer[list.getLoanProgessStatus().length];
+			for (int i = 0; i < list.getLoanProgessStatus().length; i++) {
+				progressStatus[i] = Integer.valueOf(list.getLoanProgessStatus()[i]);
+			}
+			Criteria criteria = session.createCriteria(LoanTeam.class);
+			criteria.createAlias("loan", "loan",JoinType.RIGHT_OUTER_JOIN);	
+			criteria.setProjection(Projections.projectionList().add(
+			        Projections.groupProperty("loan.id")));
+			criteria.createAlias("loan.loanProgressStatus", "loanProgressStatus");
+			criteria.add(Restrictions.in("loanProgressStatus.id",progressStatus));		
+			// If the user is Sales manager, retrieve all loans
+			User parseUserModel = (User) this.load(User.class,
+					list.getUserID());
+			if (parseUserModel.getInternalUserDetail() != null) {
+				if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
+				        .getInternalUserDetail().getInternaUserRoleMaster()
+				        .getId()) {
+					criteria.add(Restrictions.eq("active", true));
+					criteria.add(Restrictions.eq("user.id",
+					        parseUserModel.getId()));
+				}
+			} else {
+				criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
+			}
+			
+			criteria.setFirstResult(list.getStartLimit());
+			criteria.setMaxResults(list.getEndLimit());
+
+			if(list.getColumnName().equals("firstName")){
+				criteria.createAlias("loan.user", "user",JoinType.LEFT_OUTER_JOIN);
+				if(list.getOrderByType().equals("ASC")){
+					criteria.addOrder(Order.asc("user.firstName"));
+					
+				}else{
+					criteria.addOrder(Order.desc("user.firstName"));
+				}
+
+			}else if(list.getColumnName().equals( "lastAction")){
+				if(list.getOrderByType().equals("ASC")){
+					criteria.addOrder(Order.asc("loan.modifiedDate"));
+				}else{
+					criteria.addOrder(Order.desc("loan.modifiedDate"));
+				}
+				
+			}else if(list.getColumnName().equals( "loanStatus")){
+				if(list.getOrderByType().equals("ASC")){
+					criteria.addOrder(Order.asc("loanProgressStatus.loanProgressStatus"));
+				}else{
+					criteria.addOrder(Order.desc("loanProgressStatus.loanProgressStatus"));
+				}
+			}else if(list.getColumnName().equals("opened")){
+				if(list.getOrderByType().equals("ASC")){
+					criteria.addOrder(Order.asc("loan.createdDate"));
+				}else{
+					criteria.addOrder(Order.desc("loan.createdDate"));
+				}
+			}
+			
+			List<Integer> loanTeamList = criteria.list();
+
+			if (loanTeamList != null) {
+				for (Integer loanTeam : loanTeamList) {
+					Loan loan = (Loan) session.get(Loan.class, loanTeam);	
+						loanListForUser.add(loan);
+					}
+				}
+			for (Loan loan : loanListForUser) {
+				Hibernate.isInitialized(loan.getLoanProgressStatus());
+			}
+
+		    return loanListForUser;
+		    
+		}catch(HibernateException exception){
+			throw new DatabaseException(
+			           "Exception caught in getloanlistsorted() ",
+			           exception);
+		}
+		
+    }
+
 	
 }

@@ -77,6 +77,7 @@ import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.QuoteDetailsVO;
+import com.nexera.common.vo.SortingLoanListVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -617,6 +618,11 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setId(customerDetail.getId());
 		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
+		
+		
+		if(user.getLastLoginDate() != null){
+			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate().toString());
+		}
 
 		return loanCustomerVO;
 	}
@@ -2415,5 +2421,41 @@ public class LoanServiceImpl implements LoanService {
 	  dashboardVO.setQuoteDetails(loanList);
 	  return dashboardVO;
 	 }
+	@Override
+	@Transactional
+	public LoanDashboardVO getLoanListSortedForMyloans(SortingLoanListVO list) {
+	    
+		LOG.info("Get list of sorted loans");
+		Integer endLimit = list.getStartLimit()+15;
+		list.setEndLimit(endLimit);
+		list.setLoanProgessStatus( new int[] {
+	            LoanProgressStatusMasterEnum.NEW_LOAN
+	            .getStatusId(),
+	    LoanProgressStatusMasterEnum.IN_PROGRESS
+	            .getStatusId() });
+		List<Loan> loanList = loanDao.getSortedLoanList(list);
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
 	
+	    return loanDashboardVO;
+	}
+	
+	@Override
+	@Transactional
+	public LoanDashboardVO getLoanListSortedForArchivedLoans(SortingLoanListVO list) {
+	    
+		LOG.info("Get list of sorted loans");
+		Integer endLimit = list.getStartLimit()+15;
+		list.setEndLimit(endLimit);
+		list.setLoanProgessStatus( new int[] {
+                LoanProgressStatusMasterEnum.SMCLOSED.getStatusId(),
+                LoanProgressStatusMasterEnum.WITHDRAWN.getStatusId(),
+                LoanProgressStatusMasterEnum.DECLINED.getStatusId()
+              });
+		List<Loan> loanList = loanDao.getSortedLoanList(list);
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
+	
+	    return loanDashboardVO;
+	}
 }

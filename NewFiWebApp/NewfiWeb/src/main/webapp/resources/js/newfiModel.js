@@ -25,7 +25,9 @@ AgentViewPNEnum = {
 	WORK_ON_LOAN : "work",
 	LOAN : "loan",
 	MY_ARCHIVES : "archive",
-	MY_IMP_ALERTS:"alert"
+	MY_IMP_ALERTS:"alert",
+	MY_LEADS:"leads",
+	QUICK_QUOTE:"quickQuote"
 };
 
 
@@ -38,6 +40,12 @@ AgentViewSNEnum = {
 	4:"needs",
 	5:"progress"
 };
+
+AdminModulePNEnum = {
+		USER_MANAGEMENT : "user_mgmt",
+		TURN_AROUND_TEMPLATES : "turn_around_templates",
+		TEMPLATES : "templates"
+	};
 
 function initialize(newfi,baseUrl){
 	newfiObject = newfi;
