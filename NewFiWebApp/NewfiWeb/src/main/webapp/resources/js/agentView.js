@@ -410,7 +410,7 @@ function paintLeadsAgentDashboardRightPanel(data){
 	header.append(leftCon).append(rightCon);
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
-	appendCustomers("leads-container",data,false);	
+	appendLeads("leads-container",data);	
 
 }
 function searchByTermAndLoanType(customers) {
@@ -562,7 +562,7 @@ function appendLeads(elementId, customers){
 					"loanid" : customer.loanID,
 					"userid" : customer.userID
 				}).html(customer.prospectFirstName+" "+customer.prospectLastName);
-			}
+			
 	
 			col1.append(profImage).append(cusName);
 			var phone_num = "NA";
@@ -632,7 +632,7 @@ function appendLeads(elementId, customers){
 			row.append(col1).append(col2).append(col3).append(col4).append(col5);
 			$('#' + elementId).append(row);
 			updateHandler.initiateRequest();
-			
+}
 }
 function appendCustomers(elementId, customers,skipDataClearing) {
 	
