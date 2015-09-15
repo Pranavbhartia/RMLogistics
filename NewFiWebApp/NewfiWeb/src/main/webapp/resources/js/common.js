@@ -810,7 +810,8 @@ function getCalculationFunctionForItem(key) {
 }
 
 $(document).on("closingCostChange",function(e,data){
-	setTimeout(function(){ $('#closingCostId').html(showValue(data)); }, 10);
+	//setTimeout(function(){ $('#closingCostId').html(showValue(data)); }, 10);
+	setTimeout(function(){ $('#closingCostId').html(totalEstimatedClosingCosts['totEstimatedClosingCost']); }, 10);
 })
 
 function getRowHolderObject(container, value, key) {
@@ -864,9 +865,14 @@ function getObContainer() {
 			var ob = this;
 			for ( var key in ob) {
 				var keyObj = ob[key];
-				if (keyObj.updateView) {
-					keyObj.updateView();
-				}
+				 if(typeof(keyObj)!=='undefined'){
+					if (keyObj.updateView) {
+						keyObj.updateView();
+					}
+					if(key == "totEstimatedClosingCost"){
+						keyObj.updateTotalEstimatedClosingCosts();
+					}
+				 }
 			}
 		}
 	};
