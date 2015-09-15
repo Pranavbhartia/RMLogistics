@@ -284,7 +284,7 @@ function getDashboardRightPanelForArchivesLoans(loanType) {
 
 function paintAgentDashboardRightPanel(data) {
 	    data = data.resultObject.customers;
-		if(data != null && data != ""){
+
 		$('#agent-dashboard-container').html("");
 		var header = $('<div>').attr({
 			"class" : "agent-customer-list-header clearfix"
@@ -349,7 +349,7 @@ function paintAgentDashboardRightPanel(data) {
 		$('#agent-dashboard-container').append(header);
 		appendAgentDashboardContainer();
 		appendCustomers("leads-container",data,false);	
-	}	
+
 }
 function paintLeadsAgentDashboardRightPanel(data){
 
