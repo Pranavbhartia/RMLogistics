@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.nexera.common.compositekey.QuoteCompositeKey;
 
@@ -33,7 +34,7 @@ public class QuoteDetails implements Serializable{
 	
 
 	
-	@Column(name="id")
+	@Transient
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;

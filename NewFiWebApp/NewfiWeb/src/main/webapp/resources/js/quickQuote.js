@@ -524,6 +524,13 @@ function getClosingCostSummaryContainerUnderQuickQuote(valueSet) {
         	populateClosingCostHolder(refinanceTeaserRate);
         }
     }
+    
+    if(typeof(buyHomeRefinanceRate)!=='undefined'){
+        if(buyHomeRefinanceRate.loanType){
+        	populateClosingCostHolder(buyHomeRefinanceRate);
+        }
+    }
+    
     if(valueSet){
         closingCostHolder.valueSet=valueSet;
         closingCostHolder.initValueSet = valueSet;
@@ -660,6 +667,10 @@ function getClosingCostContainerLastRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
+    if(key == "totEstimatedClosingCost"){
+    	rwObj.updateTotalEstimatedClosingCosts();
+    }
+    	
     return row.append(rowDesc).append(rowDetail);
 }
 function getClosingCostBottomConatinerUnderQuickQuote() {
@@ -740,6 +751,7 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
+    
     return row.append(rowDesc).append(rowDetail);
 }
 
