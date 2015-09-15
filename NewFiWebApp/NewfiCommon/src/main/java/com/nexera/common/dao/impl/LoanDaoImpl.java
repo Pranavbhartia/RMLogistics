@@ -45,7 +45,7 @@ import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.QuoteDetailsVO;
-import com.nexera.common.vo.SortingLoanListVO;
+import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.UserVO;
 
 @Component
@@ -1189,7 +1189,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	 }
 	
 	@Override
-    public List<Loan> getSortedLoanList(SortingLoanListVO list) {
+    public List<Loan> getSortedLoanList(DashboardCriteriaVO list) {
 		try{
 			Session session = sessionFactory.getCurrentSession();
 			List<Loan> loanListForUser = new ArrayList<Loan>();

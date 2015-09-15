@@ -136,7 +136,7 @@ function paintAgentDashboard(loanType) {
 	});
 	$('#right-panel').append(agentDashboardMainContainer);
 	currentLoanType = loanType;
-	unassignGlobalvariables();
+	reInitializeGlobalvariables();
 	$(window).scrollTop(0);
 	if (loanType == "workloans") {
 		$('#lp-work-on-loan').addClass('lp-item-active');
@@ -160,7 +160,7 @@ function paintAgentDashboard(loanType) {
 	addContext("notification", contxt);
 }
 /*Resetting gloal variables used for sorting loan list in dashboard*/
-function unassignGlobalvariables(){
+function reInitializeGlobalvariables(){
 	 sortByName = false;
 	 sortByLoanStatus = false;
 	 sortByOpened = false;
@@ -4729,7 +4729,7 @@ function getLoanListSortedForMyLoans(columnName,orderType){
 	sortingDetails.orderByType = orderType;
 		
 	$.ajax({
-        url: "rest/loan/getSortedLoanListForMyLoans",
+        url: "rest/loan/sort",
         type: "POST",
         data: {
             "sortingDetails": JSON.stringify(sortingDetails),
@@ -4800,7 +4800,7 @@ function getLoanListSortedForArchives(columnName,orderType){
 	sortingDetails.orderByType = orderType;
 		
 	$.ajax({
-        url: "rest/loan/getSortedLoanListForArchivedLoans",
+        url: "rest/loan/sort/archive",
         type: "POST",
         data: {
             "sortingDetails": JSON.stringify(sortingDetails),

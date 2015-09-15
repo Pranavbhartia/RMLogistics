@@ -77,7 +77,7 @@ import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.QuoteDetailsVO;
-import com.nexera.common.vo.SortingLoanListVO;
+import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -2423,7 +2423,7 @@ public class LoanServiceImpl implements LoanService {
 	 }
 	@Override
 	@Transactional
-	public LoanDashboardVO getLoanListSortedForMyloans(SortingLoanListVO list) {
+	public LoanDashboardVO getLoanListSortedForMyloans(DashboardCriteriaVO list) {
 	    
 		LOG.info("Get list of sorted loans");
 		Integer endLimit = list.getStartLimit()+15;
@@ -2442,7 +2442,7 @@ public class LoanServiceImpl implements LoanService {
 	
 	@Override
 	@Transactional
-	public LoanDashboardVO getLoanListSortedForArchivedLoans(SortingLoanListVO list) {
+	public LoanDashboardVO getLoanListSortedForArchivedLoans(DashboardCriteriaVO list) {
 	    
 		LOG.info("Get list of sorted loans");
 		Integer endLimit = list.getStartLimit()+15;

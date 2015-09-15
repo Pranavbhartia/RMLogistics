@@ -34,7 +34,7 @@ import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.SortingLoanListVO;
+import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
@@ -596,14 +596,14 @@ public class LoanRestService {
 		return responseVO;
 	}
 	
-	@RequestMapping(value = "/getSortedLoanListForMyLoans", method = RequestMethod.POST)
+	@RequestMapping(value = "/sort", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getSortedLoanListForMyLoans(String sortingDetails, HttpServletRequest request,
 	        HttpServletResponse response) {
 
 		Gson gson = new Gson();
 	
-		SortingLoanListVO listVO = gson.fromJson(sortingDetails,
-					SortingLoanListVO.class);
+		DashboardCriteriaVO listVO = gson.fromJson(sortingDetails,
+					DashboardCriteriaVO.class);
 		CommonResponseVO responseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 		LoanDashboardVO loanDashboardVO;
@@ -622,14 +622,14 @@ public class LoanRestService {
 
 	}
 	
-	@RequestMapping(value = "/getSortedLoanListForArchivedLoans", method = RequestMethod.POST)
+	@RequestMapping(value = "/sort/archive", method = RequestMethod.POST)
 	public @ResponseBody CommonResponseVO getSortedLoanListForArchivedLoans(String sortingDetails, HttpServletRequest request,
 	        HttpServletResponse response) {
 
 		Gson gson = new Gson();
 	
-		SortingLoanListVO listVO = gson.fromJson(sortingDetails,
-					SortingLoanListVO.class);
+		DashboardCriteriaVO listVO = gson.fromJson(sortingDetails,
+					DashboardCriteriaVO.class);
 		CommonResponseVO responseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 		LoanDashboardVO loanDashboardVO;

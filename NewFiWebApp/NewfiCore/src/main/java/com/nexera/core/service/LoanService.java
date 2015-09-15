@@ -30,7 +30,7 @@ import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
-import com.nexera.common.vo.SortingLoanListVO;
+import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -238,8 +238,8 @@ public interface LoanService {
 	         String startLimit, String endLimit);
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
 	
-	public LoanDashboardVO getLoanListSortedForMyloans(SortingLoanListVO list);
+	public LoanDashboardVO getLoanListSortedForMyloans(DashboardCriteriaVO list);
 	
-	public LoanDashboardVO getLoanListSortedForArchivedLoans(SortingLoanListVO list);
+	public LoanDashboardVO getLoanListSortedForArchivedLoans(DashboardCriteriaVO list);
 
 }

@@ -1,11 +1,10 @@
 package com.nexera.common.vo;
 
-public class SortingLoanListVO {
+public class DashboardCriteriaVO {
 
 	private Integer userID;
 	private String  orderByType;
 	private String  columnName;
-	private int[] loanProgessStatus;
 	private Integer startLimit;
 	private Integer endLimit;
 	
@@ -32,12 +31,6 @@ public class SortingLoanListVO {
 	}
 	public void setColumnName(String columnName) {
 		this.columnName = columnName;
-	}
-	public int[] getLoanProgessStatus() {
-		return loanProgessStatus;
-	}
-	public void setLoanProgessStatus(int[] loanProgessStatus) {
-		this.loanProgessStatus = loanProgessStatus;
 	}
 	public Integer getUserID() {
 	    return userID;
