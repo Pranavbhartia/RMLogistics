@@ -27,6 +27,7 @@ public class EmailVO {
 	private List<String> CCList;
 	private Map<String, String[]> substitutionsMap;
 	private ByteArrayOutputStream attachmentStream;
+	private String fileName;
 
 	public List<EmailRecipientVO> getRecipients() {
 		if (recipients == null) {
@@ -143,5 +144,15 @@ public class EmailVO {
 	public void setDisableHtml(boolean disableHtml) {
 		this.disableHtml = disableHtml;
 	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	
 
 }

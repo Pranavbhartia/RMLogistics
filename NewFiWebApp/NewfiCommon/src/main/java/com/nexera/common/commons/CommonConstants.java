@@ -175,6 +175,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_CREDIT_INFO = "CREDIT_INFO_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_RATE_LOCK_REQUESTED = "RATE_LOCK_REQUESTED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_RATES_LOCKED = "RATES_LOCKED_TEMPLATE_ID";
+	public static final String TEMPLATE_KEY_AAPLICATION_SUBMIT_CONFIRMATION_FOR_INTERNAL_USERS = "APPLICATION_SUBMIT_CONFIRMATION_FOR_INTERNAL_USERS";
 	// NEXNF-424 : Dont send Appriasl ordered email when app fee is paid in
 	// newfi
 	// public static final String TEMPLATE_KEY_NAME_APPRAISAL_ORDERED =
@@ -209,7 +210,7 @@ public interface CommonConstants {
 	public static final String PURCHASE_CONTRACT = "Purchase Contract Including Addendums and Counter-offers";
 	public static final String TEMPLATE_KEY_NAME_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "DOCUMENT_TYPE_ASSIGNMENT_FAILURE";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION = "APPLICATION_SUBMIT_CONFIRMATION";
-	
+	public static final String TEMPLATE_KEY_NAME_PURCHASE_PDF = "QUICK_QUOTE_PDF";
 
 	// Document type credit report.
 	public static final String LQB_DOC_TYPE_CR = "CREDIT REPORT";
@@ -301,6 +302,10 @@ public interface CommonConstants {
 	public static final String SUBJECT_RESET_PASSWORD = "Reset newfi Password";
 	
 	public static final String SUBJECT_APPLICATION_SUBMIT_COMFIRMATION = "newfi Application Confirmation";
+	
+	public static final String SUBJECT_NO_PRODUCTS = "No Products Available";
+	
+	public static final String SUBJECT_NEW_LOAN_SUBMISSION_ALERT = "NEWFI ALERT: New Loan Submission";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
 
@@ -329,6 +334,7 @@ public interface CommonConstants {
 	public static final String STICKET = "sTicket";
 
 	public static final String PRE_QUALIFICATION_LETTER = "Pre-Qualification letter";
+	public static final String PURCHASE_LETTER = "Quick Quote PDF";
 	public static final String SUBJECT_NEW_LOAN_ALERT = "NEWFI ALERT: New Lead";
 	public static final String EXTRA_DOCUMENT = "Extra";
 
@@ -344,11 +350,12 @@ public interface CommonConstants {
 	public static final String LOANPURPOSE = "2";
 
 	public static final String FILE_NAME_PREQUAL_LETTER = "newfi pre-qualification.pdf";
+	public static final String FILE_NAME_PURCHASE_PDF = "newfi_quickQuote_";
 	public static final String DEFAULT_CREDIT_SCORE = "800";
-	public static final String[] allowedStates = { "CA", "OR", "WA" };
+	public static final String[] allowedStates = { "CA", "OR", "WA", "CO" };
 	
 	public static final String ZIPCODE_ISNOT_VALID = "Zip code is not valid";
-	public static final String ZIPCODE_ISNOT_APPROVED ="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
+	public static final String ZIPCODE_ISNOT_APPROVED ="Please enter a valid Zip Code in a newfi approved state: CA, OR , WA or CO";
 	public static final String ZIPCODE_VALID ="Valid ZipCode";
 
 

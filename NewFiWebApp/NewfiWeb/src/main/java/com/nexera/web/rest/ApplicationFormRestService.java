@@ -1,5 +1,6 @@
 package com.nexera.web.rest;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.amazonaws.services.ec2.model.transform.PurchaseReservedInstancesOfferingResultStaxUnmarshaller;
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
@@ -45,6 +47,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.vo.CommonResponseVO;
+import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanVO;
@@ -58,15 +61,18 @@ import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.LqbInterface;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.QuoteService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.LoadXMLHandler;
 import com.nexera.core.utility.NexeraCacheableMethodInterface;
 import com.nexera.core.utility.NexeraUtility;
 import com.nexera.web.rest.util.ApplicationPathUtil;
+import com.nexera.web.rest.util.GeneratePdfForQuickQuote;
 import com.nexera.web.rest.util.LQBRequestUtil;
 import com.nexera.web.rest.util.LQBResponseMapping;
 import com.nexera.web.rest.util.PreQualificationletter;
+import com.nexera.web.rest.util.GeneratePdfForQuickQuote;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -119,6 +125,12 @@ public class ApplicationFormRestService {
 
 	@Autowired
 	private PreQualificationletter preQualificationletter;
+	
+	@Autowired
+	private GeneratePdfForQuickQuote generatePdfForQuickQuote;
+	
+	@Autowired
+	private QuoteService quoteService;
 
 	// @RequestBody
 	@RequestMapping(value = "/applyloan", method = RequestMethod.POST)
@@ -608,6 +620,31 @@ public class ApplicationFormRestService {
 
 	}
 
+	@RequestMapping(value = "/sendPurchasePdfUnderQuickQuote", method = RequestMethod.POST)
+	public CommonResponseVO sendPurchasePdfUnderQuickQuote(String loanPurchaseDetailsUnderQuickQuote,
+			HttpServletRequest httpServletRequest) {
+
+		Gson gson = new Gson();
+		CommonResponseVO responseVO = null;
+		GeneratePdfVO generatePdfVO = gson.fromJson(loanPurchaseDetailsUnderQuickQuote,
+		        GeneratePdfVO.class);
+		try {
+			String s3Path = generatePdfForQuickQuote.sendPurchasePdf(generatePdfVO, httpServletRequest);
+			if(s3Path != "" && s3Path != null){
+				generatePdfVO.setPdfUrl(s3Path);
+			}
+				
+			boolean status = quoteService.addQuoteDetails(generatePdfVO);
+			if(!status)
+				LOG.error("Error in inserting quick quote details: ");
+			responseVO = RestUtil.wrapObjectForSuccess("success");
+		} catch (Exception e) {
+
+			LOG.error("Error in generating quote pdf or inserting quote details, under quick quote: ", e);
+		}
+		return responseVO;
+	}
+	
 	@RequestMapping(value = "/sendPreQualiticationLatter", method = RequestMethod.POST)
 	public CommonResponseVO sendPreQualificationLatter(String appFormData,
 	        String rateDataSet, HttpServletRequest httpServletRequest) {

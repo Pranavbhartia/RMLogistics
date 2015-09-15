@@ -843,6 +843,16 @@ function getRowHolderObject(container, value, key) {
 			var ob = this;
 			var getVal = ob.getValueForItem();
 			$(ob.container).text(getVal);
+		},
+		updateDataForPDF : function(){
+			var ob = this;
+			var getVal = ob.getValueForItem();
+			lqbTeaserRateUnderQuickQuote[key]=getVal;
+		},
+		updateTotalEstimatedClosingCosts: function(){
+			var ob = this;
+			var getVal = ob.getValueForItem();
+			totalEstimatedClosingCosts[key]=getVal;
 		}
 	};
 	return rw;

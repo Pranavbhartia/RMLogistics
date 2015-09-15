@@ -421,7 +421,7 @@ display: block;
 	padding-left: 0px;
 }
 
-.admin-newfi-team-list-th {
+.admin-newfi-team-list-th,.template-list-th {
 	line-height: 15px;
 	padding: 15px 0;
 	padding-left: 15px;
@@ -511,7 +511,7 @@ display: block;
 	color: rgb(47, 54, 61);
 }
 
-.admin-newfi-team-list-tr {
+.admin-newfi-team-list-tr,.template-row {
 	min-height: 40px;
 	padding: 10px;
 	padding-left: 15px;
@@ -674,6 +674,118 @@ display: block;
 .temp-col3 {
 	width: 45%;
 }
+
+.template-header-col-one {
+    width: 22%;
+    padding-left: 5px;
+}
+.template-header-row-one {
+	padding: 0 10px 0 5px;
+	width: 20.5%;
+}
+.template-header-col-two {
+    width: 24%;
+    padding-left: 5px;
+    word-break: break-word;
+}
+
+.template-header-col-three {
+    width: 22%;
+    padding-left: 5px;
+    word-break: break-all;
+}
+.template-header-row-two {
+    width: 24%;
+    word-wrap: break-word;      
+    overflow: hidden;      
+    text-overflow: ellipsis;      
+    display: -webkit-box;     
+    -webkit-box-orient: vertical;      
+    -webkit-line-clamp: 1;      
+    line-height: 30px;
+    cursor: help;
+}
+
+.template-header-row-three {
+    width: 22%;
+    cursor: help;
+    word-wrap: break-word;      
+    overflow: hidden;      
+    text-overflow: ellipsis;      
+    display: -webkit-box;      
+    -webkit-box-orient: vertical;      
+    -webkit-line-clamp: 1;
+    line-height: 30px;
+}
+.template-header-col-four {
+    width: 22%;
+    padding-left: 5px;
+    height: 20px;
+}
+
+.template-header-col-five {
+    width: 10%;
+    padding-left: 5px;
+    height: 24px;
+}
+.template-row:nth-child(odd) {
+    min-height: 45px;     
+    border-top: 1px #dcdcdc dashed;      
+    background: rgba(245, 249, 245, 0.22);
+}
+.template-header-row-four {
+	width: 25%;
+}
+.template-header-row-five {
+     background: url(../images/editBlue.png) no-repeat center;
+     cursor: pointer;
+     width: 0;
+}
+.template-edit-profile-wrapper {
+    background-color: #E9F0F8;
+    margin: 10px 0;
+    padding: 0;
+}
+.template-form-row {
+    /* width: 109px; */
+    /* margin: auto; */
+    padding: 15px 0;
+}
+
+.template-form-label {
+    line-height: 40px;
+    padding: 0 10px;
+    font-size: 12px;
+    text-align: right;
+    width: 12%;
+}
+
+.template-form-input {
+    width: 300px;     
+    height: 35px;      
+    padding: 10px 0;      
+    padding-left: 10px;      
+    line-height: 15px;      
+    border: 1px solid #dcdcdc;      
+    border-radius: 3px;      
+    background: #fafafa;      
+}
+
+
+.template-form-input-cont {
+    margin: 0 15px;
+}
+/* .template-row {
+    font-family: 'opensanssemiBold';
+    white-space: nowrap;
+    line-height: 45px;
+    height: 45px;
+    border-radius: 3px;
+    font-size: 16px;
+    padding-top: 11px;
+    border-top: 1px #dcdcdc dashed;
+} */
+
 
 @media ( max-width : 1062px) {
 	.create-turn-around-label {

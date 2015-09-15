@@ -21,6 +21,7 @@ var invalidMessage="Invalid Message";
 var invalidDate="Invalid Date";
 var enterMessage="Please enter a message";
 var errorMessageForZipcode="ZipCode cannot be empty";
+var multipleInvalidEntries = "Invalid Entries";
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
@@ -93,7 +94,7 @@ var answerQuestionOne="Please answer the question";
 var zipCodeMessage="Please enter a valid 5-digit zipcode";
 //NEXNF-516
 /*var invalidStateZipCode="Zip code does not belong to any of our approved states";*/
-var invalidStateZipCode="Please enter a valid Zip Code in a newfi approved state: CA, OR or WA";
+var invalidStateZipCode="Please enter a valid Zip Code in a newfi approved state: CA, OR, WA or CO";
 var errorInrefinanceRates="error inside paintRefinanceSeeRates :";
 var incorrectEmailID="Incorrect Email ID";
 

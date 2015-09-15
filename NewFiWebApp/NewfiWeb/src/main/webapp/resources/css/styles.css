@@ -1639,7 +1639,8 @@ input[type="button"]:focus, button:focus {
 }
 
 .lp-agent-item2 {
-	background: url(../images/agent_lp_2.png) no-repeat 5px center;
+	/* background: url(../images/agent_lp_2.png) no-repeat 5px center; */
+	 background: url(../images/potential_customer.png) no-repeat 5px center;
 }
 
 .lp-agent-item3 {
@@ -1651,9 +1652,7 @@ input[type="button"]:focus, button:focus {
 	background: url(../images/agent_lp_active_1.png) no-repeat 5px center;
 }
 
-.lp-item-active .lp-agent-item2 {
-	background: url(../images/agent_lp_active_2.png) no-repeat 5px center;
-}
+
 
 .lp-item-active .lp-agent-item3 {
 	background: url(../images/agent_lp_active_3.png) no-repeat 5px center;
@@ -1671,7 +1670,9 @@ input[type="button"]:focus, button:focus {
 	border-bottom: 1px #dcdcdc solid;
 	cursor: pointer;
 }
-
+.my-leads-container {
+	padding: 20px 5px;
+}
 .agent-customer-list-header {
 	height: 45px;
 	margin-left: 15px;
@@ -1728,7 +1729,9 @@ input[type="button"]:focus, button:focus {
 .leads-container-tc1 {
 	width: 225px;
 }
-
+.sm-leads-container-tc1 {
+	width: 185px;
+}
 .leads-container-tc2 {
 	width: 120px;
 }
@@ -1736,7 +1739,9 @@ input[type="button"]:focus, button:focus {
 .leads-container-tc3 {
 	width: 135px;
 }
-
+.sm-leads-container-tc3 {
+	width: 120px;
+}
 .leads-container-tc4 {
 	width: 140px;
 }
@@ -5702,13 +5707,25 @@ a.session-login-btn {
 	  background-size: 15%;
 }
 
+.append-leads-icon {
+    background: url(../images/potential_customer.png) no-repeat 5px center;
+    background-size: 15%;
+}
+
 .lp-item-active .append-home-icon {
 	  background: url(../images/transactions.png) no-repeat 5px center;
 	  background-size: 15%;
 }
-
+.lp-item-active .append-leads-icon {
+	  background: url(../images/potential customer_White.png) no-repeat 5px center;
+	  background-size: 15%;
+}
 .leads-container-row-realtor>div {
 	padding-left: 5px;
+}
+
+.leads-container-tc1-realtor {
+    width: 165px;
 }
 
 .leads-container-tc2-realtor {
@@ -5720,10 +5737,10 @@ a.session-login-btn {
 }
 
 .leads-container-tc4-realtor {
-	width: 170px;
+	width: 154px;
 }
 .leads-container-tc5-realtor {
-	width: 161px;
+	width: 146px;
 }
 .leads-container-tc6-realtor {
 	background: url(../images/alram_blue.png) no-repeat 0px 5px;
@@ -5773,4 +5790,8 @@ p.toast-mess-style {
 }
 .leads-container-row-th {
     background-color: rgba(241, 241, 241, 0.66);
+}
+.lp-item-active .append-leads-icn {
+	 background: url(../images/potential_customer_White.png) no-repeat 5px center; 
+	
 }

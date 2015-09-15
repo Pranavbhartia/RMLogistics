@@ -1,6 +1,12 @@
 var count = 0;
 var buyHomeRefinanceRate = new Object();
 buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
+var loanPurchaseDetailsUnderQuickQuote = new Object();
+var lqbTeaserRateUnderQuickQuote = new Object();
+var inputCustmerDetailUnderQuickQuote = new Object();
+loanPurchaseDetailsUnderQuickQuote.isRate = false;
+loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
+loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote=inputCustmerDetailUnderQuickQuote;
 var PURCHASE = "PUR";
 var REFINANACE = "REF";
 var REFINANACE_LOWER_MORTGAGE_PAYMENT = "REFLMP";
@@ -20,6 +26,14 @@ var purchaseType = [{
 },{
 	question : "Last Name",
 	id : "lastName",
+	column : 1
+},{
+	question : "Email",
+	id : "emailID",
+	column : 0
+},{
+	question : "Phone No",
+	id : "primaryPhoneID",
 	column : 1
 },{
 	question : "Purchase price",
@@ -110,6 +124,14 @@ var refinanceLowerMonthlyPayment = [{
 	id : "lastName",
 	column : 1
 },{
+	question : "Email",
+	id : "emailID",
+	column : 0
+},{
+	question : "Phone No",
+	id : "primaryPhoneID",
+	column : 1
+},{
 	question : "Current balance",
 	id : "currentMortgageBalance",
 	column : 0
@@ -181,7 +203,7 @@ var refinanceLowerMonthlyPayment = [{
 
 //JSON for refinanace cashout
 var refinanceCashOut = [{
-	loanType : REFINANACE,
+	loanType : REFINANACE_CASH_OUT,
 	refinanceOption : REFINANACE_CASH_OUT,
 	formId : "quick-quote-refinanace-cash-out-form"
 },{
@@ -191,6 +213,14 @@ var refinanceCashOut = [{
 },{
 	question : "Last Name",
 	id : "lastName",
+	column : 1
+},{
+	question : "Email",
+	id : "emailID",
+	column : 0
+},{
+	question : "Phone No",
+	id : "primaryPhoneID",
 	column : 1
 },{
 	question : "Current balance",
@@ -271,12 +301,15 @@ var refinanceCashOut = [{
 
 //Function which loads the contents
 function loadQuickQoutePage(){
+	ga('set', 'page', '/quick-quote');
+	ga('send', 'pageview');
+	loanPurchaseDetailsUnderQuickQuote.userId = newfiObject.user.id;
 	$('#right-panel').html('');
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "quick-quote-dashboard-container",
-		"class" : "rp-agent-dashboard"
+		"class" : "rp-agent-dashboard quick-quote-agent-dashboard"
 	});
 	var wrapper = $('<div>').attr({
 		"class" : "quick-quote-wrapper"
@@ -366,6 +399,35 @@ function paintButtonSection(option){
 	 return button;
 }
 
+function sendPurchasePdfUnderQuickQuote(){
+	$('#overlay-loader').show();  
+	$.ajax({
+		
+		url:"rest/application/sendPurchasePdfUnderQuickQuote",
+		type:"POST",
+		data:{"loanPurchaseDetailsUnderQuickQuote" : JSON.stringify(loanPurchaseDetailsUnderQuickQuote)},
+		dataType:"application/pdf",
+		cache:false,
+		success:function(data){
+			$('#overlay-loader').hide();  
+			showToastMessage("PDF sent to your email.");
+		},
+		error:function(data){
+			$('#overlay-loader').hide();  
+			
+			if(data.status != 200)
+			{
+				showErrorToastMessage("Error");
+			}
+			else{
+				showToastMessage("PDF sent to your email.");
+	//			showDialogPopup("Pre-Qual Letter sent",preQualificationLetterSent,callBackpopupFunction);
+			}
+		}
+		
+	});
+}
+
 function paintFixYourRatePageCEPUnderQuickQuote(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn) {
     teaserRateValHolder.teaserRate=true;
     paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentContainer,hideCreateAccountBtn)
@@ -382,7 +444,25 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	    var parentWrapper = $('<div>').attr({
 	        "class": "loan-summary-wrapper"
 	    });
-	    var ratePageHeader=getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn);
+	   /* var ratePageHeader=getLoanSummaryHeader(inputCustomerDetails,hideCreateAccountBtn);*/
+	    var ratePageHeader = $('<div>').attr({
+            "class": "loan-summary-header clearfix",
+            "style":"line-height: normal;"
+        });
+	    var ratePageHeaderCol1 = $('<div>').attr({
+	        "class": "loan-summary-header-col1 page-header-loan float-left",
+	        "style":"line-height: 45px;"
+	    }).html('Programs and Rates');
+	    var ratePageHeaderCol2 = $('<div>').attr({
+	        "class": "quick-quote-header-pdf float-right",
+	        "id" : "quick-quote-generate-pdf"
+	    }).html('Save as PDF');
+	    if(loanPurchaseDetailsUnderQuickQuote.isRate){
+	    	 ratePageHeader.append(ratePageHeaderCol1).append(ratePageHeaderCol2);
+	    }else {
+	    	 ratePageHeader.append(ratePageHeaderCol1);
+	    }
+	   
 	    var ratePageSlider="";
 	    var bottomText="";
 	    var buttonWrapper="";
@@ -413,7 +493,7 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	    
 	    
 	    var loanSummaryWrapper = getLoanSummaryWrapperUnderQuickQuote(teaserRate, inputCustomerDetails,hideCreateAccountBtn);
-	    var closingCostWrapper = getClosingCostSummaryContainer(getLQBObj(teaserRate));
+	    var closingCostWrapper = getClosingCostSummaryContainerUnderQuickQuote(getLQBObj(teaserRate));
 	 
 	    parentWrapper.append(ratePageHeader).append(ratePageSlider).append(loanSummaryWrapper).append(buttonWrapper);
 	    
@@ -429,6 +509,298 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	    
 	}
 
+function getClosingCostSummaryContainerUnderQuickQuote(valueSet) {
+    closingCostHolder=getObContainer();
+    if(typeof(newfiObject)!=='undefined'){
+        //Code TO get loan type for loggedin user Hardcoded For Now
+    	//Rajeswari    	
+        //closingCostHolder.loanType=appUserDetails!=undefined?(appUserDetails.loanType!=undefined?appUserDetails.loanType.loanTypeCd:"PUR"):"PUR";
+        setClosingCostContainerValues();
+    }else{
+    	
+        if(buyHomeTeaserRate.loanType && buyHomeTeaserRate.loanType=="PUR"){
+        	populateClosingCostHolder(buyHomeTeaserRate);
+        }else if(refinanceTeaserRate){
+        	populateClosingCostHolder(refinanceTeaserRate);
+        }
+    }
+    if(valueSet){
+        closingCostHolder.valueSet=valueSet;
+        closingCostHolder.initValueSet = valueSet;
+    }else{
+        closingCostHolder.valueSet={};
+        closingCostHolder.initValueSet = valueSet;
+    }
+    var parentWrapper = $('<div>').attr({
+        "class": "closing-cost-wrapper"
+    });
+    if(valueSet.dummyData){
+        parentWrapper.html(getHeaderText(getNoProductMessageInLockRatePage()));
+    }else{
+        var header = getClosingCostHeaderUnderQuickQuote("Estimated Closing Cost Summary");
+       /* var descText = getHeaderText("Based on the information you have provided, below is a summary of your estimated closing costs:");
+        var closingDate = $('<span>').attr({
+            "class": "semibold"
+        });
+        descText.append(closingDate);*/
+        var topContainer = getClosingCostTopConatinerUnderQuickQuote();
+        var bottomContainer = getClosingCostBottomConatinerUnderQuickQuote();
+        //parentWrapper.append(header).append(descText).append(topContainer).append(bottomContainer);
+        parentWrapper.append(header).append(topContainer).append(bottomContainer);
+    }
+    return parentWrapper;
+}
+
+
+function getClosingCostContainerRowWithSubTextUnderQuickQuote(rowNum, desc, detail, subtext,isHomeOwnersInsurance) {
+    var key=objectKeyMakerFunction(desc);
+    if(closingCostHolder.valueSet[key]){
+        detail=closingCostHolder.valueSet[key];
+        lqbTeaserRateUnderQuickQuote[key]=detail;
+    }
+    var row = $('<div>').attr({
+        "class": "closing-cost-cont-desc-row clearfix"
+    });
+    //NEXNF-622
+   /* if (rowNum % 2 == 0) {
+        row.addClass("closing-cost-cont-desc-row-even");
+    }*/
+
+    //NEXNF-483
+    //NEXNF-578
+    if(desc=="Interest"||desc=="Tax Reserve - Estimated 2 Months"||desc=="Homeowners Insurance Reserve - Estimated 2 Months"){
+    	   var rowDesc = $('<div>').attr({
+    	        "class": "closing-cost-desc eng-indent float-left"
+    	    });
+    }else{
+    	   var rowDesc = $('<div>').attr({
+    	        "class": "closing-cost-desc float-left"
+    	    });
+    	 //NEXNF-622
+    	   row.addClass("closing-cost-cont-desc-row-even");
+    }
+/*    var rowDesc = $('<div>').attr({
+        "class": "closing-cost-desc eng-indentfloat-left"
+    });*/
+    var descText = $('<div>').attr({
+        "class": "semi-bold"
+    }).html(desc);
+   var subTextDiv = $('<div>').attr({
+        "class": "subtext"
+    }).html(subtext);
+   
+ //NEXNF-655
+   if(isHomeOwnersInsurance){
+   	 var bottomSubText = $('<div>').attr({
+   	        "class": "closing-cost-bot-row eng-closing-cost-note"
+   	    }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
+   	   rowDesc.append(descText).append(subTextDiv).append(bottomSubText);
+   }else{
+	   rowDesc.append(descText).append(subTextDiv);
+   }
+ 
+    //rowDesc.append(descText).append(subTextDiv);
+    
+    
+    var cssClass = "closing-cost-detail float-left";
+    
+    if(desc=="Homeowners Insurance Reserve - Estimated 2 Months" || desc=="Tax Reserve - Estimated 2 Months"){
+    	cssClass = "closing-cost-detail float-left homeowners-insurance-reserve";
+    }
+    
+    var rowDetail = $('<div>').attr({
+        "class":cssClass
+    }).html(detail);
+    
+    var rwObj=getRowHolderObject(rowDetail,detail,key);
+    closingCostHolder[key]=rwObj;
+    rwObj.updateView();
+    rwObj.updateDataForPDF();
+    
+    
+    return row.append(rowDesc).append(rowDetail);
+}
+
+function getClosingCostContainerLastRowUnderQuickQuote(rowNum, desc, detail) {
+    var key=objectKeyMakerFunction(desc);
+    if(closingCostHolder.valueSet[key]){
+        detail=closingCostHolder.valueSet[key];
+        lqbTeaserRateUnderQuickQuote[key]=detail;
+    }
+    
+    var cssclass ="closing-cost-cont-desc-row clearfix";
+    if(desc != "Total Estimated Prepaids"){
+    	cssclass ="closing-cost-cont-desc-row clearfix light-solid-line";
+    }
+    
+    if(desc == "Total Estimated Closing Costs"){
+    	cssclass ="closing-cost-cont-desc-row clearfix light-solid-line total-es-clo-cost";
+    }
+    
+    var row = $('<div>').attr({
+        "class": cssclass
+    });
+
+    //NEXNF-622
+/*    if (rowNum % 2 == 0) {
+        row.addClass("closing-cost-cont-desc-row-even");
+    }*/
+    
+
+        row.addClass("closing-cost-cont-desc-row-even");
+
+    
+    var rowDesc = $('<div>').attr({
+        "class": "closing-cost-desc float-left"
+    }).html(desc);
+    var rowDetail = $('<div>').attr({
+        "class": "closing-cost-detail float-left semi-bold"
+    }).html(detail);
+    var rwObj=getRowHolderObject(rowDetail,detail,key);
+    closingCostHolder[key]=rwObj;
+    rwObj.updateView();
+    rwObj.updateDataForPDF();
+    return row.append(rowDesc).append(rowDetail);
+}
+function getClosingCostBottomConatinerUnderQuickQuote() {
+    // removed class to fixed : NEXNF-578
+	var wrapper = $('<div>').attr({
+        "class": ""
+    });
+    //var heading = getClosingCostHeadingCont("Total Estimated Closing Cost");
+    var container2 = $('<div>').attr({
+        "class": "closing-cost-container"
+    });
+    var headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrows");
+    //NEXNF-569
+    
+    var row1Con3 = getClosingCostContainerRowUnderQuickQuote(1, getClosingCostLabel("Interest"), "","");
+    var row2Con3 = getClosingCostContainerRowUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance"), "");
+    
+/*    var row1Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");*///NEXNF-655
+    var row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Varies based on calendar month of closing");
+   /* var row2Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");*/
+    var row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
+    //var row1Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
+    //var row2Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");//NEXNF-655
+    var row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "");
+    
+    
+    //container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
+    container2.append(headerCon2).append(row1Con3).append(row2Con3).append(row1Con2).append(row2Con2).append(row4Con2);
+    //NEXNF-655
+    /* 
+    var bottomSubText = $('<div>').attr({
+        "class": "closing-cost-bot-row eng-closing-cost-note"
+    }).html("Note: Taxes for 1st and 2nd installments must be paid or will be collected at closing.");
+    return wrapper.append(container2).append(bottomSubText);*/
+    return wrapper.append(container2);
+}
+
+function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
+    var key=objectKeyMakerFunction(desc);
+    var indentTextFlag=false;
+    if(closingCostHolder.valueSet[key]){
+        detail=closingCostHolder.valueSet[key];
+        lqbTeaserRateUnderQuickQuote[key]=detail;
+    }
+    var row = $('<div>').attr({
+        "class": "closing-cost-cont-desc-row clearfix"
+    });
+    //NEXNF-622
+   /* if (rowNum % 2 == 0) {
+    	 row.addClass("closing-cost-cont-desc-row-even");
+    }*/
+    //NEXNF-483 and updated for 6.17 updates
+    // NEXNF-537
+    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || desc =="Your cost or credit based on rate selected"){
+    	indentTextFlag=true;
+    }else{
+    	//NEXNF-622
+    	 row.addClass("closing-cost-cont-desc-row-even");
+    }
+    var rowDesc="";
+    if(indentTextFlag){
+    	 rowDesc = $('<div>').attr({
+            "class": "closing-cost-desc eng-indent float-left"
+        }).html(desc);
+    }else{
+    	 rowDesc = $('<div>').attr({
+            "class": "closing-cost-desc float-left"
+        }).html(desc);
+    }
+    //end
+   /* var rowDesc = $('<div>').attr({
+        "class": "closing-cost-desc float-left"
+    }).html(desc);*/
+    var rowDetail = $('<div>').attr({
+        "class": "closing-cost-detail float-left"
+    }).html(detail);
+    var rwObj=getRowHolderObject(rowDetail,detail,key);
+    closingCostHolder[key]=rwObj;
+    rwObj.updateView();
+    rwObj.updateDataForPDF();
+    return row.append(rowDesc).append(rowDetail);
+}
+
+
+function getClosingCostTopConatinerUnderQuickQuote() {
+    var wrapper = $('<div>').attr({
+        //"class": "closing-cost-cont-wrapper-top"
+    });
+    //var heading = getClosingCostHeadingCont("Estimated Closing Costs");
+    var container1 = $('<div>').attr({
+        "class": "closing-cost-container"
+    });
+    var headerCon1 = getClosingCostConatinerHeader("Estimated Lender Costs");
+    var row1Con1 = getClosingCostContainerRowUnderQuickQuote(1, getClosingCostLabel("Lender Fee"), "");
+    var row2Con1 = getClosingCostContainerRowUnderQuickQuote(2, getClosingCostLabel("This is your cost or credit based on rate selected"), "");
+    var row3Con1 = getClosingCostContainerLastRowUnderQuickQuote(3, getClosingCostLabel("Estimated Lender Costs"), "");
+    container1.append(headerCon1).append(row1Con1).append(row2Con1).append(row3Con1);
+    var container2 = $('<div>').attr({
+        "class": "closing-cost-container"
+    });
+    var headerCon2 = getClosingCostConatinerHeader("Estimated Third Party Costs");
+    var row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, getClosingCostLabel("Appraisal Fee"), "");
+    var row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, getClosingCostLabel("Credit Report"), "");
+    var row3Con2 = getClosingCostContainerRowUnderQuickQuote(3, getClosingCostLabel("Flood Certification"), "");
+    var row4Con2 = getClosingCostContainerRowUnderQuickQuote(4, getClosingCostLabel("Wire Fee"), "");
+    var row4_1Con2;
+    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
+        row4_1Con2 = getClosingCostContainerRowUnderQuickQuote(5, getClosingCostLabel("Owners Title Insurance"), "");
+    var row5Con2 = getClosingCostContainerRowUnderQuickQuote(5, getClosingCostLabel("Lenders Title Insurance"), "");
+    var row6Con2 = getClosingCostContainerRowUnderQuickQuote(6, getClosingCostLabel("Closing/Escrow Fee"), "");
+    var row7Con2 = getClosingCostContainerRowUnderQuickQuote(7, getClosingCostLabel("Recording Fee"), "");
+    var row8Con2;
+    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
+    	//NEXNF-483
+        //row8Con2= getClosingCostContainerRowUnderQuickQuote(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
+    row8Con2= getClosingCostContainerRowUnderQuickQuote(8, getClosingCostLabel("City/County Tax stamps"), "");
+    var row9Con2 = getClosingCostContainerLastRowUnderQuickQuote(9, getClosingCostLabel("Total Estimated Third Party Costs"), "");
+    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
+    
+    var container3 = $('<div>').attr({
+        "class": "closing-cost-container"
+    });
+    //var headerCon3 = getClosingCostConatinerHeader("Estimated Prepaids");
+   // var row1Con3 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuote(1, getClosingCostLabel("Interest"), "","");
+    //var row2Con3 = getClosingCostContainerRowUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance"), "");
+    //var row3Con3 = getClosingCostContainerLastRow(3, getClosingCostLabel("Total Prepaids"), "");
+    var row10Con3 = getClosingCostContainerLastRowUnderQuickQuote(10, getClosingCostLabel("Total Estimated Closing Cost"), "");
+    
+    //container3.append(headerCon3).append(row1Con3).append(row2Con3).append(row3Con3).append(row10Con3);
+    container3.append(row10Con3);
+    
+    //return wrapper.append(heading).append(container1).append(container2).append(container3);
+    return wrapper.append(container1).append(container2).append(container3);
+}
+function getClosingCostHeaderUnderQuickQuote(text) {
+    var header = $('<div>').attr({
+        "class": "closing-cost-header  cus-eng-font capitalize ccSummary"
+    }).html(text);
+    return header;
+}
+
 function getLoanSummaryWrapperUnderQuickQuote(teaserRate, inputCustomerDetails,hideCreateAccountBtn) {
     
     var customerInputData = inputCustomerDetails;
@@ -440,10 +812,10 @@ function getLoanSummaryWrapperUnderQuickQuote(teaserRate, inputCustomerDetails,h
     } 
     var loanDescription;
     var loanClosingCost;
-    if (loanTypeText == "REF") {
-        loanDescription=getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInputData);
-    } else if (loanTypeText == "PUR") {
+    if (loanTypeText == "PUR") {
         loanDescription=getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInputData);
+    } else {
+        loanDescription=getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInputData);
     }
     var parentWrapper = $('<div>').attr({
         "class": "loan-summary-wrapper"
@@ -587,15 +959,16 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
         leftCol.append(proposedLoanAmtCol);
     }
     
-        var currentMortgagePayment = getLoanSummaryLastRow("Current<br/> Mortgage Payment", showValue(monthlyPayment),"monthlyPaymentId",true,true);
-        rightCol.append(currentMortgagePayment);
-        var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId",undefined,true);
-        rightCol.append(monthlyDiff);
+      //  var currentMortgagePayment = getLoanSummaryLastRow("Current<br/> Mortgage Payment", showValue(monthlyPayment),"monthlyPaymentId",true,true);
+     //   rightCol.append(currentMortgagePayment);
+    //   var monthlyDiff = getLoanSummaryLastRow('Estimated Mortgage<br/> Payment is '+hgLow+' by',showValue(monthlyPaymentDifference),"monthlyPaymentDifferenceId",undefined,true);
+     //   rightCol.append(monthlyDiff);
 
 
     var toggletaxComponent=getTaxInsDropToggleBtn(showValue(investment),true);
+    if($('div[id="impound"]').attr('value') == 'Yes'){
     rightCol.append(toggletaxComponent);
-
+    }
     var taxRow = getLoanSummaryRowRatePage("Tax" ,showValue(tax),"calTaxID2","taxContainerId",true,true,true);
     rightCol.append(taxRow);
 
@@ -612,6 +985,7 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     grp.append(loanTypeRow);
 
     var loanProgRow=getLoanTableSummary("Loan Program", showValidData(rateVO.yearData) +" Year Fixed", "loanprogramId");
+    loanPurchaseDetailsUnderQuickQuote.loanProgram = showValidData(rateVO.yearData) +"-Year Fixed";
     grp.append(loanProgRow);
     leftCol.append(grp);
     grp=$('<div>').attr({
@@ -624,6 +998,7 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     var interestRateCol = getRateAprRowCol("Rate / APR", val, formatPercentage(rateVO.APR), "teaserRateId", "aprid");
     grp.append(interestRateCol);
 
+    loanPurchaseDetailsUnderQuickQuote.RateAndApr = val + " / "+  formatPercentage(rateVO.APR);
     leftCol.append(grp);
 
     return parentWrapper;
@@ -652,7 +1027,7 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
     if(teaserRateValHolder.teaserRate){
         housePrice = parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.housePrice))); 
         if(typeof(newfiObject)!=="undefined"){
-            loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;
+            loanAmount =  parseFloat(removedDoller(removedComma(customerInputData.purchaseDetails.loanAmount))) ;
             downPayment = (housePrice-loanAmount);
         }else{
             downPayment =  parseFloat(removedDoller(removedComma(customerInputData.currentMortgageBalance))) ;
@@ -755,8 +1130,9 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
     var interestRateCol = getRateAprRowCol("Rate / APR", val, formatPercentage(rateVO.APR), "teaserRateId", "aprid");;
     rightCol.append(interestRateCol);
     
-
+    loanPurchaseDetailsUnderQuickQuote.RateAndApr = val + " / "+  formatPercentage(rateVO.APR);
     var loanProgCol = getLoanSummaryRowRatePage("Loan Program" ,showValidData(rateVO.yearData) +" Year Fixed","loanprogramId");
+    loanPurchaseDetailsUnderQuickQuote.loanProgram = showValidData(rateVO.yearData) +"-Year Fixed";
     rightCol.append(loanProgCol);
     
     return parentWrapper;
@@ -902,11 +1278,14 @@ function paintBuyHomeTeaserRateUnderQuickQuote(parentContainer, teaserRateData, 
             var ob;
             try{
                 ob=JSON.parse(data);
+                loanPurchaseDetailsUnderQuickQuote.isRate = true;
             }catch(exception){
                 ob={};
                 console.log("Invalid Data");
+                loanPurchaseDetailsUnderQuickQuote.isRate = false;
             }
             paintFixYourRatePageCEPUnderQuickQuote(ob, teaserRateData, parentContainer, hideCreateAccountBtn);
+            loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote = teaserRateData;
             clearOverlayMessage();
         },
         error: function() {
@@ -968,6 +1347,7 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
             var ob;
             try{
                 ob=JSON.parse(data);
+                loanPurchaseDetailsUnderQuickQuote.isRate = true;
                 if(ob.length>0){
                     responseTime=ob[0].responseTime;
             }
@@ -975,9 +1355,11 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
                 ob={};
                 responseTime="";
                 console.log("Invalid Data");
+                loanPurchaseDetailsUnderQuickQuote.isRate = false;
             }
            
             paintFixYourRatePageCEPUnderQuickQuote(ob, teaserRateData,parentContainer,hideCreateAccountBtn);
+            loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote = teaserRateData;
             clearOverlayMessage();
        
               
@@ -999,6 +1381,12 @@ function processCommonParameters(){
 	buyHomeRefinanceRate.homeWorthToday = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
 	buyHomeRefinanceRate.currentMortgageBalance = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
+	loanPurchaseDetailsUnderQuickQuote.firstName = $('input[id="firstName"]').val();
+	loanPurchaseDetailsUnderQuickQuote.lastName = $('input[id="lastName"]').val();
+	loanPurchaseDetailsUnderQuickQuote.emailId = $('input[id="emailID"]').val();
+	var phoneNumber = $('input[id="primaryPhoneID"]').val();
+	loanPurchaseDetailsUnderQuickQuote.phoneNo = phoneNumber.replace(/[^0-9]/g, '');
+	
 }
 
 function processBuyHomeUnderQuickQuote(){
@@ -1011,6 +1399,8 @@ function processBuyHomeUnderQuickQuote(){
 	}	
 	processCommonParameters();
 	paintBuyHomeTeaserRateUnderQuickQuote("",buyHomeRefinanceRate);
+	
+
 
 }
 
@@ -1018,19 +1408,21 @@ function processRateAndTermUnderQuickQuote(){
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
 	
-	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
-		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
-		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+	if($('div[id="impound"]').attr('value') == 'Yes'){
+		if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+			buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+		//	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+	
+		//	buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/getFloatValue(buyHomeRefinanceRate.propTaxMonthlyOryearly);
+			
+			
 		}
-		
-	}
-	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
-		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
-		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+			buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+		//	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+			
+		//	buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/getFloatValue(buyHomeRefinanceRate.propInsMonthlyOryearly);
+			
 		}
 	}
 	processCommonParameters();
@@ -1042,19 +1434,21 @@ function processCashOutUnderQuickQuote(){
 	buyHomeRefinanceRate.cashTakeOut = parseFloat(removedDoller(removedComma($('input[id="cashTakeOut"]').val())));
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
 	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
-	if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
-		buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
-		buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propTaxMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/12;
+	if($('div[id="impound"]').attr('value') == 'Yes'){
+		if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
+			buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 
+		//	buyHomeRefinanceRate.propTaxMonthlyOryearly = $('input[id="propTaxMonthlyOryearly"]').val();
+			
+			//buyHomeRefinanceRate.propertyTaxesPaid = getFloatValue(buyHomeRefinanceRate.propertyTaxesPaid)/getFloatValue(buyHomeRefinanceRate.propTaxMonthlyOryearly);
+			
+			
 		}
-		
-	}
-	if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
-		buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
-		buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
-		if(buyHomeRefinanceRate.propInsMonthlyOryearly == "Year"){
-			buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/12;
+		if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
+			buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));
+		//	buyHomeRefinanceRate.propInsMonthlyOryearly = $('input[id="propInsMonthlyOryearly"]').val();
+			
+			//buyHomeRefinanceRate.annualHomeownersInsurance = getFloatValue(buyHomeRefinanceRate.annualHomeownersInsurance)/getFloatValue(buyHomeRefinanceRate.propInsMonthlyOryearly);
+			
 		}
 	}
 	processCommonParameters();
@@ -1104,7 +1498,7 @@ function paintDataSection(option,isDefault){
 		if(!status){
 			return false;
 		}
-		
+		removeToastMessage();
 		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
 		buyHomeRefinanceRate.loanType = loanType;
 
@@ -1176,7 +1570,7 @@ function paintDataSection(option,isDefault){
 					"id" : option[i].id,
 					"name" : option[i].id
 				}).on("load focus", function(e){
-					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "firstName" && $(this).attr("name") != "lastName"){
+					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "firstName" && $(this).attr("name") != "lastName" && $(this).attr("name") != "primaryPhoneID" && $(this).attr("name") != "emailID"){
 						$(this).maskMoney({
 			    			thousands:',',
 			    			decimal:'.',
@@ -1351,15 +1745,18 @@ function appendMonthYearQuestion(option){
 		//restrictChar(contxt.name);
 	});
 	
+	var rowRHSLabel = $('<div>').attr({
+		"class" : "quick-quote-rhs-label float-left",
+		"maxlength": '2'
+	}).html("Impound<br />months");
 	var rowRHS = $('<input>').attr({
 		"class" : "quick-quote-row-RHS month-adj float-left",
-		"id" : "impound_month",
-		"name" :"impound_month",
-		"value" : "",
-		"placeholder" : "months"
+		"id" : option.monthYearId,
+		"name" :option.monthYearId,
+		"value" : ""
 	});
 	
-	return mainDiv.append(rowLHS).append(rowRHS);
+	return mainDiv.append(rowLHS).append(rowRHSLabel).append(rowRHS);
 	/*var text = $('<div>').attr({
 		"class" : "quick-quote-text float-left"
 	}).html("per");
@@ -1414,11 +1811,24 @@ function appendDownPaymentFeild(option){
 		"class" : "quick-quote-row-RHS quick-quote-dwn-payment float-left",
 		"id" : option.id,
 		"name" : option.id
-	});
+	}).on("load focus", function(e){
+	
+			$(this).maskMoney({
+    			thousands:',',
+    			decimal:'.',
+    			allowZero:true,
+    			prefix: '$',
+    		    precision:0,
+    		    allowNegative:false
+    		});
+    		/* this is the piece of code to retrict user put special charector*/
+    		//restrictChar($(this).attr("name"));
+		
+		
+	});;
 	
 	var rowRHS = $('<input>').attr({
 		"class" : "quick-quote-dwn-percentage float-left",
-		"name": option.id
 	}).attr('maxlength','2');
 	rowLHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"val":true,"contxt":option},percentageUpdateEventListener)
 	rowRHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"percentage":true,"contxt":option},
@@ -1443,4 +1853,9 @@ $(document).click(function(){
 		$('#property_type_id').toggle();
 	}
 	
+});
+
+
+$("body").on('click',"#quick-quote-generate-pdf",function(e){
+	sendPurchasePdfUnderQuickQuote();
 });

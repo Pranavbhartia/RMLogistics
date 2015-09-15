@@ -29,6 +29,11 @@ public class LqbTeaserRateVo {
 	// added to send mail with quotes
 	private String yearData;
 	
+	private String TotEstLenCost;
+	private String totEstThdPtyCst;
+	private String totEstimatedClosingCost;
+	private String totEstResDepWthLen;
+	
 	
 	
 	
@@ -172,6 +177,30 @@ public class LqbTeaserRateVo {
 	public void setRecordingFees1202(String recordingFees1202) {
 	    this.recordingFees1202 = recordingFees1202;
     }
+	public String getTotEstLenCost() {
+		return TotEstLenCost;
+	}
+	public void setTotEstLenCost(String totEstLenCost) {
+		TotEstLenCost = totEstLenCost;
+	}
+	public String getTotEstResDepWthLen() {
+		return totEstResDepWthLen;
+	}
+	public void setTotEstResDepWthLen(String totEstResDepWthLen) {
+		this.totEstResDepWthLen = totEstResDepWthLen;
+	}
+	public String getTotEstThdPtyCst() {
+		return totEstThdPtyCst;
+	}
+	public void setTotEstThdPtyCst(String totEstThdPtyCst) {
+		this.totEstThdPtyCst = totEstThdPtyCst;
+	}
+	public String getTotEstimatedClosingCost() {
+		return totEstimatedClosingCost;
+	}
+	public void setTotEstimatedClosingCost(String totEstimatedClosingCost) {
+		this.totEstimatedClosingCost = totEstimatedClosingCost;
+	}
 	
 	
 	

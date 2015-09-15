@@ -810,6 +810,9 @@
 	.rp-agent-dashboard{
 		width:939px !important;
 	}
+	.quick-quote-agent-dashboard {
+		width:1000px !important;
+	}
     .cust-app-rp{
         width: 534px !important;
     }
