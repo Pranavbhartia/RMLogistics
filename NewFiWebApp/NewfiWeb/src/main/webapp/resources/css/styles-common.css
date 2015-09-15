@@ -764,4 +764,52 @@ a.cus-eng-succ-mess-email {
 .quick-quote-rhs-label{
 	font-size: 14px;
     padding: 0 5px;
-}    
+}   
+.append-leads-icon {
+    background: url(../images/potential_customer.png) no-repeat 5px center;
+    background-size: 15%;
+}
+
+.lp-item-active .append-leads-icon {
+	  background: url(../images/potential customer_White.png) no-repeat 5px center;
+	  background-size: 15%;
+} 
+.sort-list-dsc {
+      background: url(../images/dd_arr_down.png) no-repeat 65px;
+      cursor: pointer;
+}
+
+.loan-status-sort-list-dsc {
+      background: url(../images/dd_arr_down.png) no-repeat 80px;
+      cursor: pointer;
+}
+
+.opened-sort-list-dsc {
+      background: url(../images/dd_arr_down.png) no-repeat 55px;
+      cursor: pointer;
+}
+
+.last-action-sort-list-dsc {
+      background: url(../images/dd_arr_down.png) no-repeat 75px;
+      cursor: pointer;
+}
+
+.sort-list-asc {
+      background: url(../images/upwrd.png) no-repeat 65px;
+      cursor: pointer;
+}
+
+.loan-status-sort-list-asc {
+      background: url(../images/upwrd.png) no-repeat 80px;
+      cursor: pointer;
+}
+
+.opened-sort-list-asc {
+      background: url(../images/upwrd.png) no-repeat 55px;
+      cursor: pointer;
+}
+
+.last-action-sort-list-asc {
+      background: url(../images/upwrd.png) no-repeat 75px;
+      cursor: pointer;
+}

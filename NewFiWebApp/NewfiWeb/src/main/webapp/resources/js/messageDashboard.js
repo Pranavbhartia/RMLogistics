@@ -757,7 +757,7 @@ $(document).on(
 		});
 
 
-function formateDateAndTime(dateTime){
+function formateDateAndTime(dateTime,isOnAgentDash){
 	var createdDateStr="";
 	var month = "";
 	var date = "";
@@ -765,66 +765,81 @@ function formateDateAndTime(dateTime){
 	var hours = "";
 	var min = "";
 	var localDate = "";
+	var time = "";
 	var browser=navigator.userAgent.search("Firefox");
 	var safari=navigator.userAgent.indexOf("Safari");
 	if(browser > -1||safari > -1){
 		createdDateStr=dateTime;
-		var complete_date=createdDateStr.slice(0,10);
-		var time=createdDateStr.slice(11);
-		complete_date=new Date(complete_date);
-		month =  complete_date.getMonth()+1;
-		date = complete_date.getDate();
-		year = complete_date.getFullYear();
-		if(complete_date.getMonth()<10){
-			month='0'+month;
+		if(createdDateStr != null){
+			var complete_date=createdDateStr.slice(0,11);
+		    time=createdDateStr.slice(11);
+			complete_date=new Date(complete_date);
+			month =  complete_date.getMonth()+1;
+			date = complete_date.getDate();
+			year = complete_date.getFullYear();
+			if(complete_date.getMonth()<10){
+				month='0'+month;
+			}
+			if(complete_date.getDate()<10){
+				date='0'+date;
+			}
+			localDate=month+'-'+date+'-'+year;
+			localDate=formatYearInDate(localDate);
+			time=time.split(':');
+			hours = time[0];
+			min = time[1];
+			
+			if(hours > 12){
+				time="PM";
+			}else{
+				time="AM";
+			}
 		}
-		if(complete_date.getDate()<10){
-			date='0'+date;
-		}
-		localDate=month+'-'+date+'-'+year;
-		localDate=formatYearInDate(localDate);
-		time=time.split(':');
-		hours = time[0];
-		min = time[1];
-		
-		if(hours > 12){
-			time="PM";
-		}else{
-			time="AM";
-		}
+	
 		
 	}else {
-		createdDateStr = new Date(dateTime);
-		 month=createdDateStr.getMonth()+1;
-		 date=createdDateStr.getDate();
-		 year=createdDateStr.getFullYear();
-		 hours=createdDateStr.getHours();
-		 min=createdDateStr.getMinutes();
-		if(createdDateStr.getMonth()<10){
-			month='0'+month;
+		if(dateTime != null){
+			createdDateStr = new Date(dateTime);
+			 month=createdDateStr.getMonth()+1;
+			 date=createdDateStr.getDate();
+			 year=createdDateStr.getFullYear();
+			 hours=createdDateStr.getHours();
+			 min=createdDateStr.getMinutes();
+			if(createdDateStr.getMonth()<10){
+				month='0'+month;
+			}
+			if(createdDateStr.getDate()<10){
+				date='0'+date;
+			}
+			if(createdDateStr.getHours()<10){
+				hours='0'+hours;
+			}
+			if(createdDateStr.getMinutes()<10){
+				min='0'+min;
+			}
+			 localDate=month+'-'+date+'-'+year;
+			 localDate=formatYearInDate(localDate);
+			 var time="";
+			if(hours > 12){
+				time="PM";
+			}else{
+				time="AM";
+			}
 		}
-		if(createdDateStr.getDate()<10){
-			date='0'+date;
-		}
-		if(createdDateStr.getHours()<10){
-			hours='0'+hours;
-		}
-		if(createdDateStr.getMinutes()<10){
-			min='0'+min;
-		}
-		 localDate=month+'-'+date+'-'+year;
-		 localDate=formatYearInDate(localDate);
-		 var time="";
-		if(hours > 12){
-			time="PM";
-		}else{
-			time="AM";
-		}
+	
 		
 	}
 
-	
-	createdDateStr=localDate+" "+hours+':'+min+' '+time;
+	if(isOnAgentDash){
+		if(localDate == ""){
+			createdDateStr = "-";
+		}else {
+			createdDateStr=localDate+"<br /> "+hours+':'+min+' '+time;
+		}
+		
+	}else {
+		createdDateStr=localDate+" "+hours+':'+min+' '+time;
+	}
 	
 	return createdDateStr;
 }

@@ -23,6 +23,10 @@ function turnAroundTime() {
 	});
 
 	context.createTitleTurnAround = function(MileStoneTurnAroundTimeVO) {
+
+		if($('#turn_around_times_container').length > 0){
+			return;
+		}
 		var tunrarounfDashboardMainContainer = $('<div>').attr({
 			"id" : "turn_around_times_container",
 			"class" : "rp-agent-dashboard float-left"

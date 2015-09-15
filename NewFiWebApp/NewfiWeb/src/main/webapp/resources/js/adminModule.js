@@ -132,13 +132,13 @@ function appendSettingsDropDown(){
 	}   
 	 else{	 
 
-	   		var UserManagementRow=paintSettingsDropDown("user-management","User Mangement","userManagement()","#");
+	   		var UserManagementRow=paintSettingsDropDown("user-management","User Mangement","userManagement()","#user_mgmt");
 	   		container.append(UserManagementRow);
 	   		
-	   		var turnAroundTimeRow=paintSettingsDropDown("loan-detail","Turn Around Details","turnAroundTime()","#turn_around_times_container");
+	   		var turnAroundTimeRow=paintSettingsDropDown("loan-detail","Turn Around Details","turnAroundTime()","#turn_around_templates");
 	   		container.append(turnAroundTimeRow);
 	   		
-	   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#");
+	   		var templatesRow=paintSettingsDropDown("templates","Templates","populateTemplate()","#templates");
 	   		container.append(templatesRow);
 	   		
 	   		/*var securitySettingsRow=paintSettingsDropDown("security-settings","Security Settings","","");
@@ -238,6 +238,10 @@ function paintAdminUserPage(data) {
 }
 
 function appendAdminAddUserWrapper(parentElement,clearParent,data) {
+	
+	if($('.admin-add-team-mem-wrapper').length > 0){
+		$('.admin-add-team-mem-wrapper').remove();
+	}
 	var wrapper = $('<div>').attr({
 		"class" : "admin-add-team-mem-wrapper"
 	}).data("additionalData",data);

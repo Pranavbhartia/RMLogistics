@@ -34,7 +34,7 @@
 		<!-- jira- 858-->
 		<c:choose>
 			<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
-				<div class="lp-item-quick-quote" id="lp-quick-quote" onclick="loadQuickQoutePage()">Quick Quote</div>
+				<div class="lp-item lp-item-quick-quote" id="lp-quick-quote" onclick="loadQuickQoutePage()">Quick Quote</div>
 							<!-- <div class="lp-item-quick-quote" id="lp-quick-quote" onclick="">Quick Quote</div> -->
 			</c:when>
 		</c:choose>

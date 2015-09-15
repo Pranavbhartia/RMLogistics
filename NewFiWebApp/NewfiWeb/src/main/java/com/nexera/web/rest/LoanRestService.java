@@ -24,6 +24,7 @@ import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.BaseRestException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
+import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LeadsDashBoardVO;
@@ -33,6 +34,7 @@ import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
@@ -592,6 +594,58 @@ public class LoanRestService {
 
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess("Success");
 		return responseVO;
+	}
+	
+	@RequestMapping(value = "/sort", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO getSortedLoanListForMyLoans(String sortingDetails, HttpServletRequest request,
+	        HttpServletResponse response) {
+
+		Gson gson = new Gson();
+	
+		DashboardCriteriaVO listVO = gson.fromJson(sortingDetails,
+					DashboardCriteriaVO.class);
+		CommonResponseVO responseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		LoanDashboardVO loanDashboardVO;
+		try{
+			 loanDashboardVO = loanService.getLoanListSortedForMyloans(listVO);
+			 responseVO = new CommonResponseVO();
+			 responseVO.setResultObject(loanDashboardVO);
+
+		}catch(Exception e){
+			LOG.error("Sorting by column:"+listVO.getColumnName()+"threw an generic exception hence returning loan list...........");
+			error.setMessage("Error while Sorting.Please try again later");
+			responseVO.setError(error);
+		}
+				
+		return responseVO;
+
+	}
+	
+	@RequestMapping(value = "/sort/archive", method = RequestMethod.POST)
+	public @ResponseBody CommonResponseVO getSortedLoanListForArchivedLoans(String sortingDetails, HttpServletRequest request,
+	        HttpServletResponse response) {
+
+		Gson gson = new Gson();
+	
+		DashboardCriteriaVO listVO = gson.fromJson(sortingDetails,
+					DashboardCriteriaVO.class);
+		CommonResponseVO responseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		LoanDashboardVO loanDashboardVO;
+		try{
+			 loanDashboardVO = loanService.getLoanListSortedForArchivedLoans(listVO);
+			 responseVO = new CommonResponseVO();
+			 responseVO.setResultObject(loanDashboardVO);
+
+		}catch(Exception e){
+			LOG.error("Sorting archived loans by column:"+listVO.getColumnName()+"threw an generic exception hence returning loan list...........");
+			error.setMessage("Error while Sorting.Please try again later");
+			responseVO.setError(error);
+		}
+				
+		return responseVO;
+
 	}
 
 }

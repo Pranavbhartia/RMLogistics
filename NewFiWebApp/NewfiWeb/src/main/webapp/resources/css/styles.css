@@ -1729,7 +1729,7 @@ input[type="button"]:focus, button:focus {
 .leads-container-tc1 {
 	width: 225px;
 }
-.sm-leads-container-tc1 {
+.sm-leads-container-tc1,.sm-leads-container-tr1 {
 	width: 185px;
 }
 .leads-container-tc2 {
@@ -1739,7 +1739,7 @@ input[type="button"]:focus, button:focus {
 .leads-container-tc3 {
 	width: 135px;
 }
-.sm-leads-container-tc3 {
+.sm-leads-container-tc3,.sm-leads-container-tr3 {
 	width: 120px;
 }
 .leads-container-tc4 {

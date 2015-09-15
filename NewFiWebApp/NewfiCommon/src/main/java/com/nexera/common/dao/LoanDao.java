@@ -20,6 +20,7 @@ import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.QuoteDetailsVO;
+import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.UserVO;
 
 public interface LoanDao extends GenericDao {
@@ -161,4 +162,5 @@ public interface LoanDao extends GenericDao {
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel);
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
 
+	public List<Loan> getSortedLoanList(DashboardCriteriaVO list);
 }

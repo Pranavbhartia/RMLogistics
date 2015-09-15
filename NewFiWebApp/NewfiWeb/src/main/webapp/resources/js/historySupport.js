@@ -14,6 +14,14 @@ function globalBinder() {
 		removeToastMessage();
 		return true;
 	});
+	$(document).on("click", ".admin-module-row", function() {
+		// TODO: Back button needs to be implemented
+		
+		console.log("Prim nav clicked : " + $.data(this, "enum").pnName);
+		saveState($.data(this, "enum").pnName, null, null);
+		removeToastMessage();
+		return true;
+	});
 	removeToastMessage();
 }
 
@@ -109,12 +117,54 @@ function bindDataToPN() {
 
 			});
 			break;
+		case "lp-my-lead":
+			$.data(this, "enum", {
+				pnName : AgentViewPNEnum.MY_LEADS
+
+			});
+			break;
+		case "lp-quick-quote":
+			$.data(this, "enum", {
+				pnName : AgentViewPNEnum.QUICK_QUOTE
+
+			});
+			break;
 		default:
 			break;
 		}
 	});
 
+	$('.admin-module-row').each(function() {
+		var id = $(this).attr('id');
+		switch (id) {
+		case "user-management":
+			$.data(this, "enum", {
+				pnName : AdminModulePNEnum.USER_MANAGEMENT
+
+			});
+			break;
+		case "loan-detail":
+			$.data(this, "enum", {
+				pnName : AdminModulePNEnum.TURN_AROUND_TEMPLATES
+
+			});
+			break;
+		case "templates":
+			$.data(this, "enum", {
+				pnName : AdminModulePNEnum.TEMPLATES
+
+			});
+			break;
+		default:
+			break;
+		}
+	});
+
+	
 }
+
+
+
 function bindDataToSN() {
 
 	// Customer view
@@ -369,6 +419,20 @@ function retrieveState() {
 		console.log('Alerts');
 		break;
 
+	case AdminModulePNEnum['USER_MANAGEMENT']:
+		console.log('User Management');
+	userManagement();
+		break;
+		
+	case AdminModulePNEnum['TURN_AROUND_TEMPLATES']:
+		console.log('Turn Around Templates');
+	turnAroundTime();
+		break;
+		
+	case AdminModulePNEnum['TEMPLATES']:
+		console.log('Templates');
+	populateTemplate();
+		break;
 	default:
 		break;
 	}

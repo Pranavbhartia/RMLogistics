@@ -810,6 +810,9 @@
 	.rp-agent-dashboard{
 		width:939px !important;
 	}
+	.sm-dashboard {
+		width:85% !important;
+	}
 	.quick-quote-agent-dashboard {
 		width:1000px !important;
 	}
