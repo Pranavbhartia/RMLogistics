@@ -12,7 +12,6 @@ var isSalesManager="";
 var isLoanManager="";
 var isRealtor="";
 var isArchivedLoans = "";
-var isLeadLoans = "";
 var sortByName = false;
 var sortByLoanStatus = false;
 var sortByOpened = false;
@@ -183,7 +182,6 @@ function getDashboardPanelMyLeads(loanType){
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLeads/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
-				isLeadLoans = true;
 				newfiObject.fetchLock=undefined;
 				isArchivedLoans = false;
 				if(startLimit==0){
@@ -191,7 +189,7 @@ function getDashboardPanelMyLeads(loanType){
 				}else{
 					if(response.resultObject&&response.resultObject.quoteDetails){
 						customers=response.resultObject.quoteDetails;
-						appendCustomers("leads-container", customers,true);
+						appendLeads("leads-container", customers);
 						
 					}
 				}	
@@ -264,7 +262,6 @@ function getDashboardRightPanelForMyLoans(loanType) {
 				newfiObject.fetchLock=undefined;
 				if(startLimit==0){
 					isArchivedLoans = false;
-					isLeadLoans = false;
 					paintAgentDashboardRightPanel(response);
 				}else{
 					if(response.resultObject&&response.resultObject.customers){
@@ -281,7 +278,6 @@ function getDashboardRightPanelForMyLoans(loanType) {
 function getDashboardRightPanelForArchivesLoans(loanType) {
 	var userID = newfiObject.user.id;
 	isArchivedLoans = true;
-	isLeadLoans = false;
 	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET",
 			"json", {}, paintAgentDashboardRightPanel);
 }
@@ -300,8 +296,6 @@ function paintAgentDashboardRightPanel(data) {
 		//NEXNF-877
 		if(isArchivedLoans){
 			leftCon.html("Archives");			
-		} else if(isLeadLoans){
-			leftCon.html("Leads");
 		}else {
 			leftCon.html("Pipeline");
 		}
@@ -530,37 +524,144 @@ function checkCreditScore(creditScore){
     }
 	return creditScore;
 }
-
-function appendCustomers(elementId, customers,skipDataClearing) {
-	var list = customers;
-	if(newfiObject.user.userRole.id==2){
-		isRealtor=true;
-	}else if(newfiObject.user.userRole.roleCd=="INTERNAL"){
-		//jira-811,810
-		if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==2){
-			isSalesManager=true;
-		}else if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==1){
-			isLoanManager=true;
-		}
+function appendLeads(elementId, customers){
 	
-	}else {
-		isSalesManager=true;
-	}
-		if(!isLeadLoans){
-			if(!skipDataClearing){
-				$('#' + elementId).html("");
-				
-				appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanManager);
-			}
-			$('#agent-dashboard-container').addClass('sm-dashboard');
-		}else{
+			var list = customers;	
 			appendTableHeader(elementId);
+			for (var i = 0; i < list.length; i++) {
+			var customer = list[i];
+	
+			var row = $('<div>').attr({
+				"class" : "leads-container-tr leads-container-row clearfix"
+			});
+	
+			
+			if (i % 2 == 0) {
+				row.addClass('leads-container-row-odd');
+			}
+	
+			if (i == list.length - 1) {
+					row.addClass('leads-container-row-last');
+			}
+	
+			
+			var col1 = $('<div>').attr({
+				"class" : "leads-container-tc1 float-left clearfix",
+					"id" : "leads-container-tc1-id"
+				});
+				
+			$(col1).addClass('sm-leads-container-tr1');
+
+			
+			 var profImage = $('<div>').attr({
+					
+					
+				});
+			 var cusName = $('<div>').attr({
+					"class" : "float-left",
+					"loanid" : customer.loanID,
+					"userid" : customer.userID
+				}).html(customer.prospectFirstName+" "+customer.prospectLastName);
+			}
+	
+			col1.append(profImage).append(cusName);
+			var phone_num = "NA";
+			if (customer.phoneNo != null && customer.phoneNo.trim() != "") {
+				phone_num = formatPhoneNumberToUsFormat(customer.phoneNo);
+			}else if(customer.phoneNo == ""){
+				phone_num = "-";
+			}
+
+			var col2="";
+			if(customer.emailId == ""){
+				customer.emailId = "-";
+			}
+
+				//write a rest call					
+				col2 = $('<div>').attr({
+					"class" : "leads-container-tc2 leads-row-2 float-left"
+				}).html(customer.emailId);
+			
+
+			var col3 = $('<div>').attr({
+				"class" : "leads-container-tc3 leads-row-3 float-left"
+			}).html(phone_num);
+
+			var	createdDateStr = new Date(
+					customer.createdDate);
+			var date = createdDateStr.getDate();
+			var month = createdDateStr.getMonth();
+			var year =  createdDateStr.getFullYear();
+			month = month+1;
+			year = year.toString().slice(2);
+			if(date < 10){
+				date = "0"+date;
+			}
+			if(month < 10){
+				month = "0"+month;
+			}
+			var hour = createdDateStr.getHours();
+			var min = createdDateStr.getMinutes();
+			var time;
+			if(hour < 10){
+				hour = "0"+hour;
+			}
+			if(min < 10){
+				min = "0"+min;
+			}
+			if(hour < 12){
+				time = hour+":"+min+" "+"AM";
+			}else{
+				time = hour+":"+min+" "+"PM";
+			}
+			createdDateStr=date+"-"+month+"-"+year+"<br />"+time;
+			if(createdDateStr==""){
+				createdDateStr="-";
+			}
+			var col4 = $('<div>').attr({
+				"class" : "leads-container-tc4 leads-row-4 float-left"
+			}).html(createdDateStr);
+			
+			var col5 = $('<div>').attr({
+				"class" : "leads-container-tc5 leads-row-5 float-left",
+				"name" : customer.pdfUrl
+			}).bind("click",function(){
+				window.open($(this).attr("name"));
+			
+			});
+			row.append(col1).append(col2).append(col3).append(col4).append(col5);
+			$('#' + elementId).append(row);
+			updateHandler.initiateRequest();
+			
+}
+function appendCustomers(elementId, customers,skipDataClearing) {
+	
+		var list = customers;
+		if(newfiObject.user.userRole.id==2){
+			isRealtor=true;
+		}else if(newfiObject.user.userRole.roleCd=="INTERNAL"){
+			//jira-811,810
+			if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==2){
+				isSalesManager=true;
+			}else if(newfiObject.user.internalUserDetail.internalUserRoleMasterVO.id==1){
+				isLoanManager=true;
+			}
+		
+		}else {
+			isSalesManager=true;
 		}
+		if(!skipDataClearing){
+			$('#' + elementId).html("");
+			
+			appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanManager);
+		}
+		$('#agent-dashboard-container').addClass('sm-dashboard');
+	
+
 		for (var i = 0; i < list.length; i++) {
 		var customer = list[i];
-		if(!isLeadLoans){
-			customer.credit_score = checkCreditScore(customer.credit_score);
-		}
+		customer.credit_score = checkCreditScore(customer.credit_score);
+
 		var row = $('<div>').attr({
 			"class" : "leads-container-tr leads-container-row clearfix"
 		});
@@ -592,18 +693,18 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			});
 			
 			// code will execute if user is logged in
-			if(!isLeadLoans){
-				var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
-				loanNotificationCntxt.customerName = customer.name;
-				addContext(customer.loanID + "-notification", loanNotificationCntxt)
-			}
+
+			var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
+			loanNotificationCntxt.customerName = customer.name;
+			addContext(customer.loanID + "-notification", loanNotificationCntxt)
+
 			
 			var cusName = "";
-			 var profImage = $('<div>').attr({
+			var profImage = $('<div>').attr({
 					
 					
-				});
-			if(!isLeadLoans){
+			});
+
 				 cusName = $('<div>').attr({
 					"class" : "cus-name float-left",
 					"loanid" : customer.loanID,
@@ -625,26 +726,19 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}).html(customer.name);
 				
 					// TODO customer prof default pic to be set correctly
-					if (customer.prof_image == undefined || customer.prof_image == ""
-						|| customer.prof_image == null) {
-						profImage.addClass("lp-initial-pic float-left");				
-						profImage.text(getInitialsFromFullName(customer.name));		
-					}
-					else
-					{
-						profImage.addClass("cus-img-icn float-left");
-						profImage.css("background-image", "url('" + customer.prof_image + "')");
-						
-					}
-			}else{
-				cusName = $('<div>').attr({
-					"class" : "float-left",
-					"loanid" : customer.loanID,
-					"userid" : customer.userID
-				}).html(customer.prospectFirstName+" "+customer.prospectLastName);
-			}
-	
-					col1.append(profImage).append(cusName);
+				if (customer.prof_image == undefined || customer.prof_image == ""
+					|| customer.prof_image == null) {
+					profImage.addClass("lp-initial-pic float-left");				
+					profImage.text(getInitialsFromFullName(customer.name));		
+				}
+				else
+				{
+					profImage.addClass("cus-img-icn float-left");
+					profImage.css("background-image", "url('" + customer.prof_image + "')");
+					
+				}	
+
+				col1.append(profImage).append(cusName);
 		//jira-661
 		if(isRealtor){
           var textCol2="";
@@ -718,76 +812,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			
 			$('#' + elementId).append(row);
 			
-		}else if(isLeadLoans){
-				var phone_num = "NA";
-				if (customer.phoneNo != null && customer.phoneNo.trim() != "") {
-					phone_num = formatPhoneNumberToUsFormat(customer.phoneNo);
-				}else if(customer.phoneNo == ""){
-					phone_num = "-";
-				}
-
-				var col2="";
-				if(customer.emailId == ""){
-					customer.emailId = "-";
-				}
-
-					//write a rest call					
-					col2 = $('<div>').attr({
-						"class" : "leads-container-tc2 leads-row-2 float-left"
-					}).html(customer.emailId);
-				
-	
-				var col3 = $('<div>').attr({
-					"class" : "leads-container-tc3 leads-row-3 float-left"
-				}).html(phone_num);
-	
-				var	createdDateStr = new Date(
-						customer.createdDate);
-				var date = createdDateStr.getDate();
-				var month = createdDateStr.getMonth();
-				var year =  createdDateStr.getFullYear();
-				month = month+1;
-				year = year.toString().slice(2);
-				if(date < 10){
-					date = "0"+date;
-				}
-				if(month < 10){
-					month = "0"+month;
-				}
-				var hour = createdDateStr.getHours();
-				var min = createdDateStr.getMinutes();
-				var time;
-				if(hour < 10){
-					hour = "0"+hour;
-				}
-				if(min < 10){
-					min = "0"+min;
-				}
-				if(hour < 12){
-					time = hour+":"+min+" "+"AM";
-				}else{
-					time = hour+":"+min+" "+"PM";
-				}
-				createdDateStr=date+"-"+month+"-"+year+"<br />"+time;
-				if(createdDateStr==""){
-					createdDateStr="-";
-				}
-				var col4 = $('<div>').attr({
-					"class" : "leads-container-tc4 leads-row-4 float-left"
-				}).html(createdDateStr);
-				
-				var col5 = $('<div>').attr({
-					"class" : "leads-container-tc5 leads-row-5 float-left",
-					"name" : customer.pdfUrl
-				}).bind("click",function(){
-					window.open($(this).attr("name"));
-				
-				});
-				row.append(col1).append(col2).append(col3).append(col4).append(col5);
-				$('#' + elementId).append(row);
-						
-			}
-			else{	
+		}else{	
 				var phone_num = "NA";
 				if (customer.phone_no != null && customer.phone_no.trim() != "") {
 					phone_num = formatPhoneNumberToUsFormat(customer.phone_no);
@@ -1034,33 +1059,7 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 
 	tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
 			.append(thCol4).append(thCol5).append(thCol6).append(thCol7).append(thCol8);
-	}else if(isLeads){
-		
-		var thCol1 = $('<div>').attr({
-			"class" : "leads-container-tc1 float-left"
-		}).html("Customer");
-		
-		var thCol2;
-	    thCol2 = $('<div>').attr({
-	    	"class" : "leads-container-tc2 float-left"
-	    }).html("Email");
-	    
-		var thCol3 = $('<div>').attr({
-			"class" : "leads-container-tc3 float-left"
-		}).html("Phone");
-
-		var thCol4="";
-			 thCol4 = $('<div>').attr({
-				"class" : "leads-container-tc4 float-left"
-			}).html("Created On");
-		
-		var thCol5 = $('<div>').attr({
-			"class" : "leads-container-tc5 float-left"
-		}).html("Pdf of Quote");
-
-		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
-				.append(thCol4).append(thCol5);
-		}
+	}
 
 	$('#' + elementId).append(tableHeader);
 }
@@ -4741,7 +4740,6 @@ function getLoanListSortedForMyLoans(columnName,orderType){
         		newfiObject.fetchLock=undefined;
     			if(sortLimit==0){
     				isArchivedLoans = false;
-    				isLeadLoans = false;
     				paintAgentDashboardRightPanel(response);
     			}else{
     				if(response.resultObject&&response.resultObject.customers){
@@ -4812,7 +4810,6 @@ function getLoanListSortedForArchives(columnName,orderType){
         		newfiObject.fetchLock=undefined;
     			if(sortLimit==0){
     				isArchivedLoans = true;
-    				isLeadLoans = false;
     				paintAgentDashboardRightPanel(response);
     			}else{
     				if(response.resultObject&&response.resultObject.customers){

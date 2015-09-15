@@ -6,6 +6,13 @@ public class DashboardCriteriaVO {
 	private String  orderByType;
 	private String  columnName;
 	private Integer startLimit;
+	private int[] loanProgessStatus;
+	public int[] getLoanProgessStatus() {
+		return loanProgessStatus;
+	}
+	public void setLoanProgessStatus(int[] loanProgessStatus) {
+		this.loanProgessStatus = loanProgessStatus;
+	}
 	private Integer endLimit;
 	
 	public Integer getStartLimit() {

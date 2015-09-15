@@ -1193,6 +1193,9 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		try{
 			Session session = sessionFactory.getCurrentSession();
 			List<Loan> loanListForUser = new ArrayList<Loan>();
+			List<LoanMilestone> loanList = new ArrayList<LoanMilestone>();
+			
+	
 			Integer[] progressStatus = new Integer[list.getLoanProgessStatus().length];
 			for (int i = 0; i < list.getLoanProgessStatus().length; i++) {
 				progressStatus[i] = Integer.valueOf(list.getLoanProgessStatus()[i]);
@@ -1238,10 +1241,11 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 				}
 				
 			}else if(list.getColumnName().equals( "loanStatus")){
+				criteria.createAlias("loan.loanMilestones", "milestones");	
 				if(list.getOrderByType().equals("ASC")){
-					criteria.addOrder(Order.asc("loanProgressStatus.loanProgressStatus"));
+					criteria.addOrder(Order.asc("milestones.comments"));
 				}else{
-					criteria.addOrder(Order.desc("loanProgressStatus.loanProgressStatus"));
+					criteria.addOrder(Order.desc("milestones.comments"));
 				}
 			}else if(list.getColumnName().equals("opened")){
 				if(list.getOrderByType().equals("ASC")){
@@ -1253,16 +1257,44 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 			
 			List<Integer> loanTeamList = criteria.list();
 
+
 			if (loanTeamList != null) {
 				for (Integer loanTeam : loanTeamList) {
-					Loan loan = (Loan) session.get(Loan.class, loanTeam);	
+					Loan loan = (Loan) session.get(Loan.class, loanTeam);
+			
 						loanListForUser.add(loan);
 					}
 				}
+			
 			for (Loan loan : loanListForUser) {
 				Hibernate.isInitialized(loan.getLoanProgressStatus());
 			}
-
+			
+			if(list.getColumnName().equals( "loanStatus")){
+				Criteria criteria1 = session.createCriteria(LoanMilestone.class);
+				criteria1.createAlias("loan", "loan");	
+				criteria1.add(Restrictions.in("loan",loanListForUser));
+			    criteria1.add(Restrictions.ne("comments", "DELETE"));
+			    criteria1.addOrder(Order.desc("statusInsertTime"));
+			    criteria1.addOrder(Order.desc("statusUpdateTime"));
+			    criteria1.addOrder(Order.desc("order"));
+				if(list.getOrderByType().equals("ASC")){
+					criteria1.addOrder(Order.asc("comments"));
+					
+				}else {
+					criteria1.addOrder(Order.desc("comments"));
+				}
+				
+				/*loanList = criteria1.list();
+				List<Loan> loans = new ArrayList<Loan>();
+				if (loanList != null) {
+					for (LoanMilestone loanMilestone : loanList) {
+							Loan loan = (Loan) session.get(Loan.class, loanMilestone.getLoan().getId());
+							loans.add(loan);
+						}
+					return loans;
+					}*/
+			}
 		    return loanListForUser;
 		    
 		}catch(HibernateException exception){
