@@ -502,7 +502,7 @@ function getNotificationContext(loanId, userId) {
 						} else {
 							var notificationList = response.resultObject;
 							ob.loanNotificationList = notificationList;
-							ob.headerText = "upcoming events";
+							ob.headerText = "Notifications";
 
 							if (callback) {
 								callback(ob);
