@@ -24,10 +24,10 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
 	<flow name="NexeraLoanMuleFlowFlow">
-		<https:inbound-endpoint address="https://0.0.0.0:8282/loanCall"
-			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
+		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall"
+			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnectors"
 			responseTimeout="120000">
-		</https:inbound-endpoint>
+		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
 		</component>
