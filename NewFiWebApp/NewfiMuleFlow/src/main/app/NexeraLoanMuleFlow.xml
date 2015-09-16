@@ -17,17 +17,17 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
 
-	<https:connector name="NoSessionConnector" doc:name="HTTP-HTTPS">
+	<https:connector name="NoSessionConnector" doc:name="HTTP\HTTPS">
 		<service-overrides sessionHandler="org.mule.session.NullSessionHandler" />
 	</https:connector>
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
 	<flow name="NexeraLoanMuleFlowFlow">
-		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall"
+		<https:inbound-endpoint address="https://0.0.0.0:8282/loanCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
 			responseTimeout="120000">
-		</http:inbound-endpoint>
+		</https:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="restInterceptor" />
 		</component>
