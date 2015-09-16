@@ -20,10 +20,10 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
 	<flow name="NexeraDocsMuleFlowFlow" doc:name="NexeraDocsMuleFlowFlow">
-		<http:inbound-endpoint address="http://0.0.0.0:8484/docsCall"
+		<https:inbound-endpoint address="https://0.0.0.0:8484/docsCall"
 			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
 			responseTimeout="120000">
-		</http:inbound-endpoint>
+		</https:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="docsRestInterceptor" />
 		</component>
