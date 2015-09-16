@@ -26,11 +26,11 @@ var purchaseType = [{
 },{
 	question : "Last Name",
 	id : "lastName",
-	column : 1
+	column : 0
 },{
 	question : "Email",
 	id : "emailID",
-	column : 0
+	column : 1
 },{
 	question : "Phone No",
 	id : "primaryPhoneID",
@@ -39,11 +39,7 @@ var purchaseType = [{
 	question : "Purchase price",
 	id : "homeWorthToday",
 	column : 0
-},/*{
-	question : "Payment for rent<br />(If renting)",
-	id : "rentPerMonth", 
-	column : 1
-},*/{
+},{
 	question : "Down payment",
 	id : "currentMortgageBalance",
 	type : "percentage",
@@ -104,11 +100,7 @@ var purchaseType = [{
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly",
 	addClass : "hide"
-}/*,{
-	question : "Months",
-	id : "months",
-	column : 0,
-}*/];
+}];
 
 //JSON for refinanace lower monthly payment
 var refinanceLowerMonthlyPayment = [{
@@ -122,29 +114,25 @@ var refinanceLowerMonthlyPayment = [{
 },{
 	question : "Last Name",
 	id : "lastName",
-	column : 1
+	column : 0
 },{
 	question : "Email",
 	id : "emailID",
-	column : 0
+	column : 1
 },{
 	question : "Phone No",
 	id : "primaryPhoneID",
 	column : 1
 },{
-	question : "Current balance",
-	id : "currentMortgageBalance",
-	column : 0
-},/*{
-	question : "Current payment",
-	id : "currentMortgagePayment",
-	column : 1
-},*/
-{
 	question : "Current value",
 	id : "homeWorthToday",
 	column : 0
 },{
+	question : "Current balance",
+	id : "currentMortgageBalance",
+	column : 0
+},
+{
 	question : "Property type",
 	id : "propertyType",
 	dropDownId : "property_type_id",
@@ -213,26 +201,22 @@ var refinanceCashOut = [{
 },{
 	question : "Last Name",
 	id : "lastName",
-	column : 1
+	column : 0
 },{
 	question : "Email",
 	id : "emailID",
-	column : 0
+	column : 1
 },{
 	question : "Phone No",
 	id : "primaryPhoneID",
 	column : 1
 },{
-	question : "Current balance",
-	id : "currentMortgageBalance",
-	column : 0
-},/*{
-	question : "Current payment",
-	id : "currentMortgagePayment",
-	column : 1
-},*/{
 	question : "Current value",
 	id : "homeWorthToday",
+	column : 0
+},{
+	question : "Current balance",
+	id : "currentMortgageBalance",
 	column : 0
 },{
 	question : "Property type",
@@ -399,6 +383,345 @@ function paintButtonSection(option){
 	 return button;
 }
 
+function paintDataSection(option,isDefault){
+
+	if($('.complete-application-wrapper').length > 0){
+		$('.complete-application-wrapper.quick-quote-details').remove();
+	}
+	if( $('.quick-quote-teaser-rate-container').length > 0){
+		$('.quick-quote-teaser-rate-container').hide();
+	}
+    var header = getCompletYourApplicationHeader(true,"Quote Details");
+
+	var questionSection = $('<div>').attr({
+		"class" : "quick-quote-question-section hide clearfix"
+	});
+	$(questionSection).toggle();
+	
+	var form = $('<form>').attr({
+		"class" : "clearfix",
+		"id":option[0].formId
+	});
+	var sectionLHS = $('<div>').attr({
+		"class" : "quick-quote-question-section-LHS float-left"
+	});
+	
+	var sectionRHS = $('<div>').attr({
+		"class" : "quick-quote-question-section-RHS float-left"
+	});
+	
+	var sectionThree = $('<div>').attr({
+		"class" : ""
+	});
+	var quickQoute = $('<div>').attr({
+		"class" : "cep-button-color quick-qoute-btn clearfix ",
+		"id" : "quick-qoute-btn-id"
+	}).html("Get Quote").on('click', function(){
+		var loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
+		var refinanceType = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
+		var status = validateForm(loanType,refinanceType);
+		
+		if(!status){
+			return false;
+		}
+		removeToastMessage();
+		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
+		buyHomeRefinanceRate.loanType = loanType;
+
+		if(buyHomeRefinanceRate.loanType == "PUR"){
+			processBuyHomeUnderQuickQuote();
+		}
+		else{
+			buyHomeRefinanceRate.refinanceOption = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
+			if(buyHomeRefinanceRate.refinanceOption == "REFLMP"){
+				processRateAndTermUnderQuickQuote();
+			}
+			else{
+				processCashOutUnderQuickQuote();
+			}
+		}		
+	});
+		
+	for(var i=0;i<option.length;i++){
+
+		var loanType = "";
+		if(i == 0){
+			if($('#quick-quote-loan-type-id').length > 0){
+				$('#quick-quote-loan-type-id').remove();
+			}
+			if(option[i].refinanceOption == undefined){
+				 option[i].refinanceOption = "";
+			}
+			loanType = $('<div>').attr({
+				"class" : "hide",
+				"id" : "quick-quote-loan-type-id",
+				"loan-type" : option[i].loanType,
+				"ref-option" : option[i].refinanceOption,				
+			});
+		}else {
+		
+			var divMainRow = $('<div>').attr({
+				"class" : "quick-quote-row clearfix"
+			});
+			
+			var rowLHS = $('<div>').attr({
+				"class" : "quick-quote-row-LHS float-left"
+			}).html(option[i].question);
+			
+			var rowRHS = "";
+			if(option[i].list !=undefined || option[i].list !=null){
+				
+				rowRHS = appendDropdown(option[i]);
+			}else if(option[i].type == "yesNo"){
+				
+				rowRHS = appendYesNoQuestion(option[i]);
+				
+			}else if(option[i].type == "month/year"){
+				
+				rowRHS = appendMonthYearQuestion(option[i]);
+				
+				$(divMainRow).addClass(option[i].addClass);
+				$(divMainRow).attr({
+					"id" : "quick-quote-monthYear"
+				});
+				
+			}else if(option[i].type == "percentage"){
+				rowRHS = appendDownPaymentFeild(option[i]);
+			}else {
+				
+				rowRHS = $('<input>').attr({
+					"class" : "quick-quote-row-RHS float-left",
+					"value" : "",
+					"id" : option[i].id,
+					"name" : option[i].id
+				}).on("load focus", function(e){
+					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "firstName" && $(this).attr("name") != "lastName" && $(this).attr("name") != "primaryPhoneID" && $(this).attr("name") != "emailID"){
+						$(this).maskMoney({
+			    			thousands:',',
+			    			decimal:'.',
+			    			allowZero:true,
+			    			prefix: '$',
+			    		    precision:0,
+			    		    allowNegative:false
+			    		});
+					}
+		    		
+		    	});
+			} 			
+			var question = option[i].question;
+			if(question.length >= 23){
+				rowLHS.addClass('quick-quote-row-LHS-adj');
+			}			
+			divMainRow.append(rowLHS).append(rowRHS).append(appendErrorMessage("err-msg-quick-quote"));			
+			if(option[i].column == 0){
+				sectionLHS.append(divMainRow);
+			}/*else if(option[i].type == "month/year"){
+				sectionThree.append(divMainRow);
+			}*/else if(option[i].column == 1){
+				sectionRHS.append(divMainRow);
+			}
+	}
+		form.append(sectionLHS).append(sectionRHS).append(sectionThree).append(loanType);
+		questionSection.append(form).append(quickQoute);
+		header.append(questionSection);
+		$('#quick-quote-container-id').append(header);
+		
+	}
+}
+
+
+/*Function which paint the question with dropdown type*/
+function appendDropdown(options){
+	var div = $('<div>').attr({
+		
+	});
+	var row = $('<input>').attr({
+		"class" : "quick-quote-row-RHS  quick-quote-option-selected float-left",
+		"id" : options.id,
+		"name" :options.id,
+		"value" : "",
+		"type" : "",
+		"placeholder" : "Select One"
+	}).on('click', function(e) {
+    	e.stopPropagation();
+    	$('.quick-quote-dropdown-cont').hide();
+        $(this).parent().find('.quick-quote-dropdown-cont').toggle();
+    });
+
+	
+	 var dropDownContainer = $('<div>').attr({
+	        "class": "quick-quote-dropdown-cont hide",
+	        "id" : options.dropDownId
+	    });
+	 var optionCont ="";
+	   for (var i = 0; i < options.list.length; i++) {
+	        var option = options.list[i];
+	         optionCont = $('<div>').attr({
+	                "class": "quick-quote-option-sel",
+	                "value" : "",
+	                "text" : option.text
+	            }).data({
+	                "value": option.value
+	            }).html(option.text);
+	         
+	         dropDownContainer.append(optionCont);
+
+	         optionCont.on('click',function(e){
+	        	 $(this).closest('.quick-quote-dropdown-cont').toggle();
+	        	 $(row).html($(this).html());
+	        	 $(row).attr("type",$(this).data("value"));   
+	        	 $(row).data("value",$(this).html());     
+	        	 $(row).attr("value",$(this).html());   
+	         });
+	         
+	   }
+
+	   return div.append(row).append(dropDownContainer);
+}
+
+/*Function which paint the question with yes/no button type*/
+function appendYesNoQuestion(option){
+	
+	var mainDiv = $('<div>').attr({
+		"class":"quick-quote-yesno-container",
+		"id" : option.id,
+		"value" : ""
+	});
+	
+	var yesContent = $('<div>').attr({
+		"class":"quick-quote-yes-btn radio-btn float-left",
+		"id":"quick-quote-yes-container-id",
+		"isSelected":""
+	}).html("Yes").bind('click',function(e){
+		e.stopImmediatePropagation();		
+		$('div[id="quick-quote-monthYear"]').show();
+		//TO calculate tax insurance and homeowners insurance value
+		calculateInsuranceValue();		
+		if($('#quick-quote-no-container-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-no-container-id').removeClass('radio-btn-selected');
+		}
+		$(this).addClass('radio-btn-selected');
+		$(this).attr('value',$(this).html());
+		
+		$(this).attr({
+			"isSelected" : true,
+			"value" : $(this).html()
+		});
+		$(mainDiv).attr({
+			"value" : $(this).html()
+		});
+		
+	});
+
+	var noContent = $('<div>').attr({
+		"class":"quick-quote-no-btn radio-btn float-left",
+		"id":"quick-quote-no-container-id",
+		"isSelected":""
+	}).html("No").bind('click',function(e){
+		
+		e.stopImmediatePropagation();
+		$('div[id="quick-quote-monthYear"]').hide();
+		
+		if($('#quick-quote-yes-container-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-yes-container-id').removeClass('radio-btn-selected');
+		}
+		$(this).addClass('radio-btn-selected');
+
+		$(this).attr({
+			"isSelected" : true,
+			"value" : $(this).html()
+		});
+		$(mainDiv).attr({
+			"value" : $(this).html()
+		});
+		
+	});
+	
+	return mainDiv.append(yesContent).append(noContent);
+
+}
+function calculateInsuranceValue(){
+	var value;
+		value = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
+		if($('input[id="homeWorthToday"]').val() != ""){
+			value = value*1.25/100;
+			value = '$'+value;
+			$('#propertyTaxesPaid').html(value);
+			$('#propertyTaxesPaid').attr({
+				"value": showValue(value)
+			});
+			$('#annualHomeownersInsurance').html(showValue(value));
+			$('#annualHomeownersInsurance').attr({
+				"value": showValue(value)
+			});
+		}
+		
+	
+	
+}
+/*Function which paint the question with year/month dropdown*/
+function appendMonthYearQuestion(option){
+	
+	var mainDiv = $('<div>').attr({
+		"class" : "quick-quote-monthyear-container ",
+		"id" : "quick-quote-monthyear-container-id"
+	});
+	
+	var rowLHS = $('<input>').attr({
+		"class" : "quick-quote-row-RHS float-left",
+		"id" : option.id,
+		"name" :option.id,
+		"value" : ""
+	}).on("load focus", function(e){
+		$(this).maskMoney({
+			thousands:',',
+			decimal:'.',
+			allowZero:true,
+			prefix: '$',
+		    precision:0,
+		    allowNegative:false
+		});
+	});
+	return mainDiv.append(rowLHS);	
+}
+
+/*Function to append downpayment row*/
+function appendDownPaymentFeild(option){
+	
+	var mainDiv = $('<div>').attr({
+		"class" : "float-left"
+	});
+	
+	var rowLHS = $('<input>').attr({
+		"class" : "quick-quote-row-RHS quick-quote-dwn-payment float-left",
+		"id" : option.id,
+		"name" : option.id
+	}).on("load focus", function(e){
+	
+			$(this).maskMoney({
+    			thousands:',',
+    			decimal:'.',
+    			allowZero:true,
+    			prefix: '$',
+    		    precision:0,
+    		    allowNegative:false
+    		});
+	});;
+	
+	var rowRHS = $('<input>').attr({
+		"class" : "quick-quote-dwn-percentage float-left",
+	}).attr('maxlength','2');
+	rowLHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"val":true,"contxt":option},percentageUpdateEventListener)
+	rowRHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"percentage":true,"contxt":option},
+        	function(e){
+        		this.value = this.value.replace(/[^0-9]/g,'')
+        		percentageUpdateEventListener(e);
+        	})
+
+    $(rowLHS).trigger("keyup");
+	return mainDiv.append(rowLHS).append(rowRHS);
+}
+
 function sendPurchasePdfUnderQuickQuote(){
 	$('#overlay-loader').show();  
 	$.ajax({
@@ -410,7 +733,7 @@ function sendPurchasePdfUnderQuickQuote(){
 		cache:false,
 		success:function(data){
 			$('#overlay-loader').hide();  
-			showToastMessage("PDF sent to your email.");
+			showToastMessage(pdfSentSuccessMessage);
 		},
 		error:function(data){
 			$('#overlay-loader').hide();  
@@ -420,8 +743,7 @@ function sendPurchasePdfUnderQuickQuote(){
 				showErrorToastMessage("Error");
 			}
 			else{
-				showToastMessage("PDF sent to your email.");
-	//			showDialogPopup("Pre-Qual Letter sent",preQualificationLetterSent,callBackpopupFunction);
+				showToastMessage(pdfSentSuccessMessage);
 			}
 		}
 		
@@ -454,7 +776,7 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	        "style":"line-height: 45px;"
 	    }).html('Programs and Rates');
 	    var ratePageHeaderCol2 = $('<div>').attr({
-	        "class": "quick-quote-header-pdf float-right",
+	        "class": "cep-button-color quick-quote-header-pdf float-right",
 	        "id" : "quick-quote-generate-pdf"
 	    }).html('Save as PDF');
 	    if(loanPurchaseDetailsUnderQuickQuote.isRate){
@@ -1388,8 +1710,8 @@ function paintRefinanceSeeRatesUnderQuickQuote(parentContainer,teaserRateData,hi
 }
 
 function processCommonParameters(){
-	buyHomeRefinanceRate.propertyType = $('div[id="propertyType"]').attr('value');
-	buyHomeRefinanceRate.residenceType = $('div[id="residenceType"]').attr('value');
+	buyHomeRefinanceRate.propertyType = $('div[id="propertyType"]').attr('type');
+	buyHomeRefinanceRate.residenceType = $('div[id="residenceType"]').attr('type');
 	buyHomeRefinanceRate.homeWorthToday = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
 	buyHomeRefinanceRate.currentMortgageBalance = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
@@ -1468,390 +1790,6 @@ function processCashOutUnderQuickQuote(){
 	
 }
 
-
-function paintDataSection(option,isDefault){
-
-	if($('.complete-application-wrapper').length > 0){
-		$('.complete-application-wrapper.quick-quote-details').remove();
-	}
-	if( $('.quick-quote-teaser-rate-container').length > 0){
-		$('.quick-quote-teaser-rate-container').hide();
-	}
-    var header = getCompletYourApplicationHeader(true,"Quote Details");
-
-	var questionSection = $('<div>').attr({
-		"class" : "quick-quote-question-section hide clearfix"
-	});
-	$(questionSection).toggle();
-	
-	var form = $('<form>').attr({
-		"class" : "clearfix",
-		"id":option[0].formId
-	});
-	var sectionLHS = $('<div>').attr({
-		"class" : "quick-quote-question-section-LHS float-left"
-	});
-	
-	var sectionRHS = $('<div>').attr({
-		"class" : "quick-quote-question-section-RHS float-left"
-	});
-	
-	var sectionThree = $('<div>').attr({
-		"class" : ""
-	});
-	var quickQoute = $('<div>').attr({
-		"class" : "cep-button-color quick-qoute-btn clearfix ",
-		"id" : "quick-qoute-btn-id"
-	}).html("Get Quote").on('click', function(){
-		var loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
-		var refinanceType = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
-		var status = validateForm(loanType,refinanceType);
-		
-		if(!status){
-			return false;
-		}
-		removeToastMessage();
-		$('.quick-quote-details-header').parent().find('.quick-quote-question-section').hide();
-		buyHomeRefinanceRate.loanType = loanType;
-
-		if(buyHomeRefinanceRate.loanType == "PUR"){
-			processBuyHomeUnderQuickQuote();
-		}
-		else{
-			buyHomeRefinanceRate.refinanceOption = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
-			if(buyHomeRefinanceRate.refinanceOption == "REFLMP"){
-				processRateAndTermUnderQuickQuote();
-			}
-			else{
-				processCashOutUnderQuickQuote();
-			}
-		}		
-	});
-	
-	
-	for(var i=0;i<option.length;i++){
-
-		var loanType = "";
-		if(i == 0){
-			if($('#quick-quote-loan-type-id').length > 0){
-				$('#quick-quote-loan-type-id').remove();
-			}
-			if(option[i].refinanceOption == undefined){
-				 option[i].refinanceOption = "";
-			}
-			loanType = $('<div>').attr({
-				"class" : "hide",
-				"id" : "quick-quote-loan-type-id",
-				"loan-type" : option[i].loanType,
-				"ref-option" : option[i].refinanceOption,				
-			});
-		}else {
-		
-			var divMainRow = $('<div>').attr({
-				"class" : "quick-quote-row clearfix"
-			});
-			
-			var rowLHS = $('<div>').attr({
-				"class" : "quick-quote-row-LHS float-left"
-			}).html(option[i].question);
-			
-			var rowRHS = "";
-			if(option[i].list !=undefined || option[i].list !=null){
-				
-				rowRHS = appendDropdown(option[i]);
-			}else if(option[i].type == "yesNo"){
-				
-				rowRHS = appendYesNoQuestion(option[i]);
-				
-			}else if(option[i].type == "month/year"){
-				
-				rowRHS = appendMonthYearQuestion(option[i]);
-				
-				$(divMainRow).addClass(option[i].addClass);
-				$(divMainRow).attr({
-					"id" : "quick-quote-monthYear"
-				});
-				
-			}else if(option[i].type == "percentage"){
-				rowRHS = appendDownPaymentFeild(option[i]);
-			}else {
-				
-				rowRHS = $('<input>').attr({
-					"class" : "quick-quote-row-RHS float-left",
-					"value" : "",
-					"id" : option[i].id,
-					"name" : option[i].id
-				}).on("load focus", function(e){
-					if($(this).attr("name") != "zipCode" && $(this).attr("name") != "firstName" && $(this).attr("name") != "lastName" && $(this).attr("name") != "primaryPhoneID" && $(this).attr("name") != "emailID"){
-						$(this).maskMoney({
-			    			thousands:',',
-			    			decimal:'.',
-			    			allowZero:true,
-			    			prefix: '$',
-			    		    precision:0,
-			    		    allowNegative:false
-			    		});
-			    		/* this is the piece of code to retrict user put special charector*/
-			    		//restrictChar($(this).attr("name"));
-					}
-		    		
-		    	});
-			} 
-			
-			var question = option[i].question;
-			if(question.length >= 23){
-				rowLHS.addClass('quick-quote-row-LHS-adj');
-			}
-			
-			divMainRow.append(rowLHS).append(rowRHS).append(appendErrorMessage("err-msg-quick-quote"));
-			
-			if(option[i].column == 0){
-				sectionLHS.append(divMainRow);
-			}/*else if(option[i].type == "month/year"){
-				sectionThree.append(divMainRow);
-			}*/else if(option[i].column == 1){
-				sectionRHS.append(divMainRow);
-			}
-	}
-		form.append(sectionLHS).append(sectionRHS).append(sectionThree).append(loanType);
-		questionSection.append(form).append(quickQoute);
-		header.append(questionSection);
-		$('#quick-quote-container-id').append(header);
-		
-	}
-	/* $('#quick-quote-container-id').after(quickQoute);*/
-}
-
-
-/*Function which paint the question with dropdown type*/
-function appendDropdown(options){
-	var div = $('<div>').attr({
-		
-	});
-	var row = $('<div>').attr({
-		"class" : "quick-quote-row-RHS  quick-quote-option-selected float-left",
-		"id" : options.id,
-		"name" :options.id,
-		"value" : "",
-		"placeholder" : "Select One"
-	}).html("").on('click', function(e) {
-    	e.stopPropagation();
-    	$('.quick-quote-dropdown-cont').hide();
-        $(this).parent().find('.quick-quote-dropdown-cont').toggle();
-    });
-
-	
-	 var dropDownContainer = $('<div>').attr({
-	        "class": "quick-quote-dropdown-cont hide",
-	        "id" : options.dropDownId
-	    });
-	 var optionCont ="";
-	   for (var i = 0; i < options.list.length; i++) {
-	        var option = options.list[i];
-	         optionCont = $('<div>').attr({
-	                "class": "quick-quote-option-sel",
-	                "value" : "",
-	                "text" : option.text
-	            }).data({
-	                "value": option.value
-	            }).html(option.text);
-	         
-	         dropDownContainer.append(optionCont);
-
-	         optionCont.on('click',function(e){
-	        	 $(this).closest('.quick-quote-dropdown-cont').toggle();
-	        	 $(row).html($(this).html());
-	        	 $(row).data("value",$(this).data("value"));     
-	        	 $(row).attr("value",$(this).data("value"));   
-	         });
-	         
-	   }
-
-	   return div.append(row).append(dropDownContainer);
-}
-
-/*Function which paint the question with yes/no button type*/
-function appendYesNoQuestion(option){
-	
-	var mainDiv = $('<div>').attr({
-		"class":"quick-quote-yesno-container",
-		"id" : option.id,
-		"value" : ""
-	});
-	
-	var yesContent = $('<div>').attr({
-		"class":"quick-quote-yes-btn radio-btn float-left",
-		"id":"quick-quote-yes-container-id",
-		"isSelected":""
-	}).html("Yes").bind('click',function(e){
-		e.stopImmediatePropagation();
-		$('div[id="quick-quote-monthYear"]').show();
-		
-		if($('#quick-quote-no-container-id').hasClass('radio-btn-selected')){			
-			$('#quick-quote-no-container-id').removeClass('radio-btn-selected');
-		}
-		$(this).addClass('radio-btn-selected');
-		$(this).attr('value',$(this).html());
-		
-		$(this).attr({
-			"isSelected" : true,
-			"value" : $(this).html()
-		});
-		$(mainDiv).attr({
-			"value" : $(this).html()
-		});
-		
-	});
-
-	var noContent = $('<div>').attr({
-		"class":"quick-quote-no-btn radio-btn float-left",
-		"id":"quick-quote-no-container-id",
-		"isSelected":""
-	}).html("No").bind('click',function(e){
-		
-		e.stopImmediatePropagation();
-		$('div[id="quick-quote-monthYear"]').hide();
-		
-		if($('#quick-quote-yes-container-id').hasClass('radio-btn-selected')){			
-			$('#quick-quote-yes-container-id').removeClass('radio-btn-selected');
-		}
-		$(this).addClass('radio-btn-selected');
-
-		$(this).attr({
-			"isSelected" : true,
-			"value" : $(this).html()
-		});
-		$(mainDiv).attr({
-			"value" : $(this).html()
-		});
-		
-	});
-	
-	return mainDiv.append(yesContent).append(noContent);
-
-}
-
-/*Function which paint the question with year/month dropdown*/
-function appendMonthYearQuestion(option){
-	
-	var mainDiv = $('<div>').attr({
-		"class" : "quick-quote-monthyear-container ",
-		"id" : "quick-quote-monthyear-container-id"
-	});
-	
-	var rowLHS = $('<input>').attr({
-		"class" : "quick-quote-row-RHS month-year-row-adj float-left",
-		"id" : option.id,
-		"name" :option.id,
-		"value" : ""
-	}).on("load focus", function(e){
-		$(this).maskMoney({
-			thousands:',',
-			decimal:'.',
-			allowZero:true,
-			prefix: '$',
-		    precision:0,
-		    allowNegative:false
-		});
-		/* this is the piece of code to retrict user put special charector*/
-		//restrictChar(contxt.name);
-	});
-	
-	var rowRHSLabel = $('<div>').attr({
-		"class" : "quick-quote-rhs-label float-left",
-		"maxlength": '2'
-	}).html("Impound<br />months");
-	var rowRHS = $('<input>').attr({
-		"class" : "quick-quote-row-RHS month-adj float-left",
-		"id" : option.monthYearId,
-		"name" :option.monthYearId,
-		"value" : ""
-	});
-	
-	return mainDiv.append(rowLHS).append(rowRHSLabel).append(rowRHS);
-	/*var text = $('<div>').attr({
-		"class" : "quick-quote-text float-left"
-	}).html("per");
-	
-	var monthYearInput = $('<input>').attr({
-		"class" : "quick-quote-row-RHS month-year-drop-down-row float-left",
-		"id" : option.monthYearId,
-		"value" : ""
-	}).html("Select").on('click',function(e){
-		  e.stopPropagation();
-		  $('#quick-quote-drop-down-monthyear').hide();
-		  $(this).parent().find('#quick-quote-drop-down-monthyear').toggle();
-	});
-	 var dropDownContainer = $('<div>').attr({
-	    "class": "quick-quote-dropdown-cont quick-quote-dropdown-cont-adj hide",
-	    "id" : "quick-quote-drop-down-monthyear"
-	 });
-	 
-	 var year = $('<div>').attr({
-		 "class" : "quick-quote-option-sel",
-		 "id" : "quick-quote-option-sel-year"
-	 }).html("Year").bind('click',function(e){
-		 $(this).closest('#quick-quote-drop-down-monthyear').toggle();
-		 $(this).parent().prev().html($(this).html());
-		 $(this).parent().prev().attr("value",$(this).html());   
-		 $('#quick-quote-drop-down-monthyear').hide();
-	 });
-	 
-	 var month = $('<div>').attr({
-		 "class" : "quick-quote-option-sel",
-		 "id" : "quick-quote-option-sel-month"
-	 }).html("Month").click(function(e){
-		 $(this).closest('#quick-quote-drop-down-monthyear').toggle();
-		 $(this).parent().prev().html($(this).html());
-		 $(this).parent().prev().attr("value",$(this).html());  
-		 $('#quick-quote-drop-down-monthyear').hide();
-		
-	 });
-
-	 dropDownContainer.append(year).append(month);
-	 return mainDiv.append(input).append(input).append(text).append(monthYearInput).append(dropDownContainer);*/
-}
-
-/*Function to append downpayment row*/
-function appendDownPaymentFeild(option){
-	
-	var mainDiv = $('<div>').attr({
-		"class" : "float-left"
-	});
-	
-	var rowLHS = $('<input>').attr({
-		"class" : "quick-quote-row-RHS quick-quote-dwn-payment float-left",
-		"id" : option.id,
-		"name" : option.id
-	}).on("load focus", function(e){
-	
-			$(this).maskMoney({
-    			thousands:',',
-    			decimal:'.',
-    			allowZero:true,
-    			prefix: '$',
-    		    precision:0,
-    		    allowNegative:false
-    		});
-    		/* this is the piece of code to retrict user put special charector*/
-    		//restrictChar($(this).attr("name"));
-		
-		
-	});;
-	
-	var rowRHS = $('<input>').attr({
-		"class" : "quick-quote-dwn-percentage float-left",
-	}).attr('maxlength','2');
-	rowLHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"val":true,"contxt":option},percentageUpdateEventListener)
-	rowRHS.bind("keyup",{"valComp":rowLHS,"percentComp":rowRHS,"percentage":true,"contxt":option},
-        	function(e){
-        		this.value = this.value.replace(/[^0-9]/g,'')
-        		percentageUpdateEventListener(e);
-        	})
-    $(rowLHS).trigger("keyup");
-	return mainDiv.append(rowLHS).append(rowRHS);
-}
-
 /*To expand and collapse Quote Details*/
 $('body').on('click','#quick-quote-header-down-icn',function(e){
 	$('.quick-quote-question-section').toggle();	
@@ -1871,3 +1809,11 @@ $(document).click(function(){
 $("body").on('click',"#quick-quote-generate-pdf",function(e){
 	sendPurchasePdfUnderQuickQuote();
 });
+
+$('body').keyup('#homeWorthToday',function(e) {
+    console.log('keyup called');
+    var code = e.keyCode || e.which;
+    if (code == '9') {
+    	calculateInsuranceValue();
+    }
+ });

@@ -154,3 +154,6 @@ var email_id_unmatch_error_message="Please provide the registered Email ID";
 var borrower_creation_unsuccess_message="Error while creating borrower";
 var realtor_creation_unsuccess_message="Error while creating realtor";
 var validation_unsuccess_message="Something went wrong while creating user. Please try again later.";
+
+//Message in quickQuote.js
+var pdfSentSuccessMessage = "PDF sent to your email.";
