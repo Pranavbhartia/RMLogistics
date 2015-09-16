@@ -433,6 +433,10 @@ function retrieveState() {
 		console.log('Templates');
 	populateTemplate();
 		break;
+	case AgentViewPNEnum['QUICK_QUOTE']:
+		console.log('quickquote');
+	loadQuickQoutePage();
+		break;
 	default:
 		break;
 	}
