@@ -17,11 +17,20 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
 	<https:connector name="HttpConnector" clientSoTimeout="120000"
-		cookieSpec="netscape" doc:name="HTTP\HTTPS" receiveBacklog="0"
-		receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
-		socketSoLinger="0" validateConnections="true">
-		<https:tls-client path="cacerts" storePassword="changeit"/>
-	</https:connector>
+  cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
+  receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
+  socketSoLinger="0" validateConnections="true">
+
+  <https:tls-client path="cacerts" storePassword="changeit" />
+        <https:tls-key-store path="E:\keystore.jks" keyPassword="raremile123" storePassword="raremile123"/>
+ </https:connector>
+ <http:connector name="HttpConnectors" clientSoTimeout="120000"
+  cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
+  receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
+  socketSoLinger="0" validateConnections="true">
+<reconnect />
+
+ </http:connector>
 	
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
@@ -33,10 +42,10 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	</catch-exception-strategy>
 
 	<flow name="NexeraAuthMuleFlowFlow">
-		<https:inbound-endpoint address="https://0.0.0.0:8181/authCall"
-			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
+		<http:inbound-endpoint address="http://0.0.0.0:8181/authCall"
+			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnectors"
 			responseTimeout="120000">
-		</https:inbound-endpoint>
+		</http:inbound-endpoint>
 		<component doc:name="Java">
 			<spring-object bean="authenticationRestInterceptor" />
 		</component>
