@@ -541,7 +541,7 @@ a.cus-eng-succ-mess-email {
 .quick-quote-row-RHS {
     font-family: openSans;
     font-size: 14px;
-    width: 43%;      
+    width: 35%;      
     text-align: left;
     height: 35px;            
     padding-left: 15px;      
@@ -612,7 +612,7 @@ a.cus-eng-succ-mess-email {
 
 .quick-quote-dropdown-cont {
     position: absolute;      
-    width: 211px;      
+    width: 173px;      
     height: auto;
     margin: 0 auto;
     border: 1px solid #dcdcdc;      
@@ -652,7 +652,7 @@ a.cus-eng-succ-mess-email {
 }
 
 .month-year-row-adj {
-    width: 90px;
+    /* width: 100px; */
 }
 
 .month-year-drop-down-row {
@@ -681,11 +681,11 @@ a.cus-eng-succ-mess-email {
 }
 
 .quick-quote-dwn-payment {
-	width: 145px;
+	width: 117px;
 }
 
 .quick-quote-dwn-percentage {
-    width: 69px;
+    width: 55px;
     padding-left: 5px;
     background: url(../images/percentagesy.png) no-repeat #fafafa right;
     background-size: 12px;
@@ -728,16 +728,10 @@ a.cus-eng-succ-mess-email {
     font-family: 'opensanssemiBold';
     margin-right: 5px;
     white-space: nowrap;
-    line-height: 30px;
-    padding-left: 10px;
-    color: #428bca;
+    line-height: 35px;
     cursor: pointer;
-    width: 120px;
-    font-size: 15px;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 3px;
-    border: 1px solid #428bca;
+    width: 120px;      color: #fff;      font-size: 15px;      text-align: center;            
+    margin: 7px;      border-radius: 3px;
 }
 
 .leads-col-2 {
