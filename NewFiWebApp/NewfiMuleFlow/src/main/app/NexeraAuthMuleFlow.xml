@@ -16,13 +16,19 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	<cxf:configuration name="CXF_AUTH_Configuration"
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
-	<http:connector name="HttpConnector" clientSoTimeout="120000"
-		cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
-		receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
-		socketSoLinger="0" validateConnections="true" 
-		>
-		<reconnect />
-	</http:connector>
+<https:connector name="HttpConnector" clientSoTimeout="120000"
+  cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
+  receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
+  socketSoLinger="0" validateConnections="true">
+	<https:tls-key-store path="keystore.jks" keyPassword="raremile123" storePassword="raremile123"/>
+ </https:connector>
+ <http:connector name="HttpConnectors" clientSoTimeout="120000"
+  cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
+  receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
+  socketSoLinger="0" validateConnections="true">
+<reconnect />
+
+ </http:connector>
 	<spring:beans>
 		<spring:import resource="classpath:spring/spring-context.xml" />
 	</spring:beans>
@@ -34,7 +40,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 
 	<flow name="NexeraAuthMuleFlowFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8181/authCall"
-			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
+			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnectors"
 			responseTimeout="120000">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
