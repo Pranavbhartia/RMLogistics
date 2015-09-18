@@ -181,10 +181,32 @@ public class GeneratePdfForQuickQuote {
     	return number.replaceAll("(?<=\\d),(?=\\d)|\\$|\\%", "");
     }
     
+    public String removeDollarCommaAndBracket(String number){
+    	if(number.contains("(")){
+    		number = number.substring(1, number.length()-1);
+    	}
+    	return number.replaceAll("(?<=\\d),(?=\\d)|\\$|\\%", "");
+    }
+    
     public String phoneNumberFormating(String phoneNumber)
     {
     	return phoneNumber.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3");
     }
+    
+    public boolean isNegative(String number){
+    	if(number.contains("(")){
+    		number = number.substring(1, number.length()-1);
+    	}
+    	if(number.contains("$")){
+    		number = removeDollarAndComma(number);
+    	}
+    	
+    	if(Float.parseFloat(number) < 0){
+    		return true;
+    	}
+    	return false;	
+    }
+    
 
     public void generatePdf(GeneratePdfVO generatePdfVO, HttpServletRequest httpServletRequest, ByteArrayOutputStream byteOutput,UserVO user) throws DocumentException, IOException {
     	Paragraph logoParagraph = new Paragraph();
@@ -510,6 +532,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
+        
         cell = new PdfPCell(new Phrase("  "+"Interest Rate / APR",font));
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
@@ -532,6 +555,16 @@ public class GeneratePdfForQuickQuote {
     
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
+        
+        String impounds = generatePdfVO.getImpounds();
+        cell = new PdfPCell(new Phrase("  "+"Impounds",font));
+        cell.setBorder(Rectangle.LEFT);
+        firstTable.addCell(cell);
+        cell = new PdfPCell(new Phrase(impounds,font));
+        cell.setBorder(Rectangle.RIGHT);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        firstTable.addCell(cell);
+        
         
         cell = new PdfPCell(new Phrase("\n"));
         cell.setColspan(2);
@@ -576,8 +609,8 @@ public class GeneratePdfForQuickQuote {
         	  cell = new PdfPCell(new Phrase(addDollarAndComma(purchasePrice),font));
         }
         else {
-        	String homeWorthToday = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getHomeWorthToday();
-        	cell = new PdfPCell(new Phrase(addDollarAndComma(homeWorthToday),font));
+        	String currentMortgageBalance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getCurrentMortgageBalance();
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(currentMortgageBalance),font));
         }
       
         String totEstimatedClosingCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstimatedClosingCost();
@@ -595,17 +628,40 @@ public class GeneratePdfForQuickQuote {
         seventhTable.addCell(cell);
         
         //totEstimatedClosingCost
+        String totEstThdPtyCst = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstThdPtyCst();
+        String TotEstLenCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstLenCost();
+        
+        boolean isEstClosingCostNegative = false;
+        if(Float.parseFloat(removeDollarCommaAndBracket(TotEstLenCost)) > Float.parseFloat(removeDollarCommaAndBracket(totEstThdPtyCst))){
+        	isEstClosingCostNegative = true;
+        }
         
         String estimatingClosingCost = "$0";
-        
-        if (Float.parseFloat(totEstimatedClosingCost) >= 1){
+        if(!isEstClosingCostNegative){
         	estimatingClosingCost = totEstimatedClosingCost;
         }
+//        String estimatingClosingCost = "$0";
+//        
+//        if (Float.parseFloat(totEstimatedClosingCost) >= 1){
+//        	estimatingClosingCost = totEstimatedClosingCost;
+//        }
         
         if(estimatingClosingCost.equals("$0"))
         	cell = new PdfPCell(new Phrase(estimatingClosingCost,font));
-        else
-        	cell = new PdfPCell(new Phrase(addDollarAndComma(estimatingClosingCost),font));
+        else{
+		       	 if(estimatingClosingCost.contains("$") && !(estimatingClosingCost.contains("("))){
+					 cell = new PdfPCell(new Phrase(estimatingClosingCost,font));
+				 }
+				 else if(!(estimatingClosingCost.contains("$")) && (estimatingClosingCost.contains("("))){
+					 cell = new PdfPCell(new Phrase(addDollarAndComma(removeDollarCommaAndBracket(""+estimatingClosingCost)),font));
+				 }
+				 else{
+					 cell = new PdfPCell(new Phrase(addDollarAndComma(""+estimatingClosingCost),font));
+				 }
+        	
+        	//cell = new PdfPCell(new Phrase(addDollarAndComma(estimatingClosingCost),font));
+        }
+        	
         
         cell.setPaddingBottom(5f);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
@@ -649,7 +705,7 @@ public class GeneratePdfForQuickQuote {
         	cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmountDuringRefinance),font));
         }
         
-        String TotEstLenCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstLenCost();
+ //       String TotEstLenCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstLenCost();
         
 //        cell = new PdfPCell(new Phrase(addDollarAndComma(loanAmount),font));
         cell.setBorder(Rectangle.RIGHT);
@@ -749,16 +805,16 @@ public class GeneratePdfForQuickQuote {
         seventhTable.addCell(cell);
         
         String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
-        cell = new PdfPCell(new Phrase("  Cash reserves for pre-paids/escrows",font));
-        cell.setBorder(Rectangle.LEFT);
-        //cell.setColspan(2);
+        cell = new PdfPCell(new Phrase("  Cash reserves for pre-paids/escrows: "+totEstResDepWthLen,font));
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+        cell.setColspan(2);
         seventhTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase(totEstResDepWthLen,boldFont));
-        cell.setPaddingTop(5f);
-        cell.setBorder(Rectangle.RIGHT);
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        seventhTable.addCell(cell);
+//        cell = new PdfPCell(new Phrase(totEstResDepWthLen,boldFont));
+//        cell.setPaddingTop(5f);
+//        cell.setBorder(Rectangle.RIGHT);
+//        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+//        seventhTable.addCell(cell);
         
         cell = new PdfPCell(new Phrase(""));
         cell.setColspan(2);
@@ -844,12 +900,38 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.TOP | Rectangle.BOTTOM | Rectangle.LEFT);
         cell.setBackgroundColor(lightBlue);
         secondTable.addCell(cell);
-   //     TotEstLenCost
+  
+        boolean isLenderCostNegative = false;
+        if(Float.parseFloat(removeDollarCommaAndBracket(lenderFee813)) < Float.parseFloat(removeDollarCommaAndBracket(creditOrCharge802))){
+        	isLenderCostNegative = true;
+        }
         
-        if(TotEstLenCost.contains("$"))
-        	cell = new PdfPCell(new Phrase(TotEstLenCost,font));
-        else
-        	cell = new PdfPCell(new Phrase(addDollarAndComma(TotEstLenCost),font));
+        if(isLenderCostNegative){
+        	 if(TotEstLenCost.contains("$") && TotEstLenCost.contains("(")){
+        		 cell = new PdfPCell(new Phrase(TotEstLenCost,font));
+        	 }
+        	 else{
+        		 if(TotEstLenCost.contains("$") && !(TotEstLenCost.contains("("))){
+        			 cell = new PdfPCell(new Phrase("("+TotEstLenCost+")",font));
+        		 }
+        		 else if(!(TotEstLenCost.contains("$")) && (TotEstLenCost.contains("("))){
+        			 cell = new PdfPCell(new Phrase("("+addDollarAndComma(removeDollarCommaAndBracket(TotEstLenCost))+")",font));
+        		 }
+        		 else{
+        			 cell = new PdfPCell(new Phrase("("+addDollarAndComma(TotEstLenCost)+")",font));
+        		 }
+        	 }
+        } 
+        else{
+        	
+        	if(TotEstLenCost.contains("(")){
+        		cell = new PdfPCell(new Phrase(TotEstLenCost.substring(1, TotEstLenCost.length()-1),font));
+       	 	}
+        	else{
+        		cell = new PdfPCell(new Phrase(TotEstLenCost,font));
+        	}
+        	
+        }
         
         cell.setPaddingTop(4); cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -1028,7 +1110,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBackgroundColor(lightBlue); 
         thirdTable.addCell(cell);
         
-        String totEstThdPtyCst = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstThdPtyCst();
+    //    String totEstThdPtyCst = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstThdPtyCst();
         cell = new PdfPCell(new Phrase(totEstThdPtyCst,font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
@@ -1067,11 +1149,46 @@ public class GeneratePdfForQuickQuote {
         cell.setBackgroundColor(lightBlue); 
         fourthTable.addCell(cell);
         
+        boolean isTotalEstClosingCostNegative = false;
+        if(Float.parseFloat(removeDollarCommaAndBracket(TotEstLenCost)) > Float.parseFloat(removeDollarCommaAndBracket(totEstThdPtyCst))){
+        	isTotalEstClosingCostNegative = true;
+        }
+      
+        if(isTotalEstClosingCostNegative){
+       	 if(totEstimatedClosingCost.contains("$") && totEstimatedClosingCost.contains("(")){
+       		 cell = new PdfPCell(new Phrase(totEstimatedClosingCost,font));
+       	 }
+       	 else{
+       		 if(totEstimatedClosingCost.contains("$") && !(totEstimatedClosingCost.contains("("))){
+       			 cell = new PdfPCell(new Phrase("("+totEstimatedClosingCost+")",font));
+       		 }
+       		 else if(!(totEstimatedClosingCost.contains("$")) && (totEstimatedClosingCost.contains("("))){
+       			 cell = new PdfPCell(new Phrase("("+addDollarAndComma(removeDollarCommaAndBracket(totEstimatedClosingCost))+")",font));
+       		 }
+       		 else{
+       			 cell = new PdfPCell(new Phrase("("+addDollarAndComma(totEstimatedClosingCost)+")",font));
+       		 }
+       	 }
+       } 
+       else{
+       	
+       	if(totEstimatedClosingCost.contains("(")){
+       		cell = new PdfPCell(new Phrase(totEstimatedClosingCost.substring(1, totEstimatedClosingCost.length()-1),font));
+      	 	}
+       	else{
+       		cell = new PdfPCell(new Phrase(totEstimatedClosingCost,font));
+       	}
+       	
+       }
+        
        // String totEstimatedClosingCost = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstimatedClosingCost();
-        if(totEstimatedClosingCost.contains("("))
-        	cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost), font));
-        else
-        	cell = new PdfPCell(new Phrase("("+addDollarAndComma(totEstimatedClosingCost)+")", font));
+//        if(totEstimatedClosingCost.contains("(")){
+//        	totEstimatedClosingCost = totEstimatedClosingCost.substring(1, totEstimatedClosingCost.length()-1);
+//        }
+//        if(totEstimatedClosingCost.contains("("))
+//        	cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost), font));
+//        else
+    //    cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost), font));
         cell.setPaddingTop(4); cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
@@ -1100,7 +1217,8 @@ public class GeneratePdfForQuickQuote {
         fifthTable.setWidths(fifthTablecolumnWidths);
         fifthTable.setWidthPercentage(100.0f);
    
-        cell = new PdfPCell(new Phrase("Estimated Prepaid and Escrows", boldFont));
+        if(impounds.equals("No")){
+        cell = new PdfPCell(new Phrase("Estimated Prepaids and Escrow Reserves", boldFont));
         cell.setBorder(Rectangle.RIGHT | Rectangle.LEFT | Rectangle.TOP);
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
@@ -1129,27 +1247,27 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         fifthTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("  "+"Homeowners Insurance",font));
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
-        CustomCell borderFT3 = app.new CustomCell();       
-        cell.setCellEvent(borderFT3);
-        cell.setBorder(Rectangle.LEFT);
-        fifthTable.addCell(cell);
-        
-        String hazIns903 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getHazIns903();
-        cell = new PdfPCell(new Phrase(hazIns903,font));
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        CustomCell borderFT4 = app.new CustomCell();       
-        cell.setCellEvent(borderFT4);
-        cell.setBorder(Rectangle.RIGHT);
-        fifthTable.addCell(cell);
+//        cell = new PdfPCell(new Phrase("  "+"Homeowners Insurance",font));
+//        cell.setPaddingTop(4); 
+//        cell.setPaddingBottom(4);
+//        CustomCell borderFT3 = app.new CustomCell();       
+//        cell.setCellEvent(borderFT3);
+//        cell.setBorder(Rectangle.LEFT);
+//        fifthTable.addCell(cell);
+//        
+//        String hazIns903 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getHazIns903();
+//        cell = new PdfPCell(new Phrase(hazIns903,font));
+//        cell.setPaddingTop(4); 
+//        cell.setPaddingBottom(4);
+//        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+//        CustomCell borderFT4 = app.new CustomCell();       
+//        cell.setCellEvent(borderFT4);
+//        cell.setBorder(Rectangle.RIGHT);
+//        fifthTable.addCell(cell);
         
         cell = new PdfPCell();
-        cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 2 Months",font));
-        cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
+        cell.addElement(new Phrase("  "+"Tax Reserve",font));
+    //    cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
         cell.setPaddingTop(4);
         cell.setPaddingBottom(4);
         CustomCell borderFT5 = app.new CustomCell();       
@@ -1168,10 +1286,10 @@ public class GeneratePdfForQuickQuote {
         fifthTable.addCell(cell);
         
         cell = new PdfPCell();
-        cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 2 Months",font));
-        cell.addElement(new Phrase("  "+"Provided you have 6 months of remaining coverage",font));
-        cell.addElement(new Phrase("  "+"Note: Taxes for 1st and 2nd installments must be paid or",font));
-        cell.addElement(new Phrase("  "+"will be collected at closing.",font));
+        cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve",font));
+//        cell.addElement(new Phrase("  "+"Provided you have 6 months of remaining coverage",font));
+//        cell.addElement(new Phrase("  "+"Note: Taxes for 1st and 2nd installments must be paid or",font));
+//        cell.addElement(new Phrase("  "+"will be collected at closing.",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setBorder(Rectangle.LEFT);
@@ -1185,7 +1303,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         fifthTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("Total Estimated Prepaids and Escrows",boldFont));
+        cell = new PdfPCell(new Phrase("Total Estimated Prepaids and Escrow Reserves",boldFont));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
@@ -1200,7 +1318,111 @@ public class GeneratePdfForQuickQuote {
         cell.setBackgroundColor(lightBlue); 
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
         fifthTable.addCell(cell);
+    }
+        else{
+        	cell = new PdfPCell(new Phrase("Estimated Prepaids and Escrow Reserves", boldFont));
+            cell.setBorder(Rectangle.RIGHT | Rectangle.LEFT | Rectangle.TOP);
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            cell.setBackgroundColor(lightBlue); 
+            cell.setColspan(2);
+            CustomCell borderFT = app.new CustomCell();       
+            cell.setCellEvent(borderFT);
+            fifthTable.addCell(cell);
+            
        
+            cell = new PdfPCell(new Phrase("  "+"Interest",font));
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            CustomCell borderFT1 = app.new CustomCell();       
+            cell.setCellEvent(borderFT1);
+            cell.setBorder(Rectangle.LEFT);
+            fifthTable.addCell(cell);
+            
+            String interest901 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getInterest901();
+            cell = new PdfPCell(new Phrase(interest901,font));
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            CustomCell borderFT2 = app.new CustomCell();       
+            cell.setCellEvent(borderFT2);
+            cell.setBorder(Rectangle.RIGHT);
+            fifthTable.addCell(cell);
+            
+//            cell = new PdfPCell(new Phrase("  "+"Homeowners Insurance",font));
+//            cell.setPaddingTop(4); 
+//            cell.setPaddingBottom(4);
+//            CustomCell borderFT3 = app.new CustomCell();       
+//            cell.setCellEvent(borderFT3);
+//            cell.setBorder(Rectangle.LEFT);
+//            fifthTable.addCell(cell);
+//            
+//            String hazIns903 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getHazIns903();
+//            cell = new PdfPCell(new Phrase(hazIns903,font));
+//            cell.setPaddingTop(4); 
+//            cell.setPaddingBottom(4);
+//            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+//            CustomCell borderFT4 = app.new CustomCell();       
+//            cell.setCellEvent(borderFT4);
+//            cell.setBorder(Rectangle.RIGHT);
+//            fifthTable.addCell(cell);
+            
+            cell = new PdfPCell();
+            cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
+            cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
+            cell.setPaddingTop(4);
+            cell.setPaddingBottom(4);
+            CustomCell borderFT5 = app.new CustomCell();       
+            cell.setCellEvent(borderFT5);
+            cell.setBorder(Rectangle.LEFT);
+            fifthTable.addCell(cell);
+            
+            String taxResrv1004 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTaxResrv1004();
+            cell = new PdfPCell(new Phrase(taxResrv1004,font));
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            CustomCell borderFT6 = app.new CustomCell();       
+            cell.setCellEvent(borderFT6);
+            cell.setBorder(Rectangle.RIGHT);
+            fifthTable.addCell(cell);
+            
+            cell = new PdfPCell();
+            cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 6 Months",font));
+//            cell.addElement(new Phrase("  "+"Provided you have 6 months of remaining coverage",font));
+//            cell.addElement(new Phrase("  "+"Note: Taxes for 1st and 2nd installments must be paid or",font));
+//            cell.addElement(new Phrase("  "+"will be collected at closing.",font));
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            cell.setBorder(Rectangle.LEFT);
+            fifthTable.addCell(cell);
+            
+            String hazInsReserve1002 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getHazInsReserve1002();
+            cell = new PdfPCell(new Phrase(hazInsReserve1002,font));
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell.setBorder(Rectangle.RIGHT);
+            fifthTable.addCell(cell);
+            
+            cell = new PdfPCell(new Phrase("Total Estimated Prepaids and Escrow Reserves",boldFont));
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
+            cell.setBackgroundColor(lightBlue); 
+            fifthTable.addCell(cell);
+            
+          //  String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
+            cell = new PdfPCell(new Phrase(totEstResDepWthLen,font));
+            cell.setPaddingTop(4); 
+            cell.setPaddingBottom(4);
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cell.setBackgroundColor(lightBlue); 
+            cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
+            fifthTable.addCell(cell);
+        	
+        }
+        
   
         fifthTableCell.addElement(fifthTable);
         mainTable.addCell(fifthTableCell);
@@ -1211,11 +1433,11 @@ public class GeneratePdfForQuickQuote {
         document.add(horizontalLine);
         document.add(new Phrase("RATE QUOTE ASSUMPTIONS\n", boldFooterFont));
         document.add(new Phrase(""
-                + "Rate displayed are subject to change. On adjustable-rate loans, interest rates are subject to potential increases over the life of the loan, once the initial"
-                + "fixed-rate period expires. Rates, loan products & fees subject to change without notice. Your rate and term may vary. If you do not lock in a rate when you"
-                + "apply, your rate at closing may differ from the rate in effect when you applied. Subject to underwriting approval, Not all applicants will be approved, Full"
-                + "documentation & property insurance required. Loan secured by a lien against your poperty. Consolidating or refinancing debts may increase the time and/or the finance"
-                + "charges/total loan amount needed to repay your debt. Trems, conditions & restrictions apply."
+                + "Rate displayed are subject to change. On adjustable-rate loans, interest rates are subject to potential increases over the life of the loan, once the initial "
+                + "fixed-rate period expires. Rates, loan products & fees subject to change without notice. Your rate and term may vary. If you do not lock in a rate when you "
+                + "apply, your rate at closing may differ from the rate in effect when you applied. Subject to underwriting approval. Not all applicants will be approved, Full "
+                + "documentation & property insurance required. Loan secured by a lien against your poperty. Consolidating or refinancing debts may increase the time and/or the finance "
+                + "charges/total loan amount needed to repay your debt. Terms, conditions & restrictions apply."
                 + "\nCall newfi for details at 888-316-3934.",footerFont));
         
     }
