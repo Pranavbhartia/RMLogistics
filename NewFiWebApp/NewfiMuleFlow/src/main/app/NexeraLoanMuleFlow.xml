@@ -25,7 +25,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 	</spring:beans>
 	<flow name="NexeraLoanMuleFlowFlow">
 		<http:inbound-endpoint address="http://0.0.0.0:8282/loanCall"
-			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnector"
+			exchange-pattern="request-response" doc:name="HTTP" connector-ref="HttpConnectors"
 			responseTimeout="120000">
 		</http:inbound-endpoint>
 		<component doc:name="Java">
