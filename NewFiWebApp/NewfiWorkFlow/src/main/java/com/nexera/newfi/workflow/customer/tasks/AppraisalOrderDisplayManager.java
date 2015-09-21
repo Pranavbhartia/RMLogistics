@@ -4,16 +4,25 @@ import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.newfi.workflow.tasks.NexeraWorkflowTask;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
 public class AppraisalOrderDisplayManager extends NexeraWorkflowTask implements
         IWorkflowTaskExecutor {
+	@Autowired
+	private IWorkflowService iWorkflowService;
+
+	private String STATUS_VALUE = "Appraisal Ordered";
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(AppraisalOrderDisplayManager.class);
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		LOG.debug("Inside method execute ");
@@ -22,8 +31,11 @@ public class AppraisalOrderDisplayManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String appOrderDate = iWorkflowService.getAppraisalMilestoneDates(
+		        loanId, STATUS_VALUE);
+		return appOrderDate;
 	}
 
 	@Override
