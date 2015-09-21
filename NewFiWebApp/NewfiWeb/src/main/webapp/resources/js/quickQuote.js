@@ -887,7 +887,7 @@ function getClosingCostSummaryContainerUnderQuickQuote(valueSet) {
 
 
 function getClosingCostContainerRowWithSubTextUnderQuickQuote(rowNum, desc, detail, subtext,isHomeOwnersInsurance) {
-    var key=objectKeyMakerFunction(desc);
+    var key=objectKeyMakerFunctionUnderQuickQuote(desc);
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
         lqbTeaserRateUnderQuickQuote[key]=detail;
@@ -950,13 +950,13 @@ function getClosingCostContainerRowWithSubTextUnderQuickQuote(rowNum, desc, deta
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
-    
-    
+    rwObj.updateTaxesAndInsurances();
+
     return row.append(rowDesc).append(rowDetail);
 }
 
 function getClosingCostContainerLastRowUnderQuickQuote(rowNum, desc, detail) {
-    var key=objectKeyMakerFunction(desc);
+    var key=objectKeyMakerFunctionUnderQuickQuote(desc);
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
         lqbTeaserRateUnderQuickQuote[key]=detail;
@@ -994,12 +994,15 @@ function getClosingCostContainerLastRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
+    rwObj.updateTaxesAndInsurances();
     if(key == "totEstimatedClosingCost"){
     	rwObj.updateTotalEstimatedClosingCosts();
     }
     	
     return row.append(rowDesc).append(rowDetail);
 }
+
+
 function getClosingCostBottomConatinerUnderQuickQuote() {
     // removed class to fixed : NEXNF-578
 	var wrapper = $('<div>').attr({
@@ -1009,23 +1012,32 @@ function getClosingCostBottomConatinerUnderQuickQuote() {
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrows");
+    var headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrow Reserves");
     //NEXNF-569
     
     var row1Con3 = getClosingCostContainerRowUnderQuickQuote(1, getClosingCostLabel("Interest"), "","");
     var row2Con3 = getClosingCostContainerRowUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance"), "");
     
 /*    var row1Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");*///NEXNF-655
-    var row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Varies based on calendar month of closing");
+    var row1Con2;
+    var row2Con2;
+	if(loanPurchaseDetailsUnderQuickQuote.impounds == "No"){
+		row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, "Tax Reserve", "$ 1,072.00", "Varies based on calendar month of closing");
+		row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, "Homeowners Insurance Reserve", "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
+	}
+	else{
+		row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, "Tax Reserve - Estimated 6 Months", "$ 1,072.00", "Varies based on calendar month of closing");
+		row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, "Homeowners Insurance Reserve - Estimated 6 Months", "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
+	}
    /* var row2Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");*/
-    var row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
+   
     //var row1Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
     //var row2Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");//NEXNF-655
-    var row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, getClosingCostLabel("Total Estimated Reserves Deposited in Escrow Account"), "");
+    var row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids and Escrow Reserves", "");
     
     
     //container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
-    container2.append(headerCon2).append(row1Con3).append(row2Con3).append(row1Con2).append(row2Con2).append(row4Con2);
+    container2.append(headerCon2).append(row1Con3).append(row1Con2).append(row2Con2).append(row4Con2);
     //NEXNF-655
     /* 
     var bottomSubText = $('<div>').attr({
@@ -1035,8 +1047,58 @@ function getClosingCostBottomConatinerUnderQuickQuote() {
     return wrapper.append(container2);
 }
 
+function objectKeyMakerFunctionUnderQuickQuote(item) {
+	switch (item) {
+	case getClosingCostLabel("Lender Fee"):
+		return "lenderFee813";
+	case getClosingCostLabel("This is your cost or credit based on rate selected"):
+		return "creditOrCharge802";
+	case getClosingCostLabel("Estimated Lender Costs"):
+		return "TotEstLenCost";
+	case getClosingCostLabel("Appraisal Fee"):
+		return "appraisalFee804";
+	case getClosingCostLabel("Credit Report"):
+		return "creditReport805";
+	case getClosingCostLabel("Flood Certification"):
+		return "floodCertification807";
+	case getClosingCostLabel("Wire Fee"):
+		return "wireFee812";
+	case getClosingCostLabel("Owners Title Insurance"):
+		return "ownersTitleInsurance1103";
+	case getClosingCostLabel("Lenders Title Insurance"):
+		return "lendersTitleInsurance1104";
+	case getClosingCostLabel("Closing/Escrow Fee"):
+		return "closingEscrowFee1102";
+	case getClosingCostLabel("Recording Fee"):
+		return "recordingFees1201";
+	case getClosingCostLabel("City/County Tax stamps"):
+		return "cityCountyTaxStamps1204";
+	case getClosingCostLabel("Total Estimated Third Party Costs"):
+		return "totEstThdPtyCst";
+	case getClosingCostLabel("Interest"):
+		return "interest901";
+	case getClosingCostLabel("Homeowners Insurance"):
+		return "hazIns903";
+	case getClosingCostLabel("Total Prepaids"):
+		return "totPrepaids";
+	case "Tax Reserve - Estimated 6 Months":
+		return "taxResrv1004";
+	case "Tax Reserve":
+		return "taxResrv1004";
+	case "Homeowners Insurance Reserve - Estimated 6 Months":
+		return "hazInsReserve1002";
+	case "Homeowners Insurance Reserve":
+		return "hazInsReserve1002";
+	case "Total Estimated Prepaids and Escrow Reserves":
+		return "totEstResDepWthLen";
+	case getClosingCostLabel("Total Estimated Closing Cost"):
+		return "totEstimatedClosingCost";
+	}
+	return undefined;
+}
+
 function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
-    var key=objectKeyMakerFunction(desc);
+    var key=objectKeyMakerFunctionUnderQuickQuote(desc);
     var indentTextFlag=false;
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
@@ -1051,7 +1113,11 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     }*/
     //NEXNF-483 and updated for 6.17 updates
     // NEXNF-537
-    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || desc =="Your cost or credit based on rate selected"){
+    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||
+    		desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||
+    			desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || 
+    				desc =="Your cost or credit based on rate selected" || desc=="Tax Reserve - Estimated 6 Months" || desc == "Tax Reserve" ||
+    				desc =="Homeowners Insurance Reserve - Estimated 6 Months" || desc =="Homeowners Insurance Reserve"){
     	indentTextFlag=true;
     }else{
     	//NEXNF-622
@@ -1078,6 +1144,7 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
+    rwObj.updateTaxesAndInsurances();
     
     return row.append(rowDesc).append(rowDetail);
 }

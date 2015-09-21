@@ -214,6 +214,7 @@ public class GeneratePdfForQuickQuote {
         Paragraph paragraph = new Paragraph();
         Paragraph imageParagraph = new Paragraph();
         Font font = FontFactory.getFont("Calibri", 6);
+        Font lineFont = FontFactory.getFont("Calibri", 3);
         Font fontWithBigSize = FontFactory.getFont("Calibri", 8);
         Font emailIdFont = FontFactory.getFont("Calibri", 8, Font.UNDERLINE);
         emailIdFont.setColor(BaseColor.BLUE);
@@ -624,8 +625,10 @@ public class GeneratePdfForQuickQuote {
         seventhTable.addCell(cell);
         cell = new PdfPCell(new Phrase("  "+"+Estimated Closing Costs",font));
         cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM);
+        cell.setBorder(Rectangle.LEFT);
         seventhTable.addCell(cell);
+        
+      
         
         //totEstimatedClosingCost
         String totEstThdPtyCst = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstThdPtyCst();
@@ -664,8 +667,20 @@ public class GeneratePdfForQuickQuote {
         	
         
         cell.setPaddingBottom(5f);
-        cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
+        cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        seventhTable.addCell(cell);
+        
+        Paragraph linePara = new Paragraph("  _____________________________________________________________________________________________________________________________________________  ", lineFont);
+        cell.setColspan(2);
+        cell.addElement(linePara);
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(8f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         seventhTable.addCell(cell);
 
         cell = new PdfPCell(new Phrase("  "+"Total Cash Investment",font));
@@ -1369,7 +1384,7 @@ public class GeneratePdfForQuickQuote {
             
             cell = new PdfPCell();
             cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
-            cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
+         //   cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
             cell.setPaddingTop(4);
             cell.setPaddingBottom(4);
             CustomCell borderFT5 = app.new CustomCell();       
