@@ -539,7 +539,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			}
 			
 			else if (ob.workItem.workflowItemType == "APPRAISAL_ORDERED" || ob.workItem.workflowItemType =="APPRAISAL_RECEIVED" ||
-					ob.workItem.workflowItemType == "APPRAISAL_ORDERED_DISPLAY" || ob.workItem.workflowItemType =="APPRAISAL_RECEIVED_DISPLAY")
+					ob.workItem.workflowItemType == "APPRAISAL_ORDERED_VIEW" || ob.workItem.workflowItemType =="APPRAISAL_RECEIVED_VIEW")
 			{
 					data.loanID = workFlowContext.loanId;
 					ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
