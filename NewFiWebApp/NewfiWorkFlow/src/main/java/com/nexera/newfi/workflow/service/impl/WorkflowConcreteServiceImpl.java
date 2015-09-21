@@ -384,6 +384,25 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 	}
 
 	@Override
+	public String getAppraisalMilestoneDates(int loanID, String status) {
+		String milestoneDate = "";
+		Loan loan = new Loan(loanID);
+		LoanMilestone searchCriteria = new LoanMilestone();
+		searchCriteria.setLoan(loan);
+		LoanMilestoneMaster lmMaster = new LoanMilestoneMaster();
+		lmMaster.setName(Milestones.APPRAISAL.getMilestoneKey());
+		searchCriteria.setLoanMilestoneMaster(lmMaster);
+		searchCriteria.setComments(status);
+		LoanMilestone lm = loanService
+		        .findLoanMileStoneByCriteria(searchCriteria);
+		if (lm != null && lm.getStatusUpdateTime() != null) {
+			milestoneDate = String.valueOf(utils.getMMDDForDisplay(lm
+			        .getStatusUpdateTime()));
+		}
+		return milestoneDate;
+	}
+
+	@Override
 	@Transactional
 	public void cleanupDisclosureMilestones(int loanID) {
 		LoanVO loanVO = loanService.getLoanByID(loanID);

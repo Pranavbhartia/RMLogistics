@@ -29,9 +29,12 @@ public interface IWorkflowService {
 	public String getRenderInfoFor1003(int loanID, int userID);
 
 	public String getRenderInfoForAppraisal(int loanID);
+
 	public String getDisclosureURL(int loanID, MasterNeedsEnum needItem);
-	
-	public String getUWMilestoneDates (int loanID, LOSLoanStatus loanStatus);
-	
-	public void cleanupDisclosureMilestones (int loanID);
+
+	public String getUWMilestoneDates(int loanID, LOSLoanStatus loanStatus);
+
+	public void cleanupDisclosureMilestones(int loanID);
+
+	public String getAppraisalMilestoneDates(int loanID, String status);
 }
