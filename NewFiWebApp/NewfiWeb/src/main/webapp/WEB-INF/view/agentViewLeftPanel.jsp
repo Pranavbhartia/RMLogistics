@@ -93,21 +93,21 @@
 				</c:choose>
 			</div>
 		</div>
-		<!--  TODO appending MY LEADS
-		
+		<!--  TODO appending MY LEADS-->
+		<!-- 
 		<div class="lp-item lp-item-agent my-leads-container clearfix" id="lp-my-lead" onclick="paintAgentDashboard('myLeads');">
-			<div class="lp-item-header hide" id="lp-item-header"></div>
-			<div class="lp-item-body lp-agent-item2" id="icn-my-leads">
-				<div class="lp-item-body-row lp-item-body-top-row">
-				<!--  NEXNF-660--->
-					<c:choose>
-						<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
-							<div class="lp-item-body-row lp-item-body-top-row lp-item-body-top-row-adj hide" id="internal-usr-my-leads">
-								MY LEADS
-							</div>	
-						</c:when>
-					</c:choose>
-				</div>
+				<div class="lp-item-header hide" id="lp-item-header"></div>
+					<div class="lp-item-body lp-agent-item2" id="icn-my-leads">
+							<div class="lp-item-body-row lp-item-body-top-row">							
+								<c:choose>
+									<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
+										<div class="lp-item-body-row lp-item-body-top-row lp-item-body-top-row-adj hide" id="internal-usr-my-leads">
+											MY LEADS
+										</div>	
+									</c:when>
+								</c:choose>
+							</div>
+					</div>
 			</div>
 		</div>
 		-->
