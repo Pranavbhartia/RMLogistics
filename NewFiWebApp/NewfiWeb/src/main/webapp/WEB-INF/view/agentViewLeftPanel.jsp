@@ -34,8 +34,8 @@
 		<!-- jira- 858-->
 		<c:choose>
 			<c:when test="${userVO.userRole.roleCd eq 'INTERNAL' }">
-				<div class="lp-item lp-item-quick-quote" id="lp-quick-quote" onclick="loadQuickQoutePage()">Quick Quote</div>
-							<!-- <div class="lp-item-quick-quote" id="lp-quick-quote" onclick="">Quick Quote</div> -->
+				<!--<div class="lp-item lp-item-quick-quote" id="lp-quick-quote" onclick="loadQuickQoutePage()">Quick Quote</div> -->
+							 <div class="lp-item-quick-quote" id="lp-quick-quote" onclick="">Quick Quote</div> 
 			</c:when>
 		</c:choose>
 		<%-- <div class="lp-item lp-item-agent clearfix" id="lp-work-on-loan" onclick="paintAgentDashboard('workloans');">
@@ -93,7 +93,7 @@
 				</c:choose>
 			</div>
 		</div>
-		<!--  TODO appending MY LEADS-->
+		<!--  TODO appending MY LEADS
 		
 		<div class="lp-item lp-item-agent my-leads-container clearfix" id="lp-my-lead" onclick="paintAgentDashboard('myLeads');">
 			<div class="lp-item-header hide" id="lp-item-header"></div>
@@ -110,7 +110,7 @@
 				</div>
 			</div>
 		</div>
-		
+		-->
 		<!--  END-->
 		<div class="lp-item lp-item-agent clearfix" id="lp-my-archives" onclick="paintAgentDashboard('archivesloans');">
 			<div class="lp-item-header hide" id="lp-item-header-archives"></div>
