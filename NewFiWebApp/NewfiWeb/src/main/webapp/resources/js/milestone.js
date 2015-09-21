@@ -755,8 +755,7 @@ function showAppFee (itemToAppendTo,workItem)
 			}
 				
 		}
-		if( itemToAppendTo && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
-				&& workItem.status == NOT_STARTED)
+		if( itemToAppendTo && workItem.status == NOT_STARTED)
 		{ 
 			itemToAppendTo.append(getAppFeeEdit(workItem));
 		}
