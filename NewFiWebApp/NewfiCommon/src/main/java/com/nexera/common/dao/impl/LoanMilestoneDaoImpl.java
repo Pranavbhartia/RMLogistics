@@ -36,26 +36,23 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
 
 	   
     }
-	private List<LoanMilestoneMaster> getMileStoneListForLoanStatus(){
-		List<LoanMilestoneMaster> mileStone=new ArrayList<LoanMilestoneMaster>(); 
-		int[] myIntArray = {Milestones.QC.getMilestoneID(),Milestones.LM_DECISION.getMilestoneID(),Milestones.OTHER.getMilestoneID(),Milestones.APP_FEE.getMilestoneID()};
-		List<Milestones> list = getAllMileStones();
-		int index = 0;
-			for(int i=1;i<=list.size();i++){		
-				if(i != myIntArray[index]){
-					LoanMilestoneMaster master=new LoanMilestoneMaster();
-					master.setId(getMileStones(i).getMilestoneID());
-					mileStone.add(master);					
-				}else {
-					if(index < 3){
-						index++;
-					}
-					
-				}
-				
 
-		}
-		return mileStone;
+	private List<LoanMilestoneMaster> getMileStoneListForLoanStatus(){
+		
+		List<LoanMilestoneMaster> reqdMSs = new ArrayList<LoanMilestoneMaster>();
+		
+		List<Integer> filteredList = new ArrayList<Integer>(Arrays.asList(Milestones.QC.getMilestoneID(),Milestones.LM_DECISION.getMilestoneID(),Milestones.OTHER.getMilestoneID(),Milestones.APP_FEE.getMilestoneID(),Milestones.APPRAISAL.getMilestoneID()));
+		
+		for (Milestones ms : Milestones.values())
+		{
+			if (!filteredList.contains(ms.getMilestoneID()))
+			{
+				LoanMilestoneMaster master=new LoanMilestoneMaster();
+				master.setId(ms.getMilestoneID());
+				reqdMSs.add(master);
+			}
+		}	
+		return reqdMSs;
 	}
 
 	
@@ -70,11 +67,6 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
 		return mileStone;
 	}
 	
-	private List<Milestones> getAllMileStones(){
-		
-		List<Milestones> milestones = Arrays.asList(Milestones.values());		
-		return milestones;
-
-	}
+	
 
 }
