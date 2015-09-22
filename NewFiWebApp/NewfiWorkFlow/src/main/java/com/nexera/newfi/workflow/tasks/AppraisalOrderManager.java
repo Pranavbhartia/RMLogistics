@@ -23,6 +23,7 @@ public class AppraisalOrderManager extends NexeraWorkflowTask implements
 	private IWorkflowService iWorkflowService;
 	@Autowired
 	private LoanService loanService;
+	private String STATUS_VALUE = "Appraisal Ordered";
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(AppraisalOrderManager.class);
 
@@ -36,7 +37,7 @@ public class AppraisalOrderManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		if (String.valueOf(LoadConstants.LQB_APPRAISAL_ORDER).equals(status)) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
-			mileStoneStatus = "Appraisal Ordered";
+			mileStoneStatus = STATUS_VALUE;
 		}
 		if (mileStoneStatus != null) {
 			LOG.debug("Updating Milestone for Appraisal As  " + mileStoneStatus);
@@ -53,8 +54,11 @@ public class AppraisalOrderManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String appOrderDate = iWorkflowService.getAppraisalMilestoneDates(loanId,
+				STATUS_VALUE);
+		return appOrderDate;
 	}
 
 	@Override
