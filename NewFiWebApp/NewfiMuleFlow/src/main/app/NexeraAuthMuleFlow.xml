@@ -17,8 +17,6 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
 
-	
-
 <https:connector name="HttpConnector" clientSoTimeout="120000"
   cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
   receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
@@ -30,6 +28,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
   cookieSpec="netscape" doc:name="HTTP-HTTPS" receiveBacklog="0"
   receiveBufferSize="0" sendBufferSize="0" serverSoTimeout="120000"
   socketSoLinger="0" validateConnections="true">
+
 		<reconnect />
 
  </http:connector>

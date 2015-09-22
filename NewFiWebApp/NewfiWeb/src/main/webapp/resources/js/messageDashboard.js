@@ -773,6 +773,7 @@ function formateDateAndTime(dateTime,isOnAgentDash){
 		if(createdDateStr != null){
 			var complete_date=createdDateStr.slice(0,11);
 		    time=createdDateStr.slice(11);
+		    complete_date = complete_date.replace(/\s/g, '');
 			complete_date=new Date(complete_date);
 			month =  complete_date.getMonth()+1;
 			date = complete_date.getDate();
