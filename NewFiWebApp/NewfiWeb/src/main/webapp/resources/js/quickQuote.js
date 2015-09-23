@@ -1012,7 +1012,7 @@ function getClosingCostBottomConatinerUnderQuickQuote() {
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrow Reserves");
+  
     //NEXNF-569
     
     var row1Con3 = getClosingCostContainerRowUnderQuickQuote(1, getClosingCostLabel("Interest"), "","");
@@ -1021,19 +1021,25 @@ function getClosingCostBottomConatinerUnderQuickQuote() {
 /*    var row1Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Varies based on calendar month of closing)");*///NEXNF-655
     var row1Con2;
     var row2Con2;
+    var headerCon2;
+    var row4Con2;
 	if(loanPurchaseDetailsUnderQuickQuote.impounds == "No"){
+		headerCon2 = getClosingCostConatinerHeader("Estimated Prepaid and Escrows");
 		row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, "Tax Reserve", "$ 1,072.00", "Varies based on calendar month of closing");
 		row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, "Homeowners Insurance Reserve", "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
+		row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids and Escrows", "");
 	}
 	else{
+		headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrow Reserves");
 		row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, "Tax Reserve - Estimated 6 Months", "$ 1,072.00", "Varies based on calendar month of closing");
 		row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, "Homeowners Insurance Reserve - Estimated 6 Months", "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
+		row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids and Escrow Reserves", "");
 	}
    /* var row2Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");*/
    
     //var row1Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(1, getClosingCostLabel("Tax Reserve - Estimated 2 Month"), "$ 1,072.00", "(Varies based on calendar month of closing)");
     //var row2Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");//NEXNF-655
-    var row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids and Escrow Reserves", "");
+     
     
     
     //container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row4Con2);
@@ -1089,6 +1095,8 @@ function objectKeyMakerFunctionUnderQuickQuote(item) {
 		return "hazInsReserve1002";
 	case "Homeowners Insurance Reserve":
 		return "hazInsReserve1002";
+	case "Total Estimated Prepaids and Escrows":
+		return "totEstResDepWthLen";
 	case "Total Estimated Prepaids and Escrow Reserves":
 		return "totEstResDepWthLen";
 	case getClosingCostLabel("Total Estimated Closing Cost"):
