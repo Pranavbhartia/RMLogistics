@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.dao.QuoteDao;
+import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.QuoteDetails;
+import com.nexera.common.vo.QuoteDetailsVO;
 
 @Component
 public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
@@ -34,6 +36,4 @@ public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
 
 	}
 	
-	
-
 }
