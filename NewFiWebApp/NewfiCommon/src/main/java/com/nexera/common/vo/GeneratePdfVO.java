@@ -17,6 +17,7 @@ public class GeneratePdfVO implements Serializable{
 	private String emailId;
 	private String phoneNo;
 	private String pdfUrl;
+	private String impounds;
 	
 	public Integer getUserId() {
 		return userId;
@@ -98,6 +99,15 @@ public class GeneratePdfVO implements Serializable{
 		this.pdfUrl = pdfUrl;
 	}
 
+	public String getImpounds() {
+		return impounds;
+	}
+
+	public void setImpounds(String impounds) {
+		this.impounds = impounds;
+	}
+
+	
 	
 	
 }
