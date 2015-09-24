@@ -2,6 +2,7 @@ package com.nexera.common.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +40,7 @@ import com.nexera.common.entity.User;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanTypeMasterVO;
@@ -1188,122 +1190,6 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	  }
 	 }
 	
-	@Override
-    public List<Loan> getSortedLoanList(DashboardCriteriaVO list) {
-		try{
-			Session session = sessionFactory.getCurrentSession();
-			List<Loan> loanListForUser = new ArrayList<Loan>();
-			List<LoanMilestone> loanList = new ArrayList<LoanMilestone>();
-			
 	
-			Integer[] progressStatus = new Integer[list.getLoanProgessStatus().length];
-			for (int i = 0; i < list.getLoanProgessStatus().length; i++) {
-				progressStatus[i] = Integer.valueOf(list.getLoanProgessStatus()[i]);
-			}
-			Criteria criteria = session.createCriteria(LoanTeam.class);
-			criteria.createAlias("loan", "loan",JoinType.RIGHT_OUTER_JOIN);	
-			criteria.setProjection(Projections.projectionList().add(
-			        Projections.groupProperty("loan.id")));
-			criteria.createAlias("loan.loanProgressStatus", "loanProgressStatus");
-			criteria.add(Restrictions.in("loanProgressStatus.id",progressStatus));		
-			// If the user is Sales manager, retrieve all loans
-			User parseUserModel = (User) this.load(User.class,
-					list.getUserID());
-			if (parseUserModel.getInternalUserDetail() != null) {
-				if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
-				        .getInternalUserDetail().getInternaUserRoleMaster()
-				        .getId()) {
-					criteria.add(Restrictions.eq("active", true));
-					criteria.add(Restrictions.eq("user.id",
-					        parseUserModel.getId()));
-				}
-			} else {
-				criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
-			}
-			
-			criteria.setFirstResult(list.getStartLimit());
-			criteria.setMaxResults(list.getEndLimit());
-
-			if(list.getColumnName().equals("firstName")){
-				criteria.createAlias("loan.user", "user",JoinType.LEFT_OUTER_JOIN);
-				if(list.getOrderByType().equals("ASC")){
-					criteria.addOrder(Order.asc("user.firstName"));
-					
-				}else{
-					criteria.addOrder(Order.desc("user.firstName"));
-				}
-
-			}else if(list.getColumnName().equals( "lastAction")){
-				if(list.getOrderByType().equals("ASC")){
-					criteria.addOrder(Order.asc("loan.modifiedDate"));
-				}else{
-					criteria.addOrder(Order.desc("loan.modifiedDate"));
-				}
-				
-			}else if(list.getColumnName().equals( "loanStatus")){
-				criteria.createAlias("loan.loanMilestones", "milestones");	
-				if(list.getOrderByType().equals("ASC")){
-					criteria.addOrder(Order.asc("milestones.comments"));
-				}else{
-					criteria.addOrder(Order.desc("milestones.comments"));
-				}
-			}else if(list.getColumnName().equals("opened")){
-				if(list.getOrderByType().equals("ASC")){
-					criteria.addOrder(Order.asc("loan.createdDate"));
-				}else{
-					criteria.addOrder(Order.desc("loan.createdDate"));
-				}
-			}
-			
-			List<Integer> loanTeamList = criteria.list();
-
-
-			if (loanTeamList != null) {
-				for (Integer loanTeam : loanTeamList) {
-					Loan loan = (Loan) session.get(Loan.class, loanTeam);
-			
-						loanListForUser.add(loan);
-					}
-				}
-			
-			for (Loan loan : loanListForUser) {
-				Hibernate.isInitialized(loan.getLoanProgressStatus());
-			}
-			
-			if(list.getColumnName().equals( "loanStatus")){
-				Criteria criteria1 = session.createCriteria(LoanMilestone.class);
-				criteria1.createAlias("loan", "loan");	
-				criteria1.add(Restrictions.in("loan",loanListForUser));
-			    criteria1.add(Restrictions.ne("comments", "DELETE"));
-			    criteria1.addOrder(Order.desc("statusInsertTime"));
-			    criteria1.addOrder(Order.desc("statusUpdateTime"));
-			    criteria1.addOrder(Order.desc("order"));
-				if(list.getOrderByType().equals("ASC")){
-					criteria1.addOrder(Order.asc("comments"));
-					
-				}else {
-					criteria1.addOrder(Order.desc("comments"));
-				}
-				
-				/*loanList = criteria1.list();
-				List<Loan> loans = new ArrayList<Loan>();
-				if (loanList != null) {
-					for (LoanMilestone loanMilestone : loanList) {
-							Loan loan = (Loan) session.get(Loan.class, loanMilestone.getLoan().getId());
-							loans.add(loan);
-						}
-					return loans;
-					}*/
-			}
-		    return loanListForUser;
-		    
-		}catch(HibernateException exception){
-			throw new DatabaseException(
-			           "Exception caught in getloanlistsorted() ",
-			           exception);
-		}
-		
-    }
-
 	
 }

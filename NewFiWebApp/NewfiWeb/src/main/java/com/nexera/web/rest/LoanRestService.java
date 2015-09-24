@@ -596,56 +596,6 @@ public class LoanRestService {
 		return responseVO;
 	}
 	
-	@RequestMapping(value = "/sort", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getSortedLoanListForMyLoans(String sortingDetails, HttpServletRequest request,
-	        HttpServletResponse response) {
-
-		Gson gson = new Gson();
 	
-		DashboardCriteriaVO listVO = gson.fromJson(sortingDetails,
-					DashboardCriteriaVO.class);
-		CommonResponseVO responseVO = new CommonResponseVO();
-		ErrorVO error = new ErrorVO();
-		LoanDashboardVO loanDashboardVO;
-		try{
-			 loanDashboardVO = loanService.getLoanListSortedForMyloans(listVO);
-			 responseVO = new CommonResponseVO();
-			 responseVO.setResultObject(loanDashboardVO);
-
-		}catch(Exception e){
-			LOG.error("Sorting by column:"+listVO.getColumnName()+"threw an generic exception hence returning loan list...........");
-			error.setMessage("Error while Sorting.Please try again later");
-			responseVO.setError(error);
-		}
-				
-		return responseVO;
-
-	}
-	
-	@RequestMapping(value = "/sort/archive", method = RequestMethod.POST)
-	public @ResponseBody CommonResponseVO getSortedLoanListForArchivedLoans(String sortingDetails, HttpServletRequest request,
-	        HttpServletResponse response) {
-
-		Gson gson = new Gson();
-	
-		DashboardCriteriaVO listVO = gson.fromJson(sortingDetails,
-					DashboardCriteriaVO.class);
-		CommonResponseVO responseVO = new CommonResponseVO();
-		ErrorVO error = new ErrorVO();
-		LoanDashboardVO loanDashboardVO;
-		try{
-			 loanDashboardVO = loanService.getLoanListSortedForArchivedLoans(listVO);
-			 responseVO = new CommonResponseVO();
-			 responseVO.setResultObject(loanDashboardVO);
-
-		}catch(Exception e){
-			LOG.error("Sorting archived loans by column:"+listVO.getColumnName()+"threw an generic exception hence returning loan list...........");
-			error.setMessage("Error while Sorting.Please try again later");
-			responseVO.setError(error);
-		}
-				
-		return responseVO;
-
-	}
 
 }
