@@ -632,51 +632,12 @@ function appendLeads(elementId, customers){
 			
 			});
 			
-			var col6 = $('<div>').attr({
-				"class" : "leads-container-row-tc6 leads-row-6 float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName
-			}).bind("click",function(){
-				createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-				/*$('div[name="'+$(this).attr("userName")+'"]').removeClass('leads-row-6');
-				$('div[name="'+$(this).attr("userName")+'"]').addClass('leads-user-created');*/
-			
-			});
-			//TO add a condition to check for user created
-			var col7 = $('<div>').attr({
-				"class" : "leads-container-tc7 leads-row-7 float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName+":"+customer.quoteCompositeKey.internalUserId
-			}).bind("click",function(){
-				deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-			
-			});
 			row.append(col1).append(col2).append(col3).append(col4).append(col5);
 			$('#' + elementId).append(row);
 			updateHandler.initiateRequest();
 }
 }
 
-function createUserFromLeads(userName,internalUserID){
-	ajaxRequest("rest/shopper/record/lead/" + userName +"/"+internalUserID, "POST",
-			"json",{}, function(response){
-				if(response.resultObject == "success"){
-					$('div[name="'+userName+'"]').removeClass('leads-row-6');
-					$('div[name="'+userName+'"]').addClass('leads-user-created');
-				}	
-			});
-}
-
-function deleteUserFromLeads(userName,internalUserID){
-	ajaxRequest("rest/shopper/record/delete/lead/" + userName +"/"+internalUserID, "POST",
-			"json",{}, function(response){
-				if(response.resultObject == "success"){
-					$('div[name="'+userName+":"+InternalUserID+'"]').parent().remove();
-				}	
-			});
-}
 function appendCustomers(elementId, customers,skipDataClearing) {
 	
 		var list = customers;
@@ -1131,20 +1092,10 @@ function appendTableHeader(elementId){
 		
 		var thCol5 = $('<div>').attr({
 			"class" : "leads-container-tc5 leads-col-5 float-left"
-		}).html("Summary");
+		}).html("Quote");
 		
-		var thCol6 = $('<div>').attr({
-			"class" : "leads-container-tc6 leads-col-6 float-left"
-		}).html("Account");
-		
-		var thCol7 = $('<div>').attr({
-			"class" : "leads-container-tc7 leads-col-7 float-left"
-		}).html("Delete");
-		
-		
-
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
-				.append(thCol4).append(thCol5).append(thCol6).append(thCol7);
+				.append(thCol4).append(thCol5);
 
 
 	    $('#' + elementId).append(tableHeader);
