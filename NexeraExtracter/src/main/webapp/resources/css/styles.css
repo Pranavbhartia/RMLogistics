@@ -490,3 +490,31 @@ table.adjuster-table {
 .mammoth-table5 .price-table-td:first-child {
 	width:135px;
 }
+.olympic-piggyback-table {
+	margin: 50px 15px;
+}
+.olympic-piggyback-row-lHS {
+	border-right: none;
+    display: table-cell;
+    padding-left: 5px;
+    font-family: 'opensanssemibold';
+}
+
+.olympic-piggyback-row-RHS {
+    border-left: none;
+    display: table-cell;
+    padding-right: 5px;
+    font-family: 'opensanssemibold';
+}
+.ltv-desc-table-row.olympic-piggyback-row:FIRST-CHILD {
+	text-align: center;
+    background-color: #428bca;
+    font-family: 'opensanssemibold';
+    color: black;
+}
+.ltv-desc-table-row.olympic-piggyback-row:nth-child(3) {
+
+    font-family: 'opensanssemibold';
+    padding-left: 5px;
+}
+    
