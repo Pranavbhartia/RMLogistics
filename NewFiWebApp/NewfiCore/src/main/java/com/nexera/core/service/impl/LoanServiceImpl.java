@@ -1956,7 +1956,7 @@ public class LoanServiceImpl implements LoanService {
 				loanManagerEmailEntity.setCCList(loanManagerccList);
 			}
 			try {
-				sendEmailService.sendEmailForLoanManagers(
+				sendEmailService.sendEmailForInternalUsersAndSM(
 				        loanManagerEmailEntity, loanId, loanManagerTemplate);
 			} catch (InvalidInputException e) {
 				LOG.error("Mail send failed--" + e);
