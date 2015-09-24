@@ -236,10 +236,7 @@ public interface LoanService {
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
 	         String startLimit, String endLimit);
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
-	
-	public LoanDashboardVO getLoanListSortedForMyloans(DashboardCriteriaVO list);
-	
-	public LoanDashboardVO getLoanListSortedForArchivedLoans(DashboardCriteriaVO list);
+
 
 
 }

@@ -214,7 +214,7 @@ function getDashboardRightPanel() {
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
 				if(startLimit==0){
 					isArchivedLoans = false;
-					paintAgentDashboardRightPanel(responses);
+					paintAgentDashboardRightPanel(responses.resultObject.customers);
 				}else{
 					appendCustomers("leads-container", customerData.customers,true);
 				}
@@ -262,7 +262,7 @@ function getDashboardRightPanelForMyLoans(loanType) {
 				newfiObject.fetchLock=undefined;
 				if(startLimit==0){
 					isArchivedLoans = false;
-					paintAgentDashboardRightPanel(response);
+					paintAgentDashboardRightPanel(response.resultObject.customers);
 				}else{
 					if(response.resultObject&&response.resultObject.customers){
 						customers=response.resultObject.customers
@@ -279,11 +279,16 @@ function getDashboardRightPanelForArchivesLoans(loanType) {
 	var userID = newfiObject.user.id;
 	isArchivedLoans = true;
 	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET",
-			"json", {}, paintAgentDashboardRightPanel);
+			"json", {}, paintAgentDashboardForArchiveLoans);
 }
-
+function paintAgentDashboardForArchiveLoans(data){
+	if(data.error == null){
+		paintAgentDashboardRightPanel(data.resultObject.customers);
+	}
+	
+}
 function paintAgentDashboardRightPanel(data) {
-	    data = data.resultObject.customers;
+	   /* data = data.resultObject.customers;*/
 
 		$('#agent-dashboard-container').html("");
 		var header = $('<div>').attr({
@@ -315,7 +320,7 @@ function paintAgentDashboardRightPanel(data) {
 			
 			$(this).parent().find('.search-input').show().focus();
 		    if($('#customerSearch').val()!="" && $('#customerSearch').val()!=undefined){
-		    	searchByTermAndLoanType(customerData.customers);
+		    	searchByTermAndLoanType(data);
 				$(this).show();
 		    }
 		
@@ -329,7 +334,7 @@ function paintAgentDashboardRightPanel(data) {
 				if ($(this).val() == "") {
 					$(this).hide();
 				}
-				searchByTermAndLoanType(customerData.customers);
+				searchByTermAndLoanType(data);
 				$(this).parent().find('.search-icn').show();
 		
 			}
@@ -426,7 +431,7 @@ function searchByTermAndLoanType(customers) {
 function searchCustomerLoanByLoanStatus(customers, loanStatus) {
 	var searchObject = new Array();
 
-	if (loanStatus != LOAN_ENUM.ALL) {
+	if (loanStatus != undefined && loanStatus != LOAN_ENUM.ALL ) {
 		for (i in customers) {
 			if (customers[i].loanStatus == loanStatus) {
 				searchObject.push(customers[i]);
@@ -546,12 +551,9 @@ function appendLeads(elementId, customers){
 	
 			
 			var col1 = $('<div>').attr({
-				"class" : "leads-container-tc1 float-left clearfix",
+				"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
 					"id" : "leads-container-tc1-id"
 				});
-				
-			$(col1).addClass('sm-leads-container-tr1');
-
 			
 			 var profImage = $('<div>').attr({
 					
@@ -623,17 +625,19 @@ function appendLeads(elementId, customers){
 			}).html(createdDateStr);
 			
 			var col5 = $('<div>').attr({
-				"class" : "leads-container-tc5 leads-row-5 float-left",
+				"class" : "leads-container-row-tc5 leads-row-5 float-left",
 				"name" : customer.pdfUrl
 			}).bind("click",function(){
 				window.open($(this).attr("name"));
 			
 			});
+			
 			row.append(col1).append(col2).append(col3).append(col4).append(col5);
 			$('#' + elementId).append(row);
 			updateHandler.initiateRequest();
 }
 }
+
 function appendCustomers(elementId, customers,skipDataClearing) {
 	
 		var list = customers;
@@ -1089,7 +1093,7 @@ function appendTableHeader(elementId){
 		var thCol5 = $('<div>').attr({
 			"class" : "leads-container-tc5 leads-col-5 float-left"
 		}).html("Quote");
-
+		
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
 				.append(thCol4).append(thCol5);
 
@@ -4700,10 +4704,12 @@ $('body').on('click','.leads-container-tc6.sm-leads-container-tc6',function(){
 	}
 	
 });
+
 //Function to get Loan list Sorted
 function getLoanListSortedForMyLoans(columnName,orderType){
 
 	var sortLimit=0;
+	var userID = newfiObject.user.id;
 	if(columnName == "firstName"){
 		if(newfiObject.nameSortfetchedCount)
 			sortLimit = newfiObject.nameSortfetchedCount;
@@ -4717,34 +4723,27 @@ function getLoanListSortedForMyLoans(columnName,orderType){
 		if(newfiObject.lastActionSortfetchedCount)
 			sortLimit = newfiObject.lastActionSortfetchedCount;
 	}
-	
-	newfiObject.fetchLock=true;
-	var userID = newfiObject.user.id;
-	var sortingDetails = new Object();
-	sortingDetails.userID = userID;	
-	sortingDetails.columnName = columnName;
-	sortingDetails.startLimit = sortLimit;
-	sortingDetails.endLimit = customerFetchCount;
-	sortingDetails.orderByType = orderType;
 		
-	$.ajax({
-        url: "rest/loan/sort",
-        type: "POST",
-        data: {
-            "sortingDetails": JSON.stringify(sortingDetails),
-        },
-        datatype: "application/json",
-        cache:false,
-        success: function(response) {
+	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
+			"json", {"startlimit":sortLimit,"count":customerFetchCount}, function(response){
         	if(response.error == null){
         		newfiObject.fetchLock=undefined;
+        		var customerData = response.resultObject.customers.slice(0);
+        		if(columnName == "firstName"){
+        			customerData = functionSortByName(customerData,orderType);
+        		}else if(columnName == "loanStatus"){          		
+        			customerData = functionSortByLoanStatus(customerData,orderType);
+        		}else if(columnName == "opened"){
+        			customerData = functionSortByCreatedDate(customerData,orderType);
+        		}else if(columnName == "lastAction"){
+        			customerData = functionSortByLastAction(customerData,orderType);
+        		}       		       		
     			if(sortLimit==0){
     				isArchivedLoans = false;
-    				paintAgentDashboardRightPanel(response);
+    				paintAgentDashboardRightPanel(customerData);
     			}else{
-    				if(response.resultObject&&response.resultObject.customers){
-    					customers=response.resultObject.customers;
-    					appendCustomers("leads-container", customers,true);
+    				if(customerData){
+    					appendCustomers("leads-container", customerData,true);
     					
     				}
     			}	
@@ -4761,11 +4760,7 @@ function getLoanListSortedForMyLoans(columnName,orderType){
         	}else {
         		showErrorToastMessage(response.error.message);
         	}
-			
-        },
-        error: function(data) {
-       
-        }
+
     });
 	
 	
@@ -4773,70 +4768,96 @@ function getLoanListSortedForMyLoans(columnName,orderType){
 
 function getLoanListSortedForArchives(columnName,orderType){
 
-	var sortLimit=0;
-	if(columnName == "firstName"){
-		if(newfiObject.nameSortfetchedCount)
-			sortLimit = newfiObject.nameSortfetchedCount;
-	}else if(columnName == "loanStatus"){
-		if(newfiObject.loanStatusSortfetchedCount)
-			sortLimit = newfiObject.loanStatusSortfetchedCount;
-	}else if(columnName == "opened"){
-		if(newfiObject.openedSortfetchedCount)
-			sortLimit = newfiObject.openedSortfetchedCount;
-	}else if(columnName == "lastAction"){
-		if(newfiObject.lastActionSortfetchedCount)
-			sortLimit = newfiObject.lastActionSortfetchedCount;
-	}
-	
-	newfiObject.fetchLock=true;
-	var userID = newfiObject.user.id;
-	var sortingDetails = new Object();
-	sortingDetails.userID = userID;	
-	sortingDetails.columnName = columnName;
-	sortingDetails.startLimit = sortLimit;
-	sortingDetails.endLimit = customerFetchCount;
-	sortingDetails.orderByType = orderType;
-		
-	$.ajax({
-        url: "rest/loan/sort/archive",
-        type: "POST",
-        data: {
-            "sortingDetails": JSON.stringify(sortingDetails),
-        },
-        datatype: "application/json",
-        cache:false,
-        success: function(response) {
+	var userID = newfiObject.user.id;		
+	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET",
+			"json", {}, function(response){
         	if(response.error == null){
         		newfiObject.fetchLock=undefined;
-    			if(sortLimit==0){
-    				isArchivedLoans = true;
-    				paintAgentDashboardRightPanel(response);
-    			}else{
-    				if(response.resultObject&&response.resultObject.customers){
-    					customers=response.resultObject.customers;
-    					appendCustomers("leads-container", customers,true);
-    					
-    				}
-    			}	
-    			sortLimit = sortLimit+customerFetchCount;
-    			if(columnName == "firstName"){
-    				newfiObject.nameSortfetchedCount = sortLimit;
-    			}else if(columnName == "loanStatus"){
-    				newfiObject.loanStatusSortfetchedCount = sortLimit;
-    			}else if(columnName == "opened"){
-    				newfiObject.openedSortfetchedCount = sortLimit;
-    			}else if(columnName == "lastAction"){
-    				newfiObject.lastActionSortfetchedCount = sortLimit;
-    			}
+        		var customerData = response.resultObject.customers.slice(0);
+        		if(columnName == "firstName"){
+        			customerData = functionSortByName(customerData,orderType);
+        		}else if(columnName == "loanStatus"){          		
+        			customerData = functionSortByLoanStatus(customerData,orderType);
+        		}else if(columnName == "opened"){
+        			customerData = functionSortByCreatedDate(customerData,orderType);
+        		}else if(columnName == "lastAction"){
+        			customerData = functionSortByLastAction(customerData,orderType);
+        		}       		       		
+        		paintAgentDashboardRightPanel(customerData);
+   			
         	}else {
         		showErrorToastMessage(response.error.message);
         	}
-			
-        },
-        error: function(data) {
-       
-        }
-    });
+
+    });	
 	
-	
+}
+function functionSortByName(byName,orderType){
+	if(orderType == "ASC"){
+		byName.sort(function(a,b) {
+			var x = a.name.toLowerCase();
+			var y = b.name.toLowerCase();
+			return x < y ? -1 : x > y ? 1 : 0;
+		});
+	}else {
+		byName.sort(function(a,b) {
+			var x = a.name.toLowerCase();
+			var y = b.name.toLowerCase();
+			return y < x ? -1 : y > x ? 1 : 0;
+		});
+	}
+	return byName;
+}
+
+function functionSortByLoanStatus(byName,orderType){
+	if(orderType == "ASC"){
+		byName.sort(function(a,b) {
+			var x = a.lqbLoanStatus.toLowerCase();
+			var y = b.lqbLoanStatus.toLowerCase();
+			return x < y ? -1 : x > y ? 1 : 0;
+		});
+	}else {
+		byName.sort(function(a,b) {
+			var x = a.lqbLoanStatus.toLowerCase();
+			var y = b.lqbLoanStatus.toLowerCase();
+			return y < x ? -1 : y > x ? 1 : 0;
+		});
+	}
+	return byName;
+}
+
+function functionSortByCreatedDate(byName,orderType){
+	if(orderType == "ASC"){
+		byName.sort(function(a,b) {
+
+			var x = a.loanInitiatedOn;
+			var y = b.loanInitiatedOn;
+			return x < y ? -1 : x > y ? 1 : 0;
+		});
+	}else {
+		byName.sort(function(a,b) {
+			var x = a.loanInitiatedOn;
+			var y = b.loanInitiatedOn;
+			return y < x ? -1 : y > x ? 1 : 0;
+		});
+	}
+	return byName;
+}
+
+function functionSortByLastAction(byName,orderType){
+	if(orderType == "ASC"){
+		byName.sort(function(a,b) {
+
+			var x = a.time;
+			var y = b.time;
+			return x < y ? -1 : x > y ? 1 : 0;
+		});
+	}else {
+		byName.sort(function(a,b) {
+			var x = a.time;
+			var y = b.time;
+			return y < x ? -1 : y > x ? 1 : 0;
+		});
+	}
+	return byName;
 }

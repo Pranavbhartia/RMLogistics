@@ -162,5 +162,4 @@ public interface LoanDao extends GenericDao {
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel);
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
 
-	public List<Loan> getSortedLoanList(DashboardCriteriaVO list);
 }
