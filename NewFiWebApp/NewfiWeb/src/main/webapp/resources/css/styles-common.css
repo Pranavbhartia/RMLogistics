@@ -188,7 +188,7 @@ input.reg-radio {
 
 .reg-input-row .reg-lname{
 	/* margin-left: 20px; */
-k}
+}
 
 .reg-input-row .reg-fname,
 .reg-input-row .reg-lname{
@@ -739,6 +739,7 @@ a.cus-eng-succ-mess-email {
 }
 .leads-col-1,.leads-col-3{
     width: 150px;
+
 }
 
 .leads-col-2 {

@@ -40,6 +40,7 @@ public class TeaserRateVO {
 	   private String residenceType;
 	   private String loanType;
 	   private PurchaseDetails purchaseDetails;
+	   private String propertyTaxesPaid;
 	   
 	public String getRefinanceOption() {
 		return refinanceOption;
@@ -250,6 +251,12 @@ public class TeaserRateVO {
 	}
 	public void setPurchaseDetails(PurchaseDetails purchaseDetails) {
 		this.purchaseDetails = purchaseDetails;
+	}
+	public String getPropertyTaxesPaid() {
+		return propertyTaxesPaid;
+	}
+	public void setPropertyTaxesPaid(String propertyTaxesPaid) {
+		this.propertyTaxesPaid = propertyTaxesPaid;
 	}
 	   
 	

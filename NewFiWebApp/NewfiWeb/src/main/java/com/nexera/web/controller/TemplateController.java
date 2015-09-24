@@ -99,6 +99,23 @@ public class TemplateController extends DefaultController {
 		return mav;
 	}
 
+	@RequestMapping(value = "checkMongoService.do")
+	public ModelAndView checkMongoService(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+
+		// Check if the user has session now. If yes, force invalidate it.
+		Object session = request.getSession(false);
+		if (session != null) {
+			request.getSession(false).invalidate();
+		}
+		// Create a new session now.
+		LOG.debug("Creating a new session for the user");
+		request.getSession(true);
+		mav.addObject("baseUrl", baseUrl);
+		mav.setViewName("checkMongoService");
+		return mav;
+	}
+	
 	@RequestMapping(value = "/uploadCommonImageToS3.do", method = RequestMethod.POST)
 	public @ResponseBody String uploadCommonImageToS3(HttpServletRequest req,
 	        Model model)

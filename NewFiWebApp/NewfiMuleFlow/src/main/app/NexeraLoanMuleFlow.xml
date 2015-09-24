@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
 		enableMuleSoapHeaders="true" initializeStaticBusInstance="true"
 		doc:name="CXF Configuration" />
 
-	<https:connector name="NoSessionConnector" doc:name="HTTP-HTTPS">
+	<https:connector name="NoSessionConnector" doc:name="HTTP\HTTPS">
 		<service-overrides sessionHandler="org.mule.session.NullSessionHandler" />
 	</https:connector>
 	<spring:beans>

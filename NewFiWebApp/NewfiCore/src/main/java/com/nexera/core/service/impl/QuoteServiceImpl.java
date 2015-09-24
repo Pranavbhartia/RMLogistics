@@ -1,7 +1,10 @@
 package com.nexera.core.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +13,10 @@ import com.google.gson.Gson;
 import com.nexera.common.compositekey.QuoteCompositeKey;
 import com.nexera.common.dao.LoanDao;
 import com.nexera.common.dao.QuoteDao;
+import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.vo.GeneratePdfVO;
+import com.nexera.common.vo.QuoteDetailsVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateVO;
@@ -64,6 +69,105 @@ public class QuoteServiceImpl implements QuoteService {
 		return status;
 	}
 	
+	@Transactional
+	public QuoteDetails getUserDetails(QuoteCompositeKey quoteCompositeKey){
+		QuoteDetails quoteDetails = quoteDao.getUserDetails(quoteCompositeKey);
+		return quoteDetails;
+	}
+	
+	
+	@Transactional
+	public boolean createNewUser(String userName, Integer internalUserId){
+		QuoteCompositeKey key = new QuoteCompositeKey();
+		key.setInternalUserId(internalUserId);
+		key.setUserName(userName);
+		QuoteDetails quoteDetails = getUserDetails(key);
+		
+		return true;
+	}
 
+	@Transactional
+	public void updateCreatedUser(QuoteCompositeKey compKey){
+		quoteDao.updateCreatedUser(compKey);
+	}
+	
+	@Transactional
+	public void updateDeletedUser(QuoteCompositeKey compKey){
+		quoteDao.updateDeletedUser(compKey);
+	}
+	
+	public String createTeaserRateData(QuoteDetails quoteDetails){
+		Gson gson = new Gson();
+		String teaserRate = quoteDetails.getLqbRateJson();
+		return teaserRate;
+	}
+	
+	public String createRegistrationDetails(QuoteDetails quoteDetails){
+		Gson gson = new Gson();
+		JSONObject mainJson = new JSONObject();
+		JSONObject personalDetails = new JSONObject();
+		JSONObject loanType = new JSONObject();
+		JSONObject purchaseDetails = new JSONObject();
+		JSONObject propertyTypeMaster = new JSONObject();
+		JSONObject refinancedetails = new JSONObject();
+		
+		personalDetails.put("firstName", quoteDetails.getProspectFirstName());
+		personalDetails.put("lastName", quoteDetails.getProspectLastName());
+		personalDetails.put("emailId", quoteDetails.getEmailId());
+		
+		mainJson.put("user", personalDetails);
+		
+		TeaserRateVO teaserRateVO = gson.fromJson(quoteDetails.getInputDetailsJson(), TeaserRateVO.class);
+		
+		if(teaserRateVO.getLoanType().equals("REFCO")){
+			loanType.put("loanTypeCd","REF");
+			refinancedetails.put("cashTakeOut", teaserRateVO.getCashTakeOut());
+		}
+		else{
+			loanType.put("loanTypeCd",teaserRateVO.getLoanType());
+		}
+		
+		mainJson.put("loanType", loanType);
+		
+		
+		if(teaserRateVO.getLoanType().equals("PUR")){
+			propertyTypeMaster.put("propertyTypeCd", teaserRateVO.getPropertyType());
+			propertyTypeMaster.put("residenceTypeCd", teaserRateVO.getResidenceType());
+			propertyTypeMaster.put("homeZipCode", teaserRateVO.getZipCode());
+			
+			mainJson.put("propertyTypeMaster", propertyTypeMaster); 
+			
+			PurchaseDetails purchase = teaserRateVO.getPurchaseDetails();
+			String purchaseJsonString = gson.toJson(purchase);
+			JSONObject purchaseJson = new JSONObject(purchaseJsonString);
+			
+			mainJson.put("purchaseDetails", purchaseJson);
+		}
+		else{
+			propertyTypeMaster.put("propertyTaxesPaid", teaserRateVO.getPropertyTaxesPaid());
+			propertyTypeMaster.put("propertyInsuranceCost", teaserRateVO.getAnnualHomeownersInsurance());
+			propertyTypeMaster.put("homeWorthToday", teaserRateVO.getHomeWorthToday());
+			propertyTypeMaster.put("homeZipCode", teaserRateVO.getZipCode());
+			propertyTypeMaster.put("propTaxMonthlyOryearly", "Year");
+			propertyTypeMaster.put("propInsMonthlyOryearly", "Year");
+			propertyTypeMaster.put("propertyTypeCd", teaserRateVO.getPropertyType());
+			propertyTypeMaster.put("residenceTypeCd", teaserRateVO.getResidenceType());
+			
+			mainJson.put("propertyTypeMaster", propertyTypeMaster);
+			
+			refinancedetails.put("refinanceOption", teaserRateVO.getRefinanceOption());
+			refinancedetails.put("currentMortgageBalance", teaserRateVO.getCurrentMortgageBalance());
+			refinancedetails.put("includeTaxes", teaserRateVO.getPrivateincludeTaxes());
+			
+			mainJson.put("refinancedetails", refinancedetails);
+			
+			
+			
+		}
+		return mainJson.toString();
+		
+	}
+	
+	
 	
 }
