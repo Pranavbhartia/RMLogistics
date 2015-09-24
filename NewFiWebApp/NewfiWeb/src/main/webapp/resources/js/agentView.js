@@ -4872,20 +4872,42 @@ function functionSortByName(byName,orderType){
 }
 
 function functionSortByLoanStatus(byName,orderType){
-	if(orderType == "ASC"){
-		byName.sort(function(a,b) {
-			var x = a.lqbLoanStatus.toLowerCase();
-			var y = b.lqbLoanStatus.toLowerCase();
-			return x < y ? -1 : x > y ? 1 : 0;
-		});
-	}else {
-		byName.sort(function(a,b) {
-			var x = a.lqbLoanStatus.toLowerCase();
-			var y = b.lqbLoanStatus.toLowerCase();
-			return y < x ? -1 : y > x ? 1 : 0;
-		});
-	}
-	return byName;
+	 if(orderType == "ASC"){
+	  byName.sort(function(a,b) {
+	   var x = "";
+	   if(a.lqbLoanStatus != null){
+	    x = a.lqbLoanStatus.toLowerCase();
+	   }
+	   var y = "";
+	   if(b.lqbLoanStatus != null){
+	     y = b.lqbLoanStatus.toLowerCase();
+	   }
+	   if(x != "" && y != ""){
+	    return x < y ? -1 : x > y ? 1 : 0;
+	   }else {
+	    return -1;
+	   }
+	   
+	  });
+	 }else {
+	  byName.sort(function(a,b) {
+	   var x = "";
+	   if(a.lqbLoanStatus != null){
+	    x = a.lqbLoanStatus.toLowerCase();
+	   }
+	   var y = "";
+	   if(b.lqbLoanStatus != null){
+	     y = b.lqbLoanStatus.toLowerCase();
+	   }
+	   if(x != "" && y != ""){
+	    return y < x ? -1 : y > x ? 1 : 0;
+	   }else {
+	    return -1;
+	   }
+	   
+	  });
+	 }
+	 return byName;
 }
 
 function functionSortByCreatedDate(byName,orderType){

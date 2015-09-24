@@ -1876,6 +1876,9 @@ $(document).click(function(){
 
 $("body").on('click',"#quick-quote-generate-pdf",function(e){
 	for (var key in closingCostHolder.valueSet) {
+		if(key=="taxResrv1004" || key == "hazInsReserve1002" ){
+			continue;
+		}
 		lqbTeaserRateUnderQuickQuote[key]=closingCostHolder.valueSet[key];
 	}
 	sendPurchasePdfUnderQuickQuote();
