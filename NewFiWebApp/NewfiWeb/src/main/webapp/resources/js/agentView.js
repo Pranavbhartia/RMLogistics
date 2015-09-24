@@ -1143,7 +1143,7 @@ function appendTableHeader(elementId){
 		
 		var thCol5 = $('<div>').attr({
 			"class" : "leads-container-tc5 leads-col-5 float-left"
-		}).html("Quote");
+		}).html("Summary");
 		
 		var thCol6 = $('<div>').attr({
 			"class" : "leads-container-tc6 leads-col-6 float-left"
