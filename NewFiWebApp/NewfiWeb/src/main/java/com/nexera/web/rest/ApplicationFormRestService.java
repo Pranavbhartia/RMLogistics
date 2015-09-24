@@ -3,6 +3,7 @@ package com.nexera.web.rest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,12 +46,19 @@ import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.Template;
+import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.exception.InvalidInputException;
+import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
+import com.nexera.common.vo.LoanTeamListVO;
+import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
@@ -594,14 +602,16 @@ public class ApplicationFormRestService {
 				// .getLoggedInUser(), false);
 			}
 		}*/
-		boolean sendMailToLM = false;
+		boolean sendNoProductsMail = false;
 		if (loanCreatedNSaved) {
 			if ((lockRateData == null || lockRateData.equals("error") || lockRateData
 			        .equals("")) && loanCreatedNSaved) {
-				sendMailToLM = true;
+				sendNoProductsMail = true;
 			}
 			loanService.sendApplicationSubmitConfirmationMail(loaAppFormVO.getLoan()
-			        .getId(),sendMailToLM);
+			        .getId(),sendNoProductsMail);
+			
+			
 		}
 		
 		// if ((lockRateData == null || lockRateData.equals("error") ||

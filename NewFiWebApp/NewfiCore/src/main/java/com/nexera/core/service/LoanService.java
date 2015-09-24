@@ -175,8 +175,7 @@ public interface LoanService {
 
 	public void sendApplicationFinishedEmail(Loan loan);
 
-	public void sendApplicationSubmitConfirmationMail(Integer loanId,
-	        boolean sendMailToLM);
+	public void sendApplicationSubmitConfirmationMail(Integer loanId, boolean sendNoProductsMail);
 
 	public void createAlertForAgentAddition(int loanId);
 
@@ -241,5 +240,6 @@ public interface LoanService {
 	public LoanDashboardVO getLoanListSortedForMyloans(DashboardCriteriaVO list);
 	
 	public LoanDashboardVO getLoanListSortedForArchivedLoans(DashboardCriteriaVO list);
+
 
 }

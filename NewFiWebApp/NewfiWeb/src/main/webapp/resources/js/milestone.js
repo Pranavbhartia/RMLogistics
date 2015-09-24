@@ -538,6 +538,12 @@ function getInternalEmployeeMileStoneContext( workItem) {
 					$(ob.stateInfoContainer).addClass("cursor-pointer");
 			}
 			
+			else if (ob.workItem.workflowItemType == "APPRAISAL_ORDERED" || ob.workItem.workflowItemType =="APPRAISAL_RECEIVED" ||
+					ob.workItem.workflowItemType == "APPRAISAL_ORDERED_VIEW" || ob.workItem.workflowItemType =="APPRAISAL_RECEIVED_VIEW")
+			{
+					data.loanID = workFlowContext.loanId;
+					ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;				
+			}
 			
 			if(ajaxURL&&ajaxURL!=""){
 				ajaxRequest(ajaxURL, "POST", "json", JSON.stringify(data),
@@ -755,8 +761,7 @@ function showAppFee (itemToAppendTo,workItem)
 			}
 				
 		}
-		if( itemToAppendTo && newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleDescription == SALES_MANAGER 
-				&& workItem.status == NOT_STARTED)
+		if( itemToAppendTo && workItem.status == NOT_STARTED)
 		{ 
 			itemToAppendTo.append(getAppFeeEdit(workItem));
 		}

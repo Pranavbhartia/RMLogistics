@@ -23,6 +23,8 @@ public class AppraisalReceiptManager extends NexeraWorkflowTask implements
 	private IWorkflowService iWorkflowService;
 	@Autowired
 	private LoanService loanService;
+	
+	private String STATUS_VALUE = "Appraisal Received";
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(AppraisalReceiptManager.class);
 
@@ -36,7 +38,7 @@ public class AppraisalReceiptManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		if (String.valueOf(LoadConstants.LQB_APPRAISAL_RECEIVED).equals(status)) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
-			mileStoneStatus = "Appraisal Received";
+			mileStoneStatus = STATUS_VALUE;
 		}
 		if (mileStoneStatus != null) {
 			LOG.debug("Updating Milestone for Appraisal As  " + mileStoneStatus);
@@ -53,8 +55,11 @@ public class AppraisalReceiptManager extends NexeraWorkflowTask implements
 
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
-		// TODO Auto-generated method stub
-		return null;
+		int loanId = Integer.parseInt(inputMap.get(
+		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+		String appOrderDate = iWorkflowService.getAppraisalMilestoneDates(loanId,
+				STATUS_VALUE);
+		return appOrderDate;
 	}
 
 	@Override

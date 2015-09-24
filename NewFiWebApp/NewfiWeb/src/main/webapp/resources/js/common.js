@@ -844,6 +844,7 @@ function getRowHolderObject(container, value, key) {
 			var ob = this;
 			var getVal = ob.getValueForItem();
 			$(ob.container).text(getVal);
+			totalEstimatedClosingCosts[key]=getVal;
 		},
 		updateDataForPDF : function(){
 			var ob = this;

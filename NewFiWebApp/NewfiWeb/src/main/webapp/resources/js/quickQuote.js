@@ -1801,6 +1801,7 @@ function processCommonParameters(){
 	loanPurchaseDetailsUnderQuickQuote.emailId = $('input[id="emailID"]').val();
 	var phoneNumber = $('input[id="primaryPhoneID"]').val();
 	loanPurchaseDetailsUnderQuickQuote.phoneNo = phoneNumber.replace(/[^0-9]/g, '');
+	buyHomeRefinanceRate.privateincludeTaxes = "No";
 	if($('div[id="impound"]').attr('value') == 'Yes'){
 		if($('input[id="propertyTaxesPaid"]').val() != null && $('input[id="propertyTaxesPaid"]').val() != ""){
 			buyHomeRefinanceRate.propertyTaxesPaid = parseFloat(removedDoller(removedComma($('input[id="propertyTaxesPaid"]').val()))); 	
@@ -1808,6 +1809,7 @@ function processCommonParameters(){
 		if($('input[id="annualHomeownersInsurance"]').val() != null && $('input[id="annualHomeownersInsurance"]').val() != "" ){
 			buyHomeRefinanceRate.annualHomeownersInsurance = parseFloat(removedDoller(removedComma( $('input[id="annualHomeownersInsurance"]').val())));	
 		}
+		buyHomeRefinanceRate.privateincludeTaxes = "Yes";
 	}
 	
 }
@@ -1817,6 +1819,8 @@ function processBuyHomeUnderQuickQuote(){
 	buyHomeRefinanceRate.purchaseDetails.housePrice = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))); 
 	buyHomeRefinanceRate.purchaseDetails.loanAmount = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))) - parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 	buyHomeRefinanceRate.purchaseDetails.rentPerMonth = parseFloat(removedDoller(removedComma($('input[id="rentPerMonth"]').val())));
+	buyHomeRefinanceRate.purchaseDetails.buyhomeZipPri = $('input[id="zipCode"]').val();
+	
 	buyHomeRefinanceRate.impounds = $('div[id="impound"]').attr('value');
 	if($('input[id="rentPerMonth"]').val() != ""){
 		buyHomeRefinanceRate.rentPerMonth = parseFloat(removedDoller(removedComma($('input[id="rentPerMonth"]').val()))); 
@@ -1830,7 +1834,6 @@ function processBuyHomeUnderQuickQuote(){
 
 function processRateAndTermUnderQuickQuote(){
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
-	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
 	processCommonParameters();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	
@@ -1839,7 +1842,6 @@ function processRateAndTermUnderQuickQuote(){
 function processCashOutUnderQuickQuote(){
 	buyHomeRefinanceRate.cashTakeOut = parseFloat(removedDoller(removedComma($('input[id="cashTakeOut"]').val())));
 	buyHomeRefinanceRate.currentMortgagePayment = parseFloat(removedDoller(removedComma($('input[id="currentMortgagePayment"]').val())));
-	buyHomeRefinanceRate.isIncludeTaxes = "Yes";
 	processCommonParameters();
 	paintRefinanceSeeRatesUnderQuickQuote("",buyHomeRefinanceRate);
 	
@@ -1862,6 +1864,9 @@ $(document).click(function(){
 
 
 $("body").on('click',"#quick-quote-generate-pdf",function(e){
+	for (var key in closingCostHolder.valueSet) {
+		lqbTeaserRateUnderQuickQuote[key]=closingCostHolder.valueSet[key];
+	}
 	sendPurchasePdfUnderQuickQuote();
 });
 

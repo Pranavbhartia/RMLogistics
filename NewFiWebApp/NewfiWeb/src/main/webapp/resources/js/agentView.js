@@ -629,11 +629,38 @@ function appendLeads(elementId, customers){
 				window.open($(this).attr("name"));
 			
 			});
-			row.append(col1).append(col2).append(col3).append(col4).append(col5);
+			var col6 = $('<div>').attr({
+			    "class" : "leads-container-row-tc6 leads-row-6 float-left",
+			    "userName" : customer.quoteCompositeKey.userName,
+			    "InternalUserID" :customer.quoteCompositeKey.internalUserId,
+			    "id":"leads-create-user-id"
+			   }).html("create").bind("click",function(){
+			    createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+			   
+			   });
+			  var col7 = $('<div>').attr({
+				    "class" : "leads-container-tc7 leads-row-7 float-left",
+				    "name" : customer.pdfUrl
+				   }).bind("click",function(){
+				    window.open($(this).attr("name"));
+				   
+				   });
+				   row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6).append(col7);
+				   
 			$('#' + elementId).append(row);
 			updateHandler.initiateRequest();
 }
 }
+
+function createUserFromLeads(userName,internalUserID){
+	 ajaxRequest("rest/shopper/record/lead/" + userName +"/"+internalUserID, "POST",
+	   "json",{}, function(response){
+	    if(response.resultObject == "success"){
+	     showToastMessage(response.resultObject);
+	    } 
+	   });
+	}
+
 function appendCustomers(elementId, customers,skipDataClearing) {
 	
 		var list = customers;
