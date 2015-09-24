@@ -991,6 +991,9 @@ public class GeneratePdfForQuickQuote {
         	if(TotEstLenCost.contains("(")){
         		cell = new PdfPCell(new Phrase(TotEstLenCost.substring(1, TotEstLenCost.length()-1),font));
        	 	}
+        	else if(!(TotEstLenCost.contains("$"))){
+        		cell = new PdfPCell(new Phrase(addDollarAndComma(TotEstLenCost),font));
+        	}
         	else{
         		cell = new PdfPCell(new Phrase(TotEstLenCost,font));
         	}
@@ -1278,6 +1281,9 @@ public class GeneratePdfForQuickQuote {
        	if(totEstimatedClosingCost.contains("(")){
        		cell = new PdfPCell(new Phrase(totEstimatedClosingCost.substring(1, totEstimatedClosingCost.length()-1),font));
       	 	}
+       	else if(!(totEstimatedClosingCost.contains("$"))){
+    		cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost),font));
+    	}
        	else{
        		cell = new PdfPCell(new Phrase(totEstimatedClosingCost,font));
        	}
