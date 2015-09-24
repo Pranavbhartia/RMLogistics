@@ -633,7 +633,7 @@ function appendLeads(elementId, customers){
 				});
 				
 				var col6 = $('<div>').attr({
-					"class" : "leads-container-row-tc6 float-left",
+					"class" : "leads-container-row-tc6 leads-row-6 float-left",
 					"userName" : customer.quoteCompositeKey.userName,
 					"InternalUserID" :customer.quoteCompositeKey.internalUserId,
 					"name":customer.quoteCompositeKey.userName
@@ -642,16 +642,13 @@ function appendLeads(elementId, customers){
 						createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
 					}				
 				
-				});
-				
+				});				
 				//TO add a condition to check for user created
 				if(customer.isCreated){
-					$('div[name="'+customer.quoteCompositeKey.userName+'"]').removeClass('leads-row-6');
-					$('div[name="'+customer.quoteCompositeKey.userName+'"]').addClass('leads-user-created');
-				}else {
-					$('div[name="'+customer.quoteCompositeKey.userName+'"]').removeClass('leads-user-created');
-					$('div[name="'+customer.quoteCompositeKey.userName+'"]').addClass('leads-row-6');
+					$(col6).removeClass('leads-row-6');
+					$(col6).addClass('leads-user-created');
 				}
+				
 				var col7 = $('<div>').attr({
 					"class" : "leads-container-tc7 leads-row-7 float-left",
 					"userName" : customer.quoteCompositeKey.userName,
@@ -673,10 +670,11 @@ function createUserFromLeads(userName,internalUserID){
 	ajaxRequest("rest/shopper/record/lead/" + userName +"/"+internalUserID, "POST",
 			"json",{}, function(response){
 				if(response.error == null){
-					$('div[name="'+userName+'"]').removeClass('leads-row-6');
-					$('div[name="'+userName+'"]').addClass('leads-user-created');
+					$('div[userName='+userName+']').removeClass('leads-row-6');
+					$('div[userName='+userName+']').addClass('leads-user-created');
+					showToastMessage(response.resultObject);
 				}else {
-					showErrorToastmessage("Error while creating user.Please try again later");
+					showErrorToastmessage(response.error.message);
 				}	
 			});
 }
@@ -685,9 +683,10 @@ function deleteUserFromLeads(userName,internalUserID){
 	ajaxRequest("rest/shopper/record/deleteLeadFromQuote/" + userName +"/"+internalUserID, "POST",
 			"json",{}, function(response){
 				if(response.error == null){
-					$('div[name="'+userName+":"+InternalUserID+'"]').parent().remove();
+					$('div[userName='+userName+']').parent().remove()
+					showToastMessage(response.resultObject)
 				}else {
-					showErrorToastmessage("Error while deleting user.Please try again later");
+					showErrorToastmessage(response.error.message);
 				}	
 			});
 }

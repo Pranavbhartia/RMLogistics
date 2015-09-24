@@ -136,16 +136,18 @@ public class ShopperRegistrationController {
 	         HttpServletRequest request, HttpServletResponse response)
 	         throws IOException {
 		CommonResponseVO responseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
 		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
 		quoteCompositeKey.setInternalUserId(internalUserID);
 		quoteCompositeKey.setUserName(userName);
 		try{
 		quoteService.updateDeletedUser(quoteCompositeKey);
-		responseVO.setResultObject("success");
+		responseVO.setResultObject(DisplayMessageConstants.USER_DELETED_SUCCESSFULLY);
 		}
 		catch(Exception e){
 			LOG.error("Error while deleting user from quotedetails", e);
-			responseVO.setResultObject("error");
+			error.setMessage(ErrorConstants.USER_DELETION_FAILED);
+			responseVO.setError(error);
 			throw new FatalException("User could not be registered from Quick Quote");
 		}
 		finally{
@@ -197,17 +199,19 @@ public class ShopperRegistrationController {
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
 			        teaseRateDatalist);
 			quoteService.updateCreatedUser(quoteCompositeKey);
-			responseVO.setResultObject("success");
+			responseVO.setResultObject(DisplayMessageConstants.USER_CREATED_SUCCESSFULLY);
 			LOG.info("User succesfully created, now trying to autologin" + user.getEmailId());
 		}
 		catch (FatalException e) {
 			LOG.error("error while creating user", e);
-			responseVO.setResultObject("error");
+			error.setMessage(ErrorConstants.USER_CREATION_FAILED);
+			responseVO.setError(error);
 			throw new FatalException("User could not be registered from Quick Quote");
 			
 		} catch (Exception e) {
 			LOG.error("error while creating user", e);
-			responseVO.setResultObject("error");
+			error.setMessage(ErrorConstants.USER_CREATION_FAILED);
+			responseVO.setError(error);
 			throw new FatalException("User could not be registered from Quick Quote");
 		}
 		finally{

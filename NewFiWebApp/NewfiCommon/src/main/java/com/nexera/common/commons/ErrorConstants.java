@@ -35,5 +35,9 @@ public interface ErrorConstants {
 	public static final String UPLOADFILEFAILEDMESSAGE = "Error while assigning document";
 	
 	public static final String USER_STATUS_INACTIVE = "Your account has been inactivated.Please contact newfi for reactivation.";
+		
+	public static final String USER_CREATION_FAILED = "Unable to create user. Try later.";
+	
+	public static final String USER_DELETION_FAILED = "Unable to delete user. Try later.";
 	
 }
