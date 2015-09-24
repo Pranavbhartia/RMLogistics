@@ -135,8 +135,11 @@ function paintRatesTablePage(data) {
 	$('#main-container').html(wrapper);
 	appendFNMAConventionalFIXEDTableWrapper(wrapper);
 	appendFNMAConventionalARMTableWrapper(wrapper);
+	appendOlympicPiggyBackFixedTableWrapper(wrapper);
+	appendOlympicPiggyBackARMTableWrapper(wrapper);
 	appendMAMMOTHTableWrapper(wrapper);
-	appendCASCADESTableWrapper(wrapper)
+	appendCASCADESTableWrapper(wrapper);
+	
 	/*
 	 * $('.rate-table-wrapper').masonry({ itemSelector:
 	 * '.rate-table-wrapper-cont'
@@ -144,7 +147,6 @@ function paintRatesTablePage(data) {
 	 * });
 	 */
 }
-
 
 
 // function to append FNMA Fixed Rate tables
@@ -1339,4 +1341,279 @@ function getRatesTableRow(rateObj) {
 	
 	return container.append(col1).append(col2).append(col3).append(col4)
 			.append(col5);
+}
+
+//Function to append olympic piggyback ARM table
+function appendOlympicPiggyBackARMTableWrapper(element){
+	var wrapper = $('<div>').attr({
+		"class" : "table-wrapper clearfix"
+	});
+
+	var pageHeader = $('<div>').attr({
+		"class" : "hide print-page-header"
+	}).html($('#header-wrapper').html());
+	
+	var header = $('<div>').attr({
+		"class" : "table-wrapper-header"
+	}).html("OLYMPIC PIGGYBACK ARM PRODUCTS");
+
+	var tableCont = $('<div>').attr({
+		"class" : "table-container"
+	});
+
+	var table1 = getRatesTable(tableData["Fannie Mae 5/1 ARM 2/2/5"],
+			"Fannie Mae 5/1 ARM 2/2/5");
+	var table2 = getRatesTable(
+			tableData["Fannie Mae 5/1 ARM High Balance 2/2/5"],
+			"Fannie Mae 5/1 ARM High Balance 2/2/5");
+	var table3 = getRatesTable(tableData["Fannie Mae 7/1 ARM 5/2/5"],
+			"Fannie Mae 7/1 ARM 5/2/5");
+	var table4 = getRatesTable(
+			tableData["Fannie Mae 7/1 ARM High Balance 5/2/5"],
+			"Fannie Mae 7/1 ARM High Balance 5/2/5");
+	
+	var table5 = getOlympicTable9(true);
+
+	tableCont.append(table1).append(table2).append(table3).append(table4).append(table5);
+	wrapper.append(pageHeader).append(header).append(tableCont);
+
+	// TODO:Price Adjustment tables
+	$(element).append(wrapper);
+
+	var priceWrapper = getOlympicPiggyBackArmPriceAdjusterWrapper(true);
+	$(element).append(priceWrapper);
+}
+
+//Function to append olympic piggyback ARM data
+function getOlympicPiggyBackArmPriceAdjusterWrapper(isFNMAArm){
+	var wrapper = $('<div>').attr({
+		"class" : "price-table-wrapper"
+	});
+
+	var header = $('<div>').attr({
+		"class" : "price-table-wrapper-header"
+	}).html("PRICE ADJUSTMENTS");
+
+	var container = $('<div>').attr({
+		"class" : "price-table-cont-wrapper"
+	});
+
+	container.append(appendLTVDataForOlympicPiggyBack(true,isFNMAArm));
+	return wrapper.append(header).append(container);
+	
+}
+//Function to append olympic piggyback fixed table
+function appendOlympicPiggyBackFixedTableWrapper(element){
+	var wrapper = $('<div>').attr({
+		"class" : "table-wrapper clearfix"
+	});
+
+	var header = $('<div>').attr({
+		"class" : "table-wrapper-header"
+	}).html("OLYMPIC FIXED PIGGYBACK PRODUCTS");
+
+	var tableCont = $('<div>').attr({
+		"class" : "table-container"
+	});
+
+	var table1 = getRatesTable(tableData["Fannie Mae 30 Yr Fixed"],
+			"Fannie Mae 30 Yr Fixed");
+	var table2 = getRatesTable(tableData["Fannie Mae 20 Yr Fixed"],
+			"Fannie Mae 20 Yr Fixed");
+	var table3 = getRatesTable(tableData["Fannie Mae 15 Yr Fixed"],
+			"Fannie Mae 15 Yr Fixed");
+	var table4 = getRatesTable(tableData["Fannie Mae 10 Yr Fixed"],
+			"Fannie Mae 10 Yr Fixed");
+	var table5 = getRatesTable(tableData["Fannie Mae 30 Yr Fixed High Balance"],
+			"Fannie Mae 30 Yr Fixed High Balance");
+	var table6 = getRatesTable(tableData["Fannie Mae 20 Yr Fixed High Balance"],
+			"Fannie Mae 20 Yr Fixed High Balance");
+	var table7 = getRatesTable(tableData["Fannie Mae 15 Yr Fixed High Balance"],
+			"Fannie Mae 15 Yr Fixed High Balance");
+	var table8 = getRatesTable(tableData["Fannie Mae 10 Yr Fixed High Balance"],
+			"Fannie Mae 10 Yr Fixed High Balance");
+	var table9 = getOlympicTable9(false);
+
+	tableCont.append(table1).append(table2).append(table3).append(table4)
+			.append(table5).append(table6).append(table7).append(table8).append(table9);
+	wrapper.append(header).append(tableCont);
+
+	// TODO:Price Adjustment tables
+
+	$(element).append(wrapper);
+
+	var priceWrapper = getOlympicPiggyBackFixedPriceAdjusterWrapper();
+
+	$(element).append(priceWrapper);
+}
+
+//Function to append olympic piggyback fixed data
+function getOlympicPiggyBackFixedPriceAdjusterWrapper(){
+	var wrapper = $('<div>').attr({
+		"class" : "price-table-wrapper price-table-page-1"
+	});
+
+	var header = $('<div>').attr({
+		"class" : "price-table-wrapper-header"
+	}).html("PRICE ADJUSTMENTS");
+
+	var container = $('<div>').attr({
+		"class" : "price-table-cont-wrapper"
+	});
+
+	container.append(appendLTVDataForOlympicPiggyBack(false));
+
+	return wrapper.append(header).append(container);
+}
+
+function appendLTVDataForOlympicPiggyBack(addHighBalArm,isFNMAArm){
+	var tableWrapper = $('<div>').attr({
+		"class" : "price-table"
+	});
+
+	var header = $('<div>').attr({
+		"class" : "price-table-header"
+	}).html("LTV / FICO (Terms > 15 years only)");
+
+	var row1 = $('<div>').attr({
+		"class" : "clearfix"
+	});
+	var table1 = getLTVTable1();
+	row1.append(table1);
+	var ltvDescTable = getLTVDescTable(addHighBalArm);
+	row1.append(ltvDescTable);
+
+	var row2 = $('<div>').attr({
+		"class" : "clearfix price-table-wrap-row"
+	});
+	var refinanceTable = getLTVTable3();
+	row2.append(refinanceTable);
+
+	var secondaryFinancingTable = getLTVTable4();
+	row2.append(secondaryFinancingTable);
+
+	var lockExpirationTable = getLTVTable5();
+	row2.append(lockExpirationTable);
+
+	var otherAdjustmentsTable = getOlympicTable6();
+	row2.append(otherAdjustmentsTable);
+	
+	var row3 = $('<div>').attr({
+		"class" : "clearfix price-table-wrap-row"
+	});
+	
+	/*var table1 = $('<div>').attr({
+		"class" : "adjuster-table-wrapper float-left"
+	}).html(getOlympicTable9(isFNMAArm));
+	
+	row3.append(table1);*/
+
+
+	
+	var note = "All loan level price adjustments are cumulative\n"
+			+ "Prices are indicative and subject to change without notice. Please log into Blustream Lending portal to obtain live lock pricing\n"
+			+ "Not all price adjustments are effective for all products. Please refer to Blustream Lending product guide for complete eligibility rules.\n"
+			+ "Intended for use by mortgage professionals only and should not be distributed to borrowers, as defined by Section 226.2 of Regulation Z";
+
+	var noteCont = $('<div>').attr({
+		"class" : "note-txt"
+	}).html(note);
+
+	return tableWrapper.append(header).append(row1).append(row2).append(row3).append(
+			noteCont);
+}
+
+
+function getOlympicTable9(isFNMAArm){
+	var tableArray = [ {
+					"desc" : "OLYMPIC FIXED 2ND MORTGAGE"
+				},{
+					"desc" : "Base Rate",
+					"value" : "6.625%"
+				},{
+					"desc" : "Adjustments To Rate"
+				},{
+	           		"desc" : "Cashout>$100,00",
+	           		"value" : "0.500%"
+	           	}, {
+	           		"desc" : "Second Home",
+	           		"value" : "0.500%"
+	           	}, {
+	           		"desc" : "75.01% - 80% LTV",
+	           		"value" : "0.500%"
+	           	}, {
+	           		"desc" : "80.01 - 85% LTV",
+	           		"value" : "1.000%"
+	           	}, {
+	           		"desc" : "85.01% - 90% LTV",
+	           		"value" : "1.500%"
+	           	}, {
+	           		"desc" : "15 YEAR FIXED",
+	           		"value" : "-0.250%"
+	           	} ];           	
+	           	
+	           	var table = $('<div>').attr({
+	           		"class" : "ltv-desc-table float-left"
+	           	});
+
+	           	for (var i = 0; i < tableArray.length; i++) {
+	           		var row = $('<div>').attr({
+	           			"class" : "ltv-desc-table-row olympic-piggyback-row clearfix"
+	           		});
+
+	           		if(i == 0 || i == 2){
+	           			$(row).html(tableArray[i].desc);
+	           		}else if(i == 1){
+	           			var col1 = $('<div>').attr({
+		           			"class" : "olympic-piggyback-row-lHS float-left"
+		           		}).html(tableArray[i].desc);
+
+		           		var col2 = $('<div>').attr({
+		           			"class" : "olympic-piggyback-row-RHS float-right"
+		           		}).html(tableArray[i].value);
+		           		row.append(col1).append(col2);
+	           		}else{
+	           			var col1 = $('<div>').attr({
+		           			"class" : "ltv-desc-table-td"
+		           		}).html(tableArray[i].desc);
+
+		           		var col2 = $('<div>').attr({
+		           			"class" : "ltv-desc-table-td"
+		           		}).html(tableArray[i].value);
+		           		row.append(col1).append(col2);
+		           		
+	           		}
+	           		table.append(row);
+	           	}
+
+	           	return table;
+}
+function getOlympicTable6() {
+	var tableCont = $('<div>').attr({
+		"class" : "ltv-table-container float-left ltv-table6"
+	});
+
+	var hedaer = $('<div>').attr({
+		"class" : "price-table-header"
+	}).html("Other Adjustments");
+	tableCont.append(hedaer);
+
+	var tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
+	                   [ "Loan amount <$100k", "0.75" ]
+	                   ];
+	
+	
+	var tableRowCont = $('<div>').attr({
+		"class" : "price-tr-wrapper"
+	});
+
+	for (var i = 0; i < tableArray.length; i++) {
+		var tableRow = getLTVTableRow(tableArray[i]);
+		tableRowCont.append(tableRow);
+		
+	}
+
+	tableCont.append(tableRowCont);
+
+	return tableCont;
 }

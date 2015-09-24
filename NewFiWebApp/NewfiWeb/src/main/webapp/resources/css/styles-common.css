@@ -188,7 +188,7 @@ input.reg-radio {
 
 .reg-input-row .reg-lname{
 	/* margin-left: 20px; */
-k}
+}
 
 .reg-input-row .reg-fname,
 .reg-input-row .reg-lname{
@@ -730,12 +730,26 @@ a.cus-eng-succ-mess-email {
     white-space: nowrap;
     line-height: 35px;
     cursor: pointer;
-    width: 120px;      color: #fff;      font-size: 15px;      text-align: center;            
-    margin: 7px;      border-radius: 3px;
+    width: 120px;      
+    color: #fff;      
+    font-size: 15px;      
+    text-align: center;            
+    margin: 7px;      
+    border-radius: 3px;
+}
+.leads-col-1,.leads-col-3{
+    width: 150px;
+
 }
 
 .leads-col-2 {
     width: 200px;
+}
+.leads-col-4 {
+	width: 133px;
+}
+.leads-row-1 {
+    width: 161px;
 }
 
 .leads-row-2 {
@@ -743,16 +757,16 @@ a.cus-eng-succ-mess-email {
 }
 
 .leads-row-3,.leads-row-1 {
-    width: 180px;
+    width: 150px;
+}
+.leads-row-4 {
+    width: 113px;
 }
 
-.leads-col-1,.leads-col-3,.leads-col-4{
-    width: 180px;
-}
 .leads-row-5 {
-    background: url(../images/pdf.png) no-repeat 40px center;
+    background: url(../images/pdf.jpg) no-repeat 40px center;
     height: 25px;
-    background-size: 20%;
+    background-size: 21%;
     cursor: pointer;
 }
 .quick-quote-rhs-label{
@@ -806,4 +820,29 @@ a.cus-eng-succ-mess-email {
 .last-action-sort-list-asc {
       background: url(../images/upwrd.png) no-repeat 75px;
       cursor: pointer;
+}
+.leads-container-row-tc6 {
+	width: 91px;
+}
+.leads-container-row-tc5 {
+	width: 141px;
+}
+.leads-row-6 {
+    background: url(../images/add_user.png) no-repeat;
+    height: 35px;
+    background-size: 28%;
+    cursor: pointer;
+}
+.leads-user-created {
+    background: url(../images/added_user.png) no-repeat;
+    height: 35px;
+    background-size: 28%;
+}
+.leads-col-6 {
+    width: 95px;
+}
+.leads-row-7 {
+ 	background: url(../images/Delete_Icon.png) no-repeat;
+ 	height: 35px;
+ 	background-size: 65%;
 }
