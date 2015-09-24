@@ -11,6 +11,8 @@ var PURCHASE = "PUR";
 var REFINANACE = "REF";
 var REFINANACE_LOWER_MORTGAGE_PAYMENT = "REFLMP";
 var REFINANACE_CASH_OUT = "REFCO";
+var firstName;
+var lastName;
 
 /*JSON structure for painting the form feild on click of loantype button*/
 
@@ -776,15 +778,22 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
             "class": "loan-summary-header clearfix",
             "style":"line-height: normal;"
         });
+	    var header = "";
+	    
+	    if(firstName && lastName){
+	    	header = firstName+" "+lastName;
+	    }else {
+	    	header = 'Programs and Rates';
+	    }
 	    var ratePageHeaderCol1 = $('<div>').attr({
 	        "class": "loan-summary-header-col1 page-header-loan float-left",
 	        "style":"line-height: 45px;"
-	    }).html('Programs and Rates');
+	    }).html(header);
 	    var ratePageHeaderCol2 = $('<div>').attr({
 	        "class": "cep-button-color quick-quote-header-pdf float-right",
 	        "id" : "quick-quote-generate-pdf"
 	    }).html('Save as PDF');
-	    if(loanPurchaseDetailsUnderQuickQuote.isRate){
+	   	if(loanPurchaseDetailsUnderQuickQuote.isRate){
 	    	 ratePageHeader.append(ratePageHeaderCol1).append(ratePageHeaderCol2);
 	    }else {
 	    	 ratePageHeader.append(ratePageHeaderCol1);
@@ -1797,7 +1806,9 @@ function processCommonParameters(){
 	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
 	loanPurchaseDetailsUnderQuickQuote.impounds  = $('div[id="impound"]').attr('value');
 	loanPurchaseDetailsUnderQuickQuote.firstName = $('input[id="firstName"]').val();
+	firstName = loanPurchaseDetailsUnderQuickQuote.firstName;
 	loanPurchaseDetailsUnderQuickQuote.lastName = $('input[id="lastName"]').val();
+	lastName = loanPurchaseDetailsUnderQuickQuote.lastName;
 	loanPurchaseDetailsUnderQuickQuote.emailId = $('input[id="emailID"]').val();
 	var phoneNumber = $('input[id="primaryPhoneID"]').val();
 	loanPurchaseDetailsUnderQuickQuote.phoneNo = phoneNumber.replace(/[^0-9]/g, '');
