@@ -71,6 +71,14 @@ public class Utility {
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_30DAY_PRICE.csv",
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_45DAY_PRICE.csv",
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_60DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_15DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_30DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_45DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_60DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_15DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_45DAY_PRICE.csv",
@@ -83,6 +91,14 @@ public class Utility {
 	        "15_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_30DAY_PRICE.csv",
 	        "15_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_45DAY_PRICE.csv",
 	        "15_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_60DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_15DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_30DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_45DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_60DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_15DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_45DAY_PRICE.csv",
@@ -91,6 +107,14 @@ public class Utility {
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_30DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_45DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_60DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_15DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_30DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_45DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_60DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_15DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_45DAY_PRICE.csv",
@@ -107,6 +131,14 @@ public class Utility {
 	        "30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_30DAY_PRICE.csv",
 	        "30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_45DAY_PRICE.csv",
 	        "30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_60DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_15DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_30DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_45DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_60DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_15DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_15DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_30DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_45DAY_PRICE.csv",
@@ -123,6 +155,14 @@ public class Utility {
 	        "5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_IO_30DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_IO_45DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_IO_60DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_15DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_30DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_45DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_60DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_15DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_15DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_30DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_45DAY_PRICE.csv",
@@ -130,7 +170,16 @@ public class Utility {
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_15DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_30DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_45DAY_PRICE.csv",
-	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_60DAY_PRICE.csv" };
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_60DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_15DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_30DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_45DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_60DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_15DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv"
+	       };
 
 	private static final String[] FILE_PATTERN = {
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_",
@@ -150,7 +199,19 @@ public class Utility {
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
 	        "30_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",
 	        "30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
-	        "15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_" };
+	        "15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_",
+	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_"};
 
 	private static final String[] KEY_INDEX = { "15DAY_PRICE.csv",
 	        "30DAY_PRICE.csv", "45DAY_PRICE.csv", "60DAY_PRICE.csv" };
@@ -194,6 +255,29 @@ public class Utility {
 			        "Cascades Jumbo 30 YR Fixed");
 			put("15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
 			        "Cascades Jumbo 15 YR Fixed");
+			
+			put("30_YR_FIXED_CONFORMING-RS_OLYMPIC_", "Fannie Mae 30 Yr Fixed");
+			put("20_YR_FIXED_CONFORMING-RS_OLYMPIC_", "Fannie Mae 20 Yr Fixed");
+			put("15_YR_FIXED_CONFORMING-RS_OLYMPIC_", "Fannie Mae 15 Yr Fixed");
+			put("10_YR_FIXED_CONFORMING-RS_OLYMPIC_", "Fannie Mae 10 Yr Fixed");
+
+			put("30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+			        "Fannie Mae 30 Yr Fixed High Balance");
+			put("20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+			        "Fannie Mae 20 Yr Fixed High Balance");
+			put("15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+			        "Fannie Mae 15 Yr Fixed High Balance");
+			put("10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+			        "Fannie Mae 10 Yr Fixed High Balance");
+			
+			put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_",
+			        "Fannie Mae 5/1 ARM 2/2/5");
+			put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_",
+			        "Fannie Mae 7/1 ARM 5/2/5");
+			put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_",
+			        "Fannie Mae 5/1 ARM High Balance 2/2/5");
+			put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_",
+			        "Fannie Mae 7/1 ARM High Balance 5/2/5");
 		}
 	};
 
@@ -231,6 +315,24 @@ public class Utility {
 				FILE_PATTERN_LABEL.get("30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_"),
 				FILE_PATTERN_LABEL.get("15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_")
 			});
+			put("OLYMPIC FIXED PIGGYBACK PRODUCTS" ,new String[]{
+					FILE_PATTERN_LABEL.get("30_YR_FIXED_CONFORMING-RS_OLYMPIC_"),
+					FILE_PATTERN_LABEL.get("20_YR_FIXED_CONFORMING-RS_OLYMPIC_"),
+					FILE_PATTERN_LABEL.get("15_YR_FIXED_CONFORMING-RS_OLYMPIC_"),
+					FILE_PATTERN_LABEL.get("10_YR_FIXED_CONFORMING-RS_OLYMPIC_"),
+					FILE_PATTERN_LABEL.get("30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_"),
+					FILE_PATTERN_LABEL.get("20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_"),
+					FILE_PATTERN_LABEL.get("15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_"),
+					FILE_PATTERN_LABEL.get("10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_")
+			});
+			
+			put("OLYMPIC PIGGYBACK ARM PRODUCTS" , new String[]{
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_"),
+					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_"),
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_"),
+					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_")
+			});
+			
 		}
 	};
 	
@@ -986,6 +1088,109 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,8,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;	
+						}
+					}
+					
+					if("Fannie Mae 30 Yr Fixed".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack Fixed");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15 ,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;
+						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
+					}
+					if("Fannie Mae 20 Yr Fixed".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack Fixed");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15 ,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}
+					if("Fannie Mae 15 Yr Fixed".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack Fixed");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
+					if("Fannie Mae 10 Yr Fixed".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack Fixed");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 40,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
+					if("Fannie Mae 30yr Fixed High Balance".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						writeCurrentDateAndTimeInExcel(sheet,restResponse);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
+					}
+					if("Fannie Mae 20 Yr Fixed High Balance".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}
+					if("Fannie Mae 15 Yr Fixed High Balance".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
+					if("Fannie Mae 10 Yr Fixed High Balance".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack High Balance");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 40,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}
+					if("Fannie Mae 5/1 ARM 2/2/5".equals(fileHeading) && "OLYMPIC PIGGYBACK ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack ARM");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
+					}
+					if("Fannie Mae 7/1 ARM 5/2/5".equals(fileHeading) && "OLYMPIC PIGGYBACK ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack ARM");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}
+					if("Fannie Mae 5/1 ARM High Balance 2/2/5".equals(fileHeading) && "OLYMPIC PIGGYBACK ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack ARM");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
+					if("Fannie Mae 7/1 ARM High Balance 5/2/5".equals(fileHeading) && "OLYMPIC PIGGYBACK ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("Olympic PiggyBack ARM");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 40,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
 						}
 					}
 					
