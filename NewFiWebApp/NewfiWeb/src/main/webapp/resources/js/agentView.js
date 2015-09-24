@@ -638,7 +638,9 @@ function appendLeads(elementId, customers){
 					"InternalUserID" :customer.quoteCompositeKey.internalUserId,
 					"name":customer.quoteCompositeKey.userName
 				}).bind("click",function(){
-					createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+					if($(this).hasClass('leads-row-6')){
+						createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+					}				
 				
 				});
 				
