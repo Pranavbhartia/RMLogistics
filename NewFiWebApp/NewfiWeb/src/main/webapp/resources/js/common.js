@@ -860,30 +860,49 @@ function getRowHolderObject(container, value, key) {
 		updateTotalEstimatedClosingCosts: function(){
 			var ob = this;
 			var getVal = ob.getValueForItem();
-			getVal = removedDoller(removedComma(getVal));
-			if(getVal%1 == 0){
-				getVal=parseInt(getVal,10);
-				getVal = numberWithCommasAndDoller(getVal);
-				
-			}else {
-				getVal = numberWithCommasAndDoller(getVal);
-			}
 			totalEstimatedClosingCosts[key]=getVal;
 		},
 		updateTaxesAndInsurances: function(){
 			var ob = this;
+			var isMonthly = false;
+			if (closingCostHolder.valueSet[key]
+				&& getFloatValue(closingCostHolder.valueSet[key]) != 0)
+				isMonthly = true;
+			else {
+					if (closingCostHolder.loanType
+							&& closingCostHolder.loanType == "PUR") {
+						var purchaseValue = getFloatValue(closingCostHolder.housePrice);
+						var result = Math.round((.0125 * purchaseValue) / 6);
+						isMonthly = true;
+					} else {
+						var taxVal = getFloatValue(closingCostHolder.propertyTaxesPaid);
+						var result = Math.round(taxVal * 2);
+						isMonthly = false;
+				}
+			}
+			
 			var getVal = ob.getValueForItem();
-			var valueForSixMonth = numberWithCommasAndDoller(getRoundValue(getFloatValue(removedComma(removedDoller(getVal))) * 3));
+			var valueForSixMonth;
+			if(isMonthly){
+				valueForSixMonth = numberWithCommasAndDoller(getRoundValue(getFloatValue(removedComma(removedDoller(getVal))) * 3));
+			}
+			else{
+				// Calculating month wise
+				valueForSixMonth = numberWithCommasAndDoller((getRoundValue(getFloatValue(removedComma(removedDoller(getVal)))/4)));
+			}
+				
 		
 			
 			if (key == "taxResrv1004" || key == "hazInsReserve1002"){
 				if(loanPurchaseDetailsUnderQuickQuote.impounds == "No"){
 					$(ob.container).text("$0.00");
 					lqbTeaserRateUnderQuickQuote[key] = "$0.00";
+				
 				}
 				else{
 					$(ob.container).text(valueForSixMonth);
 					lqbTeaserRateUnderQuickQuote[key] = valueForSixMonth;
+				
 				}
 			}
 			else if(key == "totEstResDepWthLen"){
@@ -897,7 +916,7 @@ function getRowHolderObject(container, value, key) {
 					var val2 = getFloatValue(lqbTeaserRateUnderQuickQuote["taxResrv1004"]);
 					var val3 = getFloatValue(lqbTeaserRateUnderQuickQuote["hazInsReserve1002"]);
 					var val4 = val1 + val2 + val3;
-					val4 = numberWithCommasAndDoller(getFloatValue(val4));
+					val4 = showValue(getFloatValue(val4), true);
 					$(ob.container).text(val4);
 					lqbTeaserRateUnderQuickQuote[key] = val4;
 				}
@@ -919,6 +938,9 @@ function getObContainer() {
 					}
 					if(key == "totEstimatedClosingCost"){
 						keyObj.updateTotalEstimatedClosingCosts();
+					}
+					if(key == "taxResrv1004" || key == "hazInsReserve1002" || key == "totEstResDepWthLen" ){
+						keyObj.updateTaxesAndInsurances();
 					}
 				 }
 			}

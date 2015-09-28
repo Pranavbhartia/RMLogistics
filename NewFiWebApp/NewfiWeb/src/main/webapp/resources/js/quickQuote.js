@@ -1326,16 +1326,24 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     if(teaserRateValHolder.teaserRate)
         Insurance =  parseFloat(removedDoller(removedComma(customerInputData.annualHomeownersInsurance)));
     else
-        Insurance =  parseFloat(removedDoller(removedComma(customerInputData.propertyTypeMaster.propertyInsuranceCost)));
+    	Insurance =  parseFloat(removedDoller(removedComma(customerInputData.annualHomeownersInsurance)));
+    //    Insurance =  parseFloat(removedDoller(removedComma(customerInputData.propertyTypeMaster.propertyInsuranceCost)));
     var tax;
     if(teaserRateValHolder.teaserRate)
         tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
     else
-        tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTypeMaster.propertyTaxesPaid)));
+    	tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTaxesPaid)));
+      //  tax =  parseFloat(removedDoller(removedComma(customerInputData.propertyTypeMaster.propertyTaxesPaid)));
     if(isNaN(getFloatValue(tax)))
         tax="";
+    else{
+    	tax = getFloatValue(tax) / 12;
+    }
     if(isNaN(getFloatValue(Insurance)))
         Insurance="";
+    else{
+    	Insurance = getFloatValue(Insurance) / 12;
+    }
     var isIncludeTaxes=teaserRateValHolder.teaserRate==true?customerInputData.isIncludeTaxes:customerInputData.refinancedetails.includeTaxes;
     var investment = (Insurance + tax);
     if(isIncludeTaxes =="Yes"||isIncludeTaxes ==true){
@@ -1498,10 +1506,15 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
 
         tax=(getFloatValue(housePrice)*.0125)/12;
     }
+    else{
+    	tax = getFloatValue(tax) / 12;
+    }
     if(isNaN(getFloatValue(Insurance))){
         Insurance="";
-
         Insurance=(getFloatValue(loanAmount)*.0035)/12;
+    }
+    else{
+    	Insurance = getFloatValue(Insurance) / 12;
     }
     var investment=tax+Insurance;
     var totEstHousingPayment=getFloatValue(rateVO.payment)+getFloatValue(tax)+getFloatValue(Insurance);
