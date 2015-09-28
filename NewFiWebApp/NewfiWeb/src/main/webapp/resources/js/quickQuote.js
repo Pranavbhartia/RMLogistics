@@ -688,10 +688,6 @@ function calculateInsuranceValue(){
 				});
 			}
 	   }
-		
-		
-	
-	
 }
 /*Function which paint the question with year/month dropdown*/
 function appendMonthYearQuestion(option){
