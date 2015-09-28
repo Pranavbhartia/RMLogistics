@@ -381,3 +381,20 @@ INSERT INTO `newfi_schema`.`template` (`key`, `description`, `modified_date`, `v
 #Himanshu - Adding new table for saving quick quote
 CREATE TABLE newfi_schema.`quotedetails` (`id` int(11) NOT NULL AUTO_INCREMENT,  `prospect_first_name` varchar(45) DEFAULT NULL,  `prospect_last_name` varchar(45) DEFAULT NULL,  `emailid` varchar(75) DEFAULT NULL,  `phoneno` varchar(20) DEFAULT NULL,  `prospect_username` varchar(45) DEFAULT NULL, `internal_user_id` int(11) DEFAULT NULL,  `lqb_rate_json` text, `input_details_json` text,  `rateandapr` varchar(75) DEFAULT NULL,  `loanprogram` varchar(75) DEFAULT NULL,  `pdf_url` text,  `created_date` datetime DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+#Himanshu - Adding two more columns in quotedetails table
+ALTER TABLE `newfi_schema`.`quotedetails` 
+ADD COLUMN `is_created` TINYINT NULL DEFAULT 0 COMMENT '' AFTER `created_date`,
+ADD COLUMN `is_deleted` TINYINT NULL DEFAULT 0 COMMENT '' AFTER `is_created`;
+
+#Ranjitha -  Default status for new loans
+INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('15', 'NEWFI_LOAN_STATUS', 'newfi Loan Status', '1');
+
+
+
+
+
+
+
+
+
+

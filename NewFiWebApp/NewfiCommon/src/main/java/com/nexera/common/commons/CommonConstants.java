@@ -357,8 +357,9 @@ public interface CommonConstants {
 	public static final String ZIPCODE_ISNOT_VALID = "Zip code is not valid";
 	public static final String ZIPCODE_ISNOT_APPROVED ="Please enter a valid Zip Code in a newfi approved state: CA, OR , WA or CO";
 	public static final String ZIPCODE_VALID ="Valid ZipCode";
-
-
+	
+	public static final String NEWFI_LOAN_STATUS_DESCRIPTION = "Lead";
+	
 	
 	
 }
