@@ -860,14 +860,6 @@ function getRowHolderObject(container, value, key) {
 		updateTotalEstimatedClosingCosts: function(){
 			var ob = this;
 			var getVal = ob.getValueForItem();
-			getVal = removedDoller(removedComma(getVal));
-			if(getVal%1 == 0){
-				getVal=parseInt(getVal,10);
-				getVal = numberWithCommasAndDoller(getVal);
-				
-			}else {
-				getVal = numberWithCommasAndDoller(getVal);
-			}
 			totalEstimatedClosingCosts[key]=getVal;
 		},
 		updateTaxesAndInsurances: function(){
