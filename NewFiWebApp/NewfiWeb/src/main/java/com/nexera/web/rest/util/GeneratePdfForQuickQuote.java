@@ -409,7 +409,14 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
         
-        String loanProgram = generatePdfVO.getLoanProgram();
+       // String loanProgram = generatePdfVO.getLoanProgram();
+        String loanProgram = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getYearData();
+        if(loanProgram.equals("5") || loanProgram.equals("7")){
+        	loanProgram = loanProgram+" Year ARM";
+        }
+        else{
+        	loanProgram = loanProgram+" Year Fixed";
+        }
         cell = new PdfPCell(new Phrase(loanProgram,font));
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -538,7 +545,11 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
         
-        String rateAndApr = generatePdfVO.getRateAndApr();
+        //String rateAndApr = generatePdfVO.getRateAndApr();
+        String teaserRate = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTeaserRate();
+        String APR = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getAPR();
+        String rateAndApr = teaserRate+" % / "+APR+" %";
+        
         cell = new PdfPCell(new Phrase(rateAndApr,font));
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -548,7 +559,7 @@ public class GeneratePdfForQuickQuote {
         firstTable.addCell(cell);
         String monthLoanProgram="";
         if (loanProgram != null){
-        String[] getYear = loanProgram.split("-");
+        String[] getYear = loanProgram.split(" ");
         monthLoanProgram = ""+Integer.parseInt(getYear[0]) * 12; 
         }
         cell = new PdfPCell(new Phrase(monthLoanProgram,font));
@@ -636,7 +647,9 @@ public class GeneratePdfForQuickQuote {
         
         boolean isEstClosingCostNegative = false;
         if(Float.parseFloat(removeDollarCommaAndBracket(TotEstLenCost)) > Float.parseFloat(removeDollarCommaAndBracket(totEstThdPtyCst))){
+        	if(TotEstLenCost.contains("(")){
         	isEstClosingCostNegative = true;
+        	}
         }
         
         String estimatingClosingCost = "$0";
@@ -738,7 +751,9 @@ public class GeneratePdfForQuickQuote {
         String lenderFee813 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getLenderFee813();
         String creditOrCharge802 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getCreditOrCharge802();
         if(Float.parseFloat(removeDollarCommaAndBracket(lenderFee813)) < Float.parseFloat(removeDollarCommaAndBracket(creditOrCharge802))){
-        	isLenderCostNegative = true;
+        	if(creditOrCharge802.contains("(")){
+        		isLenderCostNegative = true;
+        	}
         }
         if(isLenderCostNegative){
        	 if(TotEstLenCost.contains("$") && TotEstLenCost.contains("(")){
@@ -1257,7 +1272,9 @@ public class GeneratePdfForQuickQuote {
         
         boolean isTotalEstClosingCostNegative = false;
         if(Float.parseFloat(removeDollarCommaAndBracket(TotEstLenCost)) > Float.parseFloat(removeDollarCommaAndBracket(totEstThdPtyCst))){
+        	if(TotEstLenCost.contains("(")){
         	isTotalEstClosingCostNegative = true;
+        	}
         }
       
         if(isTotalEstClosingCostNegative){
