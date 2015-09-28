@@ -1313,6 +1313,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanVO = loanService.createLoan(loanVO);
 			LOG.info("loan is created........................................................ ");
 
+			if(loanVO != null){
+				LOG.info("updating loan milestone table for newly created loan");
+				loanService.saveLoanMilestone(loanVO.getId(),Milestones.NEWFI_LOAN_STATUS.getMilestoneID(),CommonConstants.NEWFI_LOAN_STATUS_DESCRIPTION);
+				
+			}
+			LOG.info("loan milestone entry made successfully........................................................ ");
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
 
 			LOG.info("workflowCoreService is excecuted succefully.......................................... ");
