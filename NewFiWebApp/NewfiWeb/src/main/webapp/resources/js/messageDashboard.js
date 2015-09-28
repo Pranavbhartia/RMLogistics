@@ -792,6 +792,10 @@ function formateDateAndTime(dateTime,isOnAgentDash){
 			
 			if(hours > 12){
 				time="PM";
+				hours = hours - 12;
+				if(hours < 10){
+					hours = '0'+hours;
+				}
 			}else{
 				time="AM";
 			}
@@ -823,6 +827,10 @@ function formateDateAndTime(dateTime,isOnAgentDash){
 			 var time="";
 			if(hours > 12){
 				time="PM";
+				hours = hours - 12;
+				if(hours < 10){
+					hours = '0'+hours;
+				}
 			}else{
 				time="AM";
 			}
