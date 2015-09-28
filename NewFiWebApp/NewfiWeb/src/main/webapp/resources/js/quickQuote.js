@@ -647,6 +647,7 @@ function calculateInsuranceValue(){
 		var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
 		if($('input[id="homeWorthToday"]').val() != ""){
 			var value = mainValue*1.25/100;
+			value = Math.round(value);
 			value = '$'+value;
 			$('#propertyTaxesPaid').val("");
 			$('#propertyTaxesPaid').val(value);
@@ -655,6 +656,7 @@ function calculateInsuranceValue(){
 			});
 			 
 			var homeValue = mainValue*0.35/100;
+			homeValue = Math.round(value);
 			homeValue = '$'+homeValue;
 			$('#annualHomeownersInsurance').val("");
 			$('#annualHomeownersInsurance').val(homeValue);
