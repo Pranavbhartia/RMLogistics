@@ -299,7 +299,7 @@ function getLoanSummaryContainerRefinance(teaserRate, customerInputData) {
     parentWrapper.append(wrapper);
     
 
-    var estClosingCstRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
+    var estClosingCstRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost,false), "closingCostId");
     leftCol.append(estClosingCstRow);
 
     var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment ", showValue(principalInterest),"principalIntId");
@@ -627,7 +627,7 @@ function getLoanSummaryContainerPurchase(teaserRate, customerInputData) {
     container.append(leftCol).append(rightCol);
     wrapper.append(container);
 
-    var estClosingCostRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
+    var estClosingCostRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost,false), "closingCostId");
     leftCol.append(estClosingCostRow);
 
     var estMonthlyPaymnt = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment", showValue(rateVO.payment) ,"principalIntId");

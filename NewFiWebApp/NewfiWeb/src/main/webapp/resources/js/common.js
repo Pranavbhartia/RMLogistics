@@ -811,7 +811,7 @@ function getCalculationFunctionForItem(key) {
 
 $(document).on("closingCostChange",function(e,data){
 	//setTimeout(function(){ $('#closingCostId').html(showValue(data)); }, 10);
-	setTimeout(function(){ $('#closingCostId').html(totalEstimatedClosingCosts['totEstimatedClosingCost']); }, 10);
+	setTimeout(function(){ $('#closingCostId').html(showValue(totalEstimatedClosingCosts['totEstimatedClosingCost'],false)); }, 10);
 })
 
 function getRowHolderObject(container, value, key) {

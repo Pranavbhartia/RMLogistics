@@ -656,7 +656,7 @@ function calculateInsuranceValue(){
 			});
 			 
 			var homeValue = mainValue*0.35/100;
-			homeValue = Math.round(value);
+			homeValue = Math.round(homeValue);
 			homeValue = '$'+homeValue;
 			$('#annualHomeownersInsurance').val("");
 			$('#annualHomeownersInsurance').val(homeValue);
@@ -1351,9 +1351,8 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     wrapper.append(container);
 
     parentWrapper.append(wrapper);
-    
 
-    var estClosingCstRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
+    var estClosingCstRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost,false) , "closingCostId");
     leftCol.append(estClosingCstRow);
 
     var bottomRcRow = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment ", showValue(principalInterest),"principalIntId");
@@ -1500,8 +1499,8 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
     });
     container.append(leftCol).append(rightCol);
     wrapper.append(container);
-
-    var estClosingCostRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
+    
+    var estClosingCostRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost,false), "closingCostId");
     leftCol.append(estClosingCostRow);
 
     var estMonthlyPaymnt = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment", showValue(rateVO.payment) ,"principalIntId");
