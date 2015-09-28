@@ -644,26 +644,51 @@ function appendYesNoQuestion(option){
 }
 function calculateInsuranceValue(){
 	
-		var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
-		if($('input[id="homeWorthToday"]').val() != ""){
-			var value = mainValue*1.25/100;
-			value = Math.round(value);
-			value = '$'+value;
-			$('#propertyTaxesPaid').val("");
-			$('#propertyTaxesPaid').val(value);
-			$('#propertyTaxesPaid').attr({
-				"value": showValue(value)
-			});
-			 
-			var homeValue = mainValue*0.35/100;
-			homeValue = Math.round(homeValue);
-			homeValue = '$'+homeValue;
-			$('#annualHomeownersInsurance').val("");
-			$('#annualHomeownersInsurance').val(homeValue);
-			$('#annualHomeownersInsurance').attr({
-				"value": showValue(homeValue)
-			});
-		}
+	   if($('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE){
+		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
+			if($('input[id="currentMortgageBalance"]').val() != ""){
+				var value = mainValue*1.25/100;
+				value = Math.round(value);
+				value = '$'+value;
+				$('#propertyTaxesPaid').val("");
+				$('#propertyTaxesPaid').val(value);
+				$('#propertyTaxesPaid').attr({
+					"value": showValue(value)
+				});
+				 
+				var homeValue = mainValue*0.35/100;
+				homeValue = Math.round(homeValue);
+				homeValue = '$'+homeValue;
+				$('#annualHomeownersInsurance').val("");
+				$('#annualHomeownersInsurance').val(homeValue);
+				$('#annualHomeownersInsurance').attr({
+					"value": showValue(homeValue)
+				});
+			}
+	   }else{
+		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
+			if($('input[id="homeWorthToday"]').val() != ""){
+				var value = mainValue*1.25/100;
+				value = Math.round(value);
+				value = '$'+value;
+				$('#propertyTaxesPaid').val("");
+				$('#propertyTaxesPaid').val(value);
+				$('#propertyTaxesPaid').attr({
+					"value": showValue(value)
+				});
+				
+				var loanAmount = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))-removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
+				var homeValue = loanAmount*0.35/100;
+				homeValue = Math.round(homeValue);
+				homeValue = '$'+homeValue;
+				$('#annualHomeownersInsurance').val("");
+				$('#annualHomeownersInsurance').val(homeValue);
+				$('#annualHomeownersInsurance').attr({
+					"value": showValue(homeValue)
+				});
+			}
+	   }
+		
 		
 	
 	
@@ -1898,11 +1923,15 @@ $("body").on('click',"#quick-quote-generate-pdf",function(e){
 	sendPurchasePdfUnderQuickQuote();
 });
 
-$('body').keyup('#homeWorthToday',function(e) {
+$('body').keyup('#currentMortgageBalance',function(e) {
     console.log('keyup called');
-    var code = e.keyCode || e.which;
-
-    	calculateInsuranceValue();
-
+	calculateInsuranceValue();
  });
 
+$('body').keyup('#homeWorthToday',function(e) {
+    console.log('keyup called');
+    if($('#quick-quote-loan-type-id').attr('loan-type') == PURCHASE){
+    	calculateInsuranceValue();
+	}
+
+ });
