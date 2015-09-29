@@ -1446,18 +1446,27 @@ $(document).on('keydown', '#stateId' ,function(e){
 	
  $(document).on('keypress','input[name="zipCode"]',function(e){
 		
-		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+	 	var k = e.which;
+	    var ok = k >= 48 && k <= 57|| // 0-9
+	    k==8 ||//to allow to delte
+	    k==46;//to allow backspace
+	    if (!ok) {
+	        e.preventDefault();
+	        return false;
+
+	    }
+	/*	if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
 	        //display error message
 	        //showToastMessage("Enter correct zipcode");
 	          return false;
-	    }				
-		if($(this).val().length >= 5){
+	    }*/				
+		if($(this).val().length > 5){
 
 	         return false;
 	    }
 	});  
  $(document).on('keypress','input[name="coBorrowerZipCode"]',function(e){
-		
+
 		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
 	        //display error message
 	        //showToastMessage("Enter correct zipcode");
