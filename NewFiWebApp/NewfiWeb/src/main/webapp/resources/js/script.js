@@ -9,6 +9,7 @@ var flagToShowCompletPro = true;
 var rateLockRequestedFlag = false;
 var closedialog;
 var totalEstimatedClosingCosts = new Object();
+var lqbTeaserRateUnderQuickQuote = new Object();
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);

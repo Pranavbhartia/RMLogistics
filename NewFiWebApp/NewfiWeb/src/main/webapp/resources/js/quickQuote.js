@@ -2,7 +2,6 @@ var count = 0;
 var buyHomeRefinanceRate = new Object();
 buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
-var lqbTeaserRateUnderQuickQuote = new Object();
 var inputCustmerDetailUnderQuickQuote = new Object();
 loanPurchaseDetailsUnderQuickQuote.isRate = false;
 loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
