@@ -615,13 +615,13 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         seventhTable.addCell(cell);
         
-        
+        String currentMortgageBalance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getCurrentMortgageBalance();
         
         if (loanType.equals("PUR")){
         	  cell = new PdfPCell(new Phrase(addDollarAndComma(purchasePrice),font));
         }
         else {
-        	String currentMortgageBalance = generatePdfVO.getInputCustmerDetailUnderQuickQuote().getCurrentMortgageBalance();
+        	
         	cell = new PdfPCell(new Phrase(addDollarAndComma(currentMortgageBalance),font));
         }
       
@@ -702,7 +702,7 @@ public class GeneratePdfForQuickQuote {
         seventhTable.addCell(cell);
         
         if (!loanType.equals("PUR")){
-        	purchasePrice = homeWorthTodayDuringRefinance;
+        	purchasePrice = currentMortgageBalance;
         }
         	
         Float totalCashInvestment = Float.parseFloat(removeDollarAndComma(estimatingClosingCost)) + Float.parseFloat(purchasePrice);
@@ -770,6 +770,7 @@ public class GeneratePdfForQuickQuote {
        			 cell = new PdfPCell(new Phrase(addDollarAndComma(TotEstLenCost),font));
        		 }
        	 }
+       	lenderCredit = TotEstLenCost;
        } 
        else{ 	
        		cell = new PdfPCell(new Phrase(lenderCredit,font));	
@@ -824,7 +825,7 @@ public class GeneratePdfForQuickQuote {
         if (!loanType.equals("PUR")){
         	loanAmount = loanAmountDuringRefinance;
         }
-        Float totalCredits = Float.parseFloat(removeDollarAndComma(lenderCredit)) + Float.parseFloat(loanAmount);
+        Float totalCredits = Float.parseFloat(removeDollarCommaAndBracket(lenderCredit)) + Float.parseFloat(loanAmount);
         cell = new PdfPCell(new Phrase(addDollarAndComma(""+totalCredits),font));
         cell.setPaddingTop(5f);
         cell.setBorder(Rectangle.RIGHT);

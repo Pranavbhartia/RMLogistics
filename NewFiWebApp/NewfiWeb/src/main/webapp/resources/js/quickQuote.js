@@ -644,8 +644,8 @@ function appendYesNoQuestion(option){
 }
 function calculateInsuranceValue(){
 	
-	   if($('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE){
-		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
+	   if($('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE || $('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE_CASH_OUT ){
+		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
 			if($('input[id="currentMortgageBalance"]').val() != ""){
 				var value = mainValue*1.25/100;
 				value = Math.round(value);
@@ -655,8 +655,9 @@ function calculateInsuranceValue(){
 				$('#propertyTaxesPaid').attr({
 					"value": showValue(value)
 				});
-				 
-				var homeValue = mainValue*0.35/100;
+				
+			    var loanAmount = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
+				var homeValue = loanAmount*0.35/100;
 				homeValue = Math.round(homeValue);
 				homeValue = '$'+homeValue;
 				$('#annualHomeownersInsurance').val("");
