@@ -84,7 +84,7 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 		// If Disclosures is Signed and if no MS entry is made : make it here to
 		// fix the issue
 		// in NEXNF900
-		iWorkflowService.cleanupDisclosureMilestones(loanID);
+
 		int workflowItemExecutionId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME).toString());
 		LoanMilestone mileStone = loanService.findLoanMileStoneByLoan(loan,

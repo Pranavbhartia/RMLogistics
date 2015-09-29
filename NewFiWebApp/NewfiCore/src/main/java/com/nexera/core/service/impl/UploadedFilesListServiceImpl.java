@@ -1175,7 +1175,8 @@ public class UploadedFilesListServiceImpl implements UploadedFilesListService {
 				updateFileInLoanNeedList(key, newFileRowId);
 				updateIsAssignedToTrue(newFileRowId);
 			}
-			changeWorkItem(filteredMapping, loanId);
+			//NEXNF : Removing this call
+			
 			isSuccess = true;
 			// commonResponseVO = RestUtil.wrapObjectForSuccess( true );
 

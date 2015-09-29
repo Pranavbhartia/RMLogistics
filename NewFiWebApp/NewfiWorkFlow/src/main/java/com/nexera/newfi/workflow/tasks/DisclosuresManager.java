@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.LoadConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
@@ -64,12 +65,31 @@ public class DisclosuresManager extends NexeraWorkflowTask implements
 		String returnStatus = "";
 		String mileStoneStatus = null;
 		// Rajeswari: As per JIRA : NEXNF-414 not sending emails on Disclosures
+		
+		
 		if (status.equals(LoanStatus.disclosureAvail)) {
 			message = LoanStatus.disclosureAvailMessage;
 			flag = true;
 			returnStatus = WorkItemStatus.STARTED.getStatus();
 			mileStoneStatus = LoanStatus.disclosureAvail;
 		} else if (status.equals(LoanStatus.disclosureSigned)) {
+			message = LoanStatus.disclosureSignedMessage;
+			flag = true;
+			returnStatus = WorkItemStatus.COMPLETED.getStatus();
+			mileStoneStatus = LoanStatus.disclosureSigned;
+			// Have to add need for appraisal
+			NeedsListMaster appraisalMasterNeed = needsListService
+			        .fetchNeedListMasterByType(MasterNeedsEnum.Appraisal_Report
+			                .getIdentifier());
+			List<NeedsListMaster> masterNeedsList = new ArrayList<NeedsListMaster>();
+			masterNeedsList.add(appraisalMasterNeed);
+			LOG.debug("Making Disclosure Managers as " + mileStoneStatus
+			        + "Saving Appraisal Need");
+			needsListService.saveMasterNeedsForLoan(loanId, masterNeedsList);
+			LOG.debug("Saved Appraiasl Need");
+			createAppilcationPaymentAlert(objectMap);
+		}
+		else if (String.valueOf(LoadConstants.LQB_DISCLOSURE_RECEIVED).equals(status)) {
 			message = LoanStatus.disclosureSignedMessage;
 			flag = true;
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();

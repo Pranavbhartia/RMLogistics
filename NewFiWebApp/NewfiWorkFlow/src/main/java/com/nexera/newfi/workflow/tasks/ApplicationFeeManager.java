@@ -228,7 +228,7 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 		// in NEXNF900
 		int loanID = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-		iWorkflowService.cleanupDisclosureMilestones(loanID);
+		
 		EngineTrigger engineTrigger = applicationContext
 		        .getBean(EngineTrigger.class);
 
