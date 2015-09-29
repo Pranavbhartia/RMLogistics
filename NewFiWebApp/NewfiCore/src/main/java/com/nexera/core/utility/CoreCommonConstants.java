@@ -56,6 +56,8 @@ public interface CoreCommonConstants {
 	public static String SOAP_XML_APPRAISAL_RECEIVED = "sApprRprtRd";
 	public static String SOAP_XML_APPRAISAL_ORDERED = "sApprRprtOd";
 	
+	public static String SOAP_XML_DISCLOSURE_RECEIVED = "sTilGfeRd";
+	
 	public static String SOAP_XML_LOAN_APPR_VALUE = "sApprVal";
 	public static String SOAP_XML_LOAN_AMOUNT = "sLAmtCalc";
 	public static String SOAP_XML_LTV =  "sLtvR";

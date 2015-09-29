@@ -58,7 +58,7 @@ public class LoadConstants
     
     public static Integer LQB_APPRAISAL_ORDER = 101;
     public static Integer LQB_APPRAISAL_RECEIVED = 102;
-
+    public static Integer LQB_DISCLOSURE_RECEIVED = 103;
 
     //Constants Related to Date Time Fields 
     public static String LEAD_DATE_FIELD = "sLeadD";

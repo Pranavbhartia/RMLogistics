@@ -236,8 +236,12 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 			needURLItem = MasterNeedsEnum.Signed_Disclosure;
 		}
 		if (needURLItem != null) {
-			map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
-			        getDisclosureURL(loanID, needURLItem));
+			String urlOfFile = getDisclosureURL(loanID, needURLItem);
+			if (urlOfFile != null)
+			{
+				map.put(WorkflowDisplayConstants.RESPONSE_URL_KEY,
+						urlOfFile);
+			}
 		}
 		return utils.getJsonStringOfMap(map);
 	}

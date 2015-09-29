@@ -469,7 +469,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 			else if (ob.workItem.workflowItemType == "DISCLOSURE_STATUS"||
 				ob.workItem.workflowItemType == "DISCLOSURE_DISPLAY") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
-				$(ob.stateInfoContainer).addClass("cursor-pointer");
+				
 			}else if (ob.workItem.workflowItemType == "LOCK_RATE"||
 				ob.workItem.workflowItemType == "LOCK_YOUR_RATE") {
 				ajaxURL = "rest/workflow/renderstate/"+ob.mileStoneId;
