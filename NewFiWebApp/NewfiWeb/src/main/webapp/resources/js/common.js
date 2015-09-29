@@ -812,12 +812,7 @@ function getCalculationFunctionForItem(key) {
 $(document).on("closingCostChange",function(e,data){
 	//setTimeout(function(){ $('#closingCostId').html(showValue(data)); }, 10);
 	var getVal = totalEstimatedClosingCosts['totEstimatedClosingCost'];
-	
-	var value = removedDoller(removedComma(getVal));
-	if(value%1 == 0){
-		getVal=showValue(getVal,false);
-	}
-	setTimeout(function(){ $('#closingCostId').html(getVal); }, 10);
+	setTimeout(function(){ $('#closingCostId').html(showValue(getVal,false)); }, 10);
 })
 
 function getRowHolderObject(container, value, key) {
