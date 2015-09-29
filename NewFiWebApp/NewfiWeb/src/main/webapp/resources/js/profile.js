@@ -1689,7 +1689,7 @@ function appendAddLicencePopup(element) {
 		"class" : "create-user-popup-input licence-input float-left"
 	});
 	
-	col2.append(col2Label).append(col2Input);
+	col2.append(col2Label).append(col2Input).append(appendErrorMessage("adjInputStyle"));
 	
 	row.append(col1).append(col2);
 	
@@ -1699,9 +1699,17 @@ function appendAddLicencePopup(element) {
 	}).text("Save")
 	.bind('click',function(e){
 		e.stopPropagation();
-		showOverlay();
+		if($('#licenseId').val() == ""){
+			$('#licenseId').parent().find('.err-msg').html(message).show();
+			$('#licenseId').addClass('ce-err-input').show();
+			return false;
+		}else {
+			$('#licenseId').parent().find('.err-msg').hide();
+			$('#licenseId').removeClass('ce-err-input');
+		}
 		if ($(this).attr("state-id") == "NMLS")
 		{
+			
 			saveNMLS($('#licenseId').val());
 			return;
 		}
