@@ -93,15 +93,13 @@ var purchaseType = [{
 	id : "propertyTaxesPaid",
 	column : 1,
 	type : "month/year",
-	monthYearId : "propTaxMonthlyOryearly",
-	addClass : "hide"
+	monthYearId : "propTaxMonthlyOryearly"
 },{
 	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
 	column : 1,
 	type : "month/year",
-	monthYearId : "propInsMonthlyOryearly",
-	addClass : "hide"
+	monthYearId : "propInsMonthlyOryearly"
 }];
 
 //JSON for refinanace lower monthly payment
@@ -180,15 +178,13 @@ var refinanceLowerMonthlyPayment = [{
 	id : "propertyTaxesPaid",
 	column : 1,
 	type : "month/year",
-	monthYearId : "propTaxMonthlyOryearly",
-	addClass : "hide"
+	monthYearId : "propTaxMonthlyOryearly"
 },{
 	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
 	column : 1,
 	type : "month/year",
-	monthYearId : "propInsMonthlyOryearly",
-	addClass : "hide"
+	monthYearId : "propInsMonthlyOryearly"
 }];
 
 //JSON for refinanace cashout
@@ -271,15 +267,13 @@ var refinanceCashOut = [{
 	id : "propertyTaxesPaid",
 	column : 1,
 	type : "month/year",
-	monthYearId : "propTaxMonthlyOryearly",
-	addClass : "hide"
+	monthYearId : "propTaxMonthlyOryearly"
 },{
 	question : "Homeowners<br />(annual)",
 	id : "annualHomeownersInsurance",
 	column : 1,
 	type : "month/year",
-	monthYearId : "propInsMonthlyOryearly",
-	addClass : "hide"
+	monthYearId : "propInsMonthlyOryearly"
 }];
 
 //END
@@ -481,8 +475,6 @@ function paintDataSection(option,isDefault){
 			}else if(option[i].type == "month/year"){
 				
 				rowRHS = appendMonthYearQuestion(option[i]);
-				
-				$(divMainRow).addClass(option[i].addClass);
 				$(divMainRow).attr({
 					"id" : "quick-quote-monthYear"
 				});
@@ -596,7 +588,6 @@ function appendYesNoQuestion(option){
 		"isSelected":""
 	}).html("Yes").bind('click',function(e){
 		e.stopImmediatePropagation();		
-		$('div[id="quick-quote-monthYear"]').show();
 		//TO calculate tax insurance and homeowners insurance value
 		calculateInsuranceValue();		
 		if($('#quick-quote-no-container-id').hasClass('radio-btn-selected')){			
@@ -622,8 +613,7 @@ function appendYesNoQuestion(option){
 	}).html("No").bind('click',function(e){
 		
 		e.stopImmediatePropagation();
-		$('div[id="quick-quote-monthYear"]').hide();
-		
+		calculateInsuranceValue();	
 		if($('#quick-quote-yes-container-id').hasClass('radio-btn-selected')){			
 			$('#quick-quote-yes-container-id').removeClass('radio-btn-selected');
 		}
@@ -646,53 +636,45 @@ function calculateInsuranceValue(){
 	
 	   if($('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE || $('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE_CASH_OUT ){
 		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
-			if($('input[id="currentMortgageBalance"]').val() != ""){
+			if($('input[id="homeWorthToday"]').val() != ""){
 				var value = mainValue*1.25/100;
-				value = Math.round(value);
-				value = '$'+value;
 				$('#propertyTaxesPaid').val("");
-				$('#propertyTaxesPaid').val(value);
+				$('#propertyTaxesPaid').val(showValue(value,false));
 				$('#propertyTaxesPaid').attr({
-					"value": showValue(value)
+					"value": showValue(value,false)
 				});
-				
+			}
+			if($('input[id="currentMortgageBalance"]').val() != ""){
 			    var loanAmount = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 				var homeValue = loanAmount*0.35/100;
-				homeValue = Math.round(homeValue);
-				homeValue = '$'+homeValue;
+
 				$('#annualHomeownersInsurance').val("");
-				$('#annualHomeownersInsurance').val(homeValue);
+				$('#annualHomeownersInsurance').val(showValue(homeValue,false));
 				$('#annualHomeownersInsurance').attr({
-					"value": showValue(homeValue)
+					"value": showValue(homeValue,false)
 				});
 			}
 	   }else{
 		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
 			if($('input[id="homeWorthToday"]').val() != ""){
 				var value = mainValue*1.25/100;
-				value = Math.round(value);
-				value = '$'+value;
+			
 				$('#propertyTaxesPaid').val("");
-				$('#propertyTaxesPaid').val(value);
+				$('#propertyTaxesPaid').val(showValue(value,false));
 				$('#propertyTaxesPaid').attr({
-					"value": showValue(value)
+					"value": showValue(value,false)
 				});
 				
 				var loanAmount = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))-removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 				var homeValue = loanAmount*0.35/100;
-				homeValue = Math.round(homeValue);
-				homeValue = '$'+homeValue;
+			
 				$('#annualHomeownersInsurance').val("");
-				$('#annualHomeownersInsurance').val(homeValue);
+				$('#annualHomeownersInsurance').val(showValue(homeValue,false));
 				$('#annualHomeownersInsurance').attr({
-					"value": showValue(homeValue)
+					"value": showValue(showValue(homeValue,false))
 				});
 			}
 	   }
-		
-		
-	
-	
 }
 /*Function which paint the question with year/month dropdown*/
 function appendMonthYearQuestion(option){
@@ -1924,15 +1906,11 @@ $("body").on('click',"#quick-quote-generate-pdf",function(e){
 	sendPurchasePdfUnderQuickQuote();
 });
 
-$('body').keyup('#currentMortgageBalance',function(e) {
-    console.log('keyup called');
-	calculateInsuranceValue();
+$('body').on('keyup','#currentMortgageBalance',function(e) {
+    	calculateInsuranceValue();
  });
 
-$('body').keyup('#homeWorthToday',function(e) {
-    console.log('keyup called');
-    if($('#quick-quote-loan-type-id').attr('loan-type') == PURCHASE){
+$('body').on('keyup','#homeWorthToday',function(e) {    
     	calculateInsuranceValue();
-	}
 
  });
