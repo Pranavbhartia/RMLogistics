@@ -2,7 +2,7 @@ var count = 0;
 var buyHomeRefinanceRate = new Object();
 buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
-var lqbTeaserRateUnderQuickQuote = new Object();
+
 var inputCustmerDetailUnderQuickQuote = new Object();
 loanPurchaseDetailsUnderQuickQuote.isRate = false;
 loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
@@ -1912,5 +1912,21 @@ $('body').on('keyup','#currentMortgageBalance',function(e) {
 
 $('body').on('keyup','#homeWorthToday',function(e) {    
     	calculateInsuranceValue();
+    	updateDownPayment($('#homeWorthToday').val(),$('#currentMortgageBalance').val(),$('.quick-quote-dwn-percentage').val());
 
  });
+function updateDownPayment(purchaseVal,downpayment,percentage){
+    if(purchaseVal&&getFloatValue(purchaseVal)!=0){
+        purchaseVal=getFloatValue(purchaseVal);
+        if(downpayment != "" && percentage != ""){
+        	downpayment = (purchaseVal*percentage)/100;
+            $('#currentMortgageBalance').val(showValue(downpayment,false));
+            $('#currentMortgageBalance').attr({
+    			"value": showValue(downpayment,false)
+    		});
+        }
+        
+        
+    }
+
+}
