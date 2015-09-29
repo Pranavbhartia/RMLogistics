@@ -729,7 +729,7 @@ public class GeneratePdfForQuickQuote {
         		Float prepaidNumber = Float.parseFloat(removeDollarAndComma(totEstResDepWthLen)) -(Float.parseFloat(removeDollarAndComma(totEstResDepWthLen)) - Float.parseFloat(estimatedNumber));
         		prepaidComment = addDollarAndComma(""+prepaidNumber);
         		
-        		Float estimatedPrepaidNumber = Float.parseFloat(removeDollarAndComma(totEstResDepWthLen)) + Float.parseFloat(estimatedNumber);
+        		Float estimatedPrepaidNumber = Float.parseFloat(removeDollarAndComma(totEstResDepWthLen)) - Float.parseFloat(estimatedNumber);
         		estimatedPrepaids = addDollarAndComma(""+estimatedPrepaidNumber);
         	}
         	else{
