@@ -1472,7 +1472,7 @@ $(document).on('keydown', '#stateId' ,function(e){
 	});  
  $(document).on('keypress','input[name="coBorrowerZipCode"]',function(e){
 
-		if (e.whiche.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
+		if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
 	        //display error message
 	        //showToastMessage("Enter correct zipcode");
 	          return false;
