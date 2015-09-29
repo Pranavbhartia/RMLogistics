@@ -17,8 +17,9 @@ import com.nexera.newfi.workflow.service.IWorkflowService;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
 import com.nexera.workflow.task.IWorkflowTaskExecutor;
+
 @Component
-public class UWReviewedManager implements IWorkflowTaskExecutor{
+public class UWReviewedManager implements IWorkflowTaskExecutor {
 	@Autowired
 	private LoanService loanService;
 	@Autowired
@@ -31,21 +32,22 @@ public class UWReviewedManager implements IWorkflowTaskExecutor{
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		// Do Nothing
+		String returnStatus = null;
 		int loanId = Integer.parseInt(objectMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
-		if (status != null){
-			if (!(status.equals(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID() + ""))){
-				loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
-				        LoanProgressStatusMasterEnum.DECLINED));	
+		if (status != null) {
+			if (!(status.equals(LOSLoanStatus.LQB_STATUS_APPROVED
+			        .getLosStatusID() + ""))) {
+				loanService.saveLoanProgress(loanId,
+				        new LoanProgressStatusMaster(
+				                LoanProgressStatusMasterEnum.DECLINED));
 			}
+			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 		}
-		else{
-			loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
-			        LoanProgressStatusMasterEnum.DECLINED));
-		}
-		return WorkItemStatus.COMPLETED.getStatus();
+		return returnStatus;
+
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class UWReviewedManager implements IWorkflowTaskExecutor{
 	}
 
 	private void dismissSystemEduNotification(HashMap<String, Object> objectMap) {
-		
+
 	}
 
 	@Override
