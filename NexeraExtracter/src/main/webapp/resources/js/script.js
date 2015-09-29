@@ -1526,7 +1526,7 @@ function appendLTVDataForOlympicPiggyBack(addHighBalArm,isFNMAArm){
 
 function getOlympicTable9(isFNMAArm){
 	var tableArray = [ {
-					"desc" : "OLYMPIC FIXED 2ND MORTGAGE"
+					"desc" : "OLYMPIC 30 YR FIXED 2ND MORTGAGE"
 				},{
 					"desc" : "Base Rate",
 					"value" : "6.625%"
