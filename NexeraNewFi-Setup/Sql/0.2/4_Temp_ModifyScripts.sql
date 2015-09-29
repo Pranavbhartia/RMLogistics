@@ -389,12 +389,3 @@ ADD COLUMN `is_deleted` TINYINT NULL DEFAULT 0 COMMENT '' AFTER `is_created`;
 #Ranjitha -  Default status for new loans
 INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `loan_type`) VALUES ('15', 'NEWFI_LOAN_STATUS', 'newfi Loan Status', '1');
 
-
-
-
-
-
-
-
-
-

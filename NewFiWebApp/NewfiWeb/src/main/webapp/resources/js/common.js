@@ -811,7 +811,13 @@ function getCalculationFunctionForItem(key) {
 
 $(document).on("closingCostChange",function(e,data){
 	//setTimeout(function(){ $('#closingCostId').html(showValue(data)); }, 10);
-	setTimeout(function(){ $('#closingCostId').html(totalEstimatedClosingCosts['totEstimatedClosingCost']); }, 10);
+	var getVal = totalEstimatedClosingCosts['totEstimatedClosingCost'];
+	
+	var value = removedDoller(removedComma(getVal));
+	if(value%1 == 0){
+		getVal=showValue(getVal,false);
+	}
+	setTimeout(function(){ $('#closingCostId').html(getVal); }, 10);
 })
 
 function getRowHolderObject(container, value, key) {
@@ -844,16 +850,77 @@ function getRowHolderObject(container, value, key) {
 			var ob = this;
 			var getVal = ob.getValueForItem();
 			$(ob.container).text(getVal);
+			totalEstimatedClosingCosts[key]=getVal;
 		},
 		updateDataForPDF : function(){
 			var ob = this;
-			var getVal = ob.getValueForItem();
+			var getVal = ob.getValueForItem();		
 			lqbTeaserRateUnderQuickQuote[key]=getVal;
 		},
 		updateTotalEstimatedClosingCosts: function(){
 			var ob = this;
 			var getVal = ob.getValueForItem();
 			totalEstimatedClosingCosts[key]=getVal;
+		},
+		updateTaxesAndInsurances: function(){
+			var ob = this;
+			var isMonthly = false;
+			if (closingCostHolder.valueSet[key]
+				&& getFloatValue(closingCostHolder.valueSet[key]) != 0)
+				isMonthly = true;
+			else {
+					if (closingCostHolder.loanType
+							&& closingCostHolder.loanType == "PUR") {
+						var purchaseValue = getFloatValue(closingCostHolder.housePrice);
+						var result = Math.round((.0125 * purchaseValue) / 6);
+						isMonthly = true;
+					} else {
+						var taxVal = getFloatValue(closingCostHolder.propertyTaxesPaid);
+						var result = Math.round(taxVal * 2);
+						isMonthly = false;
+				}
+			}
+			
+			var getVal = ob.getValueForItem();
+			var valueForSixMonth;
+			if(isMonthly){
+				valueForSixMonth = numberWithCommasAndDoller(getRoundValue(getFloatValue(removedComma(removedDoller(getVal))) * 3));
+			}
+			else{
+				// Calculating month wise
+				valueForSixMonth = numberWithCommasAndDoller((getRoundValue(getFloatValue(removedComma(removedDoller(getVal)))/4)));
+			}
+				
+		
+			
+			if (key == "taxResrv1004" || key == "hazInsReserve1002"){
+				if(loanPurchaseDetailsUnderQuickQuote.impounds == "No"){
+					$(ob.container).text("$0.00");
+					lqbTeaserRateUnderQuickQuote[key] = "$0.00";
+				
+				}
+				else{
+					$(ob.container).text(valueForSixMonth);
+					lqbTeaserRateUnderQuickQuote[key] = valueForSixMonth;
+				
+				}
+			}
+			else if(key == "totEstResDepWthLen"){
+				if(loanPurchaseDetailsUnderQuickQuote.impounds == "No"){
+					
+					$(ob.container).text(closingCostHolder["interest901"].getValueForItem());
+					lqbTeaserRateUnderQuickQuote[key] = closingCostHolder["interest901"].getValueForItem();;
+				}
+				else{
+					var val1 = getFloatValue(closingCostHolder["interest901"].getValueForItem());
+					var val2 = getFloatValue(lqbTeaserRateUnderQuickQuote["taxResrv1004"]);
+					var val3 = getFloatValue(lqbTeaserRateUnderQuickQuote["hazInsReserve1002"]);
+					var val4 = val1 + val2 + val3;
+					val4 = showValue(getFloatValue(val4), true);
+					$(ob.container).text(val4);
+					lqbTeaserRateUnderQuickQuote[key] = val4;
+				}
+			}
 		}
 	};
 	return rw;
@@ -871,6 +938,9 @@ function getObContainer() {
 					}
 					if(key == "totEstimatedClosingCost"){
 						keyObj.updateTotalEstimatedClosingCosts();
+					}
+					if(key == "taxResrv1004" || key == "hazInsReserve1002" || key == "totEstResDepWthLen" ){
+						keyObj.updateTaxesAndInsurances();
 					}
 				 }
 			}

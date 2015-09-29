@@ -15,6 +15,24 @@ public class QuoteDetailsVO {
 	private Date createdDate;
 	private String emailId;
 	private String phoneNo;
+	private Boolean isCreated = false;
+    private Boolean isDeleted = false;
+
+	public Boolean getIsCreated() {
+		return isCreated;
+	}
+
+	public void setIsCreated(Boolean isCreated) {
+		this.isCreated = isCreated;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 
 	public String getEmailId() {
 		return emailId;

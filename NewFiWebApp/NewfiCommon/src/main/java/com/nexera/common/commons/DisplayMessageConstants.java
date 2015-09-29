@@ -49,5 +49,9 @@ public final class DisplayMessageConstants {
 	public static final String INVALID_STATE_CODE = "INVALID_STATE_CODE";
 	// Email subject constants
 	public static final String PAYMENT_SUCCESSFUL_SUBJECT = "Payment Successful!";
-	public static final String PAYMENT_UNSUCCESSFUL_SUBJECT = "Payment Unsuccessful!";	
+	public static final String PAYMENT_UNSUCCESSFUL_SUBJECT = "Payment Unsuccessful!";
+	
+	public static final String USER_CREATED_SUCCESSFULLY = "User created Successfully.";
+	
+	public static final String USER_DELETED_SUCCESSFULLY = "User deleted Successfully.";
 }

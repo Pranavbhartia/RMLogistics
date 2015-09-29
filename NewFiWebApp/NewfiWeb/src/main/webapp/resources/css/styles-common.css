@@ -188,7 +188,7 @@ input.reg-radio {
 
 .reg-input-row .reg-lname{
 	/* margin-left: 20px; */
-k}
+}
 
 .reg-input-row .reg-fname,
 .reg-input-row .reg-lname{
@@ -541,7 +541,7 @@ a.cus-eng-succ-mess-email {
 .quick-quote-row-RHS {
     font-family: openSans;
     font-size: 14px;
-    width: 43%;      
+    width: 35%;      
     text-align: left;
     height: 35px;            
     padding-left: 15px;      
@@ -612,7 +612,7 @@ a.cus-eng-succ-mess-email {
 
 .quick-quote-dropdown-cont {
     position: absolute;      
-    width: 211px;      
+    width: 173px;      
     height: auto;
     margin: 0 auto;
     border: 1px solid #dcdcdc;      
@@ -652,7 +652,7 @@ a.cus-eng-succ-mess-email {
 }
 
 .month-year-row-adj {
-    width: 90px;
+    /* width: 100px; */
 }
 
 .month-year-drop-down-row {
@@ -681,11 +681,11 @@ a.cus-eng-succ-mess-email {
 }
 
 .quick-quote-dwn-payment {
-	width: 145px;
+	width: 117px;
 }
 
 .quick-quote-dwn-percentage {
-    width: 69px;
+    width: 55px;
     padding-left: 5px;
     background: url(../images/percentagesy.png) no-repeat #fafafa right;
     background-size: 12px;
@@ -728,20 +728,28 @@ a.cus-eng-succ-mess-email {
     font-family: 'opensanssemiBold';
     margin-right: 5px;
     white-space: nowrap;
-    line-height: 30px;
-    padding-left: 10px;
-    color: #428bca;
+    line-height: 35px;
     cursor: pointer;
-    width: 120px;
-    font-size: 15px;
-    text-align: center;
-    padding: 5px 0;
+    width: 120px;      
+    color: #fff;      
+    font-size: 15px;      
+    text-align: center;            
+    margin: 7px;      
     border-radius: 3px;
-    border: 1px solid #428bca;
+}
+.leads-col-1,.leads-col-3{
+    width: 150px;
+
 }
 
 .leads-col-2 {
     width: 200px;
+}
+.leads-col-4 {
+	width: 133px;
+}
+.leads-row-1 {
+    width: 161px;
 }
 
 .leads-row-2 {
@@ -749,16 +757,16 @@ a.cus-eng-succ-mess-email {
 }
 
 .leads-row-3,.leads-row-1 {
-    width: 180px;
+    width: 150px;
+}
+.leads-row-4 {
+    width: 113px;
 }
 
-.leads-col-1,.leads-col-3,.leads-col-4{
-    width: 180px;
-}
 .leads-row-5 {
-    background: url(../images/pdf.png) no-repeat 40px center;
+    background: url(../images/pdf.jpg) no-repeat 40px center;
     height: 25px;
-    background-size: 20%;
+    background-size: 21%;
     cursor: pointer;
 }
 .quick-quote-rhs-label{
@@ -812,4 +820,29 @@ a.cus-eng-succ-mess-email {
 .last-action-sort-list-asc {
       background: url(../images/upwrd.png) no-repeat 75px;
       cursor: pointer;
+}
+.leads-container-row-tc6 {
+	width: 91px;
+}
+.leads-container-row-tc5 {
+	width: 141px;
+}
+.leads-row-6 {
+    background: url(../images/add_user.png) no-repeat;
+    height: 35px;
+    background-size: 28%;
+    cursor: pointer;
+}
+.leads-user-created {
+    background: url(../images/added_user.png) no-repeat;
+    height: 35px;
+    background-size: 28%;
+}
+.leads-col-6 {
+    width: 95px;
+}
+.leads-row-7 {
+ 	background: url(../images/Delete_Icon.png) no-repeat;
+ 	height: 35px;
+ 	background-size: 65%;
 }

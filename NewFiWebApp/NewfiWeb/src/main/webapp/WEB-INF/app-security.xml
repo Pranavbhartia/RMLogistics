@@ -13,6 +13,7 @@
 		<intercept-url pattern="/customerEngagement.do" access="permitAll" />
 		<intercept-url pattern="/registerNew.do" access="permitAll" />
         <intercept-url pattern="/forgotPassword.do" access="permitAll" />
+        <intercept-url pattern="/checkMongoService.do" access="permitAll" />
  	    <intercept-url pattern="/reset.do" access="permitAll" />
 		<intercept-url pattern="/*.do" access="isAuthenticated()" />
 

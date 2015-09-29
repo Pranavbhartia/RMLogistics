@@ -13,6 +13,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Type;
+
 import com.nexera.common.compositekey.QuoteCompositeKey;
 
 @Entity
@@ -31,6 +33,8 @@ public class QuoteDetails implements Serializable{
 	private String rateAndApr;
 	private String loanProgram;
 	private Date createdDate;
+	private Boolean isCreated = false;
+	private Boolean isDeleted = false; 
 	
 
 	
@@ -130,6 +134,26 @@ public class QuoteDetails implements Serializable{
 	public void setLoanProgram(String loanProgram) {
 		this.loanProgram = loanProgram;
 	}
+	
+	@Column(name = "is_created", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsCreated() {
+		return isCreated;
+	}
+	public void setIsCreated(Boolean isCreated) {
+		this.isCreated = isCreated;
+	}
+	
+	@Column(name = "is_deleted", columnDefinition = "TINYINT")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+	
+	
 	
 	
 	

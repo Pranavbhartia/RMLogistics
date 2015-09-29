@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +32,8 @@ import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
+import com.nexera.common.compositekey.QuoteCompositeKey;
+import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.FatalException;
@@ -40,6 +45,7 @@ import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.core.service.LoanAppFormService;
 import com.nexera.core.service.LoanService;
+import com.nexera.core.service.QuoteService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.web.rest.util.RestUtil;
@@ -65,6 +71,9 @@ public class ShopperRegistrationController {
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
+	
+	@Autowired
+	QuoteService quoteService;
 
 	@Value("${profile.url}")
 	private String profileUrl;
@@ -122,6 +131,94 @@ public class ShopperRegistrationController {
 		
 	}
 
+	@RequestMapping(value = "/record/deleteLeadFromQuote/{userName}/{internalUserID}", method = RequestMethod.POST)
+	 public @ResponseBody CommonResponseVO deleteLeadFromQuote(@PathVariable String userName,@PathVariable Integer internalUserID,
+	         HttpServletRequest request, HttpServletResponse response)
+	         throws IOException {
+		CommonResponseVO responseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+		quoteCompositeKey.setInternalUserId(internalUserID);
+		quoteCompositeKey.setUserName(userName);
+		try{
+		quoteService.updateDeletedUser(quoteCompositeKey);
+		responseVO.setResultObject(DisplayMessageConstants.USER_DELETED_SUCCESSFULLY);
+		}
+		catch(Exception e){
+			LOG.error("Error while deleting user from quotedetails", e);
+			error.setMessage(ErrorConstants.USER_DELETION_FAILED);
+			responseVO.setError(error);
+			throw new FatalException("User could not be registered from Quick Quote");
+		}
+		finally{
+			return responseVO;
+		}
+	}
+	
+	 @RequestMapping(value = "/record/lead/{userName}/{internalUserID}", method = RequestMethod.POST)
+	 public @ResponseBody CommonResponseVO resgisterLead(@PathVariable String userName,@PathVariable Integer internalUserID,
+	         HttpServletRequest request, HttpServletResponse response)
+	         throws IOException {
+		Gson gson = new Gson();
+	    CommonResponseVO responseVO = new CommonResponseVO();
+	    QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+	    ErrorVO error = new ErrorVO();
+	    quoteCompositeKey.setInternalUserId(internalUserID);
+	    quoteCompositeKey.setUserName(userName);
+	    
+	    QuoteDetails quoteDetails = quoteService.getUserDetails(quoteCompositeKey);
+	    String emailIdUnderQuote = quoteDetails.getEmailId();
+	    User isUserPresent = userProfileService.findUserByMail(emailIdUnderQuote);
+	    
+		if (isUserPresent != null) {
+			error.setMessage(ErrorConstants.REGISTRATION_USER_EXSIST);
+			responseVO.setError(error);
+			quoteService.updateCreatedUser(quoteCompositeKey);
+			return responseVO;
+		} 
+	
+		String registrationDetails = quoteService.createRegistrationDetails(quoteDetails);
+		registrationDetails = registrationDetails.replaceAll("\\\\", "");
+		String teaseRateData = quoteService.createTeaserRateData(quoteDetails);
+		teaseRateData = "["+teaseRateData+"]";
+	
+		LOG.info("registrationDetails from quick quote - inout xml is" + registrationDetails);
+		try {
+			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails, LoanAppFormVO.class);
+
+			TypeReference<List<LqbTeaserRateVo>> typeRef = new TypeReference<List<LqbTeaserRateVo>>() {
+			};
+			
+			List<LqbTeaserRateVo> teaseRateDatalist = gson.fromJson(teaseRateData, typeRef.getType());
+
+			String emailId = loaAppFormVO.getUser().getEmailId();
+			
+			LOG.info("calling UserName : "
+			        + loaAppFormVO.getUser().getFirstName());
+
+			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
+			        teaseRateDatalist);
+			quoteService.updateCreatedUser(quoteCompositeKey);
+			responseVO.setResultObject(DisplayMessageConstants.USER_CREATED_SUCCESSFULLY);
+			LOG.info("User succesfully created, now trying to autologin" + user.getEmailId());
+		}
+		catch (FatalException e) {
+			LOG.error("error while creating user", e);
+			error.setMessage(ErrorConstants.USER_CREATION_FAILED);
+			responseVO.setError(error);
+			throw new FatalException("User could not be registered from Quick Quote");
+			
+		} catch (Exception e) {
+			LOG.error("error while creating user", e);
+			error.setMessage(ErrorConstants.USER_CREATION_FAILED);
+			responseVO.setError(error);
+			throw new FatalException("User could not be registered from Quick Quote");
+		}
+		finally{
+			return responseVO;
+		}
+	 }
+	
 	@RequestMapping(value = "/record", method = RequestMethod.POST)
 	public @ResponseBody String recordShopperInfo(String registrationDetails,
 	        HttpServletRequest request, HttpServletResponse response)

@@ -6,6 +6,7 @@
  */
 package com.nexera.common.dao.impl;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +86,21 @@ public class GenericDaoImpl implements GenericDao {
 
 	}
 
+
+    public Object load(@SuppressWarnings("rawtypes") Class cls, Object compositeKey)
+	        throws DatabaseException {
+
+		Session session = sessionFactory.getCurrentSession();
+		Object obj = null;
+		try {
+			obj = session.get(cls, (Serializable) compositeKey);
+			return obj;
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage(), e);
+		}
+
+	}
+	
 	/**
 	 * Use this method to load a plain object, i.e a class without any
 	 * associations. Load does not initialise the associations of a object.
