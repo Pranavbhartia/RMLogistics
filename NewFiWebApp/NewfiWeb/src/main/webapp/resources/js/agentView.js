@@ -808,8 +808,19 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				"class" : "leads-container-tc5  leads-container-tc5-realtor float-left"
 			}).html(textCol4);
 			
+			var userLastLogin = customer.userLastLoginTime;
+			
+			userLastLogin = formateDateAndTime(customer.userLastLoginTime,true);
+			
+			if(userLastLogin == ""){
+				userLastLogin = "-";
+			}
 			var col6 = $('<div>').attr({
-				"class" : "leads-container-tc6 alert-col leads-container-tc6-realtor float-left"
+				"class" : "leads-container-tc4  leads-container-tc5-realtor float-left"
+			}).html(userLastLogin);
+			
+			var col7 = $('<div>').attr({
+				"class" : "leads-container-tc5 alert-col leads-container-tc6-realtor float-left"
 			}).bind(
 					'click',
 					{
@@ -820,7 +831,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 						appendCustomerDetailContianer($(this).parent(),
 								event.data.customer);
 					});
-			loanNotificationCntxt.loanLstCntElement = col6;
+			loanNotificationCntxt.loanLstCntElement = col7;
 			loanNotificationCntxt.getNotificationForLoan(function(ob) {
 				if (parseInt(ob.loanNotificationList.length) > 0) {
 					var alerts = $('<div>').attr({
@@ -831,7 +842,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}
 			});
 			
-			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6);
+			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6).append(col7);
 			
 			$('#' + elementId).append(row);
 			
@@ -884,18 +895,18 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}).html(createdDateStr);
 
 				var date=customer.time.slice(0,10);
-				var time=customer.time.slice(11);
-				var modifiedDateStr=formatYearInDate(date);
-				
-				if(modifiedDateStr==""){
-					modifiedDateStr="-";
-				}else {
-					//  added Extra space for Data format,  Don't delete space
-					modifiedDateStr = modifiedDateStr+"<br/> "+time;
-				}
-				var col6 = $('<div>').attr({
-					"class" : "leads-container-tc6 float-left last-action-cell"
-				}).html(modifiedDateStr);
+			    var time=customer.time.slice(11);
+			    var modifiedDateStr=formatYearInDate(date);
+			    
+			    if(modifiedDateStr==""){
+			     modifiedDateStr="-";
+			    }else {
+			     //  added Extra space for Data format,  Don't delete space
+			     modifiedDateStr = modifiedDateStr+"<br/> "+time;
+			    }
+			    var col6 = $('<div>').attr({
+			     "class" : "leads-container-tc6 float-left last-action-cell"
+			    }).html(modifiedDateStr);
 				
 				var userLastLogin = customer.userLastLoginTime;
 	
@@ -1001,11 +1012,11 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 		}).html("Loan Advisor");
 
 		var thCol6 = $('<div>').attr({
-			"class" : "leads-container-tc5 leads-container-tc5-realtor  float-left"
+			"class" : "leads-container-tc4 leads-container-tc5-realtor  float-left"
 		}).html("Last Login");
 		
 		var thCol7 = $('<div>').attr({
-			"class" : "leads-container-tc6 leads-container-tc6-realtor-header float-left"
+			"class" : "leads-container-tc5 leads-container-tc6-realtor-header float-left"
 		}).html("Alerts");
 
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6).append(thCol7);
