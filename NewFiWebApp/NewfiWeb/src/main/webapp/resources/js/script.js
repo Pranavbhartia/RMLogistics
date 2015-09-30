@@ -9,7 +9,6 @@ var flagToShowCompletPro = true;
 var rateLockRequestedFlag = false;
 var closedialog;
 var totalEstimatedClosingCosts = new Object();
-var lqbTeaserRateUnderQuickQuote = new Object();
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);
@@ -2199,7 +2198,7 @@ function getClosingCostBottomConatiner() {
     var container2 = $('<div>').attr({
         "class": "closing-cost-container"
     });
-    var headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids");
+    var headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrows");
     //NEXNF-569
     
     var row1Con3 = getClosingCostContainerRowWithSubText(1, getClosingCostLabel("Interest"), "","");

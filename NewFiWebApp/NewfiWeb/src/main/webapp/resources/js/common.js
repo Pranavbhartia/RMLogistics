@@ -454,9 +454,7 @@ function scrollToTop() {
 }
 
 function capitalizeFirstLetter(string) {
-	if(typeof(string)!=='undefined'){
 	return string.charAt(0).toUpperCase() + string.slice(1);
-	}
 }
 
 function removedDoller(inputData) {
@@ -596,7 +594,7 @@ function getClosingCostLabel(item) {
 	case "Homeowners Insurance Reserve - Estimated 2 Month(s)":
 		return "Homeowners Insurance Reserve - Estimated 2 Months";
 	case "Total Estimated Reserves Deposited in Escrow Account":
-		return "Total Estimated Prepaids";
+		return "Total Estimated Prepaids and Escrows";
 	case "Total Estimated Closing Cost":
 		return "Total Estimated Closing Costs";//changed for portal updates 6.17 addition of s
 	}
@@ -635,8 +633,6 @@ function objectKeyMakerFunction(item) {
 		return "interest901";
 	case getClosingCostLabel("Homeowners Insurance"):
 		return "hazIns903";
-	case "Total Estimated Prepaids":
-		return "totEstResDepWthLen";
 	case getClosingCostLabel("Total Prepaids"):
 		return "totPrepaids";
 	case getClosingCostLabel("Tax Reserve - Estimated 2 Month(s)"):

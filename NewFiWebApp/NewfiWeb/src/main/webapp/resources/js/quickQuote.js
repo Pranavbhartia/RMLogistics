@@ -1914,22 +1914,21 @@ $('body').on('keyup','#currentMortgageBalance',function(e) {
 });
 
 $('body').on('keyup','#homeWorthToday',function(e) {    
-    calculateInsuranceValue();
-    updateDownPayment($('#homeWorthToday').val(),$('#currentMortgageBalance').val(),$('.quick-quote-dwn-percentage').val());
+    	calculateInsuranceValue();
+    	updateDownPayment($('#homeWorthToday').val(),$('#currentMortgageBalance').val(),$('.quick-quote-dwn-percentage').val());
 
-});
+ });
 function updateDownPayment(purchaseVal,downpayment,percentage){
-   if(purchaseVal&&getFloatValue(purchaseVal)!=0){
-       purchaseVal=getFloatValue(purchaseVal);
-       if(downpayment != "" && percentage != ""){
-        downpayment = (purchaseVal*percentage)/100;
-           $('#currentMortgageBalance').val(showValue(downpayment,false));
-           $('#currentMortgageBalance').attr({
-      "value": showValue(downpayment,false)
-     });
-       }
-       
-       
-   }
-
+    if(purchaseVal&&getFloatValue(purchaseVal)!=0){
+        purchaseVal=getFloatValue(purchaseVal);
+        if(downpayment != "" && percentage != ""){
+        	downpayment = (purchaseVal*percentage)/100;
+            $('#currentMortgageBalance').val(showValue(downpayment,false));
+            $('#currentMortgageBalance').attr({
+    			"value": showValue(downpayment,false)
+    		});
+        }
+        
+        
+    }
 }
