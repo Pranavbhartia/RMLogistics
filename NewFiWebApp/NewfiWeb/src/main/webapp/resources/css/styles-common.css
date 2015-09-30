@@ -802,6 +802,11 @@ a.cus-eng-succ-mess-email {
       cursor: pointer;
 }
 
+.loan-advisor-sort-list-dsc {
+      background: url(../images/dd_arr_down.png) no-repeat 85px;
+      cursor: pointer;
+}
+
 .sort-list-asc {
       background: url(../images/upwrd.png) no-repeat 65px;
       cursor: pointer;
@@ -809,6 +814,11 @@ a.cus-eng-succ-mess-email {
 
 .loan-status-sort-list-asc {
       background: url(../images/upwrd.png) no-repeat 80px;
+      cursor: pointer;
+}
+
+.loan-advisor-sort-list-asc {
+      background: url(../images/upwrd.png) no-repeat 85px;
       cursor: pointer;
 }
 
