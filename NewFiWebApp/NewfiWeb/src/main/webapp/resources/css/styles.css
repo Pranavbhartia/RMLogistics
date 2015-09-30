@@ -1675,7 +1675,7 @@ input[type="button"]:focus, button:focus {
 }
 .agent-customer-list-header {
 	height: 45px;
-	margin-left: 15px;
+	margin: 0 15px;
 	margin-bottom: 10px;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -1688,7 +1688,7 @@ input[type="button"]:focus, button:focus {
 }
 
 .customer-list-contianer {
-	padding-left: 15px;
+	padding: 0 15px;
 }
 
 .agent-wrapper-header {
@@ -5725,15 +5725,15 @@ a.session-login-btn {
 }
 
 .leads-container-tc1-realtor {
-    width: 165px;
+    width: 150px;
 }
 
 .leads-container-tc2-realtor {
-  	width: 147px;
+  	width: 145px;
 }
 
 .leads-container-tc3-realtor {
-	width: 140px;
+	width: 139px;
 }
 
 .leads-container-tc4-realtor {
