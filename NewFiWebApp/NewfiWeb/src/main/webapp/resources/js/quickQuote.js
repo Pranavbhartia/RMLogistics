@@ -2,7 +2,6 @@ var count = 0;
 var buyHomeRefinanceRate = new Object();
 buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
-
 var inputCustmerDetailUnderQuickQuote = new Object();
 loanPurchaseDetailsUnderQuickQuote.isRate = false;
 loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
@@ -475,6 +474,8 @@ function paintDataSection(option,isDefault){
 			}else if(option[i].type == "month/year"){
 				
 				rowRHS = appendMonthYearQuestion(option[i]);
+				
+			
 				$(divMainRow).attr({
 					"id" : "quick-quote-monthYear"
 				});
@@ -588,6 +589,7 @@ function appendYesNoQuestion(option){
 		"isSelected":""
 	}).html("Yes").bind('click',function(e){
 		e.stopImmediatePropagation();		
+		
 		//TO calculate tax insurance and homeowners insurance value
 		calculateInsuranceValue();		
 		if($('#quick-quote-no-container-id').hasClass('radio-btn-selected')){			
@@ -613,7 +615,8 @@ function appendYesNoQuestion(option){
 	}).html("No").bind('click',function(e){
 		
 		e.stopImmediatePropagation();
-		calculateInsuranceValue();	
+		calculateInsuranceValue();
+		
 		if($('#quick-quote-yes-container-id').hasClass('radio-btn-selected')){			
 			$('#quick-quote-yes-container-id').removeClass('radio-btn-selected');
 		}
@@ -633,48 +636,48 @@ function appendYesNoQuestion(option){
 
 }
 function calculateInsuranceValue(){
-	
-	   if($('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE || $('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE_CASH_OUT ){
-		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
-			if($('input[id="homeWorthToday"]').val() != ""){
-				var value = mainValue*1.25/100;
-				$('#propertyTaxesPaid').val("");
-				$('#propertyTaxesPaid').val(showValue(value,false));
-				$('#propertyTaxesPaid').attr({
-					"value": showValue(value,false)
-				});
-			}
-			if($('input[id="currentMortgageBalance"]').val() != ""){
-			    var loanAmount = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
-				var homeValue = loanAmount*0.35/100;
+	 
+    if($('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE || $('#quick-quote-loan-type-id').attr('loan-type') == REFINANACE_CASH_OUT ){
+     var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
+   if($('input[id="homeWorthToday"]').val() != ""){
+    var value = mainValue*1.25/100;
+    $('#propertyTaxesPaid').val("");
+    $('#propertyTaxesPaid').val(showValue(value,false));
+    $('#propertyTaxesPaid').attr({
+     "value": showValue(value,false)
+    });
+   }
+   if($('input[id="currentMortgageBalance"]').val() != ""){
+       var loanAmount = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
+    var homeValue = loanAmount*0.35/100;
 
-				$('#annualHomeownersInsurance').val("");
-				$('#annualHomeownersInsurance').val(showValue(homeValue,false));
-				$('#annualHomeownersInsurance').attr({
-					"value": showValue(homeValue,false)
-				});
-			}
-	   }else{
-		   var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
-			if($('input[id="homeWorthToday"]').val() != ""){
-				var value = mainValue*1.25/100;
-			
-				$('#propertyTaxesPaid').val("");
-				$('#propertyTaxesPaid').val(showValue(value,false));
-				$('#propertyTaxesPaid').attr({
-					"value": showValue(value,false)
-				});
-				
-				var loanAmount = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))-removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
-				var homeValue = loanAmount*0.35/100;
-			
-				$('#annualHomeownersInsurance').val("");
-				$('#annualHomeownersInsurance').val(showValue(homeValue,false));
-				$('#annualHomeownersInsurance').attr({
-					"value": showValue(showValue(homeValue,false))
-				});
-			}
-	   }
+    $('#annualHomeownersInsurance').val("");
+    $('#annualHomeownersInsurance').val(showValue(homeValue,false));
+    $('#annualHomeownersInsurance').attr({
+     "value": showValue(homeValue,false)
+    });
+   }
+    }else{
+     var mainValue = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
+   if($('input[id="homeWorthToday"]').val() != ""){
+    var value = mainValue*1.25/100;
+   
+    $('#propertyTaxesPaid').val("");
+    $('#propertyTaxesPaid').val(showValue(value,false));
+    $('#propertyTaxesPaid').attr({
+     "value": showValue(value,false)
+    });
+    
+    var loanAmount = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val()))-removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
+    var homeValue = loanAmount*0.35/100;
+   
+    $('#annualHomeownersInsurance').val("");
+    $('#annualHomeownersInsurance').val(showValue(homeValue,false));
+    $('#annualHomeownersInsurance').attr({
+     "value": showValue(showValue(homeValue,false))
+    });
+   }
+    }
 }
 /*Function which paint the question with year/month dropdown*/
 function appendMonthYearQuestion(option){
@@ -1043,16 +1046,16 @@ function getClosingCostBottomConatinerUnderQuickQuote() {
     var headerCon2;
     var row4Con2;
 	if(loanPurchaseDetailsUnderQuickQuote.impounds == "No"){
-		headerCon2 = getClosingCostConatinerHeader("Estimated Prepaid and Escrows");
+		headerCon2 = getClosingCostConatinerHeader("Estimated Prepaid");
 		row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, "Tax Reserve", "$ 1,072.00", "Varies based on calendar month of closing");
 		row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, "Homeowners Insurance Reserve", "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
-		row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids and Escrows", "");
+		row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids", "");
 	}
 	else{
-		headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids and Escrow Reserves");
+		headerCon2 = getClosingCostConatinerHeader("Estimated Prepaids");
 		row1Con2 = getClosingCostContainerRowUnderQuickQuote(1, "Tax Reserve - Estimated 6 Months", "$ 1,072.00", "Varies based on calendar month of closing");
 		row2Con2 = getClosingCostContainerRowUnderQuickQuote(2, "Homeowners Insurance Reserve - Estimated 6 Months", "$ 1,072.00", "Provided you have 6 months of remaining coverage",true);
-		row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids and Escrow Reserves", "");
+		row4Con2 = getClosingCostContainerLastRowUnderQuickQuote(4, "Total Estimated Prepaids", "");
 	}
    /* var row2Con2 = getClosingCostContainerRowUnderQuickQuoteWithSubTextUnderQuickQuoteUnderQuickQuote(2, getClosingCostLabel("Homeowners Insurance Reserve - Estimated 2 Month(s)"), "$ 1,072.00", "(Provided you have 6 months of remaining coverage)");*/
    
@@ -1104,6 +1107,8 @@ function objectKeyMakerFunctionUnderQuickQuote(item) {
 		return "interest901";
 	case getClosingCostLabel("Homeowners Insurance"):
 		return "hazIns903";
+	case "Total Estimated Prepaids":
+		return "totEstResDepWthLen";
 	case getClosingCostLabel("Total Prepaids"):
 		return "totPrepaids";
 	case "Tax Reserve - Estimated 6 Months":
@@ -1114,8 +1119,6 @@ function objectKeyMakerFunctionUnderQuickQuote(item) {
 		return "hazInsReserve1002";
 	case "Homeowners Insurance Reserve":
 		return "hazInsReserve1002";
-	case "Total Estimated Prepaids and Escrows":
-		return "totEstResDepWthLen";
 	case "Total Estimated Prepaids and Escrow Reserves":
 		return "totEstResDepWthLen";
 	case getClosingCostLabel("Total Estimated Closing Cost"):
@@ -1907,8 +1910,8 @@ $("body").on('click',"#quick-quote-generate-pdf",function(e){
 });
 
 $('body').on('keyup','#currentMortgageBalance',function(e) {
-    	calculateInsuranceValue();
- });
+    calculateInsuranceValue();
+});
 
 $('body').on('keyup','#homeWorthToday',function(e) {    
     	calculateInsuranceValue();
@@ -1928,5 +1931,4 @@ function updateDownPayment(purchaseVal,downpayment,percentage){
         
         
     }
-
 }
