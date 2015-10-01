@@ -5152,7 +5152,9 @@ if(appUserDetails.loanType.loanTypeCd =="PUR"){
 	paintCustomerApplicationPurchasePageStep1a();
 	return;
 }
-	
+if(typeof(appUserDetails.purchaseDetails.livingSituation)==='undefined'){
+	paintSelectLoanTypeQuestion();
+}
 appProgressBaar(2);
 quesContxts = [];
 stages = 2;

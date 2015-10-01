@@ -903,16 +903,18 @@ public class GeneratePdfForQuickQuote {
         
    
         if(showPrepaidComment){
-        cell = new PdfPCell(new Phrase("  *A credit of  "+prepaidCost+" was applied against the "+prepaidAgainstNumber,font));
+    	cell = new PdfPCell(new Phrase("\n"));
+        cell.setColspan(2);
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+        seventhTable.addCell(cell);	
+        	
+        cell = new PdfPCell(new Phrase("  *A credit of "+prepaidCost+" was applied against the "+prepaidAgainstNumber,font));
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         cell.setColspan(2);
         seventhTable.addCell(cell);
         }
         
-        cell = new PdfPCell(new Phrase("\n"));
-        cell.setColspan(2);
-        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
-        seventhTable.addCell(cell);
+        
         
 //        cell = new PdfPCell(new Phrase("\n"));
 //        cell.setColspan(2);

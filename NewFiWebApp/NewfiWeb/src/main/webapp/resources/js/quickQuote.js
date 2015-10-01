@@ -1915,7 +1915,10 @@ $('body').on('keyup','#currentMortgageBalance',function(e) {
 
 $('body').on('keyup','#homeWorthToday',function(e) {    
     	calculateInsuranceValue();
-    	updateDownPayment($('#homeWorthToday').val(),$('#currentMortgageBalance').val(),$('.quick-quote-dwn-percentage').val());
+    	 if($('#quick-quote-loan-type-id').attr('loan-type') == PURCHASE ){
+    		 updateDownPayment($('#homeWorthToday').val(),$('#currentMortgageBalance').val(),$('.quick-quote-dwn-percentage').val());
+    	 }
+    	
 
  });
 function updateDownPayment(purchaseVal,downpayment,percentage){
