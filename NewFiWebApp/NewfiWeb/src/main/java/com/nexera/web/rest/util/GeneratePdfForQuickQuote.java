@@ -998,12 +998,22 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         secondTable.addCell(cell);
         
+        cell.setColspan(2);
+        cell.addElement(linePara);
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(8f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+        secondTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("Total Estimated Lender Costs",boldFont));
+        cell = new PdfPCell(new Phrase("Total Estimated Lender Costs",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
-        cell.setBorder(Rectangle.TOP | Rectangle.BOTTOM | Rectangle.LEFT);
-        cell.setBackgroundColor(lightBlue);
+        cell.setBorder(Rectangle.BOTTOM | Rectangle.LEFT);
+       // cell.setBackgroundColor(lightBlue);
         secondTable.addCell(cell);
   
        
@@ -1039,8 +1049,8 @@ public class GeneratePdfForQuickQuote {
         
         cell.setPaddingTop(4); cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell.setBackgroundColor(lightBlue);
-        cell.setBorder(Rectangle.TOP | Rectangle.BOTTOM | Rectangle.RIGHT);
+       // cell.setBackgroundColor(lightBlue);
+        cell.setBorder(Rectangle.BOTTOM | Rectangle.RIGHT);
         secondTable.addCell(cell);
   
         cell = new PdfPCell(new Phrase("",font));
@@ -1246,11 +1256,22 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         thirdTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("Total Estimated Third Party Costs",boldFont));
+        cell.setColspan(2);
+        cell.addElement(linePara);
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(8f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+        thirdTable.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Total Estimated Third Party Costs",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
-        cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
-        cell.setBackgroundColor(lightBlue); 
+        cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM );
+       // cell.setBackgroundColor(lightBlue); 
         thirdTable.addCell(cell);
         
     //    String totEstThdPtyCst = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstThdPtyCst();
@@ -1258,8 +1279,8 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell.setBackgroundColor(lightBlue);
-        cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
+     //   cell.setBackgroundColor(lightBlue);
+        cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
         thirdTable.addCell(cell);
         
   
@@ -1451,11 +1472,22 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         fifthTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase("Total Estimated Prepaids",boldFont));
+        cell.setColspan(2);
+        cell.addElement(linePara);
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(8f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+        fifthTable.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("Total Estimated Prepaids",font));
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
-        cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
-        cell.setBackgroundColor(lightBlue); 
+        cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM);
+      // cell.setBackgroundColor(lightBlue); 
         fifthTable.addCell(cell);
         
       //  String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
@@ -1464,7 +1496,7 @@ public class GeneratePdfForQuickQuote {
         cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBackgroundColor(lightBlue); 
-        cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
+        cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM );
         fifthTable.addCell(cell);
     }
         else{
@@ -1553,11 +1585,22 @@ public class GeneratePdfForQuickQuote {
             cell.setBorder(Rectangle.RIGHT);
             fifthTable.addCell(cell);
             
-            cell = new PdfPCell(new Phrase("Total Estimated Prepaids",boldFont));
+            cell.setColspan(2);
+            cell.addElement(linePara);
+            cell.setUseAscender(true);
+            cell.setUseDescender(false);
+            cell.setPadding(2);
+            cell.setPaddingTop(0);
+            cell.setFixedHeight(8f);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+            fifthTable.addCell(cell);
+            
+            cell = new PdfPCell(new Phrase("Total Estimated Prepaids",font));
             cell.setPaddingTop(4); 
             cell.setPaddingBottom(4);
-            cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
-            cell.setBackgroundColor(lightBlue); 
+            cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM );
+       //     cell.setBackgroundColor(lightBlue); 
             fifthTable.addCell(cell);
             
           //  String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
@@ -1565,8 +1608,8 @@ public class GeneratePdfForQuickQuote {
             cell.setPaddingTop(4); 
             cell.setPaddingBottom(4);
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell.setBackgroundColor(lightBlue); 
-            cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
+           // cell.setBackgroundColor(lightBlue); 
+            cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM );
             fifthTable.addCell(cell);
         	
         }
