@@ -50,7 +50,13 @@ var contxtHolder={
             contxt.clickHandler();
         }else{
         	if(appUserDetails.loanType.loanTypeCd && appUserDetails.loanType.loanTypeCd != "NONE"){
+        		if(typeof(appUserDetails.purchaseDetails.livingSituation)==='undefined'){
+        			paintSelectLoanTypeQuestion();
+        		}
+        		else{
         		paintRefinanceStep2();
+        		}
+        	//	paintSelectLoanTypeQuestion();
         	}else{
             paintSelectLoanTypeQuestion();
         	}
