@@ -91,6 +91,7 @@ public class WorkflowConstants {
 	        		LOSLoanStatus.LQB_STATUS_PROCESSING.getLosStatusID(),
 	        		LOSLoanStatus.LQB_STATUS_REGISTERED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_PRE_APPROVED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
@@ -107,7 +108,9 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED
 	                        .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),	               
+	                LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING.getLosStatusID(),	  
+	                LOSLoanStatus.LQB_STATUS_PRE_APPROVED
+	    	                .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING
 	                        .getLosStatusID(),
@@ -313,6 +316,15 @@ public class WorkflowConstants {
 		                                .get(LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING)));
 		
 		LQB_STATUS_MILESTONE_LOOKUP
+        .put(LOSLoanStatus.LQB_STATUS_PRE_APPROVED,
+                new WorkItemMilestoneInfo(
+                        Milestones.UW,
+                        null,
+                        MILESTONE_ORDER_LOOKUP
+                                .get(LOSLoanStatus.LQB_STATUS_PRE_APPROVED)));
+
+		
+		LQB_STATUS_MILESTONE_LOOKUP
         .put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED,
                 new WorkItemMilestoneInfo(
                         Milestones.UW,
@@ -342,6 +354,12 @@ public class WorkflowConstants {
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_REGISTERED)));
 		
+		LQB_STATUS_MILESTONE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_REGISTERED,
+		        new WorkItemMilestoneInfo(Milestones.App1003,
+		                null,
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_REGISTERED)));
 		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
