@@ -79,6 +79,10 @@ public class Utility {
 	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
 	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
 	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_FHLMC_15DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_FHLMC_30DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_FHLMC_45DAY_PRICE.csv",
+	        "10_YR_FIXED_CONFORMING-RS_FHLMC_60DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_45DAY_PRICE.csv",
@@ -99,6 +103,14 @@ public class Utility {
 	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
 	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_15DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_30DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_45DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_60DAY_PRICE.csv",	        		       		       
+	        /*"15_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_15DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_30DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_45DAY_PRICE.csv",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_60DAY_PRICE.csv",*/
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_45DAY_PRICE.csv",
@@ -115,6 +127,10 @@ public class Utility {
 	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
 	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_FHLMC_15DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_FHLMC_30DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_FHLMC_45DAY_PRICE.csv",
+	        "20_YR_FIXED_CONFORMING-RS_FHLMC_60DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_15DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_30DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_45DAY_PRICE.csv",
@@ -139,6 +155,14 @@ public class Utility {
 	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
 	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_15DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_30DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_45DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_60DAY_PRICE.csv",
+	       /* "30_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_15DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_30DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_45DAY_PRICE.csv",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_60DAY_PRICE.csv",*/
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_15DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_30DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_45DAY_PRICE.csv",
@@ -163,6 +187,14 @@ public class Utility {
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_15DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_30DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_45DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_60DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_15DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_30DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_45DAY_PRICE.csv",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_60DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_15DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_30DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_45DAY_PRICE.csv",
@@ -178,7 +210,17 @@ public class Utility {
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_15DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_30DAY_PRICE.csv",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_45DAY_PRICE.csv",
-	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv"
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_60DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_15DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_30DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_45DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_60DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_15DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_30DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_45DAY_PRICE.csv",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_60DAY_PRICE.csv",
+	        
+	        
 	       };
 
 	private static final String[] FILE_PATTERN = {
@@ -186,32 +228,45 @@ public class Utility {
 	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FNMA_HIBAL_",
 	        "5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_",
 	        "5_1_1_YR_LIBOR_NONCONFORMING__2_2_5_30_YR_ARM-RS_AMERIHOME_JUMBO_IO_",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_",	       	       	       	        
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_",
+	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_",
 	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FNMA_HIBAL_",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_",
+	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_",	       
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_",
 	        "10_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
+	        "10_YR_FIXED_CONFORMING-RS_FHLMC_",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_",
+	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_",
 	        "15_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
 	        "15_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_",
+	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+	        "15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
+	        "15_YR_FIXED_CONFORMING-RS_FHLMC_",
+	       /* "15_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_",*/
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_",
 	        "20_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_",
+	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
+	        "20_YR_FIXED_CONFORMING-RS_FHLMC_",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_",
 	        "30_YR_FIXED_CONFORMING-RS_FNMA_HIBAL_",
 	        "30_YR_FIXED_NONCONFORMING-RS_AMERIHOME_JUMBO_",
 	        "30_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
-	        "15_YR_FIXED_NONCONFORMING-RS_PMAC_JUMBO_",
-	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_",
-	        "5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_",
-	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_",
-	        "10_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
-	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_",
-	        "15_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
-	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_",
-	        "20_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
 	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_",
 	        "30_YR_FIXED_CONFORMING-RS_OLYMPIC_HIBAL_",
-	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_",
-	        "7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_"};
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_",
+	        "30_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_",
+
+	       };
+	
 
 	private static final String[] KEY_INDEX = { "15DAY_PRICE.csv",
 	        "30DAY_PRICE.csv", "45DAY_PRICE.csv", "60DAY_PRICE.csv" };
@@ -278,6 +333,26 @@ public class Utility {
 			        "Fannie Mae 5/1 ARM High Balance 2/2/5");
 			put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_",
 			        "Fannie Mae 7/1 ARM High Balance 5/2/5");
+			
+			put("30_YR_FIXED_CONFORMING-RS_FHLMC_", "Freddie Mac 30 Yr Fixed");
+			put("20_YR_FIXED_CONFORMING-RS_FHLMC_", "Freddie Mac 20 Yr Fixed");
+			put("15_YR_FIXED_CONFORMING-RS_FHLMC_", "Freddie Mac 15 Yr Fixed");
+			put("10_YR_FIXED_CONFORMING-RS_FHLMC_", "Freddie Mac 10 Yr Fixed");
+			
+			/*put("15_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_",
+			        "Freddie Mac 15 Yr Fixed Super Conforming");
+			put("30_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_",
+			        "Freddie Mac 30 Yr Fixed Super Conforming");
+			*/
+			put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_",
+			        "Freddie Mac 5/1 ARM 2/2/5");
+			put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_",
+			        "Freddie Mac 7/1 ARM 5/2/5");
+			put("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_",
+			        "Freddie Mac 5/1 ARM Super Conforming 2/2/5");
+			put("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_",
+			        "Freddie Mac 7/1 ARM Super Conforming 5/2/5");
+
 		}
 	};
 
@@ -331,6 +406,26 @@ public class Utility {
 					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_"),
 					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_"),
 					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_OLYMPIC_HIBAL_")
+			});
+			
+			
+	
+			put("FHLMC CONVENTIONAL FIXED RATE PRODUCTS" ,new String[]{
+					FILE_PATTERN_LABEL.get("30_YR_FIXED_CONFORMING-RS_FHLMC_"),
+					FILE_PATTERN_LABEL.get("20_YR_FIXED_CONFORMING-RS_FHLMC_"),
+					FILE_PATTERN_LABEL.get("15_YR_FIXED_CONFORMING-RS_FHLMC_"),
+					FILE_PATTERN_LABEL.get("10_YR_FIXED_CONFORMING-RS_FHLMC_"),
+					/*FILE_PATTERN_LABEL.get("30_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_"),
+					FILE_PATTERN_LABEL.get("15_YR_FIXED_CONFORMING-RS_FHLMC_SUPCONF_")*/
+					
+				
+			});
+			
+			put("FHLMC CONVENTIONAL ARM PRODUCTS" , new String[]{
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_"),
+					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_"),
+					FILE_PATTERN_LABEL.get("5_1_1_YR_LIBOR_CONFORMING__2_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_"),
+					FILE_PATTERN_LABEL.get("7_1_1_YR_LIBOR_CONFORMING__5_2_5_30_YR_ARM-RS_FHLMC_SUPCONF_")
 			});
 			
 		}
@@ -539,7 +634,7 @@ public class Utility {
 	public RestResponse buildUIMap(List<FileProductPointRate> list,
 	        long fileTimeStamp) {
 
-		System.out.println("Last modified time: " + fileTimeStamp);
+		
 		RestResponse response = new RestResponse();
 		Map<String, List<UIEntity>> fromCache = cache.get(fileTimeStamp);
 		if (fromCache != null) {
@@ -571,6 +666,7 @@ public class Utility {
 				// This is the case if there is any issue in extraction logic
 				System.out
 				        .println("Size is different, hence returning cached data");
+				response.setTimestamp(fileTimeStamp);
 				response.setData(lastData);
 				return response;
 			}
@@ -582,9 +678,13 @@ public class Utility {
 			if (cache.size() > 10) {
 				System.out.println("Too many elements in cache. Removing.");
 				clearCache();
+				System.out.println("After removing cache...................");
 			}
+			System.out.println("After removing cache outside if...................");
 			response.setTimestamp(fileTimeStamp);
+			System.out.println("Folder TimeStamp......................" + response.getTimestamp());
 			response.setData(data);
+			System.out.println("Folder data......................" + response.getData());
 			return response;
 		}
 
@@ -1194,6 +1294,112 @@ public class Utility {
 						}
 					}
 					
+					
+					if("Freddie Mac 30 Yr Fixed".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15 ,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;
+						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
+					}
+					if("Freddie Mac 20 Yr Fixed".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15 ,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}
+					if("Freddie Mac 15 Yr Fixed".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
+					if("Freddie Mac 10 Yr Fixed".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 40,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
+					/*if("Freddie Mac 30 Yr Fixed Super Conforming".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						writeCurrentDateAndTimeInExcel(sheet,restResponse);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
+					}*/
+				/*	if("Freddie Mac 20 Yr Fixed Super Conforming".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						writeCurrentDateAndTimeInExcel(sheet,restResponse);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
+					}*/
+					/*if("Freddie Mac 15 Yr Fixed Super Conforming".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}*/
+				/*	if("Freddie Mac 10 Yr Fixed Super Conforming".equals(fileHeading) && "FHLMC CONVENTIONAL FIXED RATE PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional Fixed Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 40,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}*/
+					
+					if("Freddie Mac 5/1 ARM 2/2/5".equals(fileHeading) && "FHLMC CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional ARM Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						updateFormulaCellsDependingOnDate(sheet);
+						}
+					}
+					if("Freddie Mac 5/1 ARM Super Conforming 2/2/5".equals(fileHeading) && "FHLMC CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional ARM Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,8,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;	
+						}
+					}
+					if("Freddie Mac 7/1 ARM 5/2/5".equals(fileHeading) && "FHLMC CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional ARM Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,14,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
+					if("Freddie Mac 7/1 ARM Super Conforming 5/2/5".equals(fileHeading) && "FHLMC CONVENTIONAL ARM PRODUCTS".equals(filePatternKey)){
+						sheet = workBook.getSheet("FHLMC Conventional ARM Rate");
+						if(null != sheet){
+						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 40,2,rowCounter);
+						startRowNum = newRowNum;
+						rowCounter = 0;		
+						}
+					}
 				}
         }
 		

@@ -90,6 +90,7 @@
 					$('#error-message-display').show();
 					return;
 				}
+				
 				paintRatesTablePage(JSON.parse(data));
 			});
 

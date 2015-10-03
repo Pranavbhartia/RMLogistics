@@ -112,10 +112,10 @@ Date.prototype.format = function (mask, utc) {
     return dateFormat(this, mask, utc);
 };
 function paintRatesTablePage(data) {
-	currentFolderTime = data.folderTimeStamp;
-	var folderDate = new Date(currentFolderTime);
-	
-	$("#folderCurrentTimeStamp").html(dateFormat(folderDate, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
+	/*currentFolderTime = data.folderTimeStamp;*/
+	/*var folderDate = new Date(currentFolderTime);*/
+	currentFolderTime = data.folderTSDtFormat;
+	$("#folderCurrentTimeStamp").html(dateFormat(currentFolderTime, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
 
 	tableData = data.fileDetailList;
 	console.info(data.fileName);
@@ -139,7 +139,8 @@ function paintRatesTablePage(data) {
 	appendOlympicPiggyBackARMTableWrapper(wrapper);
 	appendMAMMOTHTableWrapper(wrapper);
 	appendCASCADESTableWrapper(wrapper);
-	
+	/*appendFHLMCConventionalFIXEDWrapper(wrapper);
+	appendFHLMCConventionalARMTableWrapper(wrapper);*/
 	/*
 	 * $('.rate-table-wrapper').masonry({ itemSelector:
 	 * '.rate-table-wrapper-cont'
@@ -147,8 +148,368 @@ function paintRatesTablePage(data) {
 	 * });
 	 */
 }
+function appendFHLMCConventionalFIXEDWrapper(element){
+	var wrapper = $('<div>').attr({
+		"class" : "table-wrapper clearfix"
+	});
 
+	var header = $('<div>').attr({
+		"class" : "table-wrapper-header"
+	}).html("FHLMC CONVENTIONAL FIXED RATE PRODUCTS");
 
+	var tableCont = $('<div>').attr({
+		"class" : "table-container"
+	});
+
+	var table1 = getRatesTable(tableData["Freddie Mac 30 Yr Fixed"],
+			"Freddie Mac 30 Yr Fixed");
+	var table2 = getRatesTable(tableData["Freddie Mac 20 Yr Fixed"],
+			"Freddie Mac 20 Yr Fixed");
+	var table3 = getRatesTable(tableData["Freddie Mac 15 Yr Fixed"],
+			"Freddie Mac 15 Yr Fixed");
+	var table4 = getRatesTable(tableData["Freddie Mac 10 Yr Fixed"],
+			"Freddie Mac 10 Yr Fixed");
+	/*var table5 = getRatesTable(tableData["Freddie Mac 15 Yr Fixed Super Conforming"],
+			"Freddie Mac 15 Yr Fixed Super Conforming");
+	var table6 = getRatesTable(tableData["Freddie Mac 30 Yr Fixed Super Conforming"],
+			"Freddie Mac 30 Yr Fixed Super Conforming");*/
+	
+
+	tableCont.append(table1).append(table2).append(table3).append(table4);
+			/*.append(table5).append(table6);*/
+	wrapper.append(header).append(tableCont);
+
+	// TODO:Price Adjustment tables
+
+	$(element).append(wrapper);
+
+	var priceWrapper = getFHLMCPriceAdjustmentWrapper();
+
+	$(element).append(priceWrapper);
+}
+
+function appendFHLMCConventionalARMTableWrapper(element){
+	var wrapper = $('<div>').attr({
+		"class" : "table-wrapper clearfix"
+	});
+
+	var pageHeader = $('<div>').attr({
+		"class" : "hide print-page-header"
+	}).html($('#header-wrapper').html());
+	
+	var header = $('<div>').attr({
+		"class" : "table-wrapper-header"
+	}).html("FHLMC CONVENTIONAL ARM PRODUCTS");
+
+	var tableCont = $('<div>').attr({
+		"class" : "table-container"
+	});
+
+	var table1 = getRatesTable(tableData["Freddie Mac 5/1 ARM 2/2/5"],
+			"Freddie Mac 5/1 ARM 2/2/5");
+	var table2 = getRatesTable(
+			tableData["Freddie Mac 5/1 ARM Super Conforming 2/2/5"],
+			"Freddie Mac 5/1 ARM Super Conforming 2/2/5");
+	var table3 = getRatesTable(tableData["Freddie Mac 7/1 ARM 5/2/5"],
+			"Freddie Mac 7/1 ARM 5/2/5");
+	var table4 = getRatesTable(
+			tableData["Freddie Mac 7/1 ARM Super Conforming 5/2/5"],
+			"Freddie Mac 7/1 ARM Super Conforming 5/2/5");
+
+	tableCont.append(table1).append(table2).append(table3).append(table4);
+	wrapper.append(pageHeader).append(header).append(tableCont);
+
+	// TODO:Price Adjustment tables
+	$(element).append(wrapper);
+
+	var priceWrapper = getFHLMCPriceAdjustmentWrapper(true);
+	$(element).append(priceWrapper);
+}
+
+function getFHLMCPriceAdjustmentWrapper(isFHLMCARM){
+	var wrapper = $('<div>').attr({
+		"class" : "price-table-wrapper"
+	});
+	var header;
+	if(isFHLMCARM){
+		header = "ARM Price Adjustments";
+	}else {
+		header = "Fixed Price Adjustments";
+	}
+
+	var header = $('<div>').attr({
+		"class" : "price-table-wrapper-header"
+	}).html(header);
+
+	var container = $('<div>').attr({
+		"class" : "price-table-cont-wrapper"
+	});
+
+	container.append(getFHLMCLTVTable(isFHLMCARM));
+	return wrapper.append(header).append(container);
+
+}
+function getFHLMCLTVTable(isFHLMCARM){
+
+		var tableWrapper = $('<div>').attr({
+			"class" : "price-table"
+		});
+
+		var header = $('<div>').attr({
+			"class" : "price-table-header"
+		}).html("LTV / FICO  (Terms > 15 years only)");
+
+		var row1 = $('<div>').attr({
+			"class" : "clearfix"
+		});
+		var table1 = getFHLMCLTVTable1();
+		row1.append(table1);
+		
+		var refinanceTable = getFHLMCLTVTable3();
+		row1.append(refinanceTable);
+		
+		var row2 = $('<div>').attr({
+			"class" : "clearfix price-table-wrap-row"
+		});
+		
+		var ltvDescTable = getFHLMCLTVDescTable(isFHLMCARM);
+		row2.append(ltvDescTable);
+
+		var secondaryFinancingTable = getFHLMCLTVTable4();
+		row2.append(secondaryFinancingTable);
+
+		var lockExpirationTable = getLTVTable5(true);
+		row2.append(lockExpirationTable);
+
+		var otherAdjustmentsTable = getFHLMCLTVTable6();
+		row2.append(otherAdjustmentsTable);
+		
+		
+
+		return tableWrapper.append(header).append(row1).append(row2);
+
+}
+
+function getFHLMCLTVTable6(){
+	
+	var tableCont = $('<div>').attr({
+		"class" : "ltv-table-container float-left ltv-table6 FHLMC-table6"
+	});
+
+	var hedaer = $('<div>').attr({
+		"class" : "price-table-header"
+	}).html("Other Adjustments");
+	tableCont.append(hedaer);
+
+	var tableArray =[ [ "Escrow Waiver Fee", "0.125" ]];
+
+	var tableRowCont = $('<div>').attr({
+		"class" : "price-tr-wrapper"
+	});
+
+	for (var i = 0; i < tableArray.length; i++) {
+		var tableRow = getLTVTableRow(tableArray[i]);
+		tableRowCont.append(tableRow);
+		}
+		
+	
+
+	tableCont.append(tableRowCont);
+
+	return tableCont;
+}
+
+function getFHLMCLTVTable4(){
+	var tableCont = $('<div>').attr({
+		"class" : "ltv-table-container float-left ltv-table4 FHLMC-table4"
+	});
+
+	var hedaer = $('<div>').attr({
+		"class" : "price-table-header"
+	}).html("Loans with Secondary Financing");
+	tableCont.append(hedaer);
+	
+	var tableArray = [ [ "LTV", "(CLTV)", "(<720)", "(>=720)" ],
+			[ "<=75", "(<=80)", "(0.375)", "(0.375)" ],
+			[ "<=65", "(80.01-95)", "(0.875)", "(0.625)" ],
+			[ "65.01-75", "(80.01-95)", "(1.125)", "(0.875)" ],
+			[ "75.01-95", "(76.01-95)", "(1.375)", "(1.125)" ]];
+
+	var tableRowCont = $('<div>').attr({
+		"class" : "price-tr-wrapper"
+	});
+	var reverseTableArray = getReverseParenthesisArray(tableArray);
+	for (var i = 0; i < reverseTableArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseTableArray[i]);
+		tableRowCont.append(tableRow);
+	}
+
+	tableCont.append(tableRowCont);
+
+	return tableCont;
+}
+function getFHLMCLTVTable3(){
+	var tableCont = $('<div>').attr({
+		"class" : "ltv-table-container float-right"
+	});
+
+	var hedaer = $('<div>').attr({
+		"class" : "price-table-header"
+	}).html("Cash Out Refinance");
+	tableCont.append(hedaer);
+
+	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80"];
+
+	var tableArray = [
+	      			[ ">=740", "(0.375)", "(0.625)", "(0.625)", "(0.875)"],
+	      			[ "720-739", "(0.375)", "(1.000)", "(1.000)", "(1.125)"],
+	      			[ "700-719", "(0.375)", "(1.000)", "(1.000)", "(1.125)"],
+	      			[ "680-699", "(0.375)", "(1.125)", "(1.125)", "(1.750)"],
+	      			[ "660-679", "(0.625)", "(1.125)", "(1.125)", "(1.875)"],
+	      			[ "640-659", "(2.000)", "(2.250)", "(2.250)", "(3.250)"]];
+
+	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
+	tableCont.append(tableHeaderRow);
+
+	var tableRowCont = $('<div>').attr({
+		"class" : "price-tr-wrapper"
+	});
+
+	var reverseTableArray = getReverseParenthesisArray(tableArray);
+	
+	for (var i = 0; i < reverseTableArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseTableArray[i]);
+		tableRowCont.append(tableRow);
+	}
+
+	tableCont.append(tableRowCont);
+
+	return tableCont;
+}
+
+function getFHLMCLTVDescTable(isFHLMCARM){
+	
+	var tableArray = [ {
+	           		"desc" : "2 Units",
+	           		"value" : "1.000"
+	           	}, {
+	           		"desc" : "3-4 Units & LTV <= 80",
+	           		"value" : "1.000"
+	           	}, {
+	           		"desc" : "3-4 Units & LTV >80 and <= 85",
+	           		"value" : "1.500"
+	           	}, {
+	           		"desc" : "3-4 Units & LTV >85",
+	           		"value" : "2.000"
+	           	}, {
+	           		"desc" : "Investment Property LTV <= 75",
+	           		"value" : "2.125"
+	           	}, {
+	           		"desc" : "Investment Property LTV >75 and <= 80",
+	           		"value" : "3.375"
+	           	} , {
+	           		"desc" : "Investment Property LTV >80",
+	           		"value" : "4.125"
+	           	} , {
+	           		"desc" : "Attached Condo >75 LTV & Term > 15yrs",
+	           		"value" : "0.750"
+	           	} , {
+	           		"desc" : "HighBal Purchase & No Cashout Refi",
+	           		"value" : "0.250"
+	           	} , {
+	           		"desc" : "HighBal Cashout Refi",
+	           		"value" : "1.000"
+	           	} , {
+	           		"desc" : "FICO Adjuster 680 - 739",
+	           		"value" : "0.125"
+	           	} , {
+	           		"desc" : "FICO Adjuster 640 - 679",
+	           		"value" : "0.250"
+	           	}];
+	           
+				if(isFHLMCARM){
+					var newArray = [ {
+			       		"desc" : "ARM LTV/CLTV <=75%",
+			       		"value" : "0.750"
+			       	} , {
+			       		"desc" : "ARM LTV/CLTV >75%",
+			       		"value" : "1.500"
+			       	} ];
+					
+					tableArray = tableArray.concat(newArray);
+				}
+	           
+	           	var table = $('<div>').attr({
+	           		"class" : "ltv-desc-table FHLMC-adj float-left"
+	           	});
+
+	           	for (var i = 0; i < tableArray.length; i++) {
+	           		
+	           		var row = $('<div>').attr({
+	           			"class" : "ltv-desc-table-row"
+	           		});
+
+	           		var col1 = $('<div>').attr({
+	           			"class" : "ltv-desc-table-td"
+	           		}).html(tableArray[i].desc);
+
+	           		var col2 = $('<div>').attr({
+	           			"class" : "ltv-desc-table-td"
+	           		}).html(tableArray[i].value);
+	           		
+	           		
+		        		
+	           		row.append(col1).append(col2);
+	           		table.append(row);
+	           	}
+
+	            
+	            
+	           	return table;
+}
+function getFHLMCLTVTable1(){
+	var tableCont = $('<div>').attr({
+		"class" : "ltv-table-container float-left"
+	});
+
+	var tableHeaderArray = [ "", "<=60", "60.01-70", "70.01-75", "75.01-80",
+			"80.01-85", ">85"];
+
+	var tableArray = [
+			[ ">=740", "(0.000)", "(0.250)", "(0.250)", "(0.500)", "(0.250)",
+					"(0.250)"],
+			[ "720-739", "(0.000)", "(0.250)", "(0.500)", "(0.750)", "(0.500)",
+					"(0.500)"],
+			[ "700-719", "(0.000)", "(0.500)", "(1.000)", "(1.250)", "(1.000)",
+					"(1.000)"],
+			[ "680-699", "(0.000)", "(0.500)", "(1.250)", "(1.750)", "(1.500)",
+					"(1.250)"],
+			[ "660-679", "(0.000)", "(1.000)", "(2.250)", "(2.750)", "(2.750)",
+					"(2.250)"],
+			[ "640-659", "(0.500)", "(1.250)", "(2.750)", "(3.000)", "(3.250)",
+					"(2.750)"],
+			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a",
+					"n/a"] ];
+
+	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
+	tableCont.append(tableHeaderRow);
+	
+	var reverseParenthesisArray = getReverseParenthesisArray(tableArray)
+	
+	var tableRowCont = $('<div>').attr({
+		"class" : "price-tr-wrapper"
+	});
+
+	for (var i = 0; i < reverseParenthesisArray.length; i++) {
+		var tableRow = getLTVTableRow(reverseParenthesisArray[i]);
+		
+		tableRowCont.append(tableRow);
+	}
+
+	tableCont.append(tableRowCont);
+
+	return tableCont;
+}
 // function to append FNMA Fixed Rate tables
 function appendFNMAConventionalFIXEDTableWrapper(element) {
 	var wrapper = $('<div>').attr({
@@ -546,9 +907,14 @@ function getLTVTable4() {
 	return tableCont;
 }
 
-function getLTVTable5() {
+function getLTVTable5(isFHLMC) {
+	
+	var addClass = "";
+	if(isFHLMC){
+		addClass = "FHLMC-table5";
+	}
 	var tableCont = $('<div>').attr({
-		"class" : "ltv-table-container float-left ltv-table5"
+		"class" : "ltv-table-container float-left ltv-table5 "+addClass
 	});
 
 	var hedaer = $('<div>').attr({
