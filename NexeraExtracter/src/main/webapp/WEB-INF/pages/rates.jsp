@@ -83,7 +83,8 @@
 	}
 		$(document).ready(function() {
 			$.ajax({
-				url : "${baseURL}rest/rates"
+				url : "${baseURL}rest/rates",
+				cache : false,
 			}).then(function(data) {
 				var jsonData = JSON.parse(data);
 				if(!jsonData.fileDetailList || jQuery.isEmptyObject(jsonData.fileDetailList)){

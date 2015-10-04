@@ -56,7 +56,7 @@ public class ExtractorRateRest {
 		System.out.println("FolderTimeStamp is in date format is......................" + fileResponse.getFolderTSDtFormat());
 		LOG.info("FolderTimeStamp is in date format is......................" + fileResponse.getFolderTSDtFormat());
 		fileResponse.setFolderTSDsFormat(String.valueOf(restResponse.getTimestamp()));
-		LOG.info("FolderTimeStamp is in date format is......................" + fileResponse.getFolderTSDtFormat());
+		LOG.info("FolderTimeStamp is in String format is......................" + fileResponse.getFolderTSDsFormat());
 		Gson gson = new Gson();
 		
 		return gson.toJson(fileResponse);
