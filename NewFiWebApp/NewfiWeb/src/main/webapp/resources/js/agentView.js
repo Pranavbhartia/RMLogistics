@@ -12,18 +12,7 @@ var isSalesManager="";
 var isLoanManager="";
 var isRealtor="";
 var isArchivedLoans = "";
-var sortByName = false;
-var sortByLoanStatus = false;
-var sortByOpened = false;
-var sortByLastAction = false;
-var orderByName = "DESC";
-var orderByLoanStatus = "DESC";
-var orderByCreatedDate = "DESC";
-var orderByLastAction = "DESC";
-var sortByNameClickCount = 0;
-var sortByLoanStatusClickCount = 0;
-var sortByOpenedClickCount = 0;
-var sortByLastActionClickCount = 0;
+var fetchedCount;
 
 LOAN_ENUM = {
 	ALL : "ALL",
@@ -160,24 +149,13 @@ function paintAgentDashboard(loanType) {
 }
 /*Resetting gloal variables used for sorting loan list in dashboard*/
 function reInitializeGlobalvariables(){
-	 sortByName = false;
-	 sortByLoanStatus = false;
-	 sortByOpened = false;
-	 sortByLastAction = false;
-     sortByNameClickCount = 0;
-     sortByLoanStatusClickCount = 0;
-     sortByOpenedClickCount = 0;
-     sortByLastActionClickCount = 0;
- 	 newfiObject.fetchedCount=undefined;
-	 newfiObject.nameSortfetchedCount=undefined;
-	 newfiObject.loanStatusSortfetchedCount=undefined;
-	 newfiObject.openedSortfetchedCount=undefined;
-	 newfiObject.lastActionSortfetchedCount=undefined;
+ 	 fetchedCount=undefined;
 }
+
 function getDashboardPanelMyLeads(loanType){
 	var startLimit=0;
-	if(newfiObject.fetchedCount)
-		startLimit=newfiObject.fetchedCount;
+	if(fetchedCount)
+		startLimit=fetchedCount;
 	newfiObject.fetchLock=true;
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLeads/" + userID, "GET",
@@ -194,7 +172,7 @@ function getDashboardPanelMyLeads(loanType){
 					}
 				}	
 				startLimit=startLimit+customerFetchCount;
-				newfiObject.fetchedCount=startLimit;		
+				fetchedCount=startLimit;		
 			});
 	
 }
@@ -207,8 +185,8 @@ function paintAgentDashboardCallBack(data) {
 // ajax call to get dashboard for my loans
 function getDashboardRightPanel() {
 	var userID = newfiObject.user.id;
-	if(newfiObject.fetchedCount)
-		startLimit=newfiObject.fetchedCount;
+	if(fetchedCount)
+		startLimit=fetchedCount;
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
@@ -219,7 +197,7 @@ function getDashboardRightPanel() {
 					appendCustomers("leads-container", customerData.customers,true);
 				}
 				startLimit=startLimit+customerFetchCount;
-				newfiObject.fetchedCount=startLimit;
+				fetchedCount=startLimit;
 			});
 }
 
@@ -227,18 +205,7 @@ function getMoreCustomers(){
 	if (currentLoanType == "workloans") {
 		getDashboardRightPanelForWorkLoans();
 	} else if (currentLoanType == "myloans") {
-		if(sortByName){
-			getLoanListSortedForMyLoans("firstName",orderByName);
-		}else if(sortByLoanStatus){
-			getLoanListSortedForMyLoans("loanStatus",orderByLoanStatus);
-		}else if(sortByOpened){
-			getLoanListSortedForMyLoans("opened",orderByCreatedDate);
-		}else if(sortByLastAction){
-			getLoanListSortedForMyLoans("lastAction",orderByLastAction);
-		}else{
-			getDashboardRightPanelForMyLoans();
-		}
-		
+		getDashboardRightPanelForMyLoans();
 	} else if (currentLoanType == "archivesloans") {		
 			getDashboardRightPanelForArchivesLoans();		
 	}
@@ -253,8 +220,8 @@ function getDashboardRightPanelForWorkLoans(loanType) {
 // ajax call to get dashboard for my loans
 function getDashboardRightPanelForMyLoans(loanType) {
 	var startLimit=0;
-	if(newfiObject.fetchedCount)
-		startLimit=newfiObject.fetchedCount;
+	if(fetchedCount)
+		startLimit=fetchedCount;
 	newfiObject.fetchLock=true;
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
@@ -270,7 +237,7 @@ function getDashboardRightPanelForMyLoans(loanType) {
 					}
 				}	
 				startLimit=startLimit+customerFetchCount;
-				newfiObject.fetchedCount=startLimit;		
+				fetchedCount=startLimit;		
 			});
 }
 
@@ -841,8 +808,19 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				"class" : "leads-container-tc5  leads-container-tc5-realtor float-left"
 			}).html(textCol4);
 			
+			var userLastLogin = customer.userLastLoginTime;
+			
+			userLastLogin = formateDateAndTime(customer.userLastLoginTime,true);
+			
+			if(userLastLogin == ""){
+				userLastLogin = "-";
+			}
 			var col6 = $('<div>').attr({
-				"class" : "leads-container-tc6 alert-col leads-container-tc6-realtor float-left"
+				"class" : "leads-container-tc4  leads-container-tc5-realtor float-left"
+			}).html(userLastLogin);
+			
+			var col7 = $('<div>').attr({
+				"class" : "leads-container-tc5 alert-col leads-container-tc6-realtor float-left"
 			}).bind(
 					'click',
 					{
@@ -853,7 +831,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 						appendCustomerDetailContianer($(this).parent(),
 								event.data.customer);
 					});
-			loanNotificationCntxt.loanLstCntElement = col6;
+			loanNotificationCntxt.loanLstCntElement = col7;
 			loanNotificationCntxt.getNotificationForLoan(function(ob) {
 				if (parseInt(ob.loanNotificationList.length) > 0) {
 					var alerts = $('<div>').attr({
@@ -864,7 +842,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}
 			});
 			
-			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6);
+			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6).append(col7);
 			
 			$('#' + elementId).append(row);
 			
@@ -917,17 +895,18 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}).html(createdDateStr);
 
 				var date=customer.time.slice(0,10);
-				var time=customer.time.slice(11);
-				var modifiedDateStr=formatYearInDate(date);
-				
-				if(modifiedDateStr==""){
-					modifiedDateStr="-";
-				}else {
-					modifiedDateStr = modifiedDateStr+"<br/>"+time;
-				}
-				var col6 = $('<div>').attr({
-					"class" : "leads-container-tc6 float-left"
-				}).html(modifiedDateStr);
+			    var time=customer.time.slice(11);
+			    var modifiedDateStr=formatYearInDate(date);
+			    
+			    if(modifiedDateStr==""){
+			     modifiedDateStr="-";
+			    }else {
+			     //  added Extra space for Data format,  Don't delete space
+			     modifiedDateStr = modifiedDateStr+"<br/> "+time;
+			    }
+			    var col6 = $('<div>').attr({
+			     "class" : "leads-container-tc6 float-left last-action-cell"
+			    }).html(modifiedDateStr);
 				
 				var userLastLogin = customer.userLastLoginTime;
 	
@@ -1033,26 +1012,21 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 		}).html("Loan Advisor");
 
 		var thCol6 = $('<div>').attr({
-			"class" : "leads-container-tc5 leads-container-tc5-realtor  float-left"
+			"class" : "leads-container-tc4 leads-container-tc5-realtor  float-left"
 		}).html("Last Login");
 		
 		var thCol7 = $('<div>').attr({
-			"class" : "leads-container-tc6 leads-container-tc6-realtor-header float-left"
+			"class" : "leads-container-tc5 leads-container-tc6-realtor-header float-left"
 		}).html("Alerts");
 
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4).append(thCol5).append(thCol6).append(thCol7);
 	}else if(isSalesManager || isLoanManager){
 		//jira-811,810
 	var thCol1 = $('<div>').attr({
-		"class" : "leads-container-tc1 sm-leads-container-tc1 float-left",
+		"class" : "leads-container-tc1 sm-leads-container-tc1 float-left sort-list-asc",
 		"id" : "leads-container-tc1-id"
 	}).html("Customer");
 
-	if(orderByName == "ASC"){
-		$(thCol1).addClass('sort-list-dsc');
-	}else {
-		$(thCol1).addClass('sort-list-asc');
-	}
 	var thCol2;
     if(isLoanManager){
     	 thCol2 = $('<div>').attr({
@@ -1060,14 +1034,10 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 		}).html("Loan Status");
     }else{
     	 thCol2 = $('<div>').attr({
-    		"class" : "leads-container-tc2 sm-leads-container-tc2  float-left"
+    		"class" : "leads-container-tc2 sm-leads-container-tc2  float-left loan-status-sort-list-asc"
     	}).html("Loan Status");
     }
-    if(orderByLoanStatus == "ASC"){
-		$(thCol2).addClass('loan-status-sort-list-dsc');
-	}else {
-		$(thCol2).addClass('loan-status-sort-list-asc');
-	}
+    
 	var thCol3 = $('<div>').attr({
 		"class" : "leads-container-tc3 sm-leads-container-tc3 float-left",
 		
@@ -1080,31 +1050,18 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 		}).html("Phone");
 	}else{
 		thCol4 = $('<div>').attr({
-			"class" : "leads-container-tc4 float-left"
+			"class" : "leads-container-tc4 float-left loan-advisor-sort-list-asc"
 		}).html("Loan Advisor");
 	}
 	
 	var thCol5 = $('<div>').attr({
-		"class" : "leads-container-tc5 sm-leads-container-tc5  float-left"
+		"class" : "leads-container-tc5 sm-leads-container-tc5  float-left opened-sort-list-asc"
 	}).html("Opened");
-
-	 if(orderByCreatedDate  == "ASC" ){
-			$(thCol5).addClass('opened-sort-list-dsc');
-		}else {
-			$(thCol5).addClass('opened-sort-list-asc');
-		}
 	 
 	var thCol6 = $('<div>').attr({
-		"class" : "leads-container-tc6 sm-leads-container-tc6  float-left"
+		"class" : "leads-container-tc6 sm-leads-container-tc6  float-left last-action-sort-list-asc"
 	}).html("Last Action");
 	
-
-	 if(orderByLastAction == "ASC"){
-			$(thCol6).addClass('last-action-sort-list-dsc');
-		}else {
-			$(thCol6).addClass('last-action-sort-list-asc');
-		}
-
 	var thCol7 = $('<div>').attr({
 		"class" : "leads-container-tc6 float-left"
 	}).html("Last Login");
@@ -4653,295 +4610,157 @@ $(document).on('click', '.delCustClas', function(e) {
 	e.stopImmediatePropagation();
 });
 
-$('body').on('click','.leads-container-tc1.sm-leads-container-tc1',function(){
-	sortByName = true;
-	sortByLastAction = false;
-	sortByLoanStatus = false;
-	sortByOpened = false;	
-	var orderBy="" ;
-	
+//Sort Loan Advisor
+$('body').on('click','.leads-container-th .leads-container-tc1.sm-leads-container-tc1', function(){
+	var isAsc;
 	if($(this).hasClass('sort-list-asc')){
 		$(this).removeClass('sort-list-asc');
 		$(this).addClass('sort-list-dsc');
-		orderBy = "ASC";
+		isAsc = 1;
 	}else if($(this).hasClass('sort-list-dsc')){
 		$(this).removeClass('sort-list-dsc');
 		$(this).addClass('sort-list-asc');
-		orderBy = "DESC";
+		isAsc = -1;
 	}
-	orderByName = orderBy;
-	sortByNameClickCount = sortByNameClickCount+1;
-	if(sortByNameClickCount > 1){
-		newfiObject.nameSortfetchedCount = undefined;
-	}
-	if(!isArchivedLoans){
-		getLoanListSortedForMyLoans("firstName",orderBy);
-	}else {
-		getLoanListSortedForArchives("firstName",orderBy);
-	}
-	
+    sortTable(isAsc, ".leads-container-tc1");
 });
 
-$('body').on('click','.leads-container-tc2.sm-leads-container-tc2',function(){
-	sortByName = false;
-	sortByLastAction = false;
-	sortByLoanStatus = true;
-	sortByOpened = false;
-	var orderBy="" ;
+// Sort Loan Advisor
+$('body').on('click','.leads-container-th .leads-container-tc4', function(){
+	var isAsc;
+	if($(this).hasClass('loan-advisor-sort-list-asc')){
+		$(this).removeClass('loan-advisor-sort-list-asc');
+		$(this).addClass('loan-advisor-sort-list-dsc');
+		isAsc = 1;
+	}else if($(this).hasClass('loan-advisor-sort-list-dsc')){
+		$(this).removeClass('loan-advisor-sort-list-dsc');
+		$(this).addClass('loan-advisor-sort-list-asc');
+		isAsc = -1;
+	}
+    sortTable(isAsc, ".leads-container-tc4");
+});
+
+//Sort Loan Status
+$('body').on('click','.leads-container-th .leads-container-tc2.sm-leads-container-tc2', function(){
+	var isAsc;
 	if($(this).hasClass('loan-status-sort-list-asc')){
 		$(this).removeClass('loan-status-sort-list-asc');
 		$(this).addClass('loan-status-sort-list-dsc');
-		orderBy = "ASC";
+		isAsc = 1;
 	}else if($(this).hasClass('loan-status-sort-list-dsc')){
 		$(this).removeClass('loan-status-sort-list-dsc');
 		$(this).addClass('loan-status-sort-list-asc');
-		orderBy = "DESC";
+		isAsc = -1;
 	}
-	orderByLoanStatus = orderBy;
-	sortByLoanStatusClickCount = sortByLoanStatusClickCount+1;
-	if(sortByLoanStatusClickCount > 1){
-		newfiObject.loanStatusSortfetchedCount = undefined;
-	}
-	if(!isArchivedLoans){
-		getLoanListSortedForMyLoans("loanStatus",orderBy);
-	}else {
-		getLoanListSortedForArchives("loanStatus",orderBy);
-	}
-	
+    sortTable(isAsc, ".leads-container-tc2");
 });
 
+//  Sort on Opened Colummn
 $('body').on('click','.leads-container-tc5.sm-leads-container-tc5',function(){
-	sortByName = false;
-	sortByLastAction = false;
-	sortByLoanStatus = false;
-	sortByOpened = true;
-	var orderBy="" ;
+	
+	var isAsc ;
 	if($(this).hasClass('opened-sort-list-asc')){
 		$(this).removeClass('opened-sort-list-asc');
 		$(this).addClass('opened-sort-list-dsc');
-		orderBy = "ASC";
+		isAsc = 1;
 	}else if($(this).hasClass('opened-sort-list-dsc')){
 		$(this).removeClass('opened-sort-list-dsc');
 		$(this).addClass('opened-sort-list-asc');
-		orderBy = "DESC";
+		isAsc = -1;
 	}
-	orderByCreatedDate = orderBy;
-	sortByOpenedClickCount = sortByOpenedClickCount+1;
-	if(sortByOpenedClickCount > 1){
-		newfiObject.openedSortfetchedCount = undefined;
-	}
-	if(!isArchivedLoans){
-		getLoanListSortedForMyLoans("opened",orderBy);
-	}else {
-		getLoanListSortedForArchives("opened",orderBy);
-	}
+	
+	sortTableByTime(isAsc, ".leads-container-tc5");
 	
 });
 
+//  Sort on Last Action
 $('body').on('click','.leads-container-tc6.sm-leads-container-tc6',function(){
-	sortByName = false;
-	sortByLastAction = true;
-	sortByLoanStatus = false;
-	sortByOpened = false;
-	var orderBy="" ;
+	
+	var isAsc ;
+	
 	if($(this).hasClass('last-action-sort-list-asc')){
 		$(this).removeClass('last-action-sort-list-asc');
 		$(this).addClass('last-action-sort-list-dsc');
-		orderBy = "ASC";
+		isAsc = 1;
 		
 	}else if($(this).hasClass('last-action-sort-list-dsc')){
 		$(this).removeClass('last-action-sort-list-dsc');
 		$(this).addClass('last-action-sort-list-asc');
-		orderBy = "DESC";
-	}
-	orderByLastAction = orderBy;
-	sortByLastActionClickCount = sortByLastActionClickCount+1;
-	if(sortByLastActionClickCount > 1){
-		newfiObject.lastActionSortfetchedCount = undefined;
-	}
-	if(!isArchivedLoans){
-		getLoanListSortedForMyLoans("lastAction",orderBy);
-	}else {
-		getLoanListSortedForArchives("lastAction",orderBy);
+		isAsc = -1;
 	}
 	
+	sortTableByTime(isAsc, ".last-action-cell");
 });
 
-//Function to get Loan list Sorted
-function getLoanListSortedForMyLoans(columnName,orderType){
+/**
+ * Method to sort based on time type columns.
+ * @param isAsc
+ * @param selector
+ */
+function sortTableByTime(isAsc,selector){
+	
+	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
+	var rows = $('#leads-container').find('.leads-container-tr').get();
+	
+	
+	
+	rows.sort(function(a, b) {
 
-	var sortLimit=0;
-	var userID = newfiObject.user.id;
-	if(columnName == "firstName"){
-		if(newfiObject.nameSortfetchedCount)
-			sortLimit = newfiObject.nameSortfetchedCount;
-	}else if(columnName == "loanStatus"){
-		if(newfiObject.loanStatusSortfetchedCount)
-			sortLimit = newfiObject.loanStatusSortfetchedCount;
-	}else if(columnName == "opened"){
-		if(newfiObject.openedSortfetchedCount)
-			sortLimit = newfiObject.openedSortfetchedCount;
-	}else if(columnName == "lastAction"){
-		if(newfiObject.lastActionSortfetchedCount)
-			sortLimit = newfiObject.lastActionSortfetchedCount;
-	}
+		try {
+			var time1 = $(a).children(selector).text();
+			var time2 = $(b).children(selector).text();
+		} catch(ex)  {
+			console.log("Error while parsing date sortTableByTime," + ex);
+			return 0;
+		}
 		
-	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
-			"json", {"startlimit":sortLimit,"count":customerFetchCount}, function(response){
-        	if(response.error == null){
-        		newfiObject.fetchLock=undefined;
-        		var customerData = response.resultObject.customers.slice(0);
-        		if(columnName == "firstName"){
-        			customerData = functionSortByName(customerData,orderType);
-        		}else if(columnName == "loanStatus"){          		
-        			customerData = functionSortByLoanStatus(customerData,orderType);
-        		}else if(columnName == "opened"){
-        			customerData = functionSortByCreatedDate(customerData,orderType);
-        		}else if(columnName == "lastAction"){
-        			customerData = functionSortByLastAction(customerData,orderType);
-        		}       		       		
-    			if(sortLimit==0){
-    				isArchivedLoans = false;
-    				paintAgentDashboardRightPanel(customerData);
-    			}else{
-    				if(customerData){
-    					appendCustomers("leads-container", customerData,true);
-    					
-    				}
-    			}	
-    			sortLimit = sortLimit+customerFetchCount;
-    			if(columnName == "firstName"){
-    				newfiObject.nameSortfetchedCount = sortLimit;
-    			}else if(columnName == "loanStatus"){
-    				newfiObject.loanStatusSortfetchedCount = sortLimit;
-    			}else if(columnName == "opened"){
-    				newfiObject.openedSortfetchedCount = sortLimit;
-    			}else if(columnName == "lastAction"){
-    				newfiObject.lastActionSortfetchedCount = sortLimit;
-    			}
-        	}else {
-        		showErrorToastMessage(response.error.message);
-        	}
+		return isAsc * (new Date(time1).getTime() - new Date(time2).getTime()); 
+	});
 
-    });
+	$.each(rows, function(index, row) {
+		if( index % 2 == 0){
+			$(row).addClass("leads-container-row-odd");
+		} 
+		console.log(row);
+		$('#leads-container').append(row);
+	});
+}
+
+
+
+/**
+ * Method to sort rows based on certain column.
+ * @param isAsc
+ * @param selector
+ */
+function sortTable(isAsc, selector) {
 	
+	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
 	
-}
+	var rows = $('#leads-container').find('.leads-container-tr').get();
 
-function getLoanListSortedForArchives(columnName,orderType){
-
-	var userID = newfiObject.user.id;		
-	ajaxRequest("rest/loan/retrieveDashboardForArchiveLoans/" + userID, "GET",
-			"json", {}, function(response){
-        	if(response.error == null){
-        		newfiObject.fetchLock=undefined;
-        		var customerData = response.resultObject.customers.slice(0);
-        		if(columnName == "firstName"){
-        			customerData = functionSortByName(customerData,orderType);
-        		}else if(columnName == "loanStatus"){          		
-        			customerData = functionSortByLoanStatus(customerData,orderType);
-        		}else if(columnName == "opened"){
-        			customerData = functionSortByCreatedDate(customerData,orderType);
-        		}else if(columnName == "lastAction"){
-        			customerData = functionSortByLastAction(customerData,orderType);
-        		}       		       		
-        		paintAgentDashboardRightPanel(customerData);
-   			
-        	}else {
-        		showErrorToastMessage(response.error.message);
-        	}
-
-    });	
 	
-}
-function functionSortByName(byName,orderType){
-	if(orderType == "ASC"){
-		byName.sort(function(a,b) {
-			var x = a.name.toLowerCase();
-			var y = b.name.toLowerCase();
-			return x < y ? -1 : x > y ? 1 : 0;
-		});
-	}else {
-		byName.sort(function(a,b) {
-			var x = a.name.toLowerCase();
-			var y = b.name.toLowerCase();
-			return y < x ? -1 : y > x ? 1 : 0;
-		});
-	}
-	return byName;
-}
+	rows.sort(function(a, b) {
 
-function functionSortByLoanStatus(byName,orderType){
-	 if(orderType == "ASC"){
-	  byName.sort(function(a,b) {
-	   var x = "";
-	   if(a.lqbLoanStatus != null){
-	    x = a.lqbLoanStatus.toLowerCase();
-	   }
-	   var y = "";
-	   if(b.lqbLoanStatus != null){
-	     y = b.lqbLoanStatus.toLowerCase();
-	   }
-	   if(x != "" && y != ""){
-	    return x < y ? -1 : x > y ? 1 : 0;
-	   }else {
-	    return -1;
-	   }
-	   
-	  });
-	 }else {
-	  byName.sort(function(a,b) {
-	   var x = "";
-	   if(a.lqbLoanStatus != null){
-	    x = a.lqbLoanStatus.toLowerCase();
-	   }
-	   var y = "";
-	   if(b.lqbLoanStatus != null){
-	     y = b.lqbLoanStatus.toLowerCase();
-	   }
-	   if(x != "" && y != ""){
-	    return y < x ? -1 : y > x ? 1 : 0;
-	   }else {
-	    return -1;
-	   }
-	   
-	  });
-	 }
-	 return byName;
-}
+		var A = $(a).children(selector).text().toLowerCase();
+		var B = $(b).children(selector).text().toLowerCase();
 
-function functionSortByCreatedDate(byName,orderType){
-	if(orderType == "ASC"){
-		byName.sort(function(a,b) {
+		if (A < B) {
+			return -1 * isAsc;
+		}
+		if (A > B) {
+			return 1 * isAsc;
+		}
+		
+		return 0;
+	});
 
-			var x = a.loanInitiatedOn;
-			var y = b.loanInitiatedOn;
-			return x < y ? -1 : x > y ? 1 : 0;
-		});
-	}else {
-		byName.sort(function(a,b) {
-			var x = a.loanInitiatedOn;
-			var y = b.loanInitiatedOn;
-			return y < x ? -1 : y > x ? 1 : 0;
-		});
-	}
-	return byName;
-}
+	
 
-function functionSortByLastAction(byName,orderType){
-	if(orderType == "ASC"){
-		byName.sort(function(a,b) {
-
-			var x = a.time;
-			var y = b.time;
-			return x < y ? -1 : x > y ? 1 : 0;
-		});
-	}else {
-		byName.sort(function(a,b) {
-			var x = a.time;
-			var y = b.time;
-			return y < x ? -1 : y > x ? 1 : 0;
-		});
-	}
-	return byName;
+	$.each(rows, function(index, row) {
+		if( index % 2 == 0){
+			$(row).addClass("leads-container-row-odd");
+		} 
+		$('#leads-container').append(row);
+	});
 }

@@ -162,21 +162,33 @@
 	}
 	.agent-customer-list-header{
 		margin-left: 10px;
+		margin-right: 0;
 	}
 	.customer-list-contianer {
 		padding-left: 10px;
 	}
 	
 	.leads-container-tc1{
-		width: 40%;
+		width: 35%;
 	}
-	
+	.sort-list-asc {
+		background: none;
+	}
+	.sort-list-dsc {
+		background: none;
+	}
 	.leads-container-tc2{
-		width: 25%;
+		width: 23%;
+		padding-right: 10px;
 	}
-	
+	.loan-status-sort-list-asc {
+		background: none;
+	}
+	.loan-status-sort-list-dsc {
+		background: none;
+	}
 	.leads-container-tc5{
-		width: 20%;
+		width: 21%;
 	}
 	
 	.leads-container-tc7{
@@ -188,7 +200,12 @@
 	.leads-container-tc6{
 		display: none;
 	}
-	
+	.opened-sort-list-asc {
+		background: none;
+	}
+	.opened-sort-list-dsc {
+		background: none;
+	}
 	.cust-detail-lw,
 	.cust-detail-rw{
 		width: 100%;
@@ -484,6 +501,51 @@
 	.temp-col3 {
 		width: 55%;
 	}
+	
+	.customer-list-contianer {
+		padding-left: 10px;
+		padding-right: 0;
+	}
+	
+	.quick-quote-button-section {
+	    width: 519px;
+	}
+	.quick-quote-col {
+	    margin: 10px 11px;  
+	    width: 150px;
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+
+	.quick-quote-question-section {
+	    margin: 0;
+	    min-height: auto;
+	}
+	
+	.quick-quote-row-LHS {
+	    width: 21%;
+	    padding-right: 10px;
+	}
+	.quick-quote-row-RHS {
+	    width: 24%;
+	    padding-left: 15px;
+	}
+	.quick-quote-dwn-payment {
+		width: 24%;
+	}
+	.err-msg-quick-quote {
+       	width: 58%;
+       	white-space: pre;
+ }
+	.quick-quote-dropdown-cont {
+    	width: 140px;
+    	margin: 42px 0 0 114px;
+	} 
+	.quote-row {
+	    width: 290px;
+	    margin: 20px 0;
+	}
 }
 
 /* ============== ANTHING ABOVE SMARTPHONES ==============*/
@@ -501,6 +563,7 @@
     .soft-menu-wrapper,.soft-menu-icon{
         display: none !important;
     }
+      
 }
 
 
@@ -566,21 +629,22 @@
 	}
 	.agent-customer-list-header{
 		margin-left: 10px;
+		margin-right: 10px;
 	}
 	.customer-list-contianer{
-		padding-left: 10px;
+		padding: 0 10px;
 	}
 	.leads-container-tc6{
 		display:none;
 	}
 	.leads-container-tc1{
-		width: 35%;
+		width: 25%;
 	}
 	.leads-container-tc2,.leads-container-tc3,.leads-container-tc4{
 		width: 15%;
 	}
 	.leads-container-tc7,.leads-container-tc5{
-		width: 10%;
+		width: 15%;
 	}
 	.cus-name{
 		padding-left: 10px;
@@ -713,6 +777,46 @@
 		width: 93%;
 		max-width: 100%;
 	}
+	
+		 .quick-quote-button-section {
+	    width: 519px;
+	}
+	.quick-quote-col {
+	    margin: 10px 11px;  
+	    width: 150px;
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+
+	.quick-quote-question-section {
+	    margin: 0;
+	    min-height: auto;
+	}
+	
+	.quick-quote-row-LHS {
+	    width: 20%;
+	    padding: 0 10px;
+	}
+	.quick-quote-row-RHS {
+	    width: 31%;
+	    padding-left: 15px;
+	}
+	.quick-quote-dwn-payment {
+		width: 48%;
+	}
+	.err-msg-quick-quote {
+       	width: 258px;
+       	white-space: pre;
+ }
+	.quick-quote-dropdown-cont {
+    	width: 169px;
+    	margin: 42px 0 0 114px;
+ } 
+	.quote-row {
+	    width: 290px;
+	    margin: 20px 0;
+	}
 }
 
 
@@ -737,19 +841,19 @@
 		padding: 0 10px;
 	}
 	.leads-container-tc1{
-		width : 25%
+		width: 21%;
 	}
 	.leads-container-tc2{
-		width : 15%
+		width: 13%;
 	}
 	.leads-container-tc3{
-		width : 15%
+		width: 10%;
 	}
 	.leads-container-tc4{
-		width : 15%
+		width: 13%;
 	}
 	.leads-container-tc5{
-		width : 10%
+		width: 10%;
 	}
 	.leads-container-tc6{
 		width : 12%
@@ -796,6 +900,45 @@
 	.ce-refinance-wrapper .rt-slider {
 		width: 82%;
 	}
+		 .quick-quote-button-section {
+	    width: 519px;
+	}
+	.quick-quote-col {
+	    margin: 10px 11px;  
+	    width: 150px;
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+
+	.quick-quote-question-section {
+	    margin: 0 20px;
+	    min-height: auto;
+	}
+	
+	.quick-quote-row-LHS {
+	    width: 114px;
+	    padding: 0 10px;
+	}
+	.quick-quote-row-RHS {
+	    width: 35%;
+	    padding-left: 15px;
+	}
+	.quick-quote-dwn-payment {
+		width: 47%;
+	}
+	.err-msg-quick-quote {
+       	width: 260px;
+       	white-space: pre;
+ }
+	.quick-quote-dropdown-cont {
+    	width: 168px;
+    	margin: 42px 0 0 114px;
+ } 
+	.quote-row {
+	    width: 290px;
+	    margin: 20px 0;
+	}
 }
 
 
@@ -811,7 +954,7 @@
 		width:939px !important;
 	}
 	.sm-dashboard {
-		width:85% !important;
+		width:87% !important;
 	}
 	.quick-quote-agent-dashboard {
 		width:1000px !important;
@@ -1202,7 +1345,7 @@
         min-height: 45px;
         padding: 5px 0;
         line-height: 35px;
-        padding-left: 0;
+        padding-left: 10px;
         font-size: 18px;
         margin-bottom: 10px;
     }
@@ -1478,6 +1621,47 @@
 	}
 	.delCustClas {
 		right: 0;
+	}
+		.quick-quote-button-section {
+	    width: 325px;
+	    margin: 0 10px;
+	}
+	.quick-quote-col {
+	    margin: 10px auto;
+	    width: 225px;
+	    float: none;
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+
+	.quick-quote-question-section {
+	    margin: 0;
+	    min-height: auto;
+	}
+	
+	.quick-quote-row-LHS {
+	    width: 143px;
+	    padding: 0 10px;
+	}
+	.quick-quote-row-RHS {
+	    width: 34%;
+	    padding-left: 15px;
+	}
+	.quick-quote-dwn-payment {
+		width: 47%;
+	}
+	.err-msg-quick-quote {
+       	width: 213px;
+       	white-space: pre;
+ }
+	.quick-quote-dropdown-cont {
+    	width: 168px;
+    	margin: 42px 0 0 142px;
+ } 
+	.quote-row {
+	    width: 290px;
+	    margin: 20px 0;
 	}
 }
 

@@ -462,23 +462,24 @@ a.cus-eng-succ-mess-email {
 }
 
 .lp-item-quick-quote {
-    height: 40px;      
-    margin: 5px auto;      
-    clear: both;      
-    display: block;            
-    line-height: 40px;      
-    color: #fff;      
-    background-color: #F47521;      
-    border: 1px #fff solid;      
-    border-radius: 3px;      
-    text-align: center;      
-    font-size: 15px;      
+    height: 40px;
+    margin: 5px auto;
+    clear: both;
+    display: block;
+    line-height: 40px;
+    color: #fff;
+    background-color: #F47521;
+    border: 1px #fff solid;
+    border-radius: 3px;
+    text-align: center;
+    font-size: 15px;
     width: 211px;
     cursor: pointer;
+    border-bottom: 1px #dcdcdc solid;
 }
 
 .lp-item-adj {
-	border-top: 1px solid #dcdcdc;
+	/* border-top: 1px solid #dcdcdc; */
 }
 
 .notification-time {
@@ -802,6 +803,11 @@ a.cus-eng-succ-mess-email {
       cursor: pointer;
 }
 
+.loan-advisor-sort-list-dsc {
+      background: url(../images/dd_arr_down.png) no-repeat 85px;
+      cursor: pointer;
+}
+
 .sort-list-asc {
       background: url(../images/upwrd.png) no-repeat 65px;
       cursor: pointer;
@@ -809,6 +815,11 @@ a.cus-eng-succ-mess-email {
 
 .loan-status-sort-list-asc {
       background: url(../images/upwrd.png) no-repeat 80px;
+      cursor: pointer;
+}
+
+.loan-advisor-sort-list-asc {
+      background: url(../images/upwrd.png) no-repeat 85px;
       cursor: pointer;
 }
 
