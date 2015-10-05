@@ -886,9 +886,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			     "class" : "leads-container-tc6 float-left last-action-cell"
 			    }).html(modifiedDateStr);
 				
-				var userLastLogin = customer.userLastLoginTime;
-	
-				
+				var userLastLogin = customer.userLastLoginTime;				
 				
 				if(userLastLogin == null){
 					userLastLogin = "-";

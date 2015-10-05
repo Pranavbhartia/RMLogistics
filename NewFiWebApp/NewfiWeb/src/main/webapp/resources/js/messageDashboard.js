@@ -754,5 +754,4 @@ $(document).on(
 					'assigned-agent-unselect');
 			removeOtherUserObject($(this).parent().attr("agentId"));
 			paintMessageRecipients();
-		});
-
+});

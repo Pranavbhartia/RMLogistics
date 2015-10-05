@@ -1632,6 +1632,7 @@ function formateDateAndTime(createdDateStr,isOnAgentDash){
 
 /**
  * @param createdDateStr  String "mm-dd-yyyy hh:mm:s"
+ * @returns date in format mm-dd-yy hh:mm am/pm
  */
 function displayDateForMessageDashboard(createdDateStr){
 	if(createdDateStr != null){
