@@ -1187,10 +1187,14 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     	//NEXNF-622
     	 row.addClass("closing-cost-cont-desc-row-even");
     }
+    var adjustmentClass = "";
+    if(desc =="Your cost or credit based on rate selected"){
+    	adjustmentClass = "closing-cost-credit-adj";
+    }
     var rowDesc="";
     if(indentTextFlag){
     	 rowDesc = $('<div>').attr({
-            "class": "closing-cost-desc eng-indent float-left"
+            "class": "closing-cost-desc eng-indent float-left "+adjustmentClass
         }).html(desc);
     }else{
     	 rowDesc = $('<div>').attr({
@@ -1201,6 +1205,33 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
    /* var rowDesc = $('<div>').attr({
         "class": "closing-cost-desc float-left"
     }).html(desc);*/
+    var creditPercentValContainer = $('<div>').attr({
+        "class": "discount-update-container"
+    });
+    
+    var creditUpdateBtn = $('<div>').attr({
+        "class": "cep-button-color  discount-update-btn float-left",
+        "id" : "discount-update-btn-id"
+    }).html("Discount").bind("click",function(){
+    	
+    });
+    
+    var emptyDiv =  $('<div>').attr({
+        
+    });
+    var creditUpdateFeild = $('<input>').attr({
+        "class": "discount-update-feild float-left",
+        "id" : "discount-update-feild-id",
+        "name" : "discount-update-feild"
+    }).bind("load focus",function(){
+    	restrictChar("discount-update-feild");
+    	
+    });
+    
+    
+    emptyDiv.append(creditUpdateFeild);
+    creditPercentValContainer.append(creditUpdateBtn).append(emptyDiv);
+    
     var rowDetail = $('<div>').attr({
         "class": "closing-cost-detail float-left"
     }).html(detail);
@@ -1210,7 +1241,12 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     rwObj.updateDataForPDF();
     rwObj.updateTaxesAndInsurances();
     
-    return row.append(rowDesc).append(rowDetail);
+    if(desc =="Your cost or credit based on rate selected"){
+    	return row.append(rowDesc).append(creditPercentValContainer).append(rowDetail);
+    }else{
+    	return row.append(rowDesc).append(rowDetail);
+    }
+    
 }
 
 

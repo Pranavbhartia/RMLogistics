@@ -1667,3 +1667,14 @@ function displayDateForMessageDashboard(createdDateStr){
 		return createdDateStr=localDate+" "+hours+':'+min+' '+time;
 	}
 }
+$(document).on('keyup','input[name="discount-update-feild"]',function(e){
+	 
+	if($(this).val().length > 5){
+     return false;
+    }
+	if($(this).val() > 99){
+		$(this).val(100);
+	     return false;
+    }
+	
+}); 
