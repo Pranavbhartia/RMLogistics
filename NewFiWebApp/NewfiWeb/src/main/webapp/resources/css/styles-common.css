@@ -751,7 +751,9 @@ a.cus-eng-succ-mess-email {
 }
 .leads-row-1 {
     width: 161px;
+    word-break: break-word;
 }
+
 
 .leads-row-2 {
     width: 200px;
