@@ -476,6 +476,7 @@ function validateForm(loanType,refinanceType){
 	var lastName = validateInput($('input[name="lastName"]'),$('input[name="lastName"]').val(),message);		
 	var emailID = validateInput($('input[name="emailID"]'),$('input[name="emailID"]').val(),message);
 	var phoneNo = validateInput($('input[name="primaryPhoneID"]'),$('input[name="primaryPhoneID"]').val(),message);
+	var creditScore = $('input[name="creditScoreId"]').val();
 	if(!firstName){
 		return false;
 	}else {
@@ -528,6 +529,16 @@ function validateForm(loanType,refinanceType){
 			return false;
 		}
 	}
+	if(creditScore != ""){
+				if(creditScore > 800){
+					$('input[name="creditScoreId"]').parent().find('.err-msg').html(creditScoreInvalidInputMessage).show();
+					$('input[name="creditScoreId"]').addClass('ce-err-input').show();
+					return false;
+				}else {
+					$('input[name="creditScoreId"]').parent().find('.err-msg').hide();
+					$('input[name="creditScoreId"]').removeClass('ce-err-input');	
+				}
+			}
 	if(loanType == PURCHASE){
 		var firstFeild = validateInput($('input[name="homeWorthToday"]'),$('input[name="homeWorthToday"]').val(),message);
 		var secondFeild = validateQuickQuote($('input[name="currentMortgageBalance"]'),$('input[name="currentMortgageBalance"]').val(),message);
