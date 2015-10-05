@@ -458,7 +458,7 @@ function paintConversations(conversations,showSM) {
 			"class" : "con-prof-name semi-bold"
 		}).html(data.createdUser.userName);
 	
-		var createdDateStr = displayDateForMessageDashboard(data.createdDate.trim());
+		var createdDateStr = displayDateForMessageDashboard(data.createdDate);
 		
 		var messageTime = $('<div>').attr({
 			"class" : "con-message-timestamp"
