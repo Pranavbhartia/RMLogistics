@@ -778,10 +778,10 @@ function formateDateAndTime(dateTime,isOnAgentDash){
 			month =  complete_date.getMonth()+1;
 			date = complete_date.getDate();
 			year = complete_date.getFullYear();
-			if(complete_date.getMonth()<10){
+			if(month<10){
 				month='0'+month;
 			}
-			if(complete_date.getDate()<10){
+			if(date<10){
 				date='0'+date;
 			}
 			localDate=month+'-'+date+'-'+year;
@@ -807,16 +807,16 @@ function formateDateAndTime(dateTime,isOnAgentDash){
 			 year=createdDateStr.getFullYear();
 			 hours=createdDateStr.getHours();
 			 min=createdDateStr.getMinutes();
-			if(createdDateStr.getMonth()<10){
+			if(month<10){
 				month='0'+month;
 			}
-			if(createdDateStr.getDate()<10){
+			if(date<10){
 				date='0'+date;
 			}
-			if(createdDateStr.getHours()<10){
+			if(hours<10){
 				hours='0'+hours;
 			}
-			if(createdDateStr.getMinutes()<10){
+			if(min<10){
 				min='0'+min;
 			}
 			 localDate=month+'-'+date+'-'+year;

@@ -2332,7 +2332,9 @@ input[type="button"]:focus, button:focus {
 
 .newfi-team-list-tr-col1 {
 	width: 25%;
+	word-break: break-word;
 }
+
 
 .newfi-team-list-tr-col2 {
 	width: 25%;

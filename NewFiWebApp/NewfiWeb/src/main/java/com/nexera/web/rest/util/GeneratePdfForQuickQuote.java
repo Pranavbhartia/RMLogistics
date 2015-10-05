@@ -908,7 +908,7 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         seventhTable.addCell(cell);	
         	
-        cell = new PdfPCell(new Phrase("  *A credit of "+prepaidCost+" was applied against the "+prepaidAgainstNumber,font));
+        cell = new PdfPCell(new Phrase("  *A credit of "+prepaidCost+" was applied against the "+prepaidAgainstNumber +" in prepaids.",font));
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         cell.setColspan(2);
         seventhTable.addCell(cell);
@@ -1728,6 +1728,7 @@ public class GeneratePdfForQuickQuote {
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] {userVo
 		        .getFirstName() + " " + userVo.getLastName() });
+		substitutions.put("-custname-", new String[] {generatePdfVO.getFirstName() + " " + generatePdfVO.getFirstName() });
 
 		emailEntity.setAttachmentStream(byteArrayOutputStream);
 		emailEntity.setSenderEmailId(userVo.getUsername()
