@@ -32,13 +32,13 @@ public class LoanCustomerVO {
 	private String carrierInfo;
 	private Boolean mobileAlertsPreference;
 	private CustomerDetailVO customerDetail;
-	private String userLastLoginTime;
+	private Date userLastLoginTime;
 
-	public String getUserLastLoginTime() {
+	public Date getUserLastLoginTime() {
 		return userLastLoginTime;
 	}
 
-	public void setUserLastLoginTime(String userLastLoginTime) {
+	public void setUserLastLoginTime(Date userLastLoginTime) {
 		this.userLastLoginTime = userLastLoginTime;
 	}
 

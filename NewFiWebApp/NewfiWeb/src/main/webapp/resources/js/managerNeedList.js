@@ -126,16 +126,21 @@ function getLoanNeedsManagerContext(loanId){
 				var categoryList=ob.customList[category];
 				if(categoryList){
 					for(var i=0;i<categoryList.length;i++){
-						if(categoryList[i].title==label){
+						var categoryTitle = categoryList[i].title;
+						categoryTitle = categoryTitle.toLowerCase();
+						label = label.toLowerCase();
+						if(categoryTitle.trim() == label.trim()){
 							exist=categoryList[i];
 							break;
 						}
 					}
 				}
 
+				
 				if(exist){
-						if(!ob.needLookup[exist.title]){
-							var document = exist;
+					if(!ob.needLookup[exist.title]){
+						
+						   var document = exist;
 							document.isChecked=true;
 							ob.addCustomNeedToList(document);
 							var newNeedRow = getNeededDocumentRow(document);
@@ -144,10 +149,12 @@ function getLoanNeedsManagerContext(loanId){
 							clearAddNeedForm();
 							if(callback){
 								callback();
-							}
-						}else{
-							showErrorToastMessage(needAlreadyExists);
-						}
+							} 
+					 
+													
+					}else{
+						showErrorToastMessage(needAlreadyExists);
+					}
 				}else{
 					ob.ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
 						if(response.error){
@@ -159,7 +166,7 @@ function getLoanNeedsManagerContext(loanId){
 								"title" : label,
 								"desc" : desc,
 								"needType" : componentId,
-								"needCategory" : category
+								"needCategory" : ob.mapNeedCategory(category)
 							};
 							ob.addCustomNeedToList(document);
 							var newNeedRow = getNeededDocumentRow(document);

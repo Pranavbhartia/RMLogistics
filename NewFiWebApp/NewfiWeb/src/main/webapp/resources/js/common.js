@@ -1494,6 +1494,7 @@ $(document).on('keydown', '#stateId' ,function(e){
 	         return false;
 	    }
 	});  
+ 
  $(document).on('keypress','input[name="state"]',function(e){
 	 
 		if($(this).val().length >= 2){
@@ -1518,6 +1519,7 @@ $(document).on('keydown', '#stateId' ,function(e){
 	    }
 			
 	}); 
+ 
 function disablehowerEffect(){
 	var exist=$(document.getElementsByTagName('head')[0]).find("[id='howerCancellationclas']");
 	if(exist.length>0)
@@ -1543,6 +1545,7 @@ function formatPercentage(value){
 	else
 		return value+" %";
 }
+
 function showValidData(value){
 	if(typeof(value)==="undefined"){
 		return "-";
@@ -1551,14 +1554,115 @@ function showValidData(value){
 		return value;
 }
 
+/**
+ * @param date-"mm-dd-yyyy"
+ * @returns "mm-dd-yy"
+ */
 function formatYearInDate(date){
 	
 	var local="";
-	if(typeof(local)!=undefined){
-		var local=date.split('-');
+	if(typeof(date)!=undefined){
+		local=date.split('-');
 		local[2]=local[2][2].concat(local[2][3]); 
 		local=local.join('-');
 		
 	}
 	return local;
+}
+/**
+ * @param dateTime Date Object
+ * @param isOnAgentDash if to be painted on loan and archive dashboard
+ * @returns date in format mm-dd-yy hh:mm am/pm
+ */
+function formateDateAndTime(createdDateStr,isOnAgentDash){
+	
+	var month = "";
+	var date = "";
+	var year = "";
+	var hours = "";
+	var min = "";
+	var localDate = "";
+	var time = "";
+
+		if(createdDateStr != null){
+			
+			 month=createdDateStr.getMonth()+1;
+			 date=createdDateStr.getDate();
+			 year=createdDateStr.getFullYear();
+			 hours=createdDateStr.getHours();
+			 min=createdDateStr.getMinutes();
+			 if(hours > 12){
+					time="PM";
+					hours = hours - 12;
+					
+				}else{
+					time="AM";
+				}
+			if(month<10){
+				month='0'+month;
+			}
+			if(date<10){
+				date='0'+date;
+			}
+			if(hours<10){
+				hours='0'+hours;
+			}
+			if(min<10){
+				min='0'+min;
+			}
+			
+			 localDate=month+'-'+date+'-'+year;
+			 localDate=formatYearInDate(localDate);
+		}
+
+	if(isOnAgentDash){
+		if(localDate == ""){
+			createdDateStr = "-";
+		}else {
+			createdDateStr=localDate+"<br /> "+hours+':'+min+' '+time;
+		}
+		
+	}else {
+		createdDateStr=localDate+" "+hours+':'+min+' '+time;
+	}
+	
+	return createdDateStr;
+}
+
+
+/**
+ * @param createdDateStr  String "mm-dd-yyyy hh:mm:s"
+ */
+function displayDateForMessageDashboard(createdDateStr){
+	if(createdDateStr != null){
+		var complete_date=createdDateStr.slice(0,11);
+	    time=createdDateStr.slice(11);
+	    complete_date = complete_date.replace(/\s/g, '');
+		complete_date=new Date(complete_date);
+		month =  complete_date.getMonth()+1;
+		date = complete_date.getDate();
+		year = complete_date.getFullYear();		
+		time=time.split(':');
+		hours = time[0];
+		min = time[1];
+		if(hours > 12){
+			time="PM";
+			hours = hours - 12;
+			hours = '0'+hours;
+		}else{
+			time="AM";
+		}
+		if(min < 10){
+			min = '0'+min;
+		}
+		if(month < 10){
+			month='0'+month;
+		}
+		if(date < 10){
+			date='0'+date;
+		}
+		localDate=month+'-'+date+'-'+year;
+		localDate=formatYearInDate(localDate);
+		return createdDateStr=localDate+" "+hours+':'+min+' '+time;
+	}
 }

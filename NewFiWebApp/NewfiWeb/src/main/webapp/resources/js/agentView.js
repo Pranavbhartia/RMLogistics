@@ -556,34 +556,9 @@ function appendLeads(elementId, customers){
 					"class" : "leads-container-tc3 leads-row-3 float-left"
 				}).html(phone_num);
 
-				var	createdDateStr = new Date(
-						customer.createdDate);
-				var date = createdDateStr.getDate();
-				var month = createdDateStr.getMonth();
-				var year =  createdDateStr.getFullYear();
-				month = month+1;
-				year = year.toString().slice(2);
-				if(date < 10){
-					date = "0"+date;
-				}
-				if(month < 10){
-					month = "0"+month;
-				}
-				var hour = createdDateStr.getHours();
-				var min = createdDateStr.getMinutes();
-				var time;
-				if(hour < 10){
-					hour = "0"+hour;
-				}
-				if(min < 10){
-					min = "0"+min;
-				}
-				if(hour < 12){
-					time = hour+":"+min+" "+"AM";
-				}else{
-					time = hour+":"+min+" "+"PM";
-				}
-				createdDateStr=date+"-"+month+"-"+year+"<br />"+time;
+				var	createdDateStr = formateDateAndTime(
+						new Date(customer.createdDate),true);
+				
 				if(createdDateStr==""){
 					createdDateStr="-";
 				}
@@ -810,11 +785,14 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			
 			var userLastLogin = customer.userLastLoginTime;
 			
-			userLastLogin = formateDateAndTime(customer.userLastLoginTime,true);
 			
-			if(userLastLogin == ""){
+			
+			if(userLastLogin == null){
 				userLastLogin = "-";
+			}else {
+				userLastLogin = formateDateAndTime(new Date(customer.userLastLoginTime),true);
 			}
+			
 			var col6 = $('<div>').attr({
 				"class" : "leads-container-tc4  leads-container-tc5-realtor float-left"
 			}).html(userLastLogin);
@@ -910,10 +888,12 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				
 				var userLastLogin = customer.userLastLoginTime;
 	
-				userLastLogin = formateDateAndTime(customer.userLastLoginTime,true);
 				
-				if(userLastLogin == ""){
+				
+				if(userLastLogin == null){
 					userLastLogin = "-";
+				}else {
+					userLastLogin = formateDateAndTime(new Date(customer.userLastLoginTime),true);
 				}
 	
 				var col7 = $('<div>').attr({

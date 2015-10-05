@@ -458,7 +458,7 @@ function paintConversations(conversations,showSM) {
 			"class" : "con-prof-name semi-bold"
 		}).html(data.createdUser.userName);
 	
-		var createdDateStr = formateDateAndTime(data.createdDate);
+		var createdDateStr = displayDateForMessageDashboard(data.createdDate.trim());
 		
 		var messageTime = $('<div>').attr({
 			"class" : "con-message-timestamp"
@@ -637,7 +637,7 @@ function paintChildConversations(level, conversations,showSM) {
 			"class" : "con-prof-name semi-bold"
 		}).html(data.createdUser.userName);
 
-		var createdDateStr = formateDateAndTime(data.createdDate);
+		var createdDateStr = displayDateForMessageDashboard(data.createdDate);
 		var messageTime = $('<div>').attr({
 			"class" : "con-message-timestamp"
 		}).html(createdDateStr);
@@ -756,94 +756,3 @@ $(document).on(
 			paintMessageRecipients();
 		});
 
-
-function formateDateAndTime(dateTime,isOnAgentDash){
-	var createdDateStr="";
-	var month = "";
-	var date = "";
-	var year = "";
-	var hours = "";
-	var min = "";
-	var localDate = "";
-	var time = "";
-	var browser=navigator.userAgent.search("Firefox");
-	var safari=navigator.userAgent.indexOf("Safari");
-	if(browser > -1||safari > -1){
-		createdDateStr=dateTime;
-		if(createdDateStr != null){
-			var complete_date=createdDateStr.slice(0,11);
-		    time=createdDateStr.slice(11);
-		    complete_date = complete_date.replace(/\s/g, '');
-			complete_date=new Date(complete_date);
-			month =  complete_date.getMonth()+1;
-			date = complete_date.getDate();
-			year = complete_date.getFullYear();
-			if(month<10){
-				month='0'+month;
-			}
-			if(date<10){
-				date='0'+date;
-			}
-			localDate=month+'-'+date+'-'+year;
-			localDate=formatYearInDate(localDate);
-			time=time.split(':');
-			hours = time[0];
-			min = time[1];
-			
-			if(hours > 12){
-				time="PM";
-				hours = hours - 12;
-			}else{
-				time="AM";
-			}
-		}
-	
-		
-	}else {
-		if(dateTime != null){
-			createdDateStr = new Date(dateTime);
-			 month=createdDateStr.getMonth()+1;
-			 date=createdDateStr.getDate();
-			 year=createdDateStr.getFullYear();
-			 hours=createdDateStr.getHours();
-			 min=createdDateStr.getMinutes();
-			if(month<10){
-				month='0'+month;
-			}
-			if(date<10){
-				date='0'+date;
-			}
-			if(hours<10){
-				hours='0'+hours;
-			}
-			if(min<10){
-				min='0'+min;
-			}
-			 localDate=month+'-'+date+'-'+year;
-			 localDate=formatYearInDate(localDate);
-			 var time="";
-			if(hours > 12){
-				time="PM";
-				hours = hours - 12;
-				
-			}else{
-				time="AM";
-			}
-		}
-	
-		
-	}
-
-	if(isOnAgentDash){
-		if(localDate == ""){
-			createdDateStr = "-";
-		}else {
-			createdDateStr=localDate+"<br /> "+hours+':'+min+' '+time;
-		}
-		
-	}else {
-		createdDateStr=localDate+" "+hours+':'+min+' '+time;
-	}
-	
-	return createdDateStr;
-}

@@ -622,7 +622,7 @@ public class LoanServiceImpl implements LoanService {
 		
 		
 		if(user.getLastLoginDate() != null){
-			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate().toString());
+			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
 		}
 
 		return loanCustomerVO;
