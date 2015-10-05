@@ -99,6 +99,11 @@ var purchaseType = [{
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly"
+},{
+	question : "Credit Score",
+	id : "creditScoreId",
+	type: "creditScore",
+	column : 0
 }];
 
 //JSON for refinanace lower monthly payment
@@ -184,6 +189,11 @@ var refinanceLowerMonthlyPayment = [{
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly"
+},{
+	question : "Credit Score",
+	id : "creditScoreId",
+	type: "creditScore",
+	column : 0
 }];
 
 //JSON for refinanace cashout
@@ -273,6 +283,11 @@ var refinanceCashOut = [{
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly"
+},{
+	question : "Credit Score",
+	id : "creditScoreId",
+	type: "creditScore",
+	column : 0
 }];
 
 //END
@@ -482,6 +497,8 @@ function paintDataSection(option,isDefault){
 				
 			}else if(option[i].type == "percentage"){
 				rowRHS = appendDownPaymentFeild(option[i]);
+			}else if(option[i].type == "creditScore"){
+				rowRHS = appendCreditScoreFeild(option[i]);
 			}else {
 				
 				rowRHS = $('<input>').attr({
@@ -523,7 +540,24 @@ function paintDataSection(option,isDefault){
 		
 	}
 }
-
+function appendCreditScoreFeild(option){
+	
+	var div = $('<input>').attr({
+		"class" : "quick-quote-row-RHS float-left",
+		"value" : "740",
+		"id" : option.id,
+		"name" : option.id
+	}).on("keypress", function(e){
+		restrictChar(option.id);
+		if($(this).val().length > 2){
+			return false;
+		}
+		$(this).attr({
+			"value": $(this).val()
+		});
+	});
+	return div;
+}
 
 /*Function which paint the question with dropdown type*/
 function appendDropdown(options){

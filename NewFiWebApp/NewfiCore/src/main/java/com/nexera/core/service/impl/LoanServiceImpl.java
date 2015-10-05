@@ -620,9 +620,9 @@ public class LoanServiceImpl implements LoanService {
 		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
 		
-		
+		//TODO to append user last login time
 		if(user.getLastLoginDate() != null){
-			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate().toString());
+			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
 		}
 
 		return loanCustomerVO;
