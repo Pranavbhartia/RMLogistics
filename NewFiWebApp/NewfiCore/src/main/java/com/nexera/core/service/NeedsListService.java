@@ -8,6 +8,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanNeedsListVO;
 import com.nexera.common.vo.ManagerNeedVo;
 import com.nexera.common.vo.NeededItemScoreVO;
@@ -54,4 +55,7 @@ public interface NeedsListService {
 //	public void createInitilaNeedsList(Integer loanId);
 
 	public void createOrDismissNeedsAlert(int loanId);
+	
+	public boolean checkNeedExist(String label,
+	        String category,String description,User user,String lqbDocumentType);
 }

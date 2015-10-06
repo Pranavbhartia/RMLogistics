@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.CommonResponseVO;
@@ -106,10 +107,18 @@ public class NeedsListRestService {
 				user = new User();
 				user.setId(1);
 			}
-			NeedsListMaster customNeed = NeedsListMaster.getCustomNeed(label,
-			        category, description, user,lqbDocumentType);
-			int needId = needsListService.saveCustomNeed(customNeed);
-			response = RestUtil.wrapObjectForSuccess(needId);
+			LOG.info("To check if need exist calling checkNeedExist service method with parametrs:"+label+","+category+","+description+","+user+","+lqbDocumentType);
+			Boolean isExist = needsListService.checkNeedExist(label, category, description, user, lqbDocumentType);
+			if(!isExist){
+				NeedsListMaster customNeed = NeedsListMaster.getCustomNeed(label,
+				        category, description, user,lqbDocumentType);
+				int needId = needsListService.saveCustomNeed(customNeed);
+				response = RestUtil.wrapObjectForSuccess(needId);
+			}else {
+				response = RestUtil.wrapObjectForFailure(null, "500",
+				        ErrorConstants.NEED_EXIST_ERROR);
+			}
+			
 		} catch (Exception e) {
 			response = RestUtil.wrapObjectForFailure(null, "500",
 			        e.getMessage());

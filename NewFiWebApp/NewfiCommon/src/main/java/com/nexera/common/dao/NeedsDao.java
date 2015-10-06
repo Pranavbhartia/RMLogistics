@@ -5,6 +5,7 @@ import java.util.List;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.User;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
 public interface NeedsDao extends GenericDao {
@@ -31,5 +32,8 @@ public interface NeedsDao extends GenericDao {
 	public String checkCreditReport(Integer loanID);
 	
 	public NeedsListMaster  getNeed(Integer needId);
+	
+	public boolean checkNeedExist(String label,
+	        String category,String description,User user,String lqbDocumentType);
 
 }

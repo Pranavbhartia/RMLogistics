@@ -27,6 +27,7 @@ import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.entity.User;
 import com.nexera.common.enums.MasterNeedsEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.exception.DatabaseException;
@@ -825,5 +826,13 @@ public class NeedsListServiceImpl implements NeedsListService {
 			        + e.getMessage());
 		}
 
+	}
+
+	@Override
+	@Transactional
+	public boolean checkNeedExist(String label, String category,
+			String description, User user, String lqbDocumentType) {
+		Boolean isexist = needsDao.checkNeedExist(label, category, description, user, lqbDocumentType);
+		return isexist;
 	}
 }
