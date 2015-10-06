@@ -380,9 +380,9 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		searchCriteria.setComments(loanStatus.getDisplayStatus());
 		LoanMilestone lm = loanService
 		        .findLoanMileStoneByCriteria(searchCriteria);
-		if (lm != null && lm.getStatusUpdateTime() != null) {
+		if (lm != null && lm.getStatusInsertTime() != null) {
 			milestoneDate = String.valueOf(utils.getMMDDForDisplay(lm
-			        .getStatusUpdateTime()));
+			        .getStatusInsertTime()));
 		}
 		return milestoneDate;
 	}
@@ -399,9 +399,9 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		searchCriteria.setComments(status);
 		LoanMilestone lm = loanService
 		        .findLoanMileStoneByCriteria(searchCriteria);
-		if (lm != null && lm.getStatusUpdateTime() != null) {
+		if (lm != null && lm.getStatusInsertTime() != null) {
 			milestoneDate = String.valueOf(utils.getMMDDForDisplay(lm
-			        .getStatusUpdateTime()));
+			        .getStatusInsertTime()));
 		}
 		return milestoneDate;
 	}
