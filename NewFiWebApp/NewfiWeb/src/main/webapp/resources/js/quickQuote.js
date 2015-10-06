@@ -2,6 +2,7 @@ var count = 0;
 var buyHomeRefinanceRate = new Object();
 buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
+var editQuoteUserDetails = new Object();
 var inputCustmerDetailUnderQuickQuote = new Object();
 loanPurchaseDetailsUnderQuickQuote.isRate = false;
 loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
@@ -10,6 +11,7 @@ var PURCHASE = "PUR";
 var REFINANACE = "REF";
 var REFINANACE_LOWER_MORTGAGE_PAYMENT = "REFLMP";
 var REFINANACE_CASH_OUT = "REFCO";
+var isEditPage = true;
 var firstName;
 var lastName;
 
@@ -326,6 +328,38 @@ function loadQuickQoutePage(){
 	wrapper.append(teaserRateContainer);
 	agentDashboardMainContainer.append(wrapper);
 	$('#right-panel').append(agentDashboardMainContainer);
+}
+function autoClickButton(buttonId){
+	$('#'+buttonId).click();
+}
+function editQuoteUser(){
+	loadQuickQoutePage();
+	var buttonId;
+	if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR"){
+		buttonId = 'quick-quote-one-id';
+	}
+	else if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REF"){
+		buttonId = 'quick-quote-two-id';
+	}
+	else if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REFCO"){
+		buttonId = 'quick-quote-three-id';
+	}
+	autoClickButton(buttonId);
+	
+	$('#firstName').val(editQuoteUserDetails.firstName);
+	$('#lastName').val(editQuoteUserDetails.lastName);
+	$('#emailID').val(editQuoteUserDetails.emailId);
+	$('#primaryPhoneID').val(editQuoteUserDetails.phoneNo);
+	$('#propertyType').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType);
+	$('#residenceType').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType);
+	$('#homeWorthToday').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.homeWorthToday);
+	
+	
+	//var parentContainer = '<div class="quick-quote-teaser-rate-container float-left" id="ce-refinance-cp" style="display: none;"></div>';
+	
+	paintFixYourRatePageCEPUnderQuickQuote(editQuoteUserDetails.teaserRateVO, editQuoteUserDetails.inputCustmerDetailUnderQuickQuote,$("#ce-refinance-cp"));
+	
+	
 }
 
 /*Entry point for painting quick quote page*/
@@ -814,9 +848,17 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	        "class": "ce-rate-main-container"
 	    });
 	    $(parentContainer).html(container);
-
-	    var teaserRate =  modifiedLQBJsonResponse(teaserRate);
-	    var rateVO = getLQBObj(teaserRate);
+	    
+	    var rateVO;
+	    
+	    if(isEditPage){
+	    	rateVO = editQuoteUserDetails.teaserRateVO.rateVO;
+	    }
+	    else{
+		    teaserRate =  modifiedLQBJsonResponse(teaserRate);
+		    rateVO = getLQBObj(teaserRate);
+	    }
+	 //   var rateVO = editQuoteUserDetails.teaserRateVO.rateVO;
 	    var parentWrapper = $('<div>').attr({
 	        "class": "loan-summary-wrapper"
 	    });

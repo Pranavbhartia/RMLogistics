@@ -1340,8 +1340,15 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
     var headerTxt = $('<div>').attr({
         "class": "slider-hdr-txt float-left"
     }).html(text);
+    var yearValues = new Array();
+   if(isEditPage){
+	   yearValues[0] = editQuoteUserDetails.teaserRateVO;
+	   yearValues = modifiedLQBJsonResponse(yearValues);
+   }
+   else{
+	   yearValues = LQBResponse; 
+   }
     
-    var yearValues = LQBResponse;
     
     var rateArray = yearValues[yearValues.length-1].rateVO;
 //    rateArray=rateArray.reverse();

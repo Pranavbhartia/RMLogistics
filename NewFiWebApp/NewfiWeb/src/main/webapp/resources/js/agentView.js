@@ -645,6 +645,8 @@ function getUserFromLeads(userName,internalUserID){
 				if(response.error == null){
 					// TODO @Manish do the next task.
 					showToastMessage(response.resultObject);
+					editQuoteUserDetails = response;
+					editQuoteUser();
 				}else {
 					showErrorToastmessage(response.error.message);
 				}	

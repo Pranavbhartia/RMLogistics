@@ -3122,7 +3122,12 @@ function modifiedLQBJsonResponse(LQBResponse) {
     yearValues.sort(function(a, b) {
         return parseFloat(a.value) - parseFloat(b.value);
     });
-    yearValues=yearValues.slice(1);
+    if(isEditPage){
+    	yearValues=yearValues.slice(0);
+    } else {
+    	yearValues=yearValues.slice(1);
+    }
+    
     return yearValues;
 }
 

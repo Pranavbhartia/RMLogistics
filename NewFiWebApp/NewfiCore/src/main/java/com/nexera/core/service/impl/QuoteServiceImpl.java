@@ -196,10 +196,10 @@ public class QuoteServiceImpl implements QuoteService {
 		
 		 String loanProgram = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getYearData();
 	        if(loanProgram.equals("5") || loanProgram.equals("7")){
-	        	loanProgram = loanProgram+" Year ARM";
+	        	loanProgram = loanProgram+" - Year ARM";
 	     }
 	     else{
-	        	loanProgram = loanProgram+" Year Fixed";
+	        	loanProgram = loanProgram+" - Year Fixed";
 	     }
 	        
 	     ArrayList<LqbTeaserRateVo> rateVO = new ArrayList<LqbTeaserRateVo>();
