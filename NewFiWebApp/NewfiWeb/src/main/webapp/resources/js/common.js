@@ -862,6 +862,72 @@ function getRowHolderObject(container, value, key) {
 			var getVal = ob.getValueForItem();
 			totalEstimatedClosingCosts[key]=getVal;
 		},
+		updateCreditAfterDiscount: function(){
+			var ob = this;
+			var getVal = ob.getValueForItem();
+			if(typeof(loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.discountPercent) != 'undefined')
+			{
+				if(key == 'creditOrCharge802'){
+						getVal = getFloatValue(getVal);
+					   //check for discounts	
+					   var discounts = loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.discountPercent;
+					   if(getVal < 0){
+						   getVal = getVal + (discounts / 100) * getVal;
+						   
+						   // Adding marker for negative value and adding dollar.
+						   getVal = markNegative(getVal);
+					   } else {
+						   getVal = getVal  - (discounts / 100) * getVal;
+					       // Adding dollar.
+						   getVal = numberWithCommasAndDoller(getVal);
+					   } 
+					   $(ob.container).text(getVal);
+					  // closingCostHolder.valueSet['creditOrCharge802']=getVal;
+					   loanPurchaseDetailsUnderQuickQuote.discountCreditOrCharge802 = getVal;
+				}
+				if(key == 'TotEstLenCost'){
+					var val1 = getFloatValue(closingCostHolder.valueSet["lenderFee813"]);
+					var val2;
+					if(typeof(loanPurchaseDetailsUnderQuickQuote.discountCreditOrCharge802)!='undefined'){
+						val2 = getFloatValue(loanPurchaseDetailsUnderQuickQuote.discountCreditOrCharge802);
+					}
+					else{
+						val2 = getFloatValue(closingCostHolder.valueSet["creditOrCharge802"]);
+					}
+					
+					var result = val1 + val2;
+					 if(result < 0){  
+						 result = markNegative(result);
+					   } else {
+						   result = showValue(result,true);
+					   } 
+					 $(ob.container).text(result);
+					 //lqbTeaserRateUnderQuickQuote['TotEstLenCost']=getVal;
+					 loanPurchaseDetailsUnderQuickQuote.discountTotEstLenCost = result;
+					 
+				}
+				if(key == 'totEstimatedClosingCost'){
+					var val1 = getFloatValue(closingCostHolder["totEstThdPtyCst"].getValueForItem());
+					var val2;
+					if(typeof(loanPurchaseDetailsUnderQuickQuote.discountCreditOrCharge802)!='undefined'){
+						val2 = getFloatValue(loanPurchaseDetailsUnderQuickQuote.discountTotEstLenCost);
+					}
+					else{
+						val2 = getFloatValue(closingCostHolder["totEstThdPtyCst"].getValueForItem());
+					}
+					
+					var result = val1 + val2;
+					 if(result < 0){  
+						 result = markNegative(result);
+					   } else {
+						   result = showValue(result,true);
+					  } 
+					 $(ob.container).text(result);
+			
+					 loanPurchaseDetailsUnderQuickQuote.discountTotEstimatedClosingCost = result;
+				}
+			}
+		},
 		updateTaxesAndInsurances: function(){
 			var ob = this;
 			var isMonthly = false;
@@ -938,9 +1004,13 @@ function getObContainer() {
 					}
 					if(key == "totEstimatedClosingCost"){
 						keyObj.updateTotalEstimatedClosingCosts();
+						keyObj.updateCreditAfterDiscount();
 					}
 					if(key == "taxResrv1004" || key == "hazInsReserve1002" || key == "totEstResDepWthLen" ){
 						keyObj.updateTaxesAndInsurances();
+					}
+					if(key == 'creditOrCharge802' || key == 'TotEstLenCost'){
+						keyObj.updateCreditAfterDiscount();
 					}
 				 }
 			}
