@@ -36,7 +36,7 @@ public class UWSubmittedManager implements IWorkflowTaskExecutor {
 		int loanId = Integer.parseInt(inputMap.get(
 		        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 		String closureDate = iworkflowService.getUWMilestoneDates(loanId,
-		        LOSLoanStatus.LQB_STATUS_IN_UNDERWRITING);
+		        LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED);
 		return closureDate;
 	}
 
