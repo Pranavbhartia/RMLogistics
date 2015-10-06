@@ -739,7 +739,7 @@ a.cus-eng-succ-mess-email {
     border-radius: 3px;
 }
 .leads-col-1,.leads-col-3{
-    width: 150px;
+    width: 140px;
 
 }
 
@@ -747,7 +747,11 @@ a.cus-eng-succ-mess-email {
     width: 200px;
 }
 .leads-col-4 {
-	width: 133px;
+	width: 100px;
+}
+
+.leads-col-5{
+	width: 80px;
 }
 .leads-row-1 {
     width: 161px;
@@ -760,17 +764,18 @@ a.cus-eng-succ-mess-email {
 }
 
 .leads-row-3,.leads-row-1 {
-    width: 150px;
+    width: 140px;
 }
 .leads-row-4 {
-    width: 113px;
+    width: 100px;
 }
 
 .leads-row-5 {
-    background: url(../images/pdf.jpg) no-repeat 40px center;
+    background: url(../images/pdf.jpg) no-repeat 25px center;
     height: 25px;
-    background-size: 21%;
+    background-size: 31%;
     cursor: pointer;
+    width: 88px !important;
 }
 .quick-quote-rhs-label{
 	font-size: 14px;
@@ -846,6 +851,21 @@ a.cus-eng-succ-mess-email {
     background-size: 28%;
     cursor: pointer;
 }
+
+.grey-edit {
+    background: url(../images/grey-edit.png) no-repeat;
+    height: 35px;
+    background-size: 21%;
+    cursor: pointer;
+}
+
+.blue-edit {
+    background: url(../images/blue-edit.png) no-repeat;
+    height: 35px;
+    background-size: 21%;
+    cursor: pointer;
+}
+
 .leads-user-created {
     background: url(../images/added_user.png) no-repeat;
     height: 35px;
