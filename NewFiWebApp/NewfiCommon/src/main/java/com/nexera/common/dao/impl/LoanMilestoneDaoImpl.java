@@ -41,7 +41,7 @@ public class LoanMilestoneDaoImpl extends GenericDaoImpl implements LoanMileston
 		
 		List<LoanMilestoneMaster> reqdMSs = new ArrayList<LoanMilestoneMaster>();
 		
-		List<Integer> filteredList = new ArrayList<Integer>(Arrays.asList(Milestones.QC.getMilestoneID(),Milestones.LM_DECISION.getMilestoneID(),Milestones.OTHER.getMilestoneID(),Milestones.APP_FEE.getMilestoneID(),Milestones.APPRAISAL.getMilestoneID(),Milestones.DISCLOSURE.getMilestoneID()));
+		List<Integer> filteredList = new ArrayList<Integer>(Arrays.asList(Milestones.QC.getMilestoneID(),Milestones.LM_DECISION.getMilestoneID(),Milestones.OTHER.getMilestoneID(),Milestones.APP_FEE.getMilestoneID(),Milestones.APPRAISAL.getMilestoneID(),Milestones.DISCLOSURE.getMilestoneID(),Milestones.PRE_QUAL.getMilestoneID()));
 		
 		for (Milestones ms : Milestones.values())
 		{
