@@ -1745,7 +1745,7 @@ $(document).on('keyup','input[name="discount-update-feild"]',function(e){
         return false;
     }
 	
-	if($(this).val() > 99){
+	if($(this).val() > 100){
 		$(this).val(100);
 		showErrorToastMessage(message);
 		return false;
@@ -1755,5 +1755,5 @@ $(document).on('keyup','input[name="discount-update-feild"]',function(e){
 
 function isValidInput(val) {
     //var val = parseFloat(value);
-    return !isNaN(val) && val >= 0 && val <= 99.99;
+    return !isNaN(val) && val >= 0 && val <= 100;
 }
