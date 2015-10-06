@@ -49,6 +49,7 @@ import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
+import com.nexera.common.enums.Milestones;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
@@ -539,6 +540,11 @@ public class ApplicationFormRestService {
 						String loanAppFrm = gson.toJson(loaAppFormVO);
 						createApplication(loanAppFrm, httpServletRequest);
 						loanCreatedNSaved = true;
+						if(loan != null){
+							LOG.info("updating loan milestone table after application submit and loanID is....."+loan.getId());
+							loanService.saveLoanMilestone(loan.getId(),Milestones.NEWFI_LOAN_STATUS.getMilestoneID(),CommonConstants.NEWFI_SUBMITTED_LOAN_STATUS_DESCRIPTION);
+							
+						}
 					}
 					if(response.contains("status=\"Error\"")){
 						lockRateData = response;
