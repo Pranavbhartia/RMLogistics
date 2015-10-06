@@ -1974,6 +1974,15 @@ $("body").on('click',"#quick-quote-generate-pdf",function(e){
 		if(key=="taxResrv1004" || key == "hazInsReserve1002" ){
 			continue;
 		}
+		if(typeof(loanPurchaseDetailsUnderQuickQuote.discountCreditOrCharge802)!='undefined'){
+			closingCostHolder.valueSet['creditOrCharge802'] = loanPurchaseDetailsUnderQuickQuote.discountCreditOrCharge802;
+		}
+		if(typeof(loanPurchaseDetailsUnderQuickQuote.discountTotEstLenCost)!='undefined'){
+			lqbTeaserRateUnderQuickQuote['TotEstLenCost'] = loanPurchaseDetailsUnderQuickQuote.discountTotEstLenCost;
+		}
+		if(typeof(loanPurchaseDetailsUnderQuickQuote.discountTotEstimatedClosingCost)!='undefined'){
+			lqbTeaserRateUnderQuickQuote['totEstimatedClosingCost'] = loanPurchaseDetailsUnderQuickQuote.discountTotEstimatedClosingCost;
+		}
 		lqbTeaserRateUnderQuickQuote[key]=closingCostHolder.valueSet[key];
 	}
 	sendPurchasePdfUnderQuickQuote();
@@ -1991,6 +2000,17 @@ $('body').on('keyup','#homeWorthToday',function(e) {
     	
 
  });
+
+
+$('body').on('click','#discount-update-btn-id',function(e) {    
+ var discountNumber = $('#discount-update-feild-id').val();
+ loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.discountPercent = discountNumber;
+ updateElementsOnSlide(globalChangeContainer.ratVo,undefined,false);
+});
+
+
+
+
 function updateDownPayment(purchaseVal,downpayment,percentage){
     if(purchaseVal&&getFloatValue(purchaseVal)!=0){
         purchaseVal=getFloatValue(purchaseVal);
