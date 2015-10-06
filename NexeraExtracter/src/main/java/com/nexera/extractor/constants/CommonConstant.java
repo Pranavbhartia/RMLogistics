@@ -15,7 +15,20 @@ public class CommonConstant {
 	public static final String BASE_URL = "http://www.blustream.com/ratesheet/";*/
 	// public static final String BASE_URL =
 	// "http://localhost:8080/nexeraextractor/";
-	public final String FOLDER_PATH = "C:\\RateSheet_Files";
+	
+	//TEST ENV
+	
+/*	public final String FOLDER_PATH = "C:\\apps\\LQB\\Price";
+	public final Integer COLUMN_IN_SINGLE_ROW = 3;
+	public final String DEFAULT_FILE_NAME = "blustreamRSTest.xls";
+	public static final String PATH_FOR_ORIGINAL_TEMPELATE = "C:\\apps\\LQB\\blustreamRSTest.xls";
+	public static final String TEMP_PATH_FOR_COPIED_TEMPELATE = "C:\\apps\\LQB\\temp";
+	public static final String COPIED_TEMPELATE = "C:\\apps\\LQB\\temp\\blustreamRSTest.xls";
+
+	public static final String BASE_URL = "http://www.blustream.com/test_ratesheet/";*/
+
+	
+	public final String FOLDER_PATH = "C:\\apps\\LQB\\Price";
 	public final Integer COLUMN_IN_SINGLE_ROW = 3;
 	public final String DEFAULT_FILE_NAME = "blustreamRS.xls";
 	

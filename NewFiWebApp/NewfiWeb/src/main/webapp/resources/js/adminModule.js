@@ -249,7 +249,7 @@ function appendAdminAddUserWrapper(parentElement,clearParent,data) {
 	var header = $('<div>').attr({
 		"class" : "admin-add-team-mem-header clearfix",
 		"id":"admin-user-management-header"
-	}).html("Add User");
+	}).html("Accounts");
 
 	var rightHeaderIcon = $('<div>').attr({
 		"class" : "header-down-icn float-right"
@@ -622,7 +622,7 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 
 	var header = $('<div>').attr({
 		"class" : "agent-wrapper-header agent-wrapper-header-active"
-	}).html("Newfi Team");
+	});
 
 	var searchDiv=$('<div>').attr({
     "class":"admin-search-icn float-right-admin",

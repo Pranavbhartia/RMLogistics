@@ -157,3 +157,4 @@ var validation_unsuccess_message="Something went wrong while creating user. Plea
 
 //Message in quickQuote.js
 var pdfSentSuccessMessage = "PDF sent to your email.";
+var creditScoreInvalidInputMessage = "Credit score cannot be greater than 800";
