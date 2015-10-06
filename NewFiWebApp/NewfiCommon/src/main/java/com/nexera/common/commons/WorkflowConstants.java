@@ -186,6 +186,8 @@ public class WorkflowConstants {
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_CLOSURE_FUNDED)));
 		
+		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_UW_SUBMITTED)));
 		
 		
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),new ArrayList<String>(Arrays
@@ -238,6 +240,8 @@ public class WorkflowConstants {
 		
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PRE_APPROVED,
 		        UW_LIST);
+		
+		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,UW_LIST);
 		//MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED, UW_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW,
 		        UW_LIST);
@@ -331,7 +335,7 @@ public class WorkflowConstants {
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,
 		        new WorkItemMilestoneInfo(Milestones.UW,
-		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
+		        		STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID()),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED)));
 		
