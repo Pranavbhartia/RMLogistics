@@ -2004,8 +2004,15 @@ $('body').on('keyup','#homeWorthToday',function(e) {
 
 $('body').on('click','#discount-update-btn-id',function(e) {    
  var discountNumber = $('#discount-update-feild-id').val();
- loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.discountPercent = discountNumber;
- updateElementsOnSlide(globalChangeContainer.ratVo,undefined,false);
+ var status = isValidInput(discountNumber);
+ removeToastMessage();
+ if(status){
+	 loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.discountPercent = discountNumber;
+	 updateElementsOnSlide(globalChangeContainer.ratVo,undefined,false);
+ }else {
+	 showErrorToastMessage(message);
+ }
+
 });
 
 

@@ -360,6 +360,8 @@ public interface CommonConstants {
 	
 	public static final String NEWFI_LOAN_STATUS_DESCRIPTION = "Lead";
 	
+	public static final String NEWFI_SUBMITTED_LOAN_STATUS_DESCRIPTION = "Application";
+	
 	
 	
 }
