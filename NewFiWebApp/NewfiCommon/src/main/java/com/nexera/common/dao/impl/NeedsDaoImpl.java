@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -17,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.dao.NeedsDao;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.entity.User;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 
@@ -207,4 +210,23 @@ public class NeedsDaoImpl extends GenericDaoImpl implements NeedsDao {
 		needsListMaster =  (NeedsListMaster) criteria.uniqueResult();
 		return needsListMaster;
     }
+
+	@Override
+	public boolean checkNeedExist(String label, String category,
+			String description, User user, String lqbDocumentType) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "from NeedsListMaster where label= :label and needCategory= :category and description=:description and modifiedBy=:user and uploadedTo=:lqbDocumentType";
+		
+		Query qry = session.createQuery(hql);
+		qry.setParameter("label", label);		
+		qry.setParameter("category", category);	
+		qry.setParameter("description", description);	
+		qry.setParameter("user", user);	
+		qry.setParameter("lqbDocumentType", lqbDocumentType);	
+		List<NeedsListMaster> masterNeedList = qry.list();	
+		if(masterNeedList.size() > 0){
+			return true;
+		}		
+		return false;
+	}
 }

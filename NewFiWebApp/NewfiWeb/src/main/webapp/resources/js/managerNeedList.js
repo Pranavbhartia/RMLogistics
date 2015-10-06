@@ -124,12 +124,15 @@ function getLoanNeedsManagerContext(loanId){
 				data.lqbDocumentType = lqb_desc;
 				var exist;
 				var categoryList=ob.customList[category];
+				var isExistInCustomList = "";
 				if(categoryList){
 					for(var i=0;i<categoryList.length;i++){
 						var categoryTitle = categoryList[i].title;
 						categoryTitle = categoryTitle.toLowerCase();
 						label = label.toLowerCase();
-						if(categoryTitle.trim() == label.trim()){
+						
+						if(categoryTitle.trim() == label.replace(/\s+/g, '').trim()){
+							isExistInCustomList = true;
 							exist=categoryList[i];
 							break;
 						}
@@ -140,7 +143,11 @@ function getLoanNeedsManagerContext(loanId){
 				if(exist){
 					if(!ob.needLookup[exist.title]){
 						
-						   var document = exist;
+						if(isExistInCustomList){
+							showErrorToastMessage(needAlreadyExists);
+							isExistInCustomList = false;
+						}else {
+							var document = exist;
 							document.isChecked=true;
 							ob.addCustomNeedToList(document);
 							var newNeedRow = getNeededDocumentRow(document);
@@ -150,7 +157,7 @@ function getLoanNeedsManagerContext(loanId){
 							if(callback){
 								callback();
 							} 
-					 
+						}						   					 
 													
 					}else{
 						showErrorToastMessage(needAlreadyExists);
@@ -158,7 +165,7 @@ function getLoanNeedsManagerContext(loanId){
 				}else{
 					ob.ajaxRequest("rest/loanneeds/custom","POST","json",data,function(response){
 						if(response.error){
-							showToastMessage(response.error.message)
+							showErrorToastMessage(response.error.message);
 						}else{
 							var componentId=response.resultObject;
 							var document = {

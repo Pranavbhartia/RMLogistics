@@ -40,4 +40,6 @@ public interface ErrorConstants {
 	
 	public static final String USER_DELETION_FAILED = "Unable to delete user. Try later.";
 	
+	public static final String NEED_EXIST_ERROR = "Need already exists";
+	
 }

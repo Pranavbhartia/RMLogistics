@@ -517,4 +517,13 @@ table.adjuster-table {
     font-family: 'opensanssemibold';
     padding-left: 5px;
 }
-    
+.FHLMC-adj {
+	padding-top: 10px;
+}  
+
+.FHLMC-table4,.FHLMC-table5 {
+	padding: 15px;
+}
+.FHLMC-table6 {
+	left:350px;
+}
