@@ -879,7 +879,8 @@ function getRowHolderObject(container, value, key) {
 					   } else {
 						   getVal = getVal  - (discounts / 100) * getVal;
 					       // Adding dollar.
-						   getVal = numberWithCommasAndDoller(getVal);
+						  /* getVal = numberWithCommasAndDoller(getVal);*/
+						   getVal = showValue(getVal,true);
 					   } 
 					   $(ob.container).text(getVal);
 					  // closingCostHolder.valueSet['creditOrCharge802']=getVal;
@@ -1739,12 +1740,20 @@ function displayDateForMessageDashboard(createdDateStr){
 }
 $(document).on('keyup','input[name="discount-update-feild"]',function(e){
 	 
-	if($(this).val().length > 5){
-     return false;
+	if($(this).val().length > 5){		
+		$(this).val(0);
+        return false;
     }
+	
 	if($(this).val() > 99){
 		$(this).val(100);
-	     return false;
+		showErrorToastMessage(message);
+		return false;
     }
 	
 }); 
+
+function isValidInput(val) {
+    //var val = parseFloat(value);
+    return !isNaN(val) && val >= 0 && val <= 99.99;
+}
