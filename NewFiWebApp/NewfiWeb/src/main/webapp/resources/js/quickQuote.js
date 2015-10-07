@@ -1409,16 +1409,17 @@ function getClosingCostTopConatinerUnderQuickQuote() {
     var row3Con2 = getClosingCostContainerRowUnderQuickQuote(3, getClosingCostLabel("Flood Certification"), "");
     var row4Con2 = getClosingCostContainerRowUnderQuickQuote(4, getClosingCostLabel("Wire Fee"), "");
     var row4_1Con2;
-    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
+    if((closingCostHolder.loanType&&closingCostHolder.loanType=="PUR") || (isEditPage && editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR")){
         row4_1Con2 = getClosingCostContainerRowUnderQuickQuote(5, getClosingCostLabel("Owners Title Insurance"), "");
+    }
     var row5Con2 = getClosingCostContainerRowUnderQuickQuote(5, getClosingCostLabel("Lenders Title Insurance"), "");
     var row6Con2 = getClosingCostContainerRowUnderQuickQuote(6, getClosingCostLabel("Closing/Escrow Fee"), "");
     var row7Con2 = getClosingCostContainerRowUnderQuickQuote(7, getClosingCostLabel("Recording Fee"), "");
     var row8Con2;
-    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
-    	//NEXNF-483
-        //row8Con2= getClosingCostContainerRowUnderQuickQuote(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
+    if((closingCostHolder.loanType&&closingCostHolder.loanType=="PUR") || (isEditPage && editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR")){
     row8Con2= getClosingCostContainerRowUnderQuickQuote(8, getClosingCostLabel("City/County Tax stamps"), "");
+    }
+  
     var row9Con2 = getClosingCostContainerLastRowUnderQuickQuote(9, getClosingCostLabel("Total Estimated Third Party Costs"), "");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
     
