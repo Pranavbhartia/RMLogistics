@@ -93,6 +93,7 @@ public class WorkflowConstants {
 	               
 	                LOSLoanStatus.LQB_STATUS_PRE_APPROVED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),

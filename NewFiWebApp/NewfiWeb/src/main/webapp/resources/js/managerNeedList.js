@@ -124,40 +124,35 @@ function getLoanNeedsManagerContext(loanId){
 				data.lqbDocumentType = lqb_desc;
 				var exist;
 				var categoryList=ob.customList[category];
-				var isExistInCustomList = "";
 				if(categoryList){
 					for(var i=0;i<categoryList.length;i++){
 						var categoryTitle = categoryList[i].title;
 						categoryTitle = categoryTitle.toLowerCase();
-						label = label.toLowerCase();
-						
-						if(categoryTitle.trim() == label.replace(/\s+/g, '').trim()){
-							isExistInCustomList = true;
+						label = label.toLowerCase();						
+						if(categoryTitle.replace(/\s+/g, '').trim() == label.replace(/\s+/g, '').trim()){
 							exist=categoryList[i];
 							break;
 						}
 					}
 				}
-
 				
 				if(exist){
 					if(!ob.needLookup[exist.title]){
-						
-						if(isExistInCustomList){
-							showErrorToastMessage(needAlreadyExists);
-							isExistInCustomList = false;
-						}else {
 							var document = exist;
-							document.isChecked=true;
-							ob.addCustomNeedToList(document);
-							var newNeedRow = getNeededDocumentRow(document);
-							
-							$('.initial-list-doc-wrapper[data-doc-type="'+f_category+'"]').find('.initial-list-doc-container').append(newNeedRow);
-							clearAddNeedForm();
-							if(callback){
-								callback();
-							} 
-						}						   					 
+							var needData = $('.initial-list-doc-wrapper[data-doc-type="'+f_category+'"]').find('.initial-list-doc-container').find('.initial-list-doc-row').has(".doc-checkbox[needid="+document.needType+"]");
+							if(needData){
+								showErrorToastMessage(needAlreadyExists);
+								isExistInCustomList = false;
+							}else {
+								document.isChecked=true;
+								ob.addCustomNeedToList(document);
+								var newNeedRow = getNeededDocumentRow(document);								
+								$('.initial-list-doc-wrapper[data-doc-type="'+f_category+'"]').find('.initial-list-doc-container').append(newNeedRow);
+								clearAddNeedForm();
+								if(callback){
+									callback();
+								} 
+							}									   					 
 													
 					}else{
 						showErrorToastMessage(needAlreadyExists);
