@@ -295,7 +295,10 @@ var refinanceCashOut = [{
 //END
 
 
-//Function which loads the contents
+
+/**Entry point to paint the quickquote page
+ * 
+ */
 function loadQuickQoutePage(){
 	ga('set', 'page', '/quick-quote');
 	ga('send', 'pageview');
@@ -329,9 +332,17 @@ function loadQuickQoutePage(){
 	agentDashboardMainContainer.append(wrapper);
 	$('#right-panel').append(agentDashboardMainContainer);
 }
+
+/**
+ * @param buttonId id of button which paint the form
+ */
 function autoClickButton(buttonId){
 	$('#'+buttonId).click();
 }
+
+/**function to paint quote details of a lead
+ * 
+ */
 function editQuoteUser(){
 	isEditPage = true;
 	loadQuickQoutePage();
@@ -345,60 +356,94 @@ function editQuoteUser(){
 	else if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REFCO"){
 		buttonId = 'quick-quote-three-id';
 	}
-	autoClickButton(buttonId);
-	
+	autoClickButton(buttonId);	
+	preAppendQuickQuoteFormFeils(editQuoteUserDetails);	
+	var teaserRateVOTemp = new Array();
+	teaserRateVOTemp[0] = editQuoteUserDetails.teaserRateVO;
+	paintFixYourRatePageCEPUnderQuickQuote(teaserRateVOTemp, editQuoteUserDetails.inputCustmerDetailUnderQuickQuote,$("#ce-refinance-cp"));
+	if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.discountPercent){
+		$("#discount-update-feild-id").val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.discountPercent);
+	}
+}
+
+/**
+ * @param editQuoteUserDetails 
+ * respsone 
+ */
+function preAppendQuickQuoteFormFeils(editQuoteUserDetails){
 	// Added by Ranjitha
 	 $('#firstName').attr('readonly',true).val(editQuoteUserDetails.firstName);
+	 firstName = editQuoteUserDetails.firstName;
 	 $('#lastName').attr('readonly',true).val(editQuoteUserDetails.lastName);
+	 lastName = editQuoteUserDetails.lastName;
 	 $('#emailID').attr('readonly',true).val(editQuoteUserDetails.emailId);
 	 $('#primaryPhoneID').val(editQuoteUserDetails.phoneNo);
 	 $('#primaryPhoneID').mask("(999) 999-9999");
 	 $('#propertyType').attr('value', getHomeOwnersInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType));
+	 $('#propertyType').attr('type',editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType);
 	 $('#residenceType').attr('value',getTaxInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType));
+	 $('#residenceType').attr('type',editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType);
 	 $('#homeWorthToday').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.homeWorthToday));
 	 $('#zipCode').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.zipCode);
 	 $('#currentMortgageBalance').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.currentMortgageBalance));
+	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REFCO"){
+			
+			$('#cashTakeOut').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.cashTakeOut));
+		}
 	 calculateInsuranceValue();
 	 //  TODO
-	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.purchaseDetails.isTaxAndInsuranceInLoanAmt){
+	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.privateincludeTaxes == "Yes"){
 	  $('#quick-quote-yes-container-id').addClass('radio-btn-selected');
+	  $('#quick-quote-yes-container-id').attr('isselected',true);
+	  $('#quick-quote-no-container-id').attr('isselected',false);
+	  $('#impound').attr("value","Yes");
 	 }else {
 	  $('#quick-quote-no-container-id').addClass('radio-btn-selected');
+	  $('#quick-quote-yes-container-id').attr('isselected',false);
+	  $('#quick-quote-no-container-id').attr('isselected',true);
+	  $('#impound').attr("value","No");
 	 }
 	
-	
-	//var parentContainer = '<div class="quick-quote-teaser-rate-container float-left" id="ce-refinance-cp" style="display: none;"></div>';
-	var teaserRateVOTemp = new Array();
-	teaserRateVOTemp[0] = editQuoteUserDetails.teaserRateVO;
-	paintFixYourRatePageCEPUnderQuickQuote(teaserRateVOTemp, editQuoteUserDetails.inputCustmerDetailUnderQuickQuote,$("#ce-refinance-cp"));
 }
 
+/**
+ * @param value is the key
+ * @returns {String}
+ */
 function getTaxInsuranceTextFromValue(value){
- switch(value){
- 
- case "0":
-  return "Primary";
- case "1":
-  return "Second";
- case "2":
-  return "Investment";
-  
- }
-}
-function getHomeOwnersInsuranceTextFromValue(value){
- switch(value){
- 
- case "0":
-  return "Single Family";
- case "1":
-  return "Condo";
- case "2":
-  return "2-4 Units";
-  
- }
+	 switch(value){
+	 
+		 case "0":
+		  return "Primary";
+		 case "1":
+		  return "Second";
+		 case "2":
+		  return "Investment";
+	  
+	 }
 }
 
-/*Entry point for painting quick quote page*/
+/**
+ * @param value is the key
+ * @returns {String}
+ */
+function getHomeOwnersInsuranceTextFromValue(value){
+	 switch(value){
+	 
+		 case "0":
+		  return "Single Family";
+		 case "1":
+		  return "Condo";
+		 case "2":
+		  return "2-4 Units";
+	  
+	 }
+}
+
+
+/**function which paint the button section  
+ * @returns container
+ */
 function getSectionOneOfQuickQuote(){
 	var buttonList = [{
 		"title" : "Purchase",
@@ -429,7 +474,11 @@ function getSectionOneOfQuickQuote(){
 	return mainContainer;
 }
 
-/*Function which paint the loan type buttons*/
+
+/**
+ * @param option is the form with elements based on 
+ * @returns
+ */
 function paintButtonSection(option){
 
 	var button = $('<div>').attr({
@@ -1416,7 +1465,11 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     
     var path = "CEP";
     var yearValues = teaserRate;
-   
+    for(var i=0;i<yearValues.length;i++){
+  	   if(yearValues[i].value == undefined){
+  		  yearValues[i].value = yearValues[i].rateVO[i].yearData; 
+  	   }	   
+     }  
     var rateVO = getLQBObj(yearValues);
     globalChangeContainer.ratVo=rateVO;
      
@@ -1606,7 +1659,11 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
         livingSituation = capitalizeFirstLetter(appUserDetails.purchaseDetails.livingSituation);
     
     var yearValues = teaserRate;
-       
+    for(var i=0;i<yearValues.length;i++){
+ 	   if(yearValues[i].value == undefined){
+ 		  yearValues[i].value = yearValues[i].rateVO[i].yearData; 
+ 	   }	   
+    }   
     var rateVO = getLQBObj(yearValues);
     globalChangeContainer.ratVo=rateVO;
    

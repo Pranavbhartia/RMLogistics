@@ -100,9 +100,11 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     	/*rateArray=rateArray.reverse();*/
     }
     if(appUserDetails.loan.lockStatus!="1"){
-        var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
-        var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
-        container.append(tenureSlider).append(rateSlider);
+    	if(!isEditPage){
+    		var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
+            var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
+            container.append(tenureSlider).append(rateSlider);
+    	}
     }
     return container
 }
