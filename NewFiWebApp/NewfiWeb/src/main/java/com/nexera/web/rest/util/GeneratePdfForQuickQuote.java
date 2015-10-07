@@ -132,7 +132,7 @@ public class GeneratePdfForQuickQuote {
 			PdfPTable foot = new PdfPTable(1);
 			
 			Phrase p = new Phrase();
-			p.add(new Chunk("Newfi dba of Nexera Holding LLC  | NMLS ID "+nmlsId+"  |  ",FontFactory.getFont("Calibri", 6,Font.BOLD)));
+			p.add(new Chunk("Newfi dba of Nexera Holding LLC  | NMLS ID 1231327  |  ",FontFactory.getFont("Calibri", 6,Font.BOLD)));
 			p.add(new Chunk(image, 0, 0));
 			p.add(new Chunk("  Equal Housing Lender",FontFactory.getFont(FontFactory.HELVETICA, 6,Font.BOLD)));
 			
@@ -333,7 +333,7 @@ public class GeneratePdfForQuickQuote {
         imageTable.addCell(cell);
    
         
-        cell = new PdfPCell(new Phrase("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID "+nmlsId,fontWithBigSize));
+        cell = new PdfPCell(new Phrase("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize));
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
