@@ -1134,8 +1134,11 @@ function getClosingCostContainerRowWithSubTextUnderQuickQuote(rowNum, desc, deta
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
-    rwObj.updateTaxesAndInsurances();
-
+    
+    if(!isEditPage){
+    	rwObj.updateTaxesAndInsurances();
+    }
+    
     return row.append(rowDesc).append(rowDetail);
 }
 
@@ -1178,7 +1181,11 @@ function getClosingCostContainerLastRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
-    rwObj.updateTaxesAndInsurances();
+    //rwObj.updateTaxesAndInsurances();
+    
+    if(!isEditPage){
+    	rwObj.updateTaxesAndInsurances();
+    }
     if(key == "totEstimatedClosingCost"){
     	rwObj.updateTotalEstimatedClosingCosts();
     }
@@ -1367,8 +1374,10 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
-    rwObj.updateTaxesAndInsurances();
-    
+    //rwObj.updateTaxesAndInsurances();
+    if(!isEditPage){
+    	rwObj.updateTaxesAndInsurances();
+    }
     if(desc =="Your cost or credit based on rate selected"){
     	return row.append(rowDesc).append(creditPercentValContainer).append(rowDetail);
     }else{
