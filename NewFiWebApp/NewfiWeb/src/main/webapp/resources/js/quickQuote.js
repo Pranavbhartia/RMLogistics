@@ -348,17 +348,18 @@ function editQuoteUser(){
 	autoClickButton(buttonId);
 	
 	// Added by Ranjitha
-	 $('#firstName').val(editQuoteUserDetails.firstName);
-	 $('#lastName').val(editQuoteUserDetails.lastName);
-	 $('#emailID').val(editQuoteUserDetails.emailId);
+	 $('#firstName').attr('readonly',true).val(editQuoteUserDetails.firstName);
+	 $('#lastName').attr('readonly',true).val(editQuoteUserDetails.lastName);
+	 $('#emailID').attr('readonly',true).val(editQuoteUserDetails.emailId);
 	 $('#primaryPhoneID').val(editQuoteUserDetails.phoneNo);
 	 $('#primaryPhoneID').mask("(999) 999-9999");
-	 $('#propertyType').val(getHomeOwnersInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType));
-	 $('#residenceType').val(getTaxInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType));
+	 $('#propertyType').attr('value', getHomeOwnersInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType));
+	 $('#residenceType').attr('value',getTaxInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType));
 	 $('#homeWorthToday').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.homeWorthToday));
 	 $('#zipCode').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.zipCode);
 	 $('#currentMortgageBalance').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.currentMortgageBalance));
 	 calculateInsuranceValue();
+	 //  TODO
 	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.purchaseDetails.isTaxAndInsuranceInLoanAmt){
 	  $('#quick-quote-yes-container-id').addClass('radio-btn-selected');
 	 }else {
@@ -370,8 +371,6 @@ function editQuoteUser(){
 	var teaserRateVOTemp = new Array();
 	teaserRateVOTemp[0] = editQuoteUserDetails.teaserRateVO;
 	paintFixYourRatePageCEPUnderQuickQuote(teaserRateVOTemp, editQuoteUserDetails.inputCustmerDetailUnderQuickQuote,$("#ce-refinance-cp"));
-	
-	
 }
 
 function getTaxInsuranceTextFromValue(value){

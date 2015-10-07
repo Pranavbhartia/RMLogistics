@@ -1486,7 +1486,15 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
     var container = $('<div>').attr({
         "class": "silder-cont yr-slider float-left"
     });
-    var yearValues = LQBResponse;
+    
+    var yearValues;
+    if(isEditPage){
+ 	   yearValues = modifiedLQBJsonResponse(LQBResponse);
+    }
+    else{
+ 	   yearValues = LQBResponse; 
+    }
+    
 
     for (var i = 0; i < yearValues.length; i++) {
         var leftOffset = i / (yearValues.length - 1) * 100;
