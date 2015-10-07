@@ -103,6 +103,7 @@ public class GeneratePdfForQuickQuote {
     private Document document;
     private PdfWriter writer;
     private static String basePath;
+    private static String nmlsId;
     public GeneratePdfForQuickQuote() {
     }
 
@@ -297,18 +298,22 @@ public class GeneratePdfForQuickQuote {
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
         String phoneNumber = user.getPhoneNumber();
+
        // String nmlsId = user.get
+
         if (firstName == null)
         	firstName = "N/A";
         if (lastName == null)
         	lastName = "N/A";
+        
+       
       
         if (phoneNumber == null)
         	phoneNumber = "N/A";
         else
         	phoneNumber = phoneNumberFormating(phoneNumber);
         cell = new PdfPCell();
-        cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID 123456\n"+phoneNumber, fontWithBigSize));
+        cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID "+nmlsId+"\n"+phoneNumber, fontWithBigSize));
 
         Paragraph para= new Paragraph();
         Anchor anchor = new Anchor(user.getEmailId(), emailIdFont);
@@ -389,11 +394,19 @@ public class GeneratePdfForQuickQuote {
         cell = new PdfPCell(new Phrase("Loan Summary", boldFont));
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.TOP);
         cell.setColspan(2);
-        cell.setPaddingTop(4);
-        cell.setPaddingBottom(4);
+        //cell.setPaddingTop(4);
+       // cell.setPaddingBottom(4);
         cell.setBackgroundColor(lightBlueHeading);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setVerticalAlignment(Element.ALIGN_CENTER);
+       // cell.setVerticalAlignment(Element.ALIGN_CENTER);
         firstTable.addCell(cell);
     
 //        cell = new PdfPCell(new Phrase("\n"));
@@ -572,7 +585,7 @@ public class GeneratePdfForQuickQuote {
         //String rateAndApr = generatePdfVO.getRateAndApr();
         String teaserRate = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTeaserRate();
         String APR = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getAPR();
-        String rateAndApr = teaserRate+" % / "+APR+" %";
+        String rateAndApr = teaserRate+"% / "+APR+"%";
         
         cell = new PdfPCell(new Phrase(rateAndApr,font));
         cell.setBorder(Rectangle.RIGHT);
@@ -615,13 +628,21 @@ public class GeneratePdfForQuickQuote {
         
         cell = new PdfPCell(new Phrase("Estimated Cash from / to Borrower", boldFont));
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.TOP);
+        //cell.setColspan(2);
         cell.setColspan(2);
-        cell.setColspan(2);
-        cell.setPaddingTop(4);
-        cell.setPaddingBottom(4);
+      //  cell.setPaddingTop(4);
+     //   cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setBackgroundColor(lightBlueHeading);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setVerticalAlignment(Element.ALIGN_CENTER);
+      //  cell.setVerticalAlignment(Element.ALIGN_CENTER);
         GeneratePdfForQuickQuote app1 = new GeneratePdfForQuickQuote();
 
         seventhTable.addCell(cell);
@@ -866,8 +887,21 @@ public class GeneratePdfForQuickQuote {
         	cell = new PdfPCell(new Phrase("  "+"Cash to Borrower",font));
         }
         	
-        cell.setPaddingTop(5f);
-        cell.setBorder(Rectangle.LEFT);
+       // cell.setPaddingTop(5f);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
+        if(showPrepaidComment){
+            cell.setBorder(Rectangle.LEFT);
+        }
+        else{
+        	cell.setBorder(Rectangle.LEFT |Rectangle.BOTTOM);
+        }
         seventhTable.addCell(cell);
         
         if(!newLoanBalancePrice.contains("$"))
@@ -895,8 +929,20 @@ public class GeneratePdfForQuickQuote {
         }
    
         cell = new PdfPCell(new Phrase(cashFromToBorrower,font));
-        cell.setPaddingTop(5f);
+       // cell.setPaddingTop(5f);
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        if(showPrepaidComment){
         cell.setBorder(Rectangle.RIGHT);
+        }
+        else{
+        	cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
+        }
+        
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         seventhTable.addCell(cell);
         
@@ -904,14 +950,22 @@ public class GeneratePdfForQuickQuote {
         
    
         if(showPrepaidComment){
-    	cell = new PdfPCell(new Phrase("\n"));
-        cell.setColspan(2);
-        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
-        seventhTable.addCell(cell);	
+//    	cell = new PdfPCell(new Phrase("\n"));
+//        cell.setColspan(2);
+//        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+//        seventhTable.addCell(cell);	
         	
         cell = new PdfPCell(new Phrase("  *A credit of "+prepaidCost+" was applied against the "+prepaidAgainstNumber +" in prepaids.",font));
-        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
+      //  cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         cell.setColspan(2);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.BOTTOM);
         seventhTable.addCell(cell);
         }
         
@@ -922,10 +976,10 @@ public class GeneratePdfForQuickQuote {
 //        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
 //        seventhTable.addCell(cell);
         
-        cell = new PdfPCell(new Phrase(""));
-        cell.setColspan(2);
-        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.BOTTOM);
-        seventhTable.addCell(cell);
+//        cell = new PdfPCell(new Phrase(""));
+//        cell.setColspan(2);
+//        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT | Rectangle.BOTTOM);
+//        seventhTable.addCell(cell);
      
         firstTableCell.addElement(firstTable);
         firstTableCell.addElement(Chunk.NEWLINE);
@@ -954,10 +1008,18 @@ public class GeneratePdfForQuickQuote {
         cell = new PdfPCell(new Phrase("Estimated Lender Costs", boldFont));
         BaseColor lightBlue = WebColors.getRGBColor("#EEF7F7");
         cell.setBorder(Rectangle.TOP | Rectangle.LEFT | Rectangle.RIGHT);
-        cell.setPaddingTop(4);
-        cell.setPaddingBottom(4);
+     //   cell.setPaddingTop(4);
+      //  cell.setPaddingBottom(4);
         cell.setBackgroundColor(lightBlue);
         cell.setColspan(2);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(1);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         GeneratePdfForQuickQuote app = new GeneratePdfForQuickQuote();
         CustomCell border = app.new CustomCell();       
         cell.setCellEvent(border);
@@ -1011,8 +1073,16 @@ public class GeneratePdfForQuickQuote {
         secondTable.addCell(cell);
         
         cell = new PdfPCell(new Phrase("Total Estimated Lender Costs",font));
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
+      //  cell.setPaddingTop(4); 
+      //  cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setBorder(Rectangle.BOTTOM | Rectangle.LEFT);
        // cell.setBackgroundColor(lightBlue);
         secondTable.addCell(cell);
@@ -1048,7 +1118,15 @@ public class GeneratePdfForQuickQuote {
         	
         }
         
-        cell.setPaddingTop(4); cell.setPaddingBottom(4);
+     //   cell.setPaddingTop(4); cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
        // cell.setBackgroundColor(lightBlue);
         cell.setBorder(Rectangle.BOTTOM | Rectangle.RIGHT);
@@ -1080,11 +1158,19 @@ public class GeneratePdfForQuickQuote {
       
         cell = new PdfPCell(new Phrase("Estimated Third Party Costs", boldFont));
         cell.setBorder(Rectangle.RIGHT | Rectangle.LEFT | Rectangle.TOP);
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
+        //cell.setPaddingTop(4); 
+       // cell.setPaddingBottom(4);
      
         cell.setBackgroundColor(lightBlue); 
         cell.setColspan(2);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         CustomCell borderET = app.new CustomCell();       
         cell.setCellEvent(borderET);
         thirdTable.addCell(cell);
@@ -1269,16 +1355,32 @@ public class GeneratePdfForQuickQuote {
         thirdTable.addCell(cell);
         
         cell = new PdfPCell(new Phrase("Total Estimated Third Party Costs",font));
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
+      //  cell.setPaddingTop(4); 
+     //   cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM );
        // cell.setBackgroundColor(lightBlue); 
         thirdTable.addCell(cell);
         
     //    String totEstThdPtyCst = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstThdPtyCst();
         cell = new PdfPCell(new Phrase(totEstThdPtyCst,font));
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
+      //  cell.setPaddingTop(4); 
+      //  cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
      //   cell.setBackgroundColor(lightBlue);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM);
@@ -1309,7 +1411,15 @@ public class GeneratePdfForQuickQuote {
         fourthTable.setWidthPercentage(100.0f);
    
         cell = new PdfPCell(new Phrase("Total Estimated Closing Costs", boldFont));
-        cell.setPaddingTop(4); cell.setPaddingBottom(4);
+    //    cell.setPaddingTop(4); cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM | Rectangle.TOP);
         cell.setBackgroundColor(lightBlue); 
         fourthTable.addCell(cell);
@@ -1359,7 +1469,15 @@ public class GeneratePdfForQuickQuote {
 //        	cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost), font));
 //        else
     //    cell = new PdfPCell(new Phrase(addDollarAndComma(totEstimatedClosingCost), font));
-        cell.setPaddingTop(4); cell.setPaddingBottom(4);
+        //cell.setPaddingTop(4); cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM | Rectangle.TOP);
         cell.setBackgroundColor(lightBlue); 
@@ -1390,9 +1508,17 @@ public class GeneratePdfForQuickQuote {
         if(impounds.equals("No")){
         cell = new PdfPCell(new Phrase("Estimated Prepaids", boldFont));
         cell.setBorder(Rectangle.RIGHT | Rectangle.LEFT | Rectangle.TOP);
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
+       // cell.setPaddingTop(4); 
+       // cell.setPaddingBottom(4);
         cell.setBackgroundColor(lightBlue); 
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setColspan(2);
         CustomCell borderFT = app.new CustomCell();       
         cell.setCellEvent(borderFT);
@@ -1485,16 +1611,32 @@ public class GeneratePdfForQuickQuote {
         fifthTable.addCell(cell);
         
         cell = new PdfPCell(new Phrase("Total Estimated Prepaids",font));
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
+    //    cell.setPaddingTop(4); 
+   //    cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM);
       // cell.setBackgroundColor(lightBlue); 
         fifthTable.addCell(cell);
         
       //  String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
         cell = new PdfPCell(new Phrase(totEstResDepWthLen,font));
-        cell.setPaddingTop(4); 
-        cell.setPaddingBottom(4);
+  //      cell.setPaddingTop(4); 
+      //  cell.setPaddingBottom(4);
+        
+        cell.setUseAscender(true);
+        cell.setUseDescender(false);
+        cell.setPadding(2);
+        cell.setPaddingTop(0);
+        cell.setFixedHeight(16f);
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         cell.setBackgroundColor(lightBlue); 
         cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM );
@@ -1503,10 +1645,18 @@ public class GeneratePdfForQuickQuote {
         else{
         	cell = new PdfPCell(new Phrase("Estimated Prepaids", boldFont));
             cell.setBorder(Rectangle.RIGHT | Rectangle.LEFT | Rectangle.TOP);
-            cell.setPaddingTop(4); 
-            cell.setPaddingBottom(4);
+           // cell.setPaddingTop(4); 
+            //cell.setPaddingBottom(4);
             cell.setBackgroundColor(lightBlue); 
             cell.setColspan(2);
+            
+            cell.setUseAscender(true);
+            cell.setUseDescender(false);
+            cell.setPadding(2);
+            cell.setPaddingTop(0);
+            cell.setFixedHeight(16f);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
             CustomCell borderFT = app.new CustomCell();       
             cell.setCellEvent(borderFT);
             fifthTable.addCell(cell);
@@ -1598,8 +1748,16 @@ public class GeneratePdfForQuickQuote {
             fifthTable.addCell(cell);
             
             cell = new PdfPCell(new Phrase("Total Estimated Prepaids",font));
-            cell.setPaddingTop(4); 
-            cell.setPaddingBottom(4);
+           // cell.setPaddingTop(4); 
+          //  cell.setPaddingBottom(4);
+            
+            cell.setUseAscender(true);
+            cell.setUseDescender(false);
+            cell.setPadding(2);
+            cell.setPaddingTop(0);
+            cell.setFixedHeight(16f);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
             cell.setBorder(Rectangle.LEFT | Rectangle.BOTTOM );
        //     cell.setBackgroundColor(lightBlue); 
             fifthTable.addCell(cell);
@@ -1667,17 +1825,24 @@ public class GeneratePdfForQuickQuote {
       }
     public String sendPurchasePdf(GeneratePdfVO generatePdfVO, HttpServletRequest request)
     {
-    	ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-    	openPdf(byteArrayOutputStream);
     	String s3Path = "";
-    	basePath = request.getRealPath("/");
     	try {
-    		    UserVO user = userProfileService.findUser(generatePdfVO.getUserId());
-    		    generatePdf(generatePdfVO, request, byteArrayOutputStream,user);
-    		    closePdf();
-    		    s3Path = writeAndUploadFile(byteArrayOutputStream);
-    			sendPurchasePdfEmail(user,byteArrayOutputStream,generatePdfVO );
-    			//byteArrayOutputStream.close();
+	    	UserVO user = userProfileService.findUser(generatePdfVO.getUserId());
+	    	nmlsId = user.getInternalUserDetail().getNmlsID();
+	    	if(nmlsId == null){
+	    		nmlsId = "N/A";
+	    	}
+	    	ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	    	openPdf(byteArrayOutputStream);
+	    	
+	    	basePath = request.getRealPath("/");
+	
+		    //UserVO user = userProfileService.findUser(generatePdfVO.getUserId());
+		    generatePdf(generatePdfVO, request, byteArrayOutputStream,user);
+		    closePdf();
+		    s3Path = writeAndUploadFile(byteArrayOutputStream);
+			sendPurchasePdfEmail(user,byteArrayOutputStream,generatePdfVO );
+			//byteArrayOutputStream.close();
  
     	} catch (Exception ex) {
     		LOGGER.error("Error in generating purchase pdf under quick quote:", ex);
