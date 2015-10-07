@@ -11,7 +11,7 @@ var PURCHASE = "PUR";
 var REFINANACE = "REF";
 var REFINANACE_LOWER_MORTGAGE_PAYMENT = "REFLMP";
 var REFINANACE_CASH_OUT = "REFCO";
-var isEditPage = true;
+var isEditPage = false;
 var firstName;
 var lastName;
 
@@ -333,6 +333,7 @@ function autoClickButton(buttonId){
 	$('#'+buttonId).click();
 }
 function editQuoteUser(){
+	isEditPage = true;
 	loadQuickQoutePage();
 	var buttonId;
 	if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR"){
@@ -346,20 +347,56 @@ function editQuoteUser(){
 	}
 	autoClickButton(buttonId);
 	
-	$('#firstName').val(editQuoteUserDetails.firstName);
-	$('#lastName').val(editQuoteUserDetails.lastName);
-	$('#emailID').val(editQuoteUserDetails.emailId);
-	$('#primaryPhoneID').val(editQuoteUserDetails.phoneNo);
-	$('#propertyType').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType);
-	$('#residenceType').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType);
-	$('#homeWorthToday').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.homeWorthToday);
+	// Added by Ranjitha
+	 $('#firstName').val(editQuoteUserDetails.firstName);
+	 $('#lastName').val(editQuoteUserDetails.lastName);
+	 $('#emailID').val(editQuoteUserDetails.emailId);
+	 $('#primaryPhoneID').val(editQuoteUserDetails.phoneNo);
+	 $('#primaryPhoneID').mask("(999) 999-9999");
+	 $('#propertyType').val(getHomeOwnersInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType));
+	 $('#residenceType').val(getTaxInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType));
+	 $('#homeWorthToday').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.homeWorthToday));
+	 $('#zipCode').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.zipCode);
+	 $('#currentMortgageBalance').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.currentMortgageBalance));
+	 calculateInsuranceValue();
+	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.purchaseDetails.isTaxAndInsuranceInLoanAmt){
+	  $('#quick-quote-yes-container-id').addClass('radio-btn-selected');
+	 }else {
+	  $('#quick-quote-no-container-id').addClass('radio-btn-selected');
+	 }
 	
 	
 	//var parentContainer = '<div class="quick-quote-teaser-rate-container float-left" id="ce-refinance-cp" style="display: none;"></div>';
+	var teaserRateVOTemp = new Array();
+	teaserRateVOTemp[0] = editQuoteUserDetails.teaserRateVO;
+	paintFixYourRatePageCEPUnderQuickQuote(teaserRateVOTemp, editQuoteUserDetails.inputCustmerDetailUnderQuickQuote,$("#ce-refinance-cp"));
 	
-	paintFixYourRatePageCEPUnderQuickQuote(editQuoteUserDetails.teaserRateVO, editQuoteUserDetails.inputCustmerDetailUnderQuickQuote,$("#ce-refinance-cp"));
 	
-	
+}
+
+function getTaxInsuranceTextFromValue(value){
+ switch(value){
+ 
+ case "0":
+  return "Primary";
+ case "1":
+  return "Second";
+ case "2":
+  return "Investment";
+  
+ }
+}
+function getHomeOwnersInsuranceTextFromValue(value){
+ switch(value){
+ 
+ case "0":
+  return "Single Family";
+ case "1":
+  return "Condo";
+ case "2":
+  return "2-4 Units";
+  
+ }
 }
 
 /*Entry point for painting quick quote page*/
@@ -461,6 +498,7 @@ function paintDataSection(option,isDefault){
 		"class" : "cep-button-color quick-qoute-btn clearfix ",
 		"id" : "quick-qoute-btn-id"
 	}).html("Get Quote").on('click', function(){
+		isEditPage = false;
 		var loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
 		var refinanceType = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
 		var status = validateForm(loanType,refinanceType);

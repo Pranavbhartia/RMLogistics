@@ -1340,10 +1340,9 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
     var headerTxt = $('<div>').attr({
         "class": "slider-hdr-txt float-left"
     }).html(text);
-    var yearValues = new Array();
+    var yearValues;
    if(isEditPage){
-	   yearValues[0] = editQuoteUserDetails.teaserRateVO;
-	   yearValues = modifiedLQBJsonResponse(yearValues);
+	   yearValues = modifiedLQBJsonResponse(LQBResponse);
    }
    else{
 	   yearValues = LQBResponse; 
