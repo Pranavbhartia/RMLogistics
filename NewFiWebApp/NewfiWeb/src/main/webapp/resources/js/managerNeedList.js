@@ -140,7 +140,7 @@ function getLoanNeedsManagerContext(loanId){
 					if(!ob.needLookup[exist.title]){
 							var document = exist;
 							var needData = $('.initial-list-doc-wrapper[data-doc-type="'+f_category+'"]').find('.initial-list-doc-container').find('.initial-list-doc-row').has(".doc-checkbox[needid="+document.needType+"]");
-							if(needData){
+							if(needData.length == 1){
 								showErrorToastMessage(needAlreadyExists);
 								isExistInCustomList = false;
 							}else {
