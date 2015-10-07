@@ -297,6 +297,7 @@ public class GeneratePdfForQuickQuote {
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
         String phoneNumber = user.getPhoneNumber();
+       // String nmlsId = user.get
         if (firstName == null)
         	firstName = "N/A";
         if (lastName == null)
