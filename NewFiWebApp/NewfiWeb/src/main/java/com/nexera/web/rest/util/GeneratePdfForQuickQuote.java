@@ -311,8 +311,11 @@ public class GeneratePdfForQuickQuote {
         else
         	phoneNumber = phoneNumberFormating(phoneNumber);
         cell = new PdfPCell();
-        cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID "+nmlsId+"\n"+phoneNumber, fontWithBigSize));
-
+        Chunk chunk = new Chunk(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID "+nmlsId+"\n"+phoneNumber, fontWithBigSize);
+        Phrase phrase = new Phrase(12);
+        phrase.add(chunk);
+        //cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID "+nmlsId+"\n"+phoneNumber, fontWithBigSize));
+        cell.addElement(phrase);
         Paragraph para= new Paragraph();
         Anchor anchor = new Anchor(user.getEmailId(), emailIdFont);
         anchor.setReference("mailto:"+user.getEmailId());
@@ -325,7 +328,7 @@ public class GeneratePdfForQuickQuote {
         String todaysDate = fmt.format(new Date());
         String customerFirstName = generatePdfVO.getFirstName();
         String customerLastName = generatePdfVO.getLastName();
-        cell = new PdfPCell(new Phrase("Loan Summary Prepared for "+customerFirstName+" "+customerLastName+"\n\n    "+todaysDate,boldFontWithBigSize));
+        cell = new PdfPCell(new Phrase("\nLoan Summary Prepared for "+customerFirstName+" "+customerLastName+"\n\n    "+todaysDate,boldFontWithBigSize));
          
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_CENTER);
@@ -333,7 +336,12 @@ public class GeneratePdfForQuickQuote {
         imageTable.addCell(cell);
    
         
-        cell = new PdfPCell(new Phrase("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize));
+   //     cell = new PdfPCell(new Phrase("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize));
+        cell = new PdfPCell();
+        chunk = new Chunk("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize);
+        phrase  = new Phrase(12);
+        phrase.add(chunk);
+        cell.addElement(phrase);
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
@@ -952,7 +960,9 @@ public class GeneratePdfForQuickQuote {
 //        cell.setColspan(2);
 //        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
 //        seventhTable.addCell(cell);	
-        	
+        if(!prepaidCost.contains("$")){
+        	prepaidCost = addDollarAndComma(prepaidCost);
+        }
         cell = new PdfPCell(new Phrase("  *A credit of "+prepaidCost+" was applied against the "+prepaidAgainstNumber +" in prepaids.",font));
       //  cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         cell.setColspan(2);
@@ -1801,7 +1811,7 @@ public class GeneratePdfForQuickQuote {
                 + "apply, your rate at closing may differ from the rate in effect when you applied. Subject to underwriting approval. Not all applicants will be approved, Full "
                 + "documentation & property insurance required. Loan secured by a lien against your poperty. Consolidating or refinancing debts may increase the time and/or the finance "
                 + "charges/total loan amount needed to repay your debt. Terms, conditions & restrictions apply."
-                + "\nCall newfi for details at 888-316-3934.",footerFont));
+                + "Call newfi for details at 888-316-3934.",footerFont));
         
     }
     
