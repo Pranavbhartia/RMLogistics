@@ -872,7 +872,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         seventhTable.addCell(cell);
@@ -1065,7 +1065,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         secondTable.addCell(cell);
@@ -1313,7 +1313,13 @@ public class GeneratePdfForQuickQuote {
         thirdTable.addCell(cell);
         
         String recordingFees1201 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getRecordingFees1201();
-        cell = new PdfPCell(new Phrase(recordingFees1201,font));
+        if(!recordingFees1201.contains("$")){
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(recordingFees1201),font));
+        }
+        else{
+        	cell = new PdfPCell(new Phrase(recordingFees1201,font));
+        }
+        
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -1347,7 +1353,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         thirdTable.addCell(cell);
@@ -1603,7 +1609,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         fifthTable.addCell(cell);
@@ -1696,8 +1702,9 @@ public class GeneratePdfForQuickQuote {
 //            cell.setBorder(Rectangle.RIGHT);
 //            fifthTable.addCell(cell);
             
-            cell = new PdfPCell();
-            cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
+            //cell = new PdfPCell();
+            cell = new PdfPCell(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
+            //cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
          //   cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
             cell.setPaddingTop(4);
             cell.setPaddingBottom(4);
@@ -1716,8 +1723,8 @@ public class GeneratePdfForQuickQuote {
             cell.setBorder(Rectangle.RIGHT);
             fifthTable.addCell(cell);
             
-            cell = new PdfPCell();
-            cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 6 Months",font));
+            cell = new PdfPCell(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 6 Months",font));
+           // cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 6 Months",font));
 //            cell.addElement(new Phrase("  "+"Provided you have 6 months of remaining coverage",font));
 //            cell.addElement(new Phrase("  "+"Note: Taxes for 1st and 2nd installments must be paid or",font));
 //            cell.addElement(new Phrase("  "+"will be collected at closing.",font));
@@ -1740,7 +1747,7 @@ public class GeneratePdfForQuickQuote {
             cell.setUseDescender(false);
             cell.setPadding(2);
             cell.setPaddingTop(0);
-            cell.setFixedHeight(8f);
+            cell.setFixedHeight(5f);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
             fifthTable.addCell(cell);
@@ -1762,8 +1769,16 @@ public class GeneratePdfForQuickQuote {
             
           //  String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
             cell = new PdfPCell(new Phrase(totEstResDepWthLen,font));
-            cell.setPaddingTop(4); 
-            cell.setPaddingBottom(4);
+           // cell.setPaddingTop(4); 
+            //cell.setPaddingBottom(4);
+            
+            cell.setUseAscender(true);
+            cell.setUseDescender(false);
+            cell.setPadding(2);
+            cell.setPaddingTop(0);
+            cell.setFixedHeight(16f);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
            // cell.setBackgroundColor(lightBlue); 
             cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM );
