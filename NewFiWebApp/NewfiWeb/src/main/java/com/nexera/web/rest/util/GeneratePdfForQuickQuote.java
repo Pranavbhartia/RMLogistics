@@ -576,13 +576,31 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         firstTable.addCell(cell);
        
-        cell = new PdfPCell(new Phrase("  "+"Loan Program",font));
+//        cell = new PdfPCell(new Phrase("  "+"Loan Program",font));
+//        cell.setBorder(Rectangle.LEFT);
+//        firstTable.addCell(cell);
+//        cell = new PdfPCell(new Phrase(loanProgram,font));
+//        cell.setBorder(Rectangle.RIGHT);
+//        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+//        firstTable.addCell(cell);
+        
+        
+        cell = new PdfPCell(new Phrase("  "+"Estimated Monthly Payment",font));
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
-        cell = new PdfPCell(new Phrase(loanProgram,font));
+        
+        
+        String principalInterest = generatePdfVO.getPrincipalInterest();
+        if(principalInterest != null && !principalInterest.contains("$")){
+        	principalInterest = addDollarAndComma(principalInterest);
+        } 
+
+        
+        cell = new PdfPCell(new Phrase(principalInterest,font));
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
+        
         
         cell = new PdfPCell(new Phrase("  "+"Interest Rate / APR",font));
         cell.setBorder(Rectangle.LEFT);
@@ -597,6 +615,8 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
+        
+        
         cell = new PdfPCell(new Phrase("  "+"Loan term - months",font));
         cell.setBorder(Rectangle.LEFT );
         firstTable.addCell(cell);
