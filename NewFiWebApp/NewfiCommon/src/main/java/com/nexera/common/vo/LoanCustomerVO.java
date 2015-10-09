@@ -24,21 +24,20 @@ public class LoanCustomerVO {
 	private String lqbLoanStatus;
 	private List<AlertListVO> alerts;
 	private List<NotesVO> notes;
-	
-	
+		
 	private String firstName;
 	private String lastName;
 	private String emailId;
 	private String carrierInfo;
 	private Boolean mobileAlertsPreference;
 	private CustomerDetailVO customerDetail;
-	private String userLastLoginTime;
+	private Date userLastLoginTime;
 
-	public String getUserLastLoginTime() {
+	public Date getUserLastLoginTime() {
 		return userLastLoginTime;
 	}
 
-	public void setUserLastLoginTime(String userLastLoginTime) {
+	public void setUserLastLoginTime(Date userLastLoginTime) {
 		this.userLastLoginTime = userLastLoginTime;
 	}
 

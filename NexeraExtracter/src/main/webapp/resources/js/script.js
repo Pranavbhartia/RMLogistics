@@ -112,10 +112,10 @@ Date.prototype.format = function (mask, utc) {
     return dateFormat(this, mask, utc);
 };
 function paintRatesTablePage(data) {
-	/*currentFolderTime = data.folderTimeStamp;*/
-	/*var folderDate = new Date(currentFolderTime);*/
-	currentFolderTime = data.folderTSDtFormat;
-	$("#folderCurrentTimeStamp").html(dateFormat(currentFolderTime, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
+	currentFolderTime = data.folderTimeStamp;
+	var folderDate = new Date(currentFolderTime);
+	/*currentFolderTime = data.folderTSDtFormat;*/
+	$("#folderCurrentTimeStamp").html(dateFormat(folderDate, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
 
 	tableData = data.fileDetailList;
 	console.info(data.fileName);
@@ -139,8 +139,8 @@ function paintRatesTablePage(data) {
 	appendOlympicPiggyBackARMTableWrapper(wrapper);
 	appendMAMMOTHTableWrapper(wrapper);
 	appendCASCADESTableWrapper(wrapper);
-	/*appendFHLMCConventionalFIXEDWrapper(wrapper);
-	appendFHLMCConventionalARMTableWrapper(wrapper);*/
+	//appendFHLMCConventionalFIXEDWrapper(wrapper);
+	//appendFHLMCConventionalARMTableWrapper(wrapper);
 	/*
 	 * $('.rate-table-wrapper').masonry({ itemSelector:
 	 * '.rate-table-wrapper-cont'

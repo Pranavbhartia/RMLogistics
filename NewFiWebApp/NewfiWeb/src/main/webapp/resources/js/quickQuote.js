@@ -99,6 +99,11 @@ var purchaseType = [{
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly"
+},{
+	question : "Credit Score",
+	id : "creditScoreId",
+	type: "creditScore",
+	column : 0
 }];
 
 //JSON for refinanace lower monthly payment
@@ -184,6 +189,11 @@ var refinanceLowerMonthlyPayment = [{
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly"
+},{
+	question : "Credit Score",
+	id : "creditScoreId",
+	type: "creditScore",
+	column : 0
 }];
 
 //JSON for refinanace cashout
@@ -273,6 +283,11 @@ var refinanceCashOut = [{
 	column : 1,
 	type : "month/year",
 	monthYearId : "propInsMonthlyOryearly"
+},{
+	question : "Credit Score",
+	id : "creditScoreId",
+	type: "creditScore",
+	column : 0
 }];
 
 //END
@@ -482,6 +497,8 @@ function paintDataSection(option,isDefault){
 				
 			}else if(option[i].type == "percentage"){
 				rowRHS = appendDownPaymentFeild(option[i]);
+			}else if(option[i].type == "creditScore"){
+				rowRHS = appendCreditScoreFeild(option[i]);
 			}else {
 				
 				rowRHS = $('<input>').attr({
@@ -523,7 +540,24 @@ function paintDataSection(option,isDefault){
 		
 	}
 }
-
+function appendCreditScoreFeild(option){
+	
+	var div = $('<input>').attr({
+		"class" : "quick-quote-row-RHS float-left",
+		"value" : "740",
+		"id" : option.id,
+		"name" : option.id
+	}).on("keypress", function(e){
+		restrictChar(option.id);
+		if($(this).val().length > 2){
+			return false;
+		}
+		$(this).attr({
+			"value": $(this).val()
+		});
+	});
+	return div;
+}
 
 /*Function which paint the question with dropdown type*/
 function appendDropdown(options){
@@ -1153,10 +1187,14 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     	//NEXNF-622
     	 row.addClass("closing-cost-cont-desc-row-even");
     }
+    var adjustmentClass = "";
+    if(desc =="Your cost or credit based on rate selected"){
+    	adjustmentClass = "closing-cost-credit-adj";
+    }
     var rowDesc="";
     if(indentTextFlag){
     	 rowDesc = $('<div>').attr({
-            "class": "closing-cost-desc eng-indent float-left"
+            "class": "closing-cost-desc eng-indent float-left "+adjustmentClass
         }).html(desc);
     }else{
     	 rowDesc = $('<div>').attr({
@@ -1167,6 +1205,33 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
    /* var rowDesc = $('<div>').attr({
         "class": "closing-cost-desc float-left"
     }).html(desc);*/
+    var creditPercentValContainer = $('<div>').attr({
+        "class": "discount-update-container"
+    });
+    
+    var creditUpdateBtn = $('<div>').attr({
+        "class": "cep-button-color  discount-update-btn float-left",
+        "id" : "discount-update-btn-id"
+    }).html("Discount").bind("click",function(){
+    	
+    });
+    
+    var emptyDiv =  $('<div>').attr({
+        
+    });
+    var creditUpdateFeild = $('<input>').attr({
+        "class": "discount-update-feild float-left",
+        "id" : "discount-update-feild-id",
+        "name" : "discount-update-feild"
+    }).bind("load focus",function(){
+    	restrictChar("discount-update-feild");
+    	
+    });
+    
+    
+    emptyDiv.append(creditUpdateFeild);
+    creditPercentValContainer.append(creditUpdateBtn).append(emptyDiv);
+    
     var rowDetail = $('<div>').attr({
         "class": "closing-cost-detail float-left"
     }).html(detail);
@@ -1176,7 +1241,12 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     rwObj.updateDataForPDF();
     rwObj.updateTaxesAndInsurances();
     
-    return row.append(rowDesc).append(rowDetail);
+    if(desc =="Your cost or credit based on rate selected"){
+    	return row.append(rowDesc).append(creditPercentValContainer).append(rowDetail);
+    }else{
+    	return row.append(rowDesc).append(rowDetail);
+    }
+    
 }
 
 
@@ -1914,22 +1984,24 @@ $('body').on('keyup','#currentMortgageBalance',function(e) {
 });
 
 $('body').on('keyup','#homeWorthToday',function(e) {    
-    calculateInsuranceValue();
-    updateDownPayment($('#homeWorthToday').val(),$('#currentMortgageBalance').val(),$('.quick-quote-dwn-percentage').val());
+    	calculateInsuranceValue();
+    	 if($('#quick-quote-loan-type-id').attr('loan-type') == PURCHASE ){
+    		 updateDownPayment($('#homeWorthToday').val(),$('#currentMortgageBalance').val(),$('.quick-quote-dwn-percentage').val());
+    	 }
+    	
 
-});
+ });
 function updateDownPayment(purchaseVal,downpayment,percentage){
-   if(purchaseVal&&getFloatValue(purchaseVal)!=0){
-       purchaseVal=getFloatValue(purchaseVal);
-       if(downpayment != "" && percentage != ""){
-        downpayment = (purchaseVal*percentage)/100;
-           $('#currentMortgageBalance').val(showValue(downpayment,false));
-           $('#currentMortgageBalance').attr({
-      "value": showValue(downpayment,false)
-     });
-       }
-       
-       
-   }
-
+    if(purchaseVal&&getFloatValue(purchaseVal)!=0){
+        purchaseVal=getFloatValue(purchaseVal);
+        if(downpayment != "" && percentage != ""){
+        	downpayment = (purchaseVal*percentage)/100;
+            $('#currentMortgageBalance').val(showValue(downpayment,false));
+            $('#currentMortgageBalance').attr({
+    			"value": showValue(downpayment,false)
+    		});
+        }
+        
+        
+    }
 }
