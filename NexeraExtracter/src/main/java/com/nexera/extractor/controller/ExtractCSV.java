@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -18,6 +19,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,10 +44,10 @@ public class ExtractCSV {
 		return mav;
 	}
 
-	@RequestMapping(value = "/downloadXLS")
+	@RequestMapping(value = "/downloadXLS/{timezone}")
 	public void downloadXLSFile(HttpServletRequest request,
-	        HttpServletResponse response) {
-		File file = createXLSFile();
+	        HttpServletResponse response,@PathVariable String timezone) {
+		File file = createXLSFile(timezone);
 		OutputStream outStream = null;
 		InputStream is = null;
 		InputStream in = null;
@@ -104,7 +106,7 @@ public class ExtractCSV {
 
 	}
 
-	public File createXLSFile() {
+	public File createXLSFile(String timezone) {
 
 		FileOutputStream out = null;
 		File file = null;
@@ -116,7 +118,9 @@ public class ExtractCSV {
 		Long folderLastModfied = folder.lastModified();
 
 		// utility.writeResponseDataSetToSheet(sheet, restResponse);
-		workbook = utility.buildUIComponent(list, folderLastModfied, workbook);
+		workbook = utility.buildUIComponent(list, folderLastModfied, workbook,timezone);
+		
+		
 		try {
 			/*
 			 * file = new File(tomcatDirectoryPath() +
