@@ -311,8 +311,11 @@ public class GeneratePdfForQuickQuote {
         else
         	phoneNumber = phoneNumberFormating(phoneNumber);
         cell = new PdfPCell();
-        cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID "+nmlsId+"\n"+phoneNumber, fontWithBigSize));
-
+        Chunk chunk = new Chunk(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID "+nmlsId+"\n"+phoneNumber, fontWithBigSize);
+        Phrase phrase = new Phrase(12);
+        phrase.add(chunk);
+        //cell.addElement(new Phrase(firstName+" "+lastName+"\nSenior Loan Advisor\nNMLS ID "+nmlsId+"\n"+phoneNumber, fontWithBigSize));
+        cell.addElement(phrase);
         Paragraph para= new Paragraph();
         Anchor anchor = new Anchor(user.getEmailId(), emailIdFont);
         anchor.setReference("mailto:"+user.getEmailId());
@@ -325,7 +328,7 @@ public class GeneratePdfForQuickQuote {
         String todaysDate = fmt.format(new Date());
         String customerFirstName = generatePdfVO.getFirstName();
         String customerLastName = generatePdfVO.getLastName();
-        cell = new PdfPCell(new Phrase("Loan Summary Prepared for "+customerFirstName+" "+customerLastName+"\n\n    "+todaysDate,boldFontWithBigSize));
+        cell = new PdfPCell(new Phrase("\nLoan Summary Prepared for "+customerFirstName+" "+customerLastName+"\n\n    "+todaysDate,boldFontWithBigSize));
          
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setVerticalAlignment(Element.ALIGN_CENTER);
@@ -333,7 +336,12 @@ public class GeneratePdfForQuickQuote {
         imageTable.addCell(cell);
    
         
-        cell = new PdfPCell(new Phrase("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize));
+   //     cell = new PdfPCell(new Phrase("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize));
+        cell = new PdfPCell();
+        chunk = new Chunk("\n2200 Powell St, Suite 340\nEmeryville, CA 94608\nNMLS ID 1231327",fontWithBigSize);
+        phrase  = new Phrase(12);
+        phrase.add(chunk);
+        cell.addElement(phrase);
         cell.setBorder(PdfPCell.NO_BORDER);
         imageTable.addCell(cell);
         
@@ -568,13 +576,31 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         firstTable.addCell(cell);
        
-        cell = new PdfPCell(new Phrase("  "+"Loan Program",font));
+//        cell = new PdfPCell(new Phrase("  "+"Loan Program",font));
+//        cell.setBorder(Rectangle.LEFT);
+//        firstTable.addCell(cell);
+//        cell = new PdfPCell(new Phrase(loanProgram,font));
+//        cell.setBorder(Rectangle.RIGHT);
+//        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+//        firstTable.addCell(cell);
+        
+        
+        cell = new PdfPCell(new Phrase("  "+"Estimated Monthly Payment",font));
         cell.setBorder(Rectangle.LEFT);
         firstTable.addCell(cell);
-        cell = new PdfPCell(new Phrase(loanProgram,font));
+        
+        
+        String principalInterest = generatePdfVO.getPrincipalInterest();
+        if(principalInterest != null && !principalInterest.contains("$")){
+        	principalInterest = addDollarAndComma(principalInterest);
+        } 
+
+        
+        cell = new PdfPCell(new Phrase(principalInterest,font));
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
+        
         
         cell = new PdfPCell(new Phrase("  "+"Interest Rate / APR",font));
         cell.setBorder(Rectangle.LEFT);
@@ -589,6 +615,8 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.RIGHT);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
         firstTable.addCell(cell);
+        
+        
         cell = new PdfPCell(new Phrase("  "+"Loan term - months",font));
         cell.setBorder(Rectangle.LEFT );
         firstTable.addCell(cell);
@@ -872,7 +900,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         seventhTable.addCell(cell);
@@ -952,7 +980,9 @@ public class GeneratePdfForQuickQuote {
 //        cell.setColspan(2);
 //        cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
 //        seventhTable.addCell(cell);	
-        	
+        if(!prepaidCost.contains("$")){
+        	prepaidCost = addDollarAndComma(prepaidCost);
+        }
         cell = new PdfPCell(new Phrase("  *A credit of "+prepaidCost+" was applied against the "+prepaidAgainstNumber +" in prepaids.",font));
       //  cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         cell.setColspan(2);
@@ -1065,7 +1095,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         secondTable.addCell(cell);
@@ -1313,7 +1343,13 @@ public class GeneratePdfForQuickQuote {
         thirdTable.addCell(cell);
         
         String recordingFees1201 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getRecordingFees1201();
-        cell = new PdfPCell(new Phrase(recordingFees1201,font));
+        if(!recordingFees1201.contains("$")){
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(recordingFees1201),font));
+        }
+        else{
+        	cell = new PdfPCell(new Phrase(recordingFees1201,font));
+        }
+        
         cell.setPaddingTop(4); 
         cell.setPaddingBottom(4);
         cell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -1347,7 +1383,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         thirdTable.addCell(cell);
@@ -1603,7 +1639,7 @@ public class GeneratePdfForQuickQuote {
         cell.setUseDescender(false);
         cell.setPadding(2);
         cell.setPaddingTop(0);
-        cell.setFixedHeight(8f);
+        cell.setFixedHeight(5f);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
         fifthTable.addCell(cell);
@@ -1696,8 +1732,9 @@ public class GeneratePdfForQuickQuote {
 //            cell.setBorder(Rectangle.RIGHT);
 //            fifthTable.addCell(cell);
             
-            cell = new PdfPCell();
-            cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
+            //cell = new PdfPCell();
+            cell = new PdfPCell(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
+            //cell.addElement(new Phrase("  "+"Tax Reserve - Estimated 6 Months",font));
          //   cell.addElement(new Phrase("  "+"Varies based on calendar month of closing",font));
             cell.setPaddingTop(4);
             cell.setPaddingBottom(4);
@@ -1716,8 +1753,8 @@ public class GeneratePdfForQuickQuote {
             cell.setBorder(Rectangle.RIGHT);
             fifthTable.addCell(cell);
             
-            cell = new PdfPCell();
-            cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 6 Months",font));
+            cell = new PdfPCell(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 6 Months",font));
+           // cell.addElement(new Phrase("  "+"Homeowners Insurance Reserve - Estimated 6 Months",font));
 //            cell.addElement(new Phrase("  "+"Provided you have 6 months of remaining coverage",font));
 //            cell.addElement(new Phrase("  "+"Note: Taxes for 1st and 2nd installments must be paid or",font));
 //            cell.addElement(new Phrase("  "+"will be collected at closing.",font));
@@ -1740,7 +1777,7 @@ public class GeneratePdfForQuickQuote {
             cell.setUseDescender(false);
             cell.setPadding(2);
             cell.setPaddingTop(0);
-            cell.setFixedHeight(8f);
+            cell.setFixedHeight(5f);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
             fifthTable.addCell(cell);
@@ -1762,8 +1799,16 @@ public class GeneratePdfForQuickQuote {
             
           //  String totEstResDepWthLen = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getTotEstResDepWthLen();
             cell = new PdfPCell(new Phrase(totEstResDepWthLen,font));
-            cell.setPaddingTop(4); 
-            cell.setPaddingBottom(4);
+           // cell.setPaddingTop(4); 
+            //cell.setPaddingBottom(4);
+            
+            cell.setUseAscender(true);
+            cell.setUseDescender(false);
+            cell.setPadding(2);
+            cell.setPaddingTop(0);
+            cell.setFixedHeight(16f);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
             cell.setHorizontalAlignment(Element.ALIGN_LEFT);
            // cell.setBackgroundColor(lightBlue); 
             cell.setBorder(Rectangle.RIGHT | Rectangle.BOTTOM );
@@ -1786,7 +1831,7 @@ public class GeneratePdfForQuickQuote {
                 + "apply, your rate at closing may differ from the rate in effect when you applied. Subject to underwriting approval. Not all applicants will be approved, Full "
                 + "documentation & property insurance required. Loan secured by a lien against your poperty. Consolidating or refinancing debts may increase the time and/or the finance "
                 + "charges/total loan amount needed to repay your debt. Terms, conditions & restrictions apply."
-                + "\nCall newfi for details at 888-316-3934.",footerFont));
+                + "Call newfi for details at 888-316-3934.",footerFont));
         
     }
     

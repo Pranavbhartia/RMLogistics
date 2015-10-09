@@ -18,6 +18,7 @@ public class GeneratePdfVO implements Serializable{
 	private String phoneNo;
 	private String pdfUrl;
 	private String impounds;
+	private String principalInterest;
 	
 	public Integer getUserId() {
 		return userId;
@@ -105,6 +106,14 @@ public class GeneratePdfVO implements Serializable{
 
 	public void setImpounds(String impounds) {
 		this.impounds = impounds;
+	}
+
+	public String getPrincipalInterest() {
+		return principalInterest;
+	}
+
+	public void setPrincipalInterest(String principalInterest) {
+		this.principalInterest = principalInterest;
 	}
 
 	
