@@ -76,7 +76,6 @@ function bindDataToPN() {
 
 			});
 			break;
-
 		case "lp-alert-wrapper":
 			$.data(this, "enum", {
 				pnName : PNEnum.ALERT
@@ -436,6 +435,10 @@ function retrieveState() {
 	case AgentViewPNEnum['QUICK_QUOTE']:
 		console.log('quickquote');
 	loadQuickQoutePage();
+		break;
+	case AgentViewPNEnum['MY_LEADS']:
+		console.log('my leads');
+	getDashboardPanelMyLeads();
 		break;
 	default:
 		break;
