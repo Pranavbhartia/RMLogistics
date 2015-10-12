@@ -524,8 +524,10 @@
 	}
 	
 	.quick-quote-row-LHS {
-	    width: 25%;
-	    margin-right: 5px;
+	    width: 22%;
+	    padding-right: 5px;
+	    padding-left: 5px;
+	    margin: 0;
 	}
 	.quick-quote-row-RHS {
 	    width: 35%;
@@ -533,16 +535,19 @@
 	    /* margin-left: 10px; */
 	}
 	.quick-quote-dwn-payment {
-		width: 47%;
+		width: 48%;
+	}
+	.quick-quote-dwn-percentage {
+		width: 50px;
 	}
 	.err-msg-quick-quote {
-       	width: 58%;
+       	width: 56%;
        	white-space: pre;
- }
+ 	}
 	.quick-quote-dropdown-cont {
-    	width: 140px;
-    	margin: 42px 0 0 114px;
-	} 
+    	width: 25%;
+    	margin: 42px 0 0 110px;
+ } 
 	.quote-row {
 	    width: 290px;
 	    margin: 20px 0;
@@ -779,7 +784,7 @@
 		max-width: 100%;
 	}
 	
-		 .quick-quote-button-section {
+ 	.quick-quote-button-section {
 	    width: 519px;
 	}
 	.quick-quote-col {
@@ -801,19 +806,21 @@
 	}
 	.quick-quote-row-RHS {
 	    width: 30%;
-	    /* padding-left: 15px; */
 	    margin-left: 5px;
 	}
 	.quick-quote-dwn-payment {
-		width: 38%;
+		width: 40%;
+	}
+	.quick-quote-dwn-percentage {
+		width: 45px;
 	}
 	.err-msg-quick-quote {
-       	width: 258px;
+       	width: 48%;
        	white-space: pre;
  }
 	.quick-quote-dropdown-cont {
-    	width: 169px;
-    	margin: 42px 0 0 114px;
+    	width: 16%;
+    	margin: 42px 0 0 130px;
  } 
 	.quote-row {
 	    width: 290px;
@@ -930,12 +937,12 @@
 		width: 47%;
 	}
 	.err-msg-quick-quote {
-       	width: 260px;
+       	width: 31%;
        	white-space: pre;
  }
 	.quick-quote-dropdown-cont {
-    	width: 168px;
-    	margin: 42px 0 0 114px;
+    	width: 16%;
+    	margin: 42px 0 0 171px;
  } 
 	.quote-row {
 	    width: 290px;
@@ -1647,23 +1654,27 @@
 	}
 	
 	.quick-quote-row-LHS {
-	    padding-left: 20px;
+	    width: 25%;
 	    text-align: left;
 	}
 	.quick-quote-row-RHS {
-	    width: 25%;
+	    width: 26%;
 	    /* padding-left: 15px; */
 	}
 	.quick-quote-dwn-payment {
-		width: 29%;
+		width: 33%;
+	}
+	.quick-quote-dwn-percentage {
+		width: 48px;
+		margin-right: 0;
 	}
 	.err-msg-quick-quote {
-       	width: 213px;
+       	width: 50%;
        	white-space: pre;
  }
 	.quick-quote-dropdown-cont {
-    	width: 168px;
-    	margin: 42px 0 0 142px;
+    	width: 38%;
+    	margin: 42px 0 0 125px;
  } 
 	.quote-row {
 	    width: 290px;
@@ -1708,15 +1719,15 @@
 	    margin: 0;
 	}
 	.quick-quote-dwn-payment {
-		width: 49%;
+		width: 52%;
 	}
 	.err-msg-quick-quote {
-       	width: 213px;
+       	width: 0;
        	white-space: pre;
  }
 	.quick-quote-dropdown-cont {
-    	width: 168px;
-    	margin: 42px 0 0 142px;
+    	width: 30%;
+    	margin: 42px 0 0 250px;
  } 
 	.quote-row {
 	    width: 290px;
