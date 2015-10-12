@@ -18,7 +18,7 @@ public class CommonConstant {
 	
 	//TEST ENV
 	
-/*	public final String FOLDER_PATH = "C:\\apps\\LQB\\Price";
+	/*public final String FOLDER_PATH = "C:\\apps\\LQB\\Price";
 	public final Integer COLUMN_IN_SINGLE_ROW = 3;
 	public final String DEFAULT_FILE_NAME = "blustreamRSTest.xls";
 	public static final String PATH_FOR_ORIGINAL_TEMPELATE = "C:\\apps\\LQB\\blustreamRSTest.xls";
