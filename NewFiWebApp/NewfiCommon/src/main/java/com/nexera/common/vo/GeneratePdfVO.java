@@ -20,6 +20,8 @@ public class GeneratePdfVO implements Serializable{
 	private String pdfUrl;
 	private String impounds;
 	private TeaserRateResponseVO teaserRateVO;
+
+	private String principalInterest;
 	
 	public Integer getUserId() {
 		return userId;
@@ -115,9 +117,13 @@ public class GeneratePdfVO implements Serializable{
 
 	public void setTeaserRateVO(TeaserRateResponseVO teaserRateVO) {
 		this.teaserRateVO = teaserRateVO;
+		
+	}
+	public String getPrincipalInterest() {
+		return principalInterest;
 	}
 
-	
-	
-	
+	public void setPrincipalInterest(String principalInterest) {
+		this.principalInterest = principalInterest;
+	}
 }

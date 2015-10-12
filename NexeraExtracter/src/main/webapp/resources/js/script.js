@@ -139,8 +139,8 @@ function paintRatesTablePage(data) {
 	appendOlympicPiggyBackARMTableWrapper(wrapper);
 	appendMAMMOTHTableWrapper(wrapper);
 	appendCASCADESTableWrapper(wrapper);
-	//appendFHLMCConventionalFIXEDWrapper(wrapper);
-	//appendFHLMCConventionalARMTableWrapper(wrapper);
+	appendFHLMCConventionalFIXEDWrapper(wrapper);
+	appendFHLMCConventionalARMTableWrapper(wrapper);
 	/*
 	 * $('.rate-table-wrapper').masonry({ itemSelector:
 	 * '.rate-table-wrapper-cont'
@@ -645,10 +645,13 @@ function getLTVTable(addHighBalArm,isFNMAArm) {
 			+ "Not all price adjustments are effective for all products. Please refer to Blustream Lending product guide for complete eligibility rules.\n"
 			+ "Intended for use by mortgage professionals only and should not be distributed to borrowers, as defined by Section 226.2 of Regulation Z";
 
+	var adjClass = "";
+	
 	var noteCont = $('<div>').attr({
-		"class" : "note-txt"
+		"class" : "note-txt "+adjClass
 	}).html(note);
 
+	$(noteCont).css('padding-top', '30px');
 	return tableWrapper.append(header).append(row1).append(row2).append(row3).append(
 			noteCont);
 }
@@ -974,12 +977,16 @@ function getLTVTable6(isFNMAArm) {
 	var tableArray="";
 	if(isFNMAArm){
 		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
-		                   [ "Loan amount <$150k", "0.75" ] 
+		                   [ "Loan amount <$150k", "0.75" ] ,
+		                   ["High Balance FICO 680-739","0.125"],
+		                   ["High Balance FICO 640-679","0.25"]
 		                   ];
 	}else{
 		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
 		                   [ "Loan amount <$150k", "0.75" ] ,
-		                   [ "Loan Amount >= $300k Standard Conforming Only", "-0.25" ]
+		                   [ "Loan Amount >= $300k Standard Conforming Only", "-0.25" ],
+		                   ["High Balance FICO 680-739","0.125"],
+		                   ["High Balance FICO 640-679","0.25"]
 		                   ];
 	}
 	

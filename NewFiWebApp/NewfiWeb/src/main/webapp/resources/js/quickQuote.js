@@ -1519,6 +1519,7 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
         monthlyPayment  = parseFloat(removedDoller(removedComma(customerInputData.refinancedetails.currentMortgagePayment)));
 
     var principalInterest = parseFloat(removedDoller(removedComma(rateVO.payment)));
+    loanPurchaseDetailsUnderQuickQuote.principalInterest = showValue(principalInterest);
     var totalEstMonthlyPayment = principalInterest;
     var Insurance;
     if(teaserRateValHolder.teaserRate)
@@ -1742,7 +1743,8 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
     
     var estClosingCostRow = getLoanSummaryLastRow("Estimated<br/>Closing Costs", showValue(rateVO.closingCost), "closingCostId");
     leftCol.append(estClosingCostRow);
-
+  //  var principalInterest = parseFloat(removedDoller(removedComma(rateVO.payment)));
+    loanPurchaseDetailsUnderQuickQuote.principalInterest = showValue(parseFloat(removedDoller(removedComma(rateVO.payment))));
     var estMonthlyPaymnt = getLoanSummaryLastRow("Estimated<br/>Mortgage Payment", showValue(rateVO.payment) ,"principalIntId");
     rightCol.append(estMonthlyPaymnt);
 

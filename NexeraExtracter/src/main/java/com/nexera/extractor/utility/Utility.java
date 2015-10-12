@@ -38,6 +38,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import scala.annotation.meta.getter;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
 import au.com.bytecode.opencsv.bean.CsvToBean;
@@ -905,11 +906,17 @@ public class Utility {
 	 * @return
 	 */
 	public HSSFWorkbook buildUIComponent(List<FileProductPointRate> list,
-	        long fileTimeStamp, HSSFWorkbook workBook){
+	        long fileTimeStamp, HSSFWorkbook workBook,String timezone){
 		
 		System.out.println("Last modified time: " + fileTimeStamp);
 		RestResponse response = new RestResponse();
 		File newTempelate = null;
+		//Date d = new Date(date);
+		Date g1 = new Date(fileTimeStamp);
+		//int timezone = d.getTimezoneOffset();
+		//System.out.println("timezoone date is :GMT+"+timezone);
+		System.out.println("timezone file is:GMT+"+g1.getTimezoneOffset());
+		
 		try {
 		Map<String, List<UIEntity>> fromCache = cache.get(fileTimeStamp);
 		newTempelate = createCopyOfTempelate();
@@ -918,6 +925,7 @@ public class Utility {
 			System.out.println("Returning from cache instance");
 			response.setData(fromCache);
 			response.setTimestamp(fileTimeStamp);
+
 		} else {
 			Map<String, List<UIEntity>> lastData = new HashMap<String, List<UIEntity>>();
 			if (cache.entrySet() != null) {
@@ -927,8 +935,9 @@ public class Utility {
 					if (entry != null) {
 						lastData = entry.getValue();
 						System.out.println("Cache has data");
-						long time = entry.getKey();
+						long time = entry.getKey();						 
 						response.setTimestamp(time);
+						
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -959,7 +968,7 @@ public class Utility {
 							
 	}
 		}
-		workBook = writeDataToExcelSheet(newTempelate, response, workBook);
+		workBook = writeDataToExcelSheet(newTempelate, response, workBook,timezone);
 		workBook.setForceFormulaRecalculation(true);
 		
 		}catch(Exception e){
@@ -1014,7 +1023,7 @@ public class Utility {
 	/**
 	 * Method to write data in excel sheet
 	 */
-	private HSSFWorkbook  writeDataToExcelSheet(File file, RestResponse restResponse, HSSFWorkbook workBook) throws IOException, java.text.ParseException{
+	private HSSFWorkbook  writeDataToExcelSheet(File file, RestResponse restResponse, HSSFWorkbook workBook,String timezone) throws IOException, java.text.ParseException{
 		
 		FileInputStream inStream = null;
 		HSSFSheet sheet = null;
@@ -1044,7 +1053,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15 ,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;
-						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse,timezone);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -1078,7 +1087,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;		
-						writeCurrentDateAndTimeInExcel(sheet,restResponse);
+						writeCurrentDateAndTimeInExcel(sheet,restResponse,timezone);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -1112,7 +1121,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;	
-						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse,timezone);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -1146,7 +1155,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;		
-						writeCurrentDateAndTimeInExcel(sheet,restResponse);
+						writeCurrentDateAndTimeInExcel(sheet,restResponse,timezone);
 						}
 					}
 					if("Mammoth Jumbo 15 YR Fixed".equals(fileHeading) && "MAMMOTH JUMBO/ HYBRID FIXED AND ARM PRODUCTS".equals(filePatternKey)){
@@ -1179,7 +1188,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;	
-						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse,timezone);
 						}
 					}
 					if("Cascades Jumbo 15 YR Fixed".equals(fileHeading) && "CASCADES JUMBO FIXED PRODUCTS".equals(filePatternKey)){
@@ -1197,7 +1206,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15 ,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;
-						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse,timezone);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -1225,14 +1234,14 @@ public class Utility {
 						rowCounter = 0;		
 						}
 					}
-					if("Fannie Mae 30yr Fixed High Balance".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
+					if("Fannie Mae 30 Yr Fixed High Balance".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
 						sheet = workBook.getSheet("Olympic PiggyBack High Balance");
 						if(null != sheet){
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;		
-						writeCurrentDateAndTimeInExcel(sheet,restResponse);
-						updateFormulaCellsDependingOnDate(sheet);
+						writeCurrentDateAndTimeInExcel(sheet,restResponse,timezone);
+						//updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
 					if("Fannie Mae 20 Yr Fixed High Balance".equals(fileHeading) && "OLYMPIC FIXED PIGGYBACK PRODUCTS".equals(filePatternKey)){
@@ -1265,7 +1274,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;	
-						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse,timezone);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -1301,7 +1310,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15 ,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;
-						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse,timezone);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -1372,7 +1381,7 @@ public class Utility {
 						newRowNum = writeDataTableToSheet(sheet ,data.get(fileHeading), 15,2,rowCounter);
 						startRowNum = newRowNum;
 						rowCounter = 0;	
-						writeCurrentDateAndTimeInExcel(sheet, restResponse);
+						writeCurrentDateAndTimeInExcel(sheet, restResponse,timezone);
 						updateFormulaCellsDependingOnDate(sheet);
 						}
 					}
@@ -1457,21 +1466,21 @@ public class Utility {
 	 * Method to write date in excel workbook
 	 * @param workBook
 	 */
-	private void writeCurrentDateAndTimeInExcel(HSSFSheet sheet, RestResponse response){
+	private void writeCurrentDateAndTimeInExcel(HSSFSheet sheet, RestResponse response,String timezone){
 		
-		Integer startRow = 9;
+		Integer startRow = 8;
 		Integer startCell = 2;
 		HSSFRow row = null;
 		HSSFCell cell = null;
-		String currentDate  = getCurrentDate();
-		int indedxForTZ = currentDate.indexOf("+");
-		currentDate = currentDate.substring(0,indedxForTZ)+ "GMT " + currentDate.substring(indedxForTZ,currentDate.length());
+		String currentDate  = getCurrentDate(timezone);
+		//int indedxForTZ = currentDate.indexOf("+");
+		//currentDate = currentDate.substring(0,indedxForTZ)+ "GMT " + currentDate.substring(indedxForTZ,currentDate.length());
 		StringBuilder sb = new StringBuilder("Lending Rates as of: ");
 		sb.append(currentDate);
-		String timeZone = getCurrentTimeZone();
+		/*String timeZone = getCurrentTimeZone();
 		sb.append("(");
 		sb.append(timeZone);
-		sb.append(")");
+		sb.append(")");*/
 		
 		if(null == sheet.getRow(startRow)){
 			row = sheet.createRow(startRow);
@@ -1491,11 +1500,17 @@ public class Utility {
 	/**
 	 * Method to get current date in a string
 	 */
-	private String getCurrentDate(){
+	private String getCurrentDate(String timezone){
 		
-		DateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy, HH:mm:ss Z");
+		DateFormat dateFormat = new SimpleDateFormat("EEEE, MMMM dd, yyyy hh:mm:ss a");
 		Date date = new Date();
+		System.out.println("date format before setting timezone:"+dateFormat.format(date));
+		System.out.println("timezone of requested location"+timezone);
+		System.out.println("timezone offset of server location"+Calendar.ZONE_OFFSET);
+		
+		dateFormat.setTimeZone(TimeZone.getTimeZone(timezone));
 		String textDate = dateFormat.format(date);
+		System.out.println("date format afyter setting timezone:"+textDate);
 		return textDate;		
 	}
 	
