@@ -1020,6 +1020,9 @@ function getObContainer() {
 					if (keyObj.updateView) {
 						keyObj.updateView();
 					}
+					if(key == 'valueSet'){
+						 loanPurchaseDetailsUnderQuickQuote.principalInterest = showValue(parseFloat(removedDoller(removedComma(ob.valueSet.payment))));
+					}
 					if(key == "totEstimatedClosingCost"){
 						keyObj.updateTotalEstimatedClosingCosts();
 						keyObj.updateCreditAfterDiscount();
