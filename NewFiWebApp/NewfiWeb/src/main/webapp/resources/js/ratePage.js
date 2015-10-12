@@ -1151,8 +1151,12 @@ function getDwnPayComponent(value,inputElementId){
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
+    var adjClass = "";
+    if(isEditPage && inputElementId == "secondInput"){
+    	adjClass = "leads-pgm-rate-edit-adj";
+    }
     var optionCont = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail dwn-val float-left",
+        "class": "loan-summary-sub-col-detail dwn-val float-left "+adjClass,
         "value":showValue(value),
         "id":inputElementId
     }).bind("load focus",{"elementID":inputElementId}, function(e){
@@ -1172,7 +1176,7 @@ function getDwnPayComponent(value,inputElementId){
 
     globalChangeContainer.dwnVal=showValue(value);
     var percentageComp = $('<input>').attr({
-    	"class": "loan-summary-sub-col-detail dwn-percentage",
+    	"class": "loan-summary-sub-col-detail dwn-percentage "+adjClass,
     	
     }).attr('maxlength','2');;
     

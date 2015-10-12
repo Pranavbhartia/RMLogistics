@@ -919,3 +919,14 @@ a.cus-eng-succ-mess-email {
     width: 58%;
     margin: 5px auto;
 }
+
+.leads-edit-adj {
+    background-color: white !important;
+    border: none;
+    cursor: not-allowed;
+    padding: 0;
+}
+.leads-pgm-rate-edit-adj {
+	border:none;
+	background-color: white !important;
+}

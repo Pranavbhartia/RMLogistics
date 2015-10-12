@@ -344,6 +344,7 @@ function autoClickButton(buttonId){
  * 
  */
 function editQuoteUser(){
+	
 	isEditPage = true;
 	loadQuickQoutePage();
 	var buttonId;
@@ -367,16 +368,20 @@ function editQuoteUser(){
 }
 
 /**
- * @param editQuoteUserDetails 
- * respsone 
+ * @param editQuoteUserDetails  - 
+ * respsone from ajax 
  */
 function preAppendQuickQuoteFormFeils(editQuoteUserDetails){
+	
 	// Added by Ranjitha
-	 $('#firstName').attr('readonly',true).val(editQuoteUserDetails.firstName);
+	 $('#firstName').attr("disabled","disabled").val(editQuoteUserDetails.firstName);
 	 firstName = editQuoteUserDetails.firstName;
-	 $('#lastName').attr('readonly',true).val(editQuoteUserDetails.lastName);
+	 $('#lastName').attr("disabled","disabled").val(editQuoteUserDetails.lastName);
 	 lastName = editQuoteUserDetails.lastName;
-	 $('#emailID').attr('readonly',true).val(editQuoteUserDetails.emailId);
+	 $('#emailID').attr("disabled","disabled").val(editQuoteUserDetails.emailId);
+	 $('#firstName').addClass('leads-edit-adj');
+	 $('#lastName').addClass('leads-edit-adj');
+	 $('#emailID').addClass('leads-edit-adj');
 	 $('#primaryPhoneID').val(editQuoteUserDetails.phoneNo);
 	 $('#primaryPhoneID').mask("(999) 999-9999");
 	 $('#propertyType').attr('value', getHomeOwnersInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType));
@@ -389,9 +394,8 @@ function preAppendQuickQuoteFormFeils(editQuoteUserDetails){
 	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REFCO"){
 			
 			$('#cashTakeOut').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.cashTakeOut));
-		}
+	}
 	 calculateInsuranceValue();
-	 //  TODO
 	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.privateincludeTaxes == "Yes"){
 	  $('#quick-quote-yes-container-id').addClass('radio-btn-selected');
 	  $('#quick-quote-yes-container-id').attr('isselected',true);
@@ -1825,17 +1829,21 @@ function getInputElmentRowUnderQuickQuote(key,desc, val,inputElementId,appUserDe
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left "+txtAlignClas+" "+cla
     }).html(desc);
+   
     var col2 = $('<div>').attr({
         "class": "loan-summary-col-detail float-left"
     });
-    
+    var adjClass = "";
+    if(isEditPage && inputElementId == "firstInput" || inputElementId == "loanAmount" || inputElementId == "secondInput"){
+    	adjClass = "leads-pgm-rate-edit-adj";
+    }
     var inputBox;
     globalChangeContainer.flag=false;
     if(key=="downPayment"){
         inputBox=getDwnPayComponent(val,inputElementId);
     }else{
         inputBox = $('<input>').attr({
-            "class" : "loan-summary-sub-col-detail float-left",
+            "class" : "loan-summary-sub-col-detail float-left "+adjClass,
             "id":inputElementId,
             "value":showValue(val),
         }).bind('keyup',{"appUserDetails":appUserDetails,"key":key},function(e){
@@ -1849,7 +1857,7 @@ function getInputElmentRowUnderQuickQuote(key,desc, val,inputElementId,appUserDe
                 precision:0,
                 allowNegative:false
             }); 
-            
+             
             if(key=="propLoanAmt"||key=="cashOut"||key=="loanBal"||key=="purchasePrice")
                 globalChangeContainer.flag=true;
             

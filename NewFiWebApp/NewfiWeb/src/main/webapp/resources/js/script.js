@@ -2036,6 +2036,10 @@ function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag,paddingLeftFlag)
         "class": clas+" float-left "+paddingClass,
         "id": id
     }).html(detail);
+    
+    if(isEditPage && id == "loanAmount"){
+    	col2.addClass("leads-edit-adj");
+    }
     container.append(col1).append(col2);
     return container;
 }
