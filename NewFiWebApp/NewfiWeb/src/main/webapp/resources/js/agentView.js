@@ -496,118 +496,145 @@ function checkCreditScore(creditScore){
     }
 	return creditScore;
 }
-function appendLeads(elementId, customers){
+
+/** method to append leads in leads page for internal users
+ * @param elementId of container to which lead list to be appended
+ * @param customers is the leads
+ */
+	function appendLeads(elementId, customers){
+		
+				var list = customers;	
+				appendTableHeader(elementId);
+				for (var i = 0; i < list.length; i++) {
+				var customer = list[i];
+		if(!customer.isDeleted){
+			var row = $('<div>').attr({
+				"class" : "leads-container-tr leads-container-row clearfix"
+			});
 	
-			var list = customers;	
-			appendTableHeader(elementId);
-			for (var i = 0; i < list.length; i++) {
-			var customer = list[i];
-			if(!customer.isDeleted){
-				var row = $('<div>').attr({
-					"class" : "leads-container-tr leads-container-row clearfix"
+			
+			if (i % 2 == 0) {
+				row.addClass('leads-container-row-odd');
+			}
+	
+			if (i == list.length - 1) {
+					row.addClass('leads-container-row-last');
+			}
+	
+			
+			var col1 = $('<div>').attr({
+				"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
+					"id" : "leads-container-tc1-id"
 				});
-		
-				
-				if (i % 2 == 0) {
-					row.addClass('leads-container-row-odd');
-				}
-		
-				if (i == list.length - 1) {
-						row.addClass('leads-container-row-last');
-				}
-		
-				
-				var col1 = $('<div>').attr({
-					"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
-						"id" : "leads-container-tc1-id"
-					});
-				
-				 var profImage = $('<div>').attr({
-						
-						
-					});
-				 var cusName = $('<div>').attr({
-						"class" : "float-left",
-						"loanid" : customer.loanID,
-						"userid" : customer.userID
-					}).html(customer.prospectFirstName+" "+customer.prospectLastName);
-				
-		
-				col1.append(profImage).append(cusName);
-				var phone_num = "NA";
-				if (customer.phoneNo != null && customer.phoneNo.trim() != "") {
-					phone_num = formatPhoneNumberToUsFormat(customer.phoneNo);
-				}else if(customer.phoneNo == ""){
-					phone_num = "-";
-				}
-
-				var col2="";
-				if(customer.emailId == ""){
-					customer.emailId = "-";
-				}
-
-					//write a rest call					
-					col2 = $('<div>').attr({
-						"class" : "leads-container-tc2 leads-row-2 float-left"
-					}).html(customer.emailId);
-				
-
-				var col3 = $('<div>').attr({
-					"class" : "leads-container-tc3 leads-row-3 float-left"
-				}).html(phone_num);
-
-				var	createdDateStr = formateDateAndTime(
-						new Date(customer.createdDate),true);
-				
-				if(createdDateStr==""){
-					createdDateStr="-";
-				}
-				var col4 = $('<div>').attr({
-					"class" : "leads-container-tc4 leads-row-4 float-left"
-				}).html(createdDateStr);
-				
-				var col5 = $('<div>').attr({
-					"class" : "leads-container-row-tc5 leads-row-5 float-left",
-					"name" : customer.pdfUrl
-				}).bind("click",function(){
-					window.open($(this).attr("name"));
-				
+			
+			 var profImage = $('<div>').attr({
+					
+					
 				});
-				
-				var col6 = $('<div>').attr({
-					"class" : "leads-container-row-tc6 leads-row-6 float-left",
-					"userName" : customer.quoteCompositeKey.userName,
-					"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-					"name":customer.quoteCompositeKey.userName
-				}).bind("click",function(){
-					if($(this).hasClass('leads-row-6')){
-						createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-					}				
-				
-				});				
-				//TO add a condition to check for user created
-				if(customer.isCreated){
-					$(col6).removeClass('leads-row-6');
-					$(col6).addClass('leads-user-created');
-				}
-				
-				var col7 = $('<div>').attr({
-					"class" : "leads-container-tc7 leads-row-7 float-left",
-					"userName" : customer.quoteCompositeKey.userName,
-					"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-					"name":customer.quoteCompositeKey.userName+":"+customer.quoteCompositeKey.internalUserId
-				}).bind("click",function(){
-					deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-				
+			 var cusName = $('<div>').attr({
+					"class" : "float-left",
+					"loanid" : customer.loanID,
+					"userid" : customer.userID
+				}).html(customer.prospectFirstName+" "+customer.prospectLastName);
+			
+	
+			col1.append(profImage).append(cusName);
+			var phone_num = "NA";
+			if (customer.phoneNo != null && customer.phoneNo.trim() != "") {
+				phone_num = formatPhoneNumberToUsFormat(customer.phoneNo);
+			}else if(customer.phoneNo == ""){
+				phone_num = "-";
+			}
+
+			var col2="";
+			if(customer.emailId == ""){
+				customer.emailId = "-";
+			}
+
+				//write a rest call					
+				col2 = $('<div>').attr({
+					"class" : "leads-container-tc2 leads-row-2 float-left"
+				}).html(customer.emailId);
+			
+
+			var col3 = $('<div>').attr({
+				"class" : "leads-container-tc3 leads-row-3 float-left"
+			}).html(phone_num);
+
+			var	createdDateStr = formateDateAndTime(
+					new Date(customer.createdDate),true);
+			
+			if(createdDateStr==""){
+				createdDateStr="-";
+			}
+			var col4 = $('<div>').attr({
+				"class" : "leads-container-tc4 leads-row-4 float-left"
+			}).html(createdDateStr);
+			
+			var col5 = $('<div>').attr({
+				"class" : "leads-container-row-tc5 leads-row-5 float-left",
+				"name" : customer.pdfUrl
+			}).bind("click",function(){
+				window.open($(this).attr("name"));
+			
+			});
+			
+			
+			//Edit button column for leads
+			var col6_1 = $('<div>').attr({
+				"class" : "leads-container-row-tc6 grey-edit float-left",
+				"userName" : customer.quoteCompositeKey.userName,
+				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
+				"name":customer.quoteCompositeKey.userName
+			});
+			
+			//TO add a condition to check for user created
+			if(!customer.isCreated){
+				// binding click  event when loan is not created.
+				col6_1.addClass("blue-edit");
+				col6_1.removeClass("grey-edit");
+				col6_1.bind("click",function(){	
+					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
 				});
-				row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6).append(col7);
-				$('#' + elementId).append(row);
-				updateHandler.initiateRequest();
 			}
 			
-}
+			var col6 = $('<div>').attr({
+				"class" : "leads-container-row-tc6 leads-row-6 float-left",
+				"userName" : customer.quoteCompositeKey.userName,
+				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
+				"name":customer.quoteCompositeKey.userName
+			}).bind("click",function(){
+				if($(this).hasClass('leads-row-6')){
+					createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+				}
+			});				
+			//TO add a condition to check for user created
+			if(customer.isCreated){
+				$(col6).removeClass('leads-row-6');
+				$(col6).addClass('leads-user-created');
+			}
+			
+			var col7 = $('<div>').attr({
+				"class" : "leads-container-tc7 leads-row-7 float-left",
+				"userName" : customer.quoteCompositeKey.userName,
+				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
+				"name":customer.quoteCompositeKey.userName+":"+customer.quoteCompositeKey.internalUserId
+			}).bind("click",function(){
+				deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+			
+			});
+			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6_1).append(col6).append(col7);
+			$('#' + elementId).append(row);
+			updateHandler.initiateRequest();
+		}
+				
+	}
 }
 
+/**
+ * @param userName is the name of the user in lead
+ * @param internalUserID
+ */
 function createUserFromLeads(userName,internalUserID){
 	ajaxRequest("rest/shopper/record/lead/" + userName +"/"+internalUserID, "POST",
 			"json",{}, function(response){
@@ -621,6 +648,29 @@ function createUserFromLeads(userName,internalUserID){
 			});
 }
 
+/**
+ * @param userName is the name of the user in lead 
+ * @param internalUserID
+ */
+function getUserFromLeads(userName,internalUserID){
+	ajaxRequest("rest/shopper/record/getQuoteUser/"+ userName+"/"+internalUserID, "GET",
+			"json",{}, function(response){
+				if(response.error == null){
+					// TODO @Manish do the next task.
+					//showToastMessage(response.resultObject);
+				
+					editQuoteUserDetails = response;
+					editQuoteUser();
+				}else {
+					showErrorToastmessage(leadEditErrorMessage);
+				}	
+			});
+}
+
+/**
+ * @param userName is the name of the user in lead 
+ * @param internalUserID
+ */
 function deleteUserFromLeads(userName,internalUserID){
 	ajaxRequest("rest/shopper/record/deleteLeadFromQuote/" + userName +"/"+internalUserID, "POST",
 			"json",{}, function(response){
@@ -632,6 +682,12 @@ function deleteUserFromLeads(userName,internalUserID){
 				}	
 			});
 }
+
+/**
+ * @param elementId of container to which customer list to be appended
+ * @param customers
+ * @param skipDataClearing to clear the rowcontainer
+ */
 function appendCustomers(elementId, customers,skipDataClearing) {
 	
 		var list = customers;
@@ -944,6 +1000,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			updateHandler.initiateRequest();
 	
 }
+
 function checkCreditScoreAval(creditScore){
 	var o=creditScore.split("|");
 	var sA=false;
@@ -1081,6 +1138,11 @@ function appendTableHeader(elementId){
 			"class" : "leads-container-tc5 leads-col-5 float-left"
 		}).html("Summary");
 		
+		var thCol6_1 = $('<div>').attr({
+			"class" : "leads-container-tc6 leads-col-6 float-left"
+		}).html("Edit");
+		
+		
 		var thCol6 = $('<div>').attr({
 			"class" : "leads-container-tc6 leads-col-6 float-left"
 		}).html("Account");
@@ -1092,7 +1154,7 @@ function appendTableHeader(elementId){
 		
 
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
-				.append(thCol4).append(thCol5).append(thCol6).append(thCol7);
+				.append(thCol4).append(thCol5).append(thCol6_1).append(thCol6).append(thCol7);
 
 
 	    $('#' + elementId).append(tableHeader);

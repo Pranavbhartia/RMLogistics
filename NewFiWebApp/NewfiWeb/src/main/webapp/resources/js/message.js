@@ -22,6 +22,7 @@ var invalidDate="Invalid Date";
 var enterMessage="Please enter a message";
 var errorMessageForZipcode="ZipCode cannot be empty";
 var multipleInvalidEntries = "Invalid Entries";
+var leadEditErrorMessage = "Edit cannot be performed on Lead.Please try again later";
 
 //Messages in adminModule.js
 var userCreationSuccessMessage="User created successfully";
