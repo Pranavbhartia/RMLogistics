@@ -1680,6 +1680,15 @@
 	    width: 290px;
 	    margin: 20px 0;
 	}
+	.admin-newfi-team-list-th-col4,
+    .admin-newfi-team-list-tr-col4 {
+	  display: none;
+  }
+  .admin-newfi-team-list-th-col5,
+  .admin-newfi-team-list-tr-col5 {
+	width: 16%;
+  }
+	
 }
 
 @media (min-width: 476px) and (max-width: 648px){
