@@ -549,8 +549,7 @@ var popUpWrapper = $('<div>').attr({
 									"internalroleid")
 						}
 					}
-				}
-				;
+				};
 
 				//TODO  to create function to call create user rest 		
 				createUserFromAdmin(user);
@@ -575,7 +574,14 @@ function appendDataToNewfiTeamWrapperForAdmin(data){
 		 var users = data.resultObject;
 		  
 		   var tableRow = getAdminTeamListTableRow(users);
-		   var teamContainer = $(".admin-newfi-team-wrapper .admin-newfi-team-container").append(tableRow);
+		   
+		   // added check for cuser type. Based on that will be appended on user list.
+		   if(users.userRole.id != 1){
+			   $("#admin-newfi-team-container-id").append(tableRow);
+		   } else {
+			   $("#admin-newfi-team-container-id-customer").append(tableRow);
+		   }
+		   
 		   EmptyTheFormFeildsInUM();
 		   showToastMessage(userCreationSuccessMessage);
 	}else{
@@ -654,21 +660,70 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 	
 	});
 	header.append(searchDiv).append(searchInputBox);
-	var container = $('<div>').attr({
+	
+	// Container for Internal users
+	var containerInternal = $('<div>').attr({
 		"class" : "admin-newfi-team-container",
 		"id":"admin-newfi-team-container-id"
 	});
+	
+	// Container for Customer users
+	var containerCustomer = $('<div>').attr({
+		"class" : "admin-newfi-team-container",
+		"id":"admin-newfi-team-container-id-customer"
+	});
+	
+	// Header for Internal user along with toggle button.
+	var internalUserHeader = $('<div>').attr({
+		"class" : "cust-personal-info-header margin-botton-10"
+	}).html("Internal");
+	
+	var expandDownIconForInternalUser = $('<div>').attr({
+		"class" : "header-down-icn profile-header-dwn-icon float-right",
+	}).bind('click',function(e){
+		$("#admin-newfi-team-container-id").toggleClass("hide");
+	});
+	internalUserHeader.append(expandDownIconForInternalUser);
 
 	var tableHeader = getAdminTeamListTableHeader();
-	container.append(tableHeader);
+	containerInternal.append(tableHeader);
+	
+	
+	
+	// HEader for Customer list along with Toggle button.
+	var customerHeader = $('<div>').attr({
+		"class" : "cust-personal-info-header  margin-botton-10"
+	}).html("Customer");
+	
+	var downIcon1 = $('<div>').attr({
+		"class" : "header-down-icn profile-header-dwn-icon float-right",
+	}).bind('click',function(e){
+		$("#admin-newfi-team-container-id-customer").toggleClass("hide");
+	});
+	customerHeader.append(downIcon1);
+	
+	
+	var tableHeader2 = getAdminTeamListTableHeader();
+	
+	containerCustomer.append(tableHeader2);
     
     for(var i=0;i<users.length;i++){
     	if(users[i].status!=-1){
-    		var tableRow = getAdminTeamListTableRow(users[i]);
-    	 	//not to append sm/super admin himself in the list of customers
-            if(users[i].id!=newfiObject.user.id){
-            	container.append(tableRow);
-            }
+    		
+    		if(users[i].userRole.id!=1){
+    			var tableRow = getAdminTeamListTableRow(users[i]);
+        	 	//not to append sm/super admin himself in the list of customers
+                if(users[i].id!=newfiObject.user.id){
+                	containerInternal.append(tableRow);
+                }
+    		} else {
+    			var tableRow = getAdminTeamListTableRow(users[i]);
+        	 	//not to append sm/super admin himself in the list of customers
+                if(users[i].id!=newfiObject.user.id){
+                	containerCustomer.append(tableRow);
+                }
+    		}
+    		
     	}		    
 	}
     /*if(searchUser){
@@ -676,7 +731,7 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
     }else{
     	wrapper.append(header).append(container);
     }*/
-    wrapper.append(header).append(container);
+    wrapper.append(header).append(internalUserHeader,  containerInternal).append(customerHeader, containerCustomer);
 	$('#admin-dashboard-container').append(wrapper);
 
 }
@@ -1025,6 +1080,7 @@ function paintRightBottomWrapper(user){
 	var header = $('<div id="alertHeader">').attr({
 		"class" : "adminUM-user-edit-profile-header"
 	}).html("LQB Information");
+	lqbContainer.removeClass("hide");
 	lqbContainer.css('margin','10px auto');
 	var height=$('.adminUM-user-edit-profile-left-container').height()-$('.adminUM-user-edit-profile-right-container ').height()-10;
 	rightContainer.css('height',height+'px');
