@@ -676,7 +676,7 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 	// Header for Internal user along with toggle button.
 	var internalUserHeader = $('<div>').attr({
 		"class" : "cust-personal-info-header margin-botton-10"
-	}).html("Internal");
+	}).html("Internal Users");
 	
 	var expandDownIconForInternalUser = $('<div>').attr({
 		"class" : "header-down-icn profile-header-dwn-icon float-right",
@@ -693,7 +693,7 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 	// HEader for Customer list along with Toggle button.
 	var customerHeader = $('<div>').attr({
 		"class" : "cust-personal-info-header  margin-botton-10"
-	}).html("Customer");
+	}).html("Users");
 	
 	var downIcon1 = $('<div>').attr({
 		"class" : "header-down-icn profile-header-dwn-icon float-right",
@@ -708,9 +708,9 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 	containerCustomer.append(tableHeader2);
     
     for(var i=0;i<users.length;i++){
-    	if(users[i].status!=-1){
+    	if(users[i].status != -1){
     		
-    		if(users[i].userRole.id!=1){
+    		if(users[i].userRole.id!=1 && users[i].userRole.id!=2 ){
     			var tableRow = getAdminTeamListTableRow(users[i]);
         	 	//not to append sm/super admin himself in the list of customers
                 if(users[i].id!=newfiObject.user.id){
