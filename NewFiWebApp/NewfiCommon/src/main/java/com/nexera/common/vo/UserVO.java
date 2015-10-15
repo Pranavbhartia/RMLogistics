@@ -39,6 +39,7 @@ public class UserVO implements Serializable {
 	private List<InternalUserStateMappingVO> internalUserStateMappingVOs;
 	private String loanManagerEmail;
 	private Date tokenGeneratedTime;
+	private String lastLoginDate;
 	private Boolean mobileAlertsPreference;
 	private String carrierInfo;
 	private Boolean emailVerified;
@@ -314,4 +315,13 @@ public class UserVO implements Serializable {
 	public void setEmailVerified(Boolean emailVerified) {
 		this.emailVerified = emailVerified;
 	}
+
+	public String getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(String lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+	
 }

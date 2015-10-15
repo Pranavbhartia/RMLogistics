@@ -100,9 +100,11 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     	/*rateArray=rateArray.reverse();*/
     }
     if(appUserDetails.loan.lockStatus!="1"){
-        var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
-        var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
-        container.append(tenureSlider).append(rateSlider);
+    	if(!isEditPage){
+    		var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
+            var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
+            container.append(tenureSlider).append(rateSlider);
+    	}
     }
     return container
 }
@@ -1149,8 +1151,12 @@ function getDwnPayComponent(value,inputElementId){
     var optionsContainer = $('<div>').attr({
         "class": "app-options-cont"
     });
+    var adjClass = "";
+    if(isEditPage && inputElementId == "secondInput"){
+    	adjClass = "leads-pgm-rate-edit-adj";
+    }
     var optionCont = $('<input>').attr({
-        "class": "loan-summary-sub-col-detail dwn-val float-left",
+        "class": "loan-summary-sub-col-detail dwn-val float-left "+adjClass,
         "value":showValue(value),
         "id":inputElementId
     }).bind("load focus",{"elementID":inputElementId}, function(e){
@@ -1170,7 +1176,7 @@ function getDwnPayComponent(value,inputElementId){
 
     globalChangeContainer.dwnVal=showValue(value);
     var percentageComp = $('<input>').attr({
-    	"class": "loan-summary-sub-col-detail dwn-percentage",
+    	"class": "loan-summary-sub-col-detail dwn-percentage "+adjClass,
     	
     }).attr('maxlength','2');;
     
@@ -1340,8 +1346,14 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
     var headerTxt = $('<div>').attr({
         "class": "slider-hdr-txt float-left"
     }).html(text);
+    var yearValues;
+   if(isEditPage){
+	   yearValues = modifiedLQBJsonResponse(LQBResponse);
+   }
+   else{
+	   yearValues = LQBResponse; 
+   }
     
-    var yearValues = LQBResponse;
     
     var rateArray = yearValues[yearValues.length-1].rateVO;
 //    rateArray=rateArray.reverse();
@@ -1480,7 +1492,15 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
     var container = $('<div>').attr({
         "class": "silder-cont yr-slider float-left"
     });
-    var yearValues = LQBResponse;
+    
+    var yearValues;
+    if(isEditPage){
+ 	   yearValues = modifiedLQBJsonResponse(LQBResponse);
+    }
+    else{
+ 	   yearValues = LQBResponse; 
+    }
+    
 
     for (var i = 0; i < yearValues.length; i++) {
         var leftOffset = i / (yearValues.length - 1) * 100;

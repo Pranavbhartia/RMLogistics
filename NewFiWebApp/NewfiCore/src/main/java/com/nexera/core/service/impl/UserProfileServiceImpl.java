@@ -354,7 +354,11 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 		List<UserVO> voList = new ArrayList<UserVO>();
 		for (User user : userList) {
-			voList.add(User.convertFromEntityToVO(user));
+			UserVO userVO = User.convertFromEntityToVO(user);
+			if(user.getLastLoginDate() != null){
+				userVO.setLastLoginDate(utils.getDateAndTimeForUserManagement(user.getLastLoginDate()));
+			}
+			voList.add(userVO);
 		}
 
 		return voList;

@@ -144,6 +144,25 @@ public class Utils {
 		return null;
 
 	}
+	
+	public String getDateAndTimeForUserManagement(Date date) {
+
+		Integer offSetFromUser = getOffsetFromUserObject();
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yy hh:mm a");
+		Date localeDate = null;
+		try {
+			dateFormat.setTimeZone(TimeZone.getTimeZone(GMT));
+
+			long offset = offSetFromUser * ONE_MINUTE_IN_MILLIS;
+			localeDate = new Date(date.getTime() - offset);
+			return dateFormat.format(localeDate);
+
+		} catch (Exception e) {
+			LOG.error("Exception Caught " + e.getMessage());
+		}
+		return null;
+
+	}
 
 	public String getMMDDForDisplay(Date date) {
 		DateFormat format = new SimpleDateFormat("MM-dd");

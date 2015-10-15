@@ -99,6 +99,7 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_LOAN_CANCELED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN.getLosStatusID(),
@@ -140,6 +141,7 @@ public class WorkflowConstants {
 	        		LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),
 	        		LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_LOAN_CANCELED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED.getLosStatusID(),
@@ -290,6 +292,8 @@ public class WorkflowConstants {
 		        LOAN_CLOSURE_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_FUNDED,
 		        LOAN_CLOSURE_LIST);
+		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_CANCELED,
+		        LOAN_CLOSURE_LIST);
 
 		// 1003
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,
@@ -367,6 +371,13 @@ public class WorkflowConstants {
 		        		STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID()),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_FUNDED)));
+		
+		LQB_STATUS_MILESTONE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_LOAN_CANCELED,
+		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
+		        		null,
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_CANCELED)));
 		//For the new closure statuses 
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,

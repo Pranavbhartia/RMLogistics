@@ -3,6 +3,7 @@
 <head>
 <title>Blustream Lending Rate Sheet</title>
 <meta http-equiv="refresh" content="300">
+<meta http-equiv="Cache-control" content="no-Cache">
 <link rel="stylesheet" href="${baseURL}resources/css/bootstrap.min.css">
 <link rel="stylesheet" href="${baseURL}resources/css/styles.css">
 <link rel="stylesheet" href="${baseURL}resources/css/styles-print.css">
@@ -79,7 +80,8 @@
 	<script type="text/javascript" src="${baseURL}resources/js/masonry.pkgd.min.js"></script>
 	<script>
 	function downloadExcel(){
-		location.href = "${baseURL}downloadXLS";
+		
+		location.href = "${baseURL}downloadXLS/"+new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1]+"?dt="+new Date().getTime();
 	}
 		$(document).ready(function() {
 			$.ajax({

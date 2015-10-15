@@ -3374,8 +3374,20 @@ input.calc-input {
 	padding-top: 2px;	
 }
 
+.milestone-lc-text.milestone-lbl-width {
+	width: 73px;
+}
+
 .milestone-lc-text {
-	text-align: right;
+	text-align: left;
+	width: 200px;
+    float: right;
+    padding-left: 100px;
+}
+
+span.milestone-lc-text{
+	width: 200px;
+    padding-left: 125px;
 }
 
 .milestone-rc-text {

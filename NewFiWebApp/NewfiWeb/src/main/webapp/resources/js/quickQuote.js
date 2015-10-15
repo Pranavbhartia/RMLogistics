@@ -2,6 +2,7 @@ var count = 0;
 var buyHomeRefinanceRate = new Object();
 buyHomeRefinanceRate.purchaseDetails = purchaseDetails;
 var loanPurchaseDetailsUnderQuickQuote = new Object();
+var editQuoteUserDetails = new Object();
 var inputCustmerDetailUnderQuickQuote = new Object();
 loanPurchaseDetailsUnderQuickQuote.isRate = false;
 loanPurchaseDetailsUnderQuickQuote.lqbTeaserRateUnderQuickQuote=lqbTeaserRateUnderQuickQuote;
@@ -10,6 +11,7 @@ var PURCHASE = "PUR";
 var REFINANACE = "REF";
 var REFINANACE_LOWER_MORTGAGE_PAYMENT = "REFLMP";
 var REFINANACE_CASH_OUT = "REFCO";
+var isEditPage = false;
 var firstName;
 var lastName;
 
@@ -293,7 +295,10 @@ var refinanceCashOut = [{
 //END
 
 
-//Function which loads the contents
+
+/**Entry point to paint the quickquote page
+ * 
+ */
 function loadQuickQoutePage(){
 	ga('set', 'page', '/quick-quote');
 	ga('send', 'pageview');
@@ -328,7 +333,121 @@ function loadQuickQoutePage(){
 	$('#right-panel').append(agentDashboardMainContainer);
 }
 
-/*Entry point for painting quick quote page*/
+/**
+ * @param buttonId id of button which paint the form
+ */
+function autoClickButton(buttonId){
+	$('#'+buttonId).click();
+}
+
+/**function to paint quote details of a lead
+ * 
+ */
+function editQuoteUser(){
+	
+	isEditPage = true;
+	loadQuickQoutePage();
+	var buttonId;
+	if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR"){
+		buttonId = 'quick-quote-one-id';
+	}
+	else if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REF"){
+		buttonId = 'quick-quote-two-id';
+	}
+	else if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REFCO"){
+		buttonId = 'quick-quote-three-id';
+	}
+	autoClickButton(buttonId);	
+	preAppendQuickQuoteFormFeils(editQuoteUserDetails);	
+	var teaserRateVOTemp = new Array();
+	teaserRateVOTemp[0] = editQuoteUserDetails.teaserRateVO;
+	paintFixYourRatePageCEPUnderQuickQuote(teaserRateVOTemp, editQuoteUserDetails.inputCustmerDetailUnderQuickQuote,$("#ce-refinance-cp"));
+	if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.discountPercent){
+		$("#discount-update-feild-id").val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.discountPercent);
+	}
+}
+
+/**
+ * @param editQuoteUserDetails  - 
+ * respsone from ajax 
+ */
+function preAppendQuickQuoteFormFeils(editQuoteUserDetails){
+	
+	// Added by Ranjitha
+	 $('#firstName').attr("disabled","disabled").val(editQuoteUserDetails.firstName);
+	 firstName = editQuoteUserDetails.firstName;
+	 $('#lastName').attr("disabled","disabled").val(editQuoteUserDetails.lastName);
+	 lastName = editQuoteUserDetails.lastName;
+	 $('#emailID').attr("disabled","disabled").val(editQuoteUserDetails.emailId);
+	 $('#firstName').addClass('leads-edit-adj');
+	 $('#lastName').addClass('leads-edit-adj');
+	 $('#emailID').addClass('leads-edit-adj');
+	 $('#primaryPhoneID').val(editQuoteUserDetails.phoneNo);
+	 $('#primaryPhoneID').mask("(999) 999-9999");
+	 $('#propertyType').attr('value', getHomeOwnersInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType));
+	 $('#propertyType').attr('type',editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.propertyType);
+	 $('#residenceType').attr('value',getTaxInsuranceTextFromValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType));
+	 $('#residenceType').attr('type',editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.residenceType);
+	 $('#homeWorthToday').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.homeWorthToday));
+	 $('#zipCode').val(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.zipCode);
+	 $('#currentMortgageBalance').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.currentMortgageBalance));
+	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "REFCO"){
+			
+			$('#cashTakeOut').val(showValue(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.cashTakeOut));
+	}
+	 calculateInsuranceValue();
+	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.privateincludeTaxes == "Yes"){
+	  $('#quick-quote-yes-container-id').addClass('radio-btn-selected');
+	  $('#quick-quote-yes-container-id').attr('isselected',true);
+	  $('#quick-quote-no-container-id').attr('isselected',false);
+	  $('#impound').attr("value","Yes");
+	 }else {
+	  $('#quick-quote-no-container-id').addClass('radio-btn-selected');
+	  $('#quick-quote-yes-container-id').attr('isselected',false);
+	  $('#quick-quote-no-container-id').attr('isselected',true);
+	  $('#impound').attr("value","No");
+	 }
+	
+}
+
+/**
+ * @param value is the key
+ * @returns {String}
+ */
+function getTaxInsuranceTextFromValue(value){
+	 switch(value){
+	 
+		 case "0":
+		  return "Primary";
+		 case "1":
+		  return "Second";
+		 case "2":
+		  return "Investment";
+	  
+	 }
+}
+
+/**
+ * @param value is the key
+ * @returns {String}
+ */
+function getHomeOwnersInsuranceTextFromValue(value){
+	 switch(value){
+	 
+		 case "0":
+		  return "Single Family";
+		 case "1":
+		  return "Condo";
+		 case "2":
+		  return "2-4 Units";
+	  
+	 }
+}
+
+
+/**function which paint the button section  
+ * @returns container
+ */
 function getSectionOneOfQuickQuote(){
 	var buttonList = [{
 		"title" : "Purchase",
@@ -359,7 +478,11 @@ function getSectionOneOfQuickQuote(){
 	return mainContainer;
 }
 
-/*Function which paint the loan type buttons*/
+
+/**
+ * @param option is the form with elements based on 
+ * @returns
+ */
 function paintButtonSection(option){
 
 	var button = $('<div>').attr({
@@ -427,6 +550,7 @@ function paintDataSection(option,isDefault){
 		"class" : "cep-button-color quick-qoute-btn clearfix ",
 		"id" : "quick-qoute-btn-id"
 	}).html("Get Quote").on('click', function(){
+		isEditPage = false;
 		var loanType = $('div[id="quick-quote-loan-type-id"]').attr('loan-type');
 		var refinanceType = $('div[id="quick-quote-loan-type-id"]').attr('ref-option');
 		var status = validateForm(loanType,refinanceType);
@@ -814,9 +938,17 @@ function paintRatePageUnderQuickQuote(teaserRate, inputCustomerDetails,parentCon
 	        "class": "ce-rate-main-container"
 	    });
 	    $(parentContainer).html(container);
-
-	    var teaserRate =  modifiedLQBJsonResponse(teaserRate);
-	    var rateVO = getLQBObj(teaserRate);
+	    
+	    var rateVO;
+	    
+	    if(isEditPage){
+	    	rateVO = editQuoteUserDetails.teaserRateVO.rateVO;
+	    }
+	    else{
+		    teaserRate =  modifiedLQBJsonResponse(teaserRate);
+		    rateVO = getLQBObj(teaserRate);
+	    }
+	 //   var rateVO = editQuoteUserDetails.teaserRateVO.rateVO;
 	    var parentWrapper = $('<div>').attr({
 	        "class": "loan-summary-wrapper"
 	    });
@@ -1006,8 +1138,11 @@ function getClosingCostContainerRowWithSubTextUnderQuickQuote(rowNum, desc, deta
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
-    rwObj.updateTaxesAndInsurances();
-
+    
+    if(!isEditPage){
+    	rwObj.updateTaxesAndInsurances();
+    }
+    
     return row.append(rowDesc).append(rowDetail);
 }
 
@@ -1050,7 +1185,11 @@ function getClosingCostContainerLastRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
-    rwObj.updateTaxesAndInsurances();
+    //rwObj.updateTaxesAndInsurances();
+    
+    if(!isEditPage){
+    	rwObj.updateTaxesAndInsurances();
+    }
     if(key == "totEstimatedClosingCost"){
     	rwObj.updateTotalEstimatedClosingCosts();
     }
@@ -1239,8 +1378,10 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     closingCostHolder[key]=rwObj;
     rwObj.updateView();
     rwObj.updateDataForPDF();
-    rwObj.updateTaxesAndInsurances();
-    
+    //rwObj.updateTaxesAndInsurances();
+    if(!isEditPage){
+    	rwObj.updateTaxesAndInsurances();
+    }
     if(desc =="Your cost or credit based on rate selected"){
     	return row.append(rowDesc).append(creditPercentValContainer).append(rowDetail);
     }else{
@@ -1272,16 +1413,17 @@ function getClosingCostTopConatinerUnderQuickQuote() {
     var row3Con2 = getClosingCostContainerRowUnderQuickQuote(3, getClosingCostLabel("Flood Certification"), "");
     var row4Con2 = getClosingCostContainerRowUnderQuickQuote(4, getClosingCostLabel("Wire Fee"), "");
     var row4_1Con2;
-    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
+    if((closingCostHolder.loanType&&closingCostHolder.loanType=="PUR") || (isEditPage && editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR")){
         row4_1Con2 = getClosingCostContainerRowUnderQuickQuote(5, getClosingCostLabel("Owners Title Insurance"), "");
+    }
     var row5Con2 = getClosingCostContainerRowUnderQuickQuote(5, getClosingCostLabel("Lenders Title Insurance"), "");
     var row6Con2 = getClosingCostContainerRowUnderQuickQuote(6, getClosingCostLabel("Closing/Escrow Fee"), "");
     var row7Con2 = getClosingCostContainerRowUnderQuickQuote(7, getClosingCostLabel("Recording Fee"), "");
     var row8Con2;
-    if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
-    	//NEXNF-483
-        //row8Con2= getClosingCostContainerRowUnderQuickQuote(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
+    if((closingCostHolder.loanType&&closingCostHolder.loanType=="PUR") || (isEditPage && editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR")){
     row8Con2= getClosingCostContainerRowUnderQuickQuote(8, getClosingCostLabel("City/County Tax stamps"), "");
+    }
+  
     var row9Con2 = getClosingCostContainerLastRowUnderQuickQuote(9, getClosingCostLabel("Total Estimated Third Party Costs"), "");
     container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
     
@@ -1337,7 +1479,11 @@ function getLoanSummaryContainerRefinanceUnderQuickQuote(teaserRate, customerInp
     
     var path = "CEP";
     var yearValues = teaserRate;
-   
+    for(var i=0;i<yearValues.length;i++){
+  	   if(yearValues[i].value == undefined){
+  		  yearValues[i].value = yearValues[i].rateVO[i].yearData; 
+  	   }	   
+     }  
     var rateVO = getLQBObj(yearValues);
     globalChangeContainer.ratVo=rateVO;
      
@@ -1528,7 +1674,11 @@ function getLoanSummaryContainerPurchaseUnderQuickQuote(teaserRate, customerInpu
         livingSituation = capitalizeFirstLetter(appUserDetails.purchaseDetails.livingSituation);
     
     var yearValues = teaserRate;
-       
+    for(var i=0;i<yearValues.length;i++){
+ 	   if(yearValues[i].value == undefined){
+ 		  yearValues[i].value = yearValues[i].rateVO[i].yearData; 
+ 	   }	   
+    }   
     var rateVO = getLQBObj(yearValues);
     globalChangeContainer.ratVo=rateVO;
    
@@ -1681,17 +1831,21 @@ function getInputElmentRowUnderQuickQuote(key,desc, val,inputElementId,appUserDe
     var col1 = $('<div>').attr({
         "class": "loan-summary-col-desc float-left "+txtAlignClas+" "+cla
     }).html(desc);
+   
     var col2 = $('<div>').attr({
         "class": "loan-summary-col-detail float-left"
     });
-    
+    var adjClass = "";
+    if(isEditPage && inputElementId == "firstInput" || inputElementId == "loanAmount" || inputElementId == "secondInput"){
+    	adjClass = "leads-pgm-rate-edit-adj";
+    }
     var inputBox;
     globalChangeContainer.flag=false;
     if(key=="downPayment"){
         inputBox=getDwnPayComponent(val,inputElementId);
     }else{
         inputBox = $('<input>').attr({
-            "class" : "loan-summary-sub-col-detail float-left",
+            "class" : "loan-summary-sub-col-detail float-left "+adjClass,
             "id":inputElementId,
             "value":showValue(val),
         }).bind('keyup',{"appUserDetails":appUserDetails,"key":key},function(e){
@@ -1705,7 +1859,7 @@ function getInputElmentRowUnderQuickQuote(key,desc, val,inputElementId,appUserDe
                 precision:0,
                 allowNegative:false
             }); 
-            
+             
             if(key=="propLoanAmt"||key=="cashOut"||key=="loanBal"||key=="purchasePrice")
                 globalChangeContainer.flag=true;
             
