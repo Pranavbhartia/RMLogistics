@@ -20,6 +20,8 @@ public class LoanDetail implements Serializable {
 	private Double rate;
 	private HomeOwnersInsuranceMaster homeOwnersInsurance;
 	private TitleCompanyMaster titleCompany;
+	private String paymentVendor;
+	
 
 	public LoanDetail() {
 	}
@@ -88,6 +90,14 @@ public class LoanDetail implements Serializable {
 		this.titleCompany = titleCompany;
 	}
 	
+	@Column(name = "payment_vendor")
+	public String getPaymentVendor() {
+		return paymentVendor;
+	}
+
+	public void setPaymentVendor(String paymentVendor) {
+		this.paymentVendor = paymentVendor;
+	}
 	
 	
 
