@@ -39,8 +39,9 @@
 			</c:when>
 		</c:choose>
 		<!--  TODO appending MY LEADS-->
-	
-		<div class="lp-item lp-item-agent my-leads-container clearfix" id="lp-my-lead" onclick="paintAgentDashboard('myLeads');">
+	<c:choose>
+		<c:when test="${userVO.userRole.id eq 3 }">
+			<div class="lp-item lp-item-agent my-leads-container clearfix" id="lp-my-lead" onclick="paintAgentDashboard('myLeads');">
 				<div class="lp-item-header hide" id="lp-item-header"></div>
 					<div class="lp-item-body lp-agent-item2" id="icn-my-leads">
 							<div class="lp-item-body-row lp-item-body-top-row">							
@@ -54,7 +55,8 @@
 							</div>
 					</div>
 			</div>
-		
+		</c:when>
+	</c:choose>
 		
 		<!--  END-->
 		<%-- <div class="lp-item lp-item-agent clearfix" id="lp-work-on-loan" onclick="paintAgentDashboard('workloans');">

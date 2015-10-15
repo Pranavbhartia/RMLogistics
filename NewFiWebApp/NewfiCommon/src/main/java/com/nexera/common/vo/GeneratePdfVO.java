@@ -3,6 +3,7 @@ package com.nexera.common.vo;
 import java.io.Serializable;
 
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
+import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateVO;
 
 public class GeneratePdfVO implements Serializable{
@@ -18,6 +19,8 @@ public class GeneratePdfVO implements Serializable{
 	private String phoneNo;
 	private String pdfUrl;
 	private String impounds;
+	private TeaserRateResponseVO teaserRateVO;
+
 	private String principalInterest;
 	
 	public Integer getUserId() {
@@ -108,6 +111,14 @@ public class GeneratePdfVO implements Serializable{
 		this.impounds = impounds;
 	}
 
+	public TeaserRateResponseVO getTeaserRateVO() {
+		return teaserRateVO;
+	}
+
+	public void setTeaserRateVO(TeaserRateResponseVO teaserRateVO) {
+		this.teaserRateVO = teaserRateVO;
+		
+	}
 	public String getPrincipalInterest() {
 		return principalInterest;
 	}
@@ -115,8 +126,4 @@ public class GeneratePdfVO implements Serializable{
 	public void setPrincipalInterest(String principalInterest) {
 		this.principalInterest = principalInterest;
 	}
-
-	
-	
-	
 }

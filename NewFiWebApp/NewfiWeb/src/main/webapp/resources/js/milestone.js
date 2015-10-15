@@ -1693,29 +1693,17 @@ function appendMilestoneItem(workflowItem, childList) {
 		// It has children 
 		// to the workItem put the rightLeft Attribute
 		workflowItem.rightLeftReference=floatClass;
-		for (index = 0; index < childList.length; index++) {			
+		for (index = 0; index < childList.length; index++) {
+			
 			var childRow = $('<div>').attr({
 				"class" : rightLeftClass + "-text"+" clearfix",
 				"mileNotificationId" : childList[index].id,
 				"data-text" : childList[index].workflowItemType,
 				"id":"WF"+childList[index].id
 			});
-			var childSpan = $('<span>').attr({
-				"mileNotificationId" : childList[index].id,
-				"data-text" : childList[index].workflowItemType
-			}).html(childList[index].displayContent);
-			childRow.append(childSpan);
-			childRow.attr("WFchild",true);
-			childSpan.attr("WFchild",true);
-			childSpan.bind("click", function(e) {
-				milestoneChildEventHandler(e)
-			});
-			addClicableClassToElement(childSpan,childList[index])
-			if(childList[index].status!=COMPLETED)
-				workFlowContext.itemsStatesToBeFetched.push(childList[index].id);
-
+			
 			var itemCheckBox = $('<div>').attr({
-				"class" : "ms-check-box box-border-box " + floatClass,
+				"class" : "ms-check-box box-border-box float-left",
 				"data-checked" : getStatusClass(childList[index])
 			})
 			if(childList[index].clickable){
@@ -1736,6 +1724,21 @@ function appendMilestoneItem(workflowItem, childList) {
 				$(itemCheckBox).addClass("cursor-auto");
 			}
 			childRow.append(itemCheckBox);
+			
+			var childSpan = $('<span>').attr({
+				"class" : "float-left milestone-lbl-width",
+				"mileNotificationId" : childList[index].id,
+				"data-text" : childList[index].workflowItemType
+			}).html(childList[index].displayContent);
+			childRow.append(childSpan);
+			childRow.attr("WFchild",true);
+			childSpan.attr("WFchild",true);
+			childSpan.bind("click", function(e) {
+				milestoneChildEventHandler(e)
+			});
+			addClicableClassToElement(childSpan,childList[index])
+			if(childList[index].status!=COMPLETED)
+				workFlowContext.itemsStatesToBeFetched.push(childList[index].id);
 			wrapper.append(childRow);
 			var itemToAppendTo=workFlowContext.getItemToAppendTo(wrapper,childRow,childList[index]);
 			var WFContxt=appendInfoAction(rightLeftClass, itemToAppendTo, childList[index]);

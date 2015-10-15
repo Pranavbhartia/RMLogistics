@@ -1,5 +1,6 @@
 package com.nexera.core.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +17,11 @@ import com.nexera.common.dao.QuoteDao;
 import com.nexera.common.entity.PurchaseDetails;
 import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.vo.GeneratePdfVO;
+import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.QuoteDetailsVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
+import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateVO;
 import com.nexera.core.service.QuoteService;
 
@@ -168,6 +171,45 @@ public class QuoteServiceImpl implements QuoteService {
 		
 	}
 	
-	
+	public GeneratePdfVO convertToGeneratePdfVo(QuoteDetails quoteDetails){
+		Gson gson = new Gson();
+		GeneratePdfVO generatePdfVO = new GeneratePdfVO();
+		generatePdfVO.setFirstName(quoteDetails.getProspectFirstName());
+		generatePdfVO.setLastName(quoteDetails.getProspectLastName());
+		generatePdfVO.setEmailId(quoteDetails.getEmailId());
+		generatePdfVO.setPdfUrl(quoteDetails.getPdfUrl());
+		generatePdfVO.setLoanProgram(quoteDetails.getLoanProgram());
+		generatePdfVO.setRateAndApr(quoteDetails.getRateAndApr());
+		generatePdfVO.setPhoneNo(quoteDetails.getPhoneNo());
+		generatePdfVO.setUserId(quoteDetails.getQuoteCompositeKey().getInternalUserId());
+		
+		
+		
+		TeaserRateVO teaserRateVO = gson.fromJson(quoteDetails.getInputDetailsJson(), TeaserRateVO.class);
+		generatePdfVO.setInputCustmerDetailUnderQuickQuote(teaserRateVO);
+		
+		LqbTeaserRateVo lqbTeaserRateVo = gson.fromJson(quoteDetails.getLqbRateJson(), LqbTeaserRateVo.class);
+		generatePdfVO.setLqbTeaserRateUnderQuickQuote(lqbTeaserRateVo);
+		
+		TeaserRateResponseVO teaserRateResponseVO = new TeaserRateResponseVO();
+		
+		
+		 String loanProgram = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getYearData();
+	        if(loanProgram.equals("5") || loanProgram.equals("7")){
+	        	loanProgram = loanProgram+" - Year ARM";
+	     }
+	     else{
+	        	loanProgram = loanProgram+" - Year Fixed";
+	     }
+	        
+	     ArrayList<LqbTeaserRateVo> rateVO = new ArrayList<LqbTeaserRateVo>();
+	     rateVO.add(lqbTeaserRateVo);
+	     teaserRateResponseVO.setLoanDuration(loanProgram);
+	     teaserRateResponseVO.setRateVO(rateVO);
+	     
+	     generatePdfVO.setTeaserRateVO(teaserRateResponseVO);
+		
+	     return generatePdfVO;
+	}
 	
 }

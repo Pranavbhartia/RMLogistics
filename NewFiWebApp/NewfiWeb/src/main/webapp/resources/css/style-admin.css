@@ -485,7 +485,7 @@ display: block;
 
 .admin-newfi-team-list-th-col4,
 .admin-newfi-team-list-tr-col4 {
-	width: 22%;
+	width: 14%;
 	padding-left: 5px;
 	height: 20px;
 }
@@ -493,6 +493,13 @@ display: block;
 .admin-newfi-team-list-th-col5,
 .admin-newfi-team-list-tr-col5 {
 	width: 10%;
+	padding-left: 5px;
+	height: 24px;
+}
+
+.admin-newfi-team-list-th-status,
+.admin-newfi-team-list-tr-status {
+	width: 6%;
 	padding-left: 5px;
 	height: 24px;
 }

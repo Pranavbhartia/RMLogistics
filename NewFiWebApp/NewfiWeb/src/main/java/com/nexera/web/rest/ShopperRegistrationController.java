@@ -39,6 +39,7 @@ import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
+import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserVO;
@@ -155,7 +156,25 @@ public class ShopperRegistrationController {
 		}
 	}
 	
-	 @RequestMapping(value = "/record/lead/{userName}/{internalUserID}", method = RequestMethod.POST)
+	@RequestMapping(value = "/record/getQuoteUser/{userName}/{internalUserID}", method = RequestMethod.GET)
+	 public @ResponseBody String editQuoteUser(@PathVariable String userName,@PathVariable Integer internalUserID,
+	         HttpServletRequest request, HttpServletResponse response)
+	         throws IOException {
+		Gson gson = new Gson();
+	    CommonResponseVO responseVO = new CommonResponseVO();
+	    QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+	    ErrorVO error = new ErrorVO();
+	    quoteCompositeKey.setInternalUserId(internalUserID);
+	    quoteCompositeKey.setUserName(userName);
+	    
+	    QuoteDetails quoteDetails = quoteService.getUserDetails(quoteCompositeKey);
+	    GeneratePdfVO generatePdfVO = quoteService.convertToGeneratePdfVo(quoteDetails);
+	    String jsonString = gson.toJson( generatePdfVO );
+	    return jsonString;    
+	}
+	
+
+	@RequestMapping(value = "/record/lead/{userName}/{internalUserID}", method = RequestMethod.POST)
 	 public @ResponseBody CommonResponseVO resgisterLead(@PathVariable String userName,@PathVariable Integer internalUserID,
 	         HttpServletRequest request, HttpServletResponse response)
 	         throws IOException {
