@@ -399,7 +399,6 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 					/*if (loanIdList.contains(loan.getId())) {
 						continue;
 					}
-
 					if (checkIfIdIsInList(loan.getLoanProgressStatus().getId(),
 					        loanProgressStatusIds)) {*/
 						loanListForUser.add(loan);
@@ -1123,7 +1122,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
     }
 	
 	@Override
-	 public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit) {
+	 public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit) {
 
 	  try {
 	   
@@ -1146,7 +1145,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	   }
 	   criteria.setFirstResult(startLimit);
 	   criteria.setMaxResults(endLimit);
-	   List<QuoteDetailsVO> loanTeamList = criteria.list();
+	   List<QuoteDetails> loanTeamList = criteria.list();
 	   
 	   return loanTeamList;
 	  } catch (HibernateException hibernateException) {
@@ -1158,7 +1157,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	 }
 
 	@Override
-	 public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel) {
+	 public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel) {
 
 	  try {
 
@@ -1179,7 +1178,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	    criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
 	   }
 
-	   List<QuoteDetailsVO> loanTeamList = criteria.list();
+	   List<QuoteDetails> loanTeamList = criteria.list();
 	   
 	   return loanTeamList;
 	  } catch (HibernateException hibernateException) {

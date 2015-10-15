@@ -13,6 +13,7 @@ import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
@@ -159,7 +160,7 @@ public interface LoanDao extends GenericDao {
 	
 	public Integer updateLtv(Loan laon);
 	
-	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel);
-	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
+	public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel);
+	public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
 
 }

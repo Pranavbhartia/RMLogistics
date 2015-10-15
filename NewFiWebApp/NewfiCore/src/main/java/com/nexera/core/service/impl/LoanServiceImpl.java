@@ -1,3 +1,4 @@
+
 package com.nexera.core.service.impl;
 
 import java.math.BigDecimal;
@@ -43,6 +44,7 @@ import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTurnAroundTime;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.UploadedFilesList;
@@ -380,8 +382,8 @@ public class LoanServiceImpl implements LoanService {
 		        .retrieveLoanByProgressStatus(
 		                this.parseUserModel(userVO),
 		                new int[] {
-		                        LoanProgressStatusMasterEnum.NEW_LOAN
-		                                .getStatusId(),
+		                        /*LoanProgressStatusMasterEnum.NEW_LOAN
+		                                .getStatusId(),*/
 		                        LoanProgressStatusMasterEnum.IN_PROGRESS
 		                                .getStatusId() });
 		;
@@ -390,6 +392,25 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDasboardForLoansInLeads(UserVO userVO) {
+
+		// Get new prospect and lead loans this user has access to.
+		List<Loan> loanList = loanDao
+		        .retrieveLoanByProgressStatus(
+		                this.parseUserModel(userVO),
+		                new int[] {
+		                        LoanProgressStatusMasterEnum.NEW_LOAN
+		                                .getStatusId()});
+		
+		LoanDashboardVO loanDashboardVO = this
+		        .buildLoanDashboardVoFromLoanList(loanList);
+
+		return loanDashboardVO;
+	}
+	
 	@Override
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO,
@@ -404,8 +425,8 @@ public class LoanServiceImpl implements LoanService {
 		        .retrieveLoanByProgressStatus(
 		                this.parseUserModel(userVO),
 		                new int[] {
-		                        LoanProgressStatusMasterEnum.NEW_LOAN
-		                                .getStatusId(),
+		                        /*LoanProgressStatusMasterEnum.NEW_LOAN
+		                                .getStatusId(),*/
 		                        LoanProgressStatusMasterEnum.IN_PROGRESS
 		                                .getStatusId() }, startLimt, endLimt);
 		;
@@ -2377,30 +2398,63 @@ public class LoanServiceImpl implements LoanService {
 	   endLimt= Integer.parseInt(endLimit);
 	  }
 	  // Get new prospect and lead loans this user has access to.
-	  List<QuoteDetailsVO> loanList = loanDao
+	  List<QuoteDetails> loanList = loanDao
 	          .retrieveLoanForMyLeads(
 	                  this.parseUserModel(userVO),startLimt, endLimt);
 	  
 	  LeadsDashBoardVO dashBoardVO = new LeadsDashBoardVO();
-	  dashBoardVO.setQuoteDetails(loanList);
+	  List<QuoteDetailsVO> quoteDetailsVOs = new ArrayList<QuoteDetailsVO>();
+	  for(QuoteDetails quoteDetailsVO:loanList){
+		  QuoteDetailsVO detailsVO = buildQuoteDetailsV0(quoteDetailsVO);	
+		  
+		  quoteDetailsVOs.add(detailsVO);
+		  
+	  }
+	  dashBoardVO.setQuoteDetails(quoteDetailsVOs);
+	  
+	  //todo get loan list
+	  LoanDashboardVO loanDashboardVO = retrieveDasboardForLoansInLeads(userVO);
+	  dashBoardVO.setLoanDetails(loanDashboardVO);
 
 	  return dashBoardVO;
-	 }
+	 }	
 	
-	 @Override
+	@Override
 	 @Transactional(readOnly = true)
 	 public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO) {
 
 	  // Get new prospect and lead loans this user has access to.
-	  List<QuoteDetailsVO> loanList = loanDao
+	  List<QuoteDetails> loanList = loanDao
 	          .retrieveLoanForMyLeads(
-	                  this.parseUserModel(userVO));
+	                  this.parseUserModel(userVO));	  
+	  LeadsDashBoardVO dashBoardVO = new LeadsDashBoardVO();
+	  List<QuoteDetailsVO> quoteDetailsVOs = new ArrayList<QuoteDetailsVO>();
+	  for(QuoteDetails quoteDetailsVO:loanList){
+		  QuoteDetailsVO detailsVO = buildQuoteDetailsV0(quoteDetailsVO);	
+		  
+		  quoteDetailsVOs.add(detailsVO);
+		  
+	  }
+	  dashBoardVO.setQuoteDetails(quoteDetailsVOs);
 	  
-	  LeadsDashBoardVO dashboardVO = new LeadsDashBoardVO();
-	  dashboardVO.setQuoteDetails(loanList);
-	  return dashboardVO;
+	  //todo get loan list
+	  LoanDashboardVO loanDashboardVO = retrieveDasboardForLoansInLeads(userVO);
+	  dashBoardVO.setLoanDetails(loanDashboardVO);
+	  
+	  return dashBoardVO;
 	 }
 		
+	/**
+	 * @param quoteDetails
+	 * @return
+	 */
+	private QuoteDetailsVO buildQuoteDetailsV0(QuoteDetails quoteDetails){
+		QuoteDetailsVO quoteDetailsVO = QuoteDetailsVO.convertEntityToVO(quoteDetails);
+		UserVO internalUserDeatils = userProfileService.findUser(quoteDetails.getQuoteCompositeKey().getInternalUserId());
+		quoteDetailsVO.setInternalUserName(internalUserDeatils.getFirstName()+" "+internalUserDeatils.getLastName());
+		return quoteDetailsVO;
+	}
+	
 	@Transactional(readOnly = true)
     private void sendNoproductsMailToLM(Integer loanID) {
 

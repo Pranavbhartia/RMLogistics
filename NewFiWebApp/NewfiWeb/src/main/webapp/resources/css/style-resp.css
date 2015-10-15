@@ -1,3 +1,4 @@
+
 /* ============== SMARTPHONES ==============*/
 @media (max-width: 767px) {
 	body{
@@ -524,10 +525,8 @@
 	}
 	
 	.quick-quote-row-LHS {
-	    width: 22%;
-	    padding-right: 5px;
-	    padding-left: 5px;
-	    margin: 0;
+	    width: 25%;
+	    margin-right: 5px;
 	}
 	.quick-quote-row-RHS {
 	    width: 35%;
@@ -535,22 +534,79 @@
 	    /* margin-left: 10px; */
 	}
 	.quick-quote-dwn-payment {
-		width: 48%;
-	}
-	.quick-quote-dwn-percentage {
-		width: 50px;
+		width: 47%;
 	}
 	.err-msg-quick-quote {
-       	width: 56%;
+       	width: 58%;
        	white-space: pre;
- 	}
+ }
 	.quick-quote-dropdown-cont {
-    	width: 25%;
-    	margin: 42px 0 0 110px;
- } 
+    	width: 140px;
+    	margin: 42px 0 0 114px;
+	} 
 	.quote-row {
 	    width: 290px;
 	    margin: 20px 0;
+	}
+	.discount-update-container {
+	    width: 52%;
+	    margin: 0 38px;
+	    float: left;
+	}
+	.discount-update-btn {
+		width: 20%;
+	}
+	.discount-update-feild {
+	    width: 21%;
+	}
+	.leads-col-2,.leads-col-4,.leads-col-6,.leads-col-7 {
+		display: none;
+	}
+	.leads-row-2,.leads-row-4,.leads-row-6,.leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+    	width: 25%;
+	}
+	.leads-col-9 {
+    	width: 21%;
+	}
+	.leads-row-1 {
+    	width: 23%;
+ }
+	.leads-row-5 {
+    	width: 16%;
+ }
+	.leads-row-8 {
+    	width: 14%;
+ }
+	.leads-row-9 {
+	    /* background-size: 32%; */
+	    /* width: 47px !important; */
+	    margin-top: 6px;
+	}
+	.grey-edit {
+	    /* width: 17px; */
+	    /* background-size: 67%; */
+	    margin-top: 11px;
+	}
+	.leads-user-created {
+	    /* background-size: 28%; */
+	    /* background-size: 66%; */
+	    width: 9%;
+	    margin-top: 10px;
+	}
+	.leads-row-11 {
+	    /* background-size: 66%; */
+	    /* width: 9%; */
+	    margin-top: 10px;
+	    /* margin-left: 2px; */
+	}
+
+	.blue-edit {
+	    /* width: 17px; */
+	    /* background-size: 67%; */
+	    margin-top: 7px;
 	}
 }
 
@@ -784,7 +840,7 @@
 		max-width: 100%;
 	}
 	
- 	.quick-quote-button-section {
+		 .quick-quote-button-section {
 	    width: 519px;
 	}
 	.quick-quote-col {
@@ -806,25 +862,83 @@
 	}
 	.quick-quote-row-RHS {
 	    width: 30%;
+	    /* padding-left: 15px; */
 	    margin-left: 5px;
 	}
 	.quick-quote-dwn-payment {
-		width: 40%;
-	}
-	.quick-quote-dwn-percentage {
-		width: 45px;
+		width: 38%;
 	}
 	.err-msg-quick-quote {
-       	width: 48%;
+       	width: 258px;
        	white-space: pre;
  }
 	.quick-quote-dropdown-cont {
-    	width: 16%;
-    	margin: 42px 0 0 130px;
+    	width: 169px;
+    	margin: 42px 0 0 114px;
  } 
 	.quote-row {
 	    width: 290px;
 	    margin: 20px 0;
+	}
+	.discount-update-container {
+	    width: 68%;
+	    margin: 0 0 0 37px;
+	    float: left;
+	}
+	.discount-update-btn {
+		width: 15%;
+	}
+	.discount-update-feild {
+	    width: 15%;
+	}
+		.leads-col-2,.leads-col-3,.leads-col-4,.leads-col-6,.leads-col-7 {
+		display: none;
+	}
+	.leads-row-2,.leads-row-3,.leads-row-4,.leads-row-6,.leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+    	width: 25%;
+	}
+	.leads-col-9 {
+    	width: 21%;
+	}
+	.leads-row-1 {
+    	width: 26%;
+	}
+	.leads-row-5 {
+    	width: 20%;
+	}
+	.leads-row-8 {
+    	width: 8%;
+	}
+	.leads-row-9 {
+	    background-size: 32%;
+	    width: 47px !important;
+	    margin-top: 6px;
+	}
+	.grey-edit {
+	    width: 17px;
+	    background-size: 67%;
+	    margin-top: 11px;
+	}
+	.leads-user-created {
+	    background-size: 28%;
+	    background-size: 66%;
+	    width: 9%;
+	    margin-top: 10px;
+	}
+	.leads-row-11 {
+	    background-size: 66%;
+	    width: 9%;
+	    margin-top: 10px;
+	    margin-left: 2px;
+	}
+
+	.blue-edit {
+	    width: 17px;
+	    background-size: 67%;
+	    margin-top: 5px;
 	}
 }
 
@@ -937,16 +1051,76 @@
 		width: 47%;
 	}
 	.err-msg-quick-quote {
-       	width: 31%;
+       	width: 260px;
        	white-space: pre;
  }
 	.quick-quote-dropdown-cont {
-    	width: 16%;
-    	margin: 42px 0 0 171px;
+    	width: 168px;
+    	margin: 42px 0 0 114px;
  } 
 	.quote-row {
 	    width: 290px;
 	    margin: 20px 0;
+	}
+	.discount-update-container {
+	    width: 64%;
+	    margin: 0 42px;
+	    float: left;
+	}
+	.discount-update-btn {
+		width: 15%;
+	}
+	.discount-update-feild {
+	    width: 15%;
+	}
+		.leads-col-2,.leads-col-3,.leads-col-4,.leads-col-6,.leads-col-7 {
+		display: none;
+	}
+	.leads-row-2,.leads-row-3,.leads-row-4,.leads-row-6,.leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+    	width: 25%;
+	}
+	.leads-col-9 {
+    	width: 21%;
+	}
+	.leads-row-1 {
+    	width: 26%;
+	}
+	.leads-row-5 {
+    	width: 20%;
+	}
+	.leads-row-8 {
+    	width: 8%;
+	}
+	.leads-row-9 {
+	    background-size: 32%;
+	    width: 47px !important;
+	    margin-top: 6px;
+	}
+	.grey-edit {
+	    width: 17px;
+	    background-size: 67%;
+	    margin-top: 11px;
+	}
+	.leads-user-created {
+	    background-size: 28%;
+	    background-size: 66%;
+	    width: 9%;
+	    margin-top: 10px;
+	}
+	.leads-row-11 {
+	    background-size: 66%;
+	    width: 9%;
+	    margin-top: 10px;
+	    margin-left: 2px;
+	}
+
+	.blue-edit {
+	    width: 17px;
+	    background-size: 67%;
+	    margin-top: 5px;
 	}
 }
 
@@ -964,6 +1138,9 @@
 	}
 	.sm-dashboard {
 		width:87% !important;
+	}
+	.leads-dashboard {
+		width:90% !important;
 	}
 	.quick-quote-agent-dashboard {
 		width:1000px !important;
@@ -1654,41 +1831,91 @@
 	}
 	
 	.quick-quote-row-LHS {
-	    width: 25%;
+	    padding-left: 20px;
 	    text-align: left;
 	}
 	.quick-quote-row-RHS {
-	    width: 26%;
+	    width: 25%;
 	    /* padding-left: 15px; */
 	}
 	.quick-quote-dwn-payment {
-		width: 33%;
-	}
-	.quick-quote-dwn-percentage {
-		width: 48px;
-		margin-right: 0;
+		width: 29%;
 	}
 	.err-msg-quick-quote {
-       	width: 50%;
+       	width: 213px;
        	white-space: pre;
- }
+ 	}
 	.quick-quote-dropdown-cont {
-    	width: 38%;
-    	margin: 42px 0 0 125px;
- } 
+    	width: 168px;
+    	margin: 42px 0 0 142px;
+ 	} 
 	.quote-row {
 	    width: 290px;
 	    margin: 20px 0;
 	}
-	.admin-newfi-team-list-th-col4,
-    .admin-newfi-team-list-tr-col4 {
-	  display: none;
-  }
-  .admin-newfi-team-list-th-col5,
-  .admin-newfi-team-list-tr-col5 {
-	width: 16%;
-  }
-	
+	.discount-update-container {
+	    width: 55%;
+	    margin: 0 10px;
+	    float: left;
+	}
+	.discount-update-btn {
+		width: 35%;
+	}
+	.discount-update-feild {
+	    width: 33%;
+	}
+	.leads-col-2,.leads-col-3,.leads-col-4,.leads-col-6,.leads-col-7 {
+		display: none;
+	}
+	.leads-row-2,.leads-row-3,.leads-row-4,.leads-row-6,.leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+    	width: 25%;
+	}
+	.leads-col-9 {
+    	width: 31%;
+	}
+	.leads-row-1 {
+    	width: 20%;
+    	margin-left: 2px;
+    	margin-right: 17px;
+ 	}
+	.leads-row-5 {
+    	width: 22%;
+	}
+	.leads-row-8 {
+    	width: 15%;
+ 	}
+	.leads-row-9 {
+	    margin-top: 5px;
+	}
+	.grey-edit {
+	    margin-top: 8px;
+	    margin-left: 5px;
+	}
+	.leads-user-created {
+	    margin-top: 9px;
+	    margin-left: 3px;
+	}
+	.leads-col-5 {
+		width: 22%;
+	}
+	.leads-col-8 {
+		width: 18%;
+	}
+	.leads-row-11 {
+	    margin-top: 9px;
+	    margin-left: 2px;
+	}
+
+	.blue-edit {
+	    margin-top: 5px;
+	    margin-left: 4px;
+	}
+	.leaddelCustClas {
+		right: 1%;
+	}
 }
 
 @media (min-width: 476px) and (max-width: 648px){
@@ -1728,19 +1955,74 @@
 	    margin: 0;
 	}
 	.quick-quote-dwn-payment {
-		width: 52%;
+		width: 49%;
 	}
 	.err-msg-quick-quote {
-       	width: 0;
+       	width: 213px;
        	white-space: pre;
  }
 	.quick-quote-dropdown-cont {
-    	width: 30%;
-    	margin: 42px 0 0 250px;
+    	width: 168px;
+    	margin: 42px 0 0 142px;
  } 
 	.quote-row {
 	    width: 290px;
 	    margin: 20px 0;
+	}
+	.discount-update-container {
+	    width: 58%;
+	    margin: 0 0 0 30px;
+	    float: left;
+	}
+	.discount-update-btn {
+		width: 25%;
+	}
+	.discount-update-feild {
+	    width: 25%;
+	}
+		.leads-col-2,.leads-col-4,.leads-col-6,.leads-col-7 {
+		display: none;
+	}
+	.leads-row-2,.leads-row-4,.leads-row-6,.leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+    	width: 27%;
+ 	}
+	.leads-col-9 {
+    	width: 24%;
+ 	}
+	.leads-row-1 {
+    	width: 26%;
+    	margin-left: 5px;
+    	word-break: break-word;
+    	margin-right: 5px;
+ 	}
+	.leads-row-5 {
+    	width: 18%;
+  	}
+  	.leads-row-3 {
+    	width: 17%;
+	}
+	.leads-row-8 {
+    	width: 13%;
+  	}
+	.leads-row-9 {
+	    margin-top: 2px;
+	}
+	.grey-edit {
+	    margin-top: 3px;
+	}
+	.leads-user-created {
+	    margin-top: 4px;
+	}
+	.leads-row-11 {
+	    margin-top: 5px;
+	    margin-left: 10px;
+	}
+
+	.blue-edit {
+	    margin-top: 3px;
 	}
 }
 

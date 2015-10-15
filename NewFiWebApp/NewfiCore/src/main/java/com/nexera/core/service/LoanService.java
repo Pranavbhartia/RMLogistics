@@ -237,6 +237,6 @@ public interface LoanService {
 	         String startLimit, String endLimit);
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
 
-
+	public LoanDashboardVO retrieveDasboardForLoansInLeads(UserVO userVO);
 
 }
