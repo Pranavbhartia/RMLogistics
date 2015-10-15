@@ -38,7 +38,8 @@ public class UWReviewedManager implements IWorkflowTaskExecutor {
 		String status = objectMap.get(
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		if (status != null) {
-			if (!(status.equals(LOSLoanStatus.LQB_STATUS_APPROVED
+			//This concrete class will be called for Approved, Denied and Suspened - only when it s denied
+			if ((status.equals(LOSLoanStatus.LQB_STATUS_LOAN_DENIED
 			        .getLosStatusID() + ""))) {
 				loanService.saveLoanProgress(loanId,
 				        new LoanProgressStatusMaster(
