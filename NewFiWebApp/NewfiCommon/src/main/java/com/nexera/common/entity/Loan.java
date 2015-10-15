@@ -529,7 +529,7 @@ public class Loan implements Serializable {
 		detailVO.setDownPayment(detail.getDownPayment());
 		detailVO.setLoanAmount(detail.getLoanAmount());
 		detailVO.setRate(detail.getRate());
-
+		detailVO.setPaymentVendor(detail.getPaymentVendor());
 		return detailVO;
 
 	}

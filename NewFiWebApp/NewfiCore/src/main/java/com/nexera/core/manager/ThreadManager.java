@@ -73,7 +73,6 @@ import com.nexera.core.service.TemplateService;
 import com.nexera.core.service.TransactionService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
-import com.nexera.core.service.impl.LoanServiceImpl;
 import com.nexera.core.utility.CoreCommonConstants;
 import com.nexera.core.utility.CreditScoreXMLHandler;
 import com.nexera.core.utility.LoadXMLHandler;
@@ -162,7 +161,6 @@ public class ThreadManager implements Runnable {
 
 	@Override
 	public void run() {
-
 		boolean success = true;
 		LOGGER.debug("Inside method run ");
 		LOGGER.debug("Loading all workflowitems");
@@ -197,6 +195,8 @@ public class ThreadManager implements Runnable {
 						String appraisalOrderedDate = null;
 						String appraisalReceivedDate = null;
 						String disclosureReceivedDate = null;
+						String interviewDate = null;
+						String appraisalVendorName = null;
 						String loanApprValue = null;
 						String loanAmount = null;
 						Milestones theMilestone = null;
@@ -210,6 +210,26 @@ public class ThreadManager implements Runnable {
 									currentLoanStatus = Integer
 									        .parseInt(loadResponseVO
 									                .getFieldValue());
+								} else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_INTERVIEW_DATE)) {
+									interviewDate = loadResponseVO
+									        .getFieldValue();
+									LOGGER.debug("The interview Date for 1003 for "
+									        + loan.getId()
+									        + " is "
+									        + interviewDate);
+
+								}
+
+								else if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_APPRAISAL_VENDOR)) {
+									appraisalVendorName = loadResponseVO
+									        .getFieldValue();
+									LOGGER.debug("The Appraisal Vendor name for "
+									        + loan.getId()
+									        + " is "
+									        + appraisalVendorName);
+
 								} else if (fieldId
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_RATE_LOCK_STATUS)) {
 									if (loadResponseVO.getFieldValue() != null) {
@@ -246,15 +266,13 @@ public class ThreadManager implements Runnable {
 										appraisalReceivedDate = loadResponseVO
 										        .getFieldValue();
 									}
-								}
-								else if (fieldId
+								} else if (fieldId
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_DISCLOSURE_RECEIVED)) {
 									if (loadResponseVO.getFieldValue() != null) {
 										disclosureReceivedDate = loadResponseVO
 										        .getFieldValue();
 									}
-								}
-								else if (fieldId
+								} else if (fieldId
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAN_APPR_VALUE)) {
 									if (loadResponseVO.getFieldValue() != null) {
 										loanApprValue = loadResponseVO
@@ -266,12 +284,10 @@ public class ThreadManager implements Runnable {
 										loanAmount = loadResponseVO
 										        .getFieldValue();
 									}
-								}
-								else if (fieldId
+								} else if (fieldId
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LTV)) {
 									if (loadResponseVO.getFieldValue() != null) {
-										ltv = loadResponseVO
-										        .getFieldValue();
+										ltv = loadResponseVO.getFieldValue();
 									}
 								}
 
@@ -293,10 +309,10 @@ public class ThreadManager implements Runnable {
 								        .getLqbLoanAmount());
 								loanService.updateLQBAmounts(updateLoan);
 							}
-							if (ltv != null && loan.getLtv() == null)
-							{
-								//update Loan for LTV
-								LOGGER.info("Updating LTV for loan " + loan.getId());
+							if (ltv != null && loan.getLtv() == null) {
+								// update Loan for LTV
+								LOGGER.info("Updating LTV for loan "
+								        + loan.getId());
 								Loan updateLoan = new Loan(loan.getId());
 								updateLoan.setLtv(Double
 								        .parseDouble(formatAmount(ltv)));
@@ -360,6 +376,15 @@ public class ThreadManager implements Runnable {
 								        workflowItems, workflowItemExecList);
 								putItemsIntoExecution(workflowItemsExecList,
 								        LoadConstants.LQB_DISCLOSURE_RECEIVED);
+							}
+							if (interviewDate != null) {
+								List<String> workflowItems = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
+								        .get(Milestones.App1003);
+								List<WorkflowItemExec> workflowItemsExecList = itemToExecute(
+								        workflowItems, workflowItemExecList);
+								putItemsIntoExecution(
+								        workflowItemsExecList,
+								        LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED);
 							}
 							LOSLoanStatus loanStatusID = null;
 							if (currentLoanStatus == -1) {
@@ -593,7 +618,8 @@ public class ThreadManager implements Runnable {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				LOGGER.error("Exception while sleeping for loanId: "+loan.getId()+", Exception is: "+e.getMessage());
+				LOGGER.error("Exception while sleeping for loanId: "
+				        + loan.getId() + ", Exception is: " + e.getMessage());
 			}
 		}
 
@@ -608,12 +634,14 @@ public class ThreadManager implements Runnable {
 			boolean creditScoreValid = loanService
 			        .isCreditScoreValid(customerDetail);
 			// Using invokeLQB field to check whether loan is modified or not
-			if (customerDetail.getTransunionScore() == null || (invokeLQB && !creditScoreValid)) {
+			if (customerDetail.getTransunionScore() == null
+			        || (invokeLQB && !creditScoreValid)) {
 				if (!fetchCreditScore(loan)) {
 					success = false;
 				}
 			}
 		}
+		fetchAppraisalVendor(loan);
 
 		LOGGER.debug("Check whether purchase document is about to expire");
 		if (loan.getLoanType() != null) {
@@ -711,16 +739,17 @@ public class ThreadManager implements Runnable {
 				        currentLoanStatus, workflowItemExec.getId()));
 				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
 				        params);
-				
+
 				List<WorkflowItemExec> childWorkflowItemExecList = workflowService
 				        .getWorkflowItemListByParentWorkflowExecItem(workflowItemExec);
-				for(WorkflowItemExec workitem: childWorkflowItemExecList){
-					String chilldParams = Utils.convertMapToJson(getParamsBasedOnStatus(
-					        currentLoanStatus, workitem.getId()));
+				for (WorkflowItemExec workitem : childWorkflowItemExecList) {
+					String chilldParams = Utils
+					        .convertMapToJson(getParamsBasedOnStatus(
+					                currentLoanStatus, workitem.getId()));
 					workflowService.saveParamsInExecTable(workitem.getId(),
-							chilldParams);
+					        chilldParams);
 				}
-				
+
 				EngineTrigger engineTrigger = applicationContext
 				        .getBean(EngineTrigger.class);
 				engineTrigger.startWorkFlowItemExecution(workflowItemExec
@@ -826,6 +855,54 @@ public class ThreadManager implements Runnable {
 			        "Request Json Object Not Created For Credit Score ");
 			nexeraUtility
 			        .sendExceptionEmail("Unable to create json object for credit score ");
+		}
+		return success;
+	}
+
+	private Boolean fetchAppraisalVendor(Loan loan) {
+		LOGGER.debug("Inside method fetchAppraisalVendor ");
+		int format = 0;
+		Boolean success = true;
+		Map<String, String> map = new HashMap<String, String>();
+		
+		LOGGER.debug(loan.getLoanDetail().getPaymentVendor());
+		JSONObject appraisalVendorJSONObject = nexeraUtility
+		        .createLoadJsonObject(map,
+		                WebServiceOperations.OP_NAME_GET_APPRAISAL_VENDOR,
+		                loan.getLqbFileId(), format, exceptionMaster);
+		if (appraisalVendorJSONObject != null) {
+			LOGGER.debug("Invoking LQB service to fetch Loan status ");
+			JSONObject loadJSONResponse = lqbInvoker
+			        .invokeLqbService(appraisalVendorJSONObject.toString());
+			if (loadJSONResponse != null) {
+				if (!loadJSONResponse
+				        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+
+					String loadResponse = loadJSONResponse
+					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+					loadResponse = nexeraUtility
+					        .removeBackSlashDelimiter(loadResponse);
+
+					List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
+					if (loadResponseList != null) {
+						for (LoadResponseVO loadResponseVO : loadResponseList) {
+							String fieldId = loadResponseVO.getFieldId();
+							if (fieldId
+							        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_APPRAISAL_VENDOR)) {
+								LOGGER.debug("The appraisal vedor name is "
+								        + loadResponseVO.getFieldValue());
+							}
+						}
+					}
+					LOGGER.debug("Invoking LQB service to fetch Appraisal Vendor  ");
+				}
+			} else {
+				success = false;
+				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
+				        "Request Json Object Not Created For Credit Score ");
+				nexeraUtility
+				        .sendExceptionEmail("Unable to create json object for credit score ");
+			}
 		}
 		return success;
 	}

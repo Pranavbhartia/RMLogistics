@@ -199,9 +199,6 @@ public class WorkflowConstants {
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_UW_REVIEWED)));
 		
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_UW_REVIEWED)));
-			
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_UW_APPROVED, WORKFLOW_ITEM_UW_REVIEWED )));
 		
