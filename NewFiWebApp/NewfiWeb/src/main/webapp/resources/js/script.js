@@ -2443,12 +2443,12 @@ function getFileDragAndDropContainer(loanEmailID) {
 /*    var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
     }).html("or e-mail attachment to : "+loanEmailID);*/
-    var textCont2 = $('<div>').attr({
+    /*var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
-    }).html("You can also email files to : "+loanEmailID);
+    }).html("You can also email files to : "+loanEmailID);*/
     //NEXNF-806
    /* return container.append(fileUploadIcn).append(textCont1Mobile).append(textCont2);*/
-    return container.append(textCont1).append(fileUploadIcn).append(textCont1Mobile).append(textCont2);
+    return container.append(textCont1).append(fileUploadIcn).append(textCont1Mobile);/*.append(textCont2);*/
 }
 
 function getDocumentContainer() {
