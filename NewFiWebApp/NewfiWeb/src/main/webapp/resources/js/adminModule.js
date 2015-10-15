@@ -576,7 +576,7 @@ function appendDataToNewfiTeamWrapperForAdmin(data){
 		   var tableRow = getAdminTeamListTableRow(users);
 		   
 		   // added check for cuser type. Based on that will be appended on user list.
-		   if(users.userRole.id != 1){
+		   if(users.userRole.id != 1 && users.userRole.id != 2){
 			   $("#admin-newfi-team-container-id").append(tableRow);
 		   } else {
 			   $("#admin-newfi-team-container-id-customer").append(tableRow);
