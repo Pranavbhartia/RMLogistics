@@ -663,17 +663,23 @@ function getInternalEmployeeMileStoneContext( workItem) {
 								}
 							}
 							else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE"){
-								//var tempOb=JSON.parse(ob.workItem.stateInfo);
-								ob.stateInfoContainer.html(ob.workItem.stateInfo);
 								
-								if (ob.workItem.stateInfo =="Disclosures Required")
-								{
-									$(ob.stateInfoContainer).removeClass("cursor-pointer");
+								var tempOb=JSON.parse(workItem.stateInfo);
+								if(tempOb.status){
+									ob.stateInfoContainer.html(tempOb.status);
 								}
-								else
+								if (tempOb)
 								{
-									attachCursorPointerClassToElement(ob.stateInfoContainer);
+									if (tempOb.stateInfo =="Disclosures Required")
+									{
+										$(ob.stateInfoContainer).removeClass("cursor-pointer");
+									}
+									else
+									{
+										attachCursorPointerClassToElement(ob.stateInfoContainer);
+									}
 								}
+								workFlowContext.mileStoneContextList[ob.workItem.id].paymentType = tempOb.PAYMENT_TYPE;
 								
 							}
 							else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
