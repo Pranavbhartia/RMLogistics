@@ -1127,7 +1127,7 @@ function getAppFeeEdit(workItem)
 		"class" : "showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
-	}).html("Click here to change fee").bind("click", function(e) {
+	}).html("Click here to edit").bind("click", function(e) {
 		milestoneChildEventHandler(e);
 	});
 	appFeeEditItem.append(spanContainer);
@@ -1887,6 +1887,7 @@ function milestoneChildEventHandler(event) {
 		if(paymentType != null && paymentType.toLowerCase() == "axis")
 		{
 			makePaymentFromAxis("axisPayment");
+			window.open("https://axis.vmpxsites.com/makeapayment");
 		}
 		else{
 			$('body').addClass('body-no-scroll');
@@ -1960,7 +1961,7 @@ function makePaymentFromAxis(nonce){
 		data : data,
 		success : function(e){
 			hideOverlay();
-			showToastMessage("Payment successful");
+			//showToastMessage("Payment successful");
 			changeStateForAxisPayment();
 		},
 		error :  function(e) {
@@ -2199,14 +2200,16 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	var divLHS = $('<div>').attr({
 		"class": "milestone-txt-LHS float-left"
 	}).html("Vendor Type");
-	
+	var value = workFlowContext.mileStoneContextList[milestoneId].paymentType;
 	var divRHS = $('<div>').attr({
 		"class": "milestone-dropdown-RHS float-left",
-		"value":""
-	}).bind("click",function(e){
+		"value":value
+	}).html(value).bind("click",function(e){
 		$(this).parent().find('.milestone-dropdown-container').toggle();
 		
 	});
+	
+	
 	var divCont = $('<div>').attr({
 		"class": "milestone-dd-cont",
 		
