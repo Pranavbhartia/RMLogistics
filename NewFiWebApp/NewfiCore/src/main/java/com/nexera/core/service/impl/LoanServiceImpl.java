@@ -34,6 +34,7 @@ import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
@@ -45,6 +46,7 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TitleCompanyMaster;
+import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
@@ -2355,6 +2357,12 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
+	public LoanDetail findLoanDetailOfLoan(Loan loan) {
+		return loanDao.findLoanDetailOfLoan(loan);
+	}
+	
+	@Override
+	@Transactional
     public Integer updateLQBAmounts(Loan loan) {
 	    Integer rows = loanDao.updateLQBAmounts(loan);
 	    return rows;
@@ -2400,7 +2408,17 @@ public class LoanServiceImpl implements LoanService {
 	  dashboardVO.setQuoteDetails(loanList);
 	  return dashboardVO;
 	 }
-		
+	
+	 @Transactional
+	 public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) {
+		return  loanDao.addLoanApplicationFee(loanApplicationFee);
+	 }
+	 
+	 @Transactional
+	 public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) {
+		 return loanDao.updateTransactionDetails(transactionDetails);
+	 }
+	 
 	@Transactional(readOnly = true)
     private void sendNoproductsMailToLM(Integer loanID) {
 

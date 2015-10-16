@@ -11,7 +11,7 @@ var PURCHASE = "PUR";
 var REFINANACE = "REF";
 var REFINANACE_LOWER_MORTGAGE_PAYMENT = "REFLMP";
 var REFINANACE_CASH_OUT = "REFCO";
-var isEditPage = false;
+//var isEditPage = false;
 var firstName;
 var lastName;
 

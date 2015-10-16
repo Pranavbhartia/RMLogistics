@@ -7,6 +7,7 @@ import java.util.List;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanNeedsList;
@@ -14,6 +15,7 @@ import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.TitleCompanyMaster;
+import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.vo.LoanTypeMasterVO;
@@ -161,5 +163,9 @@ public interface LoanDao extends GenericDao {
 	
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel);
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
+	
+	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) ;
+	
+	public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
 
 }

@@ -10,6 +10,7 @@ var rateLockRequestedFlag = false;
 var closedialog;
 var totalEstimatedClosingCosts = new Object();
 var lqbTeaserRateUnderQuickQuote = new Object();
+var isEditPage = false;
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);

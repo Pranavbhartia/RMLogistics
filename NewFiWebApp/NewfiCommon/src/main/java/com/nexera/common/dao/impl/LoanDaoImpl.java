@@ -26,6 +26,7 @@ import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.HomeOwnersInsuranceMaster;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
@@ -35,6 +36,7 @@ import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.TitleCompanyMaster;
+import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.ActiveInternalEnum;
@@ -663,6 +665,18 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		return homeOwnInsMaster;
 	}
 
+	@Override
+	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) {
+		this.save(loanApplicationFee);
+		return loanApplicationFee;
+	}
+	
+	@Override
+	public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) {
+		this.update(transactionDetails);
+		return transactionDetails;
+	}
+	
 	@Override
 	public TitleCompanyMaster addTitleCompany(
 	        TitleCompanyMaster titleCompanyMaster) {
