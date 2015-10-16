@@ -1127,7 +1127,7 @@ function getAppFeeEdit(workItem)
 		"class" : "showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
-	}).html("Click here to change fee").bind("click", function(e) {
+	}).html("Click here to edit").bind("click", function(e) {
 		milestoneChildEventHandler(e);
 	});
 	appFeeEditItem.append(spanContainer);
@@ -2200,14 +2200,16 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	var divLHS = $('<div>').attr({
 		"class": "milestone-txt-LHS float-left"
 	}).html("Vendor Type");
-	
+	var value = workFlowContext.mileStoneContextList[milestoneId].paymentType;
 	var divRHS = $('<div>').attr({
 		"class": "milestone-dropdown-RHS float-left",
-		"value":""
-	}).bind("click",function(e){
+		"value":value
+	}).html(value).bind("click",function(e){
 		$(this).parent().find('.milestone-dropdown-container').toggle();
 		
 	});
+	
+	
 	var divCont = $('<div>').attr({
 		"class": "milestone-dd-cont",
 		
