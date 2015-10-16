@@ -39,6 +39,9 @@ public interface CoreCommonConstants {
 	public static String SOAP_XML_UNDERWRITING_CONDITION_DESCRIPTION = "CondDesc";
 
 	public static String SOAP_XML_LOAD_LOAN_STATUS = "sStatusT";
+	public static String SOAP_XML_LOAD_INTERVIEW_DATE =  "GetPreparerOfForm[App1003Interviewer].PrepareDate_rep";
+	
+	public static String SOAP_XML_LOAD_APPRAISAL_VENDOR =  "sAppraisalVendorNm";
 
 	public static String SOAP_XML_USER_SSN_NUMBER = "aBSsn";
 

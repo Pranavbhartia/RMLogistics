@@ -177,6 +177,21 @@ public class Utils {
 		return null;
 
 	}
+	
+	public String getDateAndTimeForLQBUpdate(Date date) {
+		
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+		try {
+			String stringdate = dateFormat.format(date);
+
+			return stringdate;
+		} catch (Exception e) {
+			LOG.error("Exception Caught in getdatefordisplay method"
+			        + e.getMessage());
+		}
+		return null;
+
+	}
 
 	public String getDateAndTimeForDisplay(Date date) {
 
@@ -195,7 +210,7 @@ public class Utils {
 		}
 		return null;
 
-	}
+	}		
 
 	public Date getDateInUserLocale(Date date) {
 
