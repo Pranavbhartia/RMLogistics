@@ -10,8 +10,7 @@ public class LoanDetailVO implements Serializable {
 	private Double loanAmount;
 	private Double rate;
 	private LoanVO loan;
-	private String paymentVendor;
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -60,11 +59,5 @@ public class LoanDetailVO implements Serializable {
 		this.loan = loan;
 	}
 
-	public String getPaymentVendor() {
-		return paymentVendor;
-	}
-
-	public void setPaymentVendor(String paymentVendor) {
-		this.paymentVendor = paymentVendor;
-	}
+	
 }

@@ -236,7 +236,7 @@ public interface LoanService {
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
 	         String startLimit, String endLimit);
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
-
+	public void updateAppraisalVendor(Integer loanID, String appraisalVendorName) ;
 
 
 }

@@ -865,9 +865,7 @@ public class ThreadManager implements Runnable {
 		Boolean success = true;
 		Map<String, String> map = new HashMap<String, String>();
 		
-		if (loan.getLoanDetail() != null) {
-			LOGGER.debug(loan.getLoanDetail().getPaymentVendor());
-		}
+		
 		JSONObject appraisalVendorJSONObject = nexeraUtility
 		        .createLoadJsonObject(map,
 		                WebServiceOperations.OP_NAME_GET_APPRAISAL_VENDOR,

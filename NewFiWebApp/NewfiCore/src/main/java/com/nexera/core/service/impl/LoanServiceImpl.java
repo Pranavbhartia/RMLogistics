@@ -205,6 +205,15 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional
+	public void updateAppraisalVendor(Integer loanID, String appraisalVendorName) {
+
+		loanDao.updateAppraisalVendor(loanID, appraisalVendorName);
+
+		return;
+	}
+
+	@Override
 	@Transactional(readOnly = true)
 	public Loan fetchLoanById(Integer loanID) {
 		return (Loan) loanDao.load(Loan.class, loanID);
@@ -303,13 +312,13 @@ public class LoanServiceImpl implements LoanService {
 		loan.setName(loanVO.getName());
 		loan.setIsBankConnected(loanVO.getIsBankConnected());
 		loan.setLockStatus(loanVO.getLockStatus());
-		if(loanVO.getAppraisedValue()!=null){
+		if (loanVO.getAppraisedValue() != null) {
 			loan.setLqbAppraisedValue(loanVO.getAppraisedValue());
 		}
-		if(loanVO.getLoanAmount()!=null){
+		if (loanVO.getLoanAmount() != null) {
 			loan.setLqbLoanAmount(loanVO.getLoanAmount());
 		}
-		if(loanVO.getLtv() != null){
+		if (loanVO.getLtv() != null) {
 			loan.setLtv(loanVO.getLtv());
 		}
 		return loan;
@@ -390,14 +399,15 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForWorkLoans(UserVO userVO,
 	        String startLimit, String endLimit) {
 		int startLimt = Integer.parseInt(startLimit);
 		int endLimt = startLimt + 15;
-		if(endLimit!=null){
-			endLimt= Integer.parseInt(endLimit);
+		if (endLimit != null) {
+			endLimt = Integer.parseInt(endLimit);
 		}
 		// Get new prospect and lead loans this user has access to.
 		List<Loan> loanList = loanDao
@@ -428,13 +438,13 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForArchiveLoans(UserVO userVO) {
 
-		// Get declined , withdrawn , closed and delete loans this user has access to.
+		// Get declined , withdrawn , closed and delete loans this user has
+		// access to.
 		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
 		        this.parseUserModel(userVO), new int[] {
 		                LoanProgressStatusMasterEnum.SMCLOSED.getStatusId(),
 		                LoanProgressStatusMasterEnum.WITHDRAWN.getStatusId(),
-		                LoanProgressStatusMasterEnum.DECLINED.getStatusId()
-		              });
+		                LoanProgressStatusMasterEnum.DECLINED.getStatusId() });
 
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
@@ -469,13 +479,13 @@ public class LoanServiceImpl implements LoanService {
 			for (Loan loan : loanList) {
 				LoanCustomerVO loanCustomerVO = this
 				        .buildLoanCustomerVoFromUser(loan);
-				LoanMilestone loan_status=getLqbLoanStatus(loan);
-				if(loan_status!=null){
+				LoanMilestone loan_status = getLqbLoanStatus(loan);
+				if (loan_status != null) {
 					loanCustomerVO.setLqbLoanStatus(loan_status.getComments());
 				}
-				
+
 				loanCustomerVoList.add(loanCustomerVO);
-				
+
 			}
 		}
 
@@ -485,17 +495,19 @@ public class LoanServiceImpl implements LoanService {
 
 		return loanDashboardVO;
 	}
-	
-	private LoanMilestone getLqbLoanStatus(Loan loan){
-		
-		LoanMilestone loan_status=loanMilestoneDao.getLqbLoanStatus(loan);
-		if(loan_status!=null){
-			LOG.info("Loan milestone master id......................................."+loan_status.getLoanMilestoneMaster().getId());
+
+	private LoanMilestone getLqbLoanStatus(Loan loan) {
+
+		LoanMilestone loan_status = loanMilestoneDao.getLqbLoanStatus(loan);
+		if (loan_status != null) {
+			LOG.info("Loan milestone master id......................................."
+			        + loan_status.getLoanMilestoneMaster().getId());
 		}
-		
+
 		return loan_status;
-		
+
 	}
+
 	/**
 	 * return loanCustomerVo from loan
 	 * 
@@ -619,9 +631,9 @@ public class LoanServiceImpl implements LoanService {
 			customerDetailVO.setId(customerDetail.getId());
 		}
 		loanCustomerVO.setCustomerDetail(customerDetailVO);
-		
-		//TODO to append user last login time
-		if(user.getLastLoginDate() != null){
+
+		// TODO to append user last login time
+		if (user.getLastLoginDate() != null) {
 			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
 		}
 
@@ -789,14 +801,14 @@ public class LoanServiceImpl implements LoanService {
 			// loan.setCreatedDate(new Date(System.currentTimeMillis()));
 
 			loan.setLockedRate(loanVO.getLockedRate());
-			if(loanVO.getAppraisedValue()!=null){
+			if (loanVO.getAppraisedValue() != null) {
 				loan.setLqbAppraisedValue(loanVO.getAppraisedValue());
 			}
-			if(loanVO.getLoanAmount()!=null){
+			if (loanVO.getLoanAmount() != null) {
 				loan.setLqbLoanAmount(loanVO.getLoanAmount());
 			}
-			
-			if(loanVO.getLtv() != null){
+
+			if (loanVO.getLtv() != null) {
 				loan.setLtv(loanVO.getLtv());
 			}
 		} catch (Exception e) {
@@ -1248,13 +1260,13 @@ public class LoanServiceImpl implements LoanService {
 	        String loanMilestoneMAsterName) {
 		return loanDao.findLoanMileStoneByLoan(loan, loanMilestoneMAsterName);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
-	public LoanMilestone findLoanMileStoneByCriteria(LoanMilestone searchCriteria) {
+	public LoanMilestone findLoanMileStoneByCriteria(
+	        LoanMilestone searchCriteria) {
 		return loanDao.findLoanMileStoneByCriteria(searchCriteria);
 	}
-
 
 	@Override
 	@Transactional(readOnly = true)
@@ -1521,8 +1533,8 @@ public class LoanServiceImpl implements LoanService {
 			UploadedFilesList file = needListService
 			        .fetchPurchaseDocumentBasedOnPurchaseContract(loanID);
 			loanVO.getLoanType().setUploadedFiles(
-			        uploadedFilesListService.buildUpdateFileVo(file));			
-			
+			        uploadedFilesListService.buildUpdateFileVo(file));
+
 		}
 
 		if (loanVO != null) {
@@ -1562,28 +1574,28 @@ public class LoanServiceImpl implements LoanService {
 				loanVO.setCreditReportUrl("");
 			}
 
-			//Check for loanLqbStatus
-			LoanMilestone lqbLoanStatus=getLqbLoanStatus(loan);
-			if(lqbLoanStatus!=null){
+			// Check for loanLqbStatus
+			LoanMilestone lqbLoanStatus = getLqbLoanStatus(loan);
+			if (lqbLoanStatus != null) {
 				loanVO.setLqbLoanStatus(lqbLoanStatus.getComments());
 			}
 		}
-		
+
 		LoanAppForm appForm = loanAppFormService.findByLoan(loan);
-		if(appForm !=  null){
-			if(appForm.getPurchaseDetails().getHousePrice()!=null){
-				loanVO.setPurchaseValue(appForm.getPurchaseDetails().getHousePrice());
+		if (appForm != null) {
+			if (appForm.getPurchaseDetails().getHousePrice() != null) {
+				loanVO.setPurchaseValue(appForm.getPurchaseDetails()
+				        .getHousePrice());
 			}
-			if(appForm.getPropertyTypeMaster().getHomeWorthToday()!=null){
+			if (appForm.getPropertyTypeMaster().getHomeWorthToday() != null) {
 				PropertyTypeMasterVO masterVO = new PropertyTypeMasterVO();
-				masterVO.setHomeWorthToday(appForm.getPropertyTypeMaster().getHomeWorthToday());
+				masterVO.setHomeWorthToday(appForm.getPropertyTypeMaster()
+				        .getHomeWorthToday());
 				loanVO.setPropertyType(masterVO);
 			}
-			
-			
+
 		}
-		
-		
+
 		return loanVO;
 	}
 
@@ -1844,18 +1856,22 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public void sendApplicationSubmitConfirmationMail(Integer loanId,boolean sendNoProductsMail) {
+	public void sendApplicationSubmitConfirmationMail(Integer loanId,
+	        boolean sendNoProductsMail) {
 
-		if(sendNoProductsMail){
+		if (sendNoProductsMail) {
 			sendNoproductsMailToLM(loanId);
 		}
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
 		LoanVO loan = getLoanByID(loanId);
 		if (loan != null) {
-			//JIRA-860
-	/*		Template template = templateService
-			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);*/
+			// JIRA-860
+			/*
+			 * Template template = templateService
+			 * .getTemplateByKey(CommonConstants
+			 * .TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);
+			 */
 			Template template = templateService
 			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION);
 			// We create the substitutions map
@@ -1872,9 +1888,10 @@ public class LoanServiceImpl implements LoanService {
 				                + CommonConstants.SENDER_EMAIL_ID);
 			}
 			emailEntity.setSenderName(CommonConstants.SENDER_NAME);
-			//jira-680
-			/*emailEntity.setSubject("No Products Available");*/
-			emailEntity.setSubject(CommonConstants.SUBJECT_APPLICATION_SUBMIT_COMFIRMATION);
+			// jira-680
+			/* emailEntity.setSubject("No Products Available"); */
+			emailEntity
+			        .setSubject(CommonConstants.SUBJECT_APPLICATION_SUBMIT_COMFIRMATION);
 			emailEntity.setTokenMap(substitutions);
 			emailEntity.setTemplateId(template.getValue());
 			List<String> ccList = new ArrayList<String>();
@@ -1882,7 +1899,7 @@ public class LoanServiceImpl implements LoanService {
 			        + CommonConstants.SENDER_EMAIL_ID);
 
 			emailEntity.setCCList(ccList);
-			
+
 			try {
 
 				sendEmailService.sendEmailForCustomer(emailEntity, loanId,
@@ -1892,26 +1909,27 @@ public class LoanServiceImpl implements LoanService {
 			} catch (UndeliveredEmailException e) {
 				LOG.error("Mail send failed--" + e);
 			}
-			
+
 			LOG.info("Send Application Submit Status mail to internal users of loan team.................................");
-			
+
 			EmailVO loanManagerEmailEntity = new EmailVO();
 			Map<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
 			Template loanManagerTemplate = new Template();
 			Integer loanID = loan.getId();
 			LOG.info("Send confirmation mail to internal users of loan team........................");
-			
-		    loanManagerTemplate = templateService
-				        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_AAPLICATION_SUBMIT_CONFIRMATION_FOR_INTERNAL_USERS);
+
+			loanManagerTemplate = templateService
+			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_AAPLICATION_SUBMIT_CONFIRMATION_FOR_INTERNAL_USERS);
 
 			loanManagerSubstitutions.put("-customerName-", new String[] { loan
-			        .getUser().getFirstName()+" "+ loan
-			        .getUser().getLastName()});
-			loanManagerSubstitutions.put("-LQBnumber-", new String[] { loan.getLqbFileId()
-			        });
-			loanManagerSubstitutions.put("-loanID-", new String[] { loanID.toString()
-	        });
-			
+			        .getUser().getFirstName()
+			        + " "
+			        + loan.getUser().getLastName() });
+			loanManagerSubstitutions.put("-LQBnumber-",
+			        new String[] { loan.getLqbFileId() });
+			loanManagerSubstitutions.put("-loanID-",
+			        new String[] { loanID.toString() });
+
 			if (loan.getUser() != null) {
 				loanManagerEmailEntity.setSenderEmailId(loan.getUser()
 				        .getUsername() + CommonConstants.SENDER_EMAIL_ID);
@@ -1921,11 +1939,12 @@ public class LoanServiceImpl implements LoanService {
 				                + CommonConstants.SENDER_EMAIL_ID);
 			}
 			loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
-			loanManagerEmailEntity.setSubject(CommonConstants.SUBJECT_NEW_LOAN_SUBMISSION_ALERT);
+			loanManagerEmailEntity
+			        .setSubject(CommonConstants.SUBJECT_NEW_LOAN_SUBMISSION_ALERT);
 
 			loanManagerEmailEntity
 			        .setTemplateId(loanManagerTemplate.getValue());
-			
+
 			String loanManagerUsername = null;
 			String loanManagerName = null;
 			LoanTeamListVO loanTeamList = getLoanTeamListForLoan(loan);
@@ -1963,10 +1982,9 @@ public class LoanServiceImpl implements LoanService {
 			} catch (UndeliveredEmailException e) {
 				LOG.error("Mail send failed--" + e);
 			}
-			
-			
+
+		}
 	}
-}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -1974,13 +1992,15 @@ public class LoanServiceImpl implements LoanService {
 
 		EmailVO emailEntity = new EmailVO();
 		EmailRecipientVO recipientVO = new EmailRecipientVO();
-/*
-		Template template = templateService
-		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);*/
+		/*
+		 * Template template = templateService
+		 * .getTemplateByKey(CommonConstants.
+		 * TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE);
+		 */
 
 		Template template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION);
-		
+
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
 		substitutions.put("-name-", new String[] { userVO.getFirstName() + " "
@@ -2262,25 +2282,26 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-	public void markLoanDeleted(int loanId){
+	public void markLoanDeleted(int loanId) {
 		Loan loan = (Loan) loanDao.load(Loan.class, loanId);
 		LoanProgressStatusMaster loanProgressStatusMaster = (LoanProgressStatusMaster) loanDao
 		        .load(LoanProgressStatusMaster.class,
 		                LoanProgressStatusMasterEnum.DELETED.getStatusId());
 		loan.setLoanProgressStatus(loanProgressStatusMaster);
-		loanDao.saveOrUpdate(loan);		
-		
-		//TODO-to mark the loan as deleted in loan milestone table
+		loanDao.saveOrUpdate(loan);
+
+		// TODO-to mark the loan as deleted in loan milestone table
 		LoanMilestone lm = findLoanMileStoneByLoan(loan,
-		           Milestones.DELETE.getMilestoneKey());
-		   if (lm == null) {
-			   LOG.info("updating the milestone in loanmile stone table to delete");
-		    updateNexeraMilestone(loan.getId(),
-		            Milestones.DELETE.getMilestoneID(),Milestones.DELETE.getMilestoneKey());
-		   }
+		        Milestones.DELETE.getMilestoneKey());
+		if (lm == null) {
+			LOG.info("updating the milestone in loanmile stone table to delete");
+			updateNexeraMilestone(loan.getId(),
+			        Milestones.DELETE.getMilestoneID(),
+			        Milestones.DELETE.getMilestoneKey());
+		}
 
 		User user = loan.getUser();
-    
+
 		String updatedEmail = "deletedEmail-" + user.getEmailId();
 		boolean userFound = true;
 		int count = 0;
@@ -2288,14 +2309,14 @@ public class LoanServiceImpl implements LoanService {
 
 			try {
 				User userVo = userProfileService.findUserByMail(updatedEmail);
-			
+
 				if (userVo != null) {
 					updatedEmail = "deletedEmail" + count + "-"
 					        + user.getEmailId();
 					count++;
 				} else {
 					userFound = false;
-					
+
 				}
 			} catch (DatabaseException e) {
 				// TODO Auto-generated catch block
@@ -2309,13 +2330,13 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional
-    public int updateStatusInLoanTeam(UserVO userVO) {
-	    // TODO Auto-generated method stub
+	public int updateStatusInLoanTeam(UserVO userVO) {
+		// TODO Auto-generated method stub
 		User user = User.convertFromVOToEntity(userVO);
 		int rows = loanDao.updateStatusInLoanTeam(user);
-	    return rows;
-    }
-	
+		return rows;
+	}
+
 	@Override
 	@Transactional
 	public String updateNexeraMilestone(int loanId, int masterMileStoneId,
@@ -2340,134 +2361,136 @@ public class LoanServiceImpl implements LoanService {
 			return status;
 		}
 	}
-	
+
 	@Override
 	@Transactional
-	public void updateLoanModifiedDate(int loanId, Date modifiedDate){
+	public void updateLoanModifiedDate(int loanId, Date modifiedDate) {
 		loanDao.updateLoanModifiedDate(loanId, modifiedDate);
 	}
-	
+
 	@Override
 	@Transactional
-	public void updateLoanLockDetails(int loanId, Date lockExpirationDate, String lockedRate, String lockStatus){
-		loanDao.updateLoanLockDetails(loanId, lockExpirationDate, lockedRate, lockStatus);
+	public void updateLoanLockDetails(int loanId, Date lockExpirationDate,
+	        String lockedRate, String lockStatus) {
+		loanDao.updateLoanLockDetails(loanId, lockExpirationDate, lockedRate,
+		        lockStatus);
 	}
 
 	@Override
 	@Transactional
-    public Integer updateLQBAmounts(Loan loan) {
-	    Integer rows = loanDao.updateLQBAmounts(loan);
-	    return rows;
-    }
+	public Integer updateLQBAmounts(Loan loan) {
+		Integer rows = loanDao.updateLQBAmounts(loan);
+		return rows;
+	}
 
 	@Override
 	@Transactional
-    public Integer updateLtv(Loan laon) {
-	   Integer rows = loanDao.updateLtv(laon);
-	   return rows;
-    }
+	public Integer updateLtv(Loan laon) {
+		Integer rows = loanDao.updateLtv(laon);
+		return rows;
+	}
 
 	@Override
-	 @Transactional(readOnly = true)
-	 public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
-	         String startLimit, String endLimit) {
-	  int startLimt = Integer.parseInt(startLimit);
-	  int endLimt = startLimt + 15;
-	  if(endLimit!=null){
-	   endLimt= Integer.parseInt(endLimit);
-	  }
-	  // Get new prospect and lead loans this user has access to.
-	  List<QuoteDetailsVO> loanList = loanDao
-	          .retrieveLoanForMyLeads(
-	                  this.parseUserModel(userVO),startLimt, endLimt);
-	  
-	  LeadsDashBoardVO dashBoardVO = new LeadsDashBoardVO();
-	  dashBoardVO.setQuoteDetails(loanList);
-
-	  return dashBoardVO;
-	 }
-	
-	 @Override
-	 @Transactional(readOnly = true)
-	 public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO) {
-
-	  // Get new prospect and lead loans this user has access to.
-	  List<QuoteDetailsVO> loanList = loanDao
-	          .retrieveLoanForMyLeads(
-	                  this.parseUserModel(userVO));
-	  
-	  LeadsDashBoardVO dashboardVO = new LeadsDashBoardVO();
-	  dashboardVO.setQuoteDetails(loanList);
-	  return dashboardVO;
-	 }
-		
 	@Transactional(readOnly = true)
-    private void sendNoproductsMailToLM(Integer loanID) {
+	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
+	        String startLimit, String endLimit) {
+		int startLimt = Integer.parseInt(startLimit);
+		int endLimt = startLimt + 15;
+		if (endLimit != null) {
+			endLimt = Integer.parseInt(endLimit);
+		}
+		// Get new prospect and lead loans this user has access to.
+		List<QuoteDetailsVO> loanList = loanDao.retrieveLoanForMyLeads(
+		        this.parseUserModel(userVO), startLimt, endLimt);
 
-			LoanVO loan = getLoanByID(loanID);
-			EmailVO	loanManagerEmailEntity = new EmailVO();
-			HashMap<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
-			Template loanManagerTemplate = new Template();
-			LOG.info("Send no products mail to internal users of loan team...................");
-			
-		    loanManagerTemplate = templateService
-			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
-			// We create the substitutions map
-			
-			loanManagerSubstitutions.put("-customername-", new String[] { loan
-			        .getUser().getFirstName() });
-			if (loan.getUser() != null) {
-				loanManagerEmailEntity.setSenderEmailId(loan.getUser()
-				        .getUsername() + CommonConstants.SENDER_EMAIL_ID);
-			} else {
-				loanManagerEmailEntity
-				        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
-				                + CommonConstants.SENDER_EMAIL_ID);
-			}
-			loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
-			loanManagerEmailEntity.setSubject(CommonConstants.SUBJECT_NO_PRODUCTS);
+		LeadsDashBoardVO dashBoardVO = new LeadsDashBoardVO();
+		dashBoardVO.setQuoteDetails(loanList);
 
+		return dashBoardVO;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO) {
+
+		// Get new prospect and lead loans this user has access to.
+		List<QuoteDetailsVO> loanList = loanDao.retrieveLoanForMyLeads(this
+		        .parseUserModel(userVO));
+
+		LeadsDashBoardVO dashboardVO = new LeadsDashBoardVO();
+		dashboardVO.setQuoteDetails(loanList);
+		return dashboardVO;
+	}
+
+	@Transactional(readOnly = true)
+	private void sendNoproductsMailToLM(Integer loanID) {
+
+		LoanVO loan = getLoanByID(loanID);
+		EmailVO loanManagerEmailEntity = new EmailVO();
+		HashMap<String, String[]> loanManagerSubstitutions = new HashMap<String, String[]>();
+		Template loanManagerTemplate = new Template();
+		LOG.info("Send no products mail to internal users of loan team...................");
+
+		loanManagerTemplate = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER);
+		// We create the substitutions map
+
+		loanManagerSubstitutions.put("-customername-", new String[] { loan
+		        .getUser().getFirstName() });
+		if (loan.getUser() != null) {
+			loanManagerEmailEntity.setSenderEmailId(loan.getUser()
+			        .getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		} else {
 			loanManagerEmailEntity
-			        .setTemplateId(loanManagerTemplate.getValue());
-			
-			String loanManagerUsernameNoProducts = null;
-			String loanManagerNameNoProducts = null;
-			LoanTeamListVO loanTeamListNoProducts = getLoanTeamListForLoan(loan);
-			for (LoanTeamVO loanTeam : loanTeamListNoProducts.getLoanTeamList()) {
-				if (loanTeam.getUser() != null) {
-					if (loanTeam.getUser().getInternalUserDetail() != null) {
-						if (loanTeam.getUser().getInternalUserDetail()
-						        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
-						        .getRoleId()) {
-							loanManagerUsernameNoProducts = loanTeam.getUser()
-							        .getUsername();
-							loanManagerNameNoProducts = loanTeam.getUser().getFirstName()
-							        + " " + loanTeam.getUser().getLastName();
-						}
+			        .setSenderEmailId(CommonConstants.SENDER_DEFAULT_USER_NAME
+			                + CommonConstants.SENDER_EMAIL_ID);
+		}
+		loanManagerEmailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		loanManagerEmailEntity.setSubject(CommonConstants.SUBJECT_NO_PRODUCTS);
+
+		loanManagerEmailEntity.setTemplateId(loanManagerTemplate.getValue());
+
+		String loanManagerUsernameNoProducts = null;
+		String loanManagerNameNoProducts = null;
+		LoanTeamListVO loanTeamListNoProducts = getLoanTeamListForLoan(loan);
+		for (LoanTeamVO loanTeam : loanTeamListNoProducts.getLoanTeamList()) {
+			if (loanTeam.getUser() != null) {
+				if (loanTeam.getUser().getInternalUserDetail() != null) {
+					if (loanTeam.getUser().getInternalUserDetail()
+					        .getInternalUserRoleMasterVO().getId() == InternalUserRolesEum.LM
+					        .getRoleId()) {
+						loanManagerUsernameNoProducts = loanTeam.getUser()
+						        .getUsername();
+						loanManagerNameNoProducts = loanTeam.getUser()
+						        .getFirstName()
+						        + " "
+						        + loanTeam.getUser().getLastName();
 					}
 				}
 			}
+		}
 
-			loanManagerSubstitutions.put("-name-",
-			        new String[] { loanManagerNameNoProducts });
-			loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
-			List<String> loanManagerccListNoProducts = new ArrayList<String>();
-			if (loanManagerUsernameNoProducts != null) {
-				loanManagerccListNoProducts.add(CommonConstants.SENDER_DEFAULT_USER_NAME
-				        + "-" + loanManagerUsernameNoProducts + "-" + loan.getId()
-				        + CommonConstants.SENDER_EMAIL_ID);
+		loanManagerSubstitutions.put("-name-",
+		        new String[] { loanManagerNameNoProducts });
+		loanManagerEmailEntity.setTokenMap(loanManagerSubstitutions);
+		List<String> loanManagerccListNoProducts = new ArrayList<String>();
+		if (loanManagerUsernameNoProducts != null) {
+			loanManagerccListNoProducts
+			        .add(CommonConstants.SENDER_DEFAULT_USER_NAME + "-"
+			                + loanManagerUsernameNoProducts + "-"
+			                + loan.getId() + CommonConstants.SENDER_EMAIL_ID);
 
-				loanManagerEmailEntity.setCCList(loanManagerccListNoProducts);
-			}
-			try {
-				sendEmailService.sendEmailForLoanManagers(
-				        loanManagerEmailEntity, loanID, loanManagerTemplate);
-			} catch (InvalidInputException e) {
-				LOG.error("Mail send failed--" + e);
-			} catch (UndeliveredEmailException e) {
-				LOG.error("Mail send failed--" + e);
-			}
-							
-		}	
-	    
+			loanManagerEmailEntity.setCCList(loanManagerccListNoProducts);
+		}
+		try {
+			sendEmailService.sendEmailForLoanManagers(loanManagerEmailEntity,
+			        loanID, loanManagerTemplate);
+		} catch (InvalidInputException e) {
+			LOG.error("Mail send failed--" + e);
+		} catch (UndeliveredEmailException e) {
+			LOG.error("Mail send failed--" + e);
+		}
+
+	}
+
 }
