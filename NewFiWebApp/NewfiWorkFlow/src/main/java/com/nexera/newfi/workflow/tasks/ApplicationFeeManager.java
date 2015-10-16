@@ -125,7 +125,11 @@ public class ApplicationFeeManager extends NexeraWorkflowTask implements
 				        WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 				        messageForNote);
 				objectMap.put(WorkflowDisplayConstants.PAYMENT_STATUS, status);
-				sendEmail(objectMap, subject);
+				Loan loanObj =  loanService.fetchLoanById(loanId);
+				if ( loanObj != null && (loanObj.getPaymentVendor()==null || !"axis".equalsIgnoreCase(loanObj.getPaymentVendor())))
+				{
+					sendEmail(objectMap, subject);
+				}
 			}
 
 		}

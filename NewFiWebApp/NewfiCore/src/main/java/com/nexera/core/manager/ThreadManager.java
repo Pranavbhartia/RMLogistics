@@ -810,7 +810,7 @@ public class ThreadManager implements Runnable {
 					applicationFee.setModifiedBy(sysAdmin);
 					applicationFee.setModifiedDate(new Date(System.currentTimeMillis()));
 					applicationFee.setTransactionDetails(transactionDetails);
-					
+					applicationFee.setPaymentDate(new Date(System.currentTimeMillis()));
 					// Use the loan dao object to make a general save
 					loanService.addLoanApplicationFee(applicationFee);
 
