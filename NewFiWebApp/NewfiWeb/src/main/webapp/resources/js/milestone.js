@@ -2161,8 +2161,11 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	}).css({
 		"left" : offset.left,
 		"top" : offset.top+42
+	}).bind('click',function(e){
+		if($('.milestone-dropdown-container').css("display") == "block"){
+			$('.milestone-dropdown-container').hide();
+		}
 	});
-	
 	var header = $('<div>').attr({
 		"class" : "popup-header"
 	}).html("App Fee Edit");
@@ -2206,6 +2209,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 		"class": "milestone-dropdown-RHS float-left",
 		"value":value
 	}).html(value).bind("click",function(e){
+		e.stopPropagation();
 		$(this).parent().find('.milestone-dropdown-container').toggle();
 		
 	});
