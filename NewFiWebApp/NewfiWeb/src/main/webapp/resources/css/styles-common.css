@@ -985,3 +985,8 @@ a.cus-eng-succ-mess-email {
     margin: 35px auto;
     position: relative;
 }
+.note-container {
+    text-align: center;
+    color: rgba(255, 0, 0, 0.86);
+    font-family: 'opensanssemibold';
+}
