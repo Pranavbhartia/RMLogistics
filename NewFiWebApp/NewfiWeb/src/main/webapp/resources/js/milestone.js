@@ -740,6 +740,7 @@ function showAppFee (itemToAppendTo,workItem)
 			if(tempOb.status){
 				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.html(tempOb.status);	
 				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.addClass("cursor-pointer");
+				workFlowContext.mileStoneContextList[workItem.id].paymentType = tempOb.PAYMENT_TYPE;
 				if (workItem.status == NOT_STARTED)
 				{				
 					workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("data-text",workItem.workflowItemType+ "_PAY_FOR");
@@ -1856,6 +1857,10 @@ function milestoneChildEventHandler(event) {
 	}
 	else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE" || $(event.target).attr("data-text") == "APP_FEE_PAY_FOR" ) {
 		var workItemIDAppFee = $(event.target).attr("mileNotificationId");
+		var paymentType;
+		if(typeof(workFlowContext.mileStoneContextList[workItemIDAppFee].paymentType) != 'undefined'){
+			paymentType = workFlowContext.mileStoneContextList[workItemIDAppFee].paymentType;
+		}
 		if (workFlowContext.mileStoneContextList[workItemIDAppFee].workItem.status != NOT_STARTED )
 		{
 			return;
@@ -1868,26 +1873,33 @@ function milestoneChildEventHandler(event) {
 	 	
 		console.log("Pay application fee clicked!");
 		showOverlay();
-		$('body').addClass('body-no-scroll');
-		url = "/NewfiWeb/payment/initialisepayment.do";
-		payload = "loan_id=" + String(workFlowContext.loanId);
 		
-		 $.ajax({
-		        url : url,
-		        type : "POST",
-		        data : payload,
-		        cache:false,
-		        success : function(data) {
-		        	console.log("Show payment called with data : " + data);
-		        	$("#popup-overlay").html(data);
-		        	hideOverlay();		        		        	
-		        	$("#popup-overlay").show();
-		        },
-		        error : function(e) {
-		        	hideOverlay();
-		            console.error("error : " + e);
-		        }
-		    });
+		if(paymentType.toLowerCase() == "axis")
+		{
+			makePaymentFromAxis("axisPayment");
+		}
+		else{
+			$('body').addClass('body-no-scroll');
+			url = "/NewfiWeb/payment/initialisepayment.do";
+			payload = "loan_id=" + String(workFlowContext.loanId);
+			
+			 $.ajax({
+			        url : url,
+			        type : "POST",
+			        data : payload,
+			        cache:false,
+			        success : function(data) {
+			        	console.log("Show payment called with data : " + data);
+			        	$("#popup-overlay").html(data);
+			        	hideOverlay();		        		        	
+			        	$("#popup-overlay").show();
+			        },
+			        error : function(e) {
+			        	hideOverlay();
+			            console.error("error : " + e);
+			        }
+			    });
+		}
 	}else if ($(event.target).attr("data-text") == "CONTACT_LOAN_MANAGER") {
 	 	event.stopPropagation();
 	 	if(workFlowContext.dataContainer.managerList){
@@ -1909,6 +1921,43 @@ function milestoneChildEventHandler(event) {
 			},false);
 	 	}
 	}
+}
+
+// Make payment from Axis gateway
+function makePaymentFromAxis(nonce){
+	console.log("Making payment");
+	//console.log(event);
+	console.log(nonce);
+	
+	var loanID = 0;
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+	{
+		loanID = newfiObject.user.defaultLoanId;
+	}
+	else
+	{
+		loanID = selectedUserDetail.loanID;
+	}
+	console.log("loanID"+loanID);
+	//showOverlay();
+	url="./rest/payment/pay";
+	data = "payment_nonce=" + String(nonce);
+	data = data +"&loan_id=" + String(loanID);
+	$.ajax({
+		url : url,
+		type : "POST",
+		cache:false,
+		data : data,
+		success : function(e){
+			hideOverlay();
+			showToastMessage("Payment successful");
+		},
+		error :  function(e) {
+			showToastMessage("Internal error occurred. Please try later.");
+			hideOverlay();
+            console.error("error : " + e);
+        }
+	});
 }
 
 

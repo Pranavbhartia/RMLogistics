@@ -8,12 +8,15 @@ import java.util.Map;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanApplicationFee;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -236,7 +239,14 @@ public interface LoanService {
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
 	         String startLimit, String endLimit);
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
+
+	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) ;
+
 	public void updateAppraisalVendor(Integer loanID, String appraisalVendorName) ;
 
+
+	 public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
+	 
+	 public LoanDetail findLoanDetailOfLoan(Loan loan) ;
 
 }

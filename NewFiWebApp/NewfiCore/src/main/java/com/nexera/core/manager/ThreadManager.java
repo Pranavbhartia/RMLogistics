@@ -36,16 +36,19 @@ import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
+import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.ExceptionMaster;
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TransactionDetails;
+import com.nexera.common.entity.User;
 import com.nexera.common.enums.LOSLoanStatus;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -102,7 +105,7 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	WorkflowService workflowService;
-
+	
 	@Autowired
 	LoanService loanService;
 
@@ -798,7 +801,28 @@ public class ThreadManager implements Runnable {
 		for (TransactionDetails transactionDetails : transactionDetailsList) {
 			LOGGER.debug("Invoking Braintree Service ");
 			try {
-				if (braintreePaymentGatewayService.checkAndUpdateTransactions(
+				if(transactionDetails.getTransaction_id().equals("axisTransactionId")){
+					LOGGER.debug("Axis Transaction has been successful");
+					User sysAdmin = new User();
+					sysAdmin.setId(CommonConstants.SYSTEM_ADMIN_ID);
+					LoanApplicationFee applicationFee = new LoanApplicationFee();
+					applicationFee.setLoan(transactionDetails.getLoan());
+					applicationFee.setModifiedBy(sysAdmin);
+					applicationFee.setModifiedDate(new Date(System.currentTimeMillis()));
+					applicationFee.setTransactionDetails(transactionDetails);
+					
+					// Use the loan dao object to make a general save
+					loanService.addLoanApplicationFee(applicationFee);
+
+					// Update the transaction details table to soft delete the record.
+					transactionDetails.setStatus(CommonConstants.TRANSACTION_STATUS_DISABLED);
+					loanService.updateTransactionDetails(transactionDetails);	
+					
+					
+					
+					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_SUCCESS);
+				}
+				else if (braintreePaymentGatewayService.checkAndUpdateTransactions(
 				        transactionDetails).equalsIgnoreCase(
 				        LoanStatus.APP_PAYMENT_SUCCESS)) {
 					LOGGER.debug("Transaction has been successful");
