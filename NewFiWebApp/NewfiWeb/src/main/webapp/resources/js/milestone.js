@@ -1982,7 +1982,8 @@ function changeStateForAxisPayment ()
 	}
 	var workItemIDAppFee = referenceMileStone.id;	
 	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.html("Pending - Verification");
-	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.removeClass("cursor-pointer");
+	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.removeClass("cursor-pointer").attr("disabled","disabled");
+	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.css("pointer-events","none");
 	referenceMileStone.status="1";
 	$("#WF"+workItemIDAppFee).addClass("m-in-progress");
 	$("#WF"+workItemIDAppFee).removeClass("m-not-started");	
@@ -2269,7 +2270,9 @@ function appendAppFeeEditPopup(element,milestoneId) {
 						showErrorToastMessage(response.error.message);
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId];							
-						$("#WF"+milestoneId).find("#"+milestoneId+"fee").html("$"+newFee);						
+						$("#WF"+milestoneId).find("#"+milestoneId+"fee").html("$"+newFee);		
+						
+						workFlowContext.mileStoneContextList[milestoneId].paymentType =vendorType;
 						removeAppFeeEditPopup();
 					}
 			},false);
