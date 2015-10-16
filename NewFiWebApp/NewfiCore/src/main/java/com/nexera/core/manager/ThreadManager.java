@@ -864,8 +864,7 @@ public class ThreadManager implements Runnable {
 		int format = 0;
 		Boolean success = true;
 		Map<String, String> map = new HashMap<String, String>();
-		
-		
+
 		JSONObject appraisalVendorJSONObject = nexeraUtility
 		        .createLoadJsonObject(map,
 		                WebServiceOperations.OP_NAME_GET_APPRAISAL_VENDOR,
@@ -889,8 +888,12 @@ public class ThreadManager implements Runnable {
 							String fieldId = loadResponseVO.getFieldId();
 							if (fieldId
 							        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_APPRAISAL_VENDOR)) {
+								String appraisalVendor = loadResponseVO
+								        .getFieldValue();
+								loanService.updateAppraisalVendor(loan.getId(),
+								        appraisalVendor);
 								LOGGER.debug("The appraisal vedor name is "
-								        + loadResponseVO.getFieldValue());
+								        + appraisalVendor);
 							}
 						}
 					}
