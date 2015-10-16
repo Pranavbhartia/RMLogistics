@@ -20,8 +20,6 @@ public class LoanDetail implements Serializable {
 	private Double rate;
 	private HomeOwnersInsuranceMaster homeOwnersInsurance;
 	private TitleCompanyMaster titleCompany;
-	private String paymentVendor;
-	
 
 	public LoanDetail() {
 	}
@@ -70,18 +68,19 @@ public class LoanDetail implements Serializable {
 		this.rate = rate;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="home_owners_insurance")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "home_owners_insurance")
 	public HomeOwnersInsuranceMaster getHomeOwnersInsurance() {
 		return homeOwnersInsurance;
 	}
 
-	public void setHomeOwnersInsurance(HomeOwnersInsuranceMaster homeOwnersInsurance) {
+	public void setHomeOwnersInsurance(
+	        HomeOwnersInsuranceMaster homeOwnersInsurance) {
 		this.homeOwnersInsurance = homeOwnersInsurance;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="title_company")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "title_company")
 	public TitleCompanyMaster getTitleCompany() {
 		return titleCompany;
 	}
@@ -89,16 +88,5 @@ public class LoanDetail implements Serializable {
 	public void setTitleCompany(TitleCompanyMaster titleCompany) {
 		this.titleCompany = titleCompany;
 	}
-	
-	@Column(name = "payment_vendor")
-	public String getPaymentVendor() {
-		return paymentVendor;
-	}
-
-	public void setPaymentVendor(String paymentVendor) {
-		this.paymentVendor = paymentVendor;
-	}
-	
-	
 
 }
