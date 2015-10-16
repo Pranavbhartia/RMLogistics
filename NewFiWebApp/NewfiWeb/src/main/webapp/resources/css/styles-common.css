@@ -936,7 +936,7 @@ a.cus-eng-succ-mess-email {
 }
 
 .milestone-vendor-type-row {
-    margin: 5px auto;
+    margin: 5px 0;
     width: 342px;
     min-height: 50px;
     padding: 6px 10px;
@@ -944,6 +944,7 @@ a.cus-eng-succ-mess-email {
 
 .milestone-txt-LHS {
 	margin: 5px;
+	text-align: left;
 }
 .milestone-dropdown-RHS {
     height: 35px;
