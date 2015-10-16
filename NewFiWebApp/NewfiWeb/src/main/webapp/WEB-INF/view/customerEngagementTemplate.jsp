@@ -81,6 +81,7 @@
 	<script src="${initParam.resourcesPath}/resources/js/include/jquery-maskMoney.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/historySupport.js"></script>
 	<script src="${initParam.resourcesPath}/resources/js/ratePage.js"></script>
+	<script src="${initParam.resourcesPath}/resources/js/quickQuote.js"></script>
 	<script>
 		resizeHeaderWidth();
 		$(window).resize(function() {
