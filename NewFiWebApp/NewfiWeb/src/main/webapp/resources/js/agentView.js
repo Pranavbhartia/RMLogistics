@@ -4662,7 +4662,7 @@ $('body').on('click','.leads-container-th .leads-container-tc1.sm-leads-containe
 		$(this).addClass('sort-list-asc');
 		isAsc = -1;
 	}
-    sortTable(isAsc, ".leads-container-tc1");
+    sortTableByLastName(isAsc);
 });
 
 // Sort Loan Advisor
@@ -4803,4 +4803,57 @@ function sortTable(isAsc, selector) {
 		} 
 		$('#leads-container').append(row);
 	});
+}
+
+/**
+ * Method to sort rows based on certain column.
+ * @param isAsc
+ */
+function sortTableByLastName(isAsc) {
+	
+	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
+	var rows = $('#leads-container').find('.leads-container-tr').get();
+	
+	rows.sort(function(a, b) {
+
+		var name1 = $(a).children(".leads-container-tc1").text().toLowerCase();
+		var name2 = $(b).children(".leads-container-tc1").text().toLowerCase();
+		name1  = reverseName(name1);
+		name2 = reverseName(name2);
+
+		if (name1 < name2) {
+			return -1 * isAsc;
+		}
+		if (name1 > name2) {
+			return 1 * isAsc;
+		}
+		
+		return 0;
+	});
+	
+	$.each(rows, function(index, row) {
+		if( index % 2 == 0){
+			$(row).addClass("leads-container-row-odd");
+		} 
+		$('#leads-container').append(row);
+	});
+}
+
+/**
+ * Method to reverse the name.  
+ * @param name
+ * @returns
+ */
+function reverseName(name){
+	
+	if(name != null  && name != undefined){
+		var names = name.split(' ');
+		if(names.length == 2){
+		  return names[1] + names[0];
+		} else {
+			return name;   
+		}
+	} else {
+		return name;
+	}
 }

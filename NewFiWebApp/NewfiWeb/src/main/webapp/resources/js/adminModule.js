@@ -693,7 +693,7 @@ function appendNewfiTeamWrapperForAdmin(userDetails,searchUser) {
 	// HEader for Customer list along with Toggle button.
 	var customerHeader = $('<div>').attr({
 		"class" : "cust-personal-info-header  margin-botton-10"
-	}).html("Users");
+	}).html("External Users");
 	
 	var downIcon1 = $('<div>').attr({
 		"class" : "header-down-icn profile-header-dwn-icon float-right",
