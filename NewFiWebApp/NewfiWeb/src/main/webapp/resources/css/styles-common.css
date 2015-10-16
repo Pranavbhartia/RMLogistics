@@ -934,3 +934,59 @@ a.cus-eng-succ-mess-email {
 .margin-botton-10 { 
 	margin-bottom: 10px !important; 
 }
+
+.milestone-vendor-type-row {
+    margin: 5px auto;
+    width: 342px;
+    min-height: 50px;
+    padding: 6px 10px;
+}
+
+.milestone-txt-LHS {
+	margin: 5px;
+}
+.milestone-dropdown-RHS {
+    height: 35px;
+    padding-left: 10px;
+    line-height: 35px;
+    border: 1px solid #dcdcdc;
+    border-radius: 3px;
+    background: url(../images/down-arrow.png) no-repeat right center;
+    background-color: #fafafa;
+    font-size: 12px;
+    cursor: pointer;
+    text-transform: capitalize;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 20px;
+    text-transform: inherit;
+    width: 141px;
+    margin-left: 10px;
+}
+.milestone-dropdown-container {
+    border: 1px solid #dcdcdc;
+    border-radius: 3px;
+    background: #fff;
+    z-index: 2;
+    position: absolute;
+    width: 101%;
+}
+
+.milestone-dropdown-sel {
+    min-height: 30px;
+    padding: 5px;
+    line-height: normal;
+    font-size: 12px;
+    cursor: pointer;
+}
+.milestone-dd-cont {
+    width: 42%;
+    margin: 35px auto;
+    position: relative;
+}
+.note-container {
+    text-align: center;
+    color: rgba(255, 0, 0, 0.86);
+    font-family: 'opensanssemibold';
+}
