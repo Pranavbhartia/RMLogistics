@@ -860,7 +860,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	@Override
 	public void updateAppraisalVendor(int loanID, String appraisalVendorNm) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE Loan loan set loan.payment_vendor = :PAYMENT_VENDOR WHERE id = :ID";
+		String hql = "UPDATE Loan loan set loan.paymentVendor = :PAYMENT_VENDOR WHERE id = :ID";
 		Query query = session.createQuery(hql);
 		query.setParameter("PAYMENT_VENDOR", appraisalVendorNm);
 		query.setParameter("ID", loanID);

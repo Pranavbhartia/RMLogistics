@@ -6,6 +6,8 @@ var COMPLETED = "3";
 var NOT_STARTED = "0";
 var RENDER_RIGHT = "RIGHT";
 var RENDER_LEFT = "LEFT";
+var BRAINTREE = "braintree";
+var AXIS = "axis";
 var milestoneAction=""
 var workFlowContext = {
 	init : function(loanId, customer) {
@@ -2161,7 +2163,56 @@ function appendAppFeeEditPopup(element,milestoneId) {
             event.preventDefault();
         }
     });
+	var exsistingFee = $('#'+milestoneId+'fee').html();
+	if(exsistingFee){
+		$(newFee).val(exsistingFee);
+		$(newFee).html(exsistingFee);
+	}
+	var vendorRow = $('<div>').attr({
+		"class": "milestone-vendor-type-row"
+	});
 	
+	var divLHS = $('<div>').attr({
+		"class": "milestone-txt-LHS float-left"
+	}).html("Vendor Type");
+	
+	var divRHS = $('<div>').attr({
+		"class": "milestone-dropdown-RHS float-left",
+		"value":""
+	}).bind("click",function(e){
+		$(this).parent().find('.milestone-dropdown-container').toggle();
+		
+	});
+	var divCont = $('<div>').attr({
+		"class": "milestone-dd-cont",
+		
+	});
+	var dropdownDiv = $('<div>').attr({
+		"class": "milestone-dropdown-container hide",
+		
+	});
+	
+	var dropDownSelOne = $('<div>').attr({
+		"class": "milestone-dropdown-sel",
+		"id": "braintree-id"
+	}).html(BRAINTREE).bind("click",function(){
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').html($(this).html());
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').attr("value",$(this).html());
+	     $('.milestone-dropdown-container').hide();
+	});
+	
+	var dropDownSelTwo = $('<div>').attr({
+		"class": "milestone-dropdown-sel",
+		"id": "axis-id"
+	}).html(AXIS).bind("click",function(){
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').html($(this).html());
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').attr("value",$(this).html());
+	   $('.milestone-dropdown-container').hide();
+	});
+	
+	dropdownDiv.append(dropDownSelOne).append(dropDownSelTwo);
+	divCont.append(dropdownDiv);
+	vendorRow.append(divLHS).append(divRHS).append(divCont);
 	var submitBtn = $('<div>').attr({
 		"class" : "popup-save-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":newFee,"milestoneId":milestoneId},function(event){
@@ -2169,6 +2220,10 @@ function appendAppFeeEditPopup(element,milestoneId) {
 		var newFee=event.data.comment.val();
 		newFee=newFee.replace('$', '');
 		var milestoneId=event.data.milestoneId;
+		var vendorType = $('.milestone-dropdown-RHS').attr("value");
+		if(vendorType == ""){
+			vendorType = BRAINTREE;
+		}
 		if(newFee){
 			var url="rest/workflow/invokeaction/"+milestoneId;
 			var data={};			
@@ -2176,6 +2231,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 			data["userID"] = newfiObject.user.id;
 			data["workflowItemExecId"]=milestoneId;
 			data["newFee"]=newFee;
+			data["vendorType"] = vendorType;
 	 		ajaxRequest(
 				url,
 				"POST",
@@ -2205,7 +2261,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
     });
     btnContainer.append(submitBtn).append(cancelBtn);
 	
-	container.append(newFee).append(btnContainer);
+	container.append(newFee).append(vendorRow).append(btnContainer);
 	
 	wrapper.append(header).append(container);
 	wrapper.bind("click",function(e){
