@@ -860,52 +860,68 @@ public class ThreadManager implements Runnable {
 	}
 
 	private Boolean fetchAppraisalVendor(Loan loan) {
-		LOGGER.debug("Inside method fetchAppraisalVendor ");
-		int format = 0;
-		Boolean success = true;
-		Map<String, String> map = new HashMap<String, String>();
+		LOGGER.debug("Inside method fetchAppraisalVendor for " + loan.getId());
+		LoanMilestone disclosureMS = loanService.findLoanMileStoneByLoan(loan,
+		        Milestones.DISCLOSURE.getMilestoneKey());
+		Boolean success = false;
+		if (disclosureMS != null
+		        && disclosureMS.getComments() != null
+		        && disclosureMS.getComments().equals(
+		                LoanStatus.disclosureSigned)
+		        && loan.getPaymentVendor() == null) {
+			LOGGER.debug("Found ready for appraisal " + loan.getId());
+			// Then check if Loan Detail itself
+			int format = 0;
+			Map<String, String> map = new HashMap<String, String>();
+			JSONObject appraisalVendorJSONObject = nexeraUtility
+			        .createLoadJsonObject(map,
+			                WebServiceOperations.OP_NAME_GET_APPRAISAL_VENDOR,
+			                loan.getLqbFileId(), format, exceptionMaster);
+			if (appraisalVendorJSONObject != null) {
+				LOGGER.debug("Invoking LQB service to fetch Appraisal Vendor ");
+				JSONObject loadJSONResponse = lqbInvoker
+				        .invokeLqbService(appraisalVendorJSONObject.toString());
+				if (loadJSONResponse != null) {
+					if (!loadJSONResponse
+					        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
 
-		JSONObject appraisalVendorJSONObject = nexeraUtility
-		        .createLoadJsonObject(map,
-		                WebServiceOperations.OP_NAME_GET_APPRAISAL_VENDOR,
-		                loan.getLqbFileId(), format, exceptionMaster);
-		if (appraisalVendorJSONObject != null) {
-			LOGGER.debug("Invoking LQB service to fetch Loan status ");
-			JSONObject loadJSONResponse = lqbInvoker
-			        .invokeLqbService(appraisalVendorJSONObject.toString());
-			if (loadJSONResponse != null) {
-				if (!loadJSONResponse
-				        .isNull(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE)) {
+						String loadResponse = loadJSONResponse
+						        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
+						loadResponse = nexeraUtility
+						        .removeBackSlashDelimiter(loadResponse);
 
-					String loadResponse = loadJSONResponse
-					        .getString(CoreCommonConstants.SOAP_XML_RESPONSE_MESSAGE);
-					loadResponse = nexeraUtility
-					        .removeBackSlashDelimiter(loadResponse);
-
-					List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
-					if (loadResponseList != null) {
-						for (LoadResponseVO loadResponseVO : loadResponseList) {
-							String fieldId = loadResponseVO.getFieldId();
-							if (fieldId
-							        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_APPRAISAL_VENDOR)) {
-								String appraisalVendor = loadResponseVO
-								        .getFieldValue();
-								loanService.updateAppraisalVendor(loan.getId(),
-								        appraisalVendor);
-								LOGGER.debug("The appraisal vedor name is "
-								        + appraisalVendor);
+						List<LoadResponseVO> loadResponseList = parseLqbResponse(loadResponse);
+						if (loadResponseList != null) {
+							for (LoadResponseVO loadResponseVO : loadResponseList) {
+								String fieldId = loadResponseVO.getFieldId();
+								if (fieldId
+								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_APPRAISAL_VENDOR)) {
+									String appraisalVendor = loadResponseVO
+									        .getFieldValue();
+									if (appraisalVendor != null
+									        && !appraisalVendor.equals("")) {
+										loanService.updateAppraisalVendor(
+										        loan.getId(), appraisalVendor);
+									}
+									LOGGER.debug("The appraisal vedor name is "
+									        + appraisalVendor);
+								}
 							}
 						}
+						LOGGER.debug("Invoking LQB service to fetch Appraisal Vendor  ");
 					}
-					LOGGER.debug("Invoking LQB service to fetch Appraisal Vendor  ");
+				} else {
+					success = false;
+					nexeraUtility
+					        .putExceptionMasterIntoExecution(exceptionMaster,
+					                "Request Json Object Not Created For Credit Score ");
+					nexeraUtility
+					        .sendExceptionEmail("Unable to create json object for credit score ");
 				}
-			} else {
-				success = false;
-				nexeraUtility.putExceptionMasterIntoExecution(exceptionMaster,
-				        "Request Json Object Not Created For Credit Score ");
-				nexeraUtility
-				        .sendExceptionEmail("Unable to create json object for credit score ");
 			}
+		} else {
+			LOGGER.debug("This loan is not ready for Appraisal yet"
+			        + loan.getId());
 		}
 		return success;
 	}
