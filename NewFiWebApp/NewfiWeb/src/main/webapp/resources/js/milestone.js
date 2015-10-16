@@ -663,6 +663,7 @@ function getInternalEmployeeMileStoneContext( workItem) {
 							else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE"){
 								//var tempOb=JSON.parse(ob.workItem.stateInfo);
 								ob.stateInfoContainer.html(ob.workItem.stateInfo);
+								
 								if (ob.workItem.stateInfo =="Disclosures Required")
 								{
 									$(ob.stateInfoContainer).removeClass("cursor-pointer");
@@ -1861,6 +1862,7 @@ function milestoneChildEventHandler(event) {
 		if(typeof(workFlowContext.mileStoneContextList[workItemIDAppFee].paymentType) != 'undefined'){
 			paymentType = workFlowContext.mileStoneContextList[workItemIDAppFee].paymentType;
 		}
+	
 		if (workFlowContext.mileStoneContextList[workItemIDAppFee].workItem.status != NOT_STARTED )
 		{
 			return;
@@ -1874,7 +1876,7 @@ function milestoneChildEventHandler(event) {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		
-		if(paymentType.toLowerCase() == "axis")
+		if(paymentType != null && paymentType.toLowerCase() == "axis")
 		{
 			makePaymentFromAxis("axisPayment");
 		}
@@ -1951,6 +1953,7 @@ function makePaymentFromAxis(nonce){
 		success : function(e){
 			hideOverlay();
 			showToastMessage("Payment successful");
+			changeStateForAxisPayment();
 		},
 		error :  function(e) {
 			showToastMessage("Internal error occurred. Please try later.");
@@ -1960,6 +1963,21 @@ function makePaymentFromAxis(nonce){
 	});
 }
 
+
+function changeStateForAxisPayment ()
+{
+	var referenceMileStone = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"];
+	if (!referenceMileStone)
+	{
+		referenceMileStone = workFlowContext.milestoneStepsLookup["APP_FEE"];
+	}
+	var workItemIDAppFee = referenceMileStone.id;	
+	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.html("Pending - Verification");
+	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.removeClass("cursor-pointer");
+	referenceMileStone.status="1";
+	$("#WF"+workItemIDAppFee).addClass("m-in-progress");
+	$("#WF"+workItemIDAppFee).removeClass("m-not-started");	
+}
 
 //Functions to view loan manager details in customer page
 
