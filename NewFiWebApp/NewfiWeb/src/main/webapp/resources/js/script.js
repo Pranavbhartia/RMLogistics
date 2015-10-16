@@ -2039,7 +2039,8 @@ function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag,paddingLeftFlag)
         "id": id
     }).html(detail);
     
-    if(isEditPage && id == "loanAmount"){
+    
+    if(typeof isEditPage !== 'undefined' && isEditPage && id == "loanAmount"){
     	col2.addClass("leads-edit-adj");
     }
     container.append(col1).append(col2);
@@ -3128,11 +3129,15 @@ function modifiedLQBJsonResponse(LQBResponse) {
     yearValues.sort(function(a, b) {
         return parseFloat(a.value) - parseFloat(b.value);
     });
-    if(isEditPage){
-    	yearValues=yearValues.slice(0);
-    } else {
-    	yearValues=yearValues.slice(1);
+    
+    if(typeof isEditPage !== 'undefined'){
+    	 if(isEditPage){
+    	    	yearValues=yearValues.slice(0);
+    	    } else {
+    	    	yearValues=yearValues.slice(1);
+    	    }
     }
+   
     
     return yearValues;
 }

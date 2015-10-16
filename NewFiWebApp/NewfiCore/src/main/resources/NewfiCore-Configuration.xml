@@ -83,7 +83,7 @@
 	<bean id="cronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="complexJobDetail" />
-		<property name="cronExpression" value="0 0/59 * * * ?" />
+		<property name="cronExpression" value="0 0/30 * * * ?" />
 	</bean>
 
 	<!-- Scheduler factory bean to glue together jobDetails and triggers to 

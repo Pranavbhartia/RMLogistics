@@ -100,11 +100,14 @@ function getSliders(teaserRate, inputCustomerDetails,hideCreateAccountBtn){
     	/*rateArray=rateArray.reverse();*/
     }
     if(appUserDetails.loan.lockStatus!="1"){
-    	if(!isEditPage){
-    		var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
-            var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
-            container.append(tenureSlider).append(rateSlider);
+    	if(typeof isEditPage !== 'undefined'){
+    		if(!isEditPage){
+        		var tenureSlider = getYearSliderContCEP1(teaserRate,inputCustomerDetails);
+                var rateSlider = getRateSliderContCEP(teaserRate,inputCustomerDetails);
+                container.append(tenureSlider).append(rateSlider);
+        	}
     	}
+    	
     }
     return container
 }
@@ -1152,9 +1155,12 @@ function getDwnPayComponent(value,inputElementId){
         "class": "app-options-cont"
     });
     var adjClass = "";
-    if(isEditPage && inputElementId == "secondInput"){
-    	adjClass = "leads-pgm-rate-edit-adj";
+    if(typeof isEditPage !== 'undefined'){
+    	 if(isEditPage && inputElementId == "secondInput"){
+    	    	adjClass = "leads-pgm-rate-edit-adj";
+    	    }
     }
+   
     var optionCont = $('<input>').attr({
         "class": "loan-summary-sub-col-detail dwn-val float-left "+adjClass,
         "value":showValue(value),
@@ -1347,13 +1353,14 @@ function getRateSliderContCEP(LQBResponse,inputCustomerDetails) {
         "class": "slider-hdr-txt float-left"
     }).html(text);
     var yearValues;
-   if(isEditPage){
-	   yearValues = modifiedLQBJsonResponse(LQBResponse);
-   }
-   else{
-	   yearValues = LQBResponse; 
-   }
-    
+    if(typeof isEditPage !== 'undefined'){
+	   if(isEditPage){
+		   yearValues = modifiedLQBJsonResponse(LQBResponse);
+	   }
+	   else{
+		   yearValues = LQBResponse; 
+	   }
+    }
     
     var rateArray = yearValues[yearValues.length-1].rateVO;
 //    rateArray=rateArray.reverse();
@@ -1494,14 +1501,15 @@ function getYearSliderCEP(LQBResponse,inputCustomerDetails) {
     });
     
     var yearValues;
-    if(isEditPage){
- 	   yearValues = modifiedLQBJsonResponse(LQBResponse);
+    if(typeof isEditPage !== 'undefined'){
+	    if(isEditPage){
+	 	   yearValues = modifiedLQBJsonResponse(LQBResponse);
+	    }
+	    else{
+	 	   yearValues = LQBResponse; 
+	    }
+	    
     }
-    else{
- 	   yearValues = LQBResponse; 
-    }
-    
-
     for (var i = 0; i < yearValues.length; i++) {
         var leftOffset = i / (yearValues.length - 1) * 100;
         var gridItemCont = $('<div>').attr({
