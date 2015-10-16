@@ -1887,6 +1887,7 @@ function milestoneChildEventHandler(event) {
 		if(paymentType != null && paymentType.toLowerCase() == "axis")
 		{
 			makePaymentFromAxis("axisPayment");
+			window.open("https://axis.vmpxsites.com/makeapayment");
 		}
 		else{
 			$('body').addClass('body-no-scroll');
@@ -1960,7 +1961,7 @@ function makePaymentFromAxis(nonce){
 		data : data,
 		success : function(e){
 			hideOverlay();
-			showToastMessage("Payment successful");
+			//showToastMessage("Payment successful");
 			changeStateForAxisPayment();
 		},
 		error :  function(e) {
