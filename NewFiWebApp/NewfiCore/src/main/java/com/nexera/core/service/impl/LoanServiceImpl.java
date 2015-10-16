@@ -323,6 +323,9 @@ public class LoanServiceImpl implements LoanService {
 		if (loanVO.getLtv() != null) {
 			loan.setLtv(loanVO.getLtv());
 		}
+		if (loanVO.getPaymentVendor() != null) {
+			loan.setPaymentVendor(loanVO.getPaymentVendor());
+		}
 		return loan;
 
 	}
@@ -811,6 +814,10 @@ public class LoanServiceImpl implements LoanService {
 
 			if (loanVO.getLtv() != null) {
 				loan.setLtv(loanVO.getLtv());
+			}
+
+			if (loanVO.getPaymentVendor() != null) {
+				loan.setPaymentVendor(loanVO.getPaymentVendor());
 			}
 		} catch (Exception e) {
 

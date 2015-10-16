@@ -475,6 +475,7 @@ public class Loan implements Serializable {
 		loanVo.setLockExpirationDate(loan.getLockExpirationDate());
 		loanVo.setRateLockRequested(loan.getRateLockRequested());
 		loanVo.setLockedRateData(loan.getLockedRateData());
+		loanVo.setPaymentVendor(loan.getPaymentVendor());
 		loanVo.setPurchaseDocumentExpiryDate(loan
 		        .getPurchaseDocumentExpiryDate());
 		if (loan.getLoanProgressStatus() != null) {
