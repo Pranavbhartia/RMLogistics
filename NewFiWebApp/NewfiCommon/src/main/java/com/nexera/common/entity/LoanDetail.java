@@ -68,18 +68,19 @@ public class LoanDetail implements Serializable {
 		this.rate = rate;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="home_owners_insurance")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "home_owners_insurance")
 	public HomeOwnersInsuranceMaster getHomeOwnersInsurance() {
 		return homeOwnersInsurance;
 	}
 
-	public void setHomeOwnersInsurance(HomeOwnersInsuranceMaster homeOwnersInsurance) {
+	public void setHomeOwnersInsurance(
+	        HomeOwnersInsuranceMaster homeOwnersInsurance) {
 		this.homeOwnersInsurance = homeOwnersInsurance;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="title_company")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "title_company")
 	public TitleCompanyMaster getTitleCompany() {
 		return titleCompany;
 	}
@@ -87,8 +88,5 @@ public class LoanDetail implements Serializable {
 	public void setTitleCompany(TitleCompanyMaster titleCompany) {
 		this.titleCompany = titleCompany;
 	}
-	
-	
-	
 
 }

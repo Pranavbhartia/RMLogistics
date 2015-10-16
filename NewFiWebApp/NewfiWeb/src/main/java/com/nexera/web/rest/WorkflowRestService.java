@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -267,6 +268,10 @@ public class WorkflowRestService {
 			workflowService.saveParamsInExecTable(workflowItemId, params);
 			String result = engineTrigger.invokeActionMethod(workflowItemId);
 			response = RestUtil.wrapObjectForSuccess(mapStatus(result));
+			JSONObject json = new JSONObject(params);
+			int loanID = json.getInt("loanID");
+			String appraisalVendorName = json.getString("vendorType");
+			loanService.updateAppraisalVendor(loanID, appraisalVendorName);
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			response = RestUtil.wrapObjectForFailure(null, "500",

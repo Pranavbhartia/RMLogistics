@@ -66,6 +66,11 @@ public class LoanVO implements Serializable {
 	private String purchaseValue;
 	private Double ltv;
 
+	private String paymentVendor;
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	public int getCustomerWorkflowID() {
 		return customerWorkflowID;
@@ -457,52 +462,59 @@ public class LoanVO implements Serializable {
 	}
 
 	public Boolean getRateLockRequested() {
-	    return rateLockRequested;
-    }
+		return rateLockRequested;
+	}
 
 	public void setRateLockRequested(Boolean rateLockRequested) {
-	    this.rateLockRequested = rateLockRequested;
-    }
+		this.rateLockRequested = rateLockRequested;
+	}
 
 	public String getLqbLoanStatus() {
-	    return lqbLoanStatus;
-    }
+		return lqbLoanStatus;
+	}
 
 	public void setLqbLoanStatus(String lqbLoanStatus) {
-	    this.lqbLoanStatus = lqbLoanStatus;
-    }
+		this.lqbLoanStatus = lqbLoanStatus;
+	}
 
 	public Double getAppraisedValue() {
-	    return appraisedValue;
-    }
+		return appraisedValue;
+	}
 
 	public void setAppraisedValue(Double appraisedValue) {
-	    this.appraisedValue = appraisedValue;
-    }
+		this.appraisedValue = appraisedValue;
+	}
 
 	public Double getLoanAmount() {
-	    return loanAmount;
-    }
+		return loanAmount;
+	}
 
 	public void setLoanAmount(Double loanAmount) {
-	    this.loanAmount = loanAmount;
-    }
+		this.loanAmount = loanAmount;
+	}
 
 	public String getPurchaseValue() {
-	    return purchaseValue;
-    }
+		return purchaseValue;
+	}
 
 	public void setPurchaseValue(String purchaseValue) {
-	    this.purchaseValue = purchaseValue;
-    }
+		this.purchaseValue = purchaseValue;
+	}
 
 	public Double getLtv() {
-	    return ltv;
-    }
+		return ltv;
+	}
 
 	public void setLtv(Double ltv) {
-	    this.ltv = ltv;
-    }
+		this.ltv = ltv;
+	}
 
+	public String getPaymentVendor() {
+		return paymentVendor;
+	}
+
+	public void setPaymentVendor(String paymentVendor) {
+		this.paymentVendor = paymentVendor;
+	}
 
 }

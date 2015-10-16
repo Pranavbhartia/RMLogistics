@@ -14,6 +14,7 @@ public class WorkflowDisplayConstants {
 	public static final String WORKITEM_STATUS_KEY_NAME = "workflowItemstatus";
 	public static final String WORKITEM_EMAIL_STATUS_INFO = "workflow-email-status";
 	public static final String WORKFLOW_RENDERSTATE_STATUS_KEY = "status";
+	public static final String CUSTOMER_PAYMENT_TYPE = "PAYMENT_TYPE";
 	public static final String WORKFLOW_LQB_FILE_KEY = "lqbKey";
 	public static final String APP_FEE_KEY_NAME = "appfee";
 	public static final String NOTIFICATION_VO_KEY_NAME = "notificationVo";

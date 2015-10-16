@@ -371,7 +371,12 @@ public class BraintreePaymentGatewayServiceImpl implements
 		LOG.info("Executing makePayment with parameters : paymentMethodToken : "
 		        + paymentNonce + " , amount" + amount);
 
-		transactionId = createTransaction(paymentNonce, amount);
+		if(!paymentNonce.equals("axisPayment")){
+			transactionId = createTransaction(paymentNonce, amount); // for braintree transactions
+		}
+		else{
+			transactionId = "axisTransactionId"; //here axis transaction id will come
+		}
 
 		if (transactionId != null) {
 			LOG.debug("Transaction successfully created. Updating the database.");
