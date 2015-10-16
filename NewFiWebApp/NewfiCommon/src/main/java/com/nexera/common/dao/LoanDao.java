@@ -163,9 +163,12 @@ public interface LoanDao extends GenericDao {
 	
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel);
 	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
-	
+
 	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) ;
 	
 	public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
+
+	public void updateAppraisalVendor(int loanDetailID, String appraisalVendorNm) ;
+
 
 }

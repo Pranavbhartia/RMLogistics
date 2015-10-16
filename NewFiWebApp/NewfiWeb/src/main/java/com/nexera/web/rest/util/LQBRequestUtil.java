@@ -11,6 +11,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,9 @@ public class LQBRequestUtil {
 	private String advCreditUserName;
 	@Value("${adv.credit.password}")
 	private String advCreditPassword;
+	
+	@Autowired
+	Utils utils;
 
 	public JSONObject prepareCreateLoanJson(String templateName, String sTicket) {
 		JSONObject json = new JSONObject();
@@ -196,6 +200,7 @@ public class LQBRequestUtil {
 			        .getPhoneNumber());
 
 			hashmap.put("alimonyName", "NONE");
+			hashmap.put("preProcessingDate", utils.getDateAndTimeForLQBUpdate(new Date()));
 
 			if (loanAppFormVO.getReceiveAlimonyChildSupport()) {
 				hashmap.put("alimonyPayment",

@@ -1874,7 +1874,7 @@ function milestoneChildEventHandler(event) {
 		console.log("Pay application fee clicked!");
 		showOverlay();
 		
-		if(paymentType == "axis")
+		if(paymentType.toLowerCase() == "axis")
 		{
 			makePaymentFromAxis("axisPayment");
 		}

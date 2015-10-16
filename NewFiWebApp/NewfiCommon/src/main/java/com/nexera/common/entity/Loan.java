@@ -74,6 +74,7 @@ public class Loan implements Serializable {
 	private Double lqbLoanAmount;
 	private Double lqbAppraisedValue;
 	private Double ltv;
+	private String paymentVendor;
 
 	@Column(name = "bank_connected", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -528,8 +529,7 @@ public class Loan implements Serializable {
 		detailVO.setId(detail.getId());
 		detailVO.setDownPayment(detail.getDownPayment());
 		detailVO.setLoanAmount(detail.getLoanAmount());
-		detailVO.setRate(detail.getRate());
-
+		detailVO.setRate(detail.getRate());		
 		return detailVO;
 
 	}
@@ -624,5 +624,14 @@ public class Loan implements Serializable {
 	public void setLtv(Double ltv) {
 	    this.ltv = ltv;
     }
+	@Column(name = "payment_vendor")
+	public String getPaymentVendor() {
+		return paymentVendor;
+	}
+
+	public void setPaymentVendor(String paymentVendor) {
+		this.paymentVendor = paymentVendor;
+	}
+	
 
 }

@@ -283,7 +283,7 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		                LoanStatus.disclosureSigned)) {
 			// Show Click To pay only if Disclosures are signed
 			status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
-			LoanDetail loanDetail = loanService.findLoanDetailOfLoan(loan);
+			Loan loanDetail  = loanService.fetchLoanById(loanID);
 			try{	
 					paymentType = loanDetail.getPaymentVendor();
 			}

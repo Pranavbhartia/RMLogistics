@@ -63,7 +63,9 @@ public class RestInterceptor implements Callable
 
         if ( restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_CREDIT_SCORE )
             || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_UNDERWRITING_CONDITION )
-            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD )
+            || restParameters.getOpName().equalsIgnoreCase( WebServiceOperations.OP_NAME_GET_APPRAISAL_VENDOR )
+            ) {
             message.setOutboundProperty( NewFiConstants.CONSTANT_OP_NAME, WebServiceOperations.OP_NAME_LOAN_LOAD );
 		} else if (restParameters.getOpName().equalsIgnoreCase(
 		        WebServiceOperations.OP_NAME_SAVE_CREDIT_SCORE)
@@ -148,7 +150,27 @@ public class RestInterceptor implements Callable
                 }
                 inputParams[2] = sXmlQueryDefault;
                 inputParams[3] = restParameters.getLoanVO().getFormat();
-            } else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
+            }
+            else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_GET_APPRAISAL_VENDOR ) ) {
+                LOG.info( "Operation Chosen Was Appraisl Vendor " );
+                inputParams = new Object[4];
+                if ( restParameters.getLoanVO().getsTicket() != null
+                    && !restParameters.getLoanVO().getsTicket().equalsIgnoreCase( "" ) ) {
+                    inputParams[0] = restParameters.getLoanVO().getsTicket();
+                } else {
+                    inputParams[0] = NewFiManager.userTicket;
+                }
+                inputParams[1] = restParameters.getLoanVO().getsLoanNumber();
+                String sXmlQueryDefault = utils.readFileAsString( "loadAppraisalInfo.xml" );
+                LOG.info( "Default load file " + sXmlQueryDefault );
+                if ( restParameters.getLoanVO().getsXmlQueryMap() != null ) {
+                    sXmlQueryDefault = utils.applyMapOnString( restParameters.getLoanVO().getsXmlQueryMap(), sXmlQueryDefault );
+                    LOG.info( "Load file after applying map " + sXmlQueryDefault );
+                }
+                inputParams[2] = sXmlQueryDefault;
+                inputParams[3] = restParameters.getLoanVO().getFormat();
+            }
+            else if ( restParameters.getOpName().equals( WebServiceOperations.OP_NAME_LOAN_BATCH_LOAD ) ) {
                 LOG.info( "Operation Chosen Was Load " );
                 inputParams = new Object[4];
                 if ( restParameters.getLoanVO().getsTicket() != null

@@ -2,7 +2,6 @@ package com.nexera.common.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,6 @@ import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,14 +40,12 @@ import com.nexera.common.entity.User;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
-import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.QuoteDetailsVO;
-import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.UserVO;
 
 @Component
@@ -857,6 +853,17 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 		Query query = session.createQuery(hql);
 		query.setParameter("EMAIL", generateLoanEmail);
 		query.setParameter("ID", loanId);
+		query.executeUpdate();
+		session.flush();
+	}
+	
+	@Override
+	public void updateAppraisalVendor(int loanID, String appraisalVendorNm) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.payment_vendor = :PAYMENT_VENDOR WHERE id = :ID";
+		Query query = session.createQuery(hql);
+		query.setParameter("PAYMENT_VENDOR", appraisalVendorNm);
+		query.setParameter("ID", loanID);
 		query.executeUpdate();
 		session.flush();
 	}

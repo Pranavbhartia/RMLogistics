@@ -242,6 +242,9 @@ public interface LoanService {
 
 	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) ;
 
+	public void updateAppraisalVendor(Integer loanID, String appraisalVendorName) ;
+
+
 	 public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
 	 
 	 public LoanDetail findLoanDetailOfLoan(Loan loan) ;
