@@ -4307,6 +4307,7 @@ span.milestone-lc-text{
 .ms-add-notification-popup {
 	width: 450px;
 	left: 0;
+	
 }
 
 .ms-add-notification-popup .cust-detail-rw {
@@ -4314,7 +4315,13 @@ span.milestone-lc-text{
 	padding: 0;
 	margin-bottom: 0;
 }
-
+.ms-close-add-mem-popup {
+	background:  url(../images/close-blue.png) no-repeat center;
+	width: 11px;
+	height: 11px;
+	float: right;
+    cursor: pointer;
+}
 .ms-add-notification-popup .cust-detail-container {
 	height: auto;
 }
