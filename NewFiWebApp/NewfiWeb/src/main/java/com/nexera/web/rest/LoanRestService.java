@@ -23,6 +23,7 @@ import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.compositekey.QuoteCompositeKey;
+import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.BaseRestException;
@@ -39,6 +40,7 @@ import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
+import com.nexera.common.vo.QuoteDetailsVO;
 import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
@@ -76,7 +78,7 @@ public class LoanRestService {
 
 	@Autowired
 	private NeedsListService needsListService;
-	
+
 	@Autowired
 	private QuoteService quoteService;
 
@@ -86,52 +88,64 @@ public class LoanRestService {
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(LoanRestService.class);
 
-	
 	// TODO-move this to User profile rest service
-	 @RequestMapping(value = "/retrieveDashboardForMyLeads/{userID}")
-	 public @ResponseBody CommonResponseVO retrieveDashboardForMyLeads(
-	         @PathVariable Integer userID,
-	         @RequestParam(required = false) String startlimit,
-	         @RequestParam(required = false) String count) {
-	  UserVO user = new UserVO();
-	  user.setId(userID);
-	  CommonResponseVO commonResponseVO = null;
-	  if (startlimit != null) {
-	   LeadsDashBoardVO responseVO = loanService
-	           .retrieveDashboardForMyLeads(user, startlimit, count);
-	   commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
-	  } else {
-	   LeadsDashBoardVO responseVO = loanService
-	           .retrieveDashboardForMyLeads(user);
-	   commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
-	  }
+	@RequestMapping(value = "/retrieveDashboardForMyLeads/{userID}")
+	public @ResponseBody CommonResponseVO retrieveDashboardForMyLeads(
+	        @PathVariable Integer userID,
+	        @RequestParam(required = false) String startlimit,
+	        @RequestParam(required = false) String count) {
+		UserVO user = new UserVO();
+		user.setId(userID);
+		CommonResponseVO commonResponseVO = null;
+		if (startlimit != null) {
+			LeadsDashBoardVO responseVO = loanService
+			        .retrieveDashboardForMyLeads(user, startlimit, count);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
+		} else {
+			LeadsDashBoardVO responseVO = loanService
+			        .retrieveDashboardForMyLeads(user);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
+		}
 
-	  return commonResponseVO;
-	 }
-	
-	 @RequestMapping(value = "/findUniqueIdFromQuoteDetail/{userName}/{internalUserID}", method = RequestMethod.POST)
-	 public @ResponseBody String findUniqueIdFromQuoteDetail(@PathVariable String userName,@PathVariable Integer internalUserID,
-	         HttpServletRequest request, HttpServletResponse response)
-	         throws IOException {
+		return commonResponseVO;
+	}
+
+	// TODO-move this to User profile rest service
+	@RequestMapping(value = "/retrieveQuoteDetailsOfUser/{id}")
+	public @ResponseBody CommonResponseVO retrieveQuoteDetailsOfUser(
+	        @PathVariable String id) {
+		CommonResponseVO commonResponseVO = null;
+		QuoteDetails quoteDetails = quoteService.findQuoteDetailsById(id);
+		if (quoteDetails != null) {
+			QuoteDetailsVO quoteDetailsVO = quoteService
+			        .convertEntityToVO(quoteDetails);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(quoteDetailsVO);
+		}
+		return commonResponseVO;
+	}
+
+	@RequestMapping(value = "/findUniqueIdFromQuoteDetail/{userName}/{internalUserID}", method = RequestMethod.POST)
+	public @ResponseBody String findUniqueIdFromQuoteDetail(
+	        @PathVariable String userName, @PathVariable Integer internalUserID,
+	        HttpServletRequest request, HttpServletResponse response)
+	                throws IOException {
 		CommonResponseVO responseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
 		quoteCompositeKey.setInternalUserId(internalUserID);
 		quoteCompositeKey.setUserName(userName);
 		String id = null;
-		try{
+		try {
 			id = quoteService.getUniqueIdFromQuoteDetails(quoteCompositeKey);
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			LOG.error("Error while fetching uniqu id from quotedetail", e);
-			throw new FatalException("User could not be registered from Quick Quote");
-		}
-		finally{
+			throw new FatalException(
+			        "User could not be registered from Quick Quote");
+		} finally {
 			return id;
 		}
 	}
-	 
-	 
+
 	@RequestMapping(value = "/create", method = RequestMethod.PUT)
 	public @ResponseBody String createUser(@RequestBody String loanVOStr) {
 
@@ -188,9 +202,8 @@ public class LoanRestService {
 	}
 
 	@RequestMapping(value = "/creditReport/{loanID}", method = RequestMethod.GET)
-	public @ResponseBody String creditReport(
-	        @PathVariable Integer loanID, HttpServletRequest arg0,
-	        HttpServletResponse response) {
+	public @ResponseBody String creditReport(@PathVariable Integer loanID,
+	        HttpServletRequest arg0, HttpServletResponse response) {
 
 		LoanVO loanVO = loanService.wrapperCallForDashboard(loanID);
 
@@ -241,7 +254,8 @@ public class LoanRestService {
 			editLoanTeamVO.setHomeOwnInsCompany(company);
 			editLoanTeamVO.setOperationResult(true);
 		} else
-			return RestUtil.wrapObjectForFailure(null, "400", "User could not be added to team");
+			return RestUtil.wrapObjectForFailure(null, "400",
+			        "User could not be added to team");
 
 		CommonResponseVO responseVO = RestUtil
 		        .wrapObjectForSuccess(editLoanTeamVO);
@@ -274,14 +288,14 @@ public class LoanRestService {
 		} else if (titleCompanyID != null && titleCompanyID > 0) {
 			TitleCompanyMasterVO companyMaster = new TitleCompanyMasterVO();
 			companyMaster.setId(titleCompanyID);
-			boolean result = loanService
-			        .removeFromLoanTeam(loan, companyMaster);
+			boolean result = loanService.removeFromLoanTeam(loan,
+			        companyMaster);
 			editLoanTeamVO.setOperationResult(result);
 		} else if (homeOwnInsCompanyID != null && homeOwnInsCompanyID > 0) {
 			HomeOwnersInsuranceMasterVO companyMaster = new HomeOwnersInsuranceMasterVO();
 			companyMaster.setId(homeOwnInsCompanyID);
-			boolean result = loanService
-			        .removeFromLoanTeam(loan, companyMaster);
+			boolean result = loanService.removeFromLoanTeam(loan,
+			        companyMaster);
 			editLoanTeamVO.setOperationResult(result);
 		}
 
@@ -316,7 +330,8 @@ public class LoanRestService {
 				if (workflowExec != null) {
 
 					WorkflowItemMaster initialContactWorkflow = workflowService
-					        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_INITIAL_CONTACT);
+					        .getWorkflowByType(
+					                WorkflowConstants.WORKFLOW_ITEM_INITIAL_CONTACT);
 					if (initialContactWorkflow != null) {
 						WorkflowItemExec workflowItemExec = workflowService
 						        .getWorkflowItemExecByType(workflowExec,
@@ -325,14 +340,14 @@ public class LoanRestService {
 							if (workflowItemExec.getStatus().equalsIgnoreCase(
 							        WorkItemStatus.COMPLETED.getStatus())) {
 								WorkflowItemMaster WorkflowItem = workflowService
-								        .getWorkflowByType(WorkflowConstants.WORKFLOW_ITEM_1003_COMPLETE);
+								        .getWorkflowByType(
+								                WorkflowConstants.WORKFLOW_ITEM_1003_COMPLETE);
 								if (WorkflowItem != null) {
 									WorkflowItemExec workitemExec = workflowService
 									        .getWorkflowItemExecByType(
 									                workflowExec, WorkflowItem);
 									if (workitemExec != null) {
-										if (workitemExec
-										        .getStatus()
+										if (workitemExec.getStatus()
 										        .equalsIgnoreCase(
 										                WorkItemStatus.COMPLETED
 										                        .getStatus())) {
@@ -411,8 +426,8 @@ public class LoanRestService {
 	        @PathVariable Integer userID) {
 		UserVO user = new UserVO();
 		user.setId(userID);
-		//TODO added for to get mobilepreference and carrier info 
-		user=userProfileService.findUser(userID);
+		// TODO added for to get mobilepreference and carrier info
+		user = userProfileService.findUser(userID);
 		LoanDashboardVO responseVO = loanService
 		        .retrieveDashboardForWorkLoans(user);
 
@@ -431,11 +446,11 @@ public class LoanRestService {
 		if (startlimit != null) {
 			LoanDashboardVO responseVO = loanService
 			        .retrieveDashboardForWorkLoans(user, startlimit, count);
-			commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
 		} else {
 			LoanDashboardVO responseVO = loanService
 			        .retrieveDashboardForWorkLoans(user);
-			commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
 		}
 
 		return commonResponseVO;
@@ -521,7 +536,8 @@ public class LoanRestService {
 			        .findTitleCompanyByName(titleCompany);
 			return RestUtil.wrapObjectForSuccess(companyList);
 		}
-		return RestUtil.wrapObjectForFailure(null, "400", "User could not be added to team");
+		return RestUtil.wrapObjectForFailure(null, "400",
+		        "User could not be added to team");
 	}
 
 	@RequestMapping(value = "/titleCompany", method = RequestMethod.POST)
@@ -571,7 +587,8 @@ public class LoanRestService {
 
 	@RequestMapping(value = "/TurnAroundTime/{loanId}/{workFlowItemId}", method = RequestMethod.GET)
 	public @ResponseBody CommonResponseVO retrieveLoanTurnArounTime(
-	        @PathVariable Integer loanId, @PathVariable Integer workFlowItemId) {
+	        @PathVariable Integer loanId,
+	        @PathVariable Integer workFlowItemId) {
 		LoanTurnAroundTimeVO aroundTimeVO = loanService
 		        .retrieveTurnAroundTimeByLoan(loanId, workFlowItemId);
 		CommonResponseVO commonResponseVO = new CommonResponseVO();
@@ -603,8 +620,8 @@ public class LoanRestService {
 		CommonResponseVO commonResponseVO = null;
 		try {
 			LOG.info("loanId : " + loanId + " & " + date);
-			loanService.setExpiryDateToPurchaseDocument(
-			        Integer.valueOf(loanId), Long.valueOf(date));
+			loanService.setExpiryDateToPurchaseDocument(Integer.valueOf(loanId),
+			        Long.valueOf(date));
 			commonResponseVO = RestUtil.wrapObjectForSuccess(true);
 		} catch (Exception e) {
 			commonResponseVO = RestUtil.wrapObjectForFailure(null, "500",
@@ -625,7 +642,5 @@ public class LoanRestService {
 		CommonResponseVO responseVO = RestUtil.wrapObjectForSuccess("Success");
 		return responseVO;
 	}
-	
-	
 
 }

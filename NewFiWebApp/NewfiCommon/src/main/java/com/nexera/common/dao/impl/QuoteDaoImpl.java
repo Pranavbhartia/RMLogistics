@@ -47,11 +47,33 @@ public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
 		return quoteDetails;
 	}
 	
+	public QuoteDetails findQuoteDetailsById(String id){
+		QuoteDetails quoteDetails = null;
+		try{
+				Session session = sessionFactory.getCurrentSession();
+				SQLQuery qry = session.createSQLQuery("select * from quotedetails where id = :id");
+				qry.addEntity(QuoteDetails.class);
+				qry.setParameter("id", id);
+				// Here PRODUCTS is the table in the database...
+				List<QuoteDetails> list = qry.list();
+				for(QuoteDetails quote : list){
+					quoteDetails = quote;
+				}
+				
+		}
+		catch(Exception e){
+			LOG.error("Error in fetching quoteDetails on the basis of id: "+e);
+		}
+				return quoteDetails;
+	}
+	
 	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey){
 		String id = null ;
 		try{
 				Session session = sessionFactory.getCurrentSession();
-				SQLQuery qry = session.createSQLQuery("select id from quotedetails where prospect_username = '"+compKey.getUserName()+"' and internal_user_id = "+compKey.getInternalUserId());
+				SQLQuery qry = session.createSQLQuery("select id from quotedetails where prospect_username =  :username and internal_user_id = :internalUserId");
+				qry.setParameter("username", compKey.getUserName());
+				qry.setParameter("internalUserId", compKey.getInternalUserId());
 				// Here PRODUCTS is the table in the database...
 				List list = qry.list();
 				Iterator it = list.iterator();
@@ -87,7 +109,5 @@ public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
 		query.setParameter("quoteCompositeKey", compKey);
 		query.executeUpdate();	
 	}
-	
-	
 	
 }

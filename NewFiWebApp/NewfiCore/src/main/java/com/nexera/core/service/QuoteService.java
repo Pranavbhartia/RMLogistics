@@ -16,4 +16,8 @@ public interface QuoteService {
 	public void updateDeletedUser(QuoteCompositeKey compKey);
 	public GeneratePdfVO convertToGeneratePdfVo(QuoteDetails quoteDetails);
 	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey);
+	public QuoteDetails findQuoteDetailsById(String id);
+	public  QuoteDetails convertVOToEntity(QuoteDetailsVO quoteDetailsVO);
+	public  QuoteDetailsVO convertEntityToVO(QuoteDetails quoteDetails);
+
 }

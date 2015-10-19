@@ -10,4 +10,5 @@ public interface QuoteDao extends GenericDao {
 	public void updateCreatedUser(QuoteCompositeKey compKey);
 	public void updateDeletedUser(QuoteCompositeKey compKey);
 	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey);
+	public QuoteDetails findQuoteDetailsById(String id);
 }
