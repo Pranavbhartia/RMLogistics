@@ -73,6 +73,12 @@ public class QuoteServiceImpl implements QuoteService {
 	}
 	
 	@Transactional
+	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey){
+		return quoteDao.getUniqueIdFromQuoteDetails(compKey);
+	}
+	
+	
+	@Transactional
 	public QuoteDetails getUserDetails(QuoteCompositeKey quoteCompositeKey){
 		QuoteDetails quoteDetails = quoteDao.getUserDetails(quoteCompositeKey);
 		return quoteDetails;

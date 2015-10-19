@@ -1,5 +1,6 @@
 package com.nexera.web.rest;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +18,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.DisplayMessageConstants;
+import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
+import com.nexera.common.compositekey.QuoteCompositeKey;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.BaseRestException;
+import com.nexera.common.exception.FatalException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.ErrorVO;
@@ -39,6 +44,7 @@ import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.QuoteService;
 import com.nexera.core.service.UploadedFilesListService;
 import com.nexera.core.service.UserProfileService;
 import com.nexera.web.rest.util.RestUtil;
@@ -71,7 +77,8 @@ public class LoanRestService {
 	@Autowired
 	private NeedsListService needsListService;
 	
-
+	@Autowired
+	private QuoteService quoteService;
 
 	@Autowired
 	private UploadedFilesListService uploadedFilesListService;
@@ -102,6 +109,29 @@ public class LoanRestService {
 	  return commonResponseVO;
 	 }
 	
+	 @RequestMapping(value = "/findUniqueIdFromQuoteDetail/{userName}/{internalUserID}", method = RequestMethod.POST)
+	 public @ResponseBody String findUniqueIdFromQuoteDetail(@PathVariable String userName,@PathVariable Integer internalUserID,
+	         HttpServletRequest request, HttpServletResponse response)
+	         throws IOException {
+		CommonResponseVO responseVO = new CommonResponseVO();
+		ErrorVO error = new ErrorVO();
+		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+		quoteCompositeKey.setInternalUserId(internalUserID);
+		quoteCompositeKey.setUserName(userName);
+		String id = null;
+		try{
+			id = quoteService.getUniqueIdFromQuoteDetails(quoteCompositeKey);
+		}
+		catch(Exception e){
+			LOG.error("Error while fetching uniqu id from quotedetail", e);
+			throw new FatalException("User could not be registered from Quick Quote");
+		}
+		finally{
+			return id;
+		}
+	}
+	 
+	 
 	@RequestMapping(value = "/create", method = RequestMethod.PUT)
 	public @ResponseBody String createUser(@RequestBody String loanVOStr) {
 

@@ -1,9 +1,12 @@
 package com.nexera.common.dao.impl;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -42,6 +45,25 @@ public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
 	public QuoteDetails getUserDetails(QuoteCompositeKey compKey){
 		QuoteDetails quoteDetails = (QuoteDetails)this.load(QuoteDetails.class, compKey);
 		return quoteDetails;
+	}
+	
+	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey){
+		String id = null ;
+		try{
+				Session session = sessionFactory.getCurrentSession();
+				SQLQuery qry = session.createSQLQuery("select id from quotedetails where prospect_username = '"+compKey.getUserName()+"' and internal_user_id = "+compKey.getInternalUserId());
+				// Here PRODUCTS is the table in the database...
+				List list = qry.list();
+				Iterator it = list.iterator();
+				
+				if (it.hasNext())	{
+					id = ""+it.next();
+				}
+		}
+		catch(Exception e){
+			LOG.error("Error in fetching id from quotedetail table: "+e);
+		}
+				return id;
 	}
 
 	@Override
