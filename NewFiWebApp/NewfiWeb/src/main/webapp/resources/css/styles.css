@@ -2680,6 +2680,7 @@ input.calc-input {
 	max-width: 85%;
 	line-height: 20px;
 	padding-left: 20px;
+   	word-break: break-word;
 }
 
 .add-needs-wrapper {

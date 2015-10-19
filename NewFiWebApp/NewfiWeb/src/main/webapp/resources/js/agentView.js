@@ -4206,7 +4206,8 @@ function appendAddNeedsContainer() {
 	}).html("Document Title");
 	var row2Input = $('<input>').attr({
 		"id" : "need_doc_title",
-		"class" : "add-needs-input-edit float-left"
+		"class" : "add-needs-input-edit float-left",
+		"maxlength":'45'
 	});
 
 	row2.append(row2Label).append(row2Input);
