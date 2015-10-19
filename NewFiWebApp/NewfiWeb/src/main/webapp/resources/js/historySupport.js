@@ -438,7 +438,12 @@ function retrieveState() {
 		break;
 	case AgentViewPNEnum['MY_LEADS']:
 		console.log('my leads');
-	getDashboardPanelMyLeads();
+	if (secondary) {
+		paintLeadsQuotePage(loanID);
+	} else{
+		paintAgentDashboard('myLeads');
+	}
+		
 		break;
 	default:
 		break;
@@ -490,7 +495,6 @@ function retrieveState() {
 			break;
 		}
 		break;
-
 	default:
 		break;
 	}
