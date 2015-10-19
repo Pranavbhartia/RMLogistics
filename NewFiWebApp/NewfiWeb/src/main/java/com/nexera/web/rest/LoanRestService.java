@@ -32,6 +32,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.EditLoanTeamVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
+import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
 import com.nexera.common.vo.LeadsDashBoardVO;
 import com.nexera.common.vo.LoanAppFormVO;
@@ -112,16 +113,16 @@ public class LoanRestService {
 
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/retrieveQuoteDetailsOfUser/{id}")
-	public @ResponseBody CommonResponseVO retrieveQuoteDetailsOfUser(
+	public @ResponseBody String retrieveQuoteDetailsOfUser(
 	        @PathVariable String id) {
-		CommonResponseVO commonResponseVO = null;
+		Gson gson = new Gson();
+		String jsonString= null;
 		QuoteDetails quoteDetails = quoteService.findQuoteDetailsById(id);
 		if (quoteDetails != null) {
-			QuoteDetailsVO quoteDetailsVO = quoteService
-			        .convertEntityToVO(quoteDetails);
-			commonResponseVO = RestUtil.wrapObjectForSuccess(quoteDetailsVO);
+			 GeneratePdfVO generatePdfVO = quoteService.convertToGeneratePdfVo(quoteDetails);
+			 jsonString = gson.toJson( generatePdfVO );
 		}
-		return commonResponseVO;
+		return jsonString;
 	}
 
 	@RequestMapping(value = "/findUniqueIdFromQuoteDetail/{userName}/{internalUserID}", method = RequestMethod.POST)
