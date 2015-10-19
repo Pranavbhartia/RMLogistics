@@ -1,9 +1,12 @@
 package com.nexera.common.dao.impl;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -43,6 +46,47 @@ public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
 		QuoteDetails quoteDetails = (QuoteDetails)this.load(QuoteDetails.class, compKey);
 		return quoteDetails;
 	}
+	
+	public QuoteDetails findQuoteDetailsById(String id){
+		QuoteDetails quoteDetails = null;
+		try{
+				Session session = sessionFactory.getCurrentSession();
+				SQLQuery qry = session.createSQLQuery("select * from quotedetails where id = :id");
+				qry.addEntity(QuoteDetails.class);
+				qry.setParameter("id", id);
+				// Here PRODUCTS is the table in the database...
+				List<QuoteDetails> list = qry.list();
+				for(QuoteDetails quote : list){
+					quoteDetails = quote;
+				}
+				
+		}
+		catch(Exception e){
+			LOG.error("Error in fetching quoteDetails on the basis of id: "+e);
+		}
+				return quoteDetails;
+	}
+	
+	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey){
+		String id = null ;
+		try{
+				Session session = sessionFactory.getCurrentSession();
+				SQLQuery qry = session.createSQLQuery("select id from quotedetails where prospect_username =  :username and internal_user_id = :internalUserId");
+				qry.setParameter("username", compKey.getUserName());
+				qry.setParameter("internalUserId", compKey.getInternalUserId());
+				// Here PRODUCTS is the table in the database...
+				List list = qry.list();
+				Iterator it = list.iterator();
+				
+				if (it.hasNext())	{
+					id = ""+it.next();
+				}
+		}
+		catch(Exception e){
+			LOG.error("Error in fetching id from quotedetail table: "+e);
+		}
+				return id;
+	}
 
 	@Override
 	public void updateCreatedUser(QuoteCompositeKey compKey) {
@@ -65,7 +109,5 @@ public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
 		query.setParameter("quoteCompositeKey", compKey);
 		query.executeUpdate();	
 	}
-	
-	
 	
 }

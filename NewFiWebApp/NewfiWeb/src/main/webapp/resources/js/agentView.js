@@ -14,6 +14,7 @@ var isRealtor="";
 var isArchivedLoans = "";
 var fetchedCount;
 
+
 LOAN_ENUM = {
 	ALL : "ALL",
 	NEW_PROSPECT : "NEW PROSPECT",
@@ -551,10 +552,10 @@ function checkCreditScore(creditScore){
 				customer.emailId = "-";
 			}
 
-				//write a rest call					
-				col2 = $('<div>').attr({
-					"class" : "leads-container-tc2 leads-row-2 float-left"
-				}).html(customer.emailId);
+			//write a rest call					
+			col2 = $('<div>').attr({
+				"class" : "leads-container-tc2 leads-row-2 float-left"
+			}).html(customer.emailId);
 			
 
 			var col3 = $('<div>').attr({
@@ -593,7 +594,12 @@ function checkCreditScore(creditScore){
 				// binding click  event when loan is not created.
 				col6_1.addClass("blue-edit");
 				col6_1.removeClass("grey-edit");
-				col6_1.bind("click",function(){	
+				col6_1.bind("click",function(){
+					ajaxRequest("rest/loan/findUniqueIdFromQuoteDetail/" + $(this).attr("userName") +"/"+$(this).attr("InternalUserID"), "POST",
+							"json",{}, function(response){								
+								saveState('leads',response, "quote");
+							});
+
 					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
 				});
 			}
@@ -625,10 +631,11 @@ function checkCreditScore(creditScore){
 			});
 			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6_1).append(col6).append(col7);
 			$('#' + elementId).append(row);
-			updateHandler.initiateRequest();
+			
 		}
 				
 	}
+				updateHandler.initiateRequest();
 }
 
 /**
@@ -662,8 +669,21 @@ function getUserFromLeads(userName,internalUserID){
 					editQuoteUserDetails = response;
 					editQuoteUser();
 				}else {
-					showErrorToastmessage(leadEditErrorMessage);
+					showErrorToastMessage(leadEditErrorMessage);
 				}	
+			});
+}
+
+function paintLeadsQuotePage(leadId){
+	ajaxRequest("rest/loan/retrieveQuoteDetailsOfUser/"+ leadId, "GET",
+			"json",{}, function(response){
+				if(response.error == null){
+					// TODO @Manish do the next task.
+					//showToastMessage(response.resultObject);
+				
+					editQuoteUserDetails = response;
+					editQuoteUser();
+				}
 			});
 }
 
