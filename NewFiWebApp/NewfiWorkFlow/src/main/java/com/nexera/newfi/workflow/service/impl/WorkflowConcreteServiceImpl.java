@@ -20,6 +20,7 @@ import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
+import com.nexera.common.entity.LoanDetail;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -48,6 +49,8 @@ import com.nexera.workflow.bean.WorkflowItemExec;
 import com.nexera.workflow.bean.WorkflowItemMaster;
 import com.nexera.workflow.enums.WorkItemStatus;
 import com.nexera.workflow.service.WorkflowService;
+
+import antlr.StringUtils;
 
 @Component
 public class WorkflowConcreteServiceImpl implements IWorkflowService {
@@ -267,18 +270,28 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		LOG.debug("Inside method getRenderStateInfoForApplicationFee ");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String status = "";
+		String paymentType = "";
 		Loan loan = new Loan(loanID);
 		// Code change : Do not show "Click here to pay" if Disclosures are NOT
 		// signed.
 		LoanMilestone disclosureMS = loanService.findLoanMileStoneByLoan(loan,
 		        Milestones.DISCLOSURE.getMilestoneKey());
-
+		
 		if (disclosureMS != null
 		        && disclosureMS.getComments() != null
 		        && disclosureMS.getComments().equals(
 		                LoanStatus.disclosureSigned)) {
 			// Show Click To pay only if Disclosures are signed
 			status = LoanStatus.APP_PAYMENT_CLICK_TO_PAY;
+			Loan loanDetail  = loanService.fetchLoanById(loanID);
+			try{	
+					paymentType = loanDetail.getPaymentVendor();
+			}
+			catch(Exception e){
+					LOG.error("Exception Caught " + e.getMessage());
+					LOG.warn("Nothing found in loandetail table for loanid: "+loanID);
+					paymentType = null;
+			}
 		} else {
 			status = LoanStatus.APP_PAYMENT_CANT_PAY_YET;
 		}
@@ -310,6 +323,8 @@ public class WorkflowConcreteServiceImpl implements IWorkflowService {
 		}
 		map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
 		        status);
+		map.put(WorkflowDisplayConstants.CUSTOMER_PAYMENT_TYPE,  paymentType);
+		
 
 		return utils.getJsonStringOfMap(map);
 	}

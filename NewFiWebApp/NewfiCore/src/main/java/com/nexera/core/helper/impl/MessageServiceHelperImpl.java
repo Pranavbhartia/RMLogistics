@@ -479,6 +479,12 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 		// error
 		try {
 			User user = userProfileDao.findByUserId(loggedInUser.getId());
+			
+			if (!isShopper) {
+				userProfileDao.updateLoginTime(
+				        new Date(System.currentTimeMillis()), user.getId());
+			}
+			
 			if (user.getUserRole().getId() != UserRolesEnum.CUSTOMER
 			        .getRoleId()) {
 				// If the logged in user is customer generate a note, else
@@ -493,10 +499,6 @@ public class MessageServiceHelperImpl implements MessageServiceHelper {
 				 * .convertFromEntityToVO(loggedInUser));
 				 * this.generateWelcomeNote(loggedInUser, loanVO.getId());
 				 */
-			}
-			if (!isShopper) {
-				userProfileDao.updateLoginTime(
-				        new Date(System.currentTimeMillis()), user.getId());
 			}
 		} catch (Exception ex) {
 			LOG.error(

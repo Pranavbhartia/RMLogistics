@@ -11,6 +11,7 @@
 		<field id="sApprVal">loanApprovedValue</field>
 		<field id="sSpAcqYr">propertyAcquiredYear</field>
 		<field id="sSpLien">mortageRemaining</field>
+		<field id="sPreProcessingD">preProcessingDate</field>		
 		<field id="sProd3rdPartyUwResultT">1</field>
 		<field id="sProdFilterDue10Yrs">true</field>
 		<field id="sProdFilterDue15Yrs">true</field>
@@ -23,6 +24,7 @@
 		<field id="sProdFilterFinMeth5YrsArm">true</field>
 		<field id="sProdFilterFinMeth7YrsArm">true</field>
 		<field id="sProdFilterFinMethFixed">true</field>
+		
 		<!-- <collection id="sCondDataSet"> <record> <field id="IsRequired">True</field> 
 			<field id="Category">Prior Doc - Edit</field> <field id="CondDesc">This is 
 			condition 1</field> <field id="Notes">This is note.</field> <field id="DoneDate">2/1/2006</field> 

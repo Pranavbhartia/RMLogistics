@@ -712,6 +712,7 @@ public class LoanAppFormVO implements Serializable {
 		Loan loan = new Loan();
 		loan.setId(loanVO.getId());
 		loan.setLqbFileId(loanVO.getLqbFileId());
+		loan.setPaymentVendor(loanVO.getPaymentVendor());
 
 		if (null != loanVO.getLoanType()) {
 

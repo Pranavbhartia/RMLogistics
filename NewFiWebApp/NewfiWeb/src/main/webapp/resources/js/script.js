@@ -10,6 +10,8 @@ var rateLockRequestedFlag = false;
 var closedialog;
 var totalEstimatedClosingCosts = new Object();
 var lqbTeaserRateUnderQuickQuote = new Object();
+var isEditPage = false;
+
 function changeLeftPanel(primary,callback) {
 	scrollToTop();
     var leftPanel = parseInt(primary);
@@ -2037,7 +2039,8 @@ function getLoanSummaryLastRow(desc, detail, id,lighterBackFlag,paddingLeftFlag)
         "id": id
     }).html(detail);
     
-    if(isEditPage && id == "loanAmount"){
+    
+    if(typeof isEditPage !== 'undefined' && isEditPage && id == "loanAmount"){
     	col2.addClass("leads-edit-adj");
     }
     container.append(col1).append(col2);
@@ -2443,7 +2446,8 @@ function getFileDragAndDropContainer(loanEmailID) {
 /*    var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
     }).html("or e-mail attachment to : "+loanEmailID);*/
-    var textCont2 = $('<div>').attr({
+   var textCont2 = $('<div>').attr({
+
         "class": "file-upload-text-cont2"
     }).html("You can also email files to : "+loanEmailID);
     //NEXNF-806
@@ -3126,11 +3130,15 @@ function modifiedLQBJsonResponse(LQBResponse) {
     yearValues.sort(function(a, b) {
         return parseFloat(a.value) - parseFloat(b.value);
     });
-    if(isEditPage){
-    	yearValues=yearValues.slice(0);
-    } else {
-    	yearValues=yearValues.slice(1);
+    
+    if(typeof isEditPage !== 'undefined'){
+    	 if(isEditPage){
+    	    	yearValues=yearValues.slice(0);
+    	    } else {
+    	    	yearValues=yearValues.slice(1);
+    	    }
     }
+   
     
     return yearValues;
 }

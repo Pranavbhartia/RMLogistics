@@ -1,6 +1,7 @@
 package com.nexera.newfi.workflow.customer.tasks;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
@@ -30,7 +32,8 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	private TransactionService transactionService;
 	@Autowired
 	private IWorkflowService iWorkflowService;
-
+	@Autowired
+	Utils utils;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(PaymentManager.class);
 
@@ -43,11 +46,14 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 	@Override
 	public String renderStateInfo(HashMap<String, Object> inputMap) {
 		LOG.debug("Inside method renderStateInfo");
+		Map<String, Object> map = new HashMap<String, Object>();
 		String status = "";
+		String paymentType = "";
 		try {
 			Loan loan = new Loan();
-			loan.setId(Integer.parseInt(inputMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString()));
+			int loanId = Integer.parseInt(inputMap.get(
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			loan.setId(loanId);
 			LoanMilestone disclosureMS = loanService.findLoanMileStoneByLoan(
 			        loan, Milestones.DISCLOSURE.getMilestoneKey());
 
@@ -65,11 +71,23 @@ public class PaymentManager implements IWorkflowTaskExecutor {
 			if (mileStone != null && mileStone.getComments() != null) {
 				status = mileStone.getComments().toString();
 			}
+			Loan loanDetail  = loanService.fetchLoanById(loanId);
+			try{	
+					paymentType = loanDetail.getPaymentVendor();
+			}
+			catch(Exception e){
+					LOG.error("Exception Caught " + e.getMessage());
+					LOG.warn("Nothing found in  table for loanid: "+loanId);
+					paymentType = null;
+			}
+			map.put(WorkflowDisplayConstants.WORKFLOW_RENDERSTATE_STATUS_KEY,
+			        status);
+			map.put(WorkflowDisplayConstants.CUSTOMER_PAYMENT_TYPE,  paymentType);
+			return utils.getJsonStringOfMap(map);
 		} catch (Exception e) {
-			LOG.error(e.getMessage());
-			status = "";
+			LOG.error(e.getMessage());			
 		}
-		return status;
+		return utils.getJsonStringOfMap(map);
 	}
 
 	@Override

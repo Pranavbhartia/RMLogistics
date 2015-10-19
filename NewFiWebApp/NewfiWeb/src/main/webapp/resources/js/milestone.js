@@ -6,6 +6,8 @@ var COMPLETED = "3";
 var NOT_STARTED = "0";
 var RENDER_RIGHT = "RIGHT";
 var RENDER_LEFT = "LEFT";
+var BRAINTREE = "braintree";
+var AXIS = "axis";
 var milestoneAction=""
 var workFlowContext = {
 	init : function(loanId, customer) {
@@ -661,16 +663,23 @@ function getInternalEmployeeMileStoneContext( workItem) {
 								}
 							}
 							else if (ob.workItem.workflowItemType=="MANAGE_APP_FEE"){
-								//var tempOb=JSON.parse(ob.workItem.stateInfo);
-								ob.stateInfoContainer.html(ob.workItem.stateInfo);
-								if (ob.workItem.stateInfo =="Disclosures Required")
-								{
-									$(ob.stateInfoContainer).removeClass("cursor-pointer");
+								
+								var tempOb=JSON.parse(workItem.stateInfo);
+								if(tempOb.status){
+									ob.stateInfoContainer.html(tempOb.status);
 								}
-								else
+								if (tempOb)
 								{
-									attachCursorPointerClassToElement(ob.stateInfoContainer);
+									if (tempOb.stateInfo =="Disclosures Required")
+									{
+										$(ob.stateInfoContainer).removeClass("cursor-pointer");
+									}
+									else
+									{
+										attachCursorPointerClassToElement(ob.stateInfoContainer);
+									}
 								}
+								workFlowContext.mileStoneContextList[ob.workItem.id].paymentType = tempOb.PAYMENT_TYPE;
 								
 							}
 							else if (ob.workItem.workflowItemType=="MANAGE_CREDIT_STATUS"||
@@ -740,6 +749,7 @@ function showAppFee (itemToAppendTo,workItem)
 			if(tempOb.status){
 				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.html(tempOb.status);	
 				workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.addClass("cursor-pointer");
+				workFlowContext.mileStoneContextList[workItem.id].paymentType = tempOb.PAYMENT_TYPE;
 				if (workItem.status == NOT_STARTED)
 				{				
 					workFlowContext.mileStoneContextList[workItem.id].stateInfoContainer.attr("data-text",workItem.workflowItemType+ "_PAY_FOR");
@@ -1117,7 +1127,7 @@ function getAppFeeEdit(workItem)
 		"class" : "showAnchor",
 		"data-text" : workItem.workflowItemType,
 		"mileNotificationId":workItem.id
-	}).html("Click here to change fee").bind("click", function(e) {
+	}).html("Click here to edit").bind("click", function(e) {
 		milestoneChildEventHandler(e);
 	});
 	appFeeEditItem.append(spanContainer);
@@ -1856,6 +1866,11 @@ function milestoneChildEventHandler(event) {
 	}
 	else if ($(event.target).attr("data-text") == "MANAGE_APP_FEE" || $(event.target).attr("data-text") == "APP_FEE_PAY_FOR" ) {
 		var workItemIDAppFee = $(event.target).attr("mileNotificationId");
+		var paymentType;
+		if(typeof(workFlowContext.mileStoneContextList[workItemIDAppFee].paymentType) != 'undefined'){
+			paymentType = workFlowContext.mileStoneContextList[workItemIDAppFee].paymentType;
+		}
+	
 		if (workFlowContext.mileStoneContextList[workItemIDAppFee].workItem.status != NOT_STARTED )
 		{
 			return;
@@ -1868,26 +1883,34 @@ function milestoneChildEventHandler(event) {
 	 	
 		console.log("Pay application fee clicked!");
 		showOverlay();
-		$('body').addClass('body-no-scroll');
-		url = "/NewfiWeb/payment/initialisepayment.do";
-		payload = "loan_id=" + String(workFlowContext.loanId);
 		
-		 $.ajax({
-		        url : url,
-		        type : "POST",
-		        data : payload,
-		        cache:false,
-		        success : function(data) {
-		        	console.log("Show payment called with data : " + data);
-		        	$("#popup-overlay").html(data);
-		        	hideOverlay();		        		        	
-		        	$("#popup-overlay").show();
-		        },
-		        error : function(e) {
-		        	hideOverlay();
-		            console.error("error : " + e);
-		        }
-		    });
+		if(paymentType != null && paymentType.toLowerCase() == "axis")
+		{
+			makePaymentFromAxis("axisPayment");
+			window.open("https://axis.vmpxsites.com/makeapayment");
+		}
+		else{
+			$('body').addClass('body-no-scroll');
+			url = "/NewfiWeb/payment/initialisepayment.do";
+			payload = "loan_id=" + String(workFlowContext.loanId);
+			
+			 $.ajax({
+			        url : url,
+			        type : "POST",
+			        data : payload,
+			        cache:false,
+			        success : function(data) {
+			        	console.log("Show payment called with data : " + data);
+			        	$("#popup-overlay").html(data);
+			        	hideOverlay();		        		        	
+			        	$("#popup-overlay").show();
+			        },
+			        error : function(e) {
+			        	hideOverlay();
+			            console.error("error : " + e);
+			        }
+			    });
+		}
 	}else if ($(event.target).attr("data-text") == "CONTACT_LOAN_MANAGER") {
 	 	event.stopPropagation();
 	 	if(workFlowContext.dataContainer.managerList){
@@ -1911,6 +1934,59 @@ function milestoneChildEventHandler(event) {
 	}
 }
 
+// Make payment from Axis gateway
+function makePaymentFromAxis(nonce){
+	console.log("Making payment");
+	//console.log(event);
+	console.log(nonce);
+	
+	var loanID = 0;
+	if (newfiObject.user.userRole.roleCd == "CUSTOMER")
+	{
+		loanID = newfiObject.user.defaultLoanId;
+	}
+	else
+	{
+		loanID = selectedUserDetail.loanID;
+	}
+	console.log("loanID"+loanID);
+	//showOverlay();
+	url="./rest/payment/pay";
+	data = "payment_nonce=" + String(nonce);
+	data = data +"&loan_id=" + String(loanID);
+	$.ajax({
+		url : url,
+		type : "POST",
+		cache:false,
+		data : data,
+		success : function(e){
+			hideOverlay();
+			//showToastMessage("Payment successful");
+			changeStateForAxisPayment();
+		},
+		error :  function(e) {
+			showToastMessage("Internal error occurred. Please try later.");
+			hideOverlay();
+            console.error("error : " + e);
+        }
+	});
+}
+
+
+function changeStateForAxisPayment ()
+{
+	var referenceMileStone = workFlowContext.milestoneStepsLookup["MANAGE_APP_FEE"];
+	if (!referenceMileStone)
+	{
+		referenceMileStone = workFlowContext.milestoneStepsLookup["APP_FEE"];
+	}
+	var workItemIDAppFee = referenceMileStone.id;	
+	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.html("Pending - Verification");
+	workFlowContext.mileStoneContextList[workItemIDAppFee].stateInfoContainer.removeClass("cursor-pointer");
+	referenceMileStone.status="1";
+	$("#WF"+workItemIDAppFee).addClass("m-in-progress");
+	$("#WF"+workItemIDAppFee).removeClass("m-not-started");	
+}
 
 //Functions to view loan manager details in customer page
 
@@ -2084,8 +2160,11 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	}).css({
 		"left" : offset.left,
 		"top" : offset.top+42
+	}).bind('click',function(e){
+		if($('.milestone-dropdown-container').css("display") == "block"){
+			$('.milestone-dropdown-container').hide();
+		}
 	});
-	
 	var header = $('<div>').attr({
 		"class" : "popup-header"
 	}).html("App Fee Edit");
@@ -2112,7 +2191,59 @@ function appendAppFeeEditPopup(element,milestoneId) {
             event.preventDefault();
         }
     });
+	var exsistingFee = $('#'+milestoneId+'fee').html();
+	if(exsistingFee){
+		$(newFee).val(exsistingFee);
+		$(newFee).html(exsistingFee);
+	}
+	var vendorRow = $('<div>').attr({
+		"class": "milestone-vendor-type-row"
+	});
 	
+	var divLHS = $('<div>').attr({
+		"class": "milestone-txt-LHS float-left"
+	}).html("Vendor Type");
+	var value = workFlowContext.mileStoneContextList[milestoneId].paymentType;
+	var divRHS = $('<div>').attr({
+		"class": "milestone-dropdown-RHS float-left",
+		"value":value
+	}).html(value).bind("click",function(e){
+		e.stopPropagation();
+		$(this).parent().find('.milestone-dropdown-container').toggle();
+		
+	});
+	
+	
+	var divCont = $('<div>').attr({
+		"class": "milestone-dd-cont",
+		
+	});
+	var dropdownDiv = $('<div>').attr({
+		"class": "milestone-dropdown-container hide",
+		
+	});
+	
+	var dropDownSelOne = $('<div>').attr({
+		"class": "milestone-dropdown-sel",
+		"id": "braintree-id"
+	}).html(BRAINTREE).bind("click",function(){
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').html($(this).html());
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').attr("value",$(this).html());
+	     $('.milestone-dropdown-container').hide();
+	});
+	
+	var dropDownSelTwo = $('<div>').attr({
+		"class": "milestone-dropdown-sel",
+		"id": "axis-id"
+	}).html(AXIS).bind("click",function(){
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').html($(this).html());
+		$(this).parent().parent().parent().find('.milestone-dropdown-RHS').attr("value",$(this).html());
+	   $('.milestone-dropdown-container').hide();
+	});
+	
+	dropdownDiv.append(dropDownSelOne).append(dropDownSelTwo);
+	divCont.append(dropdownDiv);
+	vendorRow.append(divLHS).append(divRHS).append(divCont);
 	var submitBtn = $('<div>').attr({
 		"class" : "popup-save-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":newFee,"milestoneId":milestoneId},function(event){
@@ -2120,6 +2251,10 @@ function appendAppFeeEditPopup(element,milestoneId) {
 		var newFee=event.data.comment.val();
 		newFee=newFee.replace('$', '');
 		var milestoneId=event.data.milestoneId;
+		var vendorType = $('.milestone-dropdown-RHS').attr("value");
+		if(vendorType == ""){
+			vendorType = BRAINTREE;
+		}
 		if(newFee){
 			var url="rest/workflow/invokeaction/"+milestoneId;
 			var data={};			
@@ -2127,6 +2262,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 			data["userID"] = newfiObject.user.id;
 			data["workflowItemExecId"]=milestoneId;
 			data["newFee"]=newFee;
+			data["vendorType"] = vendorType;
 	 		ajaxRequest(
 				url,
 				"POST",
@@ -2156,7 +2292,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
     });
     btnContainer.append(submitBtn).append(cancelBtn);
 	
-	container.append(newFee).append(btnContainer);
+	container.append(newFee).append(vendorRow).append(btnContainer);
 	
 	wrapper.append(header).append(container);
 	wrapper.bind("click",function(e){
