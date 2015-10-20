@@ -1271,7 +1271,7 @@ function objectKeyMakerFunctionUnderQuickQuote(item) {
 	case getClosingCostLabel("Closing/Escrow Fee"):
 		return "closingEscrowFee1102";
 	case getClosingCostLabel("Recording Fee"):
-		return "recordingFees1201";
+		return "recordingFees1202";
 	case getClosingCostLabel("City/County Tax stamps"):
 		return "cityCountyTaxStamps1204";
 	case getClosingCostLabel("Total Estimated Third Party Costs"):
