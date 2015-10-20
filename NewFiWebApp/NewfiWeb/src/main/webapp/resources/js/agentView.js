@@ -14,6 +14,7 @@ var isRealtor="";
 var isArchivedLoans = "";
 var fetchedCount;
 
+
 LOAN_ENUM = {
 	ALL : "ALL",
 	NEW_PROSPECT : "NEW PROSPECT",
@@ -551,10 +552,10 @@ function checkCreditScore(creditScore){
 				customer.emailId = "-";
 			}
 
-				//write a rest call					
-				col2 = $('<div>').attr({
-					"class" : "leads-container-tc2 leads-row-2 float-left"
-				}).html(customer.emailId);
+			//write a rest call					
+			col2 = $('<div>').attr({
+				"class" : "leads-container-tc2 leads-row-2 float-left"
+			}).html(customer.emailId);
 			
 
 			var col3 = $('<div>').attr({
@@ -593,7 +594,12 @@ function checkCreditScore(creditScore){
 				// binding click  event when loan is not created.
 				col6_1.addClass("blue-edit");
 				col6_1.removeClass("grey-edit");
-				col6_1.bind("click",function(){	
+				col6_1.bind("click",function(){
+					ajaxRequest("rest/loan/findUniqueIdFromQuoteDetail/" + $(this).attr("userName") +"/"+$(this).attr("InternalUserID"), "POST",
+							"json",{}, function(response){								
+								saveState('leads',response, "quote");
+							});
+
 					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
 				});
 			}
@@ -625,10 +631,11 @@ function checkCreditScore(creditScore){
 			});
 			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6_1).append(col6).append(col7);
 			$('#' + elementId).append(row);
-			updateHandler.initiateRequest();
+			
 		}
 				
 	}
+				updateHandler.initiateRequest();
 }
 
 /**
@@ -662,8 +669,21 @@ function getUserFromLeads(userName,internalUserID){
 					editQuoteUserDetails = response;
 					editQuoteUser();
 				}else {
-					showErrorToastmessage(leadEditErrorMessage);
+					showErrorToastMessage(leadEditErrorMessage);
 				}	
+			});
+}
+
+function paintLeadsQuotePage(leadId){
+	ajaxRequest("rest/loan/retrieveQuoteDetailsOfUser/"+ leadId, "GET",
+			"json",{}, function(response){
+				if(response.error == null){
+					// TODO @Manish do the next task.
+					//showToastMessage(response.resultObject);
+				
+					editQuoteUserDetails = response;
+					editQuoteUser();
+				}
 			});
 }
 
@@ -4186,7 +4206,8 @@ function appendAddNeedsContainer() {
 	}).html("Document Title");
 	var row2Input = $('<input>').attr({
 		"id" : "need_doc_title",
-		"class" : "add-needs-input-edit float-left"
+		"class" : "add-needs-input-edit float-left",
+		"maxlength":'45'
 	});
 
 	row2.append(row2Label).append(row2Input);
@@ -4662,7 +4683,7 @@ $('body').on('click','.leads-container-th .leads-container-tc1.sm-leads-containe
 		$(this).addClass('sort-list-asc');
 		isAsc = -1;
 	}
-    sortTable(isAsc, ".leads-container-tc1");
+    sortTableByLastName(isAsc);
 });
 
 // Sort Loan Advisor
@@ -4803,4 +4824,57 @@ function sortTable(isAsc, selector) {
 		} 
 		$('#leads-container').append(row);
 	});
+}
+
+/**
+ * Method to sort rows based on certain column.
+ * @param isAsc
+ */
+function sortTableByLastName(isAsc) {
+	
+	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
+	var rows = $('#leads-container').find('.leads-container-tr').get();
+	
+	rows.sort(function(a, b) {
+
+		var name1 = $(a).children(".leads-container-tc1").text().toLowerCase();
+		var name2 = $(b).children(".leads-container-tc1").text().toLowerCase();
+		name1  = reverseName(name1);
+		name2 = reverseName(name2);
+
+		if (name1 < name2) {
+			return -1 * isAsc;
+		}
+		if (name1 > name2) {
+			return 1 * isAsc;
+		}
+		
+		return 0;
+	});
+	
+	$.each(rows, function(index, row) {
+		if( index % 2 == 0){
+			$(row).addClass("leads-container-row-odd");
+		} 
+		$('#leads-container').append(row);
+	});
+}
+
+/**
+ * Method to reverse the name.  
+ * @param name
+ * @returns
+ */
+function reverseName(name){
+	
+	if(name != null  && name != undefined){
+		var names = name.split(' ');
+		if(names.length == 2){
+		  return names[1] + names[0];
+		} else {
+			return name;   
+		}
+	} else {
+		return name;
+	}
 }
