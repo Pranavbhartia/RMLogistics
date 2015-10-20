@@ -4745,16 +4745,20 @@ function sortTableByTime(isAsc,selector){
 	
 	
 	rows.sort(function(a, b) {
-
-		try {
-			var time1 = $(a).children(selector).text();
-			var time2 = $(b).children(selector).text();
-		} catch(ex)  {
-			console.log("Error while parsing date sortTableByTime," + ex);
-			return 0;
-		}
 		
-		return isAsc * (new Date(time1).getTime() - new Date(time2).getTime()); 
+		try {
+            var time1 = $(a).children(selector).text();
+            var time2 = $(b).children(selector).text();
+            time1  = time1.replace(/-/g, "/");
+            time2  = time2.replace(/-/g, "/");
+            
+            var timestamp1 = new Date(time1).getTime();
+            var timestamp2 = new Date(time2).getTime();
+            return isAsc * (timestamp1 - timestamp2); 
+        } catch(ex)  {
+            console.log("Error while parsing date sortTableByTime," + ex);
+            return 0;
+        }
 	});
 
 	$.each(rows, function(index, row) {
