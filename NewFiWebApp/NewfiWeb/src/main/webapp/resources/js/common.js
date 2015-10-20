@@ -626,7 +626,7 @@ function objectKeyMakerFunction(item) {
 	case getClosingCostLabel("Closing/Escrow Fee"):
 		return "closingEscrowFee1102";
 	case getClosingCostLabel("Recording Fee"):
-		return "recordingFees1201";
+		return "recordingFees1202";
 	case getClosingCostLabel("City/County Tax stamps"):
 		return "cityCountyTaxStamps1204";
 	case getClosingCostLabel("Total Estimated Third Party Costs"):
@@ -673,6 +673,16 @@ function getCalculationFunctionForItem(key) {
 					&& closingCostHolder.valueSet[key] != "0")
 				return closingCostHolder.valueSet[key];
 			else if(closingCostHolder.valueSet[secKey]
+					&& closingCostHolder.valueSet[secKey] != "0")
+				return closingCostHolder.valueSet[secKey];
+			else
+				return "$87.00";
+		};
+		break;
+	case "recordingFees1202":
+		fun = function() {
+			var secKey="recordingFees1202";
+			if(closingCostHolder.valueSet[secKey]
 					&& closingCostHolder.valueSet[secKey] != "0")
 				return closingCostHolder.valueSet[secKey];
 			else
@@ -744,7 +754,7 @@ function getCalculationFunctionForItem(key) {
 			var val5 = getFloatValue(closingCostHolder.valueSet["ownersTitleInsurance1103"]);
 			var val6 = getFloatValue(closingCostHolder.valueSet["lendersTitleInsurance1104"]);
 			var val7 = getFloatValue(closingCostHolder.valueSet["closingEscrowFee1102"]);
-			var val8 = getFloatValue(closingCostHolder.valueSet["recordingFees1201"]);
+			var val8 = getFloatValue(closingCostHolder.valueSet["recordingFees1202"]);
 			var val9 = getFloatValue(closingCostHolder.valueSet["cityCountyTaxStamps1204"]);
 			if (isNaN(val9)) {
 				val9 = 0;

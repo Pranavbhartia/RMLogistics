@@ -1344,12 +1344,12 @@ public class GeneratePdfForQuickQuote {
         cell.setBorder(Rectangle.LEFT);
         thirdTable.addCell(cell);
         
-        String recordingFees1201 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getRecordingFees1201();
-        if(!recordingFees1201.contains("$")){
-        	cell = new PdfPCell(new Phrase(addDollarAndComma(recordingFees1201),font));
+        String recordingFees1202 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getRecordingFees1202();
+        if(!recordingFees1202.contains("$")){
+        	cell = new PdfPCell(new Phrase(addDollarAndComma(recordingFees1202),font));
         }
         else{
-        	cell = new PdfPCell(new Phrase(recordingFees1201,font));
+        	cell = new PdfPCell(new Phrase(recordingFees1202,font));
         }
         
         cell.setPaddingTop(4); 
