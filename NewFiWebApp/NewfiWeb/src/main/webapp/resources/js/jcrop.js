@@ -286,7 +286,8 @@ function createUploadPhotoContent() {
 
 function cancelUploadPhoto() {
 
-	//$("#popup-overlay").empty();
+	$("#popup-overlay").empty();
+	$("#prof-image").val('');
 	$("#popup-overlay").css("display", "none");
 	return false;
 }
