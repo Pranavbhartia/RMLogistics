@@ -807,8 +807,14 @@ function addNotificationPopup(loanId, element, data) {
 		e.stopPropagation();
 	});
 	var contxt = getContext(loanId + "-notification");
+	var closecontainer = $('<div>').attr({
+		"class" : "ms-close-add-mem-popup",
+		"id": "ms-close-add-mem-popup-id"
+	}).bind('click',function(e){
+		removeNotificationPopup();
+	});
 	var component = getSchedulerContainer(contxt, data);
-	wrapper.append(component);
+	wrapper.append(closecontainer).append(component);
 	$(element).append(wrapper);
 	$('#sch-msg-time-picker').datetimepicker({
 		pickDate : false
@@ -821,7 +827,6 @@ $(document).click(function() {
 			removeNotificationPopup();
 	}
 });
-
 function getHashLocationForNotification(type,loanId){
 	if(newfiObject.user.userRole.roleCd=="CUSTOMER"){
 		switch(type){

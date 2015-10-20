@@ -15,6 +15,7 @@ var isRealtor="";
 var isArchivedLoans = "";
 var fetchedCount;
 
+
 LOAN_ENUM = {
 	ALL : "ALL",
 	NEW_PROSPECT : "NEW PROSPECT",
@@ -154,6 +155,7 @@ function reInitializeGlobalvariables(){
 }
 
 function getDashboardPanelMyLeads(loanType){
+	
 	var startLimit=0;
 	if(fetchedCount)
 		startLimit=fetchedCount;
@@ -161,6 +163,7 @@ function getDashboardPanelMyLeads(loanType){
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLeads/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
+				$("#agent-dashboard-container").empty();
 				newfiObject.fetchLock=undefined;
 				isArchivedLoans = false;
 				if(startLimit==0){
@@ -503,133 +506,6 @@ function checkCreditScore(creditScore){
  * @param elementId of container to which lead list to be appended
  * @param customers is the leads
  */
-
-/*	function appendLeads(elementId, customers){
-		
-				var list = customers;	
-				appendTableHeader(elementId);
-				for (var i = 0; i < list.length; i++) {
-				var customer = list[i];
-		if(!customer.isDeleted){
-			var row = $('<div>').attr({
-				"class" : "leads-container-tr leads-container-row clearfix"
-			});
-	
-			
-			if (i % 2 == 0) {
-				row.addClass('leads-container-row-odd');
-			}
-	
-			if (i == list.length - 1) {
-					row.addClass('leads-container-row-last');
-			}
-	
-			
-			var col1 = $('<div>').attr({
-				"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
-					"id" : "leads-container-tc1-id"
-				});
-			
-			 var profImage = $('<div>').attr({
-					
-					
-				});
-			 var cusName = $('<div>').attr({
-					"class" : "float-left",
-					"loanid" : customer.loanID,
-					"userid" : customer.userID
-				}).html(customer.prospectFirstName+" "+customer.prospectLastName);
-			
-	
-			col1.append(profImage).append(cusName);
-			var phone_num = "NA";
-			if (customer.phoneNo != null && customer.phoneNo.trim() != "") {
-				phone_num = formatPhoneNumberToUsFormat(customer.phoneNo);
-			}else if(customer.phoneNo == ""){
-				phone_num = "-";
-			}
-			var col2="";
-			if(customer.emailId == ""){
-				customer.emailId = "-";
-			}
-				//write a rest call					
-				col2 = $('<div>').attr({
-					"class" : "leads-container-tc2 leads-row-2 float-left"
-				}).html(customer.emailId);
-			
-			var col3 = $('<div>').attr({
-				"class" : "leads-container-tc3 leads-row-3 float-left"
-			}).html(phone_num);
-			var	createdDateStr = formateDateAndTime(
-					new Date(customer.createdDate),true);
-			
-			if(createdDateStr==""){
-				createdDateStr="-";
-			}
-			var col4 = $('<div>').attr({
-				"class" : "leads-container-tc4 leads-row-4 float-left"
-			}).html(createdDateStr);
-			
-			var col5 = $('<div>').attr({
-				"class" : "leads-container-row-tc5 leads-row-5 float-left",
-				"name" : customer.pdfUrl
-			}).bind("click",function(){
-				window.open($(this).attr("name"));
-			
-			});
-			
-			
-			//Edit button column for leads
-			var col6_1 = $('<div>').attr({
-				"class" : "leads-container-row-tc6 grey-edit float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName
-			});
-			
-			//TO add a condition to check for user created
-			if(!customer.isCreated){
-				// binding click  event when loan is not created.
-				col6_1.addClass("blue-edit");
-				col6_1.removeClass("grey-edit");
-				col6_1.bind("click",function(){	
-					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-				});
-			}
-			
-			var col6 = $('<div>').attr({
-				"class" : "leads-container-row-tc6 leads-row-6 float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName
-			}).bind("click",function(){
-				if($(this).hasClass('leads-row-6')){
-					createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-				}
-			});				
-			//TO add a condition to check for user created
-			if(customer.isCreated){
-				$(col6).removeClass('leads-row-6');
-				$(col6).addClass('leads-user-created');
-			}
-			
-			var col7 = $('<div>').attr({
-				"class" : "leads-container-tc7 leads-row-7 float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName+":"+customer.quoteCompositeKey.internalUserId
-			}).bind("click",function(){
-				deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-			
-			});
-			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6_1).append(col6).append(col7);
-			$('#' + elementId).append(row);
-			updateHandler.initiateRequest();
-		}
-				
-	}
-}*/
-
 	
 	function appendLeads(elementId, customers){
 	
@@ -986,6 +862,7 @@ function checkCreditScore(creditScore){
 		}
 		
 		updateHandler.initiateRequest();
+
 }
 
 /**
@@ -1019,8 +896,21 @@ function getUserFromLeads(userName,internalUserID){
 					editQuoteUserDetails = response;
 					editQuoteUser();
 				}else {
-					showErrorToastmessage(leadEditErrorMessage);
+					showErrorToastMessage(leadEditErrorMessage);
 				}	
+			});
+}
+
+function paintLeadsQuotePage(leadId){
+	ajaxRequest("rest/loan/retrieveQuoteDetailsOfUser/"+ leadId, "GET",
+			"json",{}, function(response){
+				if(response.error == null){
+					// TODO @Manish do the next task.
+					//showToastMessage(response.resultObject);
+				
+					editQuoteUserDetails = response;
+					editQuoteUser();
+				}
 			});
 }
 
@@ -4600,7 +4490,8 @@ function appendAddNeedsContainer() {
 	}).html("Document Title");
 	var row2Input = $('<input>').attr({
 		"id" : "need_doc_title",
-		"class" : "add-needs-input-edit float-left"
+		"class" : "add-needs-input-edit float-left",
+		"maxlength":'45'
 	});
 
 	row2.append(row2Label).append(row2Input);

@@ -73,6 +73,16 @@ public class QuoteServiceImpl implements QuoteService {
 	}
 	
 	@Transactional
+	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey){
+		return quoteDao.getUniqueIdFromQuoteDetails(compKey);
+	}
+	
+	@Transactional
+	public QuoteDetails findQuoteDetailsById(String id){
+		return quoteDao.findQuoteDetailsById(id);
+	}
+	
+	@Transactional
 	public QuoteDetails getUserDetails(QuoteCompositeKey quoteCompositeKey){
 		QuoteDetails quoteDetails = quoteDao.getUserDetails(quoteCompositeKey);
 		return quoteDetails;
@@ -212,4 +222,47 @@ public class QuoteServiceImpl implements QuoteService {
 	     return generatePdfVO;
 	}
 	
+	 public QuoteDetailsVO convertEntityToVO(QuoteDetails quoteDetails){
+		  QuoteDetailsVO quoteDetailsVO = new QuoteDetailsVO();
+		  quoteDetailsVO.setCreatedDate(quoteDetails.getCreatedDate());
+		  quoteDetailsVO.setEmailId(quoteDetails.getEmailId());
+		  quoteDetailsVO.setInputDetailsJson(quoteDetails.getInputDetailsJson());
+		  quoteDetailsVO.setInternalUserId(quoteDetails.getQuoteCompositeKey().getInternalUserId());
+		  quoteDetailsVO.setLqbRateJson(quoteDetails.getLqbRateJson());
+		  quoteDetailsVO.setPdfUrl(quoteDetails.getPdfUrl());
+		  quoteDetailsVO.setPhoneNo(quoteDetails.getPhoneNo());
+		  quoteDetailsVO.setProspectFirstName(quoteDetails.getProspectFirstName());
+		  quoteDetailsVO.setProspectLastName(quoteDetails.getProspectLastName());
+		  quoteDetailsVO.setIsCreated(quoteDetails.getIsCreated());
+		  quoteDetailsVO.setIsDeleted(quoteDetails.getIsDeleted());
+		  quoteDetailsVO.setProspectUsername(quoteDetails.getQuoteCompositeKey().getUserName());
+		  quoteDetailsVO.setId(quoteDetails.getId());
+		  return quoteDetailsVO;
+	 }
+	
+	 /**
+	  * @param quoteDetailsVO
+	  * @return
+	  */
+	 public  QuoteDetails convertVOToEntity(QuoteDetailsVO quoteDetailsVO){
+	  
+	  QuoteDetails quoteDetails = new QuoteDetails();
+	  quoteDetails.setCreatedDate(quoteDetailsVO.getCreatedDate());
+	  quoteDetails.setEmailId(quoteDetailsVO.getEmailId());
+	  quoteDetails.setInputDetailsJson(quoteDetailsVO.getInputDetailsJson());
+	  QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+	  quoteCompositeKey.setInternalUserId(quoteDetailsVO.getInternalUserId());
+	  quoteCompositeKey.setUserName(quoteDetailsVO.getProspectUsername());
+	  quoteDetails.setQuoteCompositeKey(quoteCompositeKey);
+	  quoteDetails.setLqbRateJson(quoteDetailsVO.getLqbRateJson());
+	  quoteDetails.setPdfUrl(quoteDetailsVO.getPdfUrl());
+	  quoteDetails.setPhoneNo(quoteDetailsVO.getPhoneNo());
+	  quoteDetails.setProspectFirstName(quoteDetailsVO.getProspectFirstName());
+	  quoteDetails.setProspectLastName(quoteDetailsVO.getProspectLastName());
+	  quoteDetails.setIsCreated(quoteDetailsVO.getIsCreated());
+	  quoteDetails.setIsDeleted(quoteDetailsVO.getIsDeleted());  
+	  quoteDetails.setId(quoteDetailsVO.getId());
+	  return quoteDetails;
+	 }
+	 	 
 }
