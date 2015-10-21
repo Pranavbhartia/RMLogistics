@@ -24,8 +24,16 @@ public class LqbTeaserRateVo {
 	private String hazIns903;
 	private String taxResrv1004;
 	private String hazInsReserve1002;
-	private String ownersTitleInsurance1103;
+	private String ownersTitleInsurance1103;	
+    private String notaryfee1110;
+
 	
+	public String getNotaryfee1110() {
+		return notaryfee1110;
+	}
+	public void setNotaryfee1110(String notaryfee1110) {
+		this.notaryfee1110 = notaryfee1110;
+	}
 	// added to send mail with quotes
 	private String yearData;
 	
