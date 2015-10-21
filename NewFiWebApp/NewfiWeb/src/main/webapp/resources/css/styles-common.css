@@ -1018,15 +1018,16 @@ a.cus-eng-succ-mess-email {
 }
 .lead-loan-tc2 {
 	margin-right: 20px;
-    width: 12%;
-    word-break: break-word;
+	width: 12%;
+	word-break: break-word;
+	margin-left: 16px;
 }
 .lead-loan-tc3 {
     margin-left: 17px;
     width: 11%;
 }
-.lead-loan-tc4,.lead-loan-tc5,.leads-row-processor,.leads-loan-tc1 {
-	width: 11%;
+.lead-loan-tc5,.leads-row-processor,.leads-loan-tc1 {
+	/* width: 11%; */
 }
 .lead-loan-tc6,.sm-leads-col-tc1 {
 	width: 15%;
@@ -1120,4 +1121,6 @@ a.cus-eng-succ-mess-email {
     color: rgba(255, 0, 0, 0.86);
     font-family: 'opensanssemibold';
 }
-
+.lead-loan-tc4 {
+	width: 9%;
+}

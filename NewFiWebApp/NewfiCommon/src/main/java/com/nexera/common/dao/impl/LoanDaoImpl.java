@@ -339,6 +339,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 			for (Loan loan : loanListForUser) {
 				Hibernate.isInitialized(loan.getLoanProgressStatus());
+				Hibernate.initialize(loan.getLoanLCStateMaster());
 			}
 			/*
 			 * Collections.sort(loanListForUser, new Comparator<Loan>() { public
@@ -410,6 +411,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 			for (Loan loan : loanListForUser) {
 				Hibernate.isInitialized(loan.getLoanProgressStatus());
+				if(loan.getLoanLCStateMaster() != null){
+					Hibernate.initialize(loan.getLoanLCStateMaster());
+				}
+				
 			}
 			/*
 			 * Collections.sort(loanListForUser, new Comparator<Loan>() { public
