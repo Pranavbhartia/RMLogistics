@@ -178,6 +178,31 @@
 	.sort-list-dsc {
 		background: none;
 	}
+	
+	.sort-up-arrow-45 {
+        background: none;
+	}
+	
+	.sort-down-arrow-45 {
+	   background: none;  
+	}
+	
+	.sort-up-arrow-78 {
+	   background: none;  
+	}
+	
+	.sort-down-arrow-78 {
+	   background: none;  
+	}
+	
+	.last-action-sort-list-asc {
+	   background: none;
+	}
+	
+	.last-action-sort-list-dsc {
+	   background: none;
+	}
+	
 	.leads-container-tc2{
 		width: 23%;
 		padding-right: 10px;

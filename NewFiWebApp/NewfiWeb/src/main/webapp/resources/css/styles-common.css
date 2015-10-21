@@ -835,6 +835,28 @@ a.cus-eng-succ-mess-email {
       background: url(../images/upwrd.png) no-repeat 75px;
       cursor: pointer;
 }
+
+.sort-up-arrow-45 {
+      background: url(../images/upwrd.png) no-repeat 45px;
+      cursor: pointer;
+}
+
+.sort-down-arrow-45 {
+      background: url(../images/dd_arr_down.png) no-repeat 45px;
+      cursor: pointer;
+}
+
+.sort-up-arrow-78 {
+      background: url(../images/upwrd.png) no-repeat 78px;
+      cursor: pointer;
+}
+
+.sort-down-arrow-78 {
+      background: url(../images/dd_arr_down.png) no-repeat 78px;
+      cursor: pointer;
+}
+
+
 .leads-container-row-tc6 {
 	width: 91px;
 }
