@@ -577,12 +577,12 @@ function checkCreditScore(creditScore){
 		}).html(customer.prospectFirstName+" "+customer.prospectLastName);
 	 
 		//TO add a condition to check for user created
-			if(!customer.isCreated){
+			
 				// binding click  event when loan is not created.
-				cusName.bind("click",function(){	
-					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-				});
-			}			
+		cusName.bind("click",function(){	
+			getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+		});
+					
 	
 		col1.append(cusName);				
 		
@@ -603,7 +603,7 @@ function checkCreditScore(creditScore){
 			"class" : "leads-row-3 float-left"
 		}).html("Quote");
 		if(customer.isCreated){
-			$(col3).html("lead");
+			$(col3).html("Lead");
 		}
 		//TO add check for loan
 		var loanStatus = "";
@@ -879,7 +879,7 @@ function createUserFromLeads(userName,internalUserID,id){
 					$('#'+id).addClass('leads-user-created');
 					showToastMessage(response.resultObject);
 				}else {
-					showErrorToastmessage(response.error.message);
+					showErrorToastMessage(response.error.message);
 				}	
 			});
 }
