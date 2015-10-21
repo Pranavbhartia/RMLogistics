@@ -212,8 +212,10 @@ public class ThreadManager implements Runnable {
 									currentLoanStatus = Integer
 									        .parseInt(loadResponseVO
 									                .getFieldValue());
-								} else if (fieldId
+								} 
+								else if (fieldId
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_INTERVIEW_DATE)) {
+								
 									interviewDate = loadResponseVO
 									        .getFieldValue();
 									LOGGER.debug("The interview Date for 1003 for "
@@ -227,7 +229,7 @@ public class ThreadManager implements Runnable {
 									Map<String, Object> paramsMap = new HashMap<String, Object>();
 									paramsMap.put(WorkflowDisplayConstants.INTERVIEW_DATE_KEY_NAME, interviewDate);									
 									putItemsIntoExecution(workflowItemsExecList,
-									        LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED, null);
+									        LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED, paramsMap);
 
 								}
 

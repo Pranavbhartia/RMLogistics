@@ -91,7 +91,7 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			        LoanStatus.applicationSubmittedMessage);
 			loanService.updateLoanLCState(loanID, LoanLCStates.Application);
 			Date interviewDate = utils.parseStringIntoDate(objectMap.get(
-			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			        WorkflowDisplayConstants.INTERVIEW_DATE_KEY_NAME).toString());
 			if (interviewDate != null) {
 				loanService.updateInterviewDate(loanID, interviewDate);
 			}
