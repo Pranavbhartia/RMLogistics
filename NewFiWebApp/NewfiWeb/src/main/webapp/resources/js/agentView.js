@@ -4866,14 +4866,14 @@ function sortTableByLastName(isAsc) {
  * @returns
  */
 function reverseName(name){
-	
 	if(name != null  && name != undefined){
+        name = name.replace(/  +/g, ' ');
 		var names = name.split(' ');
-		if(names.length == 2){
-		  return names[1] + names[0];
-		} else {
-			return name;   
-		}
+        var tmp = "";
+        for(var i = names.length - 1; i >= 0; i-- ){
+        	tmp += names[i] + " ";
+        }
+        return tmp;
 	} else {
 		return name;
 	}
