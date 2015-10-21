@@ -601,8 +601,10 @@ function checkCreditScore(creditScore){
 			
 		col3 = $('<div>').attr({
 			"class" : "leads-row-3 float-left"
-		}).html("Lead");
-		
+		}).html("Quote");
+		if(customer.isCreated){
+			$(col3).html("lead");
+		}
 		//TO add check for loan
 		var loanStatus = "";
 		var obj = JSON.parse(customer.inputDetailsJson.toString());
