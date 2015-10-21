@@ -1,3 +1,4 @@
+
 .reg-input-cont{
 	width: 300px;
 	height: 45px;
@@ -738,45 +739,40 @@ a.cus-eng-succ-mess-email {
     margin: 7px;      
     border-radius: 3px;
 }
-.leads-col-1,.leads-col-3{
-    width: 140px;
-
+.leads-col-3, .leads-col-4,.leads-col-5,.leads-col-7,.leads-col-processor{
+    width: 11%;
+}
+.leads-col-1 {
+	width: 14%;
 }
 
-.leads-col-2 {
-    width: 200px;
-}
-.leads-col-4 {
-	width: 100px;
+.leads-col-8 {
+	width: 70px;
 }
 
-.leads-col-5{
-	width: 80px;
+.leads-col-9{
+	width: 110px;
 }
+
 .leads-row-1 {
     width: 161px;
-    word-break: break-word;
+   /*  word-break: break-word; */
 }
 
 
 .leads-row-2 {
-    width: 200px;
+    width: 11%;
+    word-break: break-word;
+    margin-right: 25px;
 }
 
-.leads-row-3,.leads-row-1 {
-    width: 140px;
+.leads-row-1 {
+    width: 10%;
 }
-.leads-row-4 {
-    width: 100px;
+.leads-row-4  {
+    width: 11%;
 }
 
-.leads-row-5 {
-    background: url(../images/pdf.jpg) no-repeat 25px center;
-    height: 25px;
-    background-size: 31%;
-    cursor: pointer;
-    width: 88px !important;
-}
 .quick-quote-rhs-label{
 	font-size: 14px;
     padding: 0 5px;
@@ -867,39 +863,59 @@ a.cus-eng-succ-mess-email {
 .leads-container-row-tc5 {
 	width: 141px;
 }
-.leads-row-6 {
-    background: url(../images/add_user.png) no-repeat;
-    height: 35px;
-    background-size: 28%;
-    cursor: pointer;
-}
 
 .grey-edit {
     background: url(../images/grey-edit.png) no-repeat;
-    height: 35px;
-    background-size: 21%;
+    height: 23px;
+    width: 23px;
     cursor: pointer;
+    background-size: 18px;
+    margin-top: 4px;
+    margin-left: 9px;
 }
 
 .blue-edit {
-    background: url(../images/blue-edit.png) no-repeat;
-    height: 35px;
-    background-size: 21%;
+    background: url(../images/blue-edit.png) no-repeat left;
+    height: 25px;
+    width: 17px;
     cursor: pointer;
+    /* margin-top: 5px; */
+    /* margin-left: 20px; */
+    background-size: 86%;
+    height: 23px;
+    width: 23px;
+    cursor: pointer;
+    background-size: 18px;
+    margin-top: 0px;
+    margin-left: 12px;
 }
 
 .leads-user-created {
     background: url(../images/added_user.png) no-repeat;
-    height: 35px;
-    background-size: 28%;
+    margin-left: 2px;
+    margin-top: 9px;
+    background-size: 20px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    z-index: 2;
 }
 .leads-col-6 {
-    width: 95px;
+    width: 12%;
 }
 .leads-row-7 {
- 	background: url(../images/Delete_Icon.png) no-repeat;
- 	height: 35px;
- 	background-size: 65%;
+ 	width: 10%;
+}
+.leads-col-2 {
+    width: 15%;
+}
+
+.leads-row-5 {
+    width: 11%;
+}
+
+.leads-row-6 {
+    width: 15%;
 }
 .discount-update-btn {
     padding-top: 7px;
@@ -952,7 +968,98 @@ a.cus-eng-succ-mess-email {
 	border:none;
 	background-color: white !important;
 }
+.leads-row-3 {
+    width: 11%;
+    margin-left: 25px;
+}
 
+.leads-row-9 {
+    background: url(../images/lead.png) no-repeat right center;
+    cursor: pointer;
+    height: 23px;
+    width: 20px;
+    z-index: 2;
+    background-size: 20px;
+}
+
+.leads-row-11 {
+    background: url(../images/add_user.png) no-repeat;
+    margin-left: 2px;
+    background-size: 20px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    z-index: 2;
+    margin-top: 4px;
+}
+
+.leaddelCustClas {
+	background: url(../images/user_del.png) no-repeat right center;
+	background-size: 20px;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	right: 25px;
+	top:20px;
+	z-index: 2;
+}
+.leads-row-8 {
+	width: 7%;
+	background: url(../images/notification.png) no-repeat  5px;
+	height: 35px;
+}
+.loan-row {
+    background: url(../images/loan.png) no-repeat right center; 
+    height: 23px;
+    width: 20px;
+    z-index: 2;
+    background-size: 20px;
+}
+.lead-loan-tc2 {
+	margin-right: 20px;
+    width: 12%;
+    word-break: break-word;
+}
+.lead-loan-tc3 {
+    margin-left: 17px;
+    width: 11%;
+}
+.lead-loan-tc4,.lead-loan-tc5,.leads-row-processor,.leads-loan-tc1 {
+	width: 11%;
+}
+.lead-loan-tc6,.sm-leads-col-tc1 {
+	width: 15%;
+}
+.lead-loan-del {
+	right: 27px;
+}
+.lead-loan-tc7,.sm-leads-col-tc6  {
+    width: 10%;
+} 
+
+.sm-leads-row-7,.sm-leads-col-tc4,.sm-leads-col-tc5,.sm-leads-col-tc7,.sm-leads-row-5,.sm-leads-row-4,.lead-loan-createddate {
+ 	width: 9%;
+}
+.sm-leads-col-tc2 {
+	width: 16%;
+}
+.sm-lead-loan-tc7 {
+	width: 9%;
+}
+.lead-loan-processor  {
+ 	width: 11%;
+ 	word-break: break-word;
+}
+.sm-leads-row-1 {
+	width: 12%;
+} 
+.sm-lead-loan-tc6  {
+	width: 11%;
+}
+.sm-leads-row-6 {
+    width: 11%;
+}
 .margin-botton-10 { 
 	margin-bottom: 10px !important; 
 }
@@ -1013,3 +1120,4 @@ a.cus-eng-succ-mess-email {
     color: rgba(255, 0, 0, 0.86);
     font-family: 'opensanssemibold';
 }
+

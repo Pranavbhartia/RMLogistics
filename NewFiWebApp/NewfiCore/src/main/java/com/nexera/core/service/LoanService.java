@@ -240,13 +240,14 @@ public interface LoanService {
 	         String startLimit, String endLimit);
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
 
+	public LoanDashboardVO retrieveDasboardForLoansInLeads(UserVO userVO);
 	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) ;
 
 	public void updateAppraisalVendor(Integer loanID, String appraisalVendorName) ;
 
 
-	 public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
+	public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
 	 
-	 public LoanDetail findLoanDetailOfLoan(Loan loan) ;
+	public LoanDetail findLoanDetailOfLoan(Loan loan) ;
 
 }
