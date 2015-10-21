@@ -418,6 +418,7 @@ INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES (
 INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Suspended');
 INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Denied');
 INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Withdrawn');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Application');
 
 #Ranjitha - loanlcstatemaster entry in loan table
 ALTER TABLE `newfi_schema`.`loan` 
