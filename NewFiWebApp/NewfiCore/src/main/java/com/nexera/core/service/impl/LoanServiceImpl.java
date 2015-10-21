@@ -508,11 +508,12 @@ public class LoanServiceImpl implements LoanService {
 			for (Loan loan : loanList) {
 				LoanCustomerVO loanCustomerVO = this
 				        .buildLoanCustomerVoFromUser(loan);
-				/*LoanMilestone loan_status = getLqbLoanStatus(loan);
+			if(loanCustomerVO.getLqbLoanStatus() == null){
+				LoanMilestone loan_status = getLqbLoanStatus(loan);
 				if (loan_status != null) {
 					loanCustomerVO.setLqbLoanStatus(loan_status.getComments());
-				}*/
-
+				}
+			}
 				loanCustomerVoList.add(loanCustomerVO);
 
 			}
