@@ -2273,7 +2273,8 @@ function appendAppFeeEditPopup(element,milestoneId) {
 						showErrorToastMessage(response.error.message);
 					}else{
 						var contxt=workFlowContext.mileStoneContextList[milestoneId];							
-						$("#WF"+milestoneId).find("#"+milestoneId+"fee").html("$"+newFee);						
+						$("#WF"+milestoneId).find("#"+milestoneId+"fee").html("$"+newFee);				
+						workFlowContext.mileStoneContextList[milestoneId].paymentType = vendorType;
 						removeAppFeeEditPopup();
 					}
 			},false);

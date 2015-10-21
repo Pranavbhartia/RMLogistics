@@ -51,6 +51,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -213,6 +214,19 @@ public class LoanServiceImpl implements LoanService {
 		return;
 	}
 
+	@Override
+	@Transactional
+	public void updateLoanLCState(Integer loanID, LoanLCStates loanLCSState) {
+		loanDao.updateLoanLCStateMaster(loanID, loanLCSState);
+		return;
+	}
+
+	@Override
+	@Transactional
+	public void updateInterviewDate(Integer loanID, Date interviewDate) {
+		loanDao.updateInterviewDateForLoan(loanID, interviewDate);
+		return;
+	}
 	@Override
 	@Transactional(readOnly = true)
 	public Loan fetchLoanById(Integer loanID) {
@@ -402,7 +416,8 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDasboardForLoansInLeads(UserVO userVO) {
-		LOG.info("Inside retrievedashboard for loans in leads for user"+userVO.getId());
+		LOG.info("Inside retrievedashboard for loans in leads for user"
+		        + userVO.getId());
 		// Get new prospect and lead loans this user has access to.
 		List<Loan> loanList = loanDao
 		        .retrieveLoanByProgressStatus(this.parseUserModel(userVO),
@@ -2435,7 +2450,8 @@ public class LoanServiceImpl implements LoanService {
 	@Transactional(readOnly = true)
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO) {
 
-		LOG.info("Inside retrieve Dashboard for user............................................."+userVO.getId());
+		LOG.info("Inside retrieve Dashboard for user............................................."
+		        + userVO.getId());
 		// Get new prospect and lead loans this user has access to.
 		List<QuoteDetails> loanList = loanDao.retrieveLoanForMyLeads(this
 		        .parseUserModel(userVO));
@@ -2446,11 +2462,13 @@ public class LoanServiceImpl implements LoanService {
 			quoteDetailsVOs.add(detailsVO);
 		}
 		dashBoardVO.setQuoteDetails(quoteDetailsVOs);
-		LOG.info("Inside retrieve Dashboard for user after setting quotedetails............................................."+userVO.getId());
+		LOG.info("Inside retrieve Dashboard for user after setting quotedetails............................................."
+		        + userVO.getId());
 		// todo get loan list
 		LoanDashboardVO loanDashboardVO = retrieveDasboardForLoansInLeads(userVO);
 		dashBoardVO.setLoanDetails(loanDashboardVO);
-		LOG.info("Inside retrieve Dashboard for user after setting loan details............................................."+userVO.getId());
+		LOG.info("Inside retrieve Dashboard for user after setting loan details............................................."
+		        + userVO.getId());
 		return dashBoardVO;
 	}
 
@@ -2459,18 +2477,24 @@ public class LoanServiceImpl implements LoanService {
 	 * @return
 	 */
 	private QuoteDetailsVO buildQuoteDetailsV0(QuoteDetails quoteDetails) {
-		LOG.info("Inside buildQuoteDetailsVO for the quote and email is ...."+quoteDetails.getEmailId()+"firstName is...."+quoteDetails.getProspectFirstName());
-		
+		LOG.info("Inside buildQuoteDetailsVO for the quote and email is ...."
+		        + quoteDetails.getEmailId() + "firstName is...."
+		        + quoteDetails.getProspectFirstName());
+
 		QuoteDetailsVO quoteDetailsVO = QuoteDetailsVO
 		        .convertEntityToVO(quoteDetails);
 		UserVO internalUserDeatils = userProfileService.findUser(quoteDetails
 		        .getQuoteCompositeKey().getInternalUserId());
 		quoteDetailsVO.setInternalUserName(internalUserDeatils.getFirstName()
 		        + " " + internalUserDeatils.getLastName());
-		LOG.info("After converting vo to entity and email is ...."+quoteDetails.getEmailId()+"firstName is...."+quoteDetails.getProspectFirstName());
+		LOG.info("After converting vo to entity and email is ...."
+		        + quoteDetails.getEmailId() + "firstName is...."
+		        + quoteDetails.getProspectFirstName());
 		return quoteDetailsVO;
 	}
 
+	@Transactional
+	@Override
 	public Integer updateLQBAmounts(Loan loan) {
 		Integer rows = loanDao.updateLQBAmounts(loan);
 		return rows;

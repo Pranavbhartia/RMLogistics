@@ -9,7 +9,7 @@ public enum LoanLCStates {
 	        "Condition Review"), DocsOrdered(11, "Docs Ordered"), DocsTitle(12,
 	        "Docs in Title"), DocsSigned(13, "Docs Signed"), Funded(14, "Funded"), Canceled(
 	        15, "Canceled"), Suspended(16, "Suspended"), Denied(17, "Denied"), Withdrawn(
-	        18, "Withdrawn");
+	        18, "Withdrawn"),Application(19,"Application");
 	public int getLcStateID() {
 		return lcStateID;
 	}

@@ -36,7 +36,6 @@ import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.ExceptionMaster;
@@ -221,6 +220,14 @@ public class ThreadManager implements Runnable {
 									        + loan.getId()
 									        + " is "
 									        + interviewDate);
+									List<String> workflowItems = WorkflowConstants.STATUS_WF_ITEM_LOOKUP
+									        .get(LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED);
+									List<WorkflowItemExec> workflowItemsExecList = itemToExecute(
+									        workflowItems, workflowItemExecList);
+									Map<String, Object> paramsMap = new HashMap<String, Object>();
+									paramsMap.put(WorkflowDisplayConstants.INTERVIEW_DATE_KEY_NAME, interviewDate);									
+									putItemsIntoExecution(workflowItemsExecList,
+									        LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED, null);
 
 								}
 
@@ -734,12 +741,24 @@ public class ThreadManager implements Runnable {
 
 	private void putItemsIntoExecution(List<WorkflowItemExec> itemsToExecute,
 	        int currentLoanStatus) {
+		putItemsIntoExecution(itemsToExecute,currentLoanStatus,null);
+	}
+	private void putItemsIntoExecution(List<WorkflowItemExec> itemsToExecute,
+	        int currentLoanStatus , Map<String,Object>  dataForExecution) {
 		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
 			if (!workflowItemExec.getStatus().equalsIgnoreCase(
 			        WorkItemStatus.COMPLETED.getStatus())) {
 				LOGGER.debug("Putting the item in execution ");
-				String params = Utils.convertMapToJson(getParamsBasedOnStatus(
-				        currentLoanStatus, workflowItemExec.getId()));
+				Map<String,Object> paramsMap  = getParamsBasedOnStatus(
+				        currentLoanStatus, workflowItemExec.getId());
+				if(dataForExecution != null)
+				{
+					for (String key : dataForExecution.keySet())
+					{
+						paramsMap.put(key, dataForExecution.get(key));
+					}
+				}
+				String params = Utils.convertMapToJson(paramsMap);
 				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
 				        params);
 
@@ -1610,12 +1629,10 @@ public class ThreadManager implements Runnable {
 		map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
 		        workflowItemExecId);
 		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
-			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-			        "08986e4b-8407-4b44-9000-50c104db899c");
+			
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING) {
 
-			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-			        "08986e4b-8407-4b44-9000-50c104db899c");
+			
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE) {
 
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FUNDED) {
