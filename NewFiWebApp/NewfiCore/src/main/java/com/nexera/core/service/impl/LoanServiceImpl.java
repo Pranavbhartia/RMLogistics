@@ -508,10 +508,10 @@ public class LoanServiceImpl implements LoanService {
 			for (Loan loan : loanList) {
 				LoanCustomerVO loanCustomerVO = this
 				        .buildLoanCustomerVoFromUser(loan);
-				LoanMilestone loan_status = getLqbLoanStatus(loan);
+				/*LoanMilestone loan_status = getLqbLoanStatus(loan);
 				if (loan_status != null) {
 					loanCustomerVO.setLqbLoanStatus(loan_status.getComments());
-				}
+				}*/
 
 				loanCustomerVoList.add(loanCustomerVO);
 
@@ -665,7 +665,13 @@ public class LoanServiceImpl implements LoanService {
 		if (user.getLastLoginDate() != null) {
 			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
 		}
-
+	
+		if(loan.getLoanLCStateMaster() != null){
+			loanCustomerVO.setLqbLoanStatus(loan.getLoanLCStateMaster().getLoanLCState());
+			
+		}
+		
+		
 		return loanCustomerVO;
 	}
 
