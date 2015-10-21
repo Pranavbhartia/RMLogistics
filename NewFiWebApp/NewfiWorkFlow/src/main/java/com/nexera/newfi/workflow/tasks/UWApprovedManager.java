@@ -7,10 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.Milestones;
 import com.nexera.core.service.LoanService;
 import com.nexera.newfi.workflow.service.IWorkflowService;
@@ -40,6 +42,8 @@ public class UWApprovedManager extends NexeraWorkflowTask implements
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			mileStoneStatus = LOSLoanStatus.LQB_STATUS_APPROVED
 			        .getDisplayStatus();
+			LOG.debug(" Approved : Updating Loan LC State for " + loanId + "as " + WorkflowConstants.STATUS_LC_STATE_LOOKUP.get(LOSLoanStatus.LQB_STATUS_APPROVED).getLcStateKey());
+			loanService.updateLoanLCState(loanId,WorkflowConstants.STATUS_LC_STATE_LOOKUP.get(LOSLoanStatus.LQB_STATUS_APPROVED));
 		}
 		if (mileStoneStatus != null) {
 			LOG.debug("Updating Milestone for UW As  " + mileStoneStatus);
