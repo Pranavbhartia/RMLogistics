@@ -19,6 +19,7 @@ import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
@@ -170,6 +171,10 @@ public interface LoanDao extends GenericDao {
 	public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
 
 	public void updateAppraisalVendor(int loanDetailID, String appraisalVendorNm) ;
+	
+	public int updateLoanLCStateMaster(int loanID,LoanLCStates loanLCSStates);
+	
+	public int updateInterviewDateForLoan(int loanID,Date interviewDate);
 
 
 }
