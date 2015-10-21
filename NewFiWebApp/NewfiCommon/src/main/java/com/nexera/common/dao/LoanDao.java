@@ -14,10 +14,12 @@ import com.nexera.common.entity.LoanNeedsList;
 import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTypeMaster;
+import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
@@ -161,14 +163,18 @@ public interface LoanDao extends GenericDao {
 	
 	public Integer updateLtv(Loan laon);
 	
-	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel);
-	public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
+	public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel);
+	public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit);
 
 	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) ;
 	
 	public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
 
 	public void updateAppraisalVendor(int loanDetailID, String appraisalVendorNm) ;
+	
+	public int updateLoanLCStateMaster(int loanID,LoanLCStates loanLCSStates);
+	
+	public int updateInterviewDateForLoan(int loanID,Date interviewDate);
 
 
 }

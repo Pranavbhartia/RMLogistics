@@ -306,6 +306,7 @@ function loadQuickQoutePage(){
 	$('#right-panel').html('');
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "quick-quote-dashboard-container",
 		"class" : "rp-agent-dashboard quick-quote-agent-dashboard"

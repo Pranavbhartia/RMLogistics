@@ -75,6 +75,29 @@ public class Loan implements Serializable {
 	private Double lqbAppraisedValue;
 	private Double ltv;
 	private String paymentVendor;
+	private LoanLCStateMaster loanLCStateMaster;
+	private Date interview_date;
+
+	
+	public Date getInterview_date() {
+		return interview_date;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_date")
+	public void setInterview_date(Date interview_date) {
+		this.interview_date = interview_date;
+	}
+
+	public LoanLCStateMaster getLoanLCStateMaster() {
+		return loanLCStateMaster;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loanLCStateMaster")
+	public void setLoanLCStateMaster(LoanLCStateMaster loanLCStateMaster) {
+		this.loanLCStateMaster = loanLCStateMaster;
+	}
 
 	@Column(name = "bank_connected", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -515,8 +538,8 @@ public class Loan implements Serializable {
 		if (loan.getLqbAppraisedValue() != null) {
 			loanVo.setAppraisedValue(loan.getLqbAppraisedValue());
 		}
-		
-		if(loan.getLtv() != null){
+
+		if (loan.getLtv() != null) {
 			loanVo.setLtv(loan.getLtv());
 		}
 		return loanVo;
@@ -530,7 +553,7 @@ public class Loan implements Serializable {
 		detailVO.setId(detail.getId());
 		detailVO.setDownPayment(detail.getDownPayment());
 		detailVO.setLoanAmount(detail.getLoanAmount());
-		detailVO.setRate(detail.getRate());		
+		detailVO.setRate(detail.getRate());
 		return detailVO;
 
 	}
@@ -619,12 +642,13 @@ public class Loan implements Serializable {
 
 	@Column(name = "ltv")
 	public Double getLtv() {
-	    return ltv;
-    }
+		return ltv;
+	}
 
 	public void setLtv(Double ltv) {
-	    this.ltv = ltv;
-    }
+		this.ltv = ltv;
+	}
+
 	@Column(name = "payment_vendor")
 	public String getPaymentVendor() {
 		return paymentVendor;
@@ -633,6 +657,5 @@ public class Loan implements Serializable {
 	public void setPaymentVendor(String paymentVendor) {
 		this.paymentVendor = paymentVendor;
 	}
-	
 
 }

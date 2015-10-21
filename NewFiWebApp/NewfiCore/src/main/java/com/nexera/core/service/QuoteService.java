@@ -17,7 +17,5 @@ public interface QuoteService {
 	public GeneratePdfVO convertToGeneratePdfVo(QuoteDetails quoteDetails);
 	public String  getUniqueIdFromQuoteDetails(QuoteCompositeKey compKey);
 	public QuoteDetails findQuoteDetailsById(String id);
-	public  QuoteDetails convertVOToEntity(QuoteDetailsVO quoteDetailsVO);
-	public  QuoteDetailsVO convertEntityToVO(QuoteDetails quoteDetails);
 
 }
