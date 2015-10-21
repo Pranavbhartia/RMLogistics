@@ -177,8 +177,11 @@ public class WorkflowConstants {
 
 		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_APPRAISAL_ORDER,new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_APPRAISAL_ORDERED)));
+		
 		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_APPRAISAL_RECEIVED,new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_APPRAISAL_RECEIVED)));
+		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED,new ArrayList<String>(Arrays
+                .asList(WORKFLOW_ITEM_1003_COMPLETE)));
 		
 		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),new ArrayList<String>(Arrays
                 .asList(WORKFLOW_ITEM_CLOSURE_DOCS_ORDERED)));

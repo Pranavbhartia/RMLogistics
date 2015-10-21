@@ -78,23 +78,23 @@ public class Loan implements Serializable {
 	private LoanLCStateMaster loanLCStateMaster;
 	private Date interview_date;
 
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "interview_date")
 	public Date getInterview_date() {
 		return interview_date;
 	}
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "interview_date")
 	public void setInterview_date(Date interview_date) {
 		this.interview_date = interview_date;
 	}
 
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loanlcstatemaster")
 	public LoanLCStateMaster getLoanLCStateMaster() {
 		return loanLCStateMaster;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "loanLCStateMaster")
 	public void setLoanLCStateMaster(LoanLCStateMaster loanLCStateMaster) {
 		this.loanLCStateMaster = loanLCStateMaster;
 	}

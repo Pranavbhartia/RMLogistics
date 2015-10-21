@@ -9,6 +9,7 @@ public class WorkflowDisplayConstants {
 	public static final String LOAN_PROGRESS_LQB = "LQB -";
 	public static final String CUSTOM_NOTIFICATION = "NOTIFICATION";
 	public static final String LOAN_ID_KEY_NAME = "loanID";
+	public static final String INTERVIEW_DATE_KEY_NAME = "interviewDate";
 	public static final String USER_ID_KEY_NAME = "userID";
 	public static final String WORKITEM_ID_KEY_NAME = "workflowItemExecId";
 	public static final String WORKITEM_STATUS_KEY_NAME = "workflowItemstatus";
