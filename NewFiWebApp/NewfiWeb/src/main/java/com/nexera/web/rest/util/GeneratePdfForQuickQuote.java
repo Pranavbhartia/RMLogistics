@@ -818,9 +818,9 @@ public class GeneratePdfForQuickQuote {
         }
         
         
-        if(prepaidCost.substring(prepaidCost.length() - 3).equals(".00")){
-        	prepaidCost = prepaidCost.substring(0, prepaidCost.length() - 3);
-        }
+//        if(prepaidCost.substring(prepaidCost.length() - 3).equals(".00")){
+//        	prepaidCost = prepaidCost.substring(0, prepaidCost.length() - 3);
+//        }
         if(isEstClosingCostNegative){
         	if(Float.parseFloat(estimatedNumber)  > Float.parseFloat(removeDollarAndComma(totEstResDepWthLen))){
         		
