@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.vo.WorkItemMilestoneInfo;
 
@@ -35,15 +36,14 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_UW_STATUS = "UW_STATUS";
 	public static final String WORKFLOW_ITEM_VIEW_UW = "VIEW_UW";
 	public static final String WORKFLOW_ITEM_MANAGE_TEAM = "MANAGE_TEAM";
-	
+
 	public static final String WORKFLOW_ITEM_UW_SUBMITTED = "UW_SUBMITTED";
 	public static final String WORKFLOW_ITEM_UW_REVIEWED = "UW_REVIEWED";
 	public static final String WORKFLOW_ITEM_UW_APPROVED = "UW_APPROVED";
-	
+
 	public static final String WORKFLOW_ITEM_UW_SUBMITTED_DISPLAY = "UW_SUBMITTED_DISPLAY";
 	public static final String WORKFLOW_ITEM_UW_REVIEWED_DISPLAY = "UW_REVIEWED_DISPLAY";
 	public static final String WORKFLOW_ITEM_UW_APPROVED_DISPLAT = "UW_APPROVED_DISPLAT";
-	
 
 	public static final String WORKFLOW_ITEM_TEAM_STATUS = "TEAM_STATUS";
 	public static final String WORKFLOW_ITEM_SYSTEM_EDU = "SYSTEM_EDU";
@@ -56,7 +56,7 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_DISCLOSURE_STATUS = "DISCLOSURE_STATUS";
 	public static final String WORKFLOW_ITEM_DISCLOSURE_DISPLAY = "DISCLOSURE_DISPLAY";
 	public static final String WORKFLOW_ITEM_CREDIT_SCORE = "CREDIT_SCORE";
-	
+
 	public static final String WORKFLOW_ITEM_COMM_EDU = "COMM_EDU";
 	public static final String WORKFLOW_ITEM_CLOSURE_STATUS = "CLOSURE_STATUS";
 	public static final String WORKFLOW_ITEM_CLOSURE_DISPLAY = "VIEW_CLOSING";
@@ -65,12 +65,11 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_ITEM_APPRAISAL_ORDERED_VIEW = "APPRAISAL_ORDERED_VIEW";
 	public static final String WORKFLOW_ITEM_APPRAISAL_RECEIVED = "APPRAISAL_RECEIVED";
 	public static final String WORKFLOW_ITEM_APPRAISAL_RECEIVED_VIEW = "APPRAISAL_RECEIVED_VIEW";
-	
-	
+
 	public static final String WORKFLOW_ITEM_CLOSURE_DOCS_ORDERED = "CLOSURE_DOCS_ORDERED";
 	public static final String WORKFLOW_ITEM_CLOSURE_DOCS_TITLE = "CLOSURE_DOCS_TITLE";
 	public static final String WORKFLOW_ITEM_CLOSURE_FUNDED = "CLOSURE_FUNDED";
-	
+
 	public static final String WORKFLOW_ITEM_APP_FEE = "APP_FEE";
 	public static final String WORKFLOW_ITEM_APP_EDU = "APP_EDU";
 
@@ -80,17 +79,17 @@ public class WorkflowConstants {
 	public static final String WORKFLOW_CUST_ITEM_NEEDS_STATUS = "VIEW_NEEDS";
 	public static final HashMap<LOSLoanStatus, WorkItemMilestoneInfo> LQB_STATUS_MILESTONE_LOOKUP = new HashMap<LOSLoanStatus, WorkItemMilestoneInfo>();;
 
-	public static final HashMap<Integer,List<String>> STATUS_WF_ITEM_LOOKUP = new HashMap<Integer, List<String>>();
+	public static final HashMap<Integer, List<String>> STATUS_WF_ITEM_LOOKUP = new HashMap<Integer, List<String>>();
 	public static final HashMap<Milestones, List<String>> MILESTONE_WF_ITEM_LOOKUP = new HashMap<Milestones, List<String>>();
 	private static final HashMap<LOSLoanStatus, List<Integer>> MILESTONE_ORDER_LOOKUP = new HashMap<LOSLoanStatus, List<Integer>>();;
+	public static final HashMap<LOSLoanStatus, LoanLCStates> STATUS_LC_STATE_LOOKUP = new HashMap<LOSLoanStatus, LoanLCStates>();
 
 	public static final List<Integer> LQB_MONITOR_LIST = new ArrayList<Integer>(
-	        Arrays.asList(
-	        		LOSLoanStatus.LQB_STATUS_LOAN_OPEN.getLosStatusID(),
-	        		LOSLoanStatus.LQB_STATUS_PRE_QUAL.getLosStatusID(),
-	        		LOSLoanStatus.LQB_STATUS_PROCESSING.getLosStatusID(),
-	        		LOSLoanStatus.LQB_STATUS_REGISTERED.getLosStatusID(),
-	               
+	        Arrays.asList(LOSLoanStatus.LQB_STATUS_LOAN_OPEN.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_PRE_QUAL.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_PROCESSING.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_REGISTERED.getLosStatusID(),
+
 	                LOSLoanStatus.LQB_STATUS_PRE_APPROVED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),
@@ -98,6 +97,7 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_DOCS_BACK.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_CANCELED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
@@ -110,18 +110,16 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED
 	                        .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(), 
-	                LOSLoanStatus.LQB_STATUS_PRE_APPROVED
-	    	                .getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_PRE_APPROVED.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING
 	                        .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_FINAL_DOCS.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE.getLosStatusID()));
 	private static final List<Integer> APPRAISAL_LIST = new ArrayList<Integer>(
-	        Arrays.asList( LOSLoanStatus.LQB_STATUS_DOCS_DRAWN
-	                .getLosStatusID(),  LOSLoanStatus.LQB_STATUS_DOCS_BACK
-	                .getLosStatusID(),
+	        Arrays.asList(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN.getLosStatusID(),
+	                LOSLoanStatus.LQB_STATUS_DOCS_BACK.getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_SUBMITTED_FOR_PURCHASE_REVIEW
 	                        .getLosStatusID(),
 	                LOSLoanStatus.LQB_STATUS_IN_PURCHASE_REVIEW
@@ -135,29 +133,29 @@ public class WorkflowConstants {
 	                LOSLoanStatus.LQB_STATUS_LOAN_PURCHASED.getLosStatusID()));
 
 	public static final List<Integer> LOAN_CLOSURE_LIST = new ArrayList<Integer>(
-			
-	        Arrays.asList(
-	        		LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),
-	        		LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),
-	        		LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_CANCELED.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED.getLosStatusID(),
-	                LOSLoanStatus.LQB_STATUS_LOAN_CLOSED.getLosStatusID()));
-	
+
+	Arrays.asList(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_LOAN_CANCELED.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED.getLosStatusID(),
+	        LOSLoanStatus.LQB_STATUS_LOAN_CLOSED.getLosStatusID()));
 
 	public static final int SYSTEM_USER = 1;
 
 	public static final String SYS_EDU_NOTIFICATION_CONTENT = "System Education Pending";
 
-	// here 72 should not be changed since it is getting replaced by turnaround time in next step
+	// here 72 should not be changed since it is getting replaced by turnaround
+	// time in next step
 	public static final String DISCLOSURE_AVAIL_NOTIFICATION_CONTENT = "Disclosures are {\"72\":\"elapsed\"}";
 	public static final String WATCH_TUTORIAL_ALERT_NOTIFICATION_CONTENT = "Click here to learn more about using the newfi portal";
 	public static final String VERIFY_EMAIL_NOTIFICATION_CONTENT = "Your email is not verified. Click <a href='#' onclick='forgetPassword()' 'style=color: blue;'> here </a> to resend your verification email.";
-	//NEXNF-634
-	//public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your loan profile.";
+	// NEXNF-634
+	// public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT
+	// = "Click here to complete your loan profile.";
 	public static final String COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT = "Click here to complete your application.";
 	public static final String AGENT_ADD_NOTIFICATION_CONTENT = "Do you have a real estate agent? Click here to add them to your newfi loan team.";
 	public static final String CREDIT_SCORE_NOTIFICATION_CONTENT = "Credit Score Pending";
@@ -172,39 +170,103 @@ public class WorkflowConstants {
 	public static final String LOCK_RATE_CUST_NOTIFICATION_CONTENT = "Request Rate Lock";
 	public static final String NEEDS_LIST_SET_TYPE_CONTENT = "Your needs list has been set. Click to upload.";
 	public static final String APP_FEE_CHANGED_CONTENT = "Application fee has been changed to ";
-	
+
 	static {
 
-		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_APPRAISAL_ORDER,new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_APPRAISAL_ORDERED)));
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PROCESSING,
+		        LoanLCStates.Processing);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK,
+		        LoanLCStates.Processing);
+		STATUS_LC_STATE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED,
+		        LoanLCStates.Processing);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,
+		        LoanLCStates.Submitted);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PRE_APPROVED,
+		        LoanLCStates.PreApproved);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED,
+		        LoanLCStates.Approved);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW,
+		        LoanLCStates.ConditionReview);
+		STATUS_LC_STATE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_FINAL_UNDER_WRITING,
+		        LoanLCStates.Approved);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PRE_DOC_QC,
+		        LoanLCStates.Approved);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
+		        LoanLCStates.Approved);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
+		        LoanLCStates.DocsOrdered);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN,
+		        LoanLCStates.DocsOrdered);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_OUT,
+		        LoanLCStates.DocsTitle);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_BACK,
+		        LoanLCStates.DocsSigned);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_FUNDING_CONDITIONS,
+		        LoanLCStates.DocsSigned);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_FUNDED,
+		        LoanLCStates.Funded);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_CANCELED,
+		        LoanLCStates.Canceled);
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED,
+		        LoanLCStates.Suspended);
 		
-		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_APPRAISAL_RECEIVED,new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_APPRAISAL_RECEIVED)));
-		STATUS_WF_ITEM_LOOKUP.put(LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED,new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_1003_COMPLETE)));
-		
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_CLOSURE_DOCS_ORDERED)));
-		
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_CLOSURE_DOCS_TITLE)));
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED,
+		        LoanLCStates.Denied);
 
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_CLOSURE_FUNDED)));
+		STATUS_LC_STATE_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN,
+		        LoanLCStates.Withdrawn);
 		
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_UW_SUBMITTED)));
-		
-		
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_UW_REVIEWED)));
-		
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_UW_REVIEWED)));
-		
-		STATUS_WF_ITEM_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),new ArrayList<String>(Arrays
-                .asList(WORKFLOW_ITEM_UW_APPROVED, WORKFLOW_ITEM_UW_REVIEWED )));
-		
+		STATUS_WF_ITEM_LOOKUP.put(
+		        LoadConstants.LQB_APPRAISAL_ORDER,
+		        new ArrayList<String>(Arrays
+		                .asList(WORKFLOW_ITEM_APPRAISAL_ORDERED)));
+
+		STATUS_WF_ITEM_LOOKUP.put(
+		        LoadConstants.LQB_APPRAISAL_RECEIVED,
+		        new ArrayList<String>(Arrays
+		                .asList(WORKFLOW_ITEM_APPRAISAL_RECEIVED)));
+		STATUS_WF_ITEM_LOOKUP.put(
+		        LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED,
+		        new ArrayList<String>(Arrays
+		                .asList(WORKFLOW_ITEM_1003_COMPLETE)));
+
+		STATUS_WF_ITEM_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID(),
+		        new ArrayList<String>(Arrays
+		                .asList(WORKFLOW_ITEM_CLOSURE_DOCS_ORDERED)));
+
+		STATUS_WF_ITEM_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID(),
+		        new ArrayList<String>(Arrays
+		                .asList(WORKFLOW_ITEM_CLOSURE_DOCS_TITLE)));
+
+		STATUS_WF_ITEM_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID(),
+		        new ArrayList<String>(Arrays
+		                .asList(WORKFLOW_ITEM_CLOSURE_FUNDED)));
+
+		STATUS_WF_ITEM_LOOKUP
+		        .put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID(),
+		                new ArrayList<String>(Arrays
+		                        .asList(WORKFLOW_ITEM_UW_SUBMITTED)));
+
+		STATUS_WF_ITEM_LOOKUP
+		        .put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID(),
+		                new ArrayList<String>(Arrays
+		                        .asList(WORKFLOW_ITEM_UW_REVIEWED)));
+
+		STATUS_WF_ITEM_LOOKUP
+		        .put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID(),
+		                new ArrayList<String>(Arrays
+		                        .asList(WORKFLOW_ITEM_UW_REVIEWED)));
+
+		STATUS_WF_ITEM_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID(),
+		        new ArrayList<String>(Arrays.asList(WORKFLOW_ITEM_UW_APPROVED,
+		                WORKFLOW_ITEM_UW_REVIEWED)));
+
 		MILESTONE_WF_ITEM_LOOKUP.put(
 		        Milestones.App1003,
 		        new ArrayList<String>(Arrays
@@ -240,12 +302,14 @@ public class WorkflowConstants {
 		        LOSLoanStatus.LQB_STATUS_DOCUMENT_CHECK_FAILED, UW_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING,
 		        UW_LIST);
-		
+
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_PRE_APPROVED,
 		        UW_LIST);
-		
-		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,UW_LIST);
-		//MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED, UW_LIST);
+
+		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,
+		        UW_LIST);
+		// MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_APPROVED,
+		// UW_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW,
 		        UW_LIST);
 		MILESTONE_ORDER_LOOKUP.put(
@@ -255,7 +319,7 @@ public class WorkflowConstants {
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
 		        UW_LIST);
 		// Apparisal
-		
+
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN,
 		        APPRAISAL_LIST);
 		MILESTONE_ORDER_LOOKUP.put(LOSLoanStatus.LQB_STATUS_DOCS_BACK,
@@ -304,95 +368,90 @@ public class WorkflowConstants {
 		// THOSE that are needed now
 		// THese are the ones that change NewFI WF Items
 
-		LQB_STATUS_MILESTONE_LOOKUP
-        .put(LOSLoanStatus.LQB_STATUS_PRE_QUAL,
-                new WorkItemMilestoneInfo(
-                        Milestones.PRE_QUAL,
-                        MILESTONE_WF_ITEM_LOOKUP.get(Milestones.PRE_QUAL),
-                        MILESTONE_ORDER_LOOKUP
-                                .get(LOSLoanStatus.LQB_STATUS_PRE_QUAL)));
-						
-		LQB_STATUS_MILESTONE_LOOKUP
-        .put(LOSLoanStatus.LQB_STATUS_PRE_APPROVED,
-                new WorkItemMilestoneInfo(
-                        Milestones.UW,
-                        null,
-                        MILESTONE_ORDER_LOOKUP
-                                .get(LOSLoanStatus.LQB_STATUS_PRE_APPROVED)));
+		LQB_STATUS_MILESTONE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_PRE_QUAL,
+		        new WorkItemMilestoneInfo(Milestones.PRE_QUAL,
+		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.PRE_QUAL),
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_PRE_QUAL)));
 
-		
-		LQB_STATUS_MILESTONE_LOOKUP
-        .put(LOSLoanStatus.LQB_STATUS_LOAN_DENIED,
-                new WorkItemMilestoneInfo(
-                        Milestones.UW,
-                        STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED.getLosStatusID()),
-                        MILESTONE_ORDER_LOOKUP
-                                .get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED)));
-		
-		LQB_STATUS_MILESTONE_LOOKUP
-        .put(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED,
-                new WorkItemMilestoneInfo(
-                        Milestones.UW,
-                        STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED.getLosStatusID()),
-                        MILESTONE_ORDER_LOOKUP
-                                .get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED)));
+		LQB_STATUS_MILESTONE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_PRE_APPROVED,
+		        new WorkItemMilestoneInfo(Milestones.UW, null,
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_PRE_APPROVED)));
+
+		LQB_STATUS_MILESTONE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_LOAN_DENIED,
+		        new WorkItemMilestoneInfo(Milestones.UW, STATUS_WF_ITEM_LOOKUP
+		                .get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED
+		                        .getLosStatusID()), MILESTONE_ORDER_LOOKUP
+		                .get(LOSLoanStatus.LQB_STATUS_LOAN_DENIED)));
+
+		LQB_STATUS_MILESTONE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED,
+		        new WorkItemMilestoneInfo(Milestones.UW, STATUS_WF_ITEM_LOOKUP
+		                .get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED
+		                        .getLosStatusID()), MILESTONE_ORDER_LOOKUP
+		                .get(LOSLoanStatus.LQB_STATUS_LOAN_SUSPENDED)));
 
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED,
-		        new WorkItemMilestoneInfo(Milestones.UW,
-		        		STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED.getLosStatusID()),
-		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED)));
-		
+		        new WorkItemMilestoneInfo(Milestones.UW, STATUS_WF_ITEM_LOOKUP
+		                .get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
+		                        .getLosStatusID()), MILESTONE_ORDER_LOOKUP
+		                .get(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED)));
+
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_REGISTERED,
-		        new WorkItemMilestoneInfo(Milestones.App1003,
-		                null,
+		        new WorkItemMilestoneInfo(Milestones.App1003, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_REGISTERED)));
-		
+
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_REGISTERED,
-		        new WorkItemMilestoneInfo(Milestones.App1003,
-		                null,
+		        new WorkItemMilestoneInfo(Milestones.App1003, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_REGISTERED)));
-		
+
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE,
-		        new WorkItemMilestoneInfo(Milestones.UW,
-		                MILESTONE_WF_ITEM_LOOKUP.get(Milestones.UW),
+		        new WorkItemMilestoneInfo(Milestones.UW, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_CLEAR_TO_CLOSE)));
 
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_FUNDED,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
-		        		STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_FUNDED.getLosStatusID()),
+		                STATUS_WF_ITEM_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_FUNDED
+		                                .getLosStatusID()),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_FUNDED)));
-		
+
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_CANCELED,
-		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
-		        		null,
+		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE, MILESTONE_WF_ITEM_LOOKUP.get(Milestones.LOAN_CLOSURE),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_CANCELED)));
-		//For the new closure statuses 
+		// For the new closure statuses
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
-		                STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED.getLosStatusID()),
+		                STATUS_WF_ITEM_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED
+		                                .getLosStatusID()),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_OUT,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
-		        		 STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_DOCS_OUT.getLosStatusID()),
+		                STATUS_WF_ITEM_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_OUT
+		                                .getLosStatusID()),
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_OUT)));
-		
-		
+
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN,
 		        new WorkItemMilestoneInfo(Milestones.LOAN_CLOSURE,
@@ -434,16 +493,16 @@ public class WorkflowConstants {
 		                        null,
 		                        MILESTONE_ORDER_LOOKUP
 		                                .get(LOSLoanStatus.LQB_STATUS_PRE_UNDERWRITING)));
-		
-		LQB_STATUS_MILESTONE_LOOKUP
-        .put(LOSLoanStatus.LQB_STATUS_APPROVED,
-                new WorkItemMilestoneInfo(
-                        Milestones.UW,
-                        STATUS_WF_ITEM_LOOKUP.get(LOSLoanStatus.LQB_STATUS_APPROVED.getLosStatusID()),
-                        MILESTONE_ORDER_LOOKUP
-                                .get(LOSLoanStatus.LQB_STATUS_APPROVED)));
-		
-		
+
+		LQB_STATUS_MILESTONE_LOOKUP.put(
+		        LOSLoanStatus.LQB_STATUS_APPROVED,
+		        new WorkItemMilestoneInfo(Milestones.UW,
+		                STATUS_WF_ITEM_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_APPROVED
+		                                .getLosStatusID()),
+		                MILESTONE_ORDER_LOOKUP
+		                        .get(LOSLoanStatus.LQB_STATUS_APPROVED)));
+
 		LQB_STATUS_MILESTONE_LOOKUP
 		        .put(LOSLoanStatus.LQB_STATUS_CONDITION_REVIEW,
 		                new WorkItemMilestoneInfo(
@@ -466,17 +525,18 @@ public class WorkflowConstants {
 
 		// For Appraisal
 
-		/*LQB_STATUS_MILESTONE_LOOKUP.put(
-		        LOSLoanStatus.LQB_STATUS_DOCS_ORDERED,
-		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
-		                MILESTONE_ORDER_LOOKUP
-		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));*/
+		/*
+		 * LQB_STATUS_MILESTONE_LOOKUP.put(
+		 * LOSLoanStatus.LQB_STATUS_DOCS_ORDERED, new
+		 * WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
+		 * MILESTONE_ORDER_LOOKUP .get(LOSLoanStatus.LQB_STATUS_DOCS_ORDERED)));
+		 */
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_DRAWN,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_DOCS_DRAWN)));
-		
+
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_DOCS_BACK,
 		        new WorkItemMilestoneInfo(Milestones.APPRAISAL, null,
@@ -559,7 +619,6 @@ public class WorkflowConstants {
 		                MILESTONE_ORDER_LOOKUP
 		                        .get(LOSLoanStatus.LQB_STATUS_LOAN_OPEN)));
 
-		
 		LQB_STATUS_MILESTONE_LOOKUP.put(
 		        LOSLoanStatus.LQB_STATUS_REGISTERED,
 		        new WorkItemMilestoneInfo(Milestones.App1003, null,
