@@ -55,7 +55,7 @@ public class LoanLCStateMaster {
         this.loans = loans;
     }
 
-    @Column(name = "loan_progress_status")
+    @Column(name = "loanLCState")
     public String getLoanLCState() {
         return loanLCState;
     }

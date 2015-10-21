@@ -84,7 +84,7 @@ public class Loan implements Serializable {
 	}
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_date")
+	@Column(name = "interview_date")
 	public void setInterview_date(Date interview_date) {
 		this.interview_date = interview_date;
 	}
