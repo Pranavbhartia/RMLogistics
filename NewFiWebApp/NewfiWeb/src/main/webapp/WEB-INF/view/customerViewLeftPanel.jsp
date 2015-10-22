@@ -9,7 +9,8 @@
       				
 			<div class="lp-pic-txt float-left">
 				<div class="lp-txt1" id ="profileNameId">${userVO.firstName}</div>
-				<div class="lp-txt2" id="loanType"></div>
+				<!-- NEXNF-1078 -->
+			<!-- 	<div class="lp-txt2" id="loanType"></div> -->
 				<!-- NEXNF-711 -->
 				<%-- <div class="lp-txt3" id= "profilePhoneNumId">${userVO.phoneNumber}</div> --%>
 			</div>
@@ -49,7 +50,7 @@
 			</div> -->
 			<!-- portal updates 7.9 -->
 			 <div class="work-on-loan-active">
-				Manage loan,compare programs <br />and track loan progress
+				Manage loan, compare programs <br />and track loan progress
 			</div>
 			<div class="work-on-loan-inactive clearfix">
 				<!--NEXNF-636  -->
