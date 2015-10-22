@@ -1441,16 +1441,16 @@ function appendTableHeader(elementId){
 	});
 	
 	var thCol1 = $('<div>').attr({
-		"class" : "leads-col-1 float-left"
+		"class" : "leads-col-1 float-left sort-list-asc"
 	}).html("Customer");
 	
 	var thCol2;
     thCol2 = $('<div>').attr({
-    	"class" : "leads-col-2 float-left"
+    	"class" : "leads-col-2 float-left sort-up-arrow-45"
     }).html("Email");
     
 	var thCol3 = $('<div>').attr({
-		"class" : "leads-col-3 float-left"
+		"class" : "leads-col-3 float-left loan-status-sort-list-asc"
 	}).html("Loan Status");
 
 	var thCol4="";
@@ -1460,7 +1460,7 @@ function appendTableHeader(elementId){
 	var processorCol = "";
 	if(isSalesManager){
 		processorCol = $('<div>').attr({
-			"class" : "leads-col-processor float-left"
+			"class" : "leads-col-processor float-left loan-advisor-sort-list-asc"
 		}).html("Loan Advisor");
 	}
 	/*var thCol5 = $('<div>').attr({
@@ -5068,6 +5068,73 @@ $('body').on('click','.leads-container-tc6.sm-leads-container-tc6',function(){
 	
 	sortTableByTime(isAsc, ".last-action-cell");
 });
+
+
+//Sort Leads By LastName First  Name
+$('body').on('click','.leads-container-th .leads-col-1.sm-leads-col-tc1', function(){
+	var isAsc;
+	if($(this).hasClass('sort-list-asc')){
+		$(this).removeClass('sort-list-asc');
+		$(this).addClass('sort-list-dsc');
+		isAsc = 1;
+	}else if($(this).hasClass('sort-list-dsc')){
+		$(this).removeClass('sort-list-dsc');
+		$(this).addClass('sort-list-asc');
+		isAsc = -1;
+	}
+    sortTableByLastName(isAsc);
+});
+
+
+//Sort Leads Status
+$('body').on('click','.leads-container-th .leads-col-3', function(){
+	var isAsc;
+	if($(this).hasClass('loan-status-sort-list-asc')){
+		$(this).removeClass('loan-status-sort-list-asc');
+		$(this).addClass('loan-status-sort-list-dsc');
+		isAsc = 1;
+	}else if($(this).hasClass('loan-status-sort-list-dsc')){
+		$(this).removeClass('loan-status-sort-list-dsc');
+		$(this).addClass('loan-status-sort-list-asc');
+		isAsc = -1;
+	}
+    sortTable(isAsc, ".leads-row-3");
+});
+
+
+//Sort Leads Emails
+$('body').on('click','.leads-container-th .leads-col-2', function(){
+	var isAsc;
+	if($(this).hasClass('sort-up-arrow-45')){
+		$(this).removeClass('sort-up-arrow-45');
+		$(this).addClass('sort-down-arrow-45');
+		isAsc = 1;
+	}else if($(this).hasClass('sort-down-arrow-45')){
+		$(this).removeClass('sort-down-arrow-45');
+		$(this).addClass('sort-up-arrow-45');
+		isAsc = -1;
+	}
+    sortTable(isAsc, ".leads-row-2");
+});
+
+
+//Sort Loan Advisor
+$('body').on('click','.leads-container-th .leads-col-processor', function(){
+	var isAsc;
+	if($(this).hasClass('loan-advisor-sort-list-asc')){
+		$(this).removeClass('loan-advisor-sort-list-asc');
+		$(this).addClass('loan-advisor-sort-list-dsc');
+		isAsc = 1;
+	}else if($(this).hasClass('loan-advisor-sort-list-dsc')){
+		$(this).removeClass('loan-advisor-sort-list-dsc');
+		$(this).addClass('loan-advisor-sort-list-asc');
+		isAsc = -1;
+	}
+    sortTable(isAsc, ".leads-row-processor");
+});
+
+
+
 
 /**
  * Method to sort based on time type columns.
