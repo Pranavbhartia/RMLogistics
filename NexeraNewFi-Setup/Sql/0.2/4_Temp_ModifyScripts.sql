@@ -439,6 +439,18 @@ ADD COLUMN `interview_date` TIMESTAMP NULL DEFAULT NULL AFTER `loanlcstatemaster
 ALTER TABLE `newfi_schema`.`quotedetails` 
 ADD COLUMN `loan_id` INT(11) NULL COMMENT '' AFTER `is_deleted`;
 
+#Himanshu - adding foreign key constraint
+ALTER TABLE `newfi_schema`.`quotedetails` 
+ADD INDEX `loan_id_fk_idx` (`loan_id` ASC)  COMMENT '';
+ALTER TABLE `newfi_schema`.`quotedetails` 
+ADD CONSTRAINT `loan_id_fk`
+  FOREIGN KEY (`loan_id`)
+  REFERENCES `newfi_schema`.`loan` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
 #Rajeswari: 
 #Change for Customer Worfklow to show "Complete  Application" instead of Application
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Application' WHERE `id`='27';
+

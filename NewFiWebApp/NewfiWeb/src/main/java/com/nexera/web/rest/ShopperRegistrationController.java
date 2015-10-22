@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.DisplayMessageConstants;
 import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.compositekey.QuoteCompositeKey;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.UserRolesEnum;
@@ -72,7 +70,7 @@ public class ShopperRegistrationController {
 
 	@Autowired
 	WorkflowCoreService workflowCoreService;
-	
+
 	@Autowired
 	QuoteService quoteService;
 
@@ -88,7 +86,7 @@ public class ShopperRegistrationController {
 	        HttpServletResponse response) throws IOException {
 
 		Gson gson = new Gson();
-		String message="";
+		String message = "";
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
 			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
@@ -99,8 +97,8 @@ public class ShopperRegistrationController {
 			};
 			// List<HashMap<String, String>> teaseRateDatalist =
 			// mapper.readValue(teaseRateData, typeRef);
-			List<LqbTeaserRateVo> teaseRateDatalist = gson.fromJson(
-			        teaseRateData, typeRef.getType());
+			List<LqbTeaserRateVo> teaseRateDatalist = gson
+			        .fromJson(teaseRateData, typeRef.getType());
 
 			String emailId = loaAppFormVO.getUser().getEmailId();
 			// LOG.info("calling 1234 "+
@@ -111,10 +109,14 @@ public class ShopperRegistrationController {
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
 			        teaseRateDatalist);
 
-			LOG.info("User succesfully created, now trying to autologin" + user.getEmailId());
-			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account!</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loaAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
-			//NEXNF-628
-			//authenticateUserAndSetSession(emailId, user.getPassword(), request);
+			LOG.info("User succesfully created, now trying to autologin"
+			        + user.getEmailId());
+			message = "<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account!</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"
+			        + loaAppFormVO.getUser().getEmailId().split(":")[0]
+			        + ".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
+			// NEXNF-628
+			// authenticateUserAndSetSession(emailId, user.getPassword(),
+			// request);
 		} catch (FatalException e) {
 			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered");
@@ -122,128 +124,141 @@ public class ShopperRegistrationController {
 			LOG.error("error while creating user", e);
 			throw new FatalException("User could not be registered ");
 		}
-		/*String redirectUrl = profileUrl + "home.do#myLoan/myTeam";
-		LOG.info("Redirecting user to login page: " + redirectUrl);
+		/*
+		 * String redirectUrl = profileUrl + "home.do#myLoan/myTeam"; LOG.info(
+		 * "Redirecting user to login page: " + redirectUrl);
+		 * 
+		 * return redirectUrl;
+		 */
 
-		return redirectUrl;
-*/	
-		
 		return message;
-		
+
 	}
 
 	@RequestMapping(value = "/record/deleteLeadFromQuote/{userName}/{internalUserID}", method = RequestMethod.POST)
-	 public @ResponseBody CommonResponseVO deleteLeadFromQuote(@PathVariable String userName,@PathVariable Integer internalUserID,
-	         HttpServletRequest request, HttpServletResponse response)
-	         throws IOException {
+	public @ResponseBody CommonResponseVO deleteLeadFromQuote(
+	        @PathVariable String userName, @PathVariable Integer internalUserID,
+	        HttpServletRequest request, HttpServletResponse response)
+	                throws IOException {
 		CommonResponseVO responseVO = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
 		quoteCompositeKey.setInternalUserId(internalUserID);
 		quoteCompositeKey.setUserName(userName);
-		try{
-		quoteService.updateDeletedUser(quoteCompositeKey);
-		responseVO.setResultObject(DisplayMessageConstants.USER_DELETED_SUCCESSFULLY);
-		}
-		catch(Exception e){
+		try {
+			quoteService.updateDeletedUser(quoteCompositeKey);
+			responseVO.setResultObject(
+			        DisplayMessageConstants.USER_DELETED_SUCCESSFULLY);
+		} catch (Exception e) {
 			LOG.error("Error while deleting user from quotedetails", e);
 			error.setMessage(ErrorConstants.USER_DELETION_FAILED);
 			responseVO.setError(error);
-			throw new FatalException("User could not be registered from Quick Quote");
-		}
-		finally{
+			throw new FatalException(
+			        "User could not be registered from Quick Quote");
+		} finally {
 			return responseVO;
 		}
 	}
-	
+
 	@RequestMapping(value = "/record/getQuoteUser/{userName}/{internalUserID}", method = RequestMethod.GET)
-	 public @ResponseBody String editQuoteUser(@PathVariable String userName,@PathVariable Integer internalUserID,
-	         HttpServletRequest request, HttpServletResponse response)
-	         throws IOException {
+	public @ResponseBody String editQuoteUser(@PathVariable String userName,
+	        @PathVariable Integer internalUserID, HttpServletRequest request,
+	        HttpServletResponse response) throws IOException {
 		Gson gson = new Gson();
-	    CommonResponseVO responseVO = new CommonResponseVO();
-	    QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
-	    ErrorVO error = new ErrorVO();
-	    quoteCompositeKey.setInternalUserId(internalUserID);
-	    quoteCompositeKey.setUserName(userName);
-	    
-	    QuoteDetails quoteDetails = quoteService.getUserDetails(quoteCompositeKey);
-	    GeneratePdfVO generatePdfVO = quoteService.convertToGeneratePdfVo(quoteDetails);
-	    String jsonString = gson.toJson( generatePdfVO );
-	    return jsonString;    
+		CommonResponseVO responseVO = new CommonResponseVO();
+		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+		ErrorVO error = new ErrorVO();
+		quoteCompositeKey.setInternalUserId(internalUserID);
+		quoteCompositeKey.setUserName(userName);
+
+		QuoteDetails quoteDetails = quoteService
+		        .getUserDetails(quoteCompositeKey);
+		GeneratePdfVO generatePdfVO = quoteService
+		        .convertToGeneratePdfVo(quoteDetails);
+		String jsonString = gson.toJson(generatePdfVO);
+		return jsonString;
 	}
-	
 
 	@RequestMapping(value = "/record/lead/{userName}/{internalUserID}", method = RequestMethod.POST)
-	 public @ResponseBody CommonResponseVO resgisterLead(@PathVariable String userName,@PathVariable Integer internalUserID,
-	         HttpServletRequest request, HttpServletResponse response)
-	         throws IOException {
+	public @ResponseBody CommonResponseVO resgisterLead(
+	        @PathVariable String userName, @PathVariable Integer internalUserID,
+	        HttpServletRequest request, HttpServletResponse response)
+	                throws IOException {
 		Gson gson = new Gson();
-	    CommonResponseVO responseVO = new CommonResponseVO();
-	    QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
-	    ErrorVO error = new ErrorVO();
-	    quoteCompositeKey.setInternalUserId(internalUserID);
-	    quoteCompositeKey.setUserName(userName);
-	    
-	    QuoteDetails quoteDetails = quoteService.getUserDetails(quoteCompositeKey);
-	    String emailIdUnderQuote = quoteDetails.getEmailId();
-	    User isUserPresent = userProfileService.findUserByMail(emailIdUnderQuote);
-	    
+		CommonResponseVO responseVO = new CommonResponseVO();
+		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+		ErrorVO error = new ErrorVO();
+		quoteCompositeKey.setInternalUserId(internalUserID);
+		quoteCompositeKey.setUserName(userName);
+
+		QuoteDetails quoteDetails = quoteService
+		        .getUserDetails(quoteCompositeKey);
+		String emailIdUnderQuote = quoteDetails.getEmailId();
+		User isUserPresent = userProfileService
+		        .findUserByMail(emailIdUnderQuote);
+
 		if (isUserPresent != null) {
 			error.setMessage(ErrorConstants.REGISTRATION_USER_EXSIST);
 			responseVO.setError(error);
 			quoteService.updateCreatedUser(quoteCompositeKey);
 			return responseVO;
-		} 
-	
-		String registrationDetails = quoteService.createRegistrationDetails(quoteDetails);
+		}
+
+		String registrationDetails = quoteService
+		        .createRegistrationDetails(quoteDetails);
 		registrationDetails = registrationDetails.replaceAll("\\\\", "");
 		String teaseRateData = quoteService.createTeaserRateData(quoteDetails);
-		teaseRateData = "["+teaseRateData+"]";
-	
-		LOG.info("registrationDetails from quick quote - inout xml is" + registrationDetails);
+		teaseRateData = "[" + teaseRateData + "]";
+
+		LOG.info("registrationDetails from quick quote - inout xml is"
+		        + registrationDetails);
 		try {
-			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails, LoanAppFormVO.class);
+			LoanAppFormVO loaAppFormVO = gson.fromJson(registrationDetails,
+			        LoanAppFormVO.class);
 
 			TypeReference<List<LqbTeaserRateVo>> typeRef = new TypeReference<List<LqbTeaserRateVo>>() {
 			};
-			
-			List<LqbTeaserRateVo> teaseRateDatalist = gson.fromJson(teaseRateData, typeRef.getType());
+
+			List<LqbTeaserRateVo> teaseRateDatalist = gson
+			        .fromJson(teaseRateData, typeRef.getType());
 
 			String emailId = loaAppFormVO.getUser().getEmailId();
-			
+
 			LOG.info("calling UserName : "
 			        + loaAppFormVO.getUser().getFirstName());
 
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
 			        teaseRateDatalist);
 			quoteService.updateCreatedUser(quoteCompositeKey);
-			quoteService.updateLoanId(quoteCompositeKey, user.getDefaultLoanId());
-			
-			responseVO.setResultObject(DisplayMessageConstants.USER_CREATED_SUCCESSFULLY);
-			LOG.info("User succesfully created, now trying to autologin" + user.getEmailId());
-		}
-		catch (FatalException e) {
+			Loan loan = new Loan(user.getDefaultLoanId());
+			quoteService.updateLoanId(quoteCompositeKey, loan);
+
+			responseVO.setResultObject(
+			        DisplayMessageConstants.USER_CREATED_SUCCESSFULLY);
+			LOG.info("User succesfully created, now trying to autologin"
+			        + user.getEmailId());
+		} catch (FatalException e) {
 			LOG.error("error while creating user", e);
 			error.setMessage(ErrorConstants.USER_CREATION_FAILED);
 			responseVO.setError(error);
-			throw new FatalException("User could not be registered from Quick Quote");
-			
+			throw new FatalException(
+			        "User could not be registered from Quick Quote");
+
 		} catch (Exception e) {
 			LOG.error("error while creating user", e);
 			error.setMessage(ErrorConstants.USER_CREATION_FAILED);
 			responseVO.setError(error);
-			throw new FatalException("User could not be registered from Quick Quote");
-		}
-		finally{
+			throw new FatalException(
+			        "User could not be registered from Quick Quote");
+		} finally {
 			return responseVO;
 		}
-	 }
-	
+	}
+
 	@RequestMapping(value = "/record", method = RequestMethod.POST)
 	public @ResponseBody String recordShopperInfo(String registrationDetails,
 	        HttpServletRequest request, HttpServletResponse response)
-	        throws IOException {
+	                throws IOException {
 
 		Gson gson = new Gson();
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
@@ -275,15 +290,16 @@ public class ShopperRegistrationController {
 		CommonResponseVO response = new CommonResponseVO();
 		ErrorVO error = new ErrorVO();
 
-		ObjectMapper mapper=new ObjectMapper();
-		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {};
+		ObjectMapper mapper = new ObjectMapper();
+		TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
+		};
 		String emailId = "";
 		try {
 			HashMap<String, Object> val = mapper.readValue(registrationDetails,
 			        typeRef);
 			if (val.containsKey("user")) {
-				LoanAppFormVO loanAppFormVO = gson.fromJson(
-				        registrationDetails, LoanAppFormVO.class);
+				LoanAppFormVO loanAppFormVO = gson.fromJson(registrationDetails,
+				        LoanAppFormVO.class);
 				emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
 			} else {
 				emailId = val.get("emailId").toString().split(":")[0];
@@ -292,7 +308,7 @@ public class ShopperRegistrationController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		// String emailId = loanAppFormVO.getUser().getEmailId().split(":")[0];
 		User user = userProfileService.findUserByMail(emailId);
 		if (user != null) {
@@ -311,10 +327,10 @@ public class ShopperRegistrationController {
 	@RequestMapping(value = "/realtorRegistration", method = RequestMethod.POST)
 	public @ResponseBody String realtorRegistration(String registrationDetails,
 	        HttpServletRequest request, HttpServletResponse response)
-	        throws IOException {
+	                throws IOException {
 
 		Gson gson = new Gson();
-		String message="";
+		String message = "";
 		LOG.info("registrationDetails - inout xml is" + registrationDetails);
 		try {
 			LoanAppFormVO loanAppFormVO = gson.fromJson(registrationDetails,
@@ -342,19 +358,23 @@ public class ShopperRegistrationController {
 
 			}
 			UserVO userVO = loanAppFormVO.getUser();
-			User newUser = userProfileService.createNewUser(loanAppFormVO
-			        .getUser());
+			User newUser = userProfileService
+			        .createNewUser(loanAppFormVO.getUser());
 			userProfileService.sendEmailToCustomer(newUser);
-			message="<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account!</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"+loanAppFormVO.getUser().getEmailId().split(":")[0]+".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
-			//NEXNF-628
-			/*authenticateUserAndSetSession(emailId, userVO.getPassword(),
-			        request);*/
+			message = "<div class='cus-eng-succ-mess-header'>Thank you for creating your newfi account!</div><div class='cus-eng-success-mess-container'><div class='cus-eng-succ-mess-row'>To help keep your information confidential and secure, we have sent an account validation email to <a class='cus-eng-succ-mess-email'>"
+			        + loanAppFormVO.getUser().getEmailId().split(":")[0]
+			        + ".</a></div><div class='cus-eng-succ-mess-row'>The validation link will expire after 72 hours so please check your email ASAP to confirm your newfi account.</div></div>";
+			// NEXNF-628
+			/*
+			 * authenticateUserAndSetSession(emailId, userVO.getPassword(),
+			 * request);
+			 */
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			LOG.error("Error in user registration", e);
 		}
-		//NEXNF-628
-		/*return profileUrl + "home.do";*/
+		// NEXNF-628
+		/* return profileUrl + "home.do"; */
 		return message;
 	}
 
