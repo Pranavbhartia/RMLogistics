@@ -352,6 +352,7 @@ public interface CommonConstants {
 	public static final String FILE_NAME_PREQUAL_LETTER = "newfi pre-qualification.pdf";
 	public static final String FILE_NAME_PURCHASE_PDF = "newfi_quickQuote_";
 	public static final String DEFAULT_CREDIT_SCORE = "800";
+	public static final String PRICING_DEFAULT_CREDIT_SCORE = "760";
 	public static final String[] allowedStates = { "CA", "OR", "WA", "CO" };
 	
 	public static final String ZIPCODE_ISNOT_VALID = "Zip code is not valid";

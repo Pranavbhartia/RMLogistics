@@ -669,14 +669,11 @@ function appendCreditScoreFeild(option){
 	
 	var div = $('<input>').attr({
 		"class" : "quick-quote-row-RHS float-left",
-		"value" : "740",
+		"value" : "760",
 		"id" : option.id,
 		"name" : option.id
 	}).on("keypress", function(e){
 		restrictChar(option.id);
-		if($(this).val().length > 2){
-			return false;
-		}
 		$(this).attr({
 			"value": $(this).val()
 		});
@@ -1272,7 +1269,7 @@ function objectKeyMakerFunctionUnderQuickQuote(item) {
 	case getClosingCostLabel("Closing/Escrow Fee"):
 		return "closingEscrowFee1102";
 	case getClosingCostLabel("Recording Fee"):
-		return "recordingFees1201";
+		return "recordingFees1202";
 	case getClosingCostLabel("City/County Tax stamps"):
 		return "cityCountyTaxStamps1204";
 	case getClosingCostLabel("Total Estimated Third Party Costs"):
@@ -2080,6 +2077,7 @@ function processCommonParameters(){
 		}
 		buyHomeRefinanceRate.privateincludeTaxes = "Yes";
 	}
+	loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.creditscore = $('#creditScoreId').val();
 	
 }
 
