@@ -514,360 +514,383 @@ function checkCreditScore(creditScore){
 		appendTableHeader(elementId);
 		$('#agent-dashboard-container').addClass('leads-dashboard');
 		
+		
 		for(var i = 0; i < loanList.length; i++) {
-			
-			var customer = loanList[i];
+	var customer = loanList[i];
 			if(customer.quoteDetailsVO){
-				if(!customer.quoteDetailsVO.isDeleted){
-					var row = $('<div>').attr({
-						"class" : "leads-container-tr leads-container-row clearfix"
-					});
-				
-					
-					if (i % 2 == 0) {
-						row.addClass('leads-container-row-odd');
-					}
-				
-					if (i == loanList.length - 1) {
-							row.addClass('leads-container-row-last');
-					}
-				
-					
-					var action = $('<div>').attr({
-						"class": "float-left"
-					});
-					var pdfIcon = $('<div>').attr({
-						"class" : "leads-row-9",
-						"name" : customer.quoteDetailsVO.pdfUrl
-					}).bind("click",function(){
-						window.open($(this).attr("name"));
-					
-					});
-					var createIcon = $('<div>').attr({
-						"class" : "leads-row-11",
-						"userName" : customer.quoteDetailsVO.prospectUsername,
-						"InternalUserID" :customer.quoteDetailsVO.internalUserId,
-						"id":customer.quoteDetailsVO.internalUserId+""+i
-					}).bind("click",function(){
-						if($(this).hasClass('leads-row-11')){
-							createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"),$(this).attr("id"));
-						}
-					});	
-					
-					//TO add a condition to check for user created
-					if(customer.quoteDetailsVO.isCreated){
-						$(createIcon).removeClass('leads-row-11');
-						$(createIcon).addClass('leads-user-created');
-					}
-					
-					action.append(pdfIcon).append(createIcon);
-					
-					var col1 = $('<div>').attr({
-						"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
-							"id" : "leads-container-tc1-id"
-						});		 
-					 
+				if(!customer.quoteDetailsVO.isDeleted && customer.quoteDetailsVO.loan == null){
+		var row = $('<div>').attr({
+			"class" : "leads-container-tr leads-container-row clearfix"
+		});
+	
+		
+		if (i % 2 == 0) {
+			row.addClass('leads-container-row-odd');
+		}
+	
+		if (i == loanList.length - 1) {
+				row.addClass('leads-container-row-last');
+		}
+	
+		
+		var action = $('<div>').attr({
+			"class": "float-left"
+		});
+		var pdfIcon = $('<div>').attr({
+			"class" : "leads-row-9",
+			"name" : customer.quoteDetailsVO.pdfUrl,
+			"title": "View PDF"
+		}).bind("click",function(){
+			window.open($(this).attr("name"));
+		
+		});
+		
+		action.append(pdfIcon);
+		
+		var col1 = $('<div>').attr({
+			"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
+				"id" : "leads-container-tc1-id"
+			});		 
+		 
 
-					var cusName = $('<div>').attr({
-						"class" : "cus-name lead-name",
-						"userName" : customer.quoteDetailsVO.prospectUsername,
-						"InternalUserID" :customer.quoteDetailsVO.internalUserId,
-						"id":customer.quoteDetailsVO.internalUserId+"_"+i
-					}).html(customer.quoteDetailsVO.prospectFirstName+" "+customer.quoteDetailsVO.prospectLastName);
-				 
-					//TO add a condition to check for user created
-						
-							// binding click  event when loan is not created.
-					cusName.bind("click",function(){	
-						getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
-					});
-								
-				
-					col1.append(cusName);				
+		var cusName = $('<div>').attr({
+			"class" : "cus-name lead-name",
+			"loanid" : customer.loanID,
+			"userid" : customer.userID,
+			"userName" : customer.quoteDetailsVO.prospectUsername,
+			"InternalUserID" :customer.quoteDetailsVO.internalUserId,
+			"id":customer.quoteDetailsVO.internalUserId+"_"+i
+		}).html(customer.quoteDetailsVO.prospectFirstName+" "+customer.quoteDetailsVO.prospectLastName);
+	 
+		//TO add a condition to check for user created
+			
+				// binding click  event when loan is not created.
+		cusName.bind("click",function(){	
+			getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+		});
 					
+	
+		col1.append(cusName);				
+		
+		var col2="";
+		var email;
+		if(customer.quoteDetailsVO.emailId == ""){
+			email = "-";
+		}else {
+			email = customer.quoteDetailsVO.emailId;
+		}
+	
+		//write a rest call					
+		col2 = $('<div>').attr({
+			"class" : "leads-row-2 float-left"
+		}).html(email);
+		
+		
+		var col3="";
+			
+		col3 = $('<div>').attr({
+			"class" : "leads-row-3 float-left"
+		}).html("Quote");
+		if(customer.quoteDetailsVO.isCreated){
+			$(col3).html("Lead");
+		}
+		//TO add check for loan
+		var loanStatus = "";
+		var obj = JSON.parse(customer.quoteDetailsVO.inputDetailsJson.toString());
+		if(obj.loanType == PURCHASE){
+			loanStatus = "Purchase";
+		}else if(obj.loanType == REFINANACE_LOWER_MORTGAGE_PAYMENT || obj.loanType == REFINANACE_CASH_OUT){
+			loanStatus = "Refinance";
+		}else{
+			loanStatus = "-";
+		}
+		var col4 = $('<div>').attr({
+			"class" : "leads-row-4 float-left"
+		}).html(loanStatus);
+		
+		var processorCol="";
+	if(isSalesManager){
+		
+		var name = customer.quoteDetailsVO.internalUserName;
+		if(name == null){
+			name = "-";
+		}
+		processorCol = $('<div>').attr({
+			"class" : "leads-row-processor float-left"
+		}).html(name);
+	}
+		
+		var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
+				customer.createdDate));
+		createdDateStr=formatYearInDate(createdDateStr);
+		if(createdDateStr==""){
+			createdDateStr="-";
+		}
+
+	/*	var col5 = $('<div>').attr({
+			"class" : "leads-row-5 float-left"
+		}).html(createdDateStr);
+		
+		
+	    var col6 = $('<div>').attr({
+	     "class" : "float-left last-action-cell leads-row-6"
+	    }).html(createdDateStr);
+	*/	
+	
+		var col7 = $('<div>').attr({
+			"class" : "leads-row-7 float-left"
+		}).html("-");
+
+		var col8 = "";
+		
+			col8 = $('<div>').attr({
+				"class" : "leads-row-8 float-left"
+			});
+			
+			var createIcon = $('<div>').attr({
+				"class" : "leads-row-11 float-right",
+				"userName" : customer.prospectUsername,
+				"InternalUserID" :customer.internalUserId,
+				"id":customer.internalUserId+""+i,
+				"title" : "Create Account"
+			}).bind("click",function(){
+				if($(this).hasClass('leads-row-11')){
+					createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"),$(this).attr("id"));
+				}
+			});	
+			
+			//TO add a condition to check for user created
+			if(customer.isCreated){
+				$(createIcon).removeClass('leads-row-11');
+				$(createIcon).attr("title", "");
+				$(createIcon).css("pointer-events","none");
+				$(createIcon).addClass('leads-user-created');
+			}
+			
+		
+		var col12 = "";
+
+				 col12 = $('<div>').attr({
+					"class" : "leaddelCustClas margin-right-10 leads-row-12 clearfix",
+				"userName" : customer.quoteDetailsVO.prospectUsername,
+				"InternalUserID" :customer.quoteDetailsVO.internalUserId,
+				"id":customer.quoteDetailsVO.internalUserId+"_0"+i,
+					"title" : "Delete"
+				}).bind("click",function(){
+					deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"),$(this).attr("id"));
+				
+				});
+
+		 if(isSalesManager){
+			 	$(col1).addClass('sm-leads-row-1');
+			 	$(col4).addClass('sm-leads-row-4');
+			 	$(col7).addClass('sm-leads-row-7');
+			 	//$(col5).addClass('sm-leads-row-5');
+			 	//$(col6).addClass('sm-leads-row-6');
+			 	
+			}
+		row.append(action).append(col1).append(col2).append(col3).append(col4).append(processorCol)
+			.append(col7).append(col8).append(createIcon).append(col12);
+		
+	
+		
+		}
+			
+	}
+		
+	else{
+			customer.credit_score = checkCreditScore(customer.credit_score);
+
+			var row = $('<div>').attr({
+				"class" : "leads-container-tr leads-container-row clearfix"
+			});
+
+			
+			if (i % 2 == 0) {
+				row.addClass('leads-container-row-odd');
+			}
+
+			if (i == loanList.length - 1) {
+					row.addClass('leads-container-row-last');
+			}
+
+			var loanIconDiv = $('<div>').attr({
+				"class" : "float-left",
+			});
+			
+			var loanIcon = $('<div>').attr({
+				"class" : "loan-row float-left",
+			});
+			
+			loanIconDiv.append(loanIcon);
+			
+			var col1 = $('<div>').attr({
+				"class" : "leads-loan-tc1 float-left clearfix",
+					"id" : "leads-container-tc1-id"
+				});				
+
+				var onlineStatus = $('<div>').attr({
+					"class" : "onl-status-icn float-left"
+				});
+				
+				// code will execute if user is logged in
+
+				var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
+				loanNotificationCntxt.customerName = customer.name;
+				addContext(customer.loanID + "-notification", loanNotificationCntxt)
+
+				
+				var cusName = "";
+				
+					 cusName = $('<div>').attr({
+						"class" : "cus-name float-left",
+						"loanid" : customer.loanID,
+						"userid" : customer.userID
+					}).bind('click', {
+						"customer" : customer
+					}, function(event) {
+						event.stopImmediatePropagation();
+			            removeToastMessage();
+						resetSelectedUserDetailObject(event.data.customer);
+						if (userIsRealtor()) {
+							saveState('loan', selectedUserDetail.loanID, "team");
+							entryPointForAgentView(selectedUserDetail.loanID, '0');
+						} else {
+							saveState('loan', selectedUserDetail.loanID, "detail");
+							entryPointForAgentView(selectedUserDetail.loanID, '2');
+						}
+
+					}).html(customer.name);
+					
+					col1.append(cusName);
+			
+					
+					var loan_status=customer.lqbLoanStatus;
+					if(loan_status==""||loan_status==null||loan_status==undefined){
+						loan_status="-";
+					}
+
+					var emailID = customer.emailId;
+					if(emailID == ""){
+						emailID = "-"
+					}
 					var col2="";
-					var email;
-					if(customer.quoteDetailsVO.emailId == ""){
-						email = "-";
-					}else {
-						email = customer.quoteDetailsVO.emailId;
-					}
+	
+						//write a rest call					
+						col2 = $('<div>').attr({
+							"class" : "leads-row-2 float-left"
+						}).html(emailID);
 				
-					//write a rest call					
-					col2 = $('<div>').attr({
-						"class" : "leads-row-2 float-left"
-					}).html(email);
-					
-					
-					var col3="";
-						
-					col3 = $('<div>').attr({
+					var col3 = $('<div>').attr({
 						"class" : "leads-row-3 float-left"
-					}).html("Quote");
-					if(customer.quoteDetailsVO.isCreated){
-						$(col3).html("Lead");
-					}
-					//TO add check for loan
-					var loanStatus = "";
-					var obj = JSON.parse(customer.quoteDetailsVO.inputDetailsJson.toString());
-					if(obj.loanType == PURCHASE){
-						loanStatus = "Purchase";
-					}else if(obj.loanType == REFINANACE_LOWER_MORTGAGE_PAYMENT || obj.loanType == REFINANACE_CASH_OUT){
-						loanStatus = "Refinance";
-					}else{
-						loanStatus = "-";
-					}
+					}).html(loan_status);
+		
 					var col4 = $('<div>').attr({
 						"class" : "leads-row-4 float-left"
-					}).html(loanStatus);
+					}).html(customer.purpose);
 					
 					var processorCol="";
 					if(isSalesManager){
 					
 						processorCol = $('<div>').attr({
 							"class" : "leads-row-processor float-left"
-						}).html(customer.quoteDetailsVO.internalUserName);
-					}else {
-						processorCol = $('<div>').attr({
-							"class" : "leads-row-processor float-left"
-						}).html("-");
+						}).html(customer.processor);
 					}
 					
-					var	createdDateStr = "";
-					/*var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
-							customer.quoteDetailsVO.createdDate));
-					createdDateStr=formatYearInDate(createdDateStr);*/
+/*					var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
+							customer.loanInitiatedOn));
+					createdDateStr=formatYearInDate(createdDateStr);
 					if(createdDateStr==""){
 						createdDateStr="-";
 					}
-
 					var col5 = $('<div>').attr({
-						"class" : "leads-row-5 float-left"
+						"class" : "lead-loan-tc5 float-left"
 					}).html(createdDateStr);
 					
-					
+					var date=customer.time.slice(0,10);
+				    var time=customer.time.slice(11);
+				    var modifiedDateStr=formatYearInDate(date);
+				    
+				    if(modifiedDateStr==""){
+				     modifiedDateStr="-";
+				    }else {
+				     //  added Extra space for Data format,  Don't delete space
+				     modifiedDateStr = modifiedDateStr+"<br/> "+time;
+				    }
 				    var col6 = $('<div>').attr({
-				     "class" : "float-left last-action-cell leads-row-6"
-				    }).html(createdDateStr);
+				     "class" : "lead-loan-tc6 float-left last-action-cell"
+				    }).html(modifiedDateStr);
+				    
+				    */
+				    
+					var userLastLogin = customer.userLastLoginTime;				
 					
-				
+					if(userLastLogin == null){
+						userLastLogin = "-";
+					}else {
+						userLastLogin = formateDateAndTime(new Date(customer.userLastLoginTime),true);
+					}
+		
 					var col7 = $('<div>').attr({
 						"class" : "leads-row-7 float-left"
-					}).html("-");
+					}).html(userLastLogin);
 
-					var col8 = "";
-					
-						col8 = $('<div>').attr({
-							"class" : "leads-row-8 float-left"
-						});
-					
-					var col12 = "";
-
-							 col12 = $('<div>').attr({
-								"class" : "leaddelCustClas leads-row-12 clearfix",
-								"userName" : customer.quoteDetailsVO.prospectUsername,
-								"InternalUserID" :customer.quoteDetailsVO.internalUserId,
-								"id":customer.quoteDetailsVO.internalUserId+"_0"+i
-							}).bind("click",function(){
-								deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"),$(this).attr("id"));
-							
+					var col8 = $('<div>').attr({
+						"class" : "leads-container-tc7 alert-col float-left",
+						"title" : "Schedule Alert"
+					}).bind(
+							'click',
+							{
+								"customer" : customer
+							},
+							function(event) {
+								event.stopImmediatePropagation();
+								appendCustomerDetailContianer($(this).parent(),
+										event.data.customer);
 							});
-
-					 if(isSalesManager){
-						 	$(col1).addClass('sm-leads-row-1');
-						 	$(col4).addClass('sm-leads-row-4');
-						 	$(col7).addClass('sm-leads-row-7');
-						 	$(col5).addClass('sm-leads-row-5');
-						 	$(col6).addClass('sm-leads-row-6');
-						 	
+					loanNotificationCntxt.loanLstCntElement = col8;
+					loanNotificationCntxt.getNotificationForLoan(function(ob) {
+						if (parseInt(ob.loanNotificationList.length) > 0) {
+							var alerts = $('<div>').attr({
+								"class" : "alerts-count"
+							}).html(ob.loanNotificationList.length);
+							ob.loanLstCntElement.html("");
+							ob.loanLstCntElement.append(alerts);
 						}
-					row.append(action).append(col1).append(col2).append(col3).append(col4).append(processorCol).append(col5)
-							.append(col6).append(col7).append(col8).append(col12);
-					
-					
-				}
-			}else{
-				customer.credit_score = checkCreditScore(customer.credit_score);
-
-				var row = $('<div>').attr({
-					"class" : "leads-container-tr leads-container-row clearfix"
-				});
-
-				
-				if (i % 2 == 0) {
-					row.addClass('leads-container-row-odd');
-				}
-
-				if (i == loanList.length - 1) {
-						row.addClass('leads-container-row-last');
-				}
-
-				var loanIcon = $('<div>').attr({
-					"class" : "loan-row float-left",
-				});
-				
-				var col1 = $('<div>').attr({
-					"class" : "leads-loan-tc1 float-left clearfix",
-						"id" : "leads-container-tc1-id"
-					});				
-
-					var onlineStatus = $('<div>').attr({
-						"class" : "onl-status-icn float-left"
 					});
 					
-					// code will execute if user is logged in
-
-					var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
-					loanNotificationCntxt.customerName = customer.name;
-					addContext(customer.loanID + "-notification", loanNotificationCntxt)
-
+					if(isSalesManager){
+						//$(col5).addClass('lead-loan-createddate');
+						//$(col6).addClass('sm-lead-loan-tc6');
+						$(col7).addClass('sm-lead-loan-tc7');
+						$(col4).addClass('sm-leads-row-4');
+					}
+					row.append(loanIconDiv).append(col1).append(col2).append(col3).append(col4).append(processorCol)
+					   .append(col7).append(col8);
 					
-					var cusName = "";
+					$('#' + elementId).append(row);
+					if((newfiObject.user&&newfiObject.user.internalUserDetail&&
+							newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
+							newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
+							newfiObject.user.userRole.id==4){
+							var userDelIcn = $('<div>').attr({
+								"class" : "delCustClas lead-loan-del clearfix",
+								"loanID" : customer.loanID,
+								"customer_name":customer.name
+							});
+							row.append(userDelIcn);
+						}else{
+							$('.leads-container-tr').css("padding","15px 15px 10px");
+						}
 					
-						 cusName = $('<div>').attr({
-							"class" : "cus-name float-left",
-							"loanid" : customer.loanID,
-							"userid" : customer.userID
-						}).bind('click', {
-							"customer" : customer
-						}, function(event) {
-							event.stopImmediatePropagation();
-				            removeToastMessage();
-							resetSelectedUserDetailObject(event.data.customer);
-							if (userIsRealtor()) {
-								saveState('loan', selectedUserDetail.loanID, "team");
-								entryPointForAgentView(selectedUserDetail.loanID, '0');
-							} else {
-								saveState('loan', selectedUserDetail.loanID, "detail");
-								entryPointForAgentView(selectedUserDetail.loanID, '2');
-							}
-
-						}).html(customer.name);
-						
-						col1.append(cusName);
-				
-						
-						var loan_status=customer.lqbLoanStatus;
-						if(loan_status==""||loan_status==null||loan_status==undefined){
-							loan_status="-";
-						}
-
-						var emailID = customer.emailId;
-						if(emailID == ""){
-							emailID = "-"
-						}
-						var col2="";
+		}
 		
-							//write a rest call					
-							col2 = $('<div>').attr({
-								"class" : "lead-loan-tc2 float-left"
-							}).html(emailID);
-					
-						var col3 = $('<div>').attr({
-							"class" : "lead-loan-tc3 float-left"
-						}).html(loan_status);
-			
-						var col4 = $('<div>').attr({
-							"class" : "lead-loan-tc4 float-left"
-						}).html(customer.purpose);
-						
-						var processorCol="";
-						if(isSalesManager){
-						
-							processorCol = $('<div>').attr({
-								"class" : "lead-loan-processor float-left"
-							}).html(customer.processor);
-						}
-						
-						var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
-								customer.loanInitiatedOn));
-						createdDateStr=formatYearInDate(createdDateStr);
-						if(createdDateStr==""){
-							createdDateStr="-";
-						}
-						var col5 = $('<div>').attr({
-							"class" : "lead-loan-tc5 float-left"
-						}).html(createdDateStr);
-
-						
-						var date=customer.time.slice(0,10);
-					    var time=customer.time.slice(11);
-					    var modifiedDateStr=formatYearInDate(date);
-					    
-					    if(modifiedDateStr==""){
-					     modifiedDateStr="-";
-					    }else {
-					     //  added Extra space for Data format,  Don't delete space
-					     modifiedDateStr = modifiedDateStr+"<br/> "+time;
-					    }
-					    var col6 = $('<div>').attr({
-					     "class" : "lead-loan-tc6 float-left last-action-cell"
-					    }).html(modifiedDateStr);
-					    
-					    
-						var userLastLogin = customer.userLastLoginTime;				
-						
-						if(userLastLogin == null){
-							userLastLogin = "-";
-						}else {
-							userLastLogin = formateDateAndTime(new Date(customer.userLastLoginTime),true);
-						}
-			
-						var col7 = $('<div>').attr({
-							"class" : "lead-loan-tc7 float-left"
-						}).html(userLastLogin);
-
-						var col8 = $('<div>').attr({
-							"class" : "leads-container-tc7 alert-col float-left"
-						}).bind(
-								'click',
-								{
-									"customer" : customer
-								},
-								function(event) {
-									event.stopImmediatePropagation();
-									appendCustomerDetailContianer($(this).parent(),
-											event.data.customer);
-								});
-						loanNotificationCntxt.loanLstCntElement = col8;
-						loanNotificationCntxt.getNotificationForLoan(function(ob) {
-							if (parseInt(ob.loanNotificationList.length) > 0) {
-								var alerts = $('<div>').attr({
-									"class" : "alerts-count"
-								}).html(ob.loanNotificationList.length);
-								ob.loanLstCntElement.html("");
-								ob.loanLstCntElement.append(alerts);
-							}
-						});
-						
-						if(isSalesManager){
-							$(col5).addClass('lead-loan-createddate');
-							$(col6).addClass('sm-lead-loan-tc6');
-							$(col7).addClass('sm-lead-loan-tc7');
-						}
-						row.append(loanIcon).append(col1).append(col2).append(col3).append(col4).append(processorCol).append(col5)
-								.append(col6).append(col7).append(col8);
-						
-					
-						if((newfiObject.user&&newfiObject.user.internalUserDetail&&
-								newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
-								newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
-								newfiObject.user.userRole.id==4){
-								var userDelIcn = $('<div>').attr({
-									"class" : "delCustClas lead-loan-del clearfix",
-									"loanID" : customer.loanID,
-									"customer_name":customer.name
-								});
-								row.append(userDelIcn);
-							}else{
-								$('.leads-container-tr').css("padding","15px 15px 10px");
-							}
-						}
-			
-						$('#' + elementId).append(row);		
+	$('#' + elementId).append(row);		
 			}
 		updateHandler.initiateRequest();
+
 }
+
 /**
  * @param userName is the name of the user in lead
  * @param internalUserID
@@ -1174,7 +1197,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				if(createdDateStr==""){
 					createdDateStr="-";
 				}
-				var col5 = $('<div>').attr({
+				/*var col5 = $('<div>').attr({
 					"class" : "leads-container-tc5 float-left"
 				}).html(createdDateStr);
 
@@ -1191,7 +1214,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			    var col6 = $('<div>').attr({
 			     "class" : "leads-container-tc6 float-left last-action-cell"
 			    }).html(modifiedDateStr);
-				
+*/				
 				var userLastLogin = customer.userLastLoginTime;				
 				
 				if(userLastLogin == null){
@@ -1205,7 +1228,8 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}).html(userLastLogin);
 
 				var col8 = $('<div>').attr({
-					"class" : "leads-container-tc7 alert-col float-left"
+					"class" : "leads-container-tc7 alert-col float-left",
+					"title" : "Schedule Alert"
 				}).bind(
 						'click',
 						{
@@ -1227,8 +1251,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 					}
 				});
 				
-				row.append(col1).append(col2).append(col3).append(col4).append(col5)
-						.append(col6).append(col7).append(col8);
+				row.append(col1).append(col2).append(col3).append(col4).append(col7).append(col8);
 				
 				$('#' + elementId).append(row);
 				if((newfiObject.user&&newfiObject.user.internalUserDetail&&
@@ -1238,7 +1261,8 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 						var userDelIcn = $('<div>').attr({
 							"class" : "delCustClas clearfix",
 							"loanID" : customer.loanID,
-							"customer_name":customer.name
+							"customer_name":customer.name,
+							"title" : "Delete"
 						});
 						row.append(userDelIcn);
 					}else{
@@ -1339,14 +1363,14 @@ function appendCustomerTableHeader(elementId) {
 		}).html("Loan Advisor");
 	}
 	
-	var thCol5 = $('<div>').attr({
+	/*var thCol5 = $('<div>').attr({
 		"class" : "leads-container-tc5 sm-leads-container-tc5  float-left opened-sort-list-asc"
-	}).html("Opened");
+	}).html("Opened");*/
 	 
-	var thCol6 = $('<div>').attr({
+	/*var thCol6 = $('<div>').attr({
 		"class" : "leads-container-tc6 sm-leads-container-tc6  float-left last-action-sort-list-asc"
 	}).html("Last Action");
-	
+	*/
 	var thCol7 = $('<div>').attr({
 		"class" : "leads-container-tc6 float-left"
 	}).html("Last Login");
@@ -1356,7 +1380,7 @@ function appendCustomerTableHeader(elementId) {
 	}).html("Alerts");
 
 	tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
-			.append(thCol4).append(thCol5).append(thCol6).append(thCol7).append(thCol8);
+			.append(thCol4).append(thCol7).append(thCol8);
 	}
 
 	$('#' + elementId).append(tableHeader);
@@ -1434,13 +1458,13 @@ function appendTableHeader(elementId){
 			"class" : "leads-col-processor float-left"
 		}).html("Loan Advisor");
 	}
-	var thCol5 = $('<div>').attr({
+	/*var thCol5 = $('<div>').attr({
 		"class" : "leads-col-5 float-left"
-	}).html("Opened");
+	}).html("Opened");*/
 	
-	var thCol6 = $('<div>').attr({
+	/*var thCol6 = $('<div>').attr({
 		"class" : "leads-col-6 float-left"
-	}).html("Last Action");
+	}).html("Last Action");*/
 	
 	
 	var thCol7 = $('<div>').attr({
@@ -1456,12 +1480,12 @@ function appendTableHeader(elementId){
 		$(thCol1).addClass('sm-leads-col-tc1');
 		$(thCol2).addClass('sm-leads-col-tc2');
 		$(thCol4).addClass('sm-leads-col-tc4');
-		$(thCol5).addClass('sm-leads-col-tc5');
-		$(thCol6).addClass('sm-leads-col-tc6');
+		//$(thCol5).addClass('sm-leads-col-tc5');
+		//$(thCol6).addClass('sm-leads-col-tc6');
 		$(thCol7).addClass('sm-leads-col-tc7');
 	}
 	tableHeader.append(thCol1).append(thCol2).append(thCol3)
-			.append(thCol4).append(processorCol).append(thCol5).append(thCol6).append(thCol7).append(thCol8);
+			.append(thCol4).append(processorCol).append(thCol7).append(thCol8);
 
 
     $('#' + elementId).append(tableHeader);
@@ -5053,20 +5077,16 @@ function sortTableByTime(isAsc,selector){
 	
 	
 	rows.sort(function(a, b) {
-		
+
 		try {
-            var time1 = $(a).children(selector).text();
-            var time2 = $(b).children(selector).text();
-            time1  = time1.replace(/-/g, "/");
-            time2  = time2.replace(/-/g, "/");
-            
-            var timestamp1 = new Date(time1).getTime();
-            var timestamp2 = new Date(time2).getTime();
-            return isAsc * (timestamp1 - timestamp2); 
-        } catch(ex)  {
-            console.log("Error while parsing date sortTableByTime," + ex);
-            return 0;
-        }
+			var time1 = $(a).children(selector).text();
+			var time2 = $(b).children(selector).text();
+		} catch(ex)  {
+			console.log("Error while parsing date sortTableByTime," + ex);
+			return 0;
+		}
+		
+		return isAsc * (new Date(time1).getTime() - new Date(time2).getTime()); 
 	});
 
 	$.each(rows, function(index, row) {
