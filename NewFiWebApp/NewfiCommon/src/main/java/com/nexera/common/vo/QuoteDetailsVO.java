@@ -200,6 +200,7 @@ public class QuoteDetailsVO {
 		        .setLoan(Loan.convertFromEntityToVO(quoteDetails.getLoan()));
 		quoteDetailsVO.setInternalUserName(quoteDetails.getProspectFirstName()
 		        + " " + quoteDetails.getProspectLastName());
+
 		return quoteDetailsVO;
 	}
 
