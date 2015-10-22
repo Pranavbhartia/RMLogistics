@@ -521,9 +521,9 @@ function checkCreditScore(creditScore){
 		
 		
 		for(var i = 0; i < loanList.length; i++) {
-	var customer = loanList[i];
-			if(customer.quoteDetailsVO){
-				if(!customer.quoteDetailsVO.isDeleted){
+		var customer = loanList[i];
+		if(customer.quoteDetailsVO){
+			if(!customer.quoteDetailsVO.isDeleted){
 		var row = $('<div>').attr({
 			"class" : "leads-container-tr leads-container-row clearfix"
 		});
@@ -560,8 +560,6 @@ function checkCreditScore(creditScore){
 
 		var cusName = $('<div>').attr({
 			"class" : "cus-name lead-name",
-			"loanid" : customer.loanID,
-			"userid" : customer.userID,
 			"userName" : customer.quoteDetailsVO.prospectUsername,
 			"InternalUserID" :customer.quoteDetailsVO.internalUserId,
 			"id":customer.quoteDetailsVO.internalUserId+"_"+i
@@ -626,7 +624,7 @@ function checkCreditScore(creditScore){
 	}
 		
 		var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
-				customer.createdDate));
+				customer.quoteDetailsVO.createdDate));
 		createdDateStr=formatYearInDate(createdDateStr);
 		if(createdDateStr==""){
 			createdDateStr="-";
@@ -665,7 +663,7 @@ function checkCreditScore(creditScore){
 			});	
 			
 			//TO add a condition to check for user created
-			if(customer.isCreated){
+			if(customer.quoteDetailsVO.isCreated){
 				$(createIcon).removeClass('leads-row-11');
 				$(createIcon).attr("title", "");
 				$(createIcon).css("pointer-events","none");
@@ -909,6 +907,8 @@ function createUserFromLeads(userName,internalUserID,id){
 					showToastMessage(response.resultObject);
 				}else {
 					showErrorToastMessage(response.error.message);
+					$('#'+id).removeClass('leads-row-11');
+					$('#'+id).addClass('leads-user-created');
 				}	
 			});
 }
