@@ -105,6 +105,11 @@ public class QuoteServiceImpl implements QuoteService {
 	}
 	
 	@Transactional
+	public void updateLoanId(QuoteCompositeKey compKey, Integer loanId) {
+		quoteDao.updateLoanId(compKey, loanId);
+	}
+	
+	@Transactional
 	public void updateDeletedUser(QuoteCompositeKey compKey){
 		quoteDao.updateDeletedUser(compKey);
 	}

@@ -435,4 +435,7 @@ ADD CONSTRAINT `fk_loanlcstatemaster`
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `interview_date` TIMESTAMP NULL DEFAULT NULL AFTER `loanlcstatemaster`;
 
+#Himanshu - added extra loan_id column in quotedetail table
+ALTER TABLE `newfi_schema`.`quotedetails` 
+ADD COLUMN `loan_id` INT(11) NULL COMMENT '' AFTER `is_deleted`;
 

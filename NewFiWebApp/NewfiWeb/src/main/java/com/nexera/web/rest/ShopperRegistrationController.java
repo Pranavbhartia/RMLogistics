@@ -218,6 +218,8 @@ public class ShopperRegistrationController {
 			UserVO user = userProfileService.registerCustomer(loaAppFormVO,
 			        teaseRateDatalist);
 			quoteService.updateCreatedUser(quoteCompositeKey);
+			quoteService.updateLoanId(quoteCompositeKey, user.getDefaultLoanId());
+			
 			responseVO.setResultObject(DisplayMessageConstants.USER_CREATED_SUCCESSFULLY);
 			LOG.info("User succesfully created, now trying to autologin" + user.getEmailId());
 		}
