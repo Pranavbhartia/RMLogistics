@@ -51,10 +51,7 @@ public class Application1003DisplayManager extends NexeraWorkflowTask implements
 		        WorkflowDisplayConstants.WORKITEM_STATUS_KEY_NAME).toString();
 		LOG.debug("Status is " + status);
 		String returnStatus = null;
-		if (status.equals(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
-		        .getLosStatusID() + "")) {
-			returnStatus = WorkItemStatus.COMPLETED.getStatus();
-		} else if (status.equals(WorkflowDisplayConstants.APP_FORM_COMPLETE)) {
+		if (status.equals(WorkflowDisplayConstants.APP_FORM_COMPLETE)) {
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 		}
 		return returnStatus;
