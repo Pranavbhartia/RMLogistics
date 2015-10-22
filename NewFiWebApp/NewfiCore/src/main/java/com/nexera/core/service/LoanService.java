@@ -237,12 +237,10 @@ public interface LoanService {
 
 	public Integer updateLtv(Loan laon);
 
-	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
+	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO,
 	        String startLimit, String endLimit);
 
-	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
-
-	public LoanDashboardVO retrieveDasboardForLoansInLeads(UserVO userVO);
+	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO);
 
 	public LoanApplicationFee addLoanApplicationFee(
 	        LoanApplicationFee loanApplicationFee);
@@ -256,4 +254,5 @@ public interface LoanService {
 
 	public void updateLoanLCState(Integer loanID, LoanLCStates loanLCSState);
 	public void updateInterviewDate(Integer loanID, Date interviewDate);
+
 }

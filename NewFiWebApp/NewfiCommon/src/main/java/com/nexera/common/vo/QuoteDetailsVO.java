@@ -194,6 +194,7 @@ public class QuoteDetailsVO {
 		        .getUserName());
 		quoteDetailsVO.setId(quoteDetails.getId());
 		quoteDetailsVO.setLoanID(quoteDetails.getLoanId());
+		quoteDetailsVO.setInternalUserName(quoteDetails.getProspectFirstName()+" "+quoteDetails.getProspectLastName());
 		return quoteDetailsVO;
 	}
 
