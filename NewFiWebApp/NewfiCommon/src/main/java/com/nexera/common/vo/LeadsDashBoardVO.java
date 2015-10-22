@@ -3,7 +3,7 @@ package com.nexera.common.vo;
 import java.util.Date;
 import java.util.List;
 
-public class LeadsDashBoardVO implements Comparable<LeadsDashBoardVO>{
+public class LeadsDashBoardVO {
 
 	private String name;
 	private String prof_image;
@@ -252,15 +252,6 @@ public class LeadsDashBoardVO implements Comparable<LeadsDashBoardVO>{
 	    this.lqbLoanStatus = lqbLoanStatus;
     }
 
-	
-	@Override
-    public int compareTo(LeadsDashBoardVO o) {
-		if (getLastActedOn() == null || o.getLastActedOn() == null)
-		      return 0;
-		 return getLastActedOn().compareTo(o.getLastActedOn());
-    }
-
-	
 }
 
 
