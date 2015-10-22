@@ -22,14 +22,14 @@ public class QuoteDetailsVO {
 	private Boolean isCreated = false;
 	private Boolean isDeleted = false;
 	private String internalUserName;
-	private Loan loan;
+	private LoanVO loan;
 
-	public Loan getLoan() {
+	public LoanVO getLoan() {
 		return loan;
 	}
 
-	public void setLoan(Loan loanVO) {
-		this.loan = loanVO;
+	public void setLoan(LoanVO loan) {
+		this.loan = loan;
 	}
 
 	public String getInternalUserName() {
@@ -148,7 +148,8 @@ public class QuoteDetailsVO {
 	 * @param quoteDetailsVO
 	 * @return
 	 */
-	public static QuoteDetails convertVOToEntity(QuoteDetailsVO quoteDetailsVO) {
+	public static QuoteDetails convertVOToEntity(
+	        QuoteDetailsVO quoteDetailsVO) {
 
 		QuoteDetails quoteDetails = new QuoteDetails();
 		quoteDetails.setCreatedDate(quoteDetailsVO.getCreatedDate());
@@ -167,7 +168,8 @@ public class QuoteDetailsVO {
 		quoteDetails.setIsCreated(quoteDetailsVO.getIsCreated());
 		quoteDetails.setIsDeleted(quoteDetailsVO.getIsDeleted());
 		quoteDetails.setId(quoteDetailsVO.getId());
-		quoteDetails.setLoan(quoteDetailsVO.getLoan());
+		quoteDetails
+		        .setLoan(Loan.convertFromVOToEntity(quoteDetailsVO.getLoan()));
 		return quoteDetails;
 	}
 
@@ -181,8 +183,8 @@ public class QuoteDetailsVO {
 		quoteDetailsVO.setCreatedDate(quoteDetails.getCreatedDate());
 		quoteDetailsVO.setEmailId(quoteDetails.getEmailId());
 		quoteDetailsVO.setInputDetailsJson(quoteDetails.getInputDetailsJson());
-		quoteDetailsVO.setInternalUserId(quoteDetails.getQuoteCompositeKey()
-		        .getInternalUserId());
+		quoteDetailsVO.setInternalUserId(
+		        quoteDetails.getQuoteCompositeKey().getInternalUserId());
 		quoteDetailsVO.setLqbRateJson(quoteDetails.getLqbRateJson());
 		quoteDetailsVO.setPdfUrl(quoteDetails.getPdfUrl());
 		quoteDetailsVO.setPhoneNo(quoteDetails.getPhoneNo());
@@ -191,10 +193,11 @@ public class QuoteDetailsVO {
 		quoteDetailsVO.setProspectLastName(quoteDetails.getProspectLastName());
 		quoteDetailsVO.setIsCreated(quoteDetails.getIsCreated());
 		quoteDetailsVO.setIsDeleted(quoteDetails.getIsDeleted());
-		quoteDetailsVO.setProspectUsername(quoteDetails.getQuoteCompositeKey()
-		        .getUserName());
+		quoteDetailsVO.setProspectUsername(
+		        quoteDetails.getQuoteCompositeKey().getUserName());
 		quoteDetailsVO.setId(quoteDetails.getId());
-		quoteDetailsVO.setLoan(quoteDetails.getLoan());
+		quoteDetailsVO
+		        .setLoan(Loan.convertFromEntityToVO(quoteDetails.getLoan()));
 		quoteDetailsVO.setInternalUserName(quoteDetails.getProspectFirstName()
 		        + " " + quoteDetails.getProspectLastName());
 		return quoteDetailsVO;
