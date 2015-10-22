@@ -1235,9 +1235,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	@Override
     public int updateInterviewDateForLoan(int loanID, Date interviewDate) {
 		Session session = sessionFactory.getCurrentSession();
-		String hql = "UPDATE Loan loan set loan.interview_date = :interview_date WHERE loan.id = :id";
+		String hql = "UPDATE Loan loan set loan.interviewDate = :interviewDate, loan.modifiedDate = :modifiedDate WHERE loan.id = :id";
 		Query query = session.createQuery(hql);		
-		query.setParameter("interview_date",interviewDate);
+		query.setParameter("interviewDate",interviewDate);
+		query.setParameter("modifiedDate", new Date());
 		query.setParameter("id", loanID);
 		int rows=query.executeUpdate();
 	    return rows;
