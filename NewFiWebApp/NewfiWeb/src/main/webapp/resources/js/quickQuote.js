@@ -306,6 +306,7 @@ function loadQuickQoutePage(){
 	$('#right-panel').html('');
 	$('.lp-right-arrow').remove();
 	$('#right-panel').html('');
+	$('.lp-item').removeClass('lp-item-active');
 	var agentDashboardMainContainer = $('<div>').attr({
 		"id" : "quick-quote-dashboard-container",
 		"class" : "rp-agent-dashboard quick-quote-agent-dashboard"
@@ -1296,12 +1297,17 @@ function objectKeyMakerFunctionUnderQuickQuote(item) {
 		return "totEstResDepWthLen";
 	case getClosingCostLabel("Total Estimated Closing Cost"):
 		return "totEstimatedClosingCost";
+    case "Notary fees":
+        return "notaryfee1110";
 	}
 	return undefined;
 }
 
 function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     var key=objectKeyMakerFunctionUnderQuickQuote(desc);
+    if(key == "notaryfee1110"){
+        closingCostHolder.valueSet[key] = "$25.00";
+    }
     var indentTextFlag=false;
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
@@ -1319,7 +1325,7 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||
     		desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||
     			desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || 
-    				desc =="Your cost or credit based on rate selected" || desc=="Tax Reserve - Estimated 6 Months" || desc == "Tax Reserve" ||
+    				desc =="Your cost or credit based on rate selected" || desc == "Notary fees" || desc=="Tax Reserve - Estimated 6 Months" || desc == "Tax Reserve" ||
     				desc =="Homeowners Insurance Reserve - Estimated 6 Months" || desc =="Homeowners Insurance Reserve"){
     	indentTextFlag=true;
     }else{
@@ -1419,13 +1425,14 @@ function getClosingCostTopConatinerUnderQuickQuote() {
     var row5Con2 = getClosingCostContainerRowUnderQuickQuote(5, getClosingCostLabel("Lenders Title Insurance"), "");
     var row6Con2 = getClosingCostContainerRowUnderQuickQuote(6, getClosingCostLabel("Closing/Escrow Fee"), "");
     var row7Con2 = getClosingCostContainerRowUnderQuickQuote(7, getClosingCostLabel("Recording Fee"), "");
+    var row71Con2 = getClosingCostContainerRowUnderQuickQuote(7, getClosingCostLabel("Notary fees"), "");
     var row8Con2;
     if((closingCostHolder.loanType&&closingCostHolder.loanType=="PUR") || (isEditPage && editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.loanType == "PUR")){
     row8Con2= getClosingCostContainerRowUnderQuickQuote(8, getClosingCostLabel("City/County Tax stamps"), "");
     }
   
     var row9Con2 = getClosingCostContainerLastRowUnderQuickQuote(9, getClosingCostLabel("Total Estimated Third Party Costs"), "");
-    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
+    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row71Con2).append(row8Con2).append(row9Con2);
     
     var container3 = $('<div>').attr({
         "class": "closing-cost-container"

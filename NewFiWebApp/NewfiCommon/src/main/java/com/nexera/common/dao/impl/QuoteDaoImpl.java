@@ -99,6 +99,17 @@ public class QuoteDaoImpl extends GenericDaoImpl implements QuoteDao{
 		query.executeUpdate();	
 	}
 	
+	@Override
+	public void updateLoanId(QuoteCompositeKey compKey, Integer loanId) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE QuoteDetails quote set quote.loanId = :loanId WHERE quote.quoteCompositeKey = :quoteCompositeKey";
+		Query query = session.createQuery(hql);
+		query.setParameter("loanId", loanId);
+		query.setParameter("quoteCompositeKey", compKey);
+		query.executeUpdate();	
+	}
+	
 	
 	@Override
 	public void updateDeletedUser(QuoteCompositeKey compKey) {

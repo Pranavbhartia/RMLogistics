@@ -35,6 +35,7 @@ public class QuoteDetails implements Serializable{
 	private Date createdDate;
 	private Boolean isCreated = false;
 	private Boolean isDeleted = false; 
+	private Integer loanId;
 	
 
 	
@@ -153,8 +154,12 @@ public class QuoteDetails implements Serializable{
 		this.isDeleted = isDeleted;
 	}
 	
-	
-	
-	
-	
+	@Column(name = "loan_id")
+	public Integer getLoanId() {
+		return loanId;
+	}
+	public void setLoanId(Integer loanId) {
+		this.loanId = loanId;
+	}
+
 }

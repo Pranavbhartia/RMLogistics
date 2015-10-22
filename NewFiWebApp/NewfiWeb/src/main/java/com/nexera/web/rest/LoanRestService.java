@@ -90,26 +90,29 @@ public class LoanRestService {
 	        .getLogger(LoanRestService.class);
 
 	// TODO-move this to User profile rest service
-	@RequestMapping(value = "/retrieveDashboardForMyLeads/{userID}")
-	public @ResponseBody CommonResponseVO retrieveDashboardForMyLeads(
-	        @PathVariable Integer userID,
-	        @RequestParam(required = false) String startlimit,
-	        @RequestParam(required = false) String count) {
-		UserVO user = new UserVO();
-		user.setId(userID);
-		CommonResponseVO commonResponseVO = null;
-		if (startlimit != null) {
-			LeadsDashBoardVO responseVO = loanService
-			        .retrieveDashboardForMyLeads(user, startlimit, count);
-			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
-		} else {
-			LeadsDashBoardVO responseVO = loanService
-			        .retrieveDashboardForMyLeads(user);
-			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
-		}
 
-		return commonResponseVO;
-	}
+	 @RequestMapping(value = "/retrieveDashboardForMyLeads/{userID}")
+	 public @ResponseBody CommonResponseVO retrieveDashboardForMyLeads(
+	         @PathVariable Integer userID,
+	         @RequestParam(required = false) String startlimit,
+	         @RequestParam(required = false) String count) {
+	  UserVO user = new UserVO();
+	  user.setId(userID);
+	  CommonResponseVO commonResponseVO = null;
+	  LeadsDashBoardVO responseVO;
+	  if (startlimit != null) {
+	    responseVO = loanService
+	           .retrieveDashboardForMyLeads(user, startlimit, count);
+	  
+	  } else {
+	    responseVO = loanService
+	           .retrieveDashboardForMyLeads(user);
+	   
+	  }
+	  commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
+	  return commonResponseVO;
+	 }
+	
 
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/retrieveQuoteDetailsOfUser/{id}")

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.LoanLCStateMaster;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 
@@ -67,6 +68,24 @@ public class LoanVO implements Serializable {
 	private Double ltv;
 
 	private String paymentVendor;
+	private LoanLCStateMaster loanLCStateMaster;
+	private Date interview_date;
+
+	public LoanLCStateMaster getLoanLCStateMaster() {
+		return loanLCStateMaster;
+	}
+
+	public void setLoanLCStateMaster(LoanLCStateMaster loanLCStateMaster) {
+		this.loanLCStateMaster = loanLCStateMaster;
+	}
+
+	public Date getInterview_date() {
+		return interview_date;
+	}
+
+	public void setInterview_date(Date interview_date) {
+		this.interview_date = interview_date;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

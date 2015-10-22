@@ -18,6 +18,7 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
@@ -33,7 +34,6 @@ import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.LoansProgressStatusVO;
-import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -178,7 +178,8 @@ public interface LoanService {
 
 	public void sendApplicationFinishedEmail(Loan loan);
 
-	public void sendApplicationSubmitConfirmationMail(Integer loanId, boolean sendNoProductsMail);
+	public void sendApplicationSubmitConfirmationMail(Integer loanId,
+	        boolean sendNoProductsMail);
 
 	public void createAlertForAgentAddition(int loanId);
 
@@ -233,20 +234,26 @@ public interface LoanService {
 
 	public LoanMilestone findLoanMileStoneByCriteria(
 	        LoanMilestone searchCriteria);
-	
+
 	public Integer updateLtv(Loan laon);
-	
+
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
-	         String startLimit, String endLimit);
+	        String startLimit, String endLimit);
+
 	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO);
 
-	public LoanApplicationFee addLoanApplicationFee(LoanApplicationFee loanApplicationFee) ;
+	public LoanDashboardVO retrieveDasboardForLoansInLeads(UserVO userVO);
 
-	public void updateAppraisalVendor(Integer loanID, String appraisalVendorName) ;
+	public LoanApplicationFee addLoanApplicationFee(
+	        LoanApplicationFee loanApplicationFee);
 
+	public void updateAppraisalVendor(Integer loanID, String appraisalVendorName);
 
-	 public TransactionDetails updateTransactionDetails(TransactionDetails transactionDetails) ;
-	 
-	 public LoanDetail findLoanDetailOfLoan(Loan loan) ;
+	public TransactionDetails updateTransactionDetails(
+	        TransactionDetails transactionDetails);
 
+	public LoanDetail findLoanDetailOfLoan(Loan loan);
+
+	public void updateLoanLCState(Integer loanID, LoanLCStates loanLCSState);
+	public void updateInterviewDate(Integer loanID, Date interviewDate);
 }

@@ -26,6 +26,7 @@ import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
 import com.nexera.common.entity.LoanApplicationFee;
 import com.nexera.common.entity.LoanDetail;
+import com.nexera.common.entity.LoanLCStateMaster;
 import com.nexera.common.entity.LoanMilestone;
 import com.nexera.common.entity.LoanMilestoneMaster;
 import com.nexera.common.entity.LoanNeedsList;
@@ -39,6 +40,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.UserRolesEnum;
 import com.nexera.common.exception.DatabaseException;
@@ -337,6 +339,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 			for (Loan loan : loanListForUser) {
 				Hibernate.isInitialized(loan.getLoanProgressStatus());
+				Hibernate.initialize(loan.getLoanLCStateMaster());
 			}
 			/*
 			 * Collections.sort(loanListForUser, new Comparator<Loan>() { public
@@ -397,7 +400,6 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 					/*if (loanIdList.contains(loan.getId())) {
 						continue;
 					}
-
 					if (checkIfIdIsInList(loan.getLoanProgressStatus().getId(),
 					        loanProgressStatusIds)) {*/
 						loanListForUser.add(loan);
@@ -409,6 +411,10 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 
 			for (Loan loan : loanListForUser) {
 				Hibernate.isInitialized(loan.getLoanProgressStatus());
+				if(loan.getLoanLCStateMaster() != null){
+					Hibernate.initialize(loan.getLoanLCStateMaster());
+				}
+				
 			}
 			/*
 			 * Collections.sort(loanListForUser, new Comparator<Loan>() { public
@@ -1144,7 +1150,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
     }
 	
 	@Override
-	 public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit) {
+	 public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel,int startLimit, int endLimit) {
 
 	  try {
 	   
@@ -1167,7 +1173,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	   }
 	   criteria.setFirstResult(startLimit);
 	   criteria.setMaxResults(endLimit);
-	   List<QuoteDetailsVO> loanTeamList = criteria.list();
+	   List<QuoteDetails> loanTeamList = criteria.list();
 	   
 	   return loanTeamList;
 	  } catch (HibernateException hibernateException) {
@@ -1179,7 +1185,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	 }
 
 	@Override
-	 public List<QuoteDetailsVO> retrieveLoanForMyLeads(User parseUserModel) {
+	 public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel) {
 
 	  try {
 
@@ -1200,7 +1206,7 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	    criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
 	   }
 
-	   List<QuoteDetailsVO> loanTeamList = criteria.list();
+	   List<QuoteDetails> loanTeamList = criteria.list();
 	   
 	   return loanTeamList;
 	  } catch (HibernateException hibernateException) {
@@ -1210,6 +1216,32 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	           hibernateException);
 	  }
 	 }
+
+	@Override
+    public int updateLoanLCStateMaster(int loanID,
+            LoanLCStates loanLCSStates) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.loanLCStateMaster = :loanLCStateMaster WHERE loan.id = :id";
+		Query query = session.createQuery(hql);
+		LoanLCStateMaster loanLCStateMaster = new LoanLCStateMaster();
+		loanLCStateMaster.setId(loanLCSStates.getLcStateID());
+		loanLCStateMaster.setLoanLCState(loanLCSStates.getLcStateKey());
+		query.setParameter("loanLCStateMaster",loanLCStateMaster);
+		query.setParameter("id", loanID);
+		int rows=query.executeUpdate();
+	    return rows;
+    }
+
+	@Override
+    public int updateInterviewDateForLoan(int loanID, Date interviewDate) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "UPDATE Loan loan set loan.interview_date = :interview_date WHERE loan.id = :id";
+		Query query = session.createQuery(hql);		
+		query.setParameter("interview_date",interviewDate);
+		query.setParameter("id", loanID);
+		int rows=query.executeUpdate();
+	    return rows;
+    }
 	
 	
 	

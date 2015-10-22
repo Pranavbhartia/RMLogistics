@@ -818,9 +818,9 @@ public class GeneratePdfForQuickQuote {
         }
         
         
-        if(prepaidCost.substring(prepaidCost.length() - 3).equals(".00")){
-        	prepaidCost = prepaidCost.substring(0, prepaidCost.length() - 3);
-        }
+//        if(prepaidCost.substring(prepaidCost.length() - 3).equals(".00")){
+//        	prepaidCost = prepaidCost.substring(0, prepaidCost.length() - 3);
+//        }
         if(isEstClosingCostNegative){
         	if(Float.parseFloat(estimatedNumber)  > Float.parseFloat(removeDollarAndComma(totEstResDepWthLen))){
         		
@@ -1359,6 +1359,31 @@ public class GeneratePdfForQuickQuote {
         cell.setCellEvent(border19);
         cell.setBorder(Rectangle.RIGHT);
         thirdTable.addCell(cell);
+        
+        cell = new PdfPCell(new Phrase("  "+"Notary fees",font));
+        cell.setPaddingTop(4); 
+        cell.setPaddingBottom(4);
+        CustomCell border181 = app.new CustomCell();       
+        cell.setCellEvent(border181);
+        cell.setBorder(Rectangle.LEFT);
+        thirdTable.addCell(cell);
+        
+        String notaryfee1110 = generatePdfVO.getLqbTeaserRateUnderQuickQuote().getNotaryfee1110();
+        if(!notaryfee1110.contains("$")){
+            cell = new PdfPCell(new Phrase(addDollarAndComma(notaryfee1110),font));
+        }
+        else{
+            cell = new PdfPCell(new Phrase(notaryfee1110,font));
+        }
+        
+        cell.setPaddingTop(4); 
+        cell.setPaddingBottom(4);
+        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        CustomCell border191 = app.new CustomCell();       
+        cell.setCellEvent(border191);
+        cell.setBorder(Rectangle.RIGHT);
+        thirdTable.addCell(cell);
+
         
         
         cell = new PdfPCell(new Phrase("  "+"City/County Transfer Taxes",font));
