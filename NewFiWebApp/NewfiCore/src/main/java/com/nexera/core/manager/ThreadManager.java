@@ -789,7 +789,7 @@ public class ThreadManager implements Runnable {
 			        && WorkflowConstants.STATUS_LC_STATE_LOOKUP
 			                .get(loanStatusRef) != null) {
 				LoanLCStates lcState = WorkflowConstants.STATUS_LC_STATE_LOOKUP
-				        .get(currentLoanStatus);
+				        .get(loanStatusRef);
 				LOGGER.debug("Updating LC State as " + lcState.getLcStateKey()
 				        + " For " + loan.getId());
 				loanService.updateLoanLCState(loan.getId(), lcState);
