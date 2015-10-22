@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -228,6 +227,7 @@ public class LoanServiceImpl implements LoanService {
 		loanDao.updateInterviewDateForLoan(loanID, interviewDate);
 		return;
 	}
+
 	@Override
 	@Transactional(readOnly = true)
 	public Loan fetchLoanById(Integer loanID) {
@@ -492,12 +492,13 @@ public class LoanServiceImpl implements LoanService {
 			for (Loan loan : loanList) {
 				LoanCustomerVO loanCustomerVO = this
 				        .buildLoanCustomerVoFromUser(loan);
-			if(loanCustomerVO.getLqbLoanStatus() == null){
-				LoanMilestone loan_status = getLqbLoanStatus(loan);
-				if (loan_status != null) {
-					loanCustomerVO.setLqbLoanStatus(loan_status.getComments());
+				if (loanCustomerVO.getLqbLoanStatus() == null) {
+					LoanMilestone loan_status = getLqbLoanStatus(loan);
+					if (loan_status != null) {
+						loanCustomerVO.setLqbLoanStatus(loan_status
+						        .getComments());
+					}
 				}
-			}
 				loanCustomerVoList.add(loanCustomerVO);
 
 			}
@@ -650,13 +651,13 @@ public class LoanServiceImpl implements LoanService {
 		if (user.getLastLoginDate() != null) {
 			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
 		}
-	
-		if(loan.getLoanLCStateMaster() != null){
-			loanCustomerVO.setLqbLoanStatus(loan.getLoanLCStateMaster().getLoanLCState());
-			
+
+		if (loan.getLoanLCStateMaster() != null) {
+			loanCustomerVO.setLqbLoanStatus(loan.getLoanLCStateMaster()
+			        .getLoanLCState());
+
 		}
-		
-		
+
 		return loanCustomerVO;
 	}
 
@@ -782,15 +783,16 @@ public class LoanServiceImpl implements LoanService {
 		if (user.getLastLoginDate() != null) {
 			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
 		}
-	
-		if(loan.getLoanLCStateMaster() != null){
-			loanCustomerVO.setLqbLoanStatus(loan.getLoanLCStateMaster().getLoanLCState());
-			
+
+		if (loan.getLoanLCStateMaster() != null) {
+			loanCustomerVO.setLqbLoanStatus(loan.getLoanLCStateMaster()
+			        .getLoanLCState());
+
 		}
-		
-		
+
 		return loanCustomerVO;
 	}
+
 	/**
 	 * return getLoanTeamListForLoan from loan
 	 * 
@@ -1735,6 +1737,10 @@ public class LoanServiceImpl implements LoanService {
 			if (lqbLoanStatus != null) {
 				loanVO.setLqbLoanStatus(lqbLoanStatus.getComments());
 			}
+
+			if (loanVO.getLoanLCStateMaster() != null) {
+				loanVO.setLqbLoanStatus(loanVO.getLoanLCStateMaster());
+			}
 		}
 
 		LoanAppForm appForm = loanAppFormService.findByLoan(loan);
@@ -2554,60 +2560,66 @@ public class LoanServiceImpl implements LoanService {
 		        .retrieveLoanByProgressStatus(this.parseUserModel(userVO),
 		                new int[] { LoanProgressStatusMasterEnum.NEW_LOAN
 		                        .getStatusId() }, startLimt, endLimt);
-		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList,userVO.getId());
-	
+		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(
+		        loanList, quoteList, userVO.getId());
+
 		return loanDashboardVO;
 	}
-	
+
 	/**
 	 * @param loanList
 	 * @param quoteList
-	 * @param userid 
+	 * @param userid
 	 * @return
 	 */
-	private LoanDashboardVO buildLeadDashboardVoFromList(List<Loan> loanList,List<QuoteDetails> quoteList, int userID) {
+	private LoanDashboardVO buildLeadDashboardVoFromList(List<Loan> loanList,
+	        List<QuoteDetails> quoteList, int userID) {
 
 		LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
 		List<LeadsDashBoardVO> loanCustomerVoList = new ArrayList<LeadsDashBoardVO>();
 
-		if (loanList != null||quoteList != null) {
+		if (loanList != null || quoteList != null) {
 			for (Loan loan : loanList) {
-				
+
 				LeadsDashBoardVO loanCustomerVO = this
 				        .buildLeadCustomerVoFromUser(loan);
-			if(loanCustomerVO.getLqbLoanStatus() == null){
-				LoanMilestone loan_status = getLqbLoanStatus(loan);
-				if (loan_status != null) {
-					loanCustomerVO.setLqbLoanStatus(loan_status.getComments());
+				if (loanCustomerVO.getLqbLoanStatus() == null) {
+					LoanMilestone loan_status = getLqbLoanStatus(loan);
+					if (loan_status != null) {
+						loanCustomerVO.setLqbLoanStatus(loan_status
+						        .getComments());
+					}
 				}
-			}
 				loanCustomerVoList.add(loanCustomerVO);
 
 			}
 			for (QuoteDetails quoteDetails : quoteList) {
 				LeadsDashBoardVO customerVO = new LeadsDashBoardVO();
-				QuoteDetailsVO detailsVO = QuoteDetailsVO.convertEntityToVO(quoteDetails);
-				UserVO internalUserDeatils = userProfileService.findUser(quoteDetails
-				        .getQuoteCompositeKey().getInternalUserId());
-				detailsVO.setInternalUserName(internalUserDeatils.getFirstName()
-				        + " " + internalUserDeatils.getLastName());
+				QuoteDetailsVO detailsVO = QuoteDetailsVO
+				        .convertEntityToVO(quoteDetails);
+				UserVO internalUserDeatils = userProfileService
+				        .findUser(quoteDetails.getQuoteCompositeKey()
+				                .getInternalUserId());
+				detailsVO.setInternalUserName(internalUserDeatils
+				        .getFirstName()
+				        + " "
+				        + internalUserDeatils.getLastName());
 				customerVO.setQuoteDetailsVO(detailsVO);
-				if(quoteDetails.getCreatedDate() != null){
+				if (quoteDetails.getCreatedDate() != null) {
 					customerVO.setLastActedOn(quoteDetails.getCreatedDate());
 				}
 				loanCustomerVoList.add(customerVO);
-            }
+			}
 		}
 
 		loanDashboardVO.setLeads(loanCustomerVoList);
 		// set no of loans as num_found
 		loanDashboardVO.setNum_found(loanList.size());
 		Collections.reverse(loanDashboardVO.getLeads());
-		
+
 		return loanDashboardVO;
 	}
-	
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO) {
@@ -2615,14 +2627,15 @@ public class LoanServiceImpl implements LoanService {
 		LOG.info("Inside retrieve Dashboard for user............................................."
 		        + userVO.getId());
 		// Get new prospect and lead loans this user has access to.
-		List<QuoteDetails> quoteList = loanDao.retrieveLoanForMyLeads(
-		        this.parseUserModel(userVO));
+		List<QuoteDetails> quoteList = loanDao.retrieveLoanForMyLeads(this
+		        .parseUserModel(userVO));
 		List<Loan> loanList = loanDao
 		        .retrieveLoanByProgressStatus(this.parseUserModel(userVO),
 		                new int[] { LoanProgressStatusMasterEnum.NEW_LOAN
 		                        .getStatusId() });
-		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList, userVO.getId());
-	
+		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(
+		        loanList, quoteList, userVO.getId());
+
 		return loanDashboardVO;
 	}
 

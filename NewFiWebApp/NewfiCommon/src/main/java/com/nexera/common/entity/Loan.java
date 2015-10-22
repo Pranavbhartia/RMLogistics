@@ -221,8 +221,7 @@ public class Loan implements Serializable {
 		return currentLoanMilestone;
 	}
 
-	public void setCurrentLoanMilestone(
-	        LoanMilestoneMaster currentLoanMilestone) {
+	public void setCurrentLoanMilestone(LoanMilestoneMaster currentLoanMilestone) {
 		this.currentLoanMilestone = currentLoanMilestone;
 	}
 
@@ -499,12 +498,12 @@ public class Loan implements Serializable {
 		loan.setRateLockRequested(loanVo.getRateLockRequested());
 		loan.setLockedRateData(loanVo.getLockedRateData());
 		loan.setPaymentVendor(loanVo.getPaymentVendor());
-		loan.setPurchaseDocumentExpiryDate(
-		        loanVo.getPurchaseDocumentExpiryDate());
+		loan.setPurchaseDocumentExpiryDate(loanVo
+		        .getPurchaseDocumentExpiryDate());
 
 		if (loanVo.getLoanType() != null) {
-			loan.setLoanType(
-			        LoanTypeMaster.convertVoToEntity(loanVo.getLoanType()));
+			loan.setLoanType(LoanTypeMaster.convertVoToEntity(loanVo
+			        .getLoanType()));
 		}
 
 		loan.setUser(User.convertFromVOToEntity(loanVo.getUser()));
@@ -535,15 +534,15 @@ public class Loan implements Serializable {
 		loanVo.setRateLockRequested(loan.getRateLockRequested());
 		loanVo.setLockedRateData(loan.getLockedRateData());
 		loanVo.setPaymentVendor(loan.getPaymentVendor());
-		loanVo.setPurchaseDocumentExpiryDate(
-		        loan.getPurchaseDocumentExpiryDate());
+		loanVo.setPurchaseDocumentExpiryDate(loan
+		        .getPurchaseDocumentExpiryDate());
 		if (loan.getLoanProgressStatus() != null) {
-			loanVo.setStatus(
-			        loan.getLoanProgressStatus().getLoanProgressStatus());
+			loanVo.setStatus(loan.getLoanProgressStatus()
+			        .getLoanProgressStatus());
 		}
 		if (loan.getLoanType() != null) {
-			loanVo.setLoanType(
-			        LoanTypeMaster.convertEntityToVO(loan.getLoanType()));
+			loanVo.setLoanType(LoanTypeMaster.convertEntityToVO(loan
+			        .getLoanType()));
 		}
 
 		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
@@ -577,6 +576,10 @@ public class Loan implements Serializable {
 
 		if (loan.getLtv() != null) {
 			loanVo.setLtv(loan.getLtv());
+		}
+		if (loan.getLoanLCStateMaster() != null) {
+			loanVo.setLoanLCStateMaster(loan.getLoanLCStateMaster()
+			        .getLoanLCState());
 		}
 		return loanVo;
 	}
