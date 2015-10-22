@@ -512,6 +512,11 @@ function checkCreditScore(creditScore){
 		
 		var loanList = list.leads;
 		appendTableHeader(elementId);
+		loanList.sort(function(a, b) {
+		    a = new Date(a.lastActedOn);
+		    b = new Date(b.lastActedOn);
+		    return a>b ? -1 : a<b ? 1 : 0;
+		});
 		$('#agent-dashboard-container').addClass('leads-dashboard');
 		
 		
