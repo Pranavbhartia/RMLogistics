@@ -649,8 +649,8 @@ function checkCreditScore(creditScore){
 			
 			var createIcon = $('<div>').attr({
 				"class" : "leads-row-11 float-right",
-				"userName" : customer.prospectUsername,
-				"InternalUserID" :customer.internalUserId,
+				"userName" : customer.quoteDetailsVO.prospectUsername,
+				"InternalUserID" :customer.quoteDetailsVO.internalUserId,
 				"id":customer.internalUserId+""+i,
 				"title" : "Create Account"
 			}).bind("click",function(){
