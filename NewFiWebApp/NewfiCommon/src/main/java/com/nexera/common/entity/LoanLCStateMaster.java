@@ -1,5 +1,6 @@
 package com.nexera.common.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -15,53 +16,53 @@ import com.nexera.common.enums.LoanLCStates;
 
 /**
  * 
- * @author 
+ * @author
  *
  */
 
 @Entity
 @Table(name = "loanlcstatemaster")
 @NamedQuery(name = "LoanLCStateMaster.findAll", query = "SELECT l FROM LoanLCStateMaster l")
-public class LoanLCStateMaster {
-    private int id;
-    private String loanLCState;
-    private List<Loan> loans;
+public class LoanLCStateMaster implements Serializable {
+	private int id;
+	private String loanLCState;
+	private List<Loan> loans;
 
-    public LoanLCStateMaster() {
-        // TODO Auto-generated constructor stub
-    }
+	public LoanLCStateMaster() {
+		// TODO Auto-generated constructor stub
+	}
 
-    public LoanLCStateMaster(LoanLCStates loanLCState) {
-        // TODO Auto-generated constructor stub
-        this.id = loanLCState.getLcStateID();
-    }
+	public LoanLCStateMaster(LoanLCStates loanLCState) {
+		// TODO Auto-generated constructor stub
+		this.id = loanLCState.getLcStateID();
+	}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
-        return id;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    @OneToMany(mappedBy = "loanProgressStatus")
-    public List<Loan> getLoans() {
-        return loans;
-    }
+	@OneToMany(mappedBy = "loanProgressStatus")
+	public List<Loan> getLoans() {
+		return loans;
+	}
 
-    public void setLoans(List<Loan> loans) {
-        this.loans = loans;
-    }
+	public void setLoans(List<Loan> loans) {
+		this.loans = loans;
+	}
 
-    @Column(name = "loan_progress_status")
-    public String getLoanLCState() {
-        return loanLCState;
-    }
+	@Column(name = "loan_progress_status")
+	public String getLoanLCState() {
+		return loanLCState;
+	}
 
-    public void setLoanLCState(String loanLCState) {
-        this.loanLCState = loanLCState;
-    }
+	public void setLoanLCState(String loanLCState) {
+		this.loanLCState = loanLCState;
+	}
 
 }
