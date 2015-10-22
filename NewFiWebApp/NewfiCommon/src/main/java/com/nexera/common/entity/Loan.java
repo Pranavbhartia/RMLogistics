@@ -78,7 +78,6 @@ public class Loan implements Serializable {
 	private LoanLCStateMaster loanLCStateMaster;
 	private Date interviewDate;
 
-		
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "interview_date")
 	public Date getInterviewDate() {
@@ -222,7 +221,8 @@ public class Loan implements Serializable {
 		return currentLoanMilestone;
 	}
 
-	public void setCurrentLoanMilestone(LoanMilestoneMaster currentLoanMilestone) {
+	public void setCurrentLoanMilestone(
+	        LoanMilestoneMaster currentLoanMilestone) {
 		this.currentLoanMilestone = currentLoanMilestone;
 	}
 
@@ -499,15 +499,15 @@ public class Loan implements Serializable {
 		loanVo.setRateLockRequested(loan.getRateLockRequested());
 		loanVo.setLockedRateData(loan.getLockedRateData());
 		loanVo.setPaymentVendor(loan.getPaymentVendor());
-		loanVo.setPurchaseDocumentExpiryDate(loan
-		        .getPurchaseDocumentExpiryDate());
+		loanVo.setPurchaseDocumentExpiryDate(
+		        loan.getPurchaseDocumentExpiryDate());
 		if (loan.getLoanProgressStatus() != null) {
-			loanVo.setStatus(loan.getLoanProgressStatus()
-			        .getLoanProgressStatus());
+			loanVo.setStatus(
+			        loan.getLoanProgressStatus().getLoanProgressStatus());
 		}
 		if (loan.getLoanType() != null) {
-			loanVo.setLoanType(LoanTypeMaster.convertEntityToVO(loan
-			        .getLoanType()));
+			loanVo.setLoanType(
+			        LoanTypeMaster.convertEntityToVO(loan.getLoanType()));
 		}
 
 		loanVo.setUser(User.convertFromEntityToVO(loan.getUser()));
