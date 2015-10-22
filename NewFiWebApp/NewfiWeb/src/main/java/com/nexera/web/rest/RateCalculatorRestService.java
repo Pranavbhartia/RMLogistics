@@ -31,6 +31,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
+import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
 import com.nexera.common.vo.lqb.TeaserRateResponseVO;
 import com.nexera.common.vo.lqb.TeaserRateVO;
@@ -61,6 +62,10 @@ public class RateCalculatorRestService {
 			LOG.info("findteaseratevalue - inout xml is" + teaseRate);
 			TeaserRateVO teaserRateVO = gson.fromJson(teaseRate,
 			        TeaserRateVO.class);
+			if(teaserRateVO.getCreditscore() == null){
+				teaserRateVO.setCreditscore(CommonConstants.PRICING_DEFAULT_CREDIT_SCORE);
+			}
+			
 			LOG.info("teaserRateVO" + teaserRateVO.getCity());
 			LOG.info("teaserRateVO" + teaserRateVO.getCurrentAddress());
 			LOG.info("teaserRateVO" + teaserRateVO.getCurrentMortgageBalance());
@@ -221,7 +226,8 @@ public class RateCalculatorRestService {
 		hashmap.put("OccType", sOccTPe);
 		hashmap.put("subPropType", subPropType);
 		hashmap.put("loanPurpose", loanPurpose);
-
+		hashmap.put("800", teaserRateVO.getCreditscore());
+		
 		JSONObject jsonObject = new JSONObject(hashmap);
 		return jsonObject;
 	}

@@ -268,10 +268,15 @@ public class WorkflowRestService {
 			workflowService.saveParamsInExecTable(workflowItemId, params);
 			String result = engineTrigger.invokeActionMethod(workflowItemId);
 			response = RestUtil.wrapObjectForSuccess(mapStatus(result));
+			
 			JSONObject json = new JSONObject(params);
-			int loanID = json.getInt("loanID");
-			String appraisalVendorName = json.getString("vendorType");
-			loanService.updateAppraisalVendor(loanID, appraisalVendorName);
+			
+			if(json.has("vendorType")){
+				int loanID = json.getInt("loanID");
+				String appraisalVendorName = json.getString("vendorType");
+				loanService.updateAppraisalVendor(loanID, appraisalVendorName);
+			}
+			
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			response = RestUtil.wrapObjectForFailure(null, "500",
