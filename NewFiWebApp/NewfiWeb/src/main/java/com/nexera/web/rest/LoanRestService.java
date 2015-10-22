@@ -99,14 +99,15 @@ public class LoanRestService {
 	  UserVO user = new UserVO();
 	  user.setId(userID);
 	  CommonResponseVO commonResponseVO = null;
-	  LeadsDashBoardVO responseVO;
+	  LoanDashboardVO responseVO = null;
 	  if (startlimit != null) {
 	    responseVO = loanService
 	           .retrieveDashboardForMyLeads(user, startlimit, count);
 	  
 	  } else {
-	    responseVO = loanService
+	     responseVO = loanService
 	           .retrieveDashboardForMyLeads(user);
+	    
 	   
 	  }
 	  commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
