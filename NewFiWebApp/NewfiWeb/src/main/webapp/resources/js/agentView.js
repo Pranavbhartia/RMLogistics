@@ -518,7 +518,7 @@ function checkCreditScore(creditScore){
 		for(var i = 0; i < loanList.length; i++) {
 	var customer = loanList[i];
 			if(customer.quoteDetailsVO){
-				if(!customer.quoteDetailsVO.isDeleted && customer.quoteDetailsVO.loan == null){
+				if(!customer.quoteDetailsVO.isDeleted){
 		var row = $('<div>').attr({
 			"class" : "leads-container-tr leads-container-row clearfix"
 		});
