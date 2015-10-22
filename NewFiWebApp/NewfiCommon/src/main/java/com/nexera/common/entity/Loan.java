@@ -481,6 +481,42 @@ public class Loan implements Serializable {
 		this.lockedRate = lockedRate;
 	}
 
+	public static Loan convertFromVOToEntity(LoanVO loanVo) {
+		if (loanVo == null)
+			return null;
+
+		Loan loan = new Loan();
+		loan.setId(loanVo.getId());
+		loan.setCreatedDate(loanVo.getCreatedDate());
+		loan.setDeleted(loanVo.getDeleted());
+		loan.setLoanEmailId(loanVo.getLoanEmailId());
+		loan.setLqbFileId(loanVo.getLqbFileId());
+		loan.setCreatedDate(loanVo.getCreatedDate());
+		loan.setModifiedDate(loanVo.getModifiedDate());
+		loan.setAppFee(loanVo.getAppFee());
+		loan.setName(loanVo.getName());
+		loan.setLockExpirationDate(loanVo.getLockExpirationDate());
+		loan.setRateLockRequested(loanVo.getRateLockRequested());
+		loan.setLockedRateData(loanVo.getLockedRateData());
+		loan.setPaymentVendor(loanVo.getPaymentVendor());
+		loan.setPurchaseDocumentExpiryDate(
+		        loanVo.getPurchaseDocumentExpiryDate());
+
+		if (loanVo.getLoanType() != null) {
+			loan.setLoanType(
+			        LoanTypeMaster.convertVoToEntity(loanVo.getLoanType()));
+		}
+
+		loan.setUser(User.convertFromVOToEntity(loanVo.getUser()));
+		loan.setIsBankConnected(loanVo.getIsBankConnected());
+		loan.setLockStatus(loanVo.getLockStatus());
+		loan.setLockedRate(loanVo.getLockedRate());
+		if (loanVo.getLtv() != null) {
+			loan.setLtv(loanVo.getLtv());
+		}
+		return loan;
+	}
+
 	public static LoanVO convertFromEntityToVO(Loan loan) {
 		if (loan == null)
 			return null;
