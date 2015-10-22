@@ -76,18 +76,18 @@ public class Loan implements Serializable {
 	private Double ltv;
 	private String paymentVendor;
 	private LoanLCStateMaster loanLCStateMaster;
-	private Date interview_date;
+	private Date interviewDate;
 
+		
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "interview_date")
-	public Date getInterview_date() {
-		return interview_date;
-	}
-	
-	public void setInterview_date(Date interview_date) {
-		this.interview_date = interview_date;
+	public Date getInterviewDate() {
+		return interviewDate;
 	}
 
+	public void setInterviewDate(Date interviewDate) {
+		this.interviewDate = interviewDate;
+	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "loanlcstatemaster")
