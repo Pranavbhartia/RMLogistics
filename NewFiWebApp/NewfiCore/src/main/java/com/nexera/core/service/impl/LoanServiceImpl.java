@@ -2605,7 +2605,9 @@ public class LoanServiceImpl implements LoanService {
 				        + " "
 				        + internalUserDeatils.getLastName());
 				customerVO.setQuoteDetailsVO(detailsVO);
-
+				if (quoteDetails.getCreatedDate() != null) {
+					customerVO.setLastActedOn(quoteDetails.getCreatedDate());
+				}
 				loanCustomerVoList.add(customerVO);
 			}
 		}
