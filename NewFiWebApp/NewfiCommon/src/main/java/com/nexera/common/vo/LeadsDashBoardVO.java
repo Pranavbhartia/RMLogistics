@@ -255,9 +255,9 @@ public class LeadsDashBoardVO implements Comparable<LeadsDashBoardVO>{
 	
 	@Override
     public int compareTo(LeadsDashBoardVO o) {
-		if (getLastActedOn() == null || o.getQuoteDetailsVO() == null)
+		if (getLastActedOn() == null || o.getLastActedOn() == null)
 		      return 0;
-		 return getLastActedOn().compareTo(o.getQuoteDetailsVO().getCreatedDate());
+		 return getLastActedOn().compareTo(o.getLastActedOn());
     }
 
 	

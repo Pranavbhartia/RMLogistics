@@ -633,9 +633,10 @@ function checkCreditScore(creditScore){
 						}).html("-");
 					}
 					
-					var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
+					var	createdDateStr = "";
+					/*var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
 							customer.quoteDetailsVO.createdDate));
-					createdDateStr=formatYearInDate(createdDateStr);
+					createdDateStr=formatYearInDate(createdDateStr);*/
 					if(createdDateStr==""){
 						createdDateStr="-";
 					}

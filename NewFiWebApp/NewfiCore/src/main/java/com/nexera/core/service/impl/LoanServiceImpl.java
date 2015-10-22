@@ -2586,6 +2586,9 @@ public class LoanServiceImpl implements LoanService {
 			for (QuoteDetails quoteDetails : quoteList) {
 				LeadsDashBoardVO customerVO = new LeadsDashBoardVO();
 				customerVO.setQuoteDetailsVO(QuoteDetailsVO.convertEntityToVO(quoteDetails));
+				if(quoteDetails.getCreatedDate() != null){
+					customerVO.setLastActedOn(quoteDetails.getCreatedDate());
+				}
 				loanCustomerVoList.add(customerVO);
             }
 		}
