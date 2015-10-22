@@ -439,3 +439,6 @@ ADD COLUMN `interview_date` TIMESTAMP NULL DEFAULT NULL AFTER `loanlcstatemaster
 ALTER TABLE `newfi_schema`.`quotedetails` 
 ADD COLUMN `loan_id` INT(11) NULL COMMENT '' AFTER `is_deleted`;
 
+#Rajeswari: 
+#Change for Customer Worfklow to show "Complete  Application" instead of Application
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Application' WHERE `id`='27';
