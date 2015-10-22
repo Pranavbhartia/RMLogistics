@@ -391,7 +391,7 @@ private HashMap<String,String> setClosingCostTempMapValue(Attributes attributes,
 	    if(rateVo.getCreditReport805() == null)
 	    rateVo.setCreditReport805("$0.00");
 	    if(rateVo.getFloodCertification807() == null)
-	    rateVo.setFloodCertification807("$0.00");
+	    rateVo.setFloodCertification807("$10.00");
 	    if(rateVo.getWireFee812() == null)
 	    rateVo.setWireFee812("$0.00");
 	    if(rateVo.getLendersTitleInsurance1104() == null)

@@ -449,3 +449,8 @@ ADD CONSTRAINT `loan_id_fk`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
+
+#Rajeswari: 
+#Change for Customer Worfklow to show "Complete  Application" instead of Application
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Application' WHERE `id`='27';
+
