@@ -2554,7 +2554,7 @@ public class LoanServiceImpl implements LoanService {
 		        .retrieveLoanByProgressStatus(this.parseUserModel(userVO),
 		                new int[] { LoanProgressStatusMasterEnum.NEW_LOAN
 		                        .getStatusId() }, startLimt, endLimt);
-		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList,userVO);
+		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList,userVO.getId());
 	
 		return loanDashboardVO;
 	}
@@ -2562,10 +2562,10 @@ public class LoanServiceImpl implements LoanService {
 	/**
 	 * @param loanList
 	 * @param quoteList
-	 * @param userVO 
+	 * @param userid 
 	 * @return
 	 */
-	private LoanDashboardVO buildLeadDashboardVoFromList(List<Loan> loanList,List<QuoteDetails> quoteList, UserVO userVO) {
+	private LoanDashboardVO buildLeadDashboardVoFromList(List<Loan> loanList,List<QuoteDetails> quoteList, int userID) {
 
 		LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
 		List<LeadsDashBoardVO> loanCustomerVoList = new ArrayList<LeadsDashBoardVO>();
@@ -2587,9 +2587,11 @@ public class LoanServiceImpl implements LoanService {
 			for (QuoteDetails quoteDetails : quoteList) {
 				LeadsDashBoardVO customerVO = new LeadsDashBoardVO();
 				QuoteDetailsVO detailsVO = QuoteDetailsVO.convertEntityToVO(quoteDetails);
-				userVO = userProfileService.findUser(userVO.getId());
-				detailsVO.setInternalUserName(userVO.getFirstName()+" "+userVO.getLastName());
-				customerVO.setQuoteDetailsVO(QuoteDetailsVO.convertEntityToVO(quoteDetails));
+				UserVO internalUserDeatils = userProfileService.findUser(quoteDetails
+				        .getQuoteCompositeKey().getInternalUserId());
+				detailsVO.setInternalUserName(internalUserDeatils.getFirstName()
+				        + " " + internalUserDeatils.getLastName());
+				customerVO.setQuoteDetailsVO(detailsVO);
 				if(quoteDetails.getCreatedDate() != null){
 					customerVO.setLastActedOn(quoteDetails.getCreatedDate());
 				}
@@ -2619,7 +2621,7 @@ public class LoanServiceImpl implements LoanService {
 		        .retrieveLoanByProgressStatus(this.parseUserModel(userVO),
 		                new int[] { LoanProgressStatusMasterEnum.NEW_LOAN
 		                        .getStatusId() });
-		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList, userVO);
+		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList, userVO.getId());
 	
 		return loanDashboardVO;
 	}
