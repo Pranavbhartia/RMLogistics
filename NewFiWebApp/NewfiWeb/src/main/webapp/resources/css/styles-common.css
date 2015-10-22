@@ -739,9 +739,14 @@ a.cus-eng-succ-mess-email {
     margin: 7px;      
     border-radius: 3px;
 }
-.leads-col-3, .leads-col-4,.leads-col-5,.leads-col-7,.leads-col-processor{
-    width: 11%;
+.leads-col-3, .leads-col-4,.leads-col-5,.leads-col-7{
+    width: 12%;
 }
+
+.leads-col-processor{
+	width: 13%;
+}
+
 .leads-col-1 {
 	width: 14%;
 }
@@ -761,7 +766,7 @@ a.cus-eng-succ-mess-email {
 
 
 .leads-row-2 {
-    width: 11%;
+    width: 18%;
     word-break: break-word;
     margin-right: 25px;
 }
@@ -890,15 +895,16 @@ a.cus-eng-succ-mess-email {
     margin-left: 12px;
 }
 
+
 .leads-user-created {
     background: url(../images/added_user.png) no-repeat;
     margin-left: 2px;
-    margin-top: 9px;
     background-size: 20px;
     cursor: pointer;
     width: 20px;
     height: 20px;
     z-index: 2;
+    margin-top: 5px;
 }
 .leads-col-6 {
     width: 12%;
@@ -969,8 +975,8 @@ a.cus-eng-succ-mess-email {
 	background-color: white !important;
 }
 .leads-row-3 {
-    width: 11%;
-    margin-left: 25px;
+    width: 12%;
+    margin-left: 20px;
 }
 
 .leads-row-9 {
@@ -990,7 +996,7 @@ a.cus-eng-succ-mess-email {
     width: 20px;
     height: 20px;
     z-index: 2;
-    margin-top: 4px;
+    margin-top: 5px;
 }
 
 .leaddelCustClas {
@@ -1017,23 +1023,27 @@ a.cus-eng-succ-mess-email {
     background-size: 20px;
 }
 .lead-loan-tc2 {
-	margin-right: 20px;
-	width: 12%;
+	margin-right: 25px;
+	width: 18%;
 	word-break: break-word;
-	margin-left: 16px;
 }
 .lead-loan-tc3 {
-    margin-left: 17px;
+    margin-left: 20px;
     width: 11%;
 }
-.lead-loan-tc5,.leads-row-processor,.leads-loan-tc1 {
-	 width: 11%; 
+
+.leads-row-processor {
+	width: 13%;
+}
+
+.lead-loan-tc5,.leads-loan-tc1 {
+	 width: 18%; 
 }
 .lead-loan-tc6,.sm-leads-col-tc1 {
-	width: 15%;
+	width: 21%;
 }
 .lead-loan-del {
-	right: 27px;
+	right: 33px;
 }
 .lead-loan-tc7,.sm-leads-col-tc6  {
     width: 10%;
@@ -1043,7 +1053,7 @@ a.cus-eng-succ-mess-email {
  	width: 9%;
 }
 .sm-leads-col-tc2 {
-	width: 16%;
+	width: 22%;
 }
 .sm-lead-loan-tc7 {
 	width: 9%;
@@ -1053,7 +1063,7 @@ a.cus-eng-succ-mess-email {
  	word-break: break-word;
 }
 .sm-leads-row-1 {
-	width: 12%;
+	width: 18%;
 } 
 .sm-lead-loan-tc6  {
 	width: 11%;
@@ -1063,6 +1073,10 @@ a.cus-eng-succ-mess-email {
 }
 .margin-botton-10 { 
 	margin-bottom: 10px !important; 
+}
+
+.margin-right-10 { 
+	margin-right: 10px !important; 
 }
 
 .milestone-vendor-type-row {

@@ -2554,7 +2554,7 @@ public class LoanServiceImpl implements LoanService {
 		        .retrieveLoanByProgressStatus(this.parseUserModel(userVO),
 		                new int[] { LoanProgressStatusMasterEnum.NEW_LOAN
 		                        .getStatusId() }, startLimt, endLimt);
-		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList);
+		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList,userVO);
 	
 		return loanDashboardVO;
 	}
@@ -2562,9 +2562,10 @@ public class LoanServiceImpl implements LoanService {
 	/**
 	 * @param loanList
 	 * @param quoteList
+	 * @param userVO 
 	 * @return
 	 */
-	private LoanDashboardVO buildLeadDashboardVoFromList(List<Loan> loanList,List<QuoteDetails> quoteList) {
+	private LoanDashboardVO buildLeadDashboardVoFromList(List<Loan> loanList,List<QuoteDetails> quoteList, UserVO userVO) {
 
 		LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
 		List<LeadsDashBoardVO> loanCustomerVoList = new ArrayList<LeadsDashBoardVO>();
@@ -2585,6 +2586,9 @@ public class LoanServiceImpl implements LoanService {
 			}
 			for (QuoteDetails quoteDetails : quoteList) {
 				LeadsDashBoardVO customerVO = new LeadsDashBoardVO();
+				QuoteDetailsVO detailsVO = QuoteDetailsVO.convertEntityToVO(quoteDetails);
+				userVO = userProfileService.findUser(userVO.getId());
+				detailsVO.setInternalUserName(userVO.getFirstName()+" "+userVO.getLastName());
 				customerVO.setQuoteDetailsVO(QuoteDetailsVO.convertEntityToVO(quoteDetails));
 				if(quoteDetails.getCreatedDate() != null){
 					customerVO.setLastActedOn(quoteDetails.getCreatedDate());
@@ -2615,7 +2619,7 @@ public class LoanServiceImpl implements LoanService {
 		        .retrieveLoanByProgressStatus(this.parseUserModel(userVO),
 		                new int[] { LoanProgressStatusMasterEnum.NEW_LOAN
 		                        .getStatusId() });
-		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList);
+		LoanDashboardVO loanDashboardVO =  buildLeadDashboardVoFromList(loanList,quoteList, userVO);
 	
 		return loanDashboardVO;
 	}

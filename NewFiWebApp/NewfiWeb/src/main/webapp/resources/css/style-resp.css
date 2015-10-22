@@ -948,18 +948,9 @@
 	    margin-top: 11px;
 	}
 	.leads-user-created {
-	    background-size: 28%;
-	    background-size: 66%;
-	    width: 9%;
 	    margin-top: 10px;
 	}
-	.leads-row-11 {
-	    background-size: 66%;
-	    width: 9%;
-	    margin-top: 10px;
-	    margin-left: 2px;
-	}
-
+	
 	.blue-edit {
 	    width: 17px;
 	    background-size: 67%;
@@ -1162,7 +1153,7 @@
 		width:939px !important;
 	}
 	.sm-dashboard {
-		width:87% !important;
+		width:83% !important;
 	}
 	.leads-dashboard {
 		width:90% !important;
