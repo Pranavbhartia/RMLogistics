@@ -651,7 +651,7 @@ function checkCreditScore(creditScore){
 				"class" : "leads-row-11 float-right",
 				"userName" : customer.quoteDetailsVO.prospectUsername,
 				"InternalUserID" :customer.quoteDetailsVO.internalUserId,
-				"id":customer.internalUserId+""+i,
+				"id":customer.quoteDetailsVO.internalUserId+""+i,
 				"title" : "Create Account"
 			}).bind("click",function(){
 				if($(this).hasClass('leads-row-11')){
