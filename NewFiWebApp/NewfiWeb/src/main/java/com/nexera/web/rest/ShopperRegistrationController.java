@@ -200,7 +200,7 @@ public class ShopperRegistrationController {
 		if (isUserPresent != null) {
 			error.setMessage(ErrorConstants.REGISTRATION_USER_EXSIST);
 			responseVO.setError(error);
-			quoteService.updateCreatedUser(quoteCompositeKey);
+			// quoteService.updateCreatedUser(quoteCompositeKey);
 			return responseVO;
 		}
 
