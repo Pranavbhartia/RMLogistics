@@ -2605,9 +2605,7 @@ public class LoanServiceImpl implements LoanService {
 				        + " "
 				        + internalUserDeatils.getLastName());
 				customerVO.setQuoteDetailsVO(detailsVO);
-				if (quoteDetails.getCreatedDate() != null) {
-					customerVO.setLastActedOn(quoteDetails.getCreatedDate());
-				}
+
 				loanCustomerVoList.add(customerVO);
 			}
 		}
@@ -2615,8 +2613,6 @@ public class LoanServiceImpl implements LoanService {
 		loanDashboardVO.setLeads(loanCustomerVoList);
 		// set no of loans as num_found
 		loanDashboardVO.setNum_found(loanList.size());
-		Collections.reverse(loanDashboardVO.getLeads());
-
 		return loanDashboardVO;
 	}
 
