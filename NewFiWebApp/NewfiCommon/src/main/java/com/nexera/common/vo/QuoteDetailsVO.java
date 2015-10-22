@@ -3,6 +3,7 @@ package com.nexera.common.vo;
 import java.util.Date;
 
 import com.nexera.common.compositekey.QuoteCompositeKey;
+import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.QuoteDetails;
 
 public class QuoteDetailsVO {
@@ -21,7 +22,15 @@ public class QuoteDetailsVO {
 	private Boolean isCreated = false;
 	private Boolean isDeleted = false;
 	private String internalUserName;
-	private int loanID;
+	private Loan loan;
+
+	public Loan getLoan() {
+		return loan;
+	}
+
+	public void setLoan(Loan loanVO) {
+		this.loan = loanVO;
+	}
 
 	public String getInternalUserName() {
 		return internalUserName;
@@ -135,14 +144,6 @@ public class QuoteDetailsVO {
 		this.createdDate = createdDate;
 	}
 
-	public int getLoanID() {
-		return loanID;
-	}
-
-	public void setLoanID(int loanID) {
-		this.loanID = loanID;
-	}
-
 	/**
 	 * @param quoteDetailsVO
 	 * @return
@@ -166,7 +167,7 @@ public class QuoteDetailsVO {
 		quoteDetails.setIsCreated(quoteDetailsVO.getIsCreated());
 		quoteDetails.setIsDeleted(quoteDetailsVO.getIsDeleted());
 		quoteDetails.setId(quoteDetailsVO.getId());
-		quoteDetails.setLoanId(quoteDetailsVO.getLoanID());
+		quoteDetails.setLoan(quoteDetailsVO.getLoan());
 		return quoteDetails;
 	}
 
@@ -193,8 +194,9 @@ public class QuoteDetailsVO {
 		quoteDetailsVO.setProspectUsername(quoteDetails.getQuoteCompositeKey()
 		        .getUserName());
 		quoteDetailsVO.setId(quoteDetails.getId());
-		quoteDetailsVO.setLoanID(quoteDetails.getLoanId());
-		quoteDetailsVO.setInternalUserName(quoteDetails.getProspectFirstName()+" "+quoteDetails.getProspectLastName());
+		quoteDetailsVO.setLoan(quoteDetails.getLoan());
+		quoteDetailsVO.setInternalUserName(quoteDetails.getProspectFirstName()
+		        + " " + quoteDetails.getProspectLastName());
 		return quoteDetailsVO;
 	}
 
