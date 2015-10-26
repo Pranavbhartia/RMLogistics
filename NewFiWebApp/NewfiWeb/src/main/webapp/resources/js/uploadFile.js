@@ -612,9 +612,9 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	});
 	var fileDragDropCon = getFileDragAndDropContainer(neededItemListObject.resultObject.loanEmailID);
 	var text = '"IMPORTANT: as a security measure, you must send documents from<br/>the e-mail address used to create your newfi account"';
-	var notecontainer = $('<div>').attr({
+	/*var notecontainer = $('<div>').attr({
 		"class" : "note-container"
-	}).html(text);
+	}).html(text);*/
 	var showSave = false;
 	var documentContainer = getDocumentContainer();
 	var submitBtn = $("<div>").attr({
@@ -624,7 +624,7 @@ function paintUploadNeededItemsPage(neededItemListObject) {
 	var neededItemsWrapper = getNeedItemsWrapper(neededItemListObject);
 	// var uploadedItemsWrapper = getUploadedItemsWrapper();
 
-	container.append(fileDragDropCon).append(notecontainer).append(documentContainer).append(
+	container.append(fileDragDropCon).append(documentContainer).append(
 			submitBtn).append(neededItemsWrapper);
 
 	uploadedNeedContainer.append(header).append(container);
