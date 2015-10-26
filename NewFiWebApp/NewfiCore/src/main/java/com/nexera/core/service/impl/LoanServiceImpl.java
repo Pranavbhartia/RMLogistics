@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.cypher.internal.compiler.v2_1.ast.rewriters.isolateAggregation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2597,21 +2596,25 @@ public class LoanServiceImpl implements LoanService {
 
 			boolean isLoanCreated = false;
 			for (QuoteDetails quoteDetails : quoteList) {
-			if(quoteDetails.getLoan() != null){
-				isLoanCreated = true;
-			}
-				
+				if (quoteDetails.getLoan() != null) {
+					isLoanCreated = true;
+				}
+
 				if (!quoteDetails.getIsDeleted() && !isLoanCreated) {
-					
+
 					LeadsDashBoardVO customerVO = new LeadsDashBoardVO();
-					
+
 					UserVO internalUserDeatils = userProfileService
 					        .findUser(quoteDetails.getQuoteCompositeKey()
 					                .getInternalUserId());
-					customerVO.setInternalUserName(internalUserDeatils.getFirstName()+" "+internalUserDeatils.getLastName());
-					customerVO.setName(quoteDetails.getProspectFirstName() + " "
-					        + quoteDetails.getProspectLastName());
-					customerVO.setInternalUserId(quoteDetails.getQuoteCompositeKey().getInternalUserId());
+					customerVO.setInternalUserName(internalUserDeatils
+					        .getFirstName()
+					        + " "
+					        + internalUserDeatils.getLastName());
+					customerVO.setName(quoteDetails.getProspectFirstName()
+					        + " " + quoteDetails.getProspectLastName());
+					customerVO.setInternalUserId(quoteDetails
+					        .getQuoteCompositeKey().getInternalUserId());
 					customerVO.setInputDetailsJson(quoteDetails
 					        .getInputDetailsJson());
 					customerVO.setPdfUrl(quoteDetails.getPdfUrl());
@@ -2619,7 +2622,8 @@ public class LoanServiceImpl implements LoanService {
 					customerVO.setIsDeleted(quoteDetails.getIsDeleted());
 					customerVO.setEmailId(quoteDetails.getEmailId());
 					customerVO.setQuote(true);
-					customerVO.setProspectUsername(quoteDetails.getQuoteCompositeKey().getUserName());
+					customerVO.setProspectUsername(quoteDetails
+					        .getQuoteCompositeKey().getUserName());
 					if (quoteDetails.getCreatedDate() != null) {
 						customerVO
 						        .setLastActedOn(quoteDetails.getCreatedDate());
