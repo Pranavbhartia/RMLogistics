@@ -893,6 +893,7 @@ function createUserFromLeads(userName,internalUserID,id){
 				if(response.error == null){
 					$('#'+id).removeClass('leads-row-11');
 					$('#'+id).addClass('leads-user-created');
+					location.reload();
 					showToastMessage(response.resultObject);
 				}else {
 					showErrorToastMessage(response.error.message);
