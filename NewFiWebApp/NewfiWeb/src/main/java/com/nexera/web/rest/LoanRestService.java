@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.nexera.common.commons.DisplayMessageConstants;
-import com.nexera.common.commons.ErrorConstants;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.compositekey.QuoteCompositeKey;
@@ -34,15 +32,12 @@ import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
-import com.nexera.common.vo.LeadsDashBoardVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
 import com.nexera.common.vo.LoanTurnAroundTimeVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.QuoteDetailsVO;
-import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
@@ -99,17 +94,9 @@ public class LoanRestService {
 	  UserVO user = new UserVO();
 	  user.setId(userID);
 	  CommonResponseVO commonResponseVO = null;
-	  LoanDashboardVO responseVO = null;
-	  if (startlimit != null) {
-	    responseVO = loanService
-	           .retrieveDashboardForMyLeads(user, startlimit, count);
-	  
-	  } else {
-	     responseVO = loanService
+	  LoanDashboardVO responseVO = null;	
+	  responseVO = loanService
 	           .retrieveDashboardForMyLeads(user);
-	    
-	   
-	  }
 	  commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
 	  return commonResponseVO;
 	 }
