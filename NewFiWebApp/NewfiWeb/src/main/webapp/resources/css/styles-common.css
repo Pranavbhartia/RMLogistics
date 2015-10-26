@@ -1050,7 +1050,7 @@ a.cus-eng-succ-mess-email {
 } 
 
 .sm-leads-row-7,.sm-leads-col-tc4,.sm-leads-col-tc5,.sm-leads-col-tc7,.sm-leads-row-5,.sm-leads-row-4,.lead-loan-createddate {
- 	width: 9%;
+ 	width: 9% !important;
 }
 .sm-leads-col-tc2 {
 	width: 22%;
@@ -1138,3 +1138,20 @@ a.cus-eng-succ-mess-email {
 .lead-loan-tc4 {
 	width: 9%;
 }
+
+.lead-custmr-name {
+	width: 21%;
+}
+
+.lead-email {
+	width: 22%;
+}
+
+.lead-purp {
+	width: 11%;
+}
+
+.lead-last-login {
+	width: 10%;
+}
+
