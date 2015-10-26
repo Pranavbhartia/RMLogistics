@@ -118,7 +118,7 @@ function paintRatesTablePage(data) {
 	$("#folderCurrentTimeStamp").html(dateFormat(folderDate, "dddd, mmmm dS, yyyy, h:MM:ss TT"));
 
 	tableData = data.fileDetailList;
-	console.info(data.fileName);
+	
 	$('#main-container').html('');
 	var wrapper = $('<div>').attr({
 		"class" : "rate-table-wrapper row clearfix"
@@ -603,7 +603,8 @@ function getLTVTable(addHighBalArm,isFNMAArm) {
 	var row1 = $('<div>').attr({
 		"class" : "clearfix"
 	});
-	var table1 = getLTVTable1();
+	var isOlympicData = false;
+	var table1 = getLTVTable1(isOlympicData);
 	row1.append(table1);
 	var ltvDescTable = getLTVDescTable(addHighBalArm);
 	row1.append(ltvDescTable);
@@ -611,7 +612,7 @@ function getLTVTable(addHighBalArm,isFNMAArm) {
 	var row2 = $('<div>').attr({
 		"class" : "clearfix price-table-wrap-row"
 	});
-	var refinanceTable = getLTVTable3();
+	var refinanceTable = getLTVTable3(isOlympicData);
 	row2.append(refinanceTable);
 
 	var secondaryFinancingTable = getLTVTable4();
@@ -683,30 +684,45 @@ function getLTVTable8(){
 	
 }
 
-function getLTVTable1() {
+function getLTVTable1(isOlympicData) {
 	var tableCont = $('<div>').attr({
 		"class" : "ltv-table-container float-left"
 	});
 
 	var tableHeaderArray = [ "", "<60", "60.01-70", "70.01-75", "75.01-80",
-			"80.01-85", "85.01-90", "90.01-95", "95.01-97" ];
+			"80.01-85", "85.01-90" ];
 
-	var tableArray = [
-			[ ">=740", "(0.000)", "(0.250)", "(0.250)", "(0.500)", "(0.250)",
-					"(0.250)", "(0.250)", "(0.750)" ],
-			[ "720-739", "(0.000)", "(0.250)", "(0.500)", "(0.750)", "(0.500)",
-					"(0.500)", "(0.500)", "(1.000)" ],
-			[ "700-719", "(0.000)", "(0.500)", "(1.000)", "(1.250)", "(1.000)",
-					"(1.000)", "(1.000)", "(1.500)" ],
-			[ "680-699", "0.000", "(0.500)", "(1.250)", "(1.750)", "(1.500)",
-					"(1.250)", "(1.250)", "(1.500)" ],
-			[ "660-679", "0.000", "(1.000)", "(2.250)", "(2.750)", "(2.750)",
-					"(2.250)", "(2.250)", "(2.250)" ],
-			[ "640-659", "(0.500)", "(1.250)", "(2.750)", "(3.000)", "(3.250)",
-					"(2.750)", "(2.750)", "(2.750)" ],
-			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a",
-					"n/a", "n/a", "n/a" ] ];
+	if(!isOlympicData){
+		tableHeaderArray.push( "90.01-95","95.01-97");
+	}
+	
+	var tableArray = null;
 
+	if(!isOlympicData){
+		tableArray = [
+		  		[ ">=740", "(0.000)", "(0.250)", "(0.250)", "(0.500)", "(0.250)",
+						"(0.250)", "(0.250)", "(0.750)" ],
+				[ "720-739", "(0.000)", "(0.250)", "(0.500)", "(0.750)", "(0.500)",
+						"(0.500)", "(0.500)", "(1.000)" ],
+				[ "700-719", "(0.000)", "(0.500)", "(1.000)", "(1.250)", "(1.000)",
+						"(1.000)", "(1.000)", "(1.500)" ],
+				[ "680-699", "0.000", "(0.500)", "(1.250)", "(1.750)", "(1.500)",
+						"(1.250)", "(1.250)", "(1.500)" ],
+				[ "660-679", "0.000", "(1.000)", "(2.250)", "(2.750)", "(2.750)",
+						"(2.250)", "(2.250)", "(2.250)" ],
+				[ "640-659", "(0.500)", "(1.250)", "(2.750)", "(3.000)", "(3.250)",
+						"(2.750)", "(2.750)", "(2.750)" ],
+				[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a",
+						"n/a", "n/a", "n/a" ] 
+		  	];
+	}else{
+		tableArray = [
+				  		[ ">=740", "(0.000)", "(0.250)", "(0.250)", "(0.500)", "(0.250)",
+								"(0.250)" ],
+						[ "720-739", "(0.000)", "(0.250)", "(0.500)", "(0.750)", "(0.500)",
+								"(0.500)" ],
+					];
+	}
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
 	
@@ -827,7 +843,7 @@ function getLTVDescTable(addHighBalArm) {
 
 }
 
-function getLTVTable3() {
+function getLTVTable3(isOlympicData) {
 	var tableCont = $('<div>').attr({
 		"class" : "ltv-table-container float-left"
 	});
@@ -848,14 +864,25 @@ function getLTVTable3() {
 			[ "640-659", "(1.500)", "(2.500)", "(2.250)", "(3.500)", "(4.250)" ],
 			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ] ];*/
 	
-	var tableArray = [
-	      			[ ">=740", "(0.375)", "(0.625)", "(0.625)", "(0.875)", "(0.875)" ],
-	      			[ "720-739", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
-	      			[ "700-719", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
-	      			[ "680-699", "(0.375)", "(1.125)", "(1.125)", "(1.750)", "(2.500)" ],
-	      			[ "660-679", "(0.625)", "(1.125)", "(1.125)", "(1.875)", "(3.000)" ],
-	      			[ "640-659", "(0.625)", "(1.625)", "(1.625)", "(2.625)", "(4.250)" ],
-	      			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ] ];
+	var tableArray = null;
+	
+	if(isOlympicData){
+		tableArray = [
+			[ ">=740", "(0.375)", "(0.625)", "(0.625)", "(0.875)", "(0.875)" ],
+			[ "720-739", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
+		];
+	}else{
+		tableArray = [
+			[ ">=740", "(0.375)", "(0.625)", "(0.625)", "(0.875)", "(0.875)" ],
+			[ "720-739", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
+			[ "700-719", "(0.375)", "(1.000)", "(1.000)", "(1.125)", "(1.750)" ],
+			[ "680-699", "(0.375)", "(1.125)", "(1.125)", "(1.750)", "(2.500)" ],
+			[ "660-679", "(0.625)", "(1.125)", "(1.125)", "(1.875)", "(3.000)" ],
+			[ "640-659", "(0.625)", "(1.625)", "(1.625)", "(2.625)", "(4.250)" ],
+			[ "620-639", "n/a", "n/a", "n/a", "n/a", "n/a" ]
+		];
+	}
+	
 
 	var tableHeaderRow = getLTVTableHeaderRow(tableHeaderArray);
 	tableCont.append(tableHeaderRow);
@@ -978,15 +1005,15 @@ function getLTVTable6(isFNMAArm) {
 	if(isFNMAArm){
 		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
 		                   [ "Loan amount <$150k", "0.75" ] ,
-		                   ["High Balance FICO 680-739","0.125"],
-		                   ["High Balance FICO 640-679","0.25"]
+		                   ["FICO 680-699","0.125"],
+		                   ["FICO 640-679","0.25"]
 		                   ];
 	}else{
 		 tableArray = [ [ "Escrow Waiver Fee", "0.125" ] , 
 		                   [ "Loan amount <$150k", "0.75" ] ,
 		                   [ "Loan Amount >= $300k Standard Conforming Only", "-0.25" ],
-		                   ["High Balance FICO 680-739","0.125"],
-		                   ["High Balance FICO 640-679","0.25"]
+		                   ["FICO 680-699","0.125"],
+		                   ["FICO 640-679","0.25"]
 		                   ];
 	}
 	
@@ -1840,6 +1867,7 @@ function getOlympicPiggyBackFixedPriceAdjusterWrapper(){
 }
 
 function appendLTVDataForOlympicPiggyBack(addHighBalArm,isFNMAArm){
+	console.info(isFNMAArm);
 	var tableWrapper = $('<div>').attr({
 		"class" : "price-table"
 	});
@@ -1851,7 +1879,10 @@ function appendLTVDataForOlympicPiggyBack(addHighBalArm,isFNMAArm){
 	var row1 = $('<div>').attr({
 		"class" : "clearfix"
 	});
-	var table1 = getLTVTable1();
+	
+	var isOlympicData = true;
+	
+	var table1 = getLTVTable1(isOlympicData);
 	row1.append(table1);
 	var ltvDescTable = getLTVDescTable(addHighBalArm);
 	row1.append(ltvDescTable);
@@ -1859,7 +1890,7 @@ function appendLTVDataForOlympicPiggyBack(addHighBalArm,isFNMAArm){
 	var row2 = $('<div>').attr({
 		"class" : "clearfix price-table-wrap-row"
 	});
-	var refinanceTable = getLTVTable3();
+	var refinanceTable = getLTVTable3(isOlympicData);
 	row2.append(refinanceTable);
 
 	var secondaryFinancingTable = getLTVTable4();
