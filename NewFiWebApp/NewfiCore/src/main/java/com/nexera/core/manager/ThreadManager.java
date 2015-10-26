@@ -36,7 +36,6 @@ import com.nexera.common.commons.WebServiceMethodParameters;
 import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.dao.LoanDao;
 import com.nexera.common.entity.CustomerDetail;
 import com.nexera.common.entity.CustomerSpouseDetail;
 import com.nexera.common.entity.ExceptionMaster;
@@ -50,6 +49,7 @@ import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.User;
 import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
@@ -105,7 +105,7 @@ public class ThreadManager implements Runnable {
 
 	@Autowired
 	WorkflowService workflowService;
-	
+
 	@Autowired
 	LoanService loanService;
 
@@ -215,6 +215,7 @@ public class ThreadManager implements Runnable {
 									                .getFieldValue());
 								} else if (fieldId
 								        .equalsIgnoreCase(CoreCommonConstants.SOAP_XML_LOAD_INTERVIEW_DATE)) {
+
 									interviewDate = loadResponseVO
 									        .getFieldValue();
 									LOGGER.debug("The interview Date for 1003 for "
@@ -381,13 +382,18 @@ public class ThreadManager implements Runnable {
 								        LoadConstants.LQB_DISCLOSURE_RECEIVED);
 							}
 							if (interviewDate != null) {
-								List<String> workflowItems = WorkflowConstants.MILESTONE_WF_ITEM_LOOKUP
-								        .get(Milestones.App1003);
+								List<String> workflowItems = WorkflowConstants.STATUS_WF_ITEM_LOOKUP
+								        .get(LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED);
 								List<WorkflowItemExec> workflowItemsExecList = itemToExecute(
 								        workflowItems, workflowItemExecList);
+								Map<String, Object> paramsMap = new HashMap<String, Object>();
+								paramsMap
+								        .put(WorkflowDisplayConstants.INTERVIEW_DATE_KEY_NAME,
+								                interviewDate);
 								putItemsIntoExecution(
 								        workflowItemsExecList,
-								        LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED);
+								        LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED,
+								        paramsMap);
 							}
 							LOSLoanStatus loanStatusID = null;
 							if (currentLoanStatus == -1) {
@@ -734,12 +740,25 @@ public class ThreadManager implements Runnable {
 
 	private void putItemsIntoExecution(List<WorkflowItemExec> itemsToExecute,
 	        int currentLoanStatus) {
+		putItemsIntoExecution(itemsToExecute, currentLoanStatus, null);
+	}
+
+	private void putItemsIntoExecution(List<WorkflowItemExec> itemsToExecute,
+	        int currentLoanStatus, Map<String, Object> dataForExecution) {
+		boolean itemsExisted = false;
 		for (WorkflowItemExec workflowItemExec : itemsToExecute) {
+			itemsExisted = true;
 			if (!workflowItemExec.getStatus().equalsIgnoreCase(
 			        WorkItemStatus.COMPLETED.getStatus())) {
 				LOGGER.debug("Putting the item in execution ");
-				String params = Utils.convertMapToJson(getParamsBasedOnStatus(
-				        currentLoanStatus, workflowItemExec.getId()));
+				Map<String, Object> paramsMap = getParamsBasedOnStatus(
+				        currentLoanStatus, workflowItemExec.getId());
+				if (dataForExecution != null) {
+					for (String key : dataForExecution.keySet()) {
+						paramsMap.put(key, dataForExecution.get(key));
+					}
+				}
+				String params = Utils.convertMapToJson(paramsMap);
 				workflowService.saveParamsInExecTable(workflowItemExec.getId(),
 				        params);
 
@@ -758,6 +777,24 @@ public class ThreadManager implements Runnable {
 				engineTrigger.startWorkFlowItemExecution(workflowItemExec
 				        .getId());
 			}
+		}
+		if (!itemsExisted) {
+			// Then do the save LC state here.
+			LOGGER.debug("This " + loan.getId()
+			        + " Did not have any concrete class for "
+			        + currentLoanStatus + "Hence updated LC");
+			LOSLoanStatus loanStatusRef = LOSLoanStatus
+			        .getLOSStatus(currentLoanStatus);
+			if (loanStatusRef != null
+			        && WorkflowConstants.STATUS_LC_STATE_LOOKUP
+			                .get(loanStatusRef) != null) {
+				LoanLCStates lcState = WorkflowConstants.STATUS_LC_STATE_LOOKUP
+				        .get(loanStatusRef);
+				LOGGER.debug("Updating LC State as " + lcState.getLcStateKey()
+				        + " For " + loan.getId());
+				loanService.updateLoanLCState(loan.getId(), lcState);
+			}
+
 		}
 	}
 
@@ -801,30 +838,32 @@ public class ThreadManager implements Runnable {
 		for (TransactionDetails transactionDetails : transactionDetailsList) {
 			LOGGER.debug("Invoking Braintree Service ");
 			try {
-				if(transactionDetails.getTransaction_id().equals("axisTransactionId")){
+				if (transactionDetails.getTransaction_id().equals(
+				        "axisTransactionId")) {
 					LOGGER.debug("Axis Transaction has been successful");
 					User sysAdmin = new User();
 					sysAdmin.setId(CommonConstants.SYSTEM_ADMIN_ID);
 					LoanApplicationFee applicationFee = new LoanApplicationFee();
 					applicationFee.setLoan(transactionDetails.getLoan());
 					applicationFee.setModifiedBy(sysAdmin);
-					applicationFee.setModifiedDate(new Date(System.currentTimeMillis()));
+					applicationFee.setModifiedDate(new Date(System
+					        .currentTimeMillis()));
 					applicationFee.setTransactionDetails(transactionDetails);
-					applicationFee.setPaymentDate(new Date(System.currentTimeMillis()));
+					applicationFee.setPaymentDate(new Date(System
+					        .currentTimeMillis()));
 					// Use the loan dao object to make a general save
 					loanService.addLoanApplicationFee(applicationFee);
 
-					// Update the transaction details table to soft delete the record.
-					transactionDetails.setStatus(CommonConstants.TRANSACTION_STATUS_DISABLED);
-					loanService.updateTransactionDetails(transactionDetails);	
-					
-					
-					
+					// Update the transaction details table to soft delete the
+					// record.
+					transactionDetails
+					        .setStatus(CommonConstants.TRANSACTION_STATUS_DISABLED);
+					loanService.updateTransactionDetails(transactionDetails);
+
 					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_SUCCESS);
-				}
-				else if (braintreePaymentGatewayService.checkAndUpdateTransactions(
-				        transactionDetails).equalsIgnoreCase(
-				        LoanStatus.APP_PAYMENT_SUCCESS)) {
+				} else if (braintreePaymentGatewayService
+				        .checkAndUpdateTransactions(transactionDetails)
+				        .equalsIgnoreCase(LoanStatus.APP_PAYMENT_SUCCESS)) {
 					LOGGER.debug("Transaction has been successful");
 					invokeApplicationFeeMilestone(LoanStatus.APP_PAYMENT_SUCCESS);
 				} else if (braintreePaymentGatewayService
@@ -1610,12 +1649,9 @@ public class ThreadManager implements Runnable {
 		map.put(WorkflowDisplayConstants.WORKITEM_ID_KEY_NAME,
 		        workflowItemExecId);
 		if (currentLoanStatus == LoadConstants.LQB_STATUS_LOAN_SUBMITTED) {
-			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-			        "08986e4b-8407-4b44-9000-50c104db899c");
+
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_IN_UNDERWRITING) {
 
-			map.put(WorkflowDisplayConstants.EMAIL_TEMPLATE_KEY_NAME,
-			        "08986e4b-8407-4b44-9000-50c104db899c");
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_CLEAR_TO_CLOSE) {
 
 		} else if (currentLoanStatus == LoadConstants.LQB_STATUS_FUNDED) {

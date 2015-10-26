@@ -25,7 +25,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.lang.StringUtils;
-import org.aspectj.weaver.NewFieldTypeMunger;
 import org.hibernate.HibernateException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,15 +62,13 @@ import com.nexera.common.entity.InternalUserDetail;
 import com.nexera.common.entity.InternalUserRoleMaster;
 import com.nexera.common.entity.InternalUserStateMapping;
 import com.nexera.common.entity.Loan;
-import com.nexera.common.entity.LoanMilestone;
-import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.RealtorDetail;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.UserRole;
 import com.nexera.common.enums.ActiveInternalEnum;
 import com.nexera.common.enums.DisplayMessageType;
-import com.nexera.common.enums.LoanProgressStatusMasterEnum;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
@@ -123,7 +120,6 @@ import com.nexera.workflow.vo.WorkflowVO;
 public class UserProfileServiceImpl implements UserProfileService,
         InitializingBean {
 
-	
 	@Autowired
 	private UserProfileDao userProfileDao;
 
@@ -176,8 +172,6 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Autowired
 	private ApplicationContext applicationContext;
-	
-
 
 	@Value("${lqb.defaulturl}")
 	private String lqbDefaultUrl;
@@ -187,10 +181,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Value("${profile.url}")
 	private String baseUrl;
-	
+
 	@Value("${recepients}")
 	private String ids;
-	
+
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(UserProfileServiceImpl.class);
 
@@ -355,8 +349,10 @@ public class UserProfileServiceImpl implements UserProfileService,
 		List<UserVO> voList = new ArrayList<UserVO>();
 		for (User user : userList) {
 			UserVO userVO = User.convertFromEntityToVO(user);
-			if(user.getLastLoginDate() != null){
-				userVO.setLastLoginDate(utils.getDateAndTimeForUserManagement(user.getLastLoginDate()));
+			if (user.getLastLoginDate() != null) {
+				userVO.setLastLoginDate(utils
+				        .getDateAndTimeForUserManagement(user
+				                .getLastLoginDate()));
 			}
 			voList.add(userVO);
 		}
@@ -484,12 +480,12 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public void verifyEmail(int userId) {
 		userProfileDao.verifyEmail(userId);
 		LoanVO loan = loanService.getActiveLoanOfUser(new UserVO(userId));
-		//NEXNF-628
-		/*if (loan != null && loan.getId() != 0) {
-			dismissAlert(MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
-			        loan.getId(), null);
-			// Dismiss Alert
-		}*/
+		// NEXNF-628
+		/*
+		 * if (loan != null && loan.getId() != 0) {
+		 * dismissAlert(MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
+		 * loan.getId(), null); // Dismiss Alert }
+		 */
 	}
 
 	@Override
@@ -610,21 +606,24 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		List<EmailRecipientVO> recipients = new ArrayList<EmailRecipientVO>();
-/*		EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
-		emailRecipientVO.setEmailID("info@newfi.com");
-		recipients.add(emailRecipientVO);*/
+		/*
+		 * EmailRecipientVO emailRecipientVO = new EmailRecipientVO();
+		 * emailRecipientVO.setEmailID("info@newfi.com");
+		 * recipients.add(emailRecipientVO);
+		 */
 		EmailRecipientVO emailRecipientVO1 = new EmailRecipientVO();
-		//emailRecipientVO1.setEmailID("pat@newfi.com");//to take from property file
+		// emailRecipientVO1.setEmailID("pat@newfi.com");//to take from property
+		// file
 		List<String> receipientList = new ArrayList<String>();
 		receipientList = getRecepientsList(ids);
-		for(String recepient:receipientList){
+		for (String recepient : receipientList) {
 			emailRecipientVO1 = new EmailRecipientVO();
-			emailRecipientVO1.setEmailID(recepient);	
+			emailRecipientVO1.setEmailID(recepient);
 			recipients.add(emailRecipientVO1);
-		}		
-		
-		//recipients.add(emailRecipientVO1);
-		//emailEntity.setRecipients(recipients);
+		}
+
+		// recipients.add(emailRecipientVO1);
+		// emailEntity.setRecipients(recipients);
 		emailEntity.setBody("---");
 		sendEmailService.sendMail(emailEntity, true);
 
@@ -632,20 +631,19 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	private List<String> getRecepientsList(String recepientEmailID2) {
 		List<String> recepientsEmailList = new ArrayList<String>();
-		if(recepientEmailID2.length() > 1){
+		if (recepientEmailID2.length() > 1) {
 			String[] recepientsEmailArray = recepientEmailID2.split(",");
 
-		
 			for (String emailID : recepientsEmailArray) {
 				recepientsEmailList.add(emailID);
 			}
-			
-		}else {
+
+		} else {
 			recepientsEmailList.add(recepientEmailID2);
 		}
 		return recepientsEmailList;
-	    
-    }
+
+	}
 
 	private void sendNewUserAlertEmail(User user, Integer loanID)
 	        throws InvalidInputException, UndeliveredEmailException {
@@ -807,12 +805,15 @@ public class UserProfileServiceImpl implements UserProfileService,
 			userProfileDao.updateInternalUserDetail(user);
 
 		} else {
-			String userType = userVO.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleDescription();
-			
+			String userType = userVO.getInternalUserDetail()
+			        .getInternalUserRoleMasterVO().getRoleDescription();
+
 			throw new InputValidationException(new GenericErrorCode(
 			        ServiceCodes.USER_PROFILE_SERVICE.getServiceID(),
-			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR+userType+" has active loans"),
-			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR+userType+" has active loans");
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR + userType
+			                + " has active loans"),
+			        ErrorConstants.LOAN_MANAGER_DELETE_ERROR + userType
+			                + " has active loans");
 		}
 		return canUserBeDeleted;
 	}
@@ -1317,10 +1318,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 			loanVO = loanService.createLoan(loanVO);
 			LOG.info("loan is created........................................................ ");
 
-			if(loanVO != null){
+			if (loanVO != null) {
 				LOG.info("updating loan milestone table for newly created loan");
-				loanService.saveLoanMilestone(loanVO.getId(),Milestones.NEWFI_LOAN_STATUS.getMilestoneID(),CommonConstants.NEWFI_LOAN_STATUS_DESCRIPTION);
-				
+				loanService.saveLoanMilestone(loanVO.getId(),
+				        Milestones.NEWFI_LOAN_STATUS.getMilestoneID(),
+				        CommonConstants.NEWFI_LOAN_STATUS_DESCRIPTION);
+				loanService
+				        .updateLoanLCState(loanVO.getId(), LoanLCStates.Lead);
+
 			}
 			LOG.info("loan milestone entry made successfully........................................................ ");
 			workflowCoreService.createWorkflow(new WorkflowVO(loanVO.getId()));
@@ -1426,11 +1431,14 @@ public class UserProfileServiceImpl implements UserProfileService,
 							        MilestoneNotificationTypes.COMPLETE_APPLICATION_NOTIFICATION_TYPE,
 							        loanVO.getId(),
 							        WorkflowConstants.COMPLETE_YOUR_APPLICATION_NOTIFICATION_CONTENT);
-							//NEXNF-628
-							/*createAlert(
-							        MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
-							        loanVO.getId(),
-							        WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT);*/
+							// NEXNF-628
+							/*
+							 * createAlert(
+							 * MilestoneNotificationTypes.VERIFY_EMAIL_ALERT,
+							 * loanVO.getId(),
+							 * WorkflowConstants.VERIFY_EMAIL_NOTIFICATION_CONTENT
+							 * );
+							 */
 							if (null != loanVO.getLoanType()
 							        && null != loanVO.getLoanType()
 							                .getLoanTypeCd()
@@ -1871,33 +1879,31 @@ public class UserProfileServiceImpl implements UserProfileService,
 	public User validateRegistrationLink(String userToken, int clientRawOffset)
 	        throws InvalidInputException {
 		User userDetail = findUserByToken(userToken);
-		
+
 		if (userDetail == null) {
 			throw new InvalidInputException("Invalid URL");
 		}
-		
-		
-		Boolean isLinkExpired=utils.hasLinkExpired(userDetail.getTokenGeneratedTime(),
-		        clientRawOffset);
-			
+
+		Boolean isLinkExpired = utils.hasLinkExpired(
+		        userDetail.getTokenGeneratedTime(), clientRawOffset);
+
 		if (isLinkExpired) {
 			throw new InvalidInputException(
 			        "Token Expired - Please use the Reset password link to generate again");
-		}else{
-			
-			//TODO setting as email verified 
-			if(!userDetail.getEmailVerified()){
+		} else {
+
+			// TODO setting as email verified
+			if (!userDetail.getEmailVerified()) {
 				LOG.info("The user is verifying his email: set his verified to true");
 				verifyEmail(userDetail.getId());
 				LOG.info("Also dismiss alert for Verification");
 			}
-			
-			//TODO updating the token as null after email is verified
+
+			// TODO updating the token as null after email is verified
 			UserVO userVOUpdate = new UserVO();
 			userVOUpdate.setId(userDetail.getId());
 			userVOUpdate.setEmailEncryptionToken(null);
-			updateTokenDetails(User
-			        .convertFromVOToEntity(userVOUpdate));
+			updateTokenDetails(User.convertFromVOToEntity(userVOUpdate));
 
 		}
 		return userDetail;
@@ -1987,7 +1993,7 @@ public class UserProfileServiceImpl implements UserProfileService,
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
 		ccList.add(loaAppFormVO.getUser().getUsername()
-			        + CommonConstants.SENDER_EMAIL_ID);
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 
 		sendEmailService.sendEmailForTeam(emailEntity, loaAppFormVO.getLoan()
@@ -1997,62 +2003,64 @@ public class UserProfileServiceImpl implements UserProfileService,
 
 	@Override
 	@Transactional
-	
 	public void updateInternalUserDetails(InternalUserDetail internalUserDetail) {
 		userProfileDao.update(internalUserDetail);
 	}
 
 	@Override
 	@Transactional
-    public boolean deleteUserEntries(UserVO userVO) throws Exception {
+	public boolean deleteUserEntries(UserVO userVO) throws Exception {
 		boolean isSuccess = false;
 
-		
-		
-		if(userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()){			
-			LOG.info("To mark the loan as deleted and change the custoomer status to inactive in user table..........................."+userVO.getId());
+		if (userVO.getUserRole().getId() == UserRolesEnum.CUSTOMER.getRoleId()) {
+			LOG.info("To mark the loan as deleted and change the custoomer status to inactive in user table..........................."
+			        + userVO.getId());
 			LoanVO loanVO = loanService.getActiveLoanOfUser(userVO);
-			if(loanVO!=null){
-				  Loan loan = new Loan(loanVO.getId());
-				  loanService.markLoanDeleted(loan.getId());
-				  isSuccess = true;
-                  LOG.info("Status returned after marking loan as deleted......................userid"+userVO.getId()+":::::staus returned::::"+isSuccess);
+			if (loanVO != null) {
+				Loan loan = new Loan(loanVO.getId());
+				loanService.markLoanDeleted(loan.getId());
+				isSuccess = true;
+				LOG.info("Status returned after marking loan as deleted......................userid"
+				        + userVO.getId()
+				        + ":::::staus returned::::"
+				        + isSuccess);
 			}
 		}
-		
-		//To update realtor status in realtor table
+
+		// To update realtor status in realtor table
 		Integer rowsReturned;
-		if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR
-		        .getRoleId()) {			
-			LOG.info("To delete/change the realtor status to -1 in user table......................"+userVO.getId());
+		if (userVO.getUserRole().getId() == UserRolesEnum.REALTOR.getRoleId()) {
+			LOG.info("To delete/change the realtor status to -1 in user table......................"
+			        + userVO.getId());
 			userVO.setStatus(CommonConstants.STATUS_IS_DELETE);
 			rowsReturned = updateUserStatus(userVO);
-			if(rowsReturned > 0){
-				isSuccess = true;
-			}			
-		}
-		
-		boolean isInternalUserDeleted = false;
-		//TO change the status of user in internal user table
-		if (userVO.getUserRole().getId() == UserRolesEnum.INTERNAL
-		        .getRoleId()) {			
-			LOG.info("To delete/change the user status to -1 in internaluser table......................"+userVO.getId());
-			isInternalUserDeleted = deleteUser(userVO);
-			userVO.setStatus(CommonConstants.STATUS_IS_DELETE);
-			rowsReturned = updateUserStatus(userVO);	
-			if(isInternalUserDeleted && rowsReturned > 0){
+			if (rowsReturned > 0) {
 				isSuccess = true;
 			}
 		}
-		
-		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
-		int rows ;
-		userVO.setStatus(0);	
-		rows = loanService.updateStatusInLoanTeam(userVO);		
-		if(rows == 0){
-			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"+rows);
+
+		boolean isInternalUserDeleted = false;
+		// TO change the status of user in internal user table
+		if (userVO.getUserRole().getId() == UserRolesEnum.INTERNAL.getRoleId()) {
+			LOG.info("To delete/change the user status to -1 in internaluser table......................"
+			        + userVO.getId());
+			isInternalUserDeleted = deleteUser(userVO);
+			userVO.setStatus(CommonConstants.STATUS_IS_DELETE);
+			rowsReturned = updateUserStatus(userVO);
+			if (isInternalUserDeleted && rowsReturned > 0) {
+				isSuccess = true;
+			}
 		}
-		
+
+		LOG.info("To delete/change the user status to 0 in loanTeam table......................");
+		int rows;
+		userVO.setStatus(0);
+		rows = loanService.updateStatusInLoanTeam(userVO);
+		if (rows == 0) {
+			LOG.info("The user is not associated in any team hence the no of updated rows returned o:::::"
+			        + rows);
+		}
+
 		return isSuccess;
 	}
 }

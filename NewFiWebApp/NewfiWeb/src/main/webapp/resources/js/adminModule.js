@@ -743,19 +743,19 @@ function getAdminTeamListTableHeader(userType) {
 	});
 
 	var thCol1 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-th-col1  float-left"
+		"class" : "admin-newfi-team-list-th-col1 sort-up-arrow-78  float-left"
 	}).html("User Name");
 
 	var thCol2 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-th-col2  float-left"
+		"class" : "admin-newfi-team-list-th-col2 last-action-sort-list-asc  float-left"
 	}).html("User Type");
 
 	var thCol3 = $('<div>').attr({
-		"class" : "admin-newfi-team-list-th-col3  float-left"
+		"class" : "admin-newfi-team-list-th-col3 sort-up-arrow-45  float-left"
 	}).html("Email");	
 	
 	var lastLoginCol = $('<div>').attr({	
-		"class" : "admin-newfi-team-list-th-col4  float-left"	
+		"class" : "admin-newfi-team-list-th-col4 last-action-sort-list-asc float-left"	
 	}).html("Last Login");
 	
 	var thCol4=$('<div>').attr({	
@@ -1454,4 +1454,166 @@ function showAdminUserTypeDropDown(){
 	
 	$('#admin-add-usertype-dropdown-cont').show();
 	
+}
+
+//Sort on User name
+$('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col1',function(){
+	
+	var containerId = $(this).parent().parent().attr("id");
+	var isAsc ;
+	
+	if($(this).hasClass('sort-up-arrow-78')){
+		$(this).removeClass('sort-up-arrow-78');
+		$(this).addClass('sort-down-arrow-78');
+		isAsc = 1;
+		
+	}else if($(this).hasClass('sort-down-arrow-78')){
+		$(this).removeClass('sort-down-arrow-78');
+		$(this).addClass('sort-up-arrow-78');
+		isAsc = -1;
+	}
+	
+	sortListByLastName(isAsc, containerId);
+});
+
+//Sort on User Type
+$('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col2',function(){
+	
+	var containerId = $(this).parent().parent().attr("id");
+
+	var isAsc ;
+	
+	if($(this).hasClass('last-action-sort-list-asc')){
+		$(this).removeClass('last-action-sort-list-asc');
+		$(this).addClass('last-action-sort-list-dsc');
+		isAsc = 1;
+		
+	}else if($(this).hasClass('last-action-sort-list-dsc')){
+		$(this).removeClass('last-action-sort-list-dsc');
+		$(this).addClass('last-action-sort-list-asc');
+		isAsc = -1;
+	}
+	
+	sortList(isAsc, containerId, ".admin-newfi-team-list-tr-col2");
+});
+
+//Sort on email
+$('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col3',function(){
+	
+	var containerId = $(this).parent().parent().attr("id");
+	
+	var isAsc ;
+	
+	if($(this).hasClass('sort-up-arrow-45')){
+		$(this).removeClass('sort-up-arrow-45');
+		$(this).addClass('sort-down-arrow-45');
+		isAsc = 1;
+		
+	} else if($(this).hasClass('sort-down-arrow-45')){
+		$(this).removeClass('sort-down-arrow-45');
+		$(this).addClass('sort-up-arrow-45');
+		isAsc = -1;
+	}
+	
+	sortList(isAsc, containerId, ".admin-newfi-team-list-tr-col3");
+});
+
+
+//Sort on Last Login
+$('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col4',function(){
+	
+	var containerId = $(this).parent().parent().attr("id");
+	var isAsc ;
+	if($(this).hasClass('last-action-sort-list-asc')){
+		$(this).removeClass('last-action-sort-list-asc');
+		$(this).addClass('last-action-sort-list-dsc');
+		isAsc = 1;
+		
+	}else if($(this).hasClass('last-action-sort-list-dsc')){
+		$(this).removeClass('last-action-sort-list-dsc');
+		$(this).addClass('last-action-sort-list-asc');
+		isAsc = -1;
+	}
+	
+	sortList(isAsc, containerId, ".admin-newfi-team-list-tr-col4");
+});
+
+
+/**
+ * Method to sort rows based on certain column.
+ * @param isAsc
+ * @param selector
+ */
+function sortList(isAsc, containerId, selector) {
+	var  $userListContainer = $("#" + containerId);
+	var rows = $userListContainer.find('.admin-newfi-team-list-tr').get();
+	
+	rows.sort(function(a, b) {
+		var A = $(a).children(selector).text().toLowerCase();
+		var B = $(b).children(selector).text().toLowerCase();
+
+		if (A < B) {
+			return -1 * isAsc;
+		}
+		if (A > B) {
+			return 1 * isAsc;
+		}
+		
+		return 0;
+	});
+	
+	$.each(rows, function(index, row) {
+		$userListContainer.append(row);
+	});
+}
+
+/**
+ * Method to sort rows based on certain column.
+ * @param isAsc
+ * @param containerId
+ */
+function sortListByLastName(isAsc, containerId) {
+	var  $userListContainer = $("#" + containerId);
+	var rows = $userListContainer.find('.admin-newfi-team-list-tr').get();
+	
+	rows.sort(function(a, b) {
+
+		var name1 = $(a).children(".admin-newfi-team-list-tr-col1").text().toLowerCase();
+		var name2 = $(b).children(".admin-newfi-team-list-tr-col1").text().toLowerCase();
+		name1  = swapLastNameFirstName(name1);
+		name2 = swapLastNameFirstName(name2);
+
+		if (name1 < name2) {
+			return -1 * isAsc;
+		}
+		if (name1 > name2) {
+			return 1 * isAsc;
+		}
+		
+		return 0;
+	});
+	
+	$.each(rows, function(index, row) { 
+		$userListContainer.append(row);
+	});
+}
+
+/**
+ * Method to reverse the name.  
+ * @param name
+ * @returns
+ */
+
+function swapLastNameFirstName(name){
+	if(name != null  && name != undefined){
+        name = name.replace(/  +/g, ' ');
+		var names = name.split(' ');
+        var tmp = "";
+        for(var i = names.length - 1; i >= 0; i-- ){
+        	tmp += names[i] + " ";
+        }
+        return tmp;
+	} else {
+		return name;
+	}
 }

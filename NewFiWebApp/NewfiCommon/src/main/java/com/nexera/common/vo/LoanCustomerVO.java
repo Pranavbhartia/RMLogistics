@@ -32,7 +32,7 @@ public class LoanCustomerVO {
 	private Boolean mobileAlertsPreference;
 	private CustomerDetailVO customerDetail;
 	private Date userLastLoginTime;
-
+	
 	public Date getUserLastLoginTime() {
 		return userLastLoginTime;
 	}
@@ -242,6 +242,6 @@ public class LoanCustomerVO {
 	    this.lqbLoanStatus = lqbLoanStatus;
     }
 
-	
-	
 }
+
+

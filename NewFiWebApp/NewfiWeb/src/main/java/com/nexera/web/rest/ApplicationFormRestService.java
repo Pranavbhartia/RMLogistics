@@ -540,11 +540,11 @@ public class ApplicationFormRestService {
 						String loanAppFrm = gson.toJson(loaAppFormVO);
 						createApplication(loanAppFrm, httpServletRequest);
 						loanCreatedNSaved = true;
-						if(loan != null){
+						/*if(loan != null){
 							LOG.info("updating loan milestone table after application submit and loanID is....."+loan.getId());
 							loanService.saveLoanMilestone(loan.getId(),Milestones.NEWFI_LOAN_STATUS.getMilestoneID(),CommonConstants.NEWFI_SUBMITTED_LOAN_STATUS_DESCRIPTION);
 							
-						}
+						}*/
 					}
 					if(response.contains("status=\"Error\"")){
 						lockRateData = response;

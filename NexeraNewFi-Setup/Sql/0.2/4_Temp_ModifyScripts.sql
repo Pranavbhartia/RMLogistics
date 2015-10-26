@@ -392,3 +392,65 @@ INSERT INTO `newfi_schema`.`loanmilestonemaster` (`id`, `name`, `description`, `
 #Rajeswari : Loan Detail changes
 ALTER TABLE `newfi_schema`.`loan` 
 ADD COLUMN `payment_vendor` VARCHAR(45) NULL DEFAULT NULL ;
+
+#Ranjitha :create new table for newfi loan status Lqb status changes for loan
+CREATE TABLE `newfi_schema`.`loanlcstatemaster` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `loan_progress_status` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`));
+  
+#Ranjitha :Insert newfi loan status
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Lead'); 
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Loan Open');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Pre-Qualified');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Registered');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Pre-Processing');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Processing');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Submitted');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Pre-Approved');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Approved');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Condition Review');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Docs Ordered');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Docs in Title');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Docs Signed');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Funded');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Canceled');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Suspended');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Denied');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Withdrawn');
+INSERT INTO `newfi_schema`.`loanlcstatemaster` (`loan_progress_status`) VALUES ('Application');
+
+#Ranjitha - loanlcstatemaster entry in loan table
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `loanlcstatemaster` INT NULL DEFAULT NULL AFTER `payment_vendor`,
+ADD INDEX `fk_loanlcstatemaster` (`loanlcstatemaster` ASC);
+ALTER TABLE `newfi_schema`.`loan` 
+ADD CONSTRAINT `fk_loanlcstatemaster`
+  FOREIGN KEY (`loanlcstatemaster`)
+  REFERENCES `newfi_schema`.`loanlcstatemaster` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+  
+#Ranjitha - interviewDate entry in loan table 
+ALTER TABLE `newfi_schema`.`loan` 
+ADD COLUMN `interview_date` TIMESTAMP NULL DEFAULT NULL AFTER `loanlcstatemaster`;
+
+#Himanshu - added extra loan_id column in quotedetail table
+ALTER TABLE `newfi_schema`.`quotedetails` 
+ADD COLUMN `loan_id` INT(11) NULL COMMENT '' AFTER `is_deleted`;
+
+#Himanshu - adding foreign key constraint
+ALTER TABLE `newfi_schema`.`quotedetails` 
+ADD INDEX `loan_id_fk_idx` (`loan_id` ASC)  COMMENT '';
+ALTER TABLE `newfi_schema`.`quotedetails` 
+ADD CONSTRAINT `loan_id_fk`
+  FOREIGN KEY (`loan_id`)
+  REFERENCES `newfi_schema`.`loan` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+#Rajeswari: 
+#Change for Customer Worfklow to show "Complete  Application" instead of Application
+UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Application' WHERE `id`='27';
+

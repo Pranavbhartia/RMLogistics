@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
+import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanMilestone;
@@ -78,6 +79,9 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
 			loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
 			        LoanProgressStatusMasterEnum.WITHDRAWN));
+			LOG.debug(" Withdrawn : Updating Loan LC State for " + loanId + "as " + WorkflowConstants.STATUS_LC_STATE_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN).getLcStateKey());
+			loanService.updateLoanLCState(loanId,WorkflowConstants.STATUS_LC_STATE_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_WITHDRAWN));
+			
 		} else if (status.equals(String
 		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_ARCHIVED
 		                .getLosStatusID()))) {
@@ -85,6 +89,16 @@ public class LoanClosureManager extends NexeraWorkflowTask implements
 			completedStatus = WorkItemStatus.COMPLETED.getStatus();
 			subject = CommonConstants.SUBJECT_LOAN_ARCHIVED;
 		}
+		else if (status.equals(String.valueOf(LOSLoanStatus.LQB_STATUS_LOAN_CANCELED
+		        .getLosStatusID()))) {				
+			int loanId = Integer.parseInt(objectMap.get(
+			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
+			LOG.debug("Making loan as cancelled"+loanId);
+			loanService.saveLoanProgress(loanId, new LoanProgressStatusMaster(
+			        LoanProgressStatusMasterEnum.SMCLOSED));
+			LOG.debug(" cancelled : Updating Loan LC State for " + loanId + "as " + WorkflowConstants.STATUS_LC_STATE_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_CANCELED).getLcStateKey());
+			loanService.updateLoanLCState(loanId,WorkflowConstants.STATUS_LC_STATE_LOOKUP.get(LOSLoanStatus.LQB_STATUS_LOAN_CANCELED));
+		} 
 		if (status != null && !status.isEmpty()) {
 			/*
 			 * makeANote(Integer.parseInt(objectMap.get(

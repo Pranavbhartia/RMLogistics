@@ -1,6 +1,7 @@
 package com.nexera.newfi.workflow.tasks;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nexera.common.commons.CommonConstants;
+import com.nexera.common.commons.LoadConstants;
 import com.nexera.common.commons.LoanStatus;
+import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
 import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.InternalUserRolesEum;
-import com.nexera.common.enums.LOSLoanStatus;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
@@ -61,6 +64,9 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 	@Autowired
 	private TemplateService templateService;
 
+	@Autowired
+	private Utils utils;
+
 	@Override
 	public String execute(HashMap<String, Object> objectMap) {
 		String status = objectMap.get(
@@ -68,18 +74,13 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 		LOG.info("Executing Concrete class with Application1003Manager with "
 		        + status);
 		String returnStatus = null;
+
 		if (status.equals(String
-		        .valueOf(LOSLoanStatus.LQB_STATUS_LOAN_SUBMITTED
-		                .getLosStatusID()))) {
+		        .valueOf(LoadConstants.LQB_1003_INTERVIEW_DATE_UPDATED))) {
 			int loanID = Integer.parseInt(objectMap.get(
 			        WorkflowDisplayConstants.LOAN_ID_KEY_NAME).toString());
-			/* makeANote(loanID, LoanStatus.submittedMessage) */;
 			objectMap.put(WorkflowDisplayConstants.WORKITEM_EMAIL_STATUS_INFO,
 			        Milestones.App1003.getMilestoneKey());
-			// Rajeswari : Removing this call to send an email when 1003 is
-			// submitted - till a etmplate is given by nexera
-			// sendEmail(objectMap,
-			// CommonConstants.SUBJECT_APPLICATION_SUBMITTED);
 			createAlertForDisclosureDue(objectMap);
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
 			LOG.info("Saving Loan as INprogres");
@@ -87,7 +88,13 @@ public class Application1003Manager extends NexeraWorkflowTask implements
 			        LoanProgressStatusMasterEnum.IN_PROGRESS));
 			loanService.saveLoanMilestone(loanID,
 			        Milestones.App1003.getMilestoneID(),
-			        LoanStatus.submittedMessage);
+			        LoanStatus.applicationSubmittedMessage);
+			loanService.updateLoanLCState(loanID, LoanLCStates.Application);
+			Date interviewDate = utils.parseStringIntoDate(objectMap.get(
+			        WorkflowDisplayConstants.INTERVIEW_DATE_KEY_NAME).toString());
+			if (interviewDate != null) {
+				loanService.updateInterviewDate(loanID, interviewDate);
+			}
 		}
 		return returnStatus;
 	}

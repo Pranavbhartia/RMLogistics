@@ -19,15 +19,14 @@ SNEnum = {
 
 };
 
-
-
 AgentViewPNEnum = {
 	WORK_ON_LOAN : "work",
 	LOAN : "loan",
 	MY_ARCHIVES : "archive",
 	MY_IMP_ALERTS:"alert",
 	MY_LEADS:"leads",
-	QUICK_QUOTE:"quickQuote"
+	QUICK_QUOTE:"quickQuote",
+	QUICK_QUOTE_LEAD:"quote"
 };
 
 

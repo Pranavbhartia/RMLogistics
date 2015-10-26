@@ -2173,13 +2173,14 @@ function getClosingCostTopConatiner() {
     var row5Con2 = getClosingCostContainerRow(5, getClosingCostLabel("Lenders Title Insurance"), "");
     var row6Con2 = getClosingCostContainerRow(6, getClosingCostLabel("Closing/Escrow Fee"), "");
     var row7Con2 = getClosingCostContainerRow(7, getClosingCostLabel("Recording Fee"), "");
+    var row71Con2 = getClosingCostContainerRow(7, getClosingCostLabel("Notary fees"), "");
     var row8Con2;
     if(closingCostHolder.loanType&&closingCostHolder.loanType=="PUR")
     	//NEXNF-483
         //row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "$ 107.00");
     row8Con2= getClosingCostContainerRow(8, getClosingCostLabel("City/County Tax stamps"), "");
     var row9Con2 = getClosingCostContainerLastRow(9, getClosingCostLabel("Total Estimated Third Party Costs"), "");
-    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row8Con2).append(row9Con2);
+    container2.append(headerCon2).append(row1Con2).append(row2Con2).append(row3Con2).append(row4Con2).append(row4_1Con2).append(row5Con2).append(row6Con2).append(row7Con2).append(row71Con2).append(row8Con2).append(row9Con2);
     
     var container3 = $('<div>').attr({
         "class": "closing-cost-container"
@@ -2304,6 +2305,9 @@ function getClosingCostContainerLastRow(rowNum, desc, detail) {
 function getClosingCostContainerRow(rowNum, desc, detail) {
     var key=objectKeyMakerFunction(desc);
     var indentTextFlag=false;
+    if(key == "notaryfee1110"){
+        closingCostHolder.valueSet[key] = "$25.00";
+    }
     if(closingCostHolder.valueSet[key]){
         detail=closingCostHolder.valueSet[key];
     }
@@ -2316,7 +2320,7 @@ function getClosingCostContainerRow(rowNum, desc, detail) {
     }*/
     //NEXNF-483 and updated for 6.17 updates
     // NEXNF-537
-    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee"||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || desc =="Your cost or credit based on rate selected"){
+    if(desc=="Lender Fee"||desc=="Appraisal Fee"||desc=="Credit Report"||desc=="Flood Certification"||desc=="Wire Fee" || desc == "Notary fees" ||desc=="Owners Title Insurance"||desc=="Lenders Title Insurance"||desc=="Closing/Escrow Fee"||desc=="Recording Fee"||desc=="Interest"||desc=="City/County Transfer Taxes"||desc=="Homeowners Insurance" || desc =="Your cost or credit based on rate selected"){
     	indentTextFlag=true;
     }else{
     	//NEXNF-622
@@ -2446,13 +2450,10 @@ function getFileDragAndDropContainer(loanEmailID) {
 /*    var textCont2 = $('<div>').attr({
         "class": "file-upload-text-cont2"
     }).html("or e-mail attachment to : "+loanEmailID);*/
-   var textCont2 = $('<div>').attr({
 
-        "class": "file-upload-text-cont2"
-    }).html("You can also email files to : "+loanEmailID);
     //NEXNF-806
    /* return container.append(fileUploadIcn).append(textCont1Mobile).append(textCont2);*/
-    return container.append(textCont1).append(fileUploadIcn).append(textCont1Mobile).append(textCont2);
+    return container.append(textCont1).append(fileUploadIcn).append(textCont1Mobile);
 }
 
 function getDocumentContainer() {

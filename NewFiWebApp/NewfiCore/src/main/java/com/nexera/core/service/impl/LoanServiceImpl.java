@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +43,7 @@ import com.nexera.common.entity.LoanTeam;
 import com.nexera.common.entity.LoanTurnAroundTime;
 import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
+import com.nexera.common.entity.QuoteDetails;
 import com.nexera.common.entity.Template;
 import com.nexera.common.entity.TitleCompanyMaster;
 import com.nexera.common.entity.TransactionDetails;
@@ -51,6 +51,7 @@ import com.nexera.common.entity.UploadedFilesList;
 import com.nexera.common.entity.User;
 import com.nexera.common.entity.WorkflowItemMaster;
 import com.nexera.common.enums.InternalUserRolesEum;
+import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.LoanTypeMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
@@ -68,7 +69,6 @@ import com.nexera.common.vo.LeadsDashBoardVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
-import com.nexera.common.vo.LoanDetailVO;
 import com.nexera.common.vo.LoanLockRateVO;
 import com.nexera.common.vo.LoanTeamListVO;
 import com.nexera.common.vo.LoanTeamVO;
@@ -80,7 +80,6 @@ import com.nexera.common.vo.MileStoneTurnAroundTimeVO;
 import com.nexera.common.vo.NotificationVO;
 import com.nexera.common.vo.PropertyTypeMasterVO;
 import com.nexera.common.vo.QuoteDetailsVO;
-import com.nexera.common.vo.DashboardCriteriaVO;
 import com.nexera.common.vo.TitleCompanyMasterVO;
 import com.nexera.common.vo.UserLoanStatus;
 import com.nexera.common.vo.UserVO;
@@ -213,6 +212,20 @@ public class LoanServiceImpl implements LoanService {
 
 		loanDao.updateAppraisalVendor(loanID, appraisalVendorName);
 
+		return;
+	}
+
+	@Override
+	@Transactional
+	public void updateLoanLCState(Integer loanID, LoanLCStates loanLCSState) {
+		loanDao.updateLoanLCStateMaster(loanID, loanLCSState);
+		return;
+	}
+
+	@Override
+	@Transactional
+	public void updateInterviewDate(Integer loanID, Date interviewDate) {
+		loanDao.updateInterviewDateForLoan(loanID, interviewDate);
 		return;
 	}
 
@@ -392,10 +405,9 @@ public class LoanServiceImpl implements LoanService {
 		// Get new prospect and lead loans this user has access to.
 		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
 		        this.parseUserModel(userVO),
-		        new int[] { LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId(),
-		                LoanProgressStatusMasterEnum.IN_PROGRESS
-		                        .getStatusId() });
-		;
+		        new int[] { LoanProgressStatusMasterEnum.IN_PROGRESS
+		                .getStatusId() });
+
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
@@ -414,11 +426,14 @@ public class LoanServiceImpl implements LoanService {
 		// Get new prospect and lead loans this user has access to.
 		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
 		        this.parseUserModel(userVO),
-		        new int[] { LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId(),
+		        new int[] {
+		                /*
+		                 * LoanProgressStatusMasterEnum.NEW_LOAN .getStatusId(),
+		                 */
 		                LoanProgressStatusMasterEnum.IN_PROGRESS
 		                        .getStatusId() },
 		        startLimt, endLimt);
-		;
+
 		LoanDashboardVO loanDashboardVO = this
 		        .buildLoanDashboardVoFromLoanList(loanList);
 
@@ -480,11 +495,13 @@ public class LoanServiceImpl implements LoanService {
 			for (Loan loan : loanList) {
 				LoanCustomerVO loanCustomerVO = this
 				        .buildLoanCustomerVoFromUser(loan);
-				LoanMilestone loan_status = getLqbLoanStatus(loan);
-				if (loan_status != null) {
-					loanCustomerVO.setLqbLoanStatus(loan_status.getComments());
+				if (loanCustomerVO.getLqbLoanStatus() == null) {
+					LoanMilestone loan_status = getLqbLoanStatus(loan);
+					if (loan_status != null) {
+						loanCustomerVO
+						        .setLqbLoanStatus(loan_status.getComments());
+					}
 				}
-
 				loanCustomerVoList.add(loanCustomerVO);
 
 			}
@@ -636,6 +653,143 @@ public class LoanServiceImpl implements LoanService {
 		// TODO to append user last login time
 		if (user.getLastLoginDate() != null) {
 			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
+		}
+
+		if (loan.getLoanLCStateMaster() != null) {
+			loanCustomerVO.setLqbLoanStatus(
+			        loan.getLoanLCStateMaster().getLoanLCState());
+
+		}
+
+		return loanCustomerVO;
+	}
+
+	private LeadsDashBoardVO buildLeadCustomerVoFromUser(Loan loan) {
+
+		User user = loan.getUser();
+		CustomerDetail customerDetail = user.getCustomerDetail();
+		List<LoanTeam> loanTeamList = loan.getLoanTeam();
+		LeadsDashBoardVO loanCustomerVO = new LeadsDashBoardVO();
+
+		loanCustomerVO.setTime(
+		        utils.getDateAndTimeForUserDashboard(loan.getModifiedDate()));
+
+		loanCustomerVO.setName(user.getFirstName() + " " + user.getLastName());
+		loanCustomerVO.setProf_image(user.getPhotoImageUrl());
+		loanCustomerVO.setPhone_no(user.getPhoneNumber());
+		loanCustomerVO.setLoanID(loan.getId());
+		loanCustomerVO.setUserID(user.getId());
+		if (user.getUserRole() != null)
+			loanCustomerVO.setRole(user.getUserRole().getLabel());
+		loanCustomerVO.setLoanInitiatedOn(loan.getCreatedDate());
+		loanCustomerVO.setLastActedOn(loan.getModifiedDate());
+		loanCustomerVO.setLoanStatus(
+		        loan.getLoanProgressStatus().getLoanProgressStatus());
+
+		loanCustomerVO.setLqbFileId(loan.getLqbFileId());
+		loanCustomerVO.setLockedRateData(loan.getLockedRateData());
+		/*
+		 * TODO: Check if the logged in user is a Sales Manager. and show the
+		 * name of the loan manager instead of processor.
+		 */
+
+		boolean processorPresent = Boolean.FALSE;
+		boolean loanManagerPresent = Boolean.FALSE;
+		String loanManagerList = "";
+		if (loan.getLoanTeam() != null) {
+			loanTeamList = loan.getLoanTeam();
+			for (LoanTeam loanTeam : loanTeamList) {
+				User loanUser = loanTeam.getUser();
+				if (loanUser.getInternalUserDetail() != null) {
+					InternalUserRoleMaster internalUserRoleMaster = loanUser
+					        .getInternalUserDetail().getInternaUserRoleMaster();
+					if (internalUserRoleMaster != null && internalUserRoleMaster
+					        .getId() == InternalUserRolesEum.PC.getRoleId()) {
+						loanCustomerVO.setProcessor(loanUser.getFirstName()
+						        + " " + loanUser.getLastName());
+						processorPresent = Boolean.TRUE;
+					} else if (checkIfUserIsSalesManager()) {
+						if (loanUser.getInternalUserDetail()
+						        .getInternaUserRoleMaster()
+						        .getId() == InternalUserRolesEum.LM.getRoleId()
+						        && loanTeam.getActive() != null
+						        && loanTeam.getActive()) {
+							loanManagerList = loanManagerList
+							        + loanUser.getFirstName() + " "
+							        + loanUser.getLastName() + ",";
+							loanManagerPresent = Boolean.TRUE;
+							processorPresent = Boolean.TRUE;
+
+						}
+
+					}
+				}
+
+			}
+
+		}
+		if (!processorPresent) {
+			loanCustomerVO.setProcessor("-");
+		}
+		if (loanManagerPresent) {
+			if (loanManagerList.endsWith(",")) {
+				loanManagerList = loanManagerList.substring(0,
+				        loanManagerList.length() - 1);
+			}
+
+			loanCustomerVO.setProcessor(loanManagerList);
+		}
+
+		loanCustomerVO.setPurpose(loan.getLoanType().getDescription());
+		loanCustomerVO.setAlert_count("3");
+		if (customerDetail != null) {
+			// constructCreditScore(customerDetail.get);
+			loanCustomerVO.setCredit_score(utils
+			        .constrtClickableCreditScore(customerDetail, loan.getId()));
+
+		} else {
+			loanCustomerVO.setCredit_score("-");
+		}
+
+		loanCustomerVO.setFirstName(user.getFirstName());
+		loanCustomerVO.setLastName(user.getLastName());
+		loanCustomerVO.setEmailId(user.getEmailId());
+		if (user.getMobileAlertsPreference() != null) {
+			loanCustomerVO.setMobileAlertsPreference(
+			        user.getMobileAlertsPreference());
+		}
+		if (user.getCarrierInfo() != null) {
+			MobileCarriersEnum mobileCarrier = MobileCarriersEnum
+			        .getCarrierNameForEmail(user.getCarrierInfo());
+			loanCustomerVO.setCarrierInfo(mobileCarrier.getCarrierName());
+		}
+		CustomerDetailVO customerDetailVO = new CustomerDetailVO();
+		if (customerDetail != null) {
+			customerDetailVO.setAddressCity(customerDetail.getAddressCity());
+			customerDetailVO.setAddressState(customerDetail.getAddressState());
+			customerDetailVO
+			        .setAddressStreet(customerDetail.getAddressStreet());
+			customerDetailVO
+			        .setAddressZipCode(customerDetail.getAddressZipCode());
+
+			if (null != customerDetail.getDateOfBirth()) {
+				SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+				String date = df.format(customerDetail.getDateOfBirth());
+				customerDetailVO.setDateOfBirth(date);
+			}
+			customerDetailVO.setId(customerDetail.getId());
+		}
+		loanCustomerVO.setCustomerDetail(customerDetailVO);
+
+		// TODO to append user last login time
+		if (user.getLastLoginDate() != null) {
+			loanCustomerVO.setUserLastLoginTime(user.getLastLoginDate());
+		}
+
+		if (loan.getLoanLCStateMaster() != null) {
+			loanCustomerVO.setLqbLoanStatus(
+			        loan.getLoanLCStateMaster().getLoanLCState());
+
 		}
 
 		return loanCustomerVO;
@@ -1591,6 +1745,10 @@ public class LoanServiceImpl implements LoanService {
 			if (lqbLoanStatus != null) {
 				loanVO.setLqbLoanStatus(lqbLoanStatus.getComments());
 			}
+
+			if (loanVO.getLoanLCStateMaster() != null) {
+				loanVO.setLqbLoanStatus(loanVO.getLoanLCStateMaster());
+			}
 		}
 
 		LoanAppForm appForm = loanAppFormService.findByLoan(loan);
@@ -2394,7 +2552,179 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO,
+	        String startLimit, String endLimit) {
+		int startLimt = Integer.parseInt(startLimit);
+		int endLimt = startLimt + 15;
+		if (endLimit != null) {
+			endLimt = Integer.parseInt(endLimit);
+		}
+		// Get new prospect and lead loans this user has access to.
+		List<QuoteDetails> quoteList = loanDao.retrieveLoanForMyLeads(
+		        this.parseUserModel(userVO), startLimt, endLimt);
+		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO),
+		        new int[] {
+		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() },
+		        startLimt, endLimt);
+		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
+		        quoteList, userVO.getId());
+
+		return loanDashboardVO;
+	}
+
+	/**
+	 * @param loanList
+	 * @param quoteList
+	 * @param userid
+	 * @return
+	 */
+	private LoanDashboardVO buildLeadDashboardVoFromList(List<Loan> loanList,
+	        List<QuoteDetails> quoteList, int userID) {
+
+		LoanDashboardVO loanDashboardVO = new LoanDashboardVO();
+		List<LeadsDashBoardVO> loanCustomerVoList = new ArrayList<LeadsDashBoardVO>();
+
+		if (loanList != null || quoteList != null) {
+			for (Loan loan : loanList) {
+
+				LeadsDashBoardVO loanCustomerVO = this
+				        .buildLeadCustomerVoFromUser(loan);
+				if (loanCustomerVO.getLqbLoanStatus() == null) {
+					LoanMilestone loan_status = getLqbLoanStatus(loan);
+					if (loan_status != null) {
+						loanCustomerVO
+						        .setLqbLoanStatus(loan_status.getComments());
+					}
+				}
+				loanCustomerVoList.add(loanCustomerVO);
+
+			}
+
+			boolean isLoanCreated = false;
+			for (QuoteDetails quoteDetail : quoteList) {
+				if (quoteDetail.getLoan() != null) {
+					isLoanCreated = true;
+					getQuoteDetailForLoan(quoteDetail, loanCustomerVoList);
+					// Loan is created from this Quote = So find the Loan from
+					// the prev list and put details like Quote
+				}
+
+				if (!quoteDetail.getIsDeleted() && !isLoanCreated) {
+
+					LeadsDashBoardVO leadAsQuoteVO = new LeadsDashBoardVO();
+
+					UserVO internalUserDeatils = userProfileService
+					        .findUser(quoteDetail.getQuoteCompositeKey()
+					                .getInternalUserId());
+					leadAsQuoteVO.setInternalUserName(
+					        internalUserDeatils.getFirstName() + " "
+					                + internalUserDeatils.getLastName());
+					leadAsQuoteVO.setName(quoteDetail.getProspectFirstName()
+					        + " " + quoteDetail.getProspectLastName());
+					leadAsQuoteVO.setInternalUserId(quoteDetail
+					        .getQuoteCompositeKey().getInternalUserId());
+					leadAsQuoteVO.setInputDetailsJson(
+					        quoteDetail.getInputDetailsJson());
+					leadAsQuoteVO.setPdfUrl(quoteDetail.getPdfUrl());
+					leadAsQuoteVO.setIsCreated(quoteDetail.getIsCreated());
+					leadAsQuoteVO.setIsDeleted(quoteDetail.getIsDeleted());
+					leadAsQuoteVO.setEmailId(quoteDetail.getEmailId());
+					leadAsQuoteVO.setQuote(true);
+					leadAsQuoteVO.setProspectUsername(
+					        quoteDetail.getQuoteCompositeKey().getUserName());
+					if (quoteDetail.getCreatedDate() != null) {
+						leadAsQuoteVO
+						        .setLastActedOn(quoteDetail.getCreatedDate());
+					}
+					loanCustomerVoList.add(leadAsQuoteVO);
+				}
+
+			}
+		}
+
+		loanDashboardVO.setLeads(loanCustomerVoList);
+		// set no of loans as num_found
+		loanDashboardVO.setNum_found(loanList.size());
+		return loanDashboardVO;
+	}
+
+	private void getQuoteDetailForLoan(QuoteDetails quoteDetail,
+	        List<LeadsDashBoardVO> loanCustomerVoList) {
+
+		LeadsDashBoardVO theLeadToModify = null;
+		for (LeadsDashBoardVO leadVO : loanCustomerVoList) {
+			// find the loan
+			if (leadVO.getLoanID() != null && leadVO.getLoanID() .equals(quoteDetail.getLoan().getId())   ){
+				theLeadToModify = leadVO;
+				break;
+			}
+		}
+		if (theLeadToModify != null) {
+			UserVO internalUserDeatils = userProfileService.findUser(
+			        quoteDetail.getQuoteCompositeKey().getInternalUserId());
+			theLeadToModify
+			        .setInternalUserName(internalUserDeatils.getFirstName()
+			                + " " + internalUserDeatils.getLastName());
+			theLeadToModify.setName(quoteDetail.getProspectFirstName() + " "
+			        + quoteDetail.getProspectLastName());
+			theLeadToModify.setInternalUserId(
+			        quoteDetail.getQuoteCompositeKey().getInternalUserId());
+			theLeadToModify
+			        .setInputDetailsJson(quoteDetail.getInputDetailsJson());
+			theLeadToModify.setPdfUrl(quoteDetail.getPdfUrl());
+			theLeadToModify.setIsCreated(quoteDetail.getIsCreated());
+			theLeadToModify.setIsDeleted(quoteDetail.getIsDeleted());
+			theLeadToModify.setProspectUsername(
+			        quoteDetail.getQuoteCompositeKey().getUserName());
+			theLeadToModify.setIsQuoteAndLoan(Boolean.TRUE);
+		}
+
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO) {
+
+		LOG.info(
+		        "Inside retrieve Dashboard for user............................................."
+		                + userVO.getId());
+		// Get new prospect and lead loans this user has access to.
+		List<QuoteDetails> quoteList = loanDao
+		        .retrieveLoanForMyLeads(this.parseUserModel(userVO));
+		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO), new int[] {
+		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() });
+		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
+		        quoteList, userVO.getId());
+
+		return loanDashboardVO;
+	}
+
+	/**
+	 * @param quoteDetails
+	 * @return
+	 */
+	private QuoteDetailsVO buildQuoteDetailsV0(QuoteDetails quoteDetails) {
+		LOG.info("Inside buildQuoteDetailsVO for the quote and email is ...."
+		        + quoteDetails.getEmailId() + "firstName is...."
+		        + quoteDetails.getProspectFirstName());
+
+		QuoteDetailsVO quoteDetailsVO = QuoteDetailsVO
+		        .convertEntityToVO(quoteDetails);
+		UserVO internalUserDeatils = userProfileService.findUser(
+		        quoteDetails.getQuoteCompositeKey().getInternalUserId());
+		quoteDetailsVO.setInternalUserName(internalUserDeatils.getFirstName()
+		        + " " + internalUserDeatils.getLastName());
+		LOG.info("After converting vo to entity and email is ...."
+		        + quoteDetails.getEmailId() + "firstName is...."
+		        + quoteDetails.getProspectFirstName());
+		return quoteDetailsVO;
+	}
+
 	@Transactional
+	@Override
 	public Integer updateLQBAmounts(Loan loan) {
 		Integer rows = loanDao.updateLQBAmounts(loan);
 		return rows;
@@ -2407,25 +2737,6 @@ public class LoanServiceImpl implements LoanService {
 		return rows;
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO,
-	        String startLimit, String endLimit) {
-		int startLimt = Integer.parseInt(startLimit);
-		int endLimt = startLimt + 15;
-		if (endLimit != null) {
-			endLimt = Integer.parseInt(endLimit);
-		}
-		// Get new prospect and lead loans this user has access to.
-		List<QuoteDetailsVO> loanList = loanDao.retrieveLoanForMyLeads(
-		        this.parseUserModel(userVO), startLimt, endLimt);
-
-		LeadsDashBoardVO dashBoardVO = new LeadsDashBoardVO();
-		dashBoardVO.setQuoteDetails(loanList);
-
-		return dashBoardVO;
-	}
-
 	@Transactional
 	public LoanApplicationFee addLoanApplicationFee(
 	        LoanApplicationFee loanApplicationFee) {
@@ -2436,19 +2747,6 @@ public class LoanServiceImpl implements LoanService {
 	public TransactionDetails updateTransactionDetails(
 	        TransactionDetails transactionDetails) {
 		return loanDao.updateTransactionDetails(transactionDetails);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public LeadsDashBoardVO retrieveDashboardForMyLeads(UserVO userVO) {
-
-		// Get new prospect and lead loans this user has access to.
-		List<QuoteDetailsVO> loanList = loanDao
-		        .retrieveLoanForMyLeads(this.parseUserModel(userVO));
-
-		LeadsDashBoardVO dashboardVO = new LeadsDashBoardVO();
-		dashboardVO.setQuoteDetails(loanList);
-		return dashboardVO;
 	}
 
 	@Transactional(readOnly = true)

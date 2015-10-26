@@ -2,6 +2,10 @@ package com.nexera.common.vo;
 
 import java.util.Date;
 
+import com.nexera.common.compositekey.QuoteCompositeKey;
+import com.nexera.common.entity.Loan;
+import com.nexera.common.entity.QuoteDetails;
+
 public class QuoteDetailsVO {
 
 	private Integer id;
@@ -16,7 +20,25 @@ public class QuoteDetailsVO {
 	private String emailId;
 	private String phoneNo;
 	private Boolean isCreated = false;
-    private Boolean isDeleted = false;
+	private Boolean isDeleted = false;
+	private String internalUserName;
+	private LoanVO loan;
+
+	public LoanVO getLoan() {
+		return loan;
+	}
+
+	public void setLoan(LoanVO loan) {
+		this.loan = loan;
+	}
+
+	public String getInternalUserName() {
+		return internalUserName;
+	}
+
+	public void setInternalUserName(String internalUserName) {
+		this.internalUserName = internalUserName;
+	}
 
 	public Boolean getIsCreated() {
 		return isCreated;
@@ -120,6 +142,66 @@ public class QuoteDetailsVO {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	/**
+	 * @param quoteDetailsVO
+	 * @return
+	 */
+	public static QuoteDetails convertVOToEntity(
+	        QuoteDetailsVO quoteDetailsVO) {
+
+		QuoteDetails quoteDetails = new QuoteDetails();
+		quoteDetails.setCreatedDate(quoteDetailsVO.getCreatedDate());
+		quoteDetails.setEmailId(quoteDetailsVO.getEmailId());
+		quoteDetails.setInputDetailsJson(quoteDetailsVO.getInputDetailsJson());
+		QuoteCompositeKey quoteCompositeKey = new QuoteCompositeKey();
+		quoteCompositeKey.setInternalUserId(quoteDetailsVO.getInternalUserId());
+		quoteCompositeKey.setUserName(quoteDetailsVO.getProspectUsername());
+		quoteDetails.setQuoteCompositeKey(quoteCompositeKey);
+		quoteDetails.setLqbRateJson(quoteDetailsVO.getLqbRateJson());
+		quoteDetails.setPdfUrl(quoteDetailsVO.getPdfUrl());
+		quoteDetails.setPhoneNo(quoteDetailsVO.getPhoneNo());
+		quoteDetails
+		        .setProspectFirstName(quoteDetailsVO.getProspectFirstName());
+		quoteDetails.setProspectLastName(quoteDetailsVO.getProspectLastName());
+		quoteDetails.setIsCreated(quoteDetailsVO.getIsCreated());
+		quoteDetails.setIsDeleted(quoteDetailsVO.getIsDeleted());
+		quoteDetails.setId(quoteDetailsVO.getId());
+		quoteDetails
+		        .setLoan(Loan.convertFromVOToEntity(quoteDetailsVO.getLoan()));
+		return quoteDetails;
+	}
+
+	/**
+	 * @param quoteDetails
+	 * @return
+	 */
+	public static QuoteDetailsVO convertEntityToVO(QuoteDetails quoteDetails) {
+
+		QuoteDetailsVO quoteDetailsVO = new QuoteDetailsVO();
+		quoteDetailsVO.setCreatedDate(quoteDetails.getCreatedDate());
+		quoteDetailsVO.setEmailId(quoteDetails.getEmailId());
+		quoteDetailsVO.setInputDetailsJson(quoteDetails.getInputDetailsJson());
+		quoteDetailsVO.setInternalUserId(
+		        quoteDetails.getQuoteCompositeKey().getInternalUserId());
+		quoteDetailsVO.setLqbRateJson(quoteDetails.getLqbRateJson());
+		quoteDetailsVO.setPdfUrl(quoteDetails.getPdfUrl());
+		quoteDetailsVO.setPhoneNo(quoteDetails.getPhoneNo());
+		quoteDetailsVO
+		        .setProspectFirstName(quoteDetails.getProspectFirstName());
+		quoteDetailsVO.setProspectLastName(quoteDetails.getProspectLastName());
+		quoteDetailsVO.setIsCreated(quoteDetails.getIsCreated());
+		quoteDetailsVO.setIsDeleted(quoteDetails.getIsDeleted());
+		quoteDetailsVO.setProspectUsername(
+		        quoteDetails.getQuoteCompositeKey().getUserName());
+		quoteDetailsVO.setId(quoteDetails.getId());
+		quoteDetailsVO
+		        .setLoan(Loan.convertFromEntityToVO(quoteDetails.getLoan()));
+		quoteDetailsVO.setInternalUserName(quoteDetails.getProspectFirstName()
+		        + " " + quoteDetails.getProspectLastName());
+
+		return quoteDetailsVO;
 	}
 
 }

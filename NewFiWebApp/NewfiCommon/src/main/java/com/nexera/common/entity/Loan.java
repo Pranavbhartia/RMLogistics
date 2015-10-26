@@ -75,6 +75,28 @@ public class Loan implements Serializable {
 	private Double lqbAppraisedValue;
 	private Double ltv;
 	private String paymentVendor;
+	private LoanLCStateMaster loanLCStateMaster;
+	private Date interviewDate;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "interview_date")
+	public Date getInterviewDate() {
+		return interviewDate;
+	}
+
+	public void setInterviewDate(Date interviewDate) {
+		this.interviewDate = interviewDate;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "loanlcstatemaster")
+	public LoanLCStateMaster getLoanLCStateMaster() {
+		return loanLCStateMaster;
+	}
+
+	public void setLoanLCStateMaster(LoanLCStateMaster loanLCStateMaster) {
+		this.loanLCStateMaster = loanLCStateMaster;
+	}
 
 	@Column(name = "bank_connected", columnDefinition = "TINYINT")
 	@Type(type = "org.hibernate.type.NumericBooleanType")
@@ -458,6 +480,42 @@ public class Loan implements Serializable {
 		this.lockedRate = lockedRate;
 	}
 
+	public static Loan convertFromVOToEntity(LoanVO loanVo) {
+		if (loanVo == null)
+			return null;
+
+		Loan loan = new Loan();
+		loan.setId(loanVo.getId());
+		loan.setCreatedDate(loanVo.getCreatedDate());
+		loan.setDeleted(loanVo.getDeleted());
+		loan.setLoanEmailId(loanVo.getLoanEmailId());
+		loan.setLqbFileId(loanVo.getLqbFileId());
+		loan.setCreatedDate(loanVo.getCreatedDate());
+		loan.setModifiedDate(loanVo.getModifiedDate());
+		loan.setAppFee(loanVo.getAppFee());
+		loan.setName(loanVo.getName());
+		loan.setLockExpirationDate(loanVo.getLockExpirationDate());
+		loan.setRateLockRequested(loanVo.getRateLockRequested());
+		loan.setLockedRateData(loanVo.getLockedRateData());
+		loan.setPaymentVendor(loanVo.getPaymentVendor());
+		loan.setPurchaseDocumentExpiryDate(loanVo
+		        .getPurchaseDocumentExpiryDate());
+
+		if (loanVo.getLoanType() != null) {
+			loan.setLoanType(LoanTypeMaster.convertVoToEntity(loanVo
+			        .getLoanType()));
+		}
+
+		loan.setUser(User.convertFromVOToEntity(loanVo.getUser()));
+		loan.setIsBankConnected(loanVo.getIsBankConnected());
+		loan.setLockStatus(loanVo.getLockStatus());
+		loan.setLockedRate(loanVo.getLockedRate());
+		if (loanVo.getLtv() != null) {
+			loan.setLtv(loanVo.getLtv());
+		}
+		return loan;
+	}
+
 	public static LoanVO convertFromEntityToVO(Loan loan) {
 		if (loan == null)
 			return null;
@@ -515,9 +573,13 @@ public class Loan implements Serializable {
 		if (loan.getLqbAppraisedValue() != null) {
 			loanVo.setAppraisedValue(loan.getLqbAppraisedValue());
 		}
-		
-		if(loan.getLtv() != null){
+
+		if (loan.getLtv() != null) {
 			loanVo.setLtv(loan.getLtv());
+		}
+		if (loan.getLoanLCStateMaster() != null) {
+			loanVo.setLoanLCStateMaster(loan.getLoanLCStateMaster()
+			        .getLoanLCState());
 		}
 		return loanVo;
 	}
@@ -530,7 +592,7 @@ public class Loan implements Serializable {
 		detailVO.setId(detail.getId());
 		detailVO.setDownPayment(detail.getDownPayment());
 		detailVO.setLoanAmount(detail.getLoanAmount());
-		detailVO.setRate(detail.getRate());		
+		detailVO.setRate(detail.getRate());
 		return detailVO;
 
 	}
@@ -619,12 +681,13 @@ public class Loan implements Serializable {
 
 	@Column(name = "ltv")
 	public Double getLtv() {
-	    return ltv;
-    }
+		return ltv;
+	}
 
 	public void setLtv(Double ltv) {
-	    this.ltv = ltv;
-    }
+		this.ltv = ltv;
+	}
+
 	@Column(name = "payment_vendor")
 	public String getPaymentVendor() {
 		return paymentVendor;
@@ -633,6 +696,5 @@ public class Loan implements Serializable {
 	public void setPaymentVendor(String paymentVendor) {
 		this.paymentVendor = paymentVendor;
 	}
-	
 
 }

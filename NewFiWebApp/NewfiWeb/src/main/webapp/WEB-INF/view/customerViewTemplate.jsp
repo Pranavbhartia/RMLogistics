@@ -131,9 +131,9 @@
                 //adjustFooter();
 			});
 			var loanType=JSON.parse(newfi.appUserDetails).loanType.description;
-			if(loanType === "Purchase")
-				loanType = "Home Buyer";
-			$('#loanType').text(loanType);
+			//NEXNF-1078
+			// Deleted the display and the div
+			
 			var initialText = getInitials(newfiObject.user.firstName,newfiObject.user.lastName);
 			if(newfiObject.user.photoImageUrl == "" || newfiObject.user.photoImageUrl == null){
 				//$("#myProfilePicture").addClass("lp-pic float-left");

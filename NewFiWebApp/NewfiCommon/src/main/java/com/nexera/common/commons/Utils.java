@@ -11,6 +11,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -144,7 +145,7 @@ public class Utils {
 		return null;
 
 	}
-	
+
 	public String getDateAndTimeForUserManagement(Date date) {
 
 		Integer offSetFromUser = getOffsetFromUserObject();
@@ -177,9 +178,9 @@ public class Utils {
 		return null;
 
 	}
-	
+
 	public String getDateAndTimeForLQBUpdate(Date date) {
-		
+
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 		try {
 			String stringdate = dateFormat.format(date);
@@ -210,7 +211,7 @@ public class Utils {
 		}
 		return null;
 
-	}		
+	}
 
 	public Date getDateInUserLocale(Date date) {
 
@@ -305,6 +306,17 @@ public class Utils {
 			return false;
 		}
 
+	}
+
+	public Date parseStringIntoDate(String dateTime) {
+		Date date = null;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		try {
+			date = simpleDateFormat.parse(dateTime);
+		} catch (ParseException pe) {
+			LOG.error("This format not supported for" + dateTime);
+		}
+		return date;
 	}
 
 	// To be used by all modules to fetch the currently logged in user

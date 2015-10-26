@@ -1,1 +1,2 @@
 *.classpath
+NewFiWebApp/NewfiCommon/src/main/java/com/nexera/common/dao/impl/LoanDaoImpl.java

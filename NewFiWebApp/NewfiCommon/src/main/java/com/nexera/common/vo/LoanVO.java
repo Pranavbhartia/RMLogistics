@@ -67,6 +67,24 @@ public class LoanVO implements Serializable {
 	private Double ltv;
 
 	private String paymentVendor;
+	private String loanLCStateMaster;
+	private Date interview_date;
+
+	public String getLoanLCStateMaster() {
+		return loanLCStateMaster;
+	}
+
+	public void setLoanLCStateMaster(String loanLCStateMaster) {
+		this.loanLCStateMaster = loanLCStateMaster;
+	}
+
+	public Date getInterview_date() {
+		return interview_date;
+	}
+
+	public void setInterview_date(Date interview_date) {
+		this.interview_date = interview_date;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;

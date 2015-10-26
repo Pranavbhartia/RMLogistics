@@ -430,9 +430,10 @@ function adjustAgentDashboardOnResize() {
 }
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
-	var statusIcnWidth = $('.onl-status-icn').width();
+	//var statusIcnWidth = $('.onl-status-icn').width();
 	var cusImgWidth = $('.cus-img-icn').width();
-	var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 40;
+	//var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 40;
+	var cusNameWidth = cusNameColWidth - (cusImgWidth + 40);
 	$('.cus-name').attr('style', 'width:' + cusNameWidth + 'px');
 }
 
@@ -580,6 +581,8 @@ function getClosingCostLabel(item) {
 		return "Closing/Escrow Fee";
 	case "Recording Fee":
 		return "Recording Fee";
+    case "Notary fees":
+        return "Notary fees";
 		//NEXNF-483 if text need to be changed please change only value being returned
 	case "City/County Tax stamps":
 		return "City/County Transfer Taxes";
@@ -647,6 +650,8 @@ function objectKeyMakerFunction(item) {
 		return "totEstResDepWthLen";
 	case getClosingCostLabel("Total Estimated Closing Cost"):
 		return "totEstimatedClosingCost";
+    case "Notary fees":
+        return "notaryfee1110";
 	}
 	return undefined;
 }
@@ -759,8 +764,12 @@ function getCalculationFunctionForItem(key) {
 			if (isNaN(val9)) {
 				val9 = 0;
 			}
+            var val10 = getFloatValue(closingCostHolder.valueSet["notaryfee1110"]);
+            if (isNaN(val10)) {
+                val10 = 0;
+            }
 			var result = val1 + val2 + val3 + val4 + val5 + val6 + val7 + val8
-					+ val9;
+					+ val9 + val10;
 			return result;
 		};
 		break;

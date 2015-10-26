@@ -1,3 +1,4 @@
+
 /*
  *Contains JavaScript functions for agent dashboard pages
  */
@@ -13,6 +14,7 @@ var isLoanManager="";
 var isRealtor="";
 var isArchivedLoans = "";
 var fetchedCount;
+
 
 LOAN_ENUM = {
 	ALL : "ALL",
@@ -153,6 +155,7 @@ function reInitializeGlobalvariables(){
 }
 
 function getDashboardPanelMyLeads(loanType){
+	
 	var startLimit=0;
 	if(fetchedCount)
 		startLimit=fetchedCount;
@@ -160,14 +163,16 @@ function getDashboardPanelMyLeads(loanType){
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLeads/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
+				$("#agent-dashboard-container").empty();
 				newfiObject.fetchLock=undefined;
 				isArchivedLoans = false;
 				if(startLimit==0){
-					paintLeadsAgentDashboardRightPanel(response.resultObject.quoteDetails);
+					paintLeadsAgentDashboardRightPanel(response.resultObject);
 				}else{
 					if(response.resultObject&&response.resultObject.quoteDetails){
-						customers=response.resultObject.quoteDetails;
+						customers=response.resultObject;
 						appendLeads("leads-container", customers);
+						
 						
 					}
 				}	
@@ -501,149 +506,408 @@ function checkCreditScore(creditScore){
  * @param elementId of container to which lead list to be appended
  * @param customers is the leads
  */
-	function appendLeads(elementId, customers){
+	
+	function appendLeads(elementId, list){
+	
 		
-				var list = customers;	
-				appendTableHeader(elementId);
-				for (var i = 0; i < list.length; i++) {
-				var customer = list[i];
-		if(!customer.isDeleted){
+		var loanList = list.leads;
+		appendTableHeader(elementId);
+		loanList.sort(function(a, b) {
+		    a = new Date(a.lastActedOn);
+		    b = new Date(b.lastActedOn);
+		    return a>b ? -1 : a<b ? 1 : 0;
+		});
+		$('#agent-dashboard-container').addClass('leads-dashboard');
+		
+		
+		for(var i = 0; i < loanList.length; i++) {
+			var customer = loanList[i];
+			if(customer.quote){
+				//Only Quotes are here
+				
+				var row = $('<div>').attr({
+					"class" : "leads-container-tr leads-container-row clearfix"
+				});
+			
+				
+				if (i % 2 == 0) {
+					row.addClass('leads-container-row-odd');
+				}
+			
+				if (i == loanList.length - 1) {
+						row.addClass('leads-container-row-last');
+				}
+			
+				
+				var action = $('<div>').attr({
+					"class": "float-left"
+				});
+				var pdfIcon = $('<div>').attr({
+					"class" : "leads-row-9",
+					"name" : customer.pdfUrl,
+					"title": "View PDF"
+				}).bind("click",function(){
+					window.open($(this).attr("name"));
+				
+				});
+				
+				action.append(pdfIcon);
+				
+				var col1 = $('<div>').attr({
+					"class" : "leads-container-tc1 leads-col-1 lead-custmr-name float-left clearfix",
+						"id" : "leads-container-tc1-id"
+					});		 
+				 
+		
+				var cusName = $('<div>').attr({
+					"class" : "cus-name float-left",
+					"userName" : customer.prospectUsername,
+					"InternalUserID" :customer.internalUserId,
+					"id":customer.internalUserId+"_"+i
+				}).html(customer.name);
+			 
+				//TO add a condition to check for user created
+					
+						// binding click  event when loan is not created.
+				cusName.bind("click",function(){	
+					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+				});
+							
+			
+				col1.append(action).append(cusName);				
+				
+				var col2="";
+				var email;
+				if(customer.emailId == null){
+					email = "-";
+				}else {
+					email = customer.emailId;
+				}
+			
+				//write a rest call					
+				col2 = $('<div>').attr({
+					"class" : "leads-col-2 lead-email float-left"
+				}).html(email);
+				
+				
+				var col3="";
+					
+				col3 = $('<div>').attr({
+					"class" : "leads-col-3 float-left"
+				}).html("Quote");
+				if(customer.isCreated){
+					$(col3).html("Lead");
+				}
+				//TO add check for loan
+				var loanStatus = "";
+				var obj = JSON.parse(customer.inputDetailsJson.toString());
+				if(obj.loanType == PURCHASE){
+					loanStatus = "Purchase";
+				}else if(obj.loanType == REFINANACE_LOWER_MORTGAGE_PAYMENT || obj.loanType == REFINANACE_CASH_OUT){
+					loanStatus = "Refinance";
+				}else{
+					loanStatus = "-";
+				}
+				var col4 = $('<div>').attr({
+					"class" : "leads-col-4 lead-purp float-left"
+				}).html(loanStatus);
+				
+				var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
+						customer.createdDate));
+				createdDateStr=formatYearInDate(createdDateStr);
+				if(createdDateStr==""){
+					createdDateStr="-";
+				}
+		
+				var col7 = $('<div>').attr({
+					"class" : "leads-col-7 lead-last-login float-left"
+				}).html("-");
+		
+				var col8 = "";
+				
+					col8 = $('<div>').attr({
+						"class" : "leads-row-8 float-left"
+					});
+					
+				var createIcon = $('<div>').attr({
+					"class" : "leads-row-11 float-right",
+					"userName" : customer.prospectUsername,
+					"InternalUserID" :customer.internalUserId,
+					"id":customer.internalUserId+""+i,
+					"title" : "Create Account"
+				}).bind("click",function(){
+					if($(this).hasClass('leads-row-11')){
+						createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"),$(this).attr("id"));
+					}
+				});	
+					
+				//TO add a condition to check for user created
+				if(customer.isCreated){
+					$(createIcon).removeClass('leads-row-11');
+					$(createIcon).attr("title", "");
+					$(createIcon).css("pointer-events","none");
+					$(createIcon).addClass('leads-user-created');
+				}
+					
+					
+				
+				var col12 = "";
+		
+				 col12 = $('<div>').attr({
+					"class" : "leaddelCustClas margin-right-10 leads-col-12 clearfix",
+					"userName" : customer.prospectUsername,
+					"InternalUserID" :customer.internalUserId,
+					"id":customer.internalUserId+"_0"+i,
+					"title" : "Delete"
+				}).bind("click",function(){
+					deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"),$(this).attr("id"));
+				
+				});
+				 
+				 
+				var processorCol="";
+				if(isSalesManager){
+					
+					var name = customer.internalUserName;
+					if(name == null){
+						name = "-";
+					}
+					processorCol = $('<div>').attr({
+						"class" : "leads-row-processor float-left"
+					}).html(name);
+				}  else {
+					$(col1).addClass('big-lead-custmr-name');
+				 	$(col4).addClass('big-lead-purp');
+				 	$(col7).addClass('big-lead-last-login');
+				}
+			
+			 	$(col1).addClass('sm-leads-row-1');
+			 	$(col2).addClass('sm-leads-row-2');
+			 	$(col4).addClass('sm-leads-row-4');
+			 	$(col7).addClass('sm-leads-row-7');
+			 					 	
+				row.append(col1).append(col2).append(col3).append(col4).append(processorCol)
+					.append(col7).append(col8).append(createIcon).append(col12);
+			
+			
+	}else {
+			customer.credit_score = checkCreditScore(customer.credit_score);
+
 			var row = $('<div>').attr({
 				"class" : "leads-container-tr leads-container-row clearfix"
 			});
-	
+
 			
 			if (i % 2 == 0) {
 				row.addClass('leads-container-row-odd');
 			}
-	
-			if (i == list.length - 1) {
+
+			if (i == loanList.length - 1) {
 					row.addClass('leads-container-row-last');
 			}
-	
-			
+
+			var loanIconDiv = $('<div>').attr({
+				"class" : "float-left",
+			});
+			if (customer.isQuoteAndLoan)
+			{
+				var loanIcon = $('<div>').attr({
+					"class" : "loan-row float-left link-pointer",
+					"name" : customer.pdfUrl,
+					"title": "View Quote PDF"
+				});
+				loanIcon.bind("click",function(){
+					window.open($(this).attr("name"));
+				
+				});				
+				loanIconDiv.append(loanIcon);				
+			}
+			else{
+				var loanIcon = $('<div>').attr({
+					"class" : "loan-row float-left",
+				});
+				
+				loanIconDiv.append(loanIcon);
+			}
 			var col1 = $('<div>').attr({
-				"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
+				"class" : "leads-container-tc1 leads-col-1 lead-custmr-name float-left clearfix",
 					"id" : "leads-container-tc1-id"
-				});
+				});				
+
+		var onlineStatus = $('<div>').attr({
+			"class" : "onl-status-icn float-left"
+		});
+		
+		// code will execute if user is logged in
+
+		var loanNotificationCntxt = getNotificationContext(customer.loanID, 0);
+		loanNotificationCntxt.customerName = customer.name;
+		addContext(customer.loanID + "-notification", loanNotificationCntxt)
+
+		
+		var cusName = "";
+		
+			 cusName = $('<div>').attr({
+				"class" : "cus-name float-left",
+				"loanid" : customer.loanID,
+				"userid" : customer.userID
+			}).bind('click', {
+				"customer" : customer
+			}, function(event) {
+				event.stopImmediatePropagation();
+	            removeToastMessage();
+				resetSelectedUserDetailObject(event.data.customer);
+				if (userIsRealtor()) {
+					saveState('loan', selectedUserDetail.loanID, "team");
+					entryPointForAgentView(selectedUserDetail.loanID, '0');
+				} else {
+					saveState('loan', selectedUserDetail.loanID, "detail");
+					entryPointForAgentView(selectedUserDetail.loanID, '2');
+				}
+
+			}).html(customer.name);
 			
-			 var profImage = $('<div>').attr({
-					
-					
-				});
-			 var cusName = $('<div>').attr({
-					"class" : "float-left",
-					"loanid" : customer.loanID,
-					"userid" : customer.userID
-				}).html(customer.prospectFirstName+" "+customer.prospectLastName);
-			
+			col1.append(loanIconDiv).append(cusName);
 	
-			col1.append(profImage).append(cusName);
-			var phone_num = "NA";
-			if (customer.phoneNo != null && customer.phoneNo.trim() != "") {
-				phone_num = formatPhoneNumberToUsFormat(customer.phoneNo);
-			}else if(customer.phoneNo == ""){
-				phone_num = "-";
+			
+			var loan_status=customer.lqbLoanStatus;
+			if(loan_status==""||loan_status==null||loan_status==undefined){
+				loan_status="-";
 			}
 
-			var col2="";
-			if(customer.emailId == ""){
-				customer.emailId = "-";
+			var emailID = customer.emailId;
+			if(emailID == ""){
+				emailID = "-"
 			}
+			var col2="";
 
 				//write a rest call					
 				col2 = $('<div>').attr({
-					"class" : "leads-container-tc2 leads-row-2 float-left"
-				}).html(customer.emailId);
-			
-
+					"class" : "leads-col-2 lead-email float-left"
+				}).html(emailID);
+		
 			var col3 = $('<div>').attr({
-				"class" : "leads-container-tc3 leads-row-3 float-left"
-			}).html(phone_num);
-
-			var	createdDateStr = formateDateAndTime(
-					new Date(customer.createdDate),true);
-			
-			if(createdDateStr==""){
-				createdDateStr="-";
-			}
-			var col4 = $('<div>').attr({
-				"class" : "leads-container-tc4 leads-row-4 float-left"
-			}).html(createdDateStr);
-			
-			var col5 = $('<div>').attr({
-				"class" : "leads-container-row-tc5 leads-row-5 float-left",
-				"name" : customer.pdfUrl
-			}).bind("click",function(){
-				window.open($(this).attr("name"));
-			
-			});
-			
-			
-			//Edit button column for leads
-			var col6_1 = $('<div>').attr({
-				"class" : "leads-container-row-tc6 grey-edit float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName
-			});
-			
-			//TO add a condition to check for user created
-			if(!customer.isCreated){
-				// binding click  event when loan is not created.
-				col6_1.addClass("blue-edit");
-				col6_1.removeClass("grey-edit");
-				col6_1.bind("click",function(){	
+				"class" : "leads-col-3 float-left",
+				"loanid" : customer.loanID,
+				"userid" : customer.userID,
+				"InternalUserID" :customer.internalUserId,
+				"userName" : customer.prospectUsername,
+			}).html(loan_status);
+			//Bind only if it is a Quote and a Lead
+			if(customer.isQuoteAndLoan)
+			{
+				col3.attr("title","Edit Quote");
+				col3.addClass("link-pointer");
+				col3.bind("click",function(){	
 					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
 				});
 			}
+			var col4 = $('<div>').attr({
+				"class" : "leads-col-4 lead-purp float-left",
+				"userName": "",
+				"InternalUserID": ""
+			}).html(customer.purpose).bind('click',function(e){
+				
+			});
 			
-			var col6 = $('<div>').attr({
-				"class" : "leads-container-row-tc6 leads-row-6 float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName
-			}).bind("click",function(){
-				if($(this).hasClass('leads-row-6')){
-					createUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+			/*if(customer.loanCreatedInLQB){
+				$(col4).addClass("edit-quote-details-for-loan");
+				
+			}*/
+			
+			
+			var userLastLogin = customer.userLastLoginTime;				
+			
+			if(userLastLogin == null){
+				userLastLogin = "-";
+			}else {
+				userLastLogin = formateDateAndTime(new Date(customer.userLastLoginTime),true);
+			}
+
+			var col7 = $('<div>').attr({
+				"class" : "leads-col-7 lead-last-login float-left"
+			}).html(userLastLogin);
+
+			var col8 = $('<div>').attr({
+				"class" : "leads-container-tc7 alert-col float-left",
+				"title" : "Schedule Alert"
+			}).bind(
+					'click',
+					{
+						"customer" : customer
+					},
+					function(event) {
+						event.stopImmediatePropagation();
+						appendCustomerDetailContianer($(this).parent(),
+								event.data.customer);
+					});
+			loanNotificationCntxt.loanLstCntElement = col8;
+			loanNotificationCntxt.getNotificationForLoan(function(ob) {
+				if (parseInt(ob.loanNotificationList.length) > 0) {
+					var alerts = $('<div>').attr({
+						"class" : "alerts-count"
+					}).html(ob.loanNotificationList.length);
+					ob.loanLstCntElement.html("");
+					ob.loanLstCntElement.append(alerts);
 				}
-			});				
-			//TO add a condition to check for user created
-			if(customer.isCreated){
-				$(col6).removeClass('leads-row-6');
-				$(col6).addClass('leads-user-created');
+			});
+			
+			var processorCol="";
+			if(isSalesManager){
+			
+				processorCol = $('<div>').attr({
+					"class" : "leads-row-processor float-left"
+				}).html(customer.processor);
+			} else {
+				$(col1).addClass('big-lead-custmr-name');
+			 	$(col4).addClass('big-lead-purp');
+			 	$(col7).addClass('big-lead-last-login');
 			}
 			
-			var col7 = $('<div>').attr({
-				"class" : "leads-container-tc7 leads-row-7 float-left",
-				"userName" : customer.quoteCompositeKey.userName,
-				"InternalUserID" :customer.quoteCompositeKey.internalUserId,
-				"name":customer.quoteCompositeKey.userName+":"+customer.quoteCompositeKey.internalUserId
-			}).bind("click",function(){
-				deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+			$(col7).addClass('sm-lead-loan-tc7');
+			$(col4).addClass('sm-leads-row-4');
+
+			row.append(col1).append(col2).append(col3).append(col4).append(processorCol)
+		   .append(col7).append(col8);
 			
-			});
-			row.append(col1).append(col2).append(col3).append(col4).append(col5).append(col6_1).append(col6).append(col7);
 			$('#' + elementId).append(row);
-			updateHandler.initiateRequest();
+			if((newfiObject.user&&newfiObject.user.internalUserDetail&&
+					newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
+					newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
+					newfiObject.user.userRole.id==4){
+					var userDelIcn = $('<div>').attr({
+						"class" : "delCustClas lead-loan-del clearfix",
+						"loanID" : customer.loanID,
+						"customer_name":customer.name
+					});
+					row.append(userDelIcn);
+				}else{
+					$('.leads-container-tr').css("padding","15px 10px 10px");
+				}
+			//If it is Quote and a Loan - add a Edit Quote Icon
+			
 		}
-				
+		$('#' + elementId).append(row);		
 	}
+		
+	updateHandler.initiateRequest();
+
 }
 
 /**
  * @param userName is the name of the user in lead
  * @param internalUserID
  */
-function createUserFromLeads(userName,internalUserID){
+function createUserFromLeads(userName,internalUserID,id){
 	ajaxRequest("rest/shopper/record/lead/" + userName +"/"+internalUserID, "POST",
 			"json",{}, function(response){
 				if(response.error == null){
-					$('div[userName='+userName+']').removeClass('leads-row-6');
-					$('div[userName='+userName+']').addClass('leads-user-created');
+					$('#'+id).removeClass('leads-row-11');
+					$('#'+id).addClass('leads-user-created');
+					location.reload();
 					showToastMessage(response.resultObject);
 				}else {
-					showErrorToastmessage(response.error.message);
+					showErrorToastMessage(response.error.message);
 				}	
 			});
 }
@@ -662,8 +926,21 @@ function getUserFromLeads(userName,internalUserID){
 					editQuoteUserDetails = response;
 					editQuoteUser();
 				}else {
-					showErrorToastmessage(leadEditErrorMessage);
+					showErrorToastMessage(leadEditErrorMessage);
 				}	
+			});
+}
+
+function paintLeadsQuotePage(leadId){
+	ajaxRequest("rest/loan/retrieveQuoteDetailsOfUser/"+ leadId, "GET",
+			"json",{}, function(response){
+				if(response.error == null){
+					// TODO @Manish do the next task.
+					//showToastMessage(response.resultObject);
+				
+					editQuoteUserDetails = response;
+					editQuoteUser();
+				}
 			});
 }
 
@@ -671,11 +948,11 @@ function getUserFromLeads(userName,internalUserID){
  * @param userName is the name of the user in lead 
  * @param internalUserID
  */
-function deleteUserFromLeads(userName,internalUserID){
+function deleteUserFromLeads(userName,internalUserID,id){
 	ajaxRequest("rest/shopper/record/deleteLeadFromQuote/" + userName +"/"+internalUserID, "POST",
 			"json",{}, function(response){
 				if(response.error == null){
-					$('div[userName='+userName+']').parent().remove()
+					$('#'+id).parent().remove()
 					showToastMessage(response.resultObject)
 				}else {
 					showErrorToastmessage(response.error.message);
@@ -707,7 +984,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 		if(!skipDataClearing){
 			$('#' + elementId).html("");
 			
-			appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanManager);
+			appendCustomerTableHeader(elementId);
 		}
 		$('#agent-dashboard-container').addClass('sm-dashboard');
 	
@@ -924,7 +1201,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				if(createdDateStr==""){
 					createdDateStr="-";
 				}
-				var col5 = $('<div>').attr({
+				/*var col5 = $('<div>').attr({
 					"class" : "leads-container-tc5 float-left"
 				}).html(createdDateStr);
 
@@ -941,7 +1218,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 			    var col6 = $('<div>').attr({
 			     "class" : "leads-container-tc6 float-left last-action-cell"
 			    }).html(modifiedDateStr);
-				
+*/				
 				var userLastLogin = customer.userLastLoginTime;				
 				
 				if(userLastLogin == null){
@@ -955,7 +1232,8 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 				}).html(userLastLogin);
 
 				var col8 = $('<div>').attr({
-					"class" : "leads-container-tc7 alert-col float-left"
+					"class" : "leads-container-tc7 alert-col float-left",
+					"title" : "Schedule Alert"
 				}).bind(
 						'click',
 						{
@@ -977,8 +1255,7 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 					}
 				});
 				
-				row.append(col1).append(col2).append(col3).append(col4).append(col5)
-						.append(col6).append(col7).append(col8);
+				row.append(col1).append(col2).append(col3).append(col4).append(col7).append(col8);
 				
 				$('#' + elementId).append(row);
 				if((newfiObject.user&&newfiObject.user.internalUserDetail&&
@@ -988,7 +1265,8 @@ function appendCustomers(elementId, customers,skipDataClearing) {
 						var userDelIcn = $('<div>').attr({
 							"class" : "delCustClas clearfix",
 							"loanID" : customer.loanID,
-							"customer_name":customer.name
+							"customer_name":customer.name,
+							"title" : "Delete"
 						});
 						row.append(userDelIcn);
 					}else{
@@ -1015,7 +1293,7 @@ function checkCreditScoreAval(creditScore){
 }
 
 // Function to append customer table header in agent dashboard
-function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanManager) {
+function appendCustomerTableHeader(elementId) {
 	
 	var tableHeader = $('<div>').attr({
 		"class" : "leads-container-th leads-container-row leads-container-row-th clearfix"
@@ -1089,14 +1367,14 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 		}).html("Loan Advisor");
 	}
 	
-	var thCol5 = $('<div>').attr({
+	/*var thCol5 = $('<div>').attr({
 		"class" : "leads-container-tc5 sm-leads-container-tc5  float-left opened-sort-list-asc"
-	}).html("Opened");
+	}).html("Opened");*/
 	 
-	var thCol6 = $('<div>').attr({
+	/*var thCol6 = $('<div>').attr({
 		"class" : "leads-container-tc6 sm-leads-container-tc6  float-left last-action-sort-list-asc"
 	}).html("Last Action");
-	
+	*/
 	var thCol7 = $('<div>').attr({
 		"class" : "leads-container-tc6 float-left"
 	}).html("Last Login");
@@ -1106,12 +1384,12 @@ function appendCustomerTableHeader(elementId,isRealtor,isSalesManager,isLoanMana
 	}).html("Alerts");
 
 	tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
-			.append(thCol4).append(thCol5).append(thCol6).append(thCol7).append(thCol8);
+			.append(thCol4).append(thCol7).append(thCol8);
 	}
 
 	$('#' + elementId).append(tableHeader);
 }
-function appendTableHeader(elementId){
+/*function appendTableHeader(elementId){
 		var tableHeader = $('<div>').attr({
 			"class" : "leads-container-th leads-container-row leads-container-row-th clearfix"
 		});
@@ -1128,7 +1406,6 @@ function appendTableHeader(elementId){
 		var thCol3 = $('<div>').attr({
 			"class" : "leads-container-tc3 leads-col-3 float-left"
 		}).html("Phone");
-
 		var thCol4="";
 			 thCol4 = $('<div>').attr({
 				"class" : "leads-container-tc4 leads-col-4 float-left"
@@ -1152,12 +1429,74 @@ function appendTableHeader(elementId){
 		}).html("Delete");
 		
 		
-
 		tableHeader.append(thCol1).append(thCol2).append(thCol3).append(thCol4)
 				.append(thCol4).append(thCol5).append(thCol6_1).append(thCol6).append(thCol7);
-
-
 	    $('#' + elementId).append(tableHeader);
+}*/
+
+function appendTableHeader(elementId){
+	var tableHeader = $('<div>').attr({
+		"class" : "leads-container-th leads-container-row leads-container-row-th clearfix"
+	});
+	
+	var thCol1 = $('<div>').attr({
+		"class" : "leads-col-1 lead-custmr-name float-left sort-list-asc"
+	}).html("Customer");
+	
+	var thCol2;
+    thCol2 = $('<div>').attr({
+    	"class" : "leads-col-2  lead-email float-left sort-up-arrow-45"
+    }).html("Email");
+    
+	var thCol3 = $('<div>').attr({
+		"class" : "leads-col-3 float-left loan-status-sort-list-asc"
+	}).html("Loan Status");
+
+	var thCol4="";
+		 thCol4 = $('<div>').attr({
+			"class" : "leads-col-4 lead-purp float-left"
+		}).html("Purpose");
+	var processorCol = "";
+	if(isSalesManager){
+		processorCol = $('<div>').attr({
+			"class" : "leads-col-processor float-left loan-advisor-sort-list-asc"
+		}).html("Loan Advisor");
+	}
+	/*var thCol5 = $('<div>').attr({
+		"class" : "leads-col-5 float-left"
+	}).html("Opened");*/
+	
+	/*var thCol6 = $('<div>').attr({
+		"class" : "leads-col-6 float-left"
+	}).html("Last Action");*/
+	
+	
+	var thCol7 = $('<div>').attr({
+		"class" : "leads-col-7 lead-last-login float-left"
+	}).html("Last Login");
+	
+	var thCol8 = $('<div>').attr({
+		"class" : "leads-col-8 float-left"
+	}).html("Alerts");
+	
+
+	if(isSalesManager){
+		$(thCol1).addClass('sm-leads-col-tc1');
+		$(thCol2).addClass('sm-leads-col-tc2');
+		$(thCol4).addClass('sm-leads-col-tc4');
+		//$(thCol5).addClass('sm-leads-col-tc5');
+		//$(thCol6).addClass('sm-leads-col-tc6');
+		$(thCol7).addClass('sm-leads-col-tc7');
+	} else {
+		$(thCol1).addClass('big-lead-custmr-name');
+	 	$(thCol4).addClass('big-lead-purp');
+	 	$(thCol7).addClass('big-lead-last-login');
+	}
+	tableHeader.append(thCol1).append(thCol2).append(thCol3)
+			.append(thCol4).append(processorCol).append(thCol7).append(thCol8);
+
+
+    $('#' + elementId).append(tableHeader);
 }
 /**
  * function to append details related to customer in agent dashboard
@@ -4186,7 +4525,8 @@ function appendAddNeedsContainer() {
 	}).html("Document Title");
 	var row2Input = $('<input>').attr({
 		"id" : "need_doc_title",
-		"class" : "add-needs-input-edit float-left"
+		"class" : "add-needs-input-edit float-left",
+		"maxlength":'45'
 	});
 
 	row2.append(row2Label).append(row2Input);
@@ -4732,6 +5072,73 @@ $('body').on('click','.leads-container-tc6.sm-leads-container-tc6',function(){
 	sortTableByTime(isAsc, ".last-action-cell");
 });
 
+
+//Sort Leads By LastName First  Name
+$('body').on('click','.leads-container-th .leads-col-1', function(){
+	var isAsc;
+	if($(this).hasClass('sort-list-asc')){
+		$(this).removeClass('sort-list-asc');
+		$(this).addClass('sort-list-dsc');
+		isAsc = 1;
+	}else if($(this).hasClass('sort-list-dsc')){
+		$(this).removeClass('sort-list-dsc');
+		$(this).addClass('sort-list-asc');
+		isAsc = -1;
+	}
+    sortTableByLastName(isAsc);
+});
+
+
+//Sort Leads Status
+$('body').on('click','.leads-container-th .leads-col-3', function(){
+	var isAsc;
+	if($(this).hasClass('loan-status-sort-list-asc')){
+		$(this).removeClass('loan-status-sort-list-asc');
+		$(this).addClass('loan-status-sort-list-dsc');
+		isAsc = 1;
+	}else if($(this).hasClass('loan-status-sort-list-dsc')){
+		$(this).removeClass('loan-status-sort-list-dsc');
+		$(this).addClass('loan-status-sort-list-asc');
+		isAsc = -1;
+	}
+    sortTable(isAsc, ".leads-col-3");
+});
+
+
+//Sort Leads Emails
+$('body').on('click','.leads-container-th .leads-col-2', function(){
+	var isAsc;
+	if($(this).hasClass('sort-up-arrow-45')){
+		$(this).removeClass('sort-up-arrow-45');
+		$(this).addClass('sort-down-arrow-45');
+		isAsc = 1;
+	}else if($(this).hasClass('sort-down-arrow-45')){
+		$(this).removeClass('sort-down-arrow-45');
+		$(this).addClass('sort-up-arrow-45');
+		isAsc = -1;
+	}
+    sortTable(isAsc, ".leads-col-2");
+});
+
+
+//Sort Loan Advisor
+$('body').on('click','.leads-container-th .leads-col-processor', function(){
+	var isAsc;
+	if($(this).hasClass('loan-advisor-sort-list-asc')){
+		$(this).removeClass('loan-advisor-sort-list-asc');
+		$(this).addClass('loan-advisor-sort-list-dsc');
+		isAsc = 1;
+	}else if($(this).hasClass('loan-advisor-sort-list-dsc')){
+		$(this).removeClass('loan-advisor-sort-list-dsc');
+		$(this).addClass('loan-advisor-sort-list-asc');
+		isAsc = -1;
+	}
+    sortTable(isAsc, ".leads-row-processor");
+});
+
+
+
+
 /**
  * Method to sort based on time type columns.
  * @param isAsc
@@ -4745,20 +5152,16 @@ function sortTableByTime(isAsc,selector){
 	
 	
 	rows.sort(function(a, b) {
-		
+
 		try {
-            var time1 = $(a).children(selector).text();
-            var time2 = $(b).children(selector).text();
-            time1  = time1.replace(/-/g, "/");
-            time2  = time2.replace(/-/g, "/");
-            
-            var timestamp1 = new Date(time1).getTime();
-            var timestamp2 = new Date(time2).getTime();
-            return isAsc * (timestamp1 - timestamp2); 
-        } catch(ex)  {
-            console.log("Error while parsing date sortTableByTime," + ex);
-            return 0;
-        }
+			var time1 = $(a).children(selector).text();
+			var time2 = $(b).children(selector).text();
+		} catch(ex)  {
+			console.log("Error while parsing date sortTableByTime," + ex);
+			return 0;
+		}
+		
+		return isAsc * (new Date(time1).getTime() - new Date(time2).getTime()); 
 	});
 
 	$.each(rows, function(index, row) {
@@ -4849,15 +5252,16 @@ function sortTableByLastName(isAsc) {
  * @returns
  */
 function reverseName(name){
-	
 	if(name != null  && name != undefined){
+        name = name.replace(/  +/g, ' ');
 		var names = name.split(' ');
-		if(names.length == 2){
-		  return names[1] + names[0];
-		} else {
-			return name;   
-		}
+        var tmp = "";
+        for(var i = names.length - 1; i >= 0; i-- ){
+        	tmp += names[i] + " ";
+        }
+        return tmp;
 	} else {
 		return name;
 	}
 }
+

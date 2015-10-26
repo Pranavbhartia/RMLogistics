@@ -9,6 +9,15 @@ public class LoanDashboardVO implements Serializable {
 
 	private int num_found;
 	private List<LoanCustomerVO> customers;
+	private List<LeadsDashBoardVO> leads;
+
+	public List<LeadsDashBoardVO> getLeads() {
+		return leads;
+	}
+
+	public void setLeads(List<LeadsDashBoardVO> leads) {
+		this.leads = leads;
+	}
 
 	public List<LoanCustomerVO> getCustomers() {
 		return customers;
