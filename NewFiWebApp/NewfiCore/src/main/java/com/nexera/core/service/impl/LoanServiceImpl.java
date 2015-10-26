@@ -2656,7 +2656,7 @@ public class LoanServiceImpl implements LoanService {
 		LeadsDashBoardVO theLeadToModify = null;
 		for (LeadsDashBoardVO leadVO : loanCustomerVoList) {
 			// find the loan
-			if (leadVO.getLoanID() == quoteDetail.getLoan().getId()) {
+			if (leadVO.getLoanID() != null && leadVO.getLoanID() .equals(quoteDetail.getLoan().getId())   ){
 				theLeadToModify = leadVO;
 				break;
 			}
