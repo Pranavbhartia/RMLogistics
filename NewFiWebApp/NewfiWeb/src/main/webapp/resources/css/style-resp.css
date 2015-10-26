@@ -937,11 +937,7 @@
 	.leads-row-8 {
     	width: 8%;
 	}
-	.leads-row-9 {
-	    background-size: 32%;
-	    width: 47px !important;
-	    margin-top: 6px;
-	}
+	
 	.grey-edit {
 	    width: 17px;
 	    background-size: 67%;
@@ -1110,11 +1106,7 @@
 	.leads-row-8 {
     	width: 8%;
 	}
-	.leads-row-9 {
-	    background-size: 32%;
-	    width: 47px !important;
-	    margin-top: 6px;
-	}
+	
 	.grey-edit {
 	    width: 17px;
 	    background-size: 67%;
@@ -1125,12 +1117,6 @@
 	    background-size: 66%;
 	    width: 9%;
 	    margin-top: 10px;
-	}
-	.leads-row-11 {
-	    background-size: 66%;
-	    width: 9%;
-	    margin-top: 10px;
-	    margin-left: 2px;
 	}
 
 	.blue-edit {

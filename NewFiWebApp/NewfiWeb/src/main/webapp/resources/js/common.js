@@ -430,9 +430,10 @@ function adjustAgentDashboardOnResize() {
 }
 function adjustCustomerNameWidth() {
 	var cusNameColWidth = $('.leads-container-tc1').width();
-	var statusIcnWidth = $('.onl-status-icn').width();
+	//var statusIcnWidth = $('.onl-status-icn').width();
 	var cusImgWidth = $('.cus-img-icn').width();
-	var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 40;
+	//var cusNameWidth = cusNameColWidth - (statusIcnWidth + cusImgWidth) - 40;
+	var cusNameWidth = cusNameColWidth - (cusImgWidth + 40);
 	$('.cus-name').attr('style', 'width:' + cusNameWidth + 'px');
 }
 

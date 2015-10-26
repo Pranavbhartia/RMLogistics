@@ -554,13 +554,13 @@ function checkCreditScore(creditScore){
 				action.append(pdfIcon);
 				
 				var col1 = $('<div>').attr({
-					"class" : "leads-container-tc1 leads-row-1 float-left clearfix",
+					"class" : "leads-container-tc1 leads-col-1 lead-custmr-name float-left clearfix",
 						"id" : "leads-container-tc1-id"
 					});		 
 				 
 		
 				var cusName = $('<div>').attr({
-					"class" : "cus-name lead-name",
+					"class" : "cus-name float-left",
 					"userName" : customer.prospectUsername,
 					"InternalUserID" :customer.internalUserId,
 					"id":customer.internalUserId+"_"+i
@@ -574,7 +574,7 @@ function checkCreditScore(creditScore){
 				});
 							
 			
-				col1.append(cusName);				
+				col1.append(action).append(cusName);				
 				
 				var col2="";
 				var email;
@@ -586,14 +586,14 @@ function checkCreditScore(creditScore){
 			
 				//write a rest call					
 				col2 = $('<div>').attr({
-					"class" : "leads-row-2 float-left"
+					"class" : "leads-col-2 lead-email float-left"
 				}).html(email);
 				
 				
 				var col3="";
 					
 				col3 = $('<div>').attr({
-					"class" : "leads-row-3 float-left"
+					"class" : "leads-col-3 float-left"
 				}).html("Quote");
 				if(customer.isCreated){
 					$(col3).html("Lead");
@@ -609,20 +609,8 @@ function checkCreditScore(creditScore){
 					loanStatus = "-";
 				}
 				var col4 = $('<div>').attr({
-					"class" : "leads-row-4 float-left"
+					"class" : "leads-col-4 lead-purp float-left"
 				}).html(loanStatus);
-				
-				var processorCol="";
-				if(isSalesManager){
-					
-					var name = customer.internalUserName;
-					if(name == null){
-						name = "-";
-					}
-					processorCol = $('<div>').attr({
-						"class" : "leads-row-processor float-left"
-					}).html(name);
-				}
 				
 				var	createdDateStr = $.datepicker.formatDate('mm-dd-yy', new Date(
 						customer.createdDate));
@@ -632,13 +620,13 @@ function checkCreditScore(creditScore){
 				}
 		
 				var col7 = $('<div>').attr({
-					"class" : "leads-row-7 float-left"
+					"class" : "leads-col-7 lead-last-login float-left"
 				}).html("-");
 		
 				var col8 = "";
 				
 					col8 = $('<div>').attr({
-						"class" : "leads-row-8 float-left"
+						"class" : "leads-col-8 float-left"
 					});
 					
 				var createIcon = $('<div>').attr({
@@ -666,7 +654,7 @@ function checkCreditScore(creditScore){
 				var col12 = "";
 		
 				 col12 = $('<div>').attr({
-					"class" : "leaddelCustClas margin-right-10 leads-row-12 clearfix",
+					"class" : "leaddelCustClas margin-right-10 leads-col-12 clearfix",
 					"userName" : customer.prospectUsername,
 					"InternalUserID" :customer.internalUserId,
 					"id":customer.internalUserId+"_0"+i,
@@ -675,13 +663,30 @@ function checkCreditScore(creditScore){
 					deleteUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"),$(this).attr("id"));
 				
 				});
+				 
+				 
+				var processorCol="";
+				if(isSalesManager){
+					
+					var name = customer.internalUserName;
+					if(name == null){
+						name = "-";
+					}
+					processorCol = $('<div>').attr({
+						"class" : "leads-row-processor float-left"
+					}).html(name);
+				}  else {
+					$(col1).addClass('big-lead-custmr-name');
+				 	$(col4).addClass('big-lead-purp');
+				 	$(col7).addClass('big-lead-last-login');
+				}
 			
 			 	$(col1).addClass('sm-leads-row-1');
 			 	$(col2).addClass('sm-leads-row-2');
 			 	$(col4).addClass('sm-leads-row-4');
 			 	$(col7).addClass('sm-leads-row-7');
 			 					 	
-				row.append(action).append(col1).append(col2).append(col3).append(col4).append(processorCol)
+				row.append(col1).append(col2).append(col3).append(col4).append(processorCol)
 					.append(col7).append(col8).append(createIcon).append(col12);
 			
 			
@@ -725,7 +730,7 @@ function checkCreditScore(creditScore){
 				loanIconDiv.append(loanIcon);
 			}
 			var col1 = $('<div>').attr({
-				"class" : "leads-loan-tc1 float-left clearfix",
+				"class" : "leads-container-tc1 leads-col-1 lead-custmr-name float-left clearfix",
 					"id" : "leads-container-tc1-id"
 				});				
 
@@ -762,7 +767,7 @@ function checkCreditScore(creditScore){
 
 			}).html(customer.name);
 			
-			col1.append(cusName);
+			col1.append(loanIconDiv).append(cusName);
 	
 			
 			var loan_status=customer.lqbLoanStatus;
@@ -778,7 +783,7 @@ function checkCreditScore(creditScore){
 
 				//write a rest call					
 				col2 = $('<div>').attr({
-					"class" : "leads-row-2 float-left"
+					"class" : "leads-col-2 lead-email float-left"
 				}).html(emailID);
 		
 			var col3 = $('<div>').attr({
@@ -798,7 +803,7 @@ function checkCreditScore(creditScore){
 				});
 			}
 			var col4 = $('<div>').attr({
-				"class" : "leads-row-4 float-left",
+				"class" : "leads-col-4 lead-purp float-left",
 				"userName": "",
 				"InternalUserID": ""
 			}).html(customer.purpose).bind('click',function(e){
@@ -809,13 +814,7 @@ function checkCreditScore(creditScore){
 				$(col4).addClass("edit-quote-details-for-loan");
 				
 			}*/
-			var processorCol="";
-			if(isSalesManager){
 			
-				processorCol = $('<div>').attr({
-					"class" : "leads-row-processor float-left"
-				}).html(customer.processor);
-			}
 			
 			var userLastLogin = customer.userLastLoginTime;				
 			
@@ -826,7 +825,7 @@ function checkCreditScore(creditScore){
 			}
 
 			var col7 = $('<div>').attr({
-				"class" : "leads-row-7 float-left"
+				"class" : "leads-col-7 lead-last-login float-left"
 			}).html(userLastLogin);
 
 			var col8 = $('<div>').attr({
@@ -853,10 +852,22 @@ function checkCreditScore(creditScore){
 				}
 			});
 			
+			var processorCol="";
+			if(isSalesManager){
+			
+				processorCol = $('<div>').attr({
+					"class" : "leads-row-processor float-left"
+				}).html(customer.processor);
+			} else {
+				$(col1).addClass('big-lead-custmr-name');
+			 	$(col4).addClass('big-lead-purp');
+			 	$(col7).addClass('big-lead-last-login');
+			}
+			
 			$(col7).addClass('sm-lead-loan-tc7');
 			$(col4).addClass('sm-leads-row-4');
 
-			row.append(loanIconDiv).append(col1).append(col2).append(col3).append(col4).append(processorCol)
+			row.append(col1).append(col2).append(col3).append(col4).append(processorCol)
 		   .append(col7).append(col8);
 			
 			$('#' + elementId).append(row);
@@ -871,7 +882,7 @@ function checkCreditScore(creditScore){
 					});
 					row.append(userDelIcn);
 				}else{
-					$('.leads-container-tr').css("padding","15px 15px 10px");
+					$('.leads-container-tr').css("padding","15px 10px 10px");
 				}
 			//If it is Quote and a Loan - add a Edit Quote Icon
 			
@@ -1478,6 +1489,10 @@ function appendTableHeader(elementId){
 		//$(thCol5).addClass('sm-leads-col-tc5');
 		//$(thCol6).addClass('sm-leads-col-tc6');
 		$(thCol7).addClass('sm-leads-col-tc7');
+	} else {
+		$(thCol1).addClass('big-lead-custmr-name');
+	 	$(thCol4).addClass('big-lead-purp');
+	 	$(thCol7).addClass('big-lead-last-login');
 	}
 	tableHeader.append(thCol1).append(thCol2).append(thCol3)
 			.append(thCol4).append(processorCol).append(thCol7).append(thCol8);
@@ -5088,7 +5103,7 @@ $('body').on('click','.leads-container-th .leads-col-3', function(){
 		$(this).addClass('loan-status-sort-list-asc');
 		isAsc = -1;
 	}
-    sortTable(isAsc, ".leads-row-3");
+    sortTable(isAsc, ".leads-col-3");
 });
 
 
@@ -5104,7 +5119,7 @@ $('body').on('click','.leads-container-th .leads-col-2', function(){
 		$(this).addClass('sort-up-arrow-45');
 		isAsc = -1;
 	}
-    sortTable(isAsc, ".leads-row-2");
+    sortTable(isAsc, ".leads-col-2");
 });
 
 
