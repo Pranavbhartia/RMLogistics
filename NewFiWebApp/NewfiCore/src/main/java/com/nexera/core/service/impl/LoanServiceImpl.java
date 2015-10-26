@@ -2595,40 +2595,43 @@ public class LoanServiceImpl implements LoanService {
 			}
 
 			boolean isLoanCreated = false;
-			for (QuoteDetails quoteDetails : quoteList) {
-				if (quoteDetails.getLoan() != null) {
+			for (QuoteDetails quoteDetail : quoteList) {
+				if (quoteDetail.getLoan() != null) {
 					isLoanCreated = true;
+					getQuoteDetailForLoan(quoteDetail, loanCustomerVoList);
+					// Loan is created from this Quote = So find the Loan from
+					// the prev list and put details like Quote
 				}
 
-				if (!quoteDetails.getIsDeleted() && !isLoanCreated) {
+				if (!quoteDetail.getIsDeleted() && !isLoanCreated) {
 
-					LeadsDashBoardVO customerVO = new LeadsDashBoardVO();
+					LeadsDashBoardVO leadAsQuoteVO = new LeadsDashBoardVO();
 
 					UserVO internalUserDeatils = userProfileService
-					        .findUser(quoteDetails.getQuoteCompositeKey()
+					        .findUser(quoteDetail.getQuoteCompositeKey()
 					                .getInternalUserId());
-					customerVO.setInternalUserName(internalUserDeatils
+					leadAsQuoteVO.setInternalUserName(internalUserDeatils
 					        .getFirstName()
 					        + " "
 					        + internalUserDeatils.getLastName());
-					customerVO.setName(quoteDetails.getProspectFirstName()
-					        + " " + quoteDetails.getProspectLastName());
-					customerVO.setInternalUserId(quoteDetails
+					leadAsQuoteVO.setName(quoteDetail.getProspectFirstName()
+					        + " " + quoteDetail.getProspectLastName());
+					leadAsQuoteVO.setInternalUserId(quoteDetail
 					        .getQuoteCompositeKey().getInternalUserId());
-					customerVO.setInputDetailsJson(quoteDetails
+					leadAsQuoteVO.setInputDetailsJson(quoteDetail
 					        .getInputDetailsJson());
-					customerVO.setPdfUrl(quoteDetails.getPdfUrl());
-					customerVO.setIsCreated(quoteDetails.getIsCreated());
-					customerVO.setIsDeleted(quoteDetails.getIsDeleted());
-					customerVO.setEmailId(quoteDetails.getEmailId());
-					customerVO.setQuote(true);
-					customerVO.setProspectUsername(quoteDetails
+					leadAsQuoteVO.setPdfUrl(quoteDetail.getPdfUrl());
+					leadAsQuoteVO.setIsCreated(quoteDetail.getIsCreated());
+					leadAsQuoteVO.setIsDeleted(quoteDetail.getIsDeleted());
+					leadAsQuoteVO.setEmailId(quoteDetail.getEmailId());
+					leadAsQuoteVO.setQuote(true);
+					leadAsQuoteVO.setProspectUsername(quoteDetail
 					        .getQuoteCompositeKey().getUserName());
-					if (quoteDetails.getCreatedDate() != null) {
-						customerVO
-						        .setLastActedOn(quoteDetails.getCreatedDate());
+					if (quoteDetail.getCreatedDate() != null) {
+						leadAsQuoteVO.setLastActedOn(quoteDetail
+						        .getCreatedDate());
 					}
-					loanCustomerVoList.add(customerVO);
+					loanCustomerVoList.add(leadAsQuoteVO);
 				}
 
 			}
@@ -2638,6 +2641,39 @@ public class LoanServiceImpl implements LoanService {
 		// set no of loans as num_found
 		loanDashboardVO.setNum_found(loanList.size());
 		return loanDashboardVO;
+	}
+
+	private void getQuoteDetailForLoan(QuoteDetails quoteDetail,
+	        List<LeadsDashBoardVO> loanCustomerVoList) {
+
+		LeadsDashBoardVO theLeadToModify = null;
+		for (LeadsDashBoardVO leadVO : loanCustomerVoList) {
+			// find the loan
+			if (leadVO.getLoanID() == quoteDetail.getLoan().getId()) {
+				theLeadToModify = leadVO;
+				break;
+			}
+		}
+		if (theLeadToModify != null) {
+			UserVO internalUserDeatils = userProfileService
+			        .findUser(quoteDetail.getQuoteCompositeKey()
+			                .getInternalUserId());
+			theLeadToModify.setInternalUserName(internalUserDeatils
+			        .getFirstName() + " " + internalUserDeatils.getLastName());
+			theLeadToModify.setName(quoteDetail.getProspectFirstName() + " "
+			        + quoteDetail.getProspectLastName());
+			theLeadToModify.setInternalUserId(quoteDetail
+			        .getQuoteCompositeKey().getInternalUserId());
+			theLeadToModify.setInputDetailsJson(quoteDetail
+			        .getInputDetailsJson());
+			theLeadToModify.setPdfUrl(quoteDetail.getPdfUrl());
+			theLeadToModify.setIsCreated(quoteDetail.getIsCreated());
+			theLeadToModify.setIsDeleted(quoteDetail.getIsDeleted());
+			theLeadToModify.setProspectUsername(quoteDetail
+			        .getQuoteCompositeKey().getUserName());
+			theLeadToModify.setIsQuoteAndLoan(Boolean.TRUE);
+		}
+
 	}
 
 	@Override
