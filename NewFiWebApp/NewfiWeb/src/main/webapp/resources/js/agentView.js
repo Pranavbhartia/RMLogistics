@@ -676,6 +676,7 @@ function checkCreditScore(creditScore){
 				});
 			
 			 	$(col1).addClass('sm-leads-row-1');
+			 	$(col2).addClass('sm-leads-row-2');
 			 	$(col4).addClass('sm-leads-row-4');
 			 	$(col7).addClass('sm-leads-row-7');
 			 					 	
@@ -842,10 +843,31 @@ function checkCreditScore(creditScore){
 						"loanID" : customer.loanID,
 						"customer_name":customer.name
 					});
-					row.append(userDelIcn);
-				}else{
-					$('.leads-container-tr').css("padding","15px 15px 10px");
-				}
+					
+					if(isSalesManager){
+						//$(col5).addClass('lead-loan-createddate');
+						//$(col6).addClass('sm-lead-loan-tc6');
+						$(col7).addClass('sm-lead-loan-tc7');
+						$(col4).addClass('sm-leads-row-4');
+						$(col1).addClass('sm-leads-row-1');
+					}
+					row.append(loanIconDiv).append(col1).append(col2).append(col3).append(col4).append(processorCol)
+					   .append(col7).append(col8);
+					
+					$('#' + elementId).append(row);
+					if((newfiObject.user&&newfiObject.user.internalUserDetail&&
+							newfiObject.user.internalUserDetail.internalUserRoleMasterVO&&
+							newfiObject.user.internalUserDetail.internalUserRoleMasterVO.roleName=="SM")||
+							newfiObject.user.userRole.id==4){
+							var userDelIcn = $('<div>').attr({
+								"class" : "delCustClas lead-loan-del clearfix",
+								"loanID" : customer.loanID,
+								"customer_name":customer.name
+							});
+							row.append(userDelIcn);
+						}else{
+							$('.leads-container-tr').css("padding","15px 15px 10px");
+						}
 					
 		}
 		
@@ -1403,12 +1425,12 @@ function appendTableHeader(elementId){
 	});
 	
 	var thCol1 = $('<div>').attr({
-		"class" : "leads-col-1 float-left sort-list-asc"
+		"class" : "leads-col-1 lead-custmr-name float-left sort-list-asc"
 	}).html("Customer");
 	
 	var thCol2;
     thCol2 = $('<div>').attr({
-    	"class" : "leads-col-2 float-left sort-up-arrow-45"
+    	"class" : "leads-col-2  lead-email float-left sort-up-arrow-45"
     }).html("Email");
     
 	var thCol3 = $('<div>').attr({
@@ -1417,7 +1439,7 @@ function appendTableHeader(elementId){
 
 	var thCol4="";
 		 thCol4 = $('<div>').attr({
-			"class" : "leads-col-4 float-left"
+			"class" : "leads-col-4 lead-purp float-left"
 		}).html("Purpose");
 	var processorCol = "";
 	if(isSalesManager){
@@ -1435,7 +1457,7 @@ function appendTableHeader(elementId){
 	
 	
 	var thCol7 = $('<div>').attr({
-		"class" : "leads-col-7 float-left"
+		"class" : "leads-col-7 lead-last-login float-left"
 	}).html("Last Login");
 	
 	var thCol8 = $('<div>').attr({
