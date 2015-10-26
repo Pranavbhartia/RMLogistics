@@ -33,14 +33,88 @@ public class LeadsDashBoardVO {
 	private CustomerDetailVO customerDetail;
 	private Date userLastLoginTime;
 	
-	private QuoteDetailsVO quoteDetailsVO;
+	private String prospectUsername;
+	private Integer internalUserId;
+	private String lqbRateJson;
+	private String inputDetailsJson;
+	private String pdfUrl;
+	private Boolean isCreated = false;
+	private Boolean isDeleted = false;
+	private String internalUserName;
+	private boolean isQuote = false;
 
-	public QuoteDetailsVO getQuoteDetailsVO() {
-		return quoteDetailsVO;
+	
+	public boolean isQuote() {
+		return isQuote;
 	}
 
-	public void setQuoteDetailsVO(QuoteDetailsVO quoteDetailsVO) {
-		this.quoteDetailsVO = quoteDetailsVO;
+	public void setQuote(boolean isQuote) {
+		this.isQuote = isQuote;
+	}
+
+
+	public String getProspectUsername() {
+		return prospectUsername;
+	}
+
+	public void setProspectUsername(String prospectUsername) {
+		this.prospectUsername = prospectUsername;
+	}
+
+	public Integer getInternalUserId() {
+		return internalUserId;
+	}
+
+	public void setInternalUserId(Integer internalUserId) {
+		this.internalUserId = internalUserId;
+	}
+
+	public String getLqbRateJson() {
+		return lqbRateJson;
+	}
+
+	public void setLqbRateJson(String lqbRateJson) {
+		this.lqbRateJson = lqbRateJson;
+	}
+
+	public String getInputDetailsJson() {
+		return inputDetailsJson;
+	}
+
+	public void setInputDetailsJson(String inputDetailsJson) {
+		this.inputDetailsJson = inputDetailsJson;
+	}
+
+	public String getPdfUrl() {
+		return pdfUrl;
+	}
+
+	public void setPdfUrl(String pdfUrl) {
+		this.pdfUrl = pdfUrl;
+	}
+
+	public Boolean getIsCreated() {
+		return isCreated;
+	}
+
+	public void setIsCreated(Boolean isCreated) {
+		this.isCreated = isCreated;
+	}
+
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public String getInternalUserName() {
+		return internalUserName;
+	}
+
+	public void setInternalUserName(String internalUserName) {
+		this.internalUserName = internalUserName;
 	}
 
 	public Date getUserLastLoginTime() {
