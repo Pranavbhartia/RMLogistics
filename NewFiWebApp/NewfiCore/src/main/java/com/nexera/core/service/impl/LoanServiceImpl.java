@@ -2604,6 +2604,7 @@ public class LoanServiceImpl implements LoanService {
 
 			boolean isLoanCreated = false;
 			for (QuoteDetails quoteDetail : quoteList) {
+				
 				if (quoteDetail.getLoan() != null) {
 					isLoanCreated = true;
 					getQuoteDetailForLoan(quoteDetail, loanCustomerVoList);
@@ -2639,8 +2640,9 @@ public class LoanServiceImpl implements LoanService {
 						        .setLastActedOn(quoteDetail.getCreatedDate());
 					}
 					loanCustomerVoList.add(leadAsQuoteVO);
+				
 				}
-
+				isLoanCreated = false;
 			}
 		}
 
