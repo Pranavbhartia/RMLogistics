@@ -5074,7 +5074,7 @@ $('body').on('click','.leads-container-tc6.sm-leads-container-tc6',function(){
 
 
 //Sort Leads By LastName First  Name
-$('body').on('click','.leads-container-th .leads-col-1.sm-leads-col-tc1', function(){
+$('body').on('click','.leads-container-th .leads-col-1', function(){
 	var isAsc;
 	if($(this).hasClass('sort-list-asc')){
 		$(this).removeClass('sort-list-asc');
