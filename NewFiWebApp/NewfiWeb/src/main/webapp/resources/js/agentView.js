@@ -626,7 +626,7 @@ function checkCreditScore(creditScore){
 				var col8 = "";
 				
 					col8 = $('<div>').attr({
-						"class" : "leads-col-8 float-left"
+						"class" : "leads-row-8 float-left"
 					});
 					
 				var createIcon = $('<div>').attr({
@@ -787,7 +787,7 @@ function checkCreditScore(creditScore){
 				}).html(emailID);
 		
 			var col3 = $('<div>').attr({
-				"class" : "leads-row-3 float-left",
+				"class" : "leads-col-3 float-left",
 				"loanid" : customer.loanID,
 				"userid" : customer.userID,
 				"InternalUserID" :customer.internalUserId,
@@ -908,8 +908,6 @@ function createUserFromLeads(userName,internalUserID,id){
 					showToastMessage(response.resultObject);
 				}else {
 					showErrorToastMessage(response.error.message);
-					$('#'+id).removeClass('leads-row-11');
-					$('#'+id).addClass('leads-user-created');
 				}	
 			});
 }
