@@ -853,7 +853,7 @@ function checkCreditScore(creditScore){
 		
 	updateHandler.initiateRequest();
 
-	}	
+	
 }
 /**
  * @param userName is the name of the user in lead
