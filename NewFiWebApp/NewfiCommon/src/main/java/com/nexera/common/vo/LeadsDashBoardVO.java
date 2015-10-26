@@ -24,7 +24,7 @@ public class LeadsDashBoardVO {
 	private String lqbLoanStatus;
 	private List<AlertListVO> alerts;
 	private List<NotesVO> notes;
-		
+
 	private String firstName;
 	private String lastName;
 	private String emailId;
@@ -32,7 +32,7 @@ public class LeadsDashBoardVO {
 	private Boolean mobileAlertsPreference;
 	private CustomerDetailVO customerDetail;
 	private Date userLastLoginTime;
-	
+
 	private String prospectUsername;
 	private Integer internalUserId;
 	private String lqbRateJson;
@@ -42,16 +42,23 @@ public class LeadsDashBoardVO {
 	private Boolean isDeleted = false;
 	private String internalUserName;
 	private boolean isQuote = false;
+	private Boolean isQuoteAndLoan = Boolean.FALSE;
 
-	
 	public boolean isQuote() {
 		return isQuote;
+	}
+
+	public Boolean getIsQuoteAndLoan() {
+		return isQuoteAndLoan;
+	}
+
+	public void setIsQuoteAndLoan(Boolean isQuoteAndLoan) {
+		this.isQuoteAndLoan = isQuoteAndLoan;
 	}
 
 	public void setQuote(boolean isQuote) {
 		this.isQuote = isQuote;
 	}
-
 
 	public String getProspectUsername() {
 		return prospectUsername;
@@ -245,7 +252,6 @@ public class LeadsDashBoardVO {
 		this.lastActedOn = lastActedOn;
 	}
 
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -279,53 +285,51 @@ public class LeadsDashBoardVO {
 	}
 
 	public String getLoanStatus() {
-	    return loanStatus;
-    }
+		return loanStatus;
+	}
 
 	public void setLoanStatus(String loanStatus) {
-	    this.loanStatus = loanStatus;
-    }
+		this.loanStatus = loanStatus;
+	}
 
 	public String getLqbFileId() {
-	    return lqbFileId;
-    }
+		return lqbFileId;
+	}
 
 	public void setLqbFileId(String lqbFileId) {
-	    this.lqbFileId = lqbFileId;
-    }
+		this.lqbFileId = lqbFileId;
+	}
 
 	public String getCarrierInfo() {
-	    return carrierInfo;
-    }
+		return carrierInfo;
+	}
 
 	public void setCarrierInfo(String carrierInfo) {
-	    this.carrierInfo = carrierInfo;
-    }
+		this.carrierInfo = carrierInfo;
+	}
 
 	public Boolean getMobileAlertsPreference() {
-	    return mobileAlertsPreference;
-    }
+		return mobileAlertsPreference;
+	}
 
 	public void setMobileAlertsPreference(Boolean mobileAlertsPreference) {
-	    this.mobileAlertsPreference = mobileAlertsPreference;
-    }
+		this.mobileAlertsPreference = mobileAlertsPreference;
+	}
 
 	public String getLockedRateData() {
-	    return lockedRateData;
-    }
+		return lockedRateData;
+	}
 
 	public void setLockedRateData(String lockedRateData) {
-	    this.lockedRateData = lockedRateData;
-    }
+		this.lockedRateData = lockedRateData;
+	}
 
 	public String getLqbLoanStatus() {
-	    return lqbLoanStatus;
-    }
+		return lqbLoanStatus;
+	}
 
 	public void setLqbLoanStatus(String lqbLoanStatus) {
-	    this.lqbLoanStatus = lqbLoanStatus;
-    }
+		this.lqbLoanStatus = lqbLoanStatus;
+	}
 
 }
-
-

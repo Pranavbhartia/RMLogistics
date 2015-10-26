@@ -523,6 +523,7 @@ function checkCreditScore(creditScore){
 		for(var i = 0; i < loanList.length; i++) {
 			var customer = loanList[i];
 			if(customer.quote){
+				//Only Quotes are here
 				
 				var row = $('<div>').attr({
 					"class" : "leads-container-tr leads-container-row clearfix"
@@ -703,13 +704,26 @@ function checkCreditScore(creditScore){
 			var loanIconDiv = $('<div>').attr({
 				"class" : "float-left",
 			});
-			
-			var loanIcon = $('<div>').attr({
-				"class" : "loan-row float-left",
-			});
-			
-			loanIconDiv.append(loanIcon);
-			
+			if (customer.isQuoteAndLoan)
+			{
+				var loanIcon = $('<div>').attr({
+					"class" : "loan-row float-left link-pointer",
+					"name" : customer.pdfUrl,
+					"title": "View Quote PDF"
+				});
+				loanIcon.bind("click",function(){
+					window.open($(this).attr("name"));
+				
+				});				
+				loanIconDiv.append(loanIcon);				
+			}
+			else{
+				var loanIcon = $('<div>').attr({
+					"class" : "loan-row float-left",
+				});
+				
+				loanIconDiv.append(loanIcon);
+			}
 			var col1 = $('<div>').attr({
 				"class" : "leads-loan-tc1 float-left clearfix",
 					"id" : "leads-container-tc1-id"
@@ -768,9 +782,21 @@ function checkCreditScore(creditScore){
 				}).html(emailID);
 		
 			var col3 = $('<div>').attr({
-				"class" : "leads-row-3 float-left"
+				"class" : "leads-row-3 float-left",
+				"loanid" : customer.loanID,
+				"userid" : customer.userID,
+				"InternalUserID" :customer.internalUserId,
+				"userName" : customer.prospectUsername,
 			}).html(loan_status);
-
+			//Bind only if it is a Quote and a Lead
+			if(customer.isQuoteAndLoan)
+			{
+				col3.attr("title","Edit Quote");
+				col3.addClass("link-pointer");
+				col3.bind("click",function(){	
+					getUserFromLeads($(this).attr("userName"),$(this).attr("InternalUserID"));
+				});
+			}
 			var col4 = $('<div>').attr({
 				"class" : "leads-row-4 float-left",
 				"userName": "",
@@ -847,14 +873,16 @@ function checkCreditScore(creditScore){
 				}else{
 					$('.leads-container-tr').css("padding","15px 15px 10px");
 				}
+			//If it is Quote and a Loan - add a Edit Quote Icon
+			
 		}
 		$('#' + elementId).append(row);		
 	}
 		
 	updateHandler.initiateRequest();
 
-	
 }
+
 /**
  * @param userName is the name of the user in lead
  * @param internalUserID
