@@ -1513,7 +1513,7 @@ function checkboxActionEvent(workflowItem,targetElement,callback){
 		data.workflowItemstatus=COMPLETED;//since we will send only completed status from frontend
 		if (workflowItem.workflowItemType == "1003_COMPLETE")
 		{
-			data.workflowItemstatus="28"; // Tihs LOS Status for 1003 Complete
+			data.workflowItemstatus="104"; // Tihs LOS Status for 1003 Complete
 		}
 		data["workflowItemExecId"]=wf.id;
 		data["loanID"]=workFlowContext.loanId;
