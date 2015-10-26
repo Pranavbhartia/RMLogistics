@@ -47,7 +47,6 @@ import com.nexera.common.exception.DatabaseException;
 import com.nexera.common.vo.LoanTypeMasterVO;
 import com.nexera.common.vo.LoanUserSearchVO;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.QuoteDetailsVO;
 import com.nexera.common.vo.UserVO;
 
 @Component
@@ -1188,27 +1187,30 @@ public class LoanDaoImpl extends GenericDaoImpl implements LoanDao {
 	 public List<QuoteDetails> retrieveLoanForMyLeads(User parseUserModel) {
 
 	  try {
+			Session session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(QuoteDetails.class);
+			criteria.addOrder(Order.desc("createdDate"));
+			// If the user is Sales manager, retrieve all loans
+			parseUserModel = (User) this.load(User.class,
+			        parseUserModel.getId());
+			if (parseUserModel.getInternalUserDetail() != null) {
+				if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
+				        .getInternalUserDetail().getInternaUserRoleMaster()
+				        .getId()) {
+					criteria.add(Restrictions.eq(
+					        "quoteCompositeKey.internalUserId",
+					        parseUserModel.getId()));
+				}
+			} else {
+				criteria.add(Restrictions.eq(
+				        "quoteCompositeKey.internalUserId",
+				        parseUserModel.getId()));
+			}
+			
+			List<QuoteDetails> loanTeamList = criteria.list();
 
-	   Session session = sessionFactory.getCurrentSession();
-	   Criteria criteria = session.createCriteria(QuoteDetails.class);
-	   criteria.addOrder(Order.desc("createdDate"));
-	   // If the user is Sales manager, retrieve all loans
-	   parseUserModel = (User) this.load(User.class,
-	           parseUserModel.getId());
-	   if (parseUserModel.getInternalUserDetail() != null) {
-	    if (InternalUserRolesEum.SM.getRoleId() != parseUserModel
-	            .getInternalUserDetail().getInternaUserRoleMaster()
-	            .getId()) {
-	     criteria.add(Restrictions.eq("user.id",
-	             parseUserModel.getId()));
-	    }
-	   } else {
-	    criteria.add(Restrictions.eq("user.id", parseUserModel.getId()));
-	   }
-
-	   List<QuoteDetails> loanTeamList = criteria.list();
-	   
-	   return loanTeamList;
+			return loanTeamList;
+		  
 	  } catch (HibernateException hibernateException) {
 
 	   throw new DatabaseException(
