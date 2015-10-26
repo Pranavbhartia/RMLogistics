@@ -1727,11 +1727,6 @@ input[type="button"]:focus, button:focus {
 	font-family : 'opensanssemibold';/* jira-834 */
 }
 
-.leads-container-th  .leads-container-tc1 {
-	margin-left: 10px;
-	width: 255px;
-}
-
 .leads-container-tc1 {
 	width: 265px;
 }
