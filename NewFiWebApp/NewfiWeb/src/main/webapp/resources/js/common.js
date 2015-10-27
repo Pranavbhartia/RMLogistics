@@ -910,12 +910,22 @@ function getRowHolderObject(container, value, key) {
 							   getVal = getVal - (discounts / 100) * loanAmountForDiscount;
 							   
 							   // Adding marker for negative value and adding dollar.
-							   getVal = markNegative(getVal);
+							   if(getVal >=0 ){
+								   getVal = showValue(getVal, true); 
+							   }
+							   else{
+								   getVal = markNegative(getVal);
+							   }
 						   } else {
 							   getVal = getVal  - (discounts / 100) * loanAmountForDiscount;
 						       // Adding dollar.
 							  /* getVal = numberWithCommasAndDoller(getVal);*/
-							   getVal = showValue(getVal,true);
+							   if(getVal >=0 ){
+								   getVal = showValue(getVal, true); 
+							   }
+							   else{
+								   getVal = markNegative(getVal);
+							   }
 						   } 
 						   $(ob.container).text(getVal);
 						  // closingCostHolder.valueSet['creditOrCharge802']=getVal;
