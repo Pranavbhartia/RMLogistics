@@ -2551,29 +2551,6 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.findLoanDetailOfLoan(loan);
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO,
-	        String startLimit, String endLimit) {
-		int startLimt = Integer.parseInt(startLimit);
-		int endLimt = startLimt + 15;
-		if (endLimit != null) {
-			endLimt = Integer.parseInt(endLimit);
-		}
-		// Get new prospect and lead loans this user has access to.
-		List<QuoteDetails> quoteList = loanDao.retrieveLoanForMyLeads(
-		        this.parseUserModel(userVO), startLimt, endLimt);
-		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO),
-		        new int[] {
-		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() },
-		        startLimt, endLimt);
-		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
-		        quoteList, userVO.getId());
-
-		return loanDashboardVO;
-	}
-
 	/**
 	 * @param loanList
 	 * @param quoteList
@@ -2698,6 +2675,29 @@ public class LoanServiceImpl implements LoanService {
 		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
 		        this.parseUserModel(userVO), new int[] {
 		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() });
+		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
+		        quoteList, userVO.getId());
+
+		return loanDashboardVO;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO,
+	        String startLimit, String endLimit) {
+		int startLimt = Integer.parseInt(startLimit);
+		int endLimt = startLimt + 15;
+		if (endLimit != null) {
+			endLimt = Integer.parseInt(endLimit);
+		}
+		// Get new prospect and lead loans this user has access to.
+		List<QuoteDetails> quoteList = loanDao.retrieveLoanForMyLeads(
+		        this.parseUserModel(userVO), startLimt, endLimt);
+		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO),
+		        new int[] {
+		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() },
+		        startLimt, endLimt);
 		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
 		        quoteList, userVO.getId());
 
