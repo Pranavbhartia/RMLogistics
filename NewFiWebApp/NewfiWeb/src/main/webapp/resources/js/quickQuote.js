@@ -1366,7 +1366,7 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
         "id" : "discount-update-feild-id",
         "name" : "discount-update-feild"
     }).bind("load focus",function(){
-    	restrictChar("discount-update-feild");
+    	restrictCharUnderQuickQuote("discount-update-feild");
     	
     });
     
@@ -1393,6 +1393,30 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     
 }
 
+function restrictCharUnderQuickQuote(name){
+	
+	$('input[name="'+name+'"]').bind('keypress', function (e) {
+	   
+	    var k = e.which;
+	    var ok = k >= 48 && k <= 57|| // 0-9
+	    k==8 ||//to allow to delte
+	    k==45 ||//to allow minus sign
+	    k==46;//to allow backspace
+	    if (!ok) {
+	        e.preventDefault();
+	        return false;
+
+	    }
+	});
+	$('input[name="'+name+'"]').bind('paste',function(e){
+		var pastedText = e.originalEvent.clipboardData.getData('text');
+		console.log(pastedText);
+		var regex = /^[0-9]*$/;
+		if(!regex.test(pastedText)){
+			e.preventDefault();
+		}
+	});
+}
 
 function getClosingCostTopConatinerUnderQuickQuote() {
     var wrapper = $('<div>').attr({

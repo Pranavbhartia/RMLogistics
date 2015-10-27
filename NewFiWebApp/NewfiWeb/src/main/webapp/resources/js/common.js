@@ -1794,5 +1794,5 @@ $(document).on('keyup','input[name="discount-update-feild"]',function(e){
 
 function isValidInput(val) {
     //var val = parseFloat(value);
-    return !isNaN(val) && val >= 0 && val <= 100;
+    return !isNaN(val) && ((val >= 0 && val <= 100) || (val <= 0 && val >= -100));
 }
