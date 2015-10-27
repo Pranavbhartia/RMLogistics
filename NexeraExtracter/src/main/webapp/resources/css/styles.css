@@ -339,7 +339,7 @@ a,a:hover,a:visited {
 
 .price-table-wrap-row {
 	position: relative;
-	margin-bottom: 30px;
+	margin-bottom: 60px;
 }
 
 .ltv-table4 {
@@ -447,11 +447,11 @@ table.adjuster-table {
 }
 
 .mamoth-table-wrapper .rate-table-wrapper-cont {
-	height: 240px;
+	height: 250px;
 }
 
 .mamoth-table-wrapper .rate-table-container {
-	height: 210px;
+	height: 225px;
 }
 
 .price-table-td-new {
