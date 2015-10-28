@@ -1518,7 +1518,6 @@ $('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col3
 	sortList(isAsc, containerId, ".admin-newfi-team-list-tr-col3");
 });
 
-
 //Sort on Last Login
 $('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col4',function(){
 	
@@ -1535,8 +1534,44 @@ $('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col4
 		isAsc = -1;
 	}
 	
-	sortList(isAsc, containerId, ".admin-newfi-team-list-tr-col4");
+	sortTableByTime(isAsc, containerId, ".admin-newfi-team-list-tr-col4");
 });
+
+
+/**
+ * Method to sort based on time type columns.
+ * @param isAsc
+ * @param selector
+ */
+function sortTableByTime(isAsc,containerId,  selector){
+	var  $userListContainer = $("#" + containerId);
+	var rows = $userListContainer.find('.admin-newfi-team-list-tr').get();
+	
+	rows.sort(function(a, b) {
+		try {
+		   var time1 = $(a).children(selector).text().trim();
+		   var time2 = $(b).children(selector).text().trim();
+           time1  = time1.replace(/-/g, "/");
+           time2  = time2.replace(/-/g, "/");
+           
+           var timestamp1 = new Date(time1).getTime();
+           timestamp1 = isNaN(timestamp1 ) ? 0 : timestamp1;
+           
+           var timestamp2 = new Date(time2).getTime();
+           timestamp2 = isNaN(timestamp2) ? 0 : timestamp2;
+           
+           return isAsc * (timestamp1 - timestamp2); 
+       } catch(ex)  {
+           console.log("Error while parsing date sortTableByTime," + ex);
+           return 0;
+		}
+	});
+	
+	$.each(rows, function(index, row) {
+		$userListContainer.append(row);
+	});
+}
+
 
 
 /**

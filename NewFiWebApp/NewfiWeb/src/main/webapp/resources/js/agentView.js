@@ -5139,8 +5139,13 @@ function sortTableByTime(isAsc,selector){
 		   var time2 = $(b).children(selector).text().trim();
            time1  = time1.replace(/-/g, "/");
            time2  = time2.replace(/-/g, "/");
+           
            var timestamp1 = new Date(time1).getTime();
+           timestamp1 = isNaN(timestamp1 ) ? 0 : timestamp1;
+           
            var timestamp2 = new Date(time2).getTime();
+           timestamp2 = isNaN(timestamp2) ? 0 : timestamp2;
+           
            return isAsc * (timestamp1 - timestamp2); 
        } catch(ex)  {
            console.log("Error while parsing date sortTableByTime," + ex);
