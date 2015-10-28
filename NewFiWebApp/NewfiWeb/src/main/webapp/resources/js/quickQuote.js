@@ -424,6 +424,20 @@ function preAppendQuickQuoteFormFeils(editQuoteUserDetails){
 	  $('#quick-quote-no-container-id').attr('isselected',true);
 	  $('#impound').attr("value","No");
 	 }
+	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.lockPeriod == "30"){
+		  $('#quick-quote-30-lock-period-id').addClass('radio-btn-selected');
+		  $('#quick-quote-30-lock-period-id').attr('isselected',true);
+		  $('#quick-quote-45-lock-period-id').attr('isselected',false);
+		  $('#lockPeriod').attr("value",editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.lockPeriod);
+	 }else {
+		 $('#quick-quote-45-lock-period-id').addClass('radio-btn-selected');
+		 $('#quick-quote-30-lock-period-id').removeClass('radio-btn-selected');
+		  $('#quick-quote-45-lock-period-id').attr('isselected',true);
+		  $('#quick-quote-30-lock-period-id').attr('isselected',false);
+		  $('#lockPeriod').attr("value",editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.lockPeriod);
+	 }
+	 
+	 $('#creditScoreId').attr('value',editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.creditscore)
 	
 }
 
@@ -2184,7 +2198,7 @@ function processCommonParameters(){
 		buyHomeRefinanceRate.privateincludeTaxes = "Yes";
 	}
 	loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.creditscore = $('#creditScoreId').val();
-	
+	buyHomeRefinanceRate.creditscore = $('#creditScoreId').val();
 }
 
 function processBuyHomeUnderQuickQuote(){
