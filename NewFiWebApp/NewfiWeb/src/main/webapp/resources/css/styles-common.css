@@ -636,6 +636,10 @@ a.cus-eng-succ-mess-email {
     width: 100%;
 }
 
+.quick-quote-lock-period-container {
+    position: relative;
+    width: 100%;
+}
 
 .quick-quote-yes-no-container {
     display: inline-block;      
@@ -721,7 +725,17 @@ a.cus-eng-succ-mess-email {
     padding-left: 20px;
 }
 
+.quick-quote-30-lock-period-btn {
+    margin: 10px 12px 10px 0;
+    padding-left: 20px;
+}
+
 .quick-quote-no-btn {
+    margin: 10px 10px;
+    padding-left: 20px;
+}
+
+.quick-quote-45-lock-period-btn {
     margin: 10px 10px;
     padding-left: 20px;
 }

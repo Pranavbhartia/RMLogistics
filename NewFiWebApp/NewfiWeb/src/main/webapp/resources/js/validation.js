@@ -651,6 +651,11 @@ function validateForm(loanType,refinanceType){
 		}
 		
 	}
+	var lockPeriodValue = $('#lockPeriod').attr("value");
+	if(lockPeriodValue == ""){
+		showErrorToastMessage(answerQuestionOne);
+		return false;
+	}
 	if($('#impound').attr("value") == "Yes"){
 		var propertyTaxesPaid = validateQuickQuote($('#propertyTaxesPaid'),$('#propertyTaxesPaid').val(),multipleInvalidEntries,true);
 		var annualHomeownersInsurance = validateQuickQuote($('#annualHomeownersInsurance'),$('#annualHomeownersInsurance').val(),multipleInvalidEntries,true);

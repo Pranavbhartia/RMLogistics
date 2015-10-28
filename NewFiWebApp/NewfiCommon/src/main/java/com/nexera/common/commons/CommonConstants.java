@@ -26,7 +26,7 @@ public interface CommonConstants {
 
 	// Active status of a user
 	public static final Integer STATUS_ACTIVE = 1;
-	
+
 	public static final Integer STATUS_IS_DELETE = -1;
 
 	public static final Integer PAGINATION_SIZE = 5;
@@ -155,7 +155,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_NEW_NOTE = "NEW_NOTE_TEMPLATE";
 	public static final String TEMPLATE_KEY_NAME_PAYMENT_UNSUCCESSFUL = "PAYMENT_UNSUCCESSFUL_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_TEST_TEMPLATE = "TEST_EMAIL_TEMPLATE_ID";
-	
+
 	public static final String TEMPLATE_KEY_NAME_NEW_LEAD_NO_PRODUCTS = "NEW_LEAD_NO_PRODUCTS";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI = "WELCOME_TO_NEWFI_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_WELCOME_TO_NEWFI_REALTOR = "WELCOME_TO_NEWFI_REALTOR_TEMPLATE_ID";
@@ -169,7 +169,10 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_NOT_YET_COMPLETED = "APPLICATION_NOT_YET_COMPLETED_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_NOT_YET_COMPLETED_3 = "APPLICATION_NOT_YET_COMPLETED_3_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_FINISHED = "APPLICATION_FINISHED_TEMPLATE_ID";
-/*	public static final String TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE = "NO_PRODUCTS_AVAILABLE_TEMPLATE_ID";*/
+	/*
+	 * public static final String TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE =
+	 * "NO_PRODUCTS_AVAILABLE_TEMPLATE_ID";
+	 */
 	public static final String TEMPLATE_KEY_NAME_NO_PRODUCTS_AVAILABLE_LOAN_MANAGER = "NO_PRODUCTS_AVAILABLE_LOAN_MANAGER_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_FILE_INACTIVITY = "FILE_INACTIVITY_TEMPLATE_ID";
 	public static final String TEMPLATE_KEY_NAME_CREDIT_INFO = "CREDIT_INFO_TEMPLATE_ID";
@@ -250,8 +253,11 @@ public interface CommonConstants {
 
 	public static final String SUBJECT_YOUR_APPLICATION_FEE_DUE = "Your Application Fee Due";
 
-	/*public static final String SUBJECT_APPLICATION_FEE_PAID = "Application Fee Paid";*/
-	
+	/*
+	 * public static final String SUBJECT_APPLICATION_FEE_PAID =
+	 * "Application Fee Paid";
+	 */
+
 	public static final String SUBJECT_APPLICATION_FEE_PAID = "Appraisal Fee Paid";
 
 	public static final String SUBJECT_APPLICATION_FEE_PENDING = "Application Fee Pending";
@@ -295,16 +301,19 @@ public interface CommonConstants {
 	public static final String SUBJECT_INITIAL_NEEDS_LIST_ARE_SET = "Initial Needs List For Your Newfi Loan";
 	public static final String SUBJECT_TITLE_COMPANY = "Welcome to newfi as a Title Company";
 	public static final String SUBJECT_HOME_INSUR_COMPANY = "Welcome to newfi as a Home Insurance Company";
-	
-/*	public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "Document Type Lqb Assignment Failure";*/
+
+	/*
+	 * public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE =
+	 * "Document Type Lqb Assignment Failure";
+	 */
 	public static final String SUBJECT_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "NEWFI ALERT: Unassigned Document";
 
 	public static final String SUBJECT_RESET_PASSWORD = "Reset newfi Password";
-	
+
 	public static final String SUBJECT_APPLICATION_SUBMIT_COMFIRMATION = "newfi Application Confirmation";
-	
+
 	public static final String SUBJECT_NO_PRODUCTS = "No Products Available";
-	
+
 	public static final String SUBJECT_NEW_LOAN_SUBMISSION_ALERT = "NEWFI ALERT: New Loan Submission";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
@@ -328,7 +337,7 @@ public interface CommonConstants {
 	public static final String SEND_EMAIL_TO_SALES_MANGERS = "salesManagersOnly";
 
 	public static final String SEND_EMAIL_TO_INTERNAL_USERS = "internalUsers";
-	
+
 	public static final String SEND_EMAIL_TO_LM_AND_SM = "LM_SM_Users";
 
 	public static final String STICKET = "sTicket";
@@ -354,15 +363,15 @@ public interface CommonConstants {
 	public static final String DEFAULT_CREDIT_SCORE = "800";
 	public static final String PRICING_DEFAULT_CREDIT_SCORE = "760";
 	public static final String[] allowedStates = { "CA", "OR", "WA", "CO" };
-	
+
 	public static final String ZIPCODE_ISNOT_VALID = "Zip code is not valid";
-	public static final String ZIPCODE_ISNOT_APPROVED ="Please enter a valid Zip Code in a newfi approved state: CA, OR , WA or CO";
-	public static final String ZIPCODE_VALID ="Valid ZipCode";
-	
+	public static final String ZIPCODE_ISNOT_APPROVED = "Please enter a valid Zip Code in a newfi approved state: CA, OR , WA or CO";
+	public static final String ZIPCODE_VALID = "Valid ZipCode";
+
 	public static final String NEWFI_LOAN_STATUS_DESCRIPTION = "Lead";
-	
+
 	public static final String NEWFI_SUBMITTED_LOAN_STATUS_DESCRIPTION = "Application";
-	
-	
-	
+
+	public static final String DEFAULT_LOCK_PERIOD = "30";
+
 }
