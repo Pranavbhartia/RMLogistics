@@ -757,11 +757,11 @@ function appendLockPeriodData(option){
 	var mainDiv = $('<div>').attr({
 		"class":"quick-quote-lock-period-container",
 		"id" : option.id,
-		"value" : ""
+		"value" : "30"
 	});
 	
 	var thirtyDayContent = $('<div>').attr({
-		"class":"quick-quote-30-lock-period-btn radio-btn float-left",
+		"class":"quick-quote-30-lock-period-btn radio-btn float-left radio-btn-selected",
 		"id":"quick-quote-30-lock-period-id",
 		"value" : "30",
 		"isSelected":""

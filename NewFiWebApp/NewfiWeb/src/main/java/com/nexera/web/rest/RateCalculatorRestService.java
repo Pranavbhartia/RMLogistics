@@ -234,13 +234,14 @@ public class RateCalculatorRestService {
 		if (teaserRateVO.getCreditscore() != null) {
 			hashmap.put("creditScore", teaserRateVO.getCreditscore());
 		} else {
-			hashmap.put("creditScore", "800");
+			hashmap.put("creditScore",
+			        CommonConstants.PRICING_DEFAULT_CREDIT_SCORE);
 		}
 
 		if (teaserRateVO.getLockPeriod() != null) {
 			hashmap.put("lockPeriod", teaserRateVO.getLockPeriod());
 		} else {
-			hashmap.put("lockPeriod", "30");
+			hashmap.put("lockPeriod", CommonConstants.DEFAULT_LOCK_PERIOD);
 		}
 
 		JSONObject jsonObject = new JSONObject(hashmap);
