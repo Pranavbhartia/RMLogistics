@@ -163,7 +163,6 @@ function getDashboardPanelMyLeads(loanType){
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLeads/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
-				//$("#agent-dashboard-container").empty();
 				newfiObject.fetchLock=undefined;
 				isArchivedLoans = false;
 				if(startLimit==0){
@@ -5124,9 +5123,6 @@ $('body').on('click','.leads-container-th .leads-col-processor', function(){
     sortTable(isAsc, ".leads-row-processor");
 });
 
-
-
-
 /**
  * Method to sort based on time type columns.
  * @param isAsc
@@ -5137,19 +5133,19 @@ function sortTableByTime(isAsc,selector){
 	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
 	var rows = $('#leads-container').find('.leads-container-tr').get();
 	
-	
-	
 	rows.sort(function(a, b) {
-
 		try {
-			var time1 = $(a).children(selector).text();
-			var time2 = $(b).children(selector).text();
-		} catch(ex)  {
-			console.log("Error while parsing date sortTableByTime," + ex);
-			return 0;
+		   var time1 = $(a).children(selector).text().trim();
+		   var time2 = $(b).children(selector).text().trim();
+           time1  = time1.replace(/-/g, "/");
+           time2  = time2.replace(/-/g, "/");
+           var timestamp1 = new Date(time1).getTime();
+           var timestamp2 = new Date(time2).getTime();
+           return isAsc * (timestamp1 - timestamp2); 
+       } catch(ex)  {
+           console.log("Error while parsing date sortTableByTime," + ex);
+           return 0;
 		}
-		
-		return isAsc * (new Date(time1).getTime() - new Date(time2).getTime()); 
 	});
 
 	$.each(rows, function(index, row) {
@@ -5173,24 +5169,13 @@ function sortTable(isAsc, selector) {
 	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
 	
 	var rows = $('#leads-container').find('.leads-container-tr').get();
-
 	
 	rows.sort(function(a, b) {
 
-		var A = $(a).children(selector).text().toLowerCase();
-		var B = $(b).children(selector).text().toLowerCase();
-
-		if (A < B) {
-			return -1 * isAsc;
-		}
-		if (A > B) {
-			return 1 * isAsc;
-		}
-		
-		return 0;
+		var A = $(a).children(selector).text().toLowerCase().trim();
+		var B = $(b).children(selector).text().toLowerCase().trim();
+		return (A == B ? 0 : A > B ? -1  * isAsc : isAsc );
 	});
-
-	
 
 	$.each(rows, function(index, row) {
 		if( index % 2 == 0){
@@ -5210,20 +5195,11 @@ function sortTableByLastName(isAsc) {
 	var rows = $('#leads-container').find('.leads-container-tr').get();
 	
 	rows.sort(function(a, b) {
-
-		var name1 = $(a).children(".leads-container-tc1").text().toLowerCase();
-		var name2 = $(b).children(".leads-container-tc1").text().toLowerCase();
-		name1  = reverseName(name1);
-		name2 = reverseName(name2);
-
-		if (name1 < name2) {
-			return -1 * isAsc;
-		}
-		if (name1 > name2) {
-			return 1 * isAsc;
-		}
-		
-		return 0;
+		var name1 = $(a).children(".leads-container-tc1").text().toLowerCase().trim();
+		var name2 = $(b).children(".leads-container-tc1").text().toLowerCase().trim();
+		name1  = reverseWordsInString(name1);
+		name2 = reverseWordsInString(name2);
+		return (name1 == name2 ? 0 : name1 > name2 ? -1  * isAsc : isAsc );
 	});
 	
 	$.each(rows, function(index, row) {
@@ -5233,23 +5209,3 @@ function sortTableByLastName(isAsc) {
 		$('#leads-container').append(row);
 	});
 }
-
-/**
- * Method to reverse the name.  
- * @param name
- * @returns
- */
-function reverseName(name){
-	if(name != null  && name != undefined){
-        name = name.replace(/  +/g, ' ');
-		var names = name.split(' ');
-        var tmp = "";
-        for(var i = names.length - 1; i >= 0; i-- ){
-        	tmp += names[i] + " ";
-        }
-        return tmp;
-	} else {
-		return name;
-	}
-}
-

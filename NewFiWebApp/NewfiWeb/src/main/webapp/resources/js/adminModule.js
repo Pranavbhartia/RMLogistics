@@ -1551,15 +1551,8 @@ function sortList(isAsc, containerId, selector) {
 	rows.sort(function(a, b) {
 		var A = $(a).children(selector).text().toLowerCase();
 		var B = $(b).children(selector).text().toLowerCase();
-
-		if (A < B) {
-			return -1 * isAsc;
-		}
-		if (A > B) {
-			return 1 * isAsc;
-		}
 		
-		return 0;
+		return (A == B ? 0 : A > B ? -1  * isAsc : isAsc );
 	});
 	
 	$.each(rows, function(index, row) {
@@ -1580,40 +1573,13 @@ function sortListByLastName(isAsc, containerId) {
 
 		var name1 = $(a).children(".admin-newfi-team-list-tr-col1").text().toLowerCase();
 		var name2 = $(b).children(".admin-newfi-team-list-tr-col1").text().toLowerCase();
-		name1  = swapLastNameFirstName(name1);
-		name2 = swapLastNameFirstName(name2);
-
-		if (name1 < name2) {
-			return -1 * isAsc;
-		}
-		if (name1 > name2) {
-			return 1 * isAsc;
-		}
+		name1  = reverseWordsInString(name1);
+		name2 = reverseWordsInString(name2);
 		
-		return 0;
+		return (name1 == name2 ? 0 : name1 > name2 ? -1  * isAsc : isAsc );
 	});
 	
 	$.each(rows, function(index, row) { 
 		$userListContainer.append(row);
 	});
-}
-
-/**
- * Method to reverse the name.  
- * @param name
- * @returns
- */
-
-function swapLastNameFirstName(name){
-	if(name != null  && name != undefined){
-        name = name.replace(/  +/g, ' ');
-		var names = name.split(' ');
-        var tmp = "";
-        for(var i = names.length - 1; i >= 0; i-- ){
-        	tmp += names[i] + " ";
-        }
-        return tmp;
-	} else {
-		return name;
-	}
 }

@@ -1806,3 +1806,22 @@ function isValidInput(val) {
     //var val = parseFloat(value);
     return !isNaN(val) && ((val >= 0 && val <= 100) || (val <= 0 && val >= -100));
 }
+
+/**
+ * Method to reverse the string.  
+ * @param name
+ * @returns
+ */
+function reverseWordsInString(name){
+	if(name != null  && name != undefined && name != ""){
+        name = name.replace(/  +/g, ' ').trim();
+		var names = name.split(' ');
+        var tmp = "";
+        for(var i = names.length - 1; i >= 0; i-- ){
+        	tmp += names[i] + " ";
+        }
+        return tmp;
+	} else {
+		return name;
+	}
+}
