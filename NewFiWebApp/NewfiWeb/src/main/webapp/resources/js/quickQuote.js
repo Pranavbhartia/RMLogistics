@@ -106,7 +106,13 @@ var purchaseType = [{
 	id : "creditScoreId",
 	type: "creditScore",
 	column : 0
-}];
+},{
+	question : "Lock Period",
+	id : "lockPeriod",
+	type : "lockPeriod",
+	column : 0,
+}
+];
 
 //JSON for refinanace lower monthly payment
 var refinanceLowerMonthlyPayment = [{
@@ -196,6 +202,11 @@ var refinanceLowerMonthlyPayment = [{
 	id : "creditScoreId",
 	type: "creditScore",
 	column : 0
+},{
+	question : "Lock Period",
+	id : "lockPeriod",
+	type : "lockPeriod",
+	column : 0,
 }];
 
 //JSON for refinanace cashout
@@ -290,6 +301,11 @@ var refinanceCashOut = [{
 	id : "creditScoreId",
 	type: "creditScore",
 	column : 0
+},{
+	question : "Lock Period",
+	id : "lockPeriod",
+	type : "lockPeriod",
+	column : 0,
 }];
 
 //END
@@ -611,7 +627,12 @@ function paintDataSection(option,isDefault){
 				
 				rowRHS = appendYesNoQuestion(option[i]);
 				
-			}else if(option[i].type == "month/year"){
+			}else if(option[i].type == "lockPeriod"){
+				
+				rowRHS = appendLockPeriodData(option[i]);
+				
+			}
+			else if(option[i].type == "month/year"){
 				
 				rowRHS = appendMonthYearQuestion(option[i]);
 				
@@ -729,6 +750,66 @@ function appendDropdown(options){
 
 	   return div.append(row).append(dropDownContainer);
 }
+
+/*Function which paint the question with yes/no button type*/
+function appendLockPeriodData(option){
+	
+	var mainDiv = $('<div>').attr({
+		"class":"quick-quote-lock-period-container",
+		"id" : option.id,
+		"value" : ""
+	});
+	
+	var thirtyDayContent = $('<div>').attr({
+		"class":"quick-quote-30-lock-period-btn radio-btn float-left",
+		"id":"quick-quote-30-lock-period-id",
+		"value" : "30",
+		"isSelected":""
+	}).html("30 days").bind('click',function(e){
+		e.stopImmediatePropagation();		
+		
+		//TO calculate tax insurance and homeowners insurance value	
+		if($('#quick-quote-45-lock-period-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-45-lock-period-id').removeClass('radio-btn-selected');
+		}
+		$(this).addClass('radio-btn-selected');
+		
+		$(this).attr({
+			"isSelected" : true
+		});
+		$(mainDiv).attr({
+			"value" : $(this).attr('value')
+		});
+		
+	});
+
+	var fourtyFiveDayContent = $('<div>').attr({
+		"class":"quick-quote-45-lock-period-btn radio-btn float-left",
+		"id":"quick-quote-45-lock-period-id",
+		"value" : "45",
+		"isSelected":""
+	}).html("45 days").bind('click',function(e){
+		
+		e.stopImmediatePropagation();
+		
+		if($('#quick-quote-30-lock-period-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-30-lock-period-id').removeClass('radio-btn-selected');
+		}
+		$(this).addClass('radio-btn-selected');
+
+		$(this).attr({
+			"isSelected" : true
+		});
+		$(mainDiv).attr({
+			"value" : $(this).attr('value')
+		});
+		
+	});
+	
+	return mainDiv.append(thirtyDayContent).append(fourtyFiveDayContent);
+
+}
+
 
 /*Function which paint the question with yes/no button type*/
 function appendYesNoQuestion(option){
@@ -2083,6 +2164,7 @@ function processCommonParameters(){
 	buyHomeRefinanceRate.homeWorthToday = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
 	buyHomeRefinanceRate.currentMortgageBalance = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
+	buyHomeRefinanceRate.lockPeriod = $('div[id="lockPeriod"]').attr('value')
 	loanPurchaseDetailsUnderQuickQuote.impounds  = $('div[id="impound"]').attr('value');
 	loanPurchaseDetailsUnderQuickQuote.firstName = $('input[id="firstName"]').val();
 	firstName = loanPurchaseDetailsUnderQuickQuote.firstName;

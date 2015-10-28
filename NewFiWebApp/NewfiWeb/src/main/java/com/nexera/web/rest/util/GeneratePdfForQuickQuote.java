@@ -590,6 +590,20 @@ public class GeneratePdfForQuickQuote {
 		cell.setBorder(Rectangle.RIGHT);
 		cell.setHorizontalAlignment(Element.ALIGN_LEFT);
 		firstTable.addCell(cell);
+
+		String lockPeriod = generatePdfVO.getInputCustmerDetailUnderQuickQuote()
+		        .getLockPeriod();
+		if (lockPeriod != null) {
+			cell = new PdfPCell(new Phrase("  " + "Rate Lock Period", font));
+			cell.setBorder(Rectangle.LEFT);
+			firstTable.addCell(cell);
+
+			cell = new PdfPCell(new Phrase(lockPeriod + " Days", font));
+			cell.setBorder(Rectangle.RIGHT);
+			cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+			firstTable.addCell(cell);
+		}
+
 		cell = new PdfPCell(new Phrase("\n"));
 		cell.setColspan(2);
 		cell.setBorder(Rectangle.LEFT | Rectangle.RIGHT);
