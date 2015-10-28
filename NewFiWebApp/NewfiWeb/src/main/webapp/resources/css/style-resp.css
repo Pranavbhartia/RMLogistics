@@ -1918,6 +1918,13 @@
 	.leaddelCustClas {
 		right: 1%;
 	}
+	.quick-quote-30-lock-period-btn{
+		white-space: normal;
+		margin: 10px;
+	}
+	.quick-quote-45-lock-period-btn {
+		white-space: normal;
+	}
 }
 
 @media (min-width: 476px) and (max-width: 648px){
