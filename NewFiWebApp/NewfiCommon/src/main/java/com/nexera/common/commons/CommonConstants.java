@@ -214,6 +214,7 @@ public interface CommonConstants {
 	public static final String TEMPLATE_KEY_NAME_DOCUMENT_TYPE_ASSIGNMENT_FAILURE = "DOCUMENT_TYPE_ASSIGNMENT_FAILURE";
 	public static final String TEMPLATE_KEY_NAME_APPLICATION_SUBMIT_CONFIRMATION = "APPLICATION_SUBMIT_CONFIRMATION";
 	public static final String TEMPLATE_KEY_NAME_PURCHASE_PDF = "QUICK_QUOTE_PDF";
+	public static final String TEMPLATE_KEY_NAME_READY_TO_ORDER_APPRAISAL = "READY_TO_ORDER_APPRAISAL";
 
 	// Document type credit report.
 	public static final String LQB_DOC_TYPE_CR = "CREDIT REPORT";
@@ -315,6 +316,8 @@ public interface CommonConstants {
 	public static final String SUBJECT_NO_PRODUCTS = "No Products Available";
 
 	public static final String SUBJECT_NEW_LOAN_SUBMISSION_ALERT = "NEWFI ALERT: New Loan Submission";
+	
+	public static final String SUBJECT_READY_TO_ORDER_APPRAISAL = "NEWFI UPDATE: Ready to Order Appraisal";
 
 	public static final String CREATET_LOAN_TEMPLATE = "DIRECT-REFI-MASTER TEMPLATE";
 

@@ -18,6 +18,7 @@ import com.nexera.common.entity.LoanTypeMaster;
 import com.nexera.common.entity.NeedsListMaster;
 import com.nexera.common.entity.TransactionDetails;
 import com.nexera.common.entity.UploadedFilesList;
+import com.nexera.common.entity.User;
 import com.nexera.common.enums.LoanLCStates;
 import com.nexera.common.exception.InvalidInputException;
 import com.nexera.common.exception.NoRecordsFetchedException;
@@ -254,5 +255,7 @@ public interface LoanService {
 
 	public void updateLoanLCState(Integer loanID, LoanLCStates loanLCSState);
 	public void updateInterviewDate(Integer loanID, Date interviewDate);
+	
+	public void sendAppraisalVendorUpdateMailToCustomer(int InternalUserID,int loanID) throws InvalidInputException, UndeliveredEmailException; 
 
 }

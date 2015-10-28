@@ -454,3 +454,6 @@ ADD CONSTRAINT `loan_id_fk`
 #Change for Customer Worfklow to show "Complete  Application" instead of Application
 UPDATE `newfi_schema`.`workflowitemmaster` SET `description`='Complete Application' WHERE `id`='27';
 
+#Ranjitha :
+INSERT INTO `newfi_schema`.`template` (`key`, `description`, `modified_date`, `value`, `sms_text`) VALUES ('READY_TO_ORDER_APPRAISAL', 'Ready to order appraisal', '2015-10-28 17:40:00', '65ea7443-3445-4552-8b55-9e5d64f3e2f8', 'Ready to order appraisal');
+
