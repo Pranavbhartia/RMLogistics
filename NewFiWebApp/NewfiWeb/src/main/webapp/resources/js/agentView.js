@@ -335,7 +335,7 @@ function paintLeadsAgentDashboardRightPanel(data){
 		
 		$(this).parent().find('.search-input').show().focus();
 	    if($('#customerSearch').val()!="" && $('#customerSearch').val()!=undefined){
-	    	searchByTermAndLoanType(customerData.customers);
+	    	searchLeadsPageByName(data.leads);
 			$(this).show();
 	    }
 	
@@ -349,7 +349,7 @@ function paintLeadsAgentDashboardRightPanel(data){
 			if ($(this).val() == "") {
 				$(this).hide();
 			}
-			searchByTermAndLoanType(customerData.customers);
+			searchLeadsPageByName(data.leads);
 			$(this).parent().find('.search-icn').show();
 	
 		}
@@ -366,6 +366,7 @@ function paintLeadsAgentDashboardRightPanel(data){
     rightCon.append(searchCon);
 
 	header.append(leftCon).append(rightCon);
+	$('#agent-dashboard-container').empty();
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
 	appendLeads("leads-container",data, false);	
@@ -378,6 +379,23 @@ function searchByTermAndLoanType(customers) {
 	var filteredResult = searchCustomerLoanByLoanStatus(customers, loanType);
 	var finalResults = filterCustomerName(filteredResult, searchTerm);
 	appendCustomers("leads-container", finalResults);
+
+}
+
+
+function searchLeadsPageByName(customers) {
+	var searchTerm = $("#customerSearch").val();
+	var loanType = $(".filter-selected").attr('id');
+
+	
+	//var filteredResult = searchCustomerLoanByLoanStatus(customers, loanType);
+	var finalResults = filterCustomerName(customers, searchTerm);
+	
+	var customersObject = {
+			"leads" : finalResults
+	}
+	//appendLeads("leads-container", finalResults);
+	appendLeads("leads-container",customersObject, false);
 
 }
 
@@ -475,7 +493,7 @@ function appendAgentDashboardContainer() {
  * @param customers
  */
 function checkCreditScore(creditScore){
-	if(creditScore.indexOf("800")>-1){
+	if(creditScore && creditScore.indexOf("800")>-1){
     	
 		creditScore="NA";
     	
