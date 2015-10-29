@@ -1097,14 +1097,16 @@ a.cus-eng-succ-mess-email {
 
 .milestone-vendor-type-row {
     margin: 5px 0;
-    width: 342px;
     min-height: 50px;
-    padding: 6px 10px;
+    padding: 5px 0px;
 }
 
 .milestone-txt-LHS {
-	margin: 5px;
-	text-align: left;
+	/* margin: 5px; */
+	/* text-align: left; */
+	padding: 0 2px;
+	/* font-size: 13px; */
+	line-height: 32px;
 }
 .milestone-dropdown-RHS {
     height: 35px;
@@ -1129,9 +1131,10 @@ a.cus-eng-succ-mess-email {
     border: 1px solid #dcdcdc;
     border-radius: 3px;
     background: #fff;
-    z-index: 2;
+    z-index: 0;
     position: absolute;
-    width: 101%;
+    width: 132%;
+    margin-left: 11px;
 }
 
 .milestone-dropdown-sel {
@@ -1184,4 +1187,41 @@ a.cus-eng-succ-mess-email {
 	width: 13%;
 }
 
+.app-fee-status-popup {
+    width: 276px;
+    margin-top: -20px;
+}
+.app-fee-popup-header {
+	text-align: left;
+	line-height: 20px;
+    margin: 5px 0 10px 0px;
+    float: left;
+    font-size: 12px;
+}
+.app-fee-popup-textbox {
+    width: 54%;
+    height: 35px;
+    padding: 10px;
+    margin: 0 10px;
+    background: #fafafa;
+    border: 1px solid #cecece;
+    border-radius: 3px;
+    float: left;
+}
+.app-fee-btn-container {
+    width: 185px;
+    margin: 10px 30px;
+}
+.app-fee-btn {
+    height: 30px;
+    line-height: 30px;
+    width: 84px;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.5px;
+    background-color: #F47521;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
 
+}

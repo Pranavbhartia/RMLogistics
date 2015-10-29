@@ -38,8 +38,10 @@ import com.nexera.common.vo.LoanMilestoneMasterVO;
 import com.nexera.common.vo.LoanMilestoneVO;
 import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.MilestoneLoanTeamVO;
+import com.nexera.common.vo.UserVO;
 import com.nexera.core.service.LoanService;
 import com.nexera.core.service.NeedsListService;
+import com.nexera.core.service.UserProfileService;
 import com.nexera.core.service.WorkflowCoreService;
 import com.nexera.web.rest.util.RestUtil;
 import com.nexera.workflow.bean.WorkflowItemExec;
@@ -62,6 +64,8 @@ public class WorkflowRestService {
 	private NeedsListService needsListService;
 	@Autowired
 	private WorkflowCoreService workflowCoreService;
+	@Autowired
+	private UserProfileService userProfileService;
 	private static final Logger LOG = LoggerFactory
 	        .getLogger(WorkflowRestService.class);
 
@@ -275,6 +279,10 @@ public class WorkflowRestService {
 				int loanID = json.getInt("loanID");
 				String appraisalVendorName = json.getString("vendorType");
 				loanService.updateAppraisalVendor(loanID, appraisalVendorName);
+				int InternalUserID = json.getInt("userID");
+				LOG.info("Updated vendor type successfully for loan....."+loanID+" and by user...."+InternalUserID);
+				loanService.sendAppraisalVendorUpdateMailToCustomer(InternalUserID, loanID);				
+				LOG.info("Sent mail for customer whose loan id is........"+loanID);
 			}
 			
 		} catch (Exception e) {

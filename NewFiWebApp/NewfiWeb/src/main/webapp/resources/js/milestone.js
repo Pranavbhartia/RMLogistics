@@ -6,8 +6,8 @@ var COMPLETED = "3";
 var NOT_STARTED = "0";
 var RENDER_RIGHT = "RIGHT";
 var RENDER_LEFT = "LEFT";
-var BRAINTREE = "braintree";
-var AXIS = "axis";
+var BRAINTREE = "Valuation Patners";
+var AXIS = "Axis";
 var milestoneAction=""
 var workFlowContext = {
 	init : function(loanId, customer) {
@@ -2157,7 +2157,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	
 	var wrapper = $('<div>').attr({
 		"id" : "appfee-edit-popup",
-		"class" : "ms-add-member-popup loan-status-popup ms-add-member-popup-adjustment"
+		"class" : "ms-add-member-popup loan-status-popup app-fee-status-popup ms-add-member-popup-adjustment"
 	}).css({
 		"left" : offset.left,
 		"top" : offset.top+42
@@ -2166,15 +2166,21 @@ function appendAppFeeEditPopup(element,milestoneId) {
 			$('.milestone-dropdown-container').hide();
 		}
 	});
-	var header = $('<div>').attr({
-		"class" : "popup-header"
-	}).html("App Fee Edit");
+	
 	
 	var container = $('<div>').attr({
 		"class" : "popup-container"
 	});
-	var newFee = $('<textarea>').attr({
-		"class" : "popup-textbox",
+	var appFeeRow = $('<div>').attr({
+		"class" : "app-fee-first-row clearfix"
+	});
+	
+	var header = $('<div>').attr({
+		"class" : "popup-header app-fee-popup-header float-left"
+	}).html("Appraisal Fee");
+	
+	var newFee = $('<input>').attr({
+		"class" : "popup-textbox app-fee-popup-textbox",
 		"placeholder" : "Change Fee here"
 		
 	}).keydown(function() {
@@ -2192,18 +2198,20 @@ function appendAppFeeEditPopup(element,milestoneId) {
             event.preventDefault();
         }
     });
+	appFeeRow.append(header).append(newFee);
+	
 	var exsistingFee = $('#'+milestoneId+'fee').html();
 	if(exsistingFee){
 		$(newFee).val(exsistingFee);
 		$(newFee).html(exsistingFee);
 	}
 	var vendorRow = $('<div>').attr({
-		"class": "milestone-vendor-type-row"
+		"class": "milestone-vendor-type-row clearfix"
 	});
 	
 	var divLHS = $('<div>').attr({
 		"class": "milestone-txt-LHS float-left"
-	}).html("Vendor Type");
+	}).html("AMC Vendor");
 	var value = workFlowContext.mileStoneContextList[milestoneId].paymentType;
 	var divRHS = $('<div>').attr({
 		"class": "milestone-dropdown-RHS float-left",
@@ -2246,7 +2254,7 @@ function appendAppFeeEditPopup(element,milestoneId) {
 	divCont.append(dropdownDiv);
 	vendorRow.append(divLHS).append(divRHS).append(divCont);
 	var submitBtn = $('<div>').attr({
-		"class" : "popup-save-btn float-left"
+		"class" : "popup-save-btn app-fee-btn float-left"
 	}).html("Save").bind('click',{"container":wrapper,"comment":newFee,"milestoneId":milestoneId},function(event){
 		
 		var newFee=event.data.comment.val();
@@ -2284,19 +2292,19 @@ function appendAppFeeEditPopup(element,milestoneId) {
 		}
 	});
 	var cancelBtn = $('<div>').attr({
-		"class" : "popup-save-btn float-right"
+		"class" : "popup-save-btn app-fee-btn float-right"
 	}).html("Cancel").bind('click',function(event){
 		event.stopPropagation();
 		removeAppFeeEditPopup();
 	});
 	var btnContainer = $('<div>').attr({
-        "class": "milestone-qc-btn-container"
+        "class": "milestone-qc-btn-container app-fee-btn-container"
     });
     btnContainer.append(submitBtn).append(cancelBtn);
 	
-	container.append(newFee).append(vendorRow).append(btnContainer);
+	container.append(appFeeRow).append(vendorRow).append(btnContainer);
 	
-	wrapper.append(header).append(container);
+	wrapper.append(container);
 	wrapper.bind("click",function(e){
 		e.stopPropagation();
 	})
