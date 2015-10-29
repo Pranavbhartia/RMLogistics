@@ -705,4 +705,13 @@ public class Utils {
 		Random randomGenerator = new Random();
 		return randomGenerator.nextInt(1000);
 	}
+	
+	public static String phoneNumberFormating(String phoneNumber) {
+		if(phoneNumber == null || phoneNumber == ""){
+			return "N/A";
+		}else {
+			return phoneNumber.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3");
+		}
+		
+	}
 }

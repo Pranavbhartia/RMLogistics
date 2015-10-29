@@ -2817,7 +2817,7 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
     public void sendAppraisalVendorUpdateMailToCustomer(int InternalUserID,int loanID) throws InvalidInputException, UndeliveredEmailException {
 		
 		UserVO InternalUserDetails = userProfileService.findUser(InternalUserID);
@@ -2843,7 +2843,7 @@ public class LoanServiceImpl implements LoanService {
 		substitutions.put("-internalusername-", new String[] { InternalUserDetails.getFirstName()+" "+InternalUserDetails.getLastName() });
 		substitutions.put("-internalusertype-", new String[] { InternalUserDetails.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleDescription() });
 		substitutions.put("-internaluserNMLSID-", new String[] { nmlsID });
-		substitutions.put("-internaluserphone-", new String[] { phoneNumberFormating(InternalUserDetails.getPhoneNumber()) });
+		substitutions.put("-internaluserphone-", new String[] { Utils.phoneNumberFormating(InternalUserDetails.getPhoneNumber()) });
 		substitutions.put("-internaluseremail-", new String[] { InternalUserDetails.getEmailId() });
 
 		emailEntity.setSenderEmailId(loanDetails.getUser().getUsername()
@@ -2860,13 +2860,6 @@ public class LoanServiceImpl implements LoanService {
 		        template);
 	    
     }
-	private String phoneNumberFormating(String phoneNumber) {
-		if(phoneNumber == null || phoneNumber == ""){
-			return "N/A";
-		}else {
-			return phoneNumber.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3");
-		}
-		
-	}
+	
 
 }
