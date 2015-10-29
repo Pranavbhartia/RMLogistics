@@ -2879,5 +2879,10 @@ public class LoanServiceImpl implements LoanService {
 		        template);
 
 	}
-
+	@Override
+	@Transactional
+	public void moveLoanToPipeline(Integer loanID) {
+		saveLoanProgress(loanID, new LoanProgressStatusMaster(LoanProgressStatusMasterEnum.IN_PROGRESS));
+		updateLoanLCState(loanID, LoanLCStates.PreApplication);		 	
+	}
 }
