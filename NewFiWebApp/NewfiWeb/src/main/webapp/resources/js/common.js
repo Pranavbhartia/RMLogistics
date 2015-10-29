@@ -1575,16 +1575,11 @@ $(document).on('keydown', '#stateId' ,function(e){
 	    k==8 ||//to allow to delte
 	    k==46;//to allow backspace
 	    if (!ok) {
-	        e.preventDefault();
+	     
 	        return false;
 
-	    }
-	/*	if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
-	        //display error message
-	        //showToastMessage("Enter correct zipcode");
-	          return false;
-	    }*/				
-		if($(this).val().length > 5){
+	    }			
+		if($(this).val().length >= 5){
 
 	         return false;
 	    }
@@ -1597,7 +1592,7 @@ $(document).on('keydown', '#stateId' ,function(e){
 	          return false;
 	    }				
 		if($(this).val().length >= 5){
-
+		
 	         return false;
 	    }
 	});  
@@ -1610,7 +1605,7 @@ $(document).on('keydown', '#stateId' ,function(e){
 	          return false;
 		}				
 		if($(this).val().length >= 5){
-
+	
 	         return false;
 	    }
 	});  
