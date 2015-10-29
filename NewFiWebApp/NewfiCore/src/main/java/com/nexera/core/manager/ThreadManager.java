@@ -413,8 +413,12 @@ public class ThreadManager implements Runnable {
 								}
 								// Rajeswari : Get the milestone that this
 								// Status code corresponds to.
+								if (WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
+								        .get(loanStatusID) != null)
+								{
 								theMilestone = WorkflowConstants.LQB_STATUS_MILESTONE_LOOKUP
 								        .get(loanStatusID).getMilestone();
+								}
 								// Rajeswari : Get the other look ups like :
 								// what are the concrete classes to call and
 								// What are the other statuses linked to this
