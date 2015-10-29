@@ -39,6 +39,7 @@ import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.ErrorVO;
 import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.LoanAppFormVO;
+import com.nexera.common.vo.LoanVO;
 import com.nexera.common.vo.RealtorDetailVO;
 import com.nexera.common.vo.UserVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
@@ -232,9 +233,8 @@ public class ShopperRegistrationController {
 			quoteService.updateCreatedUser(quoteCompositeKey);
 			Loan loan = new Loan(user.getDefaultLoanId());
 			quoteService.updateLoanId(quoteCompositeKey, loan);
-
-			responseVO.setResultObject(
-			        DisplayMessageConstants.USER_CREATED_SUCCESSFULLY);
+			LoanVO loanVo = loanService.getLoanByID(user.getDefaultLoanId());
+			responseVO = RestUtil.wrapObjectForSuccess(loanVo);
 			LOG.info("User succesfully created, now trying to autologin"
 			        + user.getEmailId());
 		} catch (FatalException e) {
