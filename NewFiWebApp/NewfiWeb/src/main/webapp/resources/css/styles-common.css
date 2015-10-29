@@ -1169,6 +1169,7 @@ a.cus-eng-succ-mess-email {
 .lead-email {
 	width: 22%;
 	word-break: break-word;
+	word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
 .lead-purp {
