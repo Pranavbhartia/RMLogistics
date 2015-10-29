@@ -1663,6 +1663,7 @@ public class LoanServiceImpl implements LoanService {
 			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
 			mileStone.setComments(comments);
 			mileStone.setStatusUpdateTime(new Date());
+			mileStone.setStatusInsertTime(new Date());
 			this.saveLoanMilestone(mileStone);
 			status = WorkItemStatus.COMPLETED.getStatus();
 			return status;
@@ -2819,7 +2820,8 @@ public class LoanServiceImpl implements LoanService {
 	@Override
 	@Transactional(readOnly = true)
 	public void sendAppraisalVendorUpdateMailToCustomer(int InternalUserID,
-	        int loanID) throws InvalidInputException, UndeliveredEmailException {
+
+	int loanID) throws InvalidInputException, UndeliveredEmailException {
 
 		UserVO InternalUserDetails = userProfileService
 		        .findUser(InternalUserID);
@@ -2832,8 +2834,8 @@ public class LoanServiceImpl implements LoanService {
 		}
 		String accountLogin = baseUrl;
 		EmailVO emailEntity = new EmailVO();
-
 		Template template = null;
+		// We create the substitutions map
 		template = templateService
 		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_READY_TO_ORDER_APPRAISAL);
 		// We create the substitutions map
@@ -2841,7 +2843,6 @@ public class LoanServiceImpl implements LoanService {
 		substitutions.put("-name-", new String[] { loanDetails.getUser()
 		        .getFirstName() + " " + loanDetails.getUser().getLastName() });
 		substitutions.put("-accountlogin-", new String[] { accountLogin });
-
 		substitutions.put("-internalusername-",
 		        new String[] { InternalUserDetails.getFirstName() + " "
 		                + InternalUserDetails.getLastName() });
@@ -2853,7 +2854,6 @@ public class LoanServiceImpl implements LoanService {
 		        .phoneNumberFormating(InternalUserDetails.getPhoneNumber()) });
 		substitutions.put("-internaluseremail-",
 		        new String[] { InternalUserDetails.getEmailId() });
-
 		emailEntity.setSenderEmailId(loanDetails.getUser().getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
@@ -2867,7 +2867,6 @@ public class LoanServiceImpl implements LoanService {
 		User user = User.convertFromVOToEntity(loanDetails.getUser());
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
 		        template);
-
 	}
 
 	@Override
