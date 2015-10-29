@@ -22,7 +22,7 @@ function globalBinder() {
 		removeToastMessage();
 		return true;
 	});
-	removeToastMessage();
+
 }
 
 function globalSNBinder() {
@@ -46,6 +46,7 @@ function globalSNBinder() {
 }
 
 function bindDataToPN() {
+	removeToastMessage();
 	// Assign values to primary navigation-Customer view
 	var divArray = $('.left-panel >div');
 	$('.left-panel >div').each(function() {
@@ -165,7 +166,7 @@ function bindDataToPN() {
 
 
 function bindDataToSN() {
-
+	removeToastMessage();
 	// Customer view
 	$('#cust-sec-nav >div').each(function() {
 

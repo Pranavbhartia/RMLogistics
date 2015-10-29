@@ -1518,7 +1518,6 @@ $('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col3
 	sortList(isAsc, containerId, ".admin-newfi-team-list-tr-col3");
 });
 
-
 //Sort on Last Login
 $('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col4',function(){
 	
@@ -1535,8 +1534,44 @@ $('body').on('click','.admin-newfi-team-container .admin-newfi-team-list-th-col4
 		isAsc = -1;
 	}
 	
-	sortList(isAsc, containerId, ".admin-newfi-team-list-tr-col4");
+	sortTableByTime(isAsc, containerId, ".admin-newfi-team-list-tr-col4");
 });
+
+
+/**
+ * Method to sort based on time type columns.
+ * @param isAsc
+ * @param selector
+ */
+function sortTableByTime(isAsc,containerId,  selector){
+	var  $userListContainer = $("#" + containerId);
+	var rows = $userListContainer.find('.admin-newfi-team-list-tr').get();
+	
+	rows.sort(function(a, b) {
+		try {
+		   var time1 = $(a).children(selector).text().trim();
+		   var time2 = $(b).children(selector).text().trim();
+           time1  = time1.replace(/-/g, "/");
+           time2  = time2.replace(/-/g, "/");
+           
+           var timestamp1 = new Date(time1).getTime();
+           timestamp1 = isNaN(timestamp1 ) ? 0 : timestamp1;
+           
+           var timestamp2 = new Date(time2).getTime();
+           timestamp2 = isNaN(timestamp2) ? 0 : timestamp2;
+           
+           return isAsc * (timestamp1 - timestamp2); 
+       } catch(ex)  {
+           console.log("Error while parsing date sortTableByTime," + ex);
+           return 0;
+		}
+	});
+	
+	$.each(rows, function(index, row) {
+		$userListContainer.append(row);
+	});
+}
+
 
 
 /**
@@ -1551,15 +1586,8 @@ function sortList(isAsc, containerId, selector) {
 	rows.sort(function(a, b) {
 		var A = $(a).children(selector).text().toLowerCase();
 		var B = $(b).children(selector).text().toLowerCase();
-
-		if (A < B) {
-			return -1 * isAsc;
-		}
-		if (A > B) {
-			return 1 * isAsc;
-		}
 		
-		return 0;
+		return (A == B ? 0 : A > B ? -1  * isAsc : isAsc );
 	});
 	
 	$.each(rows, function(index, row) {
@@ -1580,40 +1608,13 @@ function sortListByLastName(isAsc, containerId) {
 
 		var name1 = $(a).children(".admin-newfi-team-list-tr-col1").text().toLowerCase();
 		var name2 = $(b).children(".admin-newfi-team-list-tr-col1").text().toLowerCase();
-		name1  = swapLastNameFirstName(name1);
-		name2 = swapLastNameFirstName(name2);
-
-		if (name1 < name2) {
-			return -1 * isAsc;
-		}
-		if (name1 > name2) {
-			return 1 * isAsc;
-		}
+		name1  = reverseWordsInString(name1);
+		name2 = reverseWordsInString(name2);
 		
-		return 0;
+		return (name1 == name2 ? 0 : name1 > name2 ? -1  * isAsc : isAsc );
 	});
 	
 	$.each(rows, function(index, row) { 
 		$userListContainer.append(row);
 	});
-}
-
-/**
- * Method to reverse the name.  
- * @param name
- * @returns
- */
-
-function swapLastNameFirstName(name){
-	if(name != null  && name != undefined){
-        name = name.replace(/  +/g, ' ');
-		var names = name.split(' ');
-        var tmp = "";
-        for(var i = names.length - 1; i >= 0; i-- ){
-        	tmp += names[i] + " ";
-        }
-        return tmp;
-	} else {
-		return name;
-	}
 }

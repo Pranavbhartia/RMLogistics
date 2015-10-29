@@ -1671,6 +1671,7 @@ public class LoanServiceImpl implements LoanService {
 			mileStone.setLoanMilestoneMaster(loanMilestoneMaster);
 			mileStone.setComments(comments);
 			mileStone.setStatusUpdateTime(new Date());
+			mileStone.setStatusInsertTime(new Date());
 			this.saveLoanMilestone(mileStone);
 			status = WorkItemStatus.COMPLETED.getStatus();
 			return status;
@@ -2551,29 +2552,6 @@ public class LoanServiceImpl implements LoanService {
 		return loanDao.findLoanDetailOfLoan(loan);
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO,
-	        String startLimit, String endLimit) {
-		int startLimt = Integer.parseInt(startLimit);
-		int endLimt = startLimt + 15;
-		if (endLimit != null) {
-			endLimt = Integer.parseInt(endLimit);
-		}
-		// Get new prospect and lead loans this user has access to.
-		List<QuoteDetails> quoteList = loanDao.retrieveLoanForMyLeads(
-		        this.parseUserModel(userVO), startLimt, endLimt);
-		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
-		        this.parseUserModel(userVO),
-		        new int[] {
-		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() },
-		        startLimt, endLimt);
-		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
-		        quoteList, userVO.getId());
-
-		return loanDashboardVO;
-	}
-
 	/**
 	 * @param loanList
 	 * @param quoteList
@@ -2604,7 +2582,7 @@ public class LoanServiceImpl implements LoanService {
 
 			boolean isLoanCreated = false;
 			for (QuoteDetails quoteDetail : quoteList) {
-				
+
 				if (quoteDetail.getLoan() != null) {
 					isLoanCreated = true;
 					getQuoteDetailForLoan(quoteDetail, loanCustomerVoList);
@@ -2640,7 +2618,7 @@ public class LoanServiceImpl implements LoanService {
 						        .setLastActedOn(quoteDetail.getCreatedDate());
 					}
 					loanCustomerVoList.add(leadAsQuoteVO);
-				
+
 				}
 				isLoanCreated = false;
 			}
@@ -2658,7 +2636,8 @@ public class LoanServiceImpl implements LoanService {
 		LeadsDashBoardVO theLeadToModify = null;
 		for (LeadsDashBoardVO leadVO : loanCustomerVoList) {
 			// find the loan
-			if (leadVO.getLoanID() != null && leadVO.getLoanID() .equals(quoteDetail.getLoan().getId())   ){
+			if (leadVO.getLoanID() != null && leadVO.getLoanID()
+			        .equals(quoteDetail.getLoan().getId())) {
 				theLeadToModify = leadVO;
 				break;
 			}
@@ -2698,6 +2677,29 @@ public class LoanServiceImpl implements LoanService {
 		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
 		        this.parseUserModel(userVO), new int[] {
 		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() });
+		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
+		        quoteList, userVO.getId());
+
+		return loanDashboardVO;
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public LoanDashboardVO retrieveDashboardForMyLeads(UserVO userVO,
+	        String startLimit, String endLimit) {
+		int startLimt = Integer.parseInt(startLimit);
+		int endLimt = startLimt + 15;
+		if (endLimit != null) {
+			endLimt = Integer.parseInt(endLimit);
+		}
+		// Get new prospect and lead loans this user has access to.
+		List<QuoteDetails> quoteList = loanDao.retrieveLoanForMyLeads(
+		        this.parseUserModel(userVO), startLimt, endLimt);
+		List<Loan> loanList = loanDao.retrieveLoanByProgressStatus(
+		        this.parseUserModel(userVO),
+		        new int[] {
+		                LoanProgressStatusMasterEnum.NEW_LOAN.getStatusId() },
+		        startLimt, endLimt);
 		LoanDashboardVO loanDashboardVO = buildLeadDashboardVoFromList(loanList,
 		        quoteList, userVO.getId());
 
@@ -2822,4 +2824,65 @@ public class LoanServiceImpl implements LoanService {
 
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public void sendAppraisalVendorUpdateMailToCustomer(int InternalUserID,
+	        int loanID)
+	                throws InvalidInputException, UndeliveredEmailException {
+
+		UserVO InternalUserDetails = userProfileService
+		        .findUser(InternalUserID);
+		LoanVO loanDetails = getLoanByID(loanID);
+
+		String subject = CommonConstants.SUBJECT_READY_TO_ORDER_APPRAISAL;
+		String nmlsID = InternalUserDetails.getInternalUserDetail().getNmlsID();
+		if (nmlsID == null) {
+			nmlsID = "N/A";
+		}
+		String accountLogin = baseUrl;
+		EmailVO emailEntity = new EmailVO();
+
+		Template template = null;
+		template = templateService.getTemplateByKey(
+		        CommonConstants.TEMPLATE_KEY_NAME_READY_TO_ORDER_APPRAISAL);
+		// We create the substitutions map
+		Map<String, String[]> substitutions = new HashMap<String, String[]>();
+		substitutions.put("-name-",
+		        new String[] { loanDetails.getUser().getFirstName() + " "
+		                + loanDetails.getUser().getLastName() });
+		substitutions.put("-accountlogin-", new String[] { accountLogin });
+
+		substitutions.put("-internalusername-",
+		        new String[] { InternalUserDetails.getFirstName() + " "
+		                + InternalUserDetails.getLastName() });
+		substitutions.put("-internalusertype-",
+		        new String[] { InternalUserDetails.getInternalUserDetail()
+		                .getInternalUserRoleMasterVO().getRoleDescription() });
+		substitutions.put("-internaluserNMLSID-", new String[] { nmlsID });
+		substitutions.put("-internaluserphone-", new String[] { Utils
+		        .phoneNumberFormating(InternalUserDetails.getPhoneNumber()) });
+		substitutions.put("-internaluseremail-",
+		        new String[] { InternalUserDetails.getEmailId() });
+
+		emailEntity.setSenderEmailId(loanDetails.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setSenderName(CommonConstants.SENDER_NAME);
+		emailEntity.setSubject(subject);
+		emailEntity.setTokenMap(substitutions);
+		emailEntity.setTemplateId(template.getValue());
+		List<String> ccList = new ArrayList<String>();
+		ccList.add(loanDetails.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
+		emailEntity.setCCList(ccList);
+		User user = User.convertFromVOToEntity(loanDetails.getUser());
+		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
+		        template);
+
+	}
+	@Override
+	@Transactional
+	public void moveLoanToPipeline(Integer loanID) {
+		saveLoanProgress(loanID, new LoanProgressStatusMaster(LoanProgressStatusMasterEnum.IN_PROGRESS));
+		updateLoanLCState(loanID, LoanLCStates.PreApplication);		 	
+	}
 }

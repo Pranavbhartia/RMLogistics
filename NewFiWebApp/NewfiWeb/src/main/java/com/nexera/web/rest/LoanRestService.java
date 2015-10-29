@@ -86,32 +86,40 @@ public class LoanRestService {
 
 	// TODO-move this to User profile rest service
 
-	 @RequestMapping(value = "/retrieveDashboardForMyLeads/{userID}")
-	 public @ResponseBody CommonResponseVO retrieveDashboardForMyLeads(
-	         @PathVariable Integer userID,
-	         @RequestParam(required = false) String startlimit,
-	         @RequestParam(required = false) String count) {
-	  UserVO user = new UserVO();
-	  user.setId(userID);
-	  CommonResponseVO commonResponseVO = null;
-	  LoanDashboardVO responseVO = null;	
-	  responseVO = loanService
-	           .retrieveDashboardForMyLeads(user);
-	  commonResponseVO=RestUtil.wrapObjectForSuccess(responseVO);
-	  return commonResponseVO;
-	 }
-	
+	@RequestMapping(value = "/retrieveDashboardForMyLeads/{userID}")
+	public @ResponseBody CommonResponseVO retrieveDashboardForMyLeads(
+	        @PathVariable Integer userID,
+	        @RequestParam(required = false) String startlimit,
+	        @RequestParam(required = false) String count) {
+		UserVO user = new UserVO();
+		user.setId(userID);
+		CommonResponseVO commonResponseVO = null;
+
+		if (startlimit != null) {
+
+			LoanDashboardVO responseVO = null;
+			responseVO = loanService.retrieveDashboardForMyLeads(user,
+			        startlimit, count);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
+		} else {
+			LoanDashboardVO responseVO = null;
+			responseVO = loanService.retrieveDashboardForMyLeads(user);
+			commonResponseVO = RestUtil.wrapObjectForSuccess(responseVO);
+		}
+		return commonResponseVO;
+	}
 
 	// TODO-move this to User profile rest service
 	@RequestMapping(value = "/retrieveQuoteDetailsOfUser/{id}")
 	public @ResponseBody String retrieveQuoteDetailsOfUser(
 	        @PathVariable String id) {
 		Gson gson = new Gson();
-		String jsonString= null;
+		String jsonString = null;
 		QuoteDetails quoteDetails = quoteService.findQuoteDetailsById(id);
 		if (quoteDetails != null) {
-			 GeneratePdfVO generatePdfVO = quoteService.convertToGeneratePdfVo(quoteDetails);
-			 jsonString = gson.toJson( generatePdfVO );
+			GeneratePdfVO generatePdfVO = quoteService
+			        .convertToGeneratePdfVo(quoteDetails);
+			jsonString = gson.toJson(generatePdfVO);
 		}
 		return jsonString;
 	}

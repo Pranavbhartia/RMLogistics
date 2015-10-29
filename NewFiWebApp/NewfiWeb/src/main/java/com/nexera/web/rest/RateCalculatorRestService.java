@@ -54,6 +54,7 @@ public class RateCalculatorRestService {
 
 	@Autowired
 	StateLookupService stateLookupService;
+
 	@RequestMapping(value = "/findteaseratevalue", method = RequestMethod.POST)
 	public @ResponseBody String getTeaserRate(String teaseRate) {
 		Gson gson = new Gson();
@@ -62,18 +63,22 @@ public class RateCalculatorRestService {
 			LOG.info("findteaseratevalue - inout xml is" + teaseRate);
 			TeaserRateVO teaserRateVO = gson.fromJson(teaseRate,
 			        TeaserRateVO.class);
-			if(teaserRateVO.getCreditscore() == null){
-				teaserRateVO.setCreditscore(CommonConstants.PRICING_DEFAULT_CREDIT_SCORE);
+			if (teaserRateVO.getCreditscore() == null) {
+				teaserRateVO.setCreditscore(
+				        CommonConstants.PRICING_DEFAULT_CREDIT_SCORE);
 			}
-			
-			LOG.info("teaserRateVO" + teaserRateVO.getCity());
-			LOG.info("teaserRateVO" + teaserRateVO.getCurrentAddress());
-			LOG.info("teaserRateVO" + teaserRateVO.getCurrentMortgageBalance());
-			LOG.info("teaserRateVO" + teaserRateVO.getCashTakeOut());
-			LOG.info("teaserRateVO" + teaserRateVO.getCreditscore());
+
+			LOG.info("City" + teaserRateVO.getCity());
+			LOG.info("Address" + teaserRateVO.getCurrentAddress());
+			LOG.info("Current Mortgage Balance"
+			        + teaserRateVO.getCurrentMortgageBalance());
+			LOG.info("CashTakeOut" + teaserRateVO.getCashTakeOut());
+			LOG.info("CreditScore" + teaserRateVO.getCreditscore());
+			LOG.info("LockPeriod" + teaserRateVO.getLockPeriod());
 
 			// String requestXML = CreateXmlForTeaserRate(teaserRateVO);
-			// LOG.info("Invoking rest service with with Json Input "+CreateTeaserRateJson(requestXML,"RunQuickPricer"));
+			// LOG.info("Invoking rest service with with Json Input
+			// "+CreateTeaserRateJson(requestXML,"RunQuickPricer"));
 			// List<TeaserRateResponseVO> teaserRateResponseVO =
 			// invokeRest(CreateTeaserRateJson(requestXML,"RunQuickPricer").toString());
 			JSONObject jsonObject = createMapforJson(teaserRateVO);
@@ -85,7 +90,8 @@ public class RateCalculatorRestService {
 				String responseTime = map.get("responseTime");
 				String lqbResponse = map.get("responseMessage");
 				if (null != lqbResponse) {
-					List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(lqbResponse);
+					List<TeaserRateResponseVO> teaserRateList = parseLqbResponse(
+					        lqbResponse);
 					if (teaserRateList != null) {
 						for (TeaserRateResponseVO responseVo : teaserRateList) {
 							responseVo.setResponseTime(responseTime);
@@ -152,14 +158,17 @@ public class RateCalculatorRestService {
 
 		if ("REFCO".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 
-			loanAmount = Integer.parseInt(unformatCurrencyField(teaserRateVO
-			        .getCashTakeOut()))
-			        + Integer.parseInt(unformatCurrencyField(teaserRateVO
-			                .getCurrentMortgageBalance())) + "";
-			LOG.info("Inside cash takeout , total loan amount is " + loanAmount);
+			loanAmount = Integer
+			        .parseInt(unformatCurrencyField(
+			                teaserRateVO.getCashTakeOut()))
+			        + Integer.parseInt(unformatCurrencyField(
+			                teaserRateVO.getCurrentMortgageBalance()))
+			        + "";
+			LOG.info(
+			        "Inside cash takeout , total loan amount is " + loanAmount);
 		} else {
-			loanAmount = unformatCurrencyField(teaserRateVO
-			        .getCurrentMortgageBalance());
+			loanAmount = unformatCurrencyField(
+			        teaserRateVO.getCurrentMortgageBalance());
 		}
 
 		if (teaserRateVO.getLoanType() != null) {
@@ -167,11 +176,8 @@ public class RateCalculatorRestService {
 			if ("PUR".equalsIgnoreCase(loanType)) {
 				if (teaserRateVO.getPurchaseDetails() != null) {
 
-					loanAmount = ""
-					        + Integer
-					                .parseInt(unformatCurrencyField(teaserRateVO
-					                        .getPurchaseDetails()
-					                        .getLoanAmount()));
+					loanAmount = "" + Integer.parseInt(unformatCurrencyField(
+					        teaserRateVO.getPurchaseDetails().getLoanAmount()));
 
 				}
 
@@ -183,7 +189,8 @@ public class RateCalculatorRestService {
 			loanPurpose = "2";
 			LOG.info("Inside loan purpose " + loanPurpose);
 		} else if ("REFLMP".equalsIgnoreCase(teaserRateVO.getRefinanceOption())
-		        || "REFMF".equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
+		        || "REFMF"
+		                .equalsIgnoreCase(teaserRateVO.getRefinanceOption())) {
 			loanPurpose = "1";
 		} else {
 			loanPurpose = "0";
@@ -195,26 +202,24 @@ public class RateCalculatorRestService {
 			teaserRateVO.setHomeWorthToday("350000");
 		}
 
-		//JSONObject geoFromAPI = getStateUtlity(teaserRateVO.getZipCode());
-		HashMap<String, String> stateLookup = stateLookupService.getZipCodeData(teaserRateVO.getZipCode());
+		// JSONObject geoFromAPI = getStateUtlity(teaserRateVO.getZipCode());
+		HashMap<String, String> stateLookup = stateLookupService
+		        .getZipCodeData(teaserRateVO.getZipCode());
 		stateFromAPI = stateLookup.get("stateName");
 		shopperCounty = stateLookup.get("countyName");
-		
-		/*try {
 
-			stateFromAPI = geoFromAPI.getString("state");
-			shopperCounty = geoFromAPI.getString("county");
-
-			if ("".equalsIgnoreCase(stateFromAPI)) {
-				stateFromAPI = "CA";
-			}
-
-			if ("".equalsIgnoreCase(shopperCounty)) {
-				shopperCounty = "Santa Clara";
-			}
-		} catch (Exception e) {
-			LOG.error("Error in createMapforJson", e);
-		}*/
+		/*
+		 * try {
+		 * 
+		 * stateFromAPI = geoFromAPI.getString("state"); shopperCounty =
+		 * geoFromAPI.getString("county");
+		 * 
+		 * if ("".equalsIgnoreCase(stateFromAPI)) { stateFromAPI = "CA"; }
+		 * 
+		 * if ("".equalsIgnoreCase(shopperCounty)) { shopperCounty =
+		 * "Santa Clara"; } } catch (Exception e) { LOG.error(
+		 * "Error in createMapforJson", e); }
+		 */
 
 		HashMap<String, String> hashmap = new HashMap<String, String>();
 		hashmap.put("homeWorthToday",
@@ -226,8 +231,19 @@ public class RateCalculatorRestService {
 		hashmap.put("OccType", sOccTPe);
 		hashmap.put("subPropType", subPropType);
 		hashmap.put("loanPurpose", loanPurpose);
-		hashmap.put("800", teaserRateVO.getCreditscore());
-		
+		if (teaserRateVO.getCreditscore() != null) {
+			hashmap.put("creditScore", teaserRateVO.getCreditscore());
+		} else {
+			hashmap.put("creditScore",
+			        CommonConstants.PRICING_DEFAULT_CREDIT_SCORE);
+		}
+
+		if (teaserRateVO.getLockPeriod() != null) {
+			hashmap.put("lockPeriod", teaserRateVO.getLockPeriod());
+		} else {
+			hashmap.put("lockPeriod", CommonConstants.DEFAULT_LOCK_PERIOD);
+		}
+
 		JSONObject jsonObject = new JSONObject(hashmap);
 		return jsonObject;
 	}
@@ -291,8 +307,8 @@ public class RateCalculatorRestService {
 				LOG.info("Program Name "
 				        + teaserRateResponseVO.getLoanDuration());
 
-				Iterator<LqbTeaserRateVo> itr = teaserRateResponseVO
-				        .getRateVO().iterator();
+				Iterator<LqbTeaserRateVo> itr = teaserRateResponseVO.getRateVO()
+				        .iterator();
 				while (itr.hasNext()) {
 					LqbTeaserRateVo resultVo = itr.next();
 					LOG.info("Teaser Rate " + resultVo.getTeaserRate()
@@ -323,8 +339,8 @@ public class RateCalculatorRestService {
 
 			// Load and Parse the XML document
 			// document contains the complete XML as a Tree.
-			Document document = builder.parse(new InputSource(new StringReader(
-			        xml)));
+			Document document = builder
+			        .parse(new InputSource(new StringReader(xml)));
 			NodeList nodeList = document.getDocumentElement().getChildNodes();
 
 			LOG.debug("document is" + document);
@@ -336,9 +352,9 @@ public class RateCalculatorRestService {
 
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) node;
-					LOG.debug("State : "
-					        + eElement.getElementsByTagName("STATE").item(0)
-					                .getTextContent());
+					LOG.debug(
+					        "State : " + eElement.getElementsByTagName("STATE")
+					                .item(0).getTextContent());
 					state = eElement.getElementsByTagName("STATE").item(0)
 					        .getTextContent();
 					// shopperCity =

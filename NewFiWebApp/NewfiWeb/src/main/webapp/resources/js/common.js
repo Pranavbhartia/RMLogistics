@@ -910,12 +910,22 @@ function getRowHolderObject(container, value, key) {
 							   getVal = getVal - (discounts / 100) * loanAmountForDiscount;
 							   
 							   // Adding marker for negative value and adding dollar.
-							   getVal = markNegative(getVal);
+							   if(getVal >=0 ){
+								   getVal = showValue(getVal, true); 
+							   }
+							   else{
+								   getVal = markNegative(getVal);
+							   }
 						   } else {
 							   getVal = getVal  - (discounts / 100) * loanAmountForDiscount;
 						       // Adding dollar.
 							  /* getVal = numberWithCommasAndDoller(getVal);*/
-							   getVal = showValue(getVal,true);
+							   if(getVal >=0 ){
+								   getVal = showValue(getVal, true); 
+							   }
+							   else{
+								   getVal = markNegative(getVal);
+							   }
 						   } 
 						   $(ob.container).text(getVal);
 						  // closingCostHolder.valueSet['creditOrCharge802']=getVal;
@@ -1565,16 +1575,11 @@ $(document).on('keydown', '#stateId' ,function(e){
 	    k==8 ||//to allow to delte
 	    k==46;//to allow backspace
 	    if (!ok) {
-	        e.preventDefault();
+	     
 	        return false;
 
-	    }
-	/*	if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) ) {
-	        //display error message
-	        //showToastMessage("Enter correct zipcode");
-	          return false;
-	    }*/				
-		if($(this).val().length > 5){
+	    }			
+		if($(this).val().length >= 5){
 
 	         return false;
 	    }
@@ -1587,7 +1592,7 @@ $(document).on('keydown', '#stateId' ,function(e){
 	          return false;
 	    }				
 		if($(this).val().length >= 5){
-
+		
 	         return false;
 	    }
 	});  
@@ -1600,7 +1605,7 @@ $(document).on('keydown', '#stateId' ,function(e){
 	          return false;
 		}				
 		if($(this).val().length >= 5){
-
+	
 	         return false;
 	    }
 	});  
@@ -1794,5 +1799,24 @@ $(document).on('keyup','input[name="discount-update-feild"]',function(e){
 
 function isValidInput(val) {
     //var val = parseFloat(value);
-    return !isNaN(val) && val >= 0 && val <= 100;
+    return !isNaN(val) && ((val >= 0 && val <= 100) || (val <= 0 && val >= -100));
+}
+
+/**
+ * Method to reverse the string.  
+ * @param name
+ * @returns
+ */
+function reverseWordsInString(name){
+	if(name != null  && name != undefined && name != ""){
+        name = name.replace(/  +/g, ' ').trim();
+		var names = name.split(' ');
+        var tmp = "";
+        for(var i = names.length - 1; i >= 0; i-- ){
+        	tmp += names[i] + " ";
+        }
+        return tmp;
+	} else {
+		return name;
+	}
 }

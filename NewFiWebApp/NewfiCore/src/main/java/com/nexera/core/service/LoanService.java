@@ -24,7 +24,6 @@ import com.nexera.common.exception.NoRecordsFetchedException;
 import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.ExtendedLoanTeamVO;
 import com.nexera.common.vo.HomeOwnersInsuranceMasterVO;
-import com.nexera.common.vo.LeadsDashBoardVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanCustomerVO;
 import com.nexera.common.vo.LoanDashboardVO;
@@ -254,5 +253,7 @@ public interface LoanService {
 
 	public void updateLoanLCState(Integer loanID, LoanLCStates loanLCSState);
 	public void updateInterviewDate(Integer loanID, Date interviewDate);
-
+	
+	public void sendAppraisalVendorUpdateMailToCustomer(int InternalUserID,int loanID) throws InvalidInputException, UndeliveredEmailException; 
+	public void moveLoanToPipeline (Integer loanID);
 }

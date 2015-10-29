@@ -163,17 +163,13 @@ function getDashboardPanelMyLeads(loanType){
 	var userID = newfiObject.user.id;
 	ajaxRequest("rest/loan/retrieveDashboardForMyLeads/" + userID, "GET",
 			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
-				$("#agent-dashboard-container").empty();
 				newfiObject.fetchLock=undefined;
 				isArchivedLoans = false;
 				if(startLimit==0){
 					paintLeadsAgentDashboardRightPanel(response.resultObject);
 				}else{
-					if(response.resultObject&&response.resultObject.quoteDetails){
-						customers=response.resultObject;
-						appendLeads("leads-container", customers);
-						
-						
+					if(response.resultObject&&response.resultObject.leads){
+						appendLeads("leads-container", response.resultObject, true);
 					}
 				}	
 				startLimit=startLimit+customerFetchCount;
@@ -187,32 +183,17 @@ function paintAgentDashboardCallBack(data) {
 	adjustAgentDashboardOnResize();
 }
 
-// ajax call to get dashboard for my loans
-function getDashboardRightPanel() {
-	var userID = newfiObject.user.id;
-	if(fetchedCount)
-		startLimit=fetchedCount;
-	var userID = newfiObject.user.id;
-	ajaxRequest("rest/loan/retrieveDashboardForMyLoans/" + userID, "GET",
-			"json", {"startlimit":startLimit,"count":customerFetchCount}, function(response){
-				if(startLimit==0){
-					isArchivedLoans = false;
-					paintAgentDashboardRightPanel(responses.resultObject.customers);
-				}else{
-					appendCustomers("leads-container", customerData.customers,true);
-				}
-				startLimit=startLimit+customerFetchCount;
-				fetchedCount=startLimit;
-			});
-}
-
 function getMoreCustomers(){
 	if (currentLoanType == "workloans") {
 		getDashboardRightPanelForWorkLoans();
 	} else if (currentLoanType == "myloans") {
 		getDashboardRightPanelForMyLoans();
 	} else if (currentLoanType == "archivesloans") {		
-			getDashboardRightPanelForArchivesLoans();		
+		getDashboardRightPanelForArchivesLoans();		
+	}
+	// Added for leads lazy loading
+	else if (currentLoanType == "myLeads") {		
+		getDashboardPanelMyLeads();
 	}
 }
 // ajax call to get dashboard for work loans
@@ -354,7 +335,7 @@ function paintLeadsAgentDashboardRightPanel(data){
 		
 		$(this).parent().find('.search-input').show().focus();
 	    if($('#customerSearch').val()!="" && $('#customerSearch').val()!=undefined){
-	    	searchByTermAndLoanType(customerData.customers);
+	    	searchLeadsPageByName(data.leads);
 			$(this).show();
 	    }
 	
@@ -368,7 +349,7 @@ function paintLeadsAgentDashboardRightPanel(data){
 			if ($(this).val() == "") {
 				$(this).hide();
 			}
-			searchByTermAndLoanType(customerData.customers);
+			searchLeadsPageByName(data.leads);
 			$(this).parent().find('.search-icn').show();
 	
 		}
@@ -385,9 +366,10 @@ function paintLeadsAgentDashboardRightPanel(data){
     rightCon.append(searchCon);
 
 	header.append(leftCon).append(rightCon);
+	$('#agent-dashboard-container').empty();
 	$('#agent-dashboard-container').append(header);
 	appendAgentDashboardContainer();
-	appendLeads("leads-container",data);	
+	appendLeads("leads-container",data, false);	
 
 }
 function searchByTermAndLoanType(customers) {
@@ -397,6 +379,23 @@ function searchByTermAndLoanType(customers) {
 	var filteredResult = searchCustomerLoanByLoanStatus(customers, loanType);
 	var finalResults = filterCustomerName(filteredResult, searchTerm);
 	appendCustomers("leads-container", finalResults);
+
+}
+
+
+function searchLeadsPageByName(customers) {
+	var searchTerm = $("#customerSearch").val();
+	var loanType = $(".filter-selected").attr('id');
+
+	
+	//var filteredResult = searchCustomerLoanByLoanStatus(customers, loanType);
+	var finalResults = filterCustomerName(customers, searchTerm);
+	
+	var customersObject = {
+			"leads" : finalResults
+	}
+	//appendLeads("leads-container", finalResults);
+	appendLeads("leads-container",customersObject, false);
 
 }
 
@@ -494,7 +493,7 @@ function appendAgentDashboardContainer() {
  * @param customers
  */
 function checkCreditScore(creditScore){
-	if(creditScore.indexOf("800")>-1){
+	if(creditScore && creditScore.indexOf("800")>-1){
     	
 		creditScore="NA";
     	
@@ -507,17 +506,21 @@ function checkCreditScore(creditScore){
  * @param customers is the leads
  */
 	
-	function appendLeads(elementId, list){
+	function appendLeads(elementId, list, skipDataClearing){
 	
-		
 		var loanList = list.leads;
-		appendTableHeader(elementId);
+		
 		loanList.sort(function(a, b) {
 		    a = new Date(a.lastActedOn);
 		    b = new Date(b.lastActedOn);
 		    return a>b ? -1 : a<b ? 1 : 0;
 		});
 		$('#agent-dashboard-container').addClass('leads-dashboard');
+		
+		if(!skipDataClearing){
+			$('#' + elementId).html("");
+			appendTableHeader(elementId);
+		}
 		
 		
 		for(var i = 0; i < loanList.length; i++) {
@@ -887,6 +890,8 @@ function checkCreditScore(creditScore){
 			//If it is Quote and a Loan - add a Edit Quote Icon
 			
 		}
+			
+		// TODO Its not required. Row already added.  - Manish
 		$('#' + elementId).append(row);		
 	}
 		
@@ -905,7 +910,7 @@ function createUserFromLeads(userName,internalUserID,id){
 					$('#'+id).removeClass('leads-row-11');
 					$('#'+id).addClass('leads-user-created');
 					location.reload();
-					showToastMessage(response.resultObject);
+					showToastMessage("User created successfully.");
 				}else {
 					showErrorToastMessage(response.error.message);
 				}	
@@ -4929,7 +4934,7 @@ function entryPointAgentViewChangeNav(viewName) {
 $(window).scroll(
 		function() {
 			var dashboard=$("#leads-container");
-			if (dashboard&&dashboard.length>0&&currentLoanType == "myloans"&&!newfiObject.fetchLock) {
+			if (dashboard&&dashboard.length>0&&(currentLoanType == "myloans" || currentLoanType == "myLeads")&&!newfiObject.fetchLock) {
 				if (($(document).height()-($(window).scrollTop()+$(window).height()))<=400) {
 					getMoreCustomers();
 				}
@@ -5136,9 +5141,6 @@ $('body').on('click','.leads-container-th .leads-col-processor', function(){
     sortTable(isAsc, ".leads-row-processor");
 });
 
-
-
-
 /**
  * Method to sort based on time type columns.
  * @param isAsc
@@ -5149,19 +5151,24 @@ function sortTableByTime(isAsc,selector){
 	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
 	var rows = $('#leads-container').find('.leads-container-tr').get();
 	
-	
-	
 	rows.sort(function(a, b) {
-
 		try {
-			var time1 = $(a).children(selector).text();
-			var time2 = $(b).children(selector).text();
-		} catch(ex)  {
-			console.log("Error while parsing date sortTableByTime," + ex);
-			return 0;
+		   var time1 = $(a).children(selector).text().trim();
+		   var time2 = $(b).children(selector).text().trim();
+           time1  = time1.replace(/-/g, "/");
+           time2  = time2.replace(/-/g, "/");
+           
+           var timestamp1 = new Date(time1).getTime();
+           timestamp1 = isNaN(timestamp1 ) ? 0 : timestamp1;
+           
+           var timestamp2 = new Date(time2).getTime();
+           timestamp2 = isNaN(timestamp2) ? 0 : timestamp2;
+           
+           return isAsc * (timestamp1 - timestamp2); 
+       } catch(ex)  {
+           console.log("Error while parsing date sortTableByTime," + ex);
+           return 0;
 		}
-		
-		return isAsc * (new Date(time1).getTime() - new Date(time2).getTime()); 
 	});
 
 	$.each(rows, function(index, row) {
@@ -5185,24 +5192,13 @@ function sortTable(isAsc, selector) {
 	$('#leads-container').find('.leads-container-tr').removeClass("leads-container-row-odd");
 	
 	var rows = $('#leads-container').find('.leads-container-tr').get();
-
 	
 	rows.sort(function(a, b) {
 
-		var A = $(a).children(selector).text().toLowerCase();
-		var B = $(b).children(selector).text().toLowerCase();
-
-		if (A < B) {
-			return -1 * isAsc;
-		}
-		if (A > B) {
-			return 1 * isAsc;
-		}
-		
-		return 0;
+		var A = $(a).children(selector).text().toLowerCase().trim();
+		var B = $(b).children(selector).text().toLowerCase().trim();
+		return (A == B ? 0 : A > B ? -1  * isAsc : isAsc );
 	});
-
-	
 
 	$.each(rows, function(index, row) {
 		if( index % 2 == 0){
@@ -5222,20 +5218,11 @@ function sortTableByLastName(isAsc) {
 	var rows = $('#leads-container').find('.leads-container-tr').get();
 	
 	rows.sort(function(a, b) {
-
-		var name1 = $(a).children(".leads-container-tc1").text().toLowerCase();
-		var name2 = $(b).children(".leads-container-tc1").text().toLowerCase();
-		name1  = reverseName(name1);
-		name2 = reverseName(name2);
-
-		if (name1 < name2) {
-			return -1 * isAsc;
-		}
-		if (name1 > name2) {
-			return 1 * isAsc;
-		}
-		
-		return 0;
+		var name1 = $(a).children(".leads-container-tc1").text().toLowerCase().trim();
+		var name2 = $(b).children(".leads-container-tc1").text().toLowerCase().trim();
+		name1  = reverseWordsInString(name1);
+		name2 = reverseWordsInString(name2);
+		return (name1 == name2 ? 0 : name1 > name2 ? -1  * isAsc : isAsc );
 	});
 	
 	$.each(rows, function(index, row) {
@@ -5245,23 +5232,3 @@ function sortTableByLastName(isAsc) {
 		$('#leads-container').append(row);
 	});
 }
-
-/**
- * Method to reverse the name.  
- * @param name
- * @returns
- */
-function reverseName(name){
-	if(name != null  && name != undefined){
-        name = name.replace(/  +/g, ' ');
-		var names = name.split(' ');
-        var tmp = "";
-        for(var i = names.length - 1; i >= 0; i-- ){
-        	tmp += names[i] + " ";
-        }
-        return tmp;
-	} else {
-		return name;
-	}
-}
-

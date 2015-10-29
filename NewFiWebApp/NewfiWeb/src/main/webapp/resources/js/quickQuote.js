@@ -106,7 +106,13 @@ var purchaseType = [{
 	id : "creditScoreId",
 	type: "creditScore",
 	column : 0
-}];
+},{
+	question : "Lock Period",
+	id : "lockPeriod",
+	type : "lockPeriod",
+	column : 0,
+}
+];
 
 //JSON for refinanace lower monthly payment
 var refinanceLowerMonthlyPayment = [{
@@ -196,6 +202,11 @@ var refinanceLowerMonthlyPayment = [{
 	id : "creditScoreId",
 	type: "creditScore",
 	column : 0
+},{
+	question : "Lock Period",
+	id : "lockPeriod",
+	type : "lockPeriod",
+	column : 0,
 }];
 
 //JSON for refinanace cashout
@@ -290,6 +301,11 @@ var refinanceCashOut = [{
 	id : "creditScoreId",
 	type: "creditScore",
 	column : 0
+},{
+	question : "Lock Period",
+	id : "lockPeriod",
+	type : "lockPeriod",
+	column : 0,
 }];
 
 //END
@@ -408,6 +424,20 @@ function preAppendQuickQuoteFormFeils(editQuoteUserDetails){
 	  $('#quick-quote-no-container-id').attr('isselected',true);
 	  $('#impound').attr("value","No");
 	 }
+	 if(editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.lockPeriod == "30"){
+		  $('#quick-quote-30-lock-period-id').addClass('radio-btn-selected');
+		  $('#quick-quote-30-lock-period-id').attr('isselected',true);
+		  $('#quick-quote-45-lock-period-id').attr('isselected',false);
+		  $('#lockPeriod').attr("value",editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.lockPeriod);
+	 }else {
+		 $('#quick-quote-45-lock-period-id').addClass('radio-btn-selected');
+		 $('#quick-quote-30-lock-period-id').removeClass('radio-btn-selected');
+		  $('#quick-quote-45-lock-period-id').attr('isselected',true);
+		  $('#quick-quote-30-lock-period-id').attr('isselected',false);
+		  $('#lockPeriod').attr("value",editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.lockPeriod);
+	 }
+	 
+	 $('#creditScoreId').attr('value',editQuoteUserDetails.inputCustmerDetailUnderQuickQuote.creditscore)
 	
 }
 
@@ -611,7 +641,12 @@ function paintDataSection(option,isDefault){
 				
 				rowRHS = appendYesNoQuestion(option[i]);
 				
-			}else if(option[i].type == "month/year"){
+			}else if(option[i].type == "lockPeriod"){
+				
+				rowRHS = appendLockPeriodData(option[i]);
+				
+			}
+			else if(option[i].type == "month/year"){
 				
 				rowRHS = appendMonthYearQuestion(option[i]);
 				
@@ -729,6 +764,66 @@ function appendDropdown(options){
 
 	   return div.append(row).append(dropDownContainer);
 }
+
+/*Function which paint the question with yes/no button type*/
+function appendLockPeriodData(option){
+	
+	var mainDiv = $('<div>').attr({
+		"class":"quick-quote-lock-period-container",
+		"id" : option.id,
+		"value" : "30"
+	});
+	
+	var thirtyDayContent = $('<div>').attr({
+		"class":"quick-quote-30-lock-period-btn radio-btn float-left radio-btn-selected",
+		"id":"quick-quote-30-lock-period-id",
+		"value" : "30",
+		"isSelected":""
+	}).html("30 days").bind('click',function(e){
+		e.stopImmediatePropagation();		
+		
+		//TO calculate tax insurance and homeowners insurance value	
+		if($('#quick-quote-45-lock-period-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-45-lock-period-id').removeClass('radio-btn-selected');
+		}
+		$(this).addClass('radio-btn-selected');
+		
+		$(this).attr({
+			"isSelected" : true
+		});
+		$(mainDiv).attr({
+			"value" : $(this).attr('value')
+		});
+		
+	});
+
+	var fourtyFiveDayContent = $('<div>').attr({
+		"class":"quick-quote-45-lock-period-btn radio-btn float-left",
+		"id":"quick-quote-45-lock-period-id",
+		"value" : "45",
+		"isSelected":""
+	}).html("45 days").bind('click',function(e){
+		
+		e.stopImmediatePropagation();
+		
+		if($('#quick-quote-30-lock-period-id').hasClass('radio-btn-selected')){			
+			$('#quick-quote-30-lock-period-id').removeClass('radio-btn-selected');
+		}
+		$(this).addClass('radio-btn-selected');
+
+		$(this).attr({
+			"isSelected" : true
+		});
+		$(mainDiv).attr({
+			"value" : $(this).attr('value')
+		});
+		
+	});
+	
+	return mainDiv.append(thirtyDayContent).append(fourtyFiveDayContent);
+
+}
+
 
 /*Function which paint the question with yes/no button type*/
 function appendYesNoQuestion(option){
@@ -1366,7 +1461,7 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
         "id" : "discount-update-feild-id",
         "name" : "discount-update-feild"
     }).bind("load focus",function(){
-    	restrictChar("discount-update-feild");
+    	restrictCharUnderQuickQuote("discount-update-feild");
     	
     });
     
@@ -1393,6 +1488,30 @@ function getClosingCostContainerRowUnderQuickQuote(rowNum, desc, detail) {
     
 }
 
+function restrictCharUnderQuickQuote(name){
+	
+	$('input[name="'+name+'"]').bind('keypress', function (e) {
+	   
+	    var k = e.which;
+	    var ok = k >= 48 && k <= 57|| // 0-9
+	    k==8 ||//to allow to delte
+	    k==45 ||//to allow minus sign
+	    k==46;//to allow backspace
+	    if (!ok) {
+	        e.preventDefault();
+	        return false;
+
+	    }
+	});
+	$('input[name="'+name+'"]').bind('paste',function(e){
+		var pastedText = e.originalEvent.clipboardData.getData('text');
+		console.log(pastedText);
+		var regex = /^[0-9]*$/;
+		if(!regex.test(pastedText)){
+			e.preventDefault();
+		}
+	});
+}
 
 function getClosingCostTopConatinerUnderQuickQuote() {
     var wrapper = $('<div>').attr({
@@ -2059,6 +2178,7 @@ function processCommonParameters(){
 	buyHomeRefinanceRate.homeWorthToday = parseFloat(removedDoller(removedComma($('input[id="homeWorthToday"]').val())));
 	buyHomeRefinanceRate.currentMortgageBalance = parseFloat(removedDoller(removedComma($('input[id="currentMortgageBalance"]').val())));
 	buyHomeRefinanceRate.zipCode = $('input[id="zipCode"]').val();
+	buyHomeRefinanceRate.lockPeriod = $('div[id="lockPeriod"]').attr('value')
 	loanPurchaseDetailsUnderQuickQuote.impounds  = $('div[id="impound"]').attr('value');
 	loanPurchaseDetailsUnderQuickQuote.firstName = $('input[id="firstName"]').val();
 	firstName = loanPurchaseDetailsUnderQuickQuote.firstName;
@@ -2078,7 +2198,7 @@ function processCommonParameters(){
 		buyHomeRefinanceRate.privateincludeTaxes = "Yes";
 	}
 	loanPurchaseDetailsUnderQuickQuote.inputCustmerDetailUnderQuickQuote.creditscore = $('#creditScoreId').val();
-	
+	buyHomeRefinanceRate.creditscore = $('#creditScoreId').val();
 }
 
 function processBuyHomeUnderQuickQuote(){
