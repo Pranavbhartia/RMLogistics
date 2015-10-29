@@ -1,9 +1,7 @@
 package com.nexera.web.rest;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +36,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.amazonaws.services.ec2.model.transform.PurchaseReservedInstancesOfferingResultStaxUnmarshaller;
 import com.google.gson.Gson;
 import com.nexera.common.commons.CommonConstants;
 import com.nexera.common.commons.Utils;
@@ -46,20 +43,12 @@ import com.nexera.common.commons.WebServiceOperations;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.entity.Loan;
 import com.nexera.common.entity.LoanAppForm;
-import com.nexera.common.entity.Template;
-import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
-import com.nexera.common.enums.Milestones;
-import com.nexera.common.exception.InvalidInputException;
-import com.nexera.common.exception.UndeliveredEmailException;
 import com.nexera.common.vo.CommonResponseVO;
 import com.nexera.common.vo.GeneratePdfVO;
 import com.nexera.common.vo.LoanAppFormVO;
 import com.nexera.common.vo.LoanLockRateVO;
-import com.nexera.common.vo.LoanTeamListVO;
-import com.nexera.common.vo.LoanTeamVO;
 import com.nexera.common.vo.LoanVO;
-import com.nexera.common.vo.email.EmailVO;
 import com.nexera.common.vo.lqb.CreditScoreResponseVO;
 import com.nexera.common.vo.lqb.LoadResponseVO;
 import com.nexera.common.vo.lqb.LqbTeaserRateVo;
@@ -81,7 +70,6 @@ import com.nexera.web.rest.util.GeneratePdfForQuickQuote;
 import com.nexera.web.rest.util.LQBRequestUtil;
 import com.nexera.web.rest.util.LQBResponseMapping;
 import com.nexera.web.rest.util.PreQualificationletter;
-import com.nexera.web.rest.util.GeneratePdfForQuickQuote;
 import com.nexera.web.rest.util.RestUtil;
 
 @RestController
@@ -540,6 +528,7 @@ public class ApplicationFormRestService {
 						String loanAppFrm = gson.toJson(loaAppFormVO);
 						createApplication(loanAppFrm, httpServletRequest);
 						loanCreatedNSaved = true;
+						loanService.moveLoanToPipeline(loan.getId());
 						/*if(loan != null){
 							LOG.info("updating loan milestone table after application submit and loanID is....."+loan.getId());
 							loanService.saveLoanMilestone(loan.getId(),Milestones.NEWFI_LOAN_STATUS.getMilestoneID(),CommonConstants.NEWFI_SUBMITTED_LOAN_STATUS_DESCRIPTION);

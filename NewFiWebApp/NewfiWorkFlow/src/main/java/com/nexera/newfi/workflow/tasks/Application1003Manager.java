@@ -17,11 +17,9 @@ import com.nexera.common.commons.LoanStatus;
 import com.nexera.common.commons.Utils;
 import com.nexera.common.commons.WorkflowConstants;
 import com.nexera.common.commons.WorkflowDisplayConstants;
-import com.nexera.common.entity.LoanProgressStatusMaster;
 import com.nexera.common.entity.Template;
 import com.nexera.common.enums.InternalUserRolesEum;
 import com.nexera.common.enums.LoanLCStates;
-import com.nexera.common.enums.LoanProgressStatusMasterEnum;
 import com.nexera.common.enums.MilestoneNotificationTypes;
 import com.nexera.common.enums.Milestones;
 import com.nexera.common.enums.UserRolesEnum;
@@ -84,9 +82,7 @@ public class Application1003Manager extends NexeraWorkflowTask
 			        Milestones.App1003.getMilestoneKey());
 			createAlertForDisclosureDue(objectMap);
 			returnStatus = WorkItemStatus.COMPLETED.getStatus();
-			LOG.info("Saving Loan as INprogres");
-			loanService.saveLoanProgress(loanID, new LoanProgressStatusMaster(
-			        LoanProgressStatusMasterEnum.IN_PROGRESS));
+			LOG.info("Saving Loan as INprogres");			
 			loanService.saveLoanMilestone(loanID,
 			        Milestones.App1003.getMilestoneID(),
 			        LoanStatus.applicationSubmittedMessage);

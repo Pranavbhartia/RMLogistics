@@ -120,7 +120,7 @@ public class LoanServiceImpl implements LoanService {
 
 	@Autowired
 	private SendEmailService sendEmailService;
-    
+
 	@Autowired
 	private WorkflowService workflowService;
 	@Autowired
@@ -2818,33 +2818,41 @@ public class LoanServiceImpl implements LoanService {
 
 	@Override
 	@Transactional(readOnly = true)
-    public void sendAppraisalVendorUpdateMailToCustomer(int InternalUserID,int loanID) throws InvalidInputException, UndeliveredEmailException {
-		
-		UserVO InternalUserDetails = userProfileService.findUser(InternalUserID);
+	public void sendAppraisalVendorUpdateMailToCustomer(int InternalUserID,
+	        int loanID) throws InvalidInputException, UndeliveredEmailException {
+
+		UserVO InternalUserDetails = userProfileService
+		        .findUser(InternalUserID);
 		LoanVO loanDetails = getLoanByID(loanID);
-		
+
 		String subject = CommonConstants.SUBJECT_READY_TO_ORDER_APPRAISAL;
 		String nmlsID = InternalUserDetails.getInternalUserDetail().getNmlsID();
-		if(nmlsID ==  null){
+		if (nmlsID == null) {
 			nmlsID = "N/A";
 		}
 		String accountLogin = baseUrl;
 		EmailVO emailEntity = new EmailVO();
 
 		Template template = null;
-			template = templateService
-			        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_READY_TO_ORDER_APPRAISAL);
+		template = templateService
+		        .getTemplateByKey(CommonConstants.TEMPLATE_KEY_NAME_READY_TO_ORDER_APPRAISAL);
 		// We create the substitutions map
 		Map<String, String[]> substitutions = new HashMap<String, String[]>();
-		substitutions.put("-name-", new String[] { loanDetails.getUser().getFirstName() + " "
-		        + loanDetails.getUser().getLastName() });
+		substitutions.put("-name-", new String[] { loanDetails.getUser()
+		        .getFirstName() + " " + loanDetails.getUser().getLastName() });
 		substitutions.put("-accountlogin-", new String[] { accountLogin });
-		
-		substitutions.put("-internalusername-", new String[] { InternalUserDetails.getFirstName()+" "+InternalUserDetails.getLastName() });
-		substitutions.put("-internalusertype-", new String[] { InternalUserDetails.getInternalUserDetail().getInternalUserRoleMasterVO().getRoleDescription() });
+
+		substitutions.put("-internalusername-",
+		        new String[] { InternalUserDetails.getFirstName() + " "
+		                + InternalUserDetails.getLastName() });
+		substitutions.put("-internalusertype-",
+		        new String[] { InternalUserDetails.getInternalUserDetail()
+		                .getInternalUserRoleMasterVO().getRoleDescription() });
 		substitutions.put("-internaluserNMLSID-", new String[] { nmlsID });
-		substitutions.put("-internaluserphone-", new String[] { Utils.phoneNumberFormating(InternalUserDetails.getPhoneNumber()) });
-		substitutions.put("-internaluseremail-", new String[] { InternalUserDetails.getEmailId() });
+		substitutions.put("-internaluserphone-", new String[] { Utils
+		        .phoneNumberFormating(InternalUserDetails.getPhoneNumber()) });
+		substitutions.put("-internaluseremail-",
+		        new String[] { InternalUserDetails.getEmailId() });
 
 		emailEntity.setSenderEmailId(loanDetails.getUser().getUsername()
 		        + CommonConstants.SENDER_EMAIL_ID);
@@ -2853,13 +2861,21 @@ public class LoanServiceImpl implements LoanService {
 		emailEntity.setTokenMap(substitutions);
 		emailEntity.setTemplateId(template.getValue());
 		List<String> ccList = new ArrayList<String>();
-		ccList.add(loanDetails.getUser().getUsername() + CommonConstants.SENDER_EMAIL_ID);
+		ccList.add(loanDetails.getUser().getUsername()
+		        + CommonConstants.SENDER_EMAIL_ID);
 		emailEntity.setCCList(ccList);
 		User user = User.convertFromVOToEntity(loanDetails.getUser());
 		sendEmailService.sendUnverifiedEmailToCustomer(emailEntity, user,
 		        template);
-	    
-    }
-	
+
+	}
+
+	@Override
+	@Transactional
+	public void moveLoanToPipeline(Integer loanID) {
+		saveLoanProgress(loanID, new LoanProgressStatusMaster(
+		        LoanProgressStatusMasterEnum.IN_PROGRESS));
+		updateLoanLCState(loanID, LoanLCStates.PreApplication);
+	}
 
 }
