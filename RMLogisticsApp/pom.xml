@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.raremile.rmlogistics</groupId>
+	<artifactId>parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>parent</name>
+	<description>Parent Module for RM Logistics Project</description>
+
+	<modules>
+		<module>RMLogisticsWeb</module>
+		<module>RMLogisticsCore</module>
+		<module>RMLogisticsCommon</module>
+	</modules>
+	
+	<properties>
+	 	<!-- Spring Version -->
+	 	<spring-framework.version>4.1.4.RELEASE</spring-framework.version>
+	 	
+	 	<!-- Spring Security -->
+	 	<spring.security>3.2.3.RELEASE</spring.security>
+	 	
+	 	<!-- Logger Version -->
+	 	<logback.version>1.0.13</logback.version>
+	 	<slf4j.version>1.7.5</slf4j.version>
+	 	
+	 	<!-- Google json -->
+	 	<gson.version>1.7.1</gson.version>  	
+	</properties>
+  
+  	<dependencies>
+  		<!-- Logging with SLF4J & LogBack -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- dependency for json -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+
+		<!-- Spring Security Core -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.security}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-aop</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-expression</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>jboss-3rd-party-releases</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
+		</repository>
+	</repositories>
+</project>
