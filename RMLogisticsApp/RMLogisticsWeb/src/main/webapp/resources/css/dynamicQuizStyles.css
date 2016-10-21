@@ -1,0 +1,81 @@
+.questWrapper {
+	padding: 10px;
+}
+
+.questionInputTextbox {
+	padding-left: 10px
+}
+
+.questionInputTextboxWrapper {
+	float: left;
+	padding-right: 10px
+}
+
+.dollar-input {
+	margin-right: 5px
+}
+
+/*Bread crumb styles*/
+aside.progressBar li.complete {
+	color: #2081bf;
+}
+
+aside.progressBar li {
+	clear: both;
+	display: block;
+	position: relative;
+}
+
+aside.progressBar li .step_icon {
+	font-size: 1.31579em;
+	line-height: 1.08em;
+	-webkit-border-radius: 19px 0 19px 19px;
+	-moz-border-radius: 19px 0 19px 19px;
+	-ms-border-radius: 19px 0 19px 19px;
+	-o-border-radius: 19px 0 19px 19px;
+	border-radius: 19px 0 19px 19px;
+	background: #fff;
+	border: 3px solid #b9d3e3;
+	color: #b9d3e3;
+	display: inline-block;
+	float: left;
+	font-weight: bold;
+	height: 42px;
+	margin: 0 0 20px 0;
+	padding: 2px;
+	text-align: center;
+	width: 42px;
+	line-height: 33px;
+}
+
+aside {
+	float: left;
+	margin-right: 10px;
+}
+
+aside.progressBar li .step_text span {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+aside.progressBar li.current .step_icon {
+	background: #0c4569;
+	border-color: #b9d3e3;
+	color: #fff;
+}
+
+aside.progressBar li.current {
+	color: #0c4569;
+	font-weight: bold;
+}
+
+aside.progressBar li.complete .step_icon {
+	background: #2081bf;
+	color: #fff;
+}
+/*
+aside.progressBar li.complete .step_icon:before {
+content: "\f00c";
+font-family: FontAwesome;
+}
+*/

@@ -1,0 +1,3289 @@
+/* ============== SMARTPHONES ==============*/
+@media ( max-width : 767px) {
+	body {
+		overflow-x: hidden;
+	}
+	/* author: akshay */
+	.prof-cust-save-btn-admin-um {
+		margin-left: 0px;
+	}
+	.admin-save-btn {
+		margin-left: 90px;
+		width: 164px
+	}
+	.add-member-input-admin-cont {
+		width: 64%;
+	}
+	.add-member-sel-admin {
+		width: 70%;
+	}
+	.admin-download-btn {
+		padding-left: 0px;
+	}
+	.admin-create-user-popup-cont {
+		float: none;
+		width: 100%;
+	}
+	.admin-create-user-popup-input {
+		float: left;
+		width: 164px;
+	}
+	.admin-err-msg {
+		float: left;
+	}
+	.admin-newfi-team-list-th-col2, .admin-newfi-team-list-tr-col2,
+		.admin-newfi-team-list-th-col3, .admin-newfi-team-list-tr-col3,
+		.admin-newfi-team-list-th-col4, .admin-newfi-team-list-tr-col4{
+		
+		
+		display: none;
+		}
+		
+	.admin-newfi-team-list-th-col1, .admin-newfi-team-list-tr-col1{
+	
+		width: 37%;
+		word-wrap: break-word;
+	}
+	.admin-newfi-team-list-th-col5, .admin-newfi-team-list-tr-col5{
+	
+		width: 32%;
+	}
+	
+	.admin-newfi-team-list-th-status, .admin-newfi-team-list-tr-status{
+	
+		width : 25%;
+	}
+	
+	.home-container {
+		padding-right: 15px;
+		overflow: hidden;
+	}
+	.left-panel {
+		display: none;
+		border-right: 1px solid #dcdcdc;
+	}
+	.right-panel {
+		margin-left: 0;
+	}
+	.center-panel {
+		margin-left: 48px;
+		padding: 10px;
+	}
+	/* author:akshay */
+	#admin-create-user-popup.create-user-popup {
+		position: relative;
+		width: 318px;;
+		margin-top: -45px;
+		margin-left: 35px;
+		left: -64px;
+	}
+	.lp-t2-txt {
+		display: none;
+	}
+	.lp-t2-wrapper, .lp-t2-item, .lp-t2-img {
+		width: 50px;
+	}
+	.lp-t2-wrapper {
+		top: 50px;
+	}
+	.lp-t2-item {
+		height: 50px;
+	}
+	.arrow-right {
+		bottom: 29px;
+		left: 50px;
+	}
+	.loan-summary-lp {
+		border-bottom: 1px #E9E9E9 solid;
+	}
+	.loan-summary-lp, .loan-summary-rp {
+		margin-bottom: 10px;
+		width: 100%;
+		padding: 0 10px;
+	}
+	.closing-cost-cont-wrapper-top, .closing-cost-cont-wrapper-bottom {
+		margin-left: 0;
+	}
+	.closing-cost-desc {
+		width: 65%;
+	}
+	.closing-cost-detail {
+		margin-left: 5%;
+		width: 30%;
+	}
+	.rate-program-container-col1, .rate-program-container-col3 {
+		display: none;
+	}
+	.rate-program-container-col2 {
+		width: 90%;
+		margin: 0 5%;
+	}
+	.cp-rate-btn, .cp-est-cost-btn {
+		font-size: 16px;
+	}
+	.cp-rate-header-text {
+		margin-bottom: 5px;
+	}
+	.cp-est-header-text {
+		padding: 0 10px;
+	}
+	.cp-rate-header-text, .cp-est-header-text {
+		font-size: 13px;
+	}
+	.rate-slider {
+		margin-bottom: 15px;
+	}
+	.logout-btn-txt {
+		display: none;
+	}
+	.left-panel {
+		height: 2000px;
+		background-color: #fff;
+		z-index: 99999;
+	}
+	.asset-doc-cont, .unassign-doc-cont {
+		width: 100%;
+		padding: 0;
+	}
+	.asset-doc-row {
+		padding-left: 20px;
+		background-position: 0 5px;
+	}
+	.needed-items-rc {
+		display: none;
+	}
+	.document-cont-col {
+		width: 50%;
+		padding: 0;
+	}
+	.file-upload-text-cont1 {
+		display: none;
+	}
+	.list-item-icn {
+		width: 20px;
+	}
+	.needed-item-desc {
+		padding: 5px 5px;
+	}
+	.needed-items-lc {
+		width: 100%;
+		padding-left: 15px;
+	}
+	.file-upload-text-cont2 {
+		line-height: 15px;
+		font-size: 12px;
+	}
+	.form-detail-input {
+		width: 200px;
+	}
+	.form-detail-input-sm {
+		width: 100px;
+	}
+	.form-detail-input-lg {
+		width: 225px;
+	}
+	.right-panel-messageDashboard {
+		width: 100% !important;
+		margin-left: 0;
+	}
+	.message-wrapper {
+		margin: 10px 10px 10px 0;
+		padding-left: 5px;
+	}
+	.message-cont-textinput {
+		width: 99%;
+		margin-left: 2px;
+	}
+	.message-cont-textinput-popup {
+		width: 99%;
+		margin-left: 2px;
+	}
+	.conversation-header {
+		margin-left: 0;
+	}
+	.conversation-container, .conversation-container-child {
+		padding: 10px;
+	}
+	.rp-agent-dashboard {
+		width: 100% !important;
+		margin-left: 0;
+	}
+	.container-row {
+		margin-right: -10px;
+	}
+	.message-btn {
+	    margin: 5px auto;
+	    float: left;
+	}
+	.message-btn-disabled {
+	    margin: 5px auto;
+	    float: left;
+	}
+	.conversation-wrapper {
+	    margin: 10px 10px 10px 5px;
+	}
+	.agent-customer-list-header {
+		margin-left: 10px;
+		margin-right: 0;
+	}
+	.customer-list-contianer {
+		padding-left: 10px;
+	}
+	.leads-container-tc1 {
+		width: 35%;
+	}
+	.sort-list-asc {
+		background: none;
+	}
+	.sort-list-dsc {
+		background: none;
+	}
+	.sort-up-arrow-45 {
+		background: none;
+	}
+	.sort-down-arrow-45 {
+		background: none;
+	}
+	.sort-up-arrow-78 {
+		background: none;
+	}
+	.sort-down-arrow-78 {
+		background: none;
+	}
+	.last-action-sort-list-asc {
+		background: none;
+	}
+	.last-action-sort-list-dsc {
+		background: none;
+	}
+	.leads-container-tc2 {
+		width: 25% !important;
+	}
+	.loan-status-sort-list-asc {
+		background: none;
+	}
+	.loan-status-sort-list-dsc {
+		background: none;
+	}
+	.leads-container-tc5 {
+		width: 21%;
+	}
+	.leads-container-tc7 {
+		width: 15%;
+	}
+	.leads-container-tc3, .leads-container-tc4, .leads-container-tc6 {
+		display: none;
+	}
+	.opened-sort-list-asc {
+		background: none;
+	}
+	.opened-sort-list-dsc {
+		background: none;
+	}
+	.cust-detail-lw, .cust-detail-rw {
+		width: 100%;
+		padding: 0;
+	}
+	.initial-list-doc-wrapper {
+		width: 100%;
+	}
+	.add-needs-input-edit {
+		width: 90%;
+	}
+	.cus-prof-pic {
+		margin-left: 30px;
+	}
+	.cus-prof-detail-lc, .cus-prof-detail-rc {
+		width: 255px;
+		margin: 0 auto;
+		float: left;
+		padding: 10px;
+	}
+	.cus-detail-rc-title {
+		width: 100px;
+	}
+	.cus-detail-rc-value {
+		width: 135px;
+	}
+	.cus-prof-pic-txt {
+		margin-left: 20px;
+	}
+	.prof-form-input {
+		display: block;
+		margin-bottom: 10px;
+	}
+	.prof-form-row .state-dropdown-wrapper {
+		margin-top: -9px;
+	}
+	.loan-personal-info-wrapper {
+		padding-left: 10px;
+		padding-right: 5px;
+	}
+	.cust-personal-info-type-container {
+	    margin-left: 10px;
+	    margin-right: 5px;
+	}
+	.prof-form-input-cont {
+	    margin-left: 0px !important;
+	}
+	
+	.silder-cont{
+		width: 90% !important;
+		margin-bottom: 30px;
+	}
+	.slider-hdr-txt {
+		margin-right: 0px;
+		width: 100%;
+	}
+	.rt-slider {
+		width: 95%;
+	}
+	.lock-rate-slider-container {
+		padding: 10px;
+	}
+	.reg-header-btns-wrapper {
+		display: none;
+	}
+	.cust-app-lp {
+		display: none;
+	}
+	.cust-app-rp {
+		margin-left: 0;
+		width: 100% !important;
+		padding: 5px 10px 0 5px;
+	}
+	.ce-ques-option {
+		width: 45%;
+		margin: 10px;
+		height: 50px;
+		line-height: 50px;
+		font-size: 28px;
+	}
+	.ce-rate-icon {
+		height: 50px;
+		margin-top: 10px;
+		/* background-size: 150px; */
+	}
+	.ce-ques-text {
+		font-size: 13px;
+		line-height: 20px;
+	}
+	.ce-title {
+		font-size: 30px;
+		padding: 0 10px;
+	}
+	.ce-ques-wrapper {
+		width: 100%;
+	}
+	.ce-ques-options-container {
+		padding: 0 10px;
+	}
+	.rt-grid-item:last-child {
+		margin-left: -18px;
+	}
+	.rt-grid-item:last-child:after {
+		left: 18px;
+	}
+	.slider-wrapper {
+		margin: 10px 0 25px 0;
+	}
+	.assigned-agent-cont-wrapper {
+		min-width: 80px;
+	}
+	.assigned-agent-cont-lc {
+		width: 60px;
+		float: none;
+		margin: 0 auto;
+		margin-top: 5px;
+	}
+	.assigned-agent-cont-rc {
+		width: 100%;
+		padding: 0;
+	}
+	.assigned-agent-default-img {
+		margin: 0 auto;
+	}
+	.assigned-agent-name {
+		font-size: 11px;
+		text-align: center;
+	}
+	.assigned-agent-role, .assigned-agent-contact {
+		display: none;
+	}
+	.milestone-header-bar {
+		display: none;
+	}
+	.agent-message-dashboard {
+		padding-left: 5px;
+	}
+	.cus-prof-popup:before {
+		bottom: 100%;
+		top: auto;
+		-ms-transform: rotate(90deg);
+		-webkit-transform: rotate(90deg);
+		-moz-transform: rotate(90deg);
+		-o-transform: rotate(90deg);
+		transform: rotate(90deg);
+		border-right-color: #428bca;
+		margin-bottom: 3px;
+		left: 170px;
+	}
+	.cus-prof-popup:after {
+		display: none;
+	}
+	.cus-prof-popup {
+		left: -150px;
+		top: 30px;
+		width: 400px;
+	}
+	.ms-add-notification-popup:after {
+		right: 50%;
+	}
+	.ce-refinance-wrapper {
+		margin-left: 0;
+		margin-top: 30px;
+	}
+	.ce-lp {
+		display: none;
+	}
+	.ce-cp {
+		width: 100% !important;
+		margin-left: 0;
+		padding: 0 20px;
+	}
+	.ce-option {
+		width: 100%;
+		font-size: 16px;
+		padding: 0 5px;
+	}
+	/* refferal page styles @author ranjitha*/
+	.reg-input-row {
+		width: 100% !important;
+		height: auto;
+		margin: 0 auto 10px auto;
+		padding: 0 10px;
+	}
+	.reg-row-lc, .reg-row-rc {
+		width: 100% !important;
+		padding: 0;
+		text-align: left !important;
+		margin: 10px auto;
+	}
+	.reg-row-lc {
+		line-height: 25px;
+	}
+	.user-info-outer-container {
+	    width: auto;
+	    margin: 0 20px;
+	}
+	
+	.reg-select.reg-input-cont {
+	    width: 75%;
+	}
+	
+	.new-user-container {
+	    width: 56%;
+	    height: auto;
+	}
+	
+	.reg-input-cont {
+	    width: 76% !important;
+	}
+	
+	.reg-btn-wrapper {
+	    width: 100%;
+	    margin: 0 auto;
+	}
+	
+	.reg-btn.reg-chg-width {
+	    width: 75%;
+	    margin: 6px 20px;
+	    font-size: 14px;
+	}
+	.reg-input {
+    	padding: 0 5px;
+	}
+/*End of refferal page styles  @author ranjitha*/
+	.cust-eng-step-hdr, .cust-app-step-hdr {
+		display: block;
+		padding: 0 20px;
+		font-size: 24px;
+		margin-bottom: 10px;
+		font-family: 'opensanssemibold';
+		color: #F47522;
+	}
+	.overlay-loader {
+		background-size: 60px;
+	}
+	#overlay-loader-text {
+		padding-top: 60px;
+		font-size: 18px;
+	}
+	.user-info-txt {
+		font-size: 14px;
+	}
+	.left-user-container {
+		height: 430px;
+		padding-top: 120px;
+		width: 35%;
+	}
+	.reg-input-row .reg-fname, .reg-input-row .reg-lname {
+		width: 200px;
+		float: none;
+		margin: 10px 0 0 0;
+	}
+	.user-info-image .assigned-agent-default-img, .user-info-image .assigned-agent-img
+		{
+		width: 50px;
+		height: 50px;
+		line-height: 50px;
+		font-size: 14px;
+		margin: 0 auto;
+	}
+	.footer-wrapper-container {
+		padding-left: 0px;
+	}
+	.center-text-session-expire {
+		margin: 100px auto;
+	}
+	.create-user-popup-cont {
+		width: 100%;
+	}
+	.create-user-popup {
+		width: 400px;
+	}
+	.add-member-input-cont {
+		padding-right: 10px;
+		margin: 10px;
+	}
+	#ms-add-member-popup {
+		right: 0px;
+		width: 440px;
+	}
+	.add-licence-popup {
+		right: -220px !important;
+		width: 300px;
+	}
+	.add-licence-popup:after {
+		right: 75%;
+	}
+	.add-licence-popup .add-member-label {
+		width: 81px;
+	}
+	.add-licence-popup .create-user-popup-input {
+		width: 175px;
+	}
+	.add-licence-popup .add-member-input-cont {
+		width: 100%;
+	}
+	.cust-profile-url {
+		float: none;
+		margin-top: 10px;
+	}
+	.loan-summary-header-col1 {
+		width: 130px;
+	}
+	.rate-btn-alertRate {
+		width: 170px;
+		padding-right: 20px;
+	}
+	.ce-refinance-wrapper .rt-slider {
+		width: 95% !important;
+	}
+	.template-column-val {
+		display: block;
+		width: 100%;
+		min-height: 20px;
+		margin-bottom: 5px;
+		padding-left: 15px;
+	}
+	.temp-col2 {
+		width: 45%;
+	}
+	.temp-col3 {
+		width: 55%;
+	}
+	.customer-list-contianer {
+		padding-left: 10px;
+		padding-right: 0;
+	}
+	.quick-quote-button-section {
+		width: 519px;
+	}
+	.quick-quote-col {
+		margin: 10px 11px;
+		width: 150px;
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+	.quick-quote-question-section {
+		margin: 0;
+		min-height: auto;
+	}
+	.quick-quote-row-LHS {
+		width: 25%;
+		margin-right: 5px;
+	}
+	.quick-quote-row-RHS {
+		width: 35%;
+		/* padding-left: 15px; */
+		/* margin-left: 10px; */
+	}
+	.quick-quote-dwn-payment {
+		width: 50%;
+	}
+	.err-msg-quick-quote {
+		width: 48%;
+		white-space: pre;
+	}
+	.quick-quote-dropdown-cont {
+		width: 175px;
+		margin: 42px 0 0 128px;
+	}
+	.quote-row {
+		width: 290px;
+		margin: 20px 0;
+	}
+	.discount-update-container {
+		width: 52%;
+		margin: 0 38px;
+		float: left;
+	}
+	.discount-update-btn {
+		width: 20%;
+	}
+	.discount-update-feild {
+		width: 21%;
+	}
+	/*  leads page SM*/
+	.leads-col-2, .leads-col-4, .leads-col-6, .leads-col-7 {
+	width: 28% !important;
+	}
+	.leads-row-2, .leads-row-4, .leads-row-6, .leads-row-7 {
+		display: none;
+	}
+	.leads-row-processor.float-left {
+	    width: 18%;
+	    word-break: break-word;
+	}
+	.leads-col-1 {
+		width: 17%;
+	}
+	.leads-col-9 {
+		width: 21%;
+	}
+	.leads-row-1 {
+		width: 23%;
+	}
+	.leads-row-5 {
+		width: 16%;
+	}
+	.leads-row-8 {
+		width: 14%;
+	}
+	.leads-row-9 {
+		margin-top: 6px;
+	}
+	.grey-edit {
+		margin-top: 11px;
+	}
+	.leads-user-created {
+		width: 9%;
+		margin-top: 4px;
+		margin-right: 1.5%;
+	}
+	.leads-create-disabled {
+		width: 9%;
+		margin-top: 4px;
+		margin-right: 1.5%;
+	}
+	.leads-row-11 {
+		margin-top: 10px;
+	}
+	.blue-edit {
+		margin-top: 7px;
+	}
+	.reg-display-title-subtxt {
+		width: 100%;
+    	margin: 0 auto;
+	}
+	.loan-advisor-sort-list-asc {background: none;}
+
+	.delCustClas.lead-loan-del {
+	    right: 39px !important;
+	    width: 10%;
+	}
+	
+	.leads-col-7 {
+	    width: 12% !important;
+	}
+	/* leads styles for LM */
+	.leads-col-4.lead-purp.big-lead-purp {
+	width: 19% !important;
+	}
+	
+	.leads-col-2.lead-email.big-lead-custmr-email {
+	    width: 35% !important;
+	}
+	
+	.leads-col-2.lead-email.big-lead-custmr-email {
+	    width: 25% !important;
+	}
+	/* Styles for archive page SM */
+	.loan-archive-col-3 {
+		display: none;
+	}
+	.loan-archive-col-6 {
+		display: none;
+	}
+	.loan-archive-col-3 {
+		display: none;
+	}
+	.loan-archive-col-4 {
+		display: none;
+	}
+	.loan-archive-col-5 {
+		display: none;
+	}
+	.leads-container-tc7.alert-col {
+    	margin-left: 17px;
+    }
+	.loan-archive-col-1 {
+	    width: 41%;
+	    padding-left: 0px;
+	}
+	
+	.loan-archive-col-2 {
+	    width: 16% !important;
+	    margin-right: 16px;
+	}
+	
+	.loan-archive-col-7  {
+	    width: 22%;
+	}
+	
+	.arch-lst-purpose-td {
+	    display: block;
+	    width: 20%;
+	}
+	
+	.arch-lst-loan-number-td {
+	    padding: 0;
+	    width: 30%;
+	    padding-left: 10px;
+	}
+	
+	.arch-lst-newfi-id-td {
+	    width: 20%;
+	}
+	
+	.start-new-loan-wrapper {
+	    float: none;
+	    margin: 0 auto;
+	}
+	
+	.start-new-loan-btn {
+	    margin-top: auto !important;
+	}
+	.archive-list-inner-wrapper {
+	    padding: 0 10px;
+	    width: 100%;
+	}
+	
+	/* Styles for pipeline page LA */
+	.la-header-tc3 {
+    	display: none;
+	}
+	
+	.la-header-tc4 {
+	    display: none;
+	}
+	
+	.la-header-tc6 {
+	width: 23%;
+	}
+	
+	.la-header-tc7 {
+	    display: block;
+	}
+	
+	.la-container-tc4 {
+	    display: none;
+	}
+	
+	.la-container-tc5 {
+	    display: none;
+	}
+	
+	.la-container-tc6 {
+	width: 23%;
+	}
+	
+	.la-container-tc7 {
+	    display: block;
+	    width: 14%;
+	}
+	
+	.la-container-tc2 {
+	    width: 28% !important;
+	}
+	
+	.float-left.la-container-tc8 {
+	    width: 10%;
+	}
+	.la-header-tc5 {
+    	width: 20%;
+	}
+	
+	.la-header-tc2 {
+    	width: 28%;
+  	}
+  	.la-header-tc1 {
+	    width: 35%;
+	}
+	
+	.la-container-tc3 {
+	    display: none;
+	}
+ 	.archive-list-wrapper {
+   		 padding: 0 5px;
+	}
+	/* Styles for archive page LA */
+	.la-header-tc5.loan-archive-col-6 {
+	    display: block;
+	    width: 21% !important;
+	}
+	
+	.la-header-tc6.loan-archive-col-5 {
+	    display: none;
+	}
+	
+	.la-container-tc6.loan-archive-col-5 {
+	    display: none;
+	}
+	
+	.leads-container-tc1.loan-archive-col-1 {
+	    width: 38% !important;
+	}
+	
+	.la-container-tc2.loan-archive-col-2 {
+	    width: 17% !important;
+	}
+	.la-header-tc2.loan-archive-col-2 {
+	    width: 17% !important;
+	}
+	
+	.la-header-tc1.loan-archive-col-1 {
+	    width: 36%;
+	}
+	/*  Styles for realtor archive page*/
+	.leads-container-tc1.leads-container-tc1-realtor {
+	    width: 37%  !important;
+	}
+	
+	.leads-container-tc5.leads-container-tc5-realtor {width: 21%;}
+	
+	.leads-container-tc5.alert-col.leads-container-tc6-realtor {
+	    width: 20%;
+	    float: right;
+	}
+	
+	.leads-container-tc2.leads-container-tc2-realtor {
+	    width: 21% !important;
+	}
+	.leads-container-tc1.loan-archive-realtor-col-1 {
+	    width: 37% !important;
+	}
+}
+
+/* ============== ANTHING ABOVE SMARTPHONES ==============*/
+@media ( min-width : 768px) {
+	.mobile-slider-container, .small-screen-menu-icon {
+		display: none;
+	}
+	.left-panel {
+		display: block !important;
+		/* position: absolute; */
+	}
+	.file-upload-text-mobile {
+		display: none;
+	}
+	.soft-menu-wrapper, .soft-menu-icon {
+		display: none !important;
+	}
+}
+
+/* ============== ONLY TABLETS ==============*/
+@media ( min-width : 768px) and (max-width: 991px) {
+	.cust-dashboard-box-wrapper{
+		width: 72%;
+	    float: right;
+	}
+	
+	.left-panel {
+		/* display: block !important; */
+		/* position: absolute; */
+		height: 100%;
+    	background-color: rgb(255, 255, 255);
+	}
+	
+	.home-container, .header-container, .footer-wrapper-container {
+		width: 100%;
+	}
+	.loan-summary-lp, .loan-summary-rp {
+		padding: 0 10px;
+	}
+	.closing-cost-cont-wrapper-top, .closing-cost-cont-wrapper-bottom {
+		margin-left: 15px;
+	}
+	.rate-program-container-col1, .rate-program-container-col2,
+		.rate-program-container-col3 {
+		margin-left: 10px;
+	}
+	.rate-program-container-col1 {
+		width: 19%;
+	}
+	.rate-program-container-col2 {
+		width: 50%;
+	}
+	.rate-program-container-col3 {
+		width: 22%;
+	}
+	.loan-summary-lp, .loan-summary-rp {
+		padding: 0 10px;
+	}
+	.cp-rate-btn, .cp-est-cost-btn {
+		font-size: 16px;
+		line-height: 35px;
+	}
+	.cp-est-header-text {
+		padding: 0;
+		font-size: 13px;
+	}
+	.cp-rate-header-text {
+		font-size: 13px;
+		margin-bottom: 5px;
+	}
+	.rate-slider {
+		margin-bottom: 20px;
+	}
+	.needed-items-rc {
+		display: none;
+	}
+	.doc-desc {
+		height: 80px;
+		padding: 5px 0;
+	}
+	.form-detail-input-lg {
+		width: 240px;
+	}
+	.agent-customer-list-header {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.customer-list-contianer {
+		padding: 0 10px;
+	}
+	.leads-container-tc6 {
+		display: none;
+	}
+	.leads-container-tc1 {
+		width: 25%;
+	}
+	.leads-container-tc2, .leads-container-tc3, .leads-container-tc4 {
+		width: 22%;
+	}
+	.leads-container-tc7, .leads-container-tc5 {
+		width: 15%;
+	}
+	.cus-name {
+		padding-left: 10px;
+		width: 50% !important;
+	}
+	.cus-detail-rc-title {
+		width: 45%;
+		padding-right: 5px;
+	}
+	.cus-detail-rc-value {
+		width: 55%;
+		padding-left: 5px;
+	}
+	.cus-prof-pic-txt {
+		width: 100px;
+	}
+	.cus-prof-detail-rc {
+		width: 230px;
+	}
+	.add-needs-input-edit {
+		width: 90%;
+	}
+	.prof-form-input {
+		width: 180px;
+		margin-right: 10px;
+	}
+	.prof-form-input-sm {
+		width: 125px;
+	}
+	.add-member-sel, .add-member-sel-search {
+		float: left;
+	}
+	.ms-team-member-th, .ms-team-member-tr {
+		width: 202px;
+	}
+	.prof-form-input-cont {
+		width: 175px;
+	}
+	.silder-cont {
+		width: 90%;
+		margin-bottom: 30px;
+	}
+	.slider-hdr-txt {
+		margin-right: 0px;
+		width: 100%;
+	}
+	.rt-slider {
+		width: 95%;
+	}
+	.lock-rate-slider-container {
+		padding: 10px;
+	}
+	.loan-summary-last-row .loan-summary-col-detail {
+		padding: 5px 10px;
+	}
+	.cust-app-lp {
+		display: none;
+	}
+	.cust-app-rp {
+		margin-left: 0;
+		width: 100% !important;
+	}
+	.milestone-header-bar {
+		display: none;
+	}
+	.cus-prof-popup:before, .cus-prof-popup:after {
+		left: 100%;
+		-ms-transform: rotate(180deg);
+		-webkit-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
+	.cus-prof-popup {
+		left: auto;
+		right: 30px;
+	}
+	.ms-add-notification-popup:after {
+		right: 150px;
+	}
+	.ms-add-notification-popup {
+		left: -100px;
+	}
+	.ce-refinance-wrapper {
+		margin-left: 10px;
+	}
+	.ce-cp {
+		margin-left: 20px;
+	}
+	.reg-row-lc {
+		padding-right: 10px;
+	}
+	.reg-row-rc {
+		padding-left: 10px;
+	}
+	.cust-app-step-hdr {
+		display: block;
+		padding: 0 20px;
+		font-size: 24px;
+		margin-bottom: 10px;
+		font-family: 'opensanssemibold';
+		color: #F47522;
+	}
+	.loan-summary-sub-col-detail {
+		float: none;
+	}
+	.sm-save-btn {
+		margin: 5px 0 0 0;
+		float: none;
+		width: 40px;
+		padding: 0;
+		text-align: center;
+	}
+	.cust-personal-info-header-url {
+		width: 195px;
+		font-size: 10px;
+	}
+	.cust-personal-info-header {
+		padding: 11px 10px;
+		margin-right: 10px;
+	}
+	div#save-license-btn {
+	    margin: 20px auto 0;
+	}
+	.add-licence-popup {
+    	right: -290px !important;    
+	}
+	.ce-refinance-wrapper .yr-slider {
+		width: 90%;
+		max-width: 100%;
+	}
+	.ce-refinance-wrapper .rt-slider {
+		width: 93%;
+		max-width: 100%;
+	}
+	.quick-quote-button-section {
+		width: 500px;
+	}
+	.quick-quote-col {
+		margin: 10px 11px;
+		width: 144px;
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+	.quick-quote-question-section {
+		margin: 10px auto;
+		min-height: auto;
+	}
+	.quick-quote-row-LHS {
+		width: 20%;
+		padding: 0 5px;
+	}
+	.quick-quote-row-RHS {
+		width: 30%;
+		/* padding-left: 15px; */
+		margin-left: 5px;
+	}
+	.quick-quote-dwn-payment {
+		width: 42%;
+	}
+	.err-msg-quick-quote {
+		width: 48%;
+		white-space: pre;
+	}
+	.quick-quote-dropdown-cont {
+		width: 152px;
+		margin: 42px 0 0 104px;
+	}
+	.quote-row {
+		width: 290px;
+		margin: 20px 0;
+	}
+	.discount-update-container {
+		width: 68%;
+		margin: 0 0 0 37px;
+		float: left;
+	}
+	.discount-update-btn {
+		width: 15%;
+	}
+	.discount-update-feild {
+		width: 15%;
+	}
+	.leads-col-2, .leads-col-3, .leads-col-4, .leads-col-6, .leads-col-7 {
+	width: 12%;
+	}
+	.leads-row-2, .leads-row-3, .leads-row-4, .leads-row-6, .leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+		width: 20%;
+	}
+	.leads-col-9 {
+		width: 21%;
+	}
+	.leads-row-1 {
+		width: 26%;
+	}
+	.leads-row-5 {
+		width: 20%;
+	}
+	.leads-row-8 {
+		width: 8%;
+	}
+	.grey-edit {
+		width: 17px;
+		background-size: 67%;
+		margin-top: 11px;
+	}
+	.leads-user-created {
+		margin-top: 4px;
+		margin-right: 11%;
+	}
+	
+	.leads-create-disabled {
+		margin-top: 4px;
+		margin-right: 11%;
+	}
+	.inactive-leads-col-edit-quote {
+		margin: 5px 10px;
+	}
+	.float-left.leads-col-edit-quote {
+	    margin: 5px 10px;
+	}
+	.blue-edit {
+		width: 17px;
+		background-size: 67%;
+		margin-top: 5px;
+	}
+
+	/* Styles for archive page LM*/
+	.loan-archive-col-3 {
+		display: none;
+	}
+	.loan-archive-col-6 {
+		display: block;
+		width: 15%;
+	}
+	.leads-container-tc5.loan-archive-col-3.float-left {
+		display: none;
+		width: 15% !important;
+	}
+	div#pipeline-del-row {
+    	display: block;
+    	right: 15px;
+ }
+
+	div#archive-del-row {
+	    display: block;
+	    right: 15px;
+	}
+	.leads-container-tc7.float-left {
+    	display: block;
+    	width: 5%;
+ 	}
+	.loan-archive-col-1 {
+	    width: 25% !important;
+	    padding-left: 10px;
+	}
+	
+	.loan-archive-col-2 {
+	    width: 18%;
+	}
+	
+	.loan-archive-col-7 {
+	    width: 20%;
+	    text-align: left;
+	}
+	
+	.leads-container-tc2.float-left.loan-archive-col-2 {
+	    width: 20%;
+	}
+	
+	.start-new-loan-flag {
+		margin: 0;
+	}
+	.start-new-loan-flag-grey {
+    	margin: 0;
+	}
+	.archive-list-inner-wrapper {
+	    /* margin: 0 10px; */
+	    padding: 0 10px;
+	    width: 100%;
+	}
+	
+	.arch-lst-purpose-td {
+	    display: block;
+	    width: 110px;
+	}
+	
+	.arch-lst-loan-number-td {
+	    padding: 0;
+	    width: 155px;
+	    padding-left: 30px;
+	}
+	
+	.arch-lst-newfi-id-td {
+	    width: 100px;
+	}
+	
+	.start-new-loan-wrapper {
+	    float: none;
+	    margin: 0 auto;
+	}
+	
+	.start-new-loan-btn {
+	    margin-top: 0 !important;
+	}
+	.leads-container-tc7.alert-col {
+    	margin-left: 0;
+    	width: 10%;
+    	margin-left: 0;
+  }
+	 .leads-container-tc4.float-left.loan-advisor-sort-list-asc.loan-archive-col-2 {
+	    display: block;
+	    width: 20%;
+	}
+	
+	.leads-container-tc4.float-left.loan-archive-col-2 {
+	    display: block;
+	    width: 20%;
+	}
+	
+	.loan-archive-col-6 {
+	    display: none;
+	    width: 12%;
+	}
+	.sort-list-asc {
+	    background: url(../images/upwrd.png) no-repeat 72px;
+	}
+	div#lead-row-del {
+	    right: 35px;
+	}
+	
+	.leads-col-2.lead-email {
+	    width: 20%;
+	}
+	.leads-row-processor {
+	    width: 20%;
+	    word-break: break-word;
+	}
+	.leads-col-1.lead-custmr-name.big-lead-custmr-name {
+	    width: 21% !important;
+	}
+	
+	.leads-col-2.lead-email.big-lead-custmr-email {
+	    width: 20%;
+	}
+	
+	.leads-col-4.lead-purp.big-lead-purp {
+	    width: 15%;
+	}
+	
+	.leads-col-7.lead-last-login.big-lead-last-login {
+	    width: 14%;
+	}
+	/* pipeline page styles for LA */
+	.la-header-tc3 {
+    	display: block;
+    	width: 19%;
+	 }
+	
+	.la-header-tc4 {
+	display: none;
+	}
+	
+	.la-header-tc6 {
+	width: 20%;
+	}
+	
+	.la-header-tc7 {
+	    display: block;
+	}
+	
+	.la-container-tc4 {
+	    display: block;
+	    width: 24%;
+	}
+	
+	.la-container-tc5 {
+	    display: none;
+	}
+	
+	.la-container-tc6 {
+	width: 20%;
+	}
+	
+	.la-container-tc7 {
+	    display: block;
+	    width: 9%;
+	}
+	
+	.la-container-tc2 {
+	    width: 25%;
+	}
+	
+	.float-left.la-container-tc8 {
+	    width: 10%;
+	}
+	.la-header-tc5 {
+    	width: 20%;
+	}
+	
+	.la-header-tc2 {
+    	width: 25%;
+ 	}
+	.la-header-tc1 {
+	    width: 25%;
+	}
+	
+	.la-container-tc3 {
+	    width: 19%;
+	}
+	.user-info-outer-container {
+    	width: 90%;
+	}
+	/* archive page LM  */
+	.la-header-tc6.loan-archive-col-5 {
+    	display: none;
+	}
+	
+	.la-container-tc6.loan-archive-col-5 {
+	    display: none;
+	}
+	
+	.la-header-tc5.loan-archive-col-6 {
+	    display: block;
+	}
+	/*  archive page for SM*/
+	.loan-archive-col-4 {
+	    width: 19%;
+	}
+	
+	.loan-archive-col-5 {
+	    width: 14%;
+	}
+	
+	.loan-archive-col-7 {
+	    width: 10%;
+	}
+	/* Admin User Management */
+	div#admin-user-management-header {
+	    margin-right: 30px;
+	}
+	
+	.agent-wrapper-header.agent-wrapper-header-active {
+	    margin-right: 30px;
+	}
+	
+	.cust-personal-info-header.margin-botton-10 {
+	    margin-right: 30px;
+	}
+	
+	.admin-newfi-team-list-th {
+	    width: 95%;
+	}
+	.admin-download-btn {
+	    padding-left: 0;
+	    padding-right: 40px;
+	}
+	.admin-newfi-team-list-tr {
+	    width: 94%;
+	}
+	
+	.admin-newfi-team-list-th-col3 {
+	    width: 26%;
+	}
+	
+	.admin-newfi-team-list-th-col4 {
+	    width: 15%;
+	}
+	
+	.admin-newfi-team-list-tr-col4 {
+	    width: 15%;
+	}
+	/* Styles for archive page realtor */
+	.leads-container-tc1.loan-archive-col-1.loan-archive-realtor-col-1 {
+	    width: 26% !important;
+	}
+	
+	.leads-container-tc2.leads-container-tc2-realtor {
+	    width: 18% !important;
+	}
+	
+	.leads-container-tc3.leads-container-tc3-realtor {
+	    width: 15%  !important;
+	}
+	
+	.leads-container-tc4.leads-container-tc4-realtor {
+	    width: 15%;
+	}
+	
+	.leads-container-tc5.leads-container-tc5-realtor {
+	    width: 12%;
+	}
+	
+	.leads-container-tc5.alert-col.leads-container-tc6-realtor {
+	    width: 12%;
+	    float: right;
+	}
+	.leads-container-tc1.loan-archive-realtor-col-1 {
+	    width: 26% !important;
+	}
+
+}
+
+/* ============== MEDIUM SIZED SCREENS ==============*/
+@media ( min-width : 992px) and (max-width: 1199px) {
+	.home-container, .header-container, .footer-wrapper-container {
+		width: 100%;
+	}
+	.rate-program-container-col1 {
+		width: 16%;
+	}
+	.rate-program-container-col2 {
+		width: 50%;
+	}
+	.rate-program-container-col3 {
+		width: 19%;
+	}
+	.loan-summary-lp, .loan-summary-rp {
+		padding: 0 10px;
+	}
+	.leads-container-tc1 {
+		width: 25%;
+	}
+	.leads-container-tc2 {
+		width: 15%;
+	}
+	.leads-container-tc3 {
+		width: 10%;
+	}
+	.leads-container-tc4 {
+		width: 20%;
+	}
+	.leads-container-tc5 {
+		width: 13%;
+	}
+	.leads-container-tc6 {
+		width: 15%;
+	}
+	.leads-container-tc7 {
+		width: 8%
+	}
+	.cus-name {
+		padding-left: 10px;
+	}
+	.add-member-input-cont {
+		padding-right: 10px;
+	}
+	.lock-rate-slider-container {
+		padding: 10px 20px;
+	}
+	.slider-hdr-txt {
+		margin-right: 20px;
+	}
+	.silder-cont {
+		width: 460px;
+	}
+	.cust-app-rp {
+		margin-left: 10px;
+	}
+	.app-input {
+		width: 150px;
+	}
+	.loan-adv-input {
+		width: 212px !important;
+	}
+	.needed-items-lc {
+		width: 70%;
+	}
+	.ce-refinance-wrapper {
+		margin-left: 60px;
+	}
+	.ce-cp {
+		margin-left: 40px;
+	}
+	.ce-option-ques-wrapper {
+		width: 340px;
+	}
+	.ce-refinance-wrapper .yr-slider {
+		width: 80%;
+	}
+	.ce-refinance-wrapper .rt-slider {
+		width: 82%;
+	}
+	.app-ques-wrapper {
+	    margin: 5px;
+	}
+	.quick-quote-button-section {
+		width: 519px;
+	}
+	.quick-quote-col {
+		margin: 10px 11px;
+		width: 150px;
+	}
+	.complete-application-header {
+		width: 95%;
+	}
+	.quick-quote-question-section {
+		margin: 0 20px;
+		min-height: auto;
+	}
+	.quick-quote-row-LHS {
+		width: 170px;
+		padding: 0 10px;
+	}
+	.quick-quote-row-RHS {
+		width: 35%;
+		/* padding-left: 15px; */
+	}
+	.quick-quote-dwn-payment {
+		width: 52%;
+	}
+	.err-msg-quick-quote {
+		width: 32%;
+		white-space: pre;
+	}
+	.quick-quote-dropdown-cont {
+		width: 174px;
+		margin: 42px 0 0 170px;
+	}
+	.quote-row {
+		width: 290px;
+		margin: 20px 0;
+	}
+	.discount-update-container {
+		width: 64%;
+		margin: 0 42px;
+		float: left;
+	}1199
+	.discount-update-btn {
+		width: 15%;
+	}
+	.discount-update-feild {
+		width: 15%;
+	}
+	.leads-col-2, .leads-col-3, .leads-col-4, .leads-col-6, .leads-col-7 {
+	width: 25%;
+	}
+	.leads-row-2, .leads-row-3, .leads-row-4, .leads-row-6, .leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+		width: 25%;
+	}
+	.leads-col-9 {
+		width: 21%;
+	}
+	.leads-row-1 {
+		width: 26%;
+	}
+	.leads-row-5 {
+		width: 20%;
+	}
+	.leads-row-8 {
+		width: 8%;
+	}
+	
+	.leads-row-processor {
+	    width: 20%;
+	}
+	
+	.leads-col-7 {
+	    width: 10%;
+	}
+	
+	div#lead-row-del {
+	    right: 40px;
+	}
+	.grey-edit {
+		width: 17px;
+		background-size: 67%;
+		margin-top: 11px;
+	}
+	.leads-user-created {
+		background-size: 28%;
+		width: 9%;
+		margin-top: 5px;
+		margin-right: 1%;
+	}
+	.leads-create-disabled {
+		background-size: 28%;
+		width: 9%;
+		margin-top: 5px;
+		margin-right: 1%;
+	}
+	.blue-edit {
+		width: 17px;
+		background-size: 67%;
+		margin-top: 5px;
+	}
+	.leads-col-4.lead-purp.big-lead-purp {
+	    width: 16%;
+	}
+	/* archive page styles SM*/
+	.leads-container-tc6-1 {
+		width:10%;
+	}
+	.archive-list-inner-wrapper {
+	    padding: 0 20px;
+	    width: 75%;
+	}
+	.arch-lst-loan-number-td {
+	    width: 30%;
+	}
+	
+	.arch-lst-newfi-id-td {
+	    width: 20%;
+	}	
+	/* pipeline page styles for LA */
+	.la-header-tc1 {
+		width: 25%;
+	}
+	.la-container-tc7.alert-col.float-left {
+    	width: 5%;
+	}
+	
+	.la-header-tc5.float-left {
+	    width: 11%;
+	}
+	.la-header-tc2 {
+    	width: 15%;
+	}
+	
+	.la-header-tc3 {
+	    width: 13%;
+	}
+	
+	.la-header-tc4 {
+	    width: 15%;
+	}
+	
+	.la-container-tc2 {
+	    width: 15%;
+	}
+	
+	.la-container-tc4 {
+	    width: 15%;
+	}
+	
+	.la-container-tc5 {
+	    width: 15%;
+	}
+	
+	.la-container-tc6 {
+	    width: 13%;
+	}
+	.la-header-tc6 {
+	    width: 13%;
+	}
+	.archive-list-wrapper {
+   		 padding: 0 5px;
+	}
+	.user-info-outer-container {
+	    width: 97%;
+	    margin: 0 10px;
+	}
+	/* .reg-btn-wrapper {
+	    width: 100%;
+	    margin: 0 auto;
+	} 
+	
+	.reg-btn {
+	    width: 35%;
+	    margin: 0 auto;
+	    margin-left: 55px;
+
+	}*/
+	.loan-archive-col-7 {
+	    width: 8%;
+	}
+	
+	.loan-archive-col-2 {
+	    width: 12%;
+	}
+	
+	.loan-archive-col-1 {
+	    width: 26% !important;
+	}
+	
+	.loan-archive-col-2 {
+	    width: 13%;
+	}
+	
+	.loan-archive-col-4 {
+	    width: 12%;
+	}
+	.loan-archive-col-5 {
+	    width: 10%;
+	}
+	
+	.loan-archive-col-6 {
+	    width: 10%;
+	}
+	/*  archive page styles for LM*/
+	.la-container-tc4.loan-archive-col-3 {
+	    width: 13% !important;
+	}
+	
+	.la-header-tc6.loan-archive-col-5 {
+	    width: 12%;
+	}
+	
+	.la-header-tc5.loan-archive-col-6 {
+	    width: 14%;
+	}
+	/* Admin User Management */
+	div#admin-user-management-header {
+	    margin-right: 30px;
+	}
+	
+	.agent-wrapper-header.agent-wrapper-header-active {
+	    margin-right: 30px;
+	}
+	
+	.cust-personal-info-header.margin-botton-10 {
+	    margin-right: 30px;
+	}
+	
+	.admin-newfi-team-list-th {
+	    width: 96%;
+	}
+	.admin-download-btn {
+	    padding-left: 0;
+	    padding-right: 40px;
+	}
+	.admin-newfi-team-list-tr {
+	    width: 94%;
+	}
+	
+	.admin-newfi-team-list-th-col3 {
+	    width: 25%;
+	}
+	
+	.admin-newfi-team-list-th-col4 {
+	    width: 15%;
+	}
+	
+	.admin-newfi-team-list-tr-col4 {
+	    width: 15%;
+	}
+	.admin-newfi-team-list-tr-col3 {
+	    word-break: break-word;
+	    width: 27%;
+	}
+	/*  Styles for archive page realtor*/
+	.leads-container-tc1.loan-archive-col-1.loan-archive-realtor-col-1 {
+	    width: 25% !important;
+	}
+	
+	.leads-container-tc5.leads-container-tc5-realtor {
+	    width: 17%;
+	}
+	
+	.leads-container-tc3.leads-container-tc3-realtor {
+	    width: 15%;
+	}
+	
+	.leads-container-tc5.alert-col.leads-container-tc6-realtor {
+	    width: 12%;
+	    float: right;
+	}
+	
+	.leads-container-tc4.leads-container-tc4-realtor {
+	    width: 15%;
+	}
+	.leads-container-tc1.loan-archive-realtor-col-1 {
+	    width: 25% !important;
+	}
+}
+
+/* ============== LARGE SIZED SCREENS ==============*/
+@media ( min-width : 1200px) {
+	.center-panel {
+		width: 840px !important;
+	}
+	.right-panel-messageDashboard {
+		width: 939px !important;
+	}
+	.rp-agent-dashboard {
+		width: 939px !important;
+	}
+	.sm-dashboard {
+		width: 83% !important;
+	}
+	.leads-dashboard {
+		width: 90% !important;
+	}
+	.quick-quote-agent-dashboard {
+		width:923px !important;
+	}
+    .cust-app-rp{
+        width: 534px !important;
+    }
+    .ce-cp{
+    	  width: 755px !important;
+    }
+}
+
+/*Custom breakpoints for milestone page*/
+@media ( max-width : 649px) {
+	.loan-progress-milestone-wrapper {
+		width: 400px;
+		max-width: 95%;
+		margin: 0 auto;
+	}
+	.milestone-lc, .milestone-rc {
+		width: 100%;
+		left: 0;
+	}
+	.ms-cust-prof-container {
+		display: none;
+	}
+	.milestone-lc:after, .milestone-lc:before {
+		left: 0;
+	}
+	.milestone-lc-border {
+		left: -1px;
+		right: auto;
+	}
+	.milestone-lc {
+		padding-left: 20px;
+		padding-bottom: 30px;
+		padding-right: 0;
+	}
+	.milestone-lc-text {
+		text-align: left;
+	}
+	.milestone-lc-header-txt, .milestone-lc-header-icn {
+		float: left;
+	}
+	.milestone-lc-header-icn {
+		margin-right: 0;
+		margin-left: 10px;
+	}
+	.milestone-lc .ms-check-box-header {
+		margin-left: -10px;
+		margin-right: 10px;
+		float: left;
+	}
+	.milestone-lc-header-txt:after {
+		left: 0;
+		border-color: transparent;
+		-ms-transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		transform: rotate(45deg);
+		border-top-width: 14px;
+		margin-left: -11px;
+		margin-top: -5px;
+		border-top-color: #ebebeb;
+	}
+	.m-not-started  .milestone-lc-header-txt:before {
+		left: 0;
+		margin-top: -6px;
+		margin-left: -10px;
+		-ms-transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		transform: rotate(45deg);
+		border-color: rgba(136, 183, 213, 0);
+		border-top-color: #888;
+		border-top-width: 15px;
+	}
+	.m-complete .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #7AB10D;
+	}
+	.m-in-progress .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #F47521;
+	}
+	.ms-check-box {
+		float: left;
+	}
+	.m-not-started .milestone-lc-header-txt:after {
+		border-width: 1px;
+		border-top-width: 14px;
+		margin-left: -3px;
+	}
+	.milestone-lc .float-right, .milestone-lr .float-right {
+		float: left;
+	}
+	.ms-add-notification-popup {
+		padding: 10px 5px;
+		width: 300px;
+		left: -60px;
+	}
+	.milestone-lc-header-icn, .milestone-rc-header-icn {
+		display: none;
+	}
+	
+	.milestone-lc-text .milestone-box-wrapper {
+	    float: left;
+	
+	}
+	
+	.milestone-lc-text.milestone-plain-text {
+		text-align: left;
+	}
+	
+	.milestone-lc-text .milestone-text-span-holder{
+		float: left;
+	}
+	/*funded mile styles */
+	.milestone-funded {
+	    float: left;
+	    padding: 0;
+	    width: 2px;
+	    margin-top: -1px;
+	}
+	
+	.m-not-started-funded-icn,.m-complete-funded-icn {
+	    margin-right: -47px;
+	}
+	
+	.milestone-funded-headerTxt {
+	    font-size: 12px;
+	}
+}
+
+/*Custom breakpoints for milestone page*/
+@media ( min-width : 768px) and (max-width: 920px) {
+	.loan-progress-milestone-wrapper {
+		width: 400px;
+		max-width: 95%;
+		margin: 0 auto;
+	}
+	.milestone-lc, .milestone-rc {
+		width: 100%;
+		left: 0;
+	}
+	.ms-cust-prof-container {
+		display: none;
+	}
+	.milestone-lc:after, .milestone-lc:before {
+		left: 0;
+	}
+	.milestone-lc-border {
+		left: -1px;
+		right: auto;
+	}
+	.milestone-lc {
+		padding-left: 20px;
+		padding-bottom: 30px;
+		padding-right: 0;
+	}
+	.milestone-lc-text {
+		text-align: left;
+	}
+	.milestone-lc-header-txt, .milestone-lc-header-icn {
+		float: left;
+	}
+	.milestone-lc-header-icn {
+		margin-right: 0;
+		margin-left: 10px;
+	}
+	.milestone-lc .ms-check-box-header {
+		margin-left: -10px;
+		margin-right: 10px;
+		float: left;
+	}
+	.milestone-lc-header-txt:after {
+		left: 0;
+		border-color: transparent;
+		-ms-transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		transform: rotate(45deg);
+		border-top-width: 14px;
+		margin-left: -11px;
+		margin-top: -5px;
+		border-top-color: #ebebeb;
+	}
+	.m-not-started  .milestone-lc-header-txt:before {
+		left: 0;
+		margin-top: -6px;
+		margin-left: -10px;
+		-ms-transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		transform: rotate(45deg);
+		border-color: rgba(136, 183, 213, 0);
+		border-top-color: #888;
+		border-top-width: 15px;
+	}
+	.m-complete .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #7AB10D;
+	}
+	.m-in-progress .milestone-lc-header-txt:after {
+		border-color: transparent;
+		border-top-color: #F47521;
+	}
+	.ms-check-box {
+		float: left;
+	}
+	.m-not-started .milestone-lc-header-txt:after {
+		border-width: 1px;
+		border-top-width: 14px;
+		margin-left: -3px;
+	}
+	.milestone-lc .float-right, .milestone-lr .float-right {
+		float: left;
+	}
+	.ms-add-notification-popup:after {
+		right: 250px;
+	}
+	
+	.milestone-lc-text .milestone-box-wrapper{
+	   float: left;
+	}
+	
+	
+	.milestone-lc-text.milestone-plain-text {
+		text-align: left;
+	}
+	
+	.milestone-lc-text .milestone-text-span-holder{
+		float: left;
+	}
+	/*funded mile styles */
+	.milestone-funded {
+	    float: left;
+	    padding: 0;
+	    width: 1%;
+	    margin-top: -3px;
+	}
+	
+	.m-not-started-funded-icn,.m-complete-funded-icn {
+	    margin-right: -47px;
+	}
+	
+	.milestone-funded-headerTxt {
+	    font-size: 12px;
+	}
+	
+}
+
+@media ( max-width : 475px) {
+	.hdr-btn-item {
+		padding: 0 10px;
+	}
+	.header-btns-wrapper.right-margin {
+		margin-right: 5px;
+	}
+	.ce-ques-option {
+	    width: 100%;
+	    margin: 10px auto;
+	    height: 50px;
+	    line-height: 50px;
+	    font-size: 28px;
+	}
+	/* author:akshay */
+	.loan-row{
+	
+		display:none;
+	}
+	
+	.leads-row-9{
+		display:none;
+	}
+	
+	.leads-container-th>div{
+		width: 25%;
+	}
+	.leads-container-tr>div{
+		width: 33%;
+		margin-right: 0 !important;
+	}
+			
+	//this fix is specific to making the two icons red and blue (delete and add) to be fit on smartphone screens
+	.leads-container-tc7{
+		width:20% !important;
+	}
+	
+	
+	.cus-img-icn {
+	
+		display:none;
+	}
+	
+	.lp-initial-pic{
+		
+		display:none;
+	}
+	
+	
+	.operation-seperator {
+		display: none;
+	}
+	.loan-summary-header-col2 {
+		display: none;
+	}
+	.form-detail-row-desc {
+		width: 100%;
+		text-align: left;
+		padding-left: 10px;
+	}
+	.form-detail-row-value, .form-detail-row-name {
+		width: 50%
+	}
+	.form-detail-row-name {
+		padding-right: 10px;
+	}
+	.save-app-btn {
+		width: 150px;
+	}
+	.form-detail-edit, .form-detail-input {
+		width: 100%;
+	}
+	.edit-form {
+		padding: 0 5px;
+	}
+	.application-form-header {
+		padding-left: 5px;
+	}
+	.application-form-header-col1, .form-progress, .progress-span-text,
+		.edit-form {
+		font-size: 10px;
+	}
+	.est-credit-row {
+		padding-left: 0;
+		text-align: center;
+	}
+	.form-detail-edit-row {
+		padding: 0;
+	}
+	.doc-desc {
+		height: 80px;
+		padding: 5px 5px;
+	}
+	.uploaded-items-container {
+		padding-left: 0;
+	}
+	.needed-items-container {
+		margin: 0;
+	}
+	.alert-btn {
+		margin-right: 5px;
+	}
+	.dt-picker-text {
+		display: none;
+	}
+	.date-picker-cont {
+		width: 50%;
+		padding-left: 0;
+		padding-right: 5px;
+	}
+	.time-picker-cont {
+		width: 50%;
+		padding-left: 5px;
+	}
+	.cust-detail-container {
+		padding: 10px;
+	}
+	.agent-customer-list-header {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	.filter-text {
+		display: none;
+	}
+	.leads-container-row {
+		padding: 10px 0 !important;
+	}
+	.onl-status-icn {
+		width: 10px;
+		height: 10px;
+	}
+	.cus-name {
+		padding-left: 0px;
+		width: 50% !important;
+		word-break: inherit;
+	}
+
+	.cus-img-icn {
+		display: none;
+	}
+	
+	.filer-dropdown {
+		width: 95px;
+		margin-left: 5px;
+		padding-left: 10px;
+	}
+	.filter-selected, .filter-dropdown-item {
+		font-size: 10px;
+	}
+	.search-input {
+		width: 70px;
+	}
+	.add-needs-input-row {
+		width: 100%;
+	}
+	.add-needs-input-edit {
+		width: 100%;
+	}
+	.initial-list-doc-wrapper, .add-needs-wrapper,
+		.need-list-save-btn-wrapper {
+		padding-left: 10px;
+	}
+	.newfi-team-list-tr-col1, .newfi-team-list-tr-col2 {
+		width: 40%;
+	}
+	.newfi-team-list-tr-col3 {
+		display: none;
+	}
+	.add-member-input-cont {
+		width: 100%;
+		margin: 10px 0;
+	}
+	.prof-form-row-desc {
+		width: 100%;
+		text-align: left;
+	}
+	.prof-form-row {
+		padding: 5px 10px;
+	}
+	.upload-pic-desc {
+		line-height: 20px;
+	}
+	.yr-grid-item-selected, .yr-grid-item {
+		font-size: 10px;
+		width: 50px;
+		margin-left: -17px;
+	}
+	.loan-summary-last-row .loan-summary-col-detail {
+		padding: 5px 10px;
+	}
+	.yr-grid-cont:first-child .yr-grid-item-selected {
+		margin-left: -9px;
+	}
+	.av-loan-details-container {
+		padding: 0;
+	}
+	.av-loan-details-row {
+		min-height: 30px;
+		height: auto;
+		line-height: 20px;
+		padding: 5px 0;
+	}
+	.av-loan-details-row-lc {
+		width: 50%;
+	}
+	.av-loan-details-row-rc {
+		max-width: 50%;
+		padding-left: 10px;
+		word-break: break-word;
+	}
+	.app-options-cont, .app-input {
+		/* width: 100%; */
+	}
+	.app-input.dwn-val {
+		width: 85%;
+		width: calc(100% - 56%);
+	}
+	.dwn-percentage {
+		text-align: left;
+		margin: 0;
+		width: 50px;
+		padding: 0 10px;
+	}
+	.complete-application-header {
+		min-height: 45px;
+		padding: 5px 0;
+		line-height: 35px;
+		padding-left: 10px;
+		font-size: 18px;
+		margin-bottom: 10px;
+	}
+	.app-ques-header-txt {
+		font-size: 24px;
+		line-height: 40px;
+		margin-bottom: 15px;
+	}
+	.cust-prof-edit-label {
+		width: 30%;
+		padding-top: 11px;
+		display: flex;
+		justify-content: flex-end;
+		line-height: normal;
+		padding: 10px 20px 0 0;
+		text-align: right;
+	}
+	.cust-prof-edit-row {
+		line-height: 35px;
+		margin: 15px 10px;
+	}
+	.cus-prof-popup {
+		width: 310px;
+		left: -180px;
+	}
+	.cus-prof-popup:before {
+		left: 195px;
+	}
+	.cust-prof-edit-row input, .pop-up-header {
+		height: 35px;
+		line-height: 35px;
+	}
+	.overlay-popup-wrapper {
+		width: 300px;
+	}
+
+	.create-user-popup {
+		width: 310px;
+		left: -65px;
+	}
+	#ms-add-member-popup .create-user-popup {
+		right: -20px;
+	}
+	.create-user-popup-cont {
+		width: 100%;
+	}
+	.create-user-popup-label {
+		width: 90px;
+		padding-right: 10px;
+		text-align: right;
+		height: 40px;
+		line-height: 20px;
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.create-user-popup-input {
+		width: 190px;
+	}
+	.cust-prof-edit-input {
+	    width: 180px;
+	}
+	
+	.cust-prof-upload-cont {
+	    width: 66%;
+	}
+	.cust-prof-edit-wrapper {
+	    width: 30%;
+	}
+	.overlay-container {
+	    width: 100%;
+	    margin: 10px auto;
+	}
+	
+	.btn-container {
+	    width: 100%;
+	    padding: 0;
+	    margin: 0 50px;
+	}
+	
+	div#btn-pu-save {
+	    margin: 10px;
+	}
+	
+	div#btn-pu-cancel {
+	    margin: 10px;
+	}
+	span.mandatoryClass {
+    	position: static;
+	}
+	.ms-team-member-th, .ms-team-member-tr {
+		width: 210px;
+	}
+	.payment-details-wrapper {
+		width: 320px;
+	}
+	.payment-dropin {
+		width: 280px;
+	}
+	.payment-submit-btn {
+		margin-left: 15px;
+	}
+	.payment-btn {
+		width: 125px;
+		font-size: 14px;
+		margin-top: 20px;
+		border: none;
+	}
+	.payment-cancel-btn {
+		margin-right: 15px;
+	}
+	#ms-add-member-popup .add-team-mem-header {
+		margin-bottom: 0;
+	}
+	#ms-add-member-popup {
+		left: -60px;
+		width: 310px;
+	}
+	#ms-add-member-popup .add-member-sel, #ms-add-member-popup .add-member-sel-search
+		{
+		width: 100%;
+	}
+	.reg-input-row {
+		width: 100% !important;
+		margin: 10px auto;
+	}
+	.reg-input-row .reg-lname {
+		margin-right: 10px;
+	}
+	.loan-summary-sub-col-detail {
+		float: none;
+	}
+	.sm-save-btn {
+		margin: 5px 0 0 0;
+		float: none;
+		width: 40px;
+		padding: 0;
+		text-align: center;
+	}
+	.login-container {
+		margin-top: 60px;
+	}
+	.display-title {
+		font-size: 22px;
+		line-height: 50px;
+	}
+	.display-title-subtxt {
+		font-size: 15px;
+	}
+	.alert-popup-cont {
+		max-width: 205px;
+	}
+	.alert-popup-wrapper {
+		width: 280px;
+	}
+	.alert-popup-cont-wrapper {
+		right: -80px;
+	}
+	.alert-popup-cont-wrapper:before {
+		right: 93px;
+	}
+	.filter-dropdown-item {
+		padding-left: 10px;
+		font-size: 11px;
+	}
+	.soft-menu-icon {
+		margin-right: 10px;
+	}
+	.reg-display-title {
+		font-size: 24px;
+	}
+	.login-row-rc {
+		width: 100%;
+		margin: 0 auto;
+	}
+	.footer-text1 {
+		width: 80%;
+		padding: 0 5px 5px;
+	}
+	.footer-wrapper-container {
+		padding-right: 5px;
+	}
+	.pgwSlideshow {
+		width: 95%;
+	}
+	.slider-prev-next-btn-row {
+		width: 95%;
+	}
+	.slider-btn {
+		width: 110px;
+	}
+	.getting-to-know-row {
+		padding-left: 10px;
+	}
+	.getting-to-know-btn {
+		width: 240px;
+		font-size: 14px;
+		float: left;
+	}
+	.ce-cp {
+		padding: 0 10px;
+	}
+	.ce-option-ques-wrapper {
+		margin: 0 0 15px 0;
+		padding: 0;
+		width: 95%;
+	}
+	.ce-sub-option-wrapper .ce-option-text {
+		font-size: 15px;
+	}
+	.ce-option-ques-wrapper .ce-rp-ques-text {
+		font-size: 13px;
+	}
+	.ce-input {
+		font-size: 15px;
+	}
+	.add-account-btn {
+		margin: -5px 0 20px 0px;
+	}
+	.ce-option-checkbox {
+		font-size: 15px;
+	}
+	.loan-manager-popup {
+		margin-left: -50px;
+	}
+	.month-cont {
+		width: 90px !important;
+	}
+	.per {
+		margin: 0 5px;
+	}
+	.cust-personal-info-header {
+		padding: 10px;
+	}
+	.ce-title-firstPage {
+		font-size: 26px;
+	}
+	.ce-get-started {
+		font-size: 26px;
+	}
+	.ce-ques-wrapper_firstPage {
+		padding: 0;
+	}
+	.reg-display-title {
+		margin-top: 10px;
+	}
+	.reg-input-row .reg-input-cont {
+		width: 70% !important;
+		margin: 0 10px;
+	}
+	.rate-btn-alertRate {
+		padding-right: 10px;
+		width: 160px;
+	}
+	.loan-summary-header-col1 {
+		width: 125px;
+	}
+	.login-container {
+		margin-bottom: 35px;
+	}
+	.rt-grid-item {
+		font-size: 11px;
+	}
+	.cus-eng-succ-mess-row {
+		white-space: normal;
+		padding: 5px 20px;
+		text-align: left;
+	}
+	.eng-indent {
+		padding: 10px 0 10px 10px;
+	}
+	.first-column {
+		padding: 0;
+		width: 25%;
+	}
+	.first-column img[name="seal"] {
+		width: 50px;
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	.second-column {
+		width: 55%;
+	}
+	.second-column * {
+		font-size: 10px;
+	}
+	a.footer-inline-txt {
+		display: inline-block;
+	}
+	.third-column {
+		width: 20%;
+	}
+	.forget-pass-adj {
+		padding: 36px 0;
+	}
+	.reg-display-title-subtxt {
+		height: auto;
+		line-height: normal;
+		text-align: center;
+		width: 100%;
+		margin: 0 auto;
+	}
+	.delCustClas {
+		right: 30px !important;
+	}
+	.leads-container-tc5 {
+		display: none;
+	}
+	.inactive-leads-col-edit-quote {
+	    margin-top: 10px;
+	    margin-left: -39px;
+	}
+	
+	.leads-col-edit-quote {
+	margin-left: -38px;
+	width: 10%;
+	margin-top: 13px;
+	}
+	/* Styles for quick quote */
+	.quick-quote-question-section-LHS {
+		width: 50%;
+	}
+	.quick-quote-question-section-RHS {
+		width: 50%;
+	}
+	.quick-quote-button-section {
+		width: 96%;
+		margin: 0 10px;
+	}
+	.quick-quote-col {
+		margin: 10px auto;
+		width: 225px;
+		float: none;
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+	.quick-quote-question-section {
+		margin: 0;
+		min-height: auto;
+	}
+	.quick-quote-row-LHS {
+		text-align: left;
+		line-height: 20px;
+		width: 25%;
+		margin: 0;
+		padding: 0 0 0 10px;
+	}
+	.quick-quote-row-RHS {
+		width: 25%;
+	}
+	.quick-quote-dwn-payment {
+		width: 32%;
+	}
+	.err-msg-quick-quote {
+		width: 48%;
+		white-space: pre;
+	}
+	.quick-quote-dropdown-cont {
+		width: 125px;
+		margin: 42px 0 0 130px;
+	}
+	.quote-row {
+		width: 290px;
+		margin: 20px 0;
+	}
+	.discount-update-container {
+		width: 55%;
+		margin: 0 10px;
+		float: left;
+	}
+	.discount-update-btn {
+		width: 35%;
+	}
+	.discount-update-feild {
+		width: 33%;
+	}
+	div#quick-quote-header-down-icn {
+	    margin: 10px 5px;
+	}
+	/*  Styles for leads page*/
+	.leads-col-3, .leads-col-4, .leads-col-6, .leads-col-processor, .leads-row-processor,.lead-last-login {
+		display: none;
+	}
+	.leads-row-2, .leads-row-3, .leads-row-4, .leads-row-6, .leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+		width: 35% !important;
+	}
+	.leads-col-9 {
+		width: 31%;
+	}
+	.leads-row-1 {
+		width: 20%;
+		margin-left: 2px;
+		margin-right: 17px;
+	}
+	.leads-row-5 {
+		width: 22%;
+	}
+	.leads-row-8 {
+		width: 15%;
+	}
+	.leads-row-9 {
+		margin-top: 5px;
+	}
+	.grey-edit {
+		margin-top: 8px;
+		margin-left: 5px;
+	}
+	.leads-user-created {
+	display: block;
+	width: 25% !important;
+	margin-top: -24px;
+	}
+	.leads-create-disabled {
+	display: block;
+	width: 25% !important;
+	margin-top: -24px;
+	}
+	.leads-col-5 {
+		width: 22%;
+	}
+	.leads-col-8 {
+		width: 18%;
+	}
+	.leads-row-11 {
+		float: right;
+		margin-top: -24px;
+		margin-left: 3px;
+		width: 25% !important;
+	}
+	.blue-edit {
+		margin-top: 5px;
+		margin-left: 4px;
+	}
+	.leaddelCustClas {
+		right: 10%;
+		width: 10% !important;
+	}
+	.quick-quote-30-lock-period-btn {
+		white-space: normal;
+		margin: 10px;
+	}
+	.quick-quote-45-lock-period-btn {
+		white-space: normal;
+	}
+	.leads-container-tc1 {
+		width: 35% !important;
+	}
+	.leads-container-tc2 {
+	    width: 32% !important;
+	}
+	/* for intro note added in upload needs page customer view:Ranjitha */
+	.needs-list-info-row,.needs-list-info-row-two {
+		text-align: left;
+	}
+	.contactInfoText{
+		text-align: left;
+	}
+	.note-container {
+		text-align: left;
+		padding-left: 12px;
+	}
+	.ui-dialog {
+	    width: 71% !important;
+	    margin-left: 77px;
+	}
+	.choice-hover {
+		-webkit-tap-highlight-color: #F47521 !important;
+	}
+	.prof-form-row-carrier {
+    	float: left;
+	}
+	.add-licence-popup {
+	    right: -187px !important;
+	    width: 260px;
+	}
+	.add-licence-popup .add-member-label {
+	    width: 65px;
+	    text-align: left;
+	    padding-right: 10px;
+	    line-height: 20px;
+	}
+	.add-member-input-cont {
+	    padding-left: 0;
+	}
+	.prof-form-input .prof-form-input-statedropdown {
+		margin-left: 10px;
+	}
+	.add-licence-popup .create-user-popup-input {
+	    width: 153px;
+	}
+	.prof-form-row .state-dropdown-wrapper {
+	    left: 0;
+	}
+	.prof-form-row-desc.profile-license-row-adj {
+	    width: 0 !important;
+	    min-width: 0;
+	    padding-right: 10px;
+	}
+
+	/* Styles for archive page SM */
+	.loan-archive-col-3 {
+		display: none;
+	}
+	.loan-archive-col-4 {
+	    display: none;
+	}
+	.loan-archive-col-6 {
+		display: none;
+	}
+	.leads-container-tc5.loan-archive-col-3.float-left {
+		display: none;
+	}
+	.archive-del-class-sm {
+		display:none;
+ 	}
+	.leads-container-tc7.float-left {
+    	display: none;
+	}
+	.loan-archive-col-1 {
+	    width: 44% !important;
+	    padding-left: 10px !important;
+	}
+	
+	.loan-archive-col-2 {
+	    width: 24% !important;
+	    margin-right: 16px !important;
+	}
+	.loan-archive-col-5 {
+    	display: none;
+	}
+	.loan-archive-col-7  {
+	    width: 25% !important;
+	    text-align: left;
+	}
+	.loan-archive-col-8 {
+	    display: none;
+	}
+	.leads-container-tc2.float-left.loan-archive-col-2 {
+	    width: 25%;
+	}
+
+	.arch-lst-purpose-td {
+	    display: none;
+	}
+	
+	.arch-lst-loan-number-td {
+	    padding: 0;
+	    width: 43%;
+	}
+	
+	.arch-lst-newfi-id-td {
+	    width: 30%;
+	}
+	
+	.start-new-loan-wrapper {
+	    float: none;
+	    margin-left: 18%;
+	}
+	
+	.start-new-loan-btn {
+	    margin-top: auto !important;
+	}
+	.archive-list-inner-wrapper {
+	    padding: 0;
+	    width: 95%;
+	    margin: 0 8px;
+	}
+	/*  Styles for pipeline page LA*/
+	.la-header-tc3 {
+    	display: none;
+	}
+	
+	.la-header-tc4 {
+	    display: none;
+	}
+	
+	.la-header-tc6 {
+		display: block;
+	}
+	.la-header-tc7 {
+	    display: none;
+	}
+	
+	.la-container-tc4 {
+	    display: none;
+	}
+	
+	.la-container-tc5 {
+	    display: none;
+	}
+	
+	.la-container-tc6 {
+	    display: block;
+	    width: 20% !important;
+	}
+	
+	.la-container-tc7 {
+	    display: none;
+	}
+	
+	.la-container-tc2 {
+	    width: 35% !important;
+	}
+	
+	.float-left.la-container-tc8 {
+	    width: 10%;
+	}
+	.la-header-tc2 {
+	    width: 35% !important;
+	}
+	.la-container-tc3 {
+	    display: none;
+	}
+	
+	.la-header-tc1 {
+	    width: 35% !important;
+	}
+	.archive-list-wrapper {
+   		 padding: 0 5px;
+	}
+	/* Styles for archive page LA */
+	.la-header-tc5.loan-archive-col-6 {
+	    display: block;
+	}
+	
+	.la-header-tc6.loan-archive-col-5 {
+	    display: none;
+	}
+	
+	.la-container-tc6.float-left.loan-archive-col-5 {
+	    display: none;
+	}
+	
+	.leads-container-tc1.loan-archive-col-1 {
+	    width: 40% !important;
+	}
+	
+	.la-container-tc2.loan-archive-col-2 {
+	    width: 39% !important;
+	}
+	.la-header-tc2.loan-archive-col-2 {
+	    width: 30% !important;
+	}
+	/* Styles for refferal registration page @author ranjitha*/
+	.user-info-outer-container {
+    	width: 90%;
+	}
+	
+	.left-user-container {
+	    float: none;
+	    height: auto;
+	    width: 100%;
+	    padding: 5px;
+	}
+	
+	.new-user-container {
+	    float: none;
+	    width: 81%;
+	    height: auto;
+	    margin: 10px auto;
+	}
+	
+	.user-info-image {
+	    margin: 0;
+	}
+	
+	.reg-btn-wrapper {
+	    width: 76%;
+	    line-height: 35px;
+	    margin: 30px auto;
+	}
+	
+	.reg-btn.reg-chg-width {
+	    width: 90%;
+	    margin:  auto;
+	    font-size: 14px;
+	}
+	
+	.reg-input-cont {
+	    float: none;
+	}
+	
+	.reg-row-rc {
+	    margin: 10px auto;
+	    width: 125% !important;
+	}
+	
+	.reg-input {
+    	padding: 0 5px;
+
+	}
+	.overlay-toast-wrapper {
+	    width: 79%;
+	    margin: 0 auto;
+	}
+	
+	.overlay-toast-txt {
+	    width: 100%;
+	    margin: 0 auto;
+	}
+	.cus-prof-detail-lc, .cus-prof-detail-rc {
+	    width: 255px;
+	    margin: 0 auto;
+	    float: none;
+	}
+	.cus-prof-detail-lc, .cus-prof-detail-rc {
+	    width: 255px;
+	    margin: 0 auto;
+	    float: none;
+	}
+	.av-loan-details-wrapper {
+	    margin: 10px 10px 10px 0;
+	}
+	
+	.add-team-mem-wrapper {
+	    margin: 10px 10px 10px 0;
+	}
+	
+	.newfi-team-wrapper {
+	    margin: 10px 10px 10px 0;
+	}
+	
+	.newfi-team-container {
+	    padding: 0;
+	}
+	/* Styles for template page */
+	.template-header-col-three,.template-header-col-four {
+	    display: none;
+	}
+	
+	.template-header-col-one,.template-header-row-one {
+	    width: 43%;
+	}
+	
+	.template-header-col-two,.template-header-row-two {
+	    width: 44%;
+	    padding-left: 0;
+	}
+	
+	.template-header-row-three,.template-header-row-four {
+	    display: none;
+	}
+		
+	.template-header-row-five {
+	    margin-left: 17px;
+	}
+	
+	.template-form-row {
+	    width: 100%;
+	}
+	
+	.template-form-input {
+	    width: 66%;
+	}
+	
+	.template-form-label {
+	    width: 29%;
+	    text-align: left;
+	}
+	.add-member-input-admin-cont {
+	    width: 75%;
+	}
+	/*Styles for realtor login archive page */
+	.leads-container-tc1-realtor {
+	    width: 40% !important;
+	}
+	
+	.loan-archive-realtor-col-1 {
+	    width: 40% !important;
+	}
+	
+	.leads-container-tc1.loan-archive-col-1.loan-archive-realtor-col-1 {
+	    width: 40% !important;
+	    padding-left: 5px !important;
+	}
+	
+	.leads-container-tc5.alert-col.leads-container-tc6-realtor {
+	    display: block;
+	    float: left;
+	}
+	
+	.leads-container-tc5.leads-container-tc6-realtor-header {
+	    display: block;
+	}
+	.leads-container-tc2.leads-container-tc2-realtor {
+	    width: 35% !important;
+	}
+}
+
+@media ( min-width : 476px) and (max-width: 648px) {
+	.quick-quote-question-section-LHS {
+		width: 50%;
+	}
+	.quick-quote-question-section-RHS {
+		width: 50%;
+	}
+	.quick-quote-button-section {
+		width: 96%;
+		margin: 0 10px;
+	}
+	.quick-quote-col {
+		margin: 10px;
+		width: 28%;
+		/* float: none; */
+	}
+	.complete-application-header {
+		width: 96%;
+	}
+	.quick-quote-question-section {
+		margin: 0;
+		min-height: auto;
+	}
+	.quick-quote-row-LHS {
+		width: 35%;
+		padding-right: 20px;
+		text-align: right;
+	}
+	.quick-quote-row-RHS {
+		width: 35%;
+		/* padding-left: 15px; */
+		margin: 0;
+	}
+	.quick-quote-dwn-payment {
+		width: 49%;
+	}
+	.err-msg-quick-quote {
+		width: 10%;
+		white-space: pre;
+	}
+	.quick-quote-dropdown-cont {
+		width: 177px;
+		margin: 42px 0 0 179px;
+	}
+	.quote-row {
+		width: 290px;
+		margin: 20px 0;
+	}
+	.discount-update-container {
+		width: 58%;
+		margin: 0 0 0 30px;
+		float: left;
+	}
+	.discount-update-btn {
+		width: 25%;
+	}
+	.discount-update-feild {
+		width: 25%;
+	}
+	.lead-last-login {
+	display: none;
+	}
+	.leads-row-2, .leads-row-4, .leads-row-6, .leads-row-7 {
+		display: none;
+	}
+	.leads-col-1 {
+		width: 27%;
+	}
+	.leads-col-9 {
+		width: 24%;
+	}
+	.leads-row-1 {
+		width: 26%;
+		margin-left: 5px;
+		word-break: break-word;
+		margin-right: 5px;
+	}
+	.leads-row-5 {
+		width: 18%;
+	}
+	.leads-row-3 {
+		width: 17%;
+	}
+	.leads-row-8 {
+		width: 13%;
+	}
+	.leads-row-9 {
+		margin-top: 2px;
+	}
+	.grey-edit {
+		margin-top: 3px;
+	}
+	.leads-user-created {
+		margin-top: 4px;
+	}
+	.leads-create-disabled {
+		margin-top: 4px;
+	}
+	.leads-row-11 {
+		margin-top: 5px;
+		margin-left: 10px;
+	}
+	.blue-edit {
+		margin-top: 3px;
+	}
+	.leads-col-7.big-lead-last-login {
+	    display: none;
+	}
+	.leads-col-4.lead-purp.float-left.big-lead-purp {
+	    width: 17% !important;
+	}
+	
+}
+
+.content-header-err {
+	font-size: 16px;
+	color: #E82828;
+	padding: 0 15px;
+}
+
+/* extremley small screen*/
+@media (max-width: 476px) {
+	.home-container {
+	    padding-right: 5px;
+	}
+}

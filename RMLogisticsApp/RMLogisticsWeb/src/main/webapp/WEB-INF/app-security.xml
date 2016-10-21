@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<http use-expressions="true" auto-config="true" entry-point-ref="customEntryPoint"
+		authentication-manager-ref="authenticationManager">
+		<intercept-url pattern="/" access="permitAll" />
+		<intercept-url pattern="/registerNew.do" access="permitAll" />
+        <intercept-url pattern="/forgotPassword.do" access="permitAll" />
+ 	    <intercept-url pattern="/reset.do" access="permitAll" />
+		<intercept-url pattern="/*home.do*" access="isAuthenticated()" />
+
+		<form-login login-page="/" authentication-failure-url="/?s=autherror"
+			authentication-success-handler-ref="userLoginHandler" />
+
+		<session-management session-fixation-protection="newSession">
+			<concurrency-control max-sessions="1"
+				error-if-maximum-exceeded="true" />
+		</session-management>
+
+		<logout invalidate-session="true" logout-success-url="/?s=logout" />
+		<custom-filter ref="logoutFilter" before="LOGOUT_FILTER" />
+	</http>
+
+	<beans:bean id="customEntryPoint"
+		class="com.raremile.logistics.web.security.AjaxAwareLoginUrlAuthenticationEntryPoint">
+		<beans:constructor-arg value="/?s=sessionerror" />
+
+
+	</beans:bean>
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref='rmLogisticsAuthenticationProvider' />
+	</authentication-manager>
+
+	<beans:bean id='userRepository'
+		class='com.raremile.logistics.web.security.UserRepositoryService' />
+		
+	<beans:bean id='rmLogisticsAuthenticationProvider' class='com.raremile.logistics.web.security.UserAuthProvider'>
+		<beans:property name="userDetailsService" ref="userRepository" />
+	</beans:bean>
+
+	<beans:bean id="logoutFilter"
+		class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<beans:constructor-arg index="0" value="/?s=logout" />
+		<beans:constructor-arg index="1">
+			<beans:list>
+				<beans:ref bean="securityContextLogoutHandler" />
+				<beans:ref bean="userLogoutHandler" />
+			</beans:list>
+		</beans:constructor-arg>
+	</beans:bean>
+
+	<beans:bean id="securityContextLogoutHandler"
+		class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+	<beans:bean id="userLoginHandler" class="com.raremile.logistics.web.security.UserLoginHandler" />
+	<beans:bean id="userLogoutHandler" class="com.raremile.logistics.web.security.UserLogoutHandler" />
+
+</beans:beans>
